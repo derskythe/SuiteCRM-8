@@ -1,0 +1,75 @@
+services:
+  suitecrm-app-php:
+    container_name: suitecrm-app-php
+    hostname: suitecrm-app-php
+    restart: unless-stopped
+    platform: "linux/amd64"
+    pull_policy: build
+    stop_grace_period: 10s
+    build:
+      dockerfile: Dockerfile.Apache
+      context: "."
+      target: final
+    environment:
+      TZ: ${TZ:-Asia/Baku}
+      SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
+      DATABASE_URL: mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-!ChangeMe!}@database:3306/${MYSQL_DATABASE:-app}?serverVersion=${MYSQL_VERSION:-8}&charset=${MYSQL_CHARSET:-utf8mb4}
+      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+      STABILITY: ${STABILITY:-dev}
+    volumes:
+        - type: volume
+          source: app-data
+          target: /var/www/html/app
+          read_only: false
+          volume:
+            nocopy: false
+        - type: bind
+          source: ./logs
+          target: /var/www/html/app/logs
+          read_only: false
+          volume:
+            nocopy: true
+#    entrypoint: /bin/bash
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/public" ]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    ports:
+      # HTTP
+      - target: 8080
+        mode: host
+        published: 8080
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        mode: host
+        published: 443
+        protocol: tcp
+    tty: true
+
+  database:
+    container_name: suitecrm-db
+    image: mariadb
+    ports: [ "3306" ]
+    volumes:
+      - mysql-data:/var/lib/mysql:rw
+      - ./mysql_init/:/docker-entrypoint-initdb.d:r
+    environment:
+      TZ: ${TZ:-Asia/Baku}
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-!ChangeMe!}
+      MYSQL_USER: ${MYSQL_USER:-app}
+    healthcheck:
+      test: [ "CMD", "/usr/local/bin/healthcheck.sh" ,"--connect", "--innodb_initialized" ]
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+volumes:
+  mysql-data:
+  app-data:
