@@ -42,6 +42,7 @@ ARG APACHE_RUN_DIR=${WORK_DIR}
 ARG APACHE_MOD_AVAIL_DIR="${APACHE_CONFDIR}/mods-available"
 ARG APACHE_MOD_ENABLED_DIR="${APACHE_CONFDIR}/mods-enabled"
 ARG APACHE_CONF_ENABLED_DIR="${APACHE_CONFDIR}/conf-enabled"
+ARG APACHE_CONF_AVAILABLE_DIR="${APACHE_CONFDIR}/conf-available"
 
 ENV WORK_DIR="${WORK_DIR}" \
     TZ=${TZ} \
@@ -103,7 +104,6 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
 FROM base AS install
 
 RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/log_debug.load && \
-        ln -s ${APACHE_MOD_AVAIL_DIR}/info.conf         ${APACHE_CONF_ENABLED_DIR}/info.conf && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/info.load         ${APACHE_MOD_ENABLED_DIR}/info.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/rewrite.load      ${APACHE_MOD_ENABLED_DIR}/rewrite.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/vhost_alias.load  ${APACHE_MOD_ENABLED_DIR}/vhost_alias.load && \
@@ -111,13 +111,15 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
         ln -s ${APACHE_MOD_AVAIL_DIR}/request.load      ${APACHE_MOD_ENABLED_DIR}/request.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/mime_magic.load   ${APACHE_MOD_ENABLED_DIR}/mime_magic.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/mime_magic.conf   ${APACHE_CONF_ENABLED_DIR}/mime_magic.conf && \
-        printf '<VirtualHost *:8080>\nAddDefaultCharset utf-8\n\nCustomLog ${APACHE_LOG_DIR}/access.log vhost_combined\nErrorLog ${APACHE_LOG_DIR}/error.log\nLogLevel trace1\nRewriteEngine On\nDocumentRoot ${WORK_DIR}/public\n<Directory ${WORK_DIR}/public>\nAllowOverride All\nOrder Allow,Deny\nAllow from All\n</Directory>\n</VirtualHost>\nServerName localhost' \
+        printf '<VirtualHost *:8080>\nAddDefaultCharset utf-8\n\nCustomLog /dev/stdout vhost_combined\nErrorLog /dev/stderr\nLogLevel info\nRewriteEngine On\nDocumentRoot ${WORK_DIR}/public\n<Directory ${WORK_DIR}/public>\nAllowOverride All\nOrder Allow,Deny\nAllow from All\n</Directory>\n</VirtualHost>\n' \
           > ${APACHE_CONFDIR}/sites-enabled/000-default.conf && \
         mv "${PHP_INI_DIR}/php.ini-development" "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/memory_limit *= *[[:digit:]]*M/memory_limit = 1024M/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/post_max_size *= *[[:digit:]]*M/post_max_size = 128M/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/upload_max_filesize *= *[[:digit:]]*M/upload_max_filesize = 128M/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/Listen *[[:digit:]]*/Listen 8080/' "${APACHE_CONFDIR}/ports.conf" && \
+        sed -ri -e 's/^#AddDefaultCharset/AddDefaultCharset/' "${APACHE_CONF_AVAILABLE_DIR}/charset.conf" && \
+        printf 'ServerName localhost\nCustomLog /dev/stdout combined\nCustomLog /dev/stdout vhost_combined\nErrorLog /dev/stderr\nLogLevel info\n' > ${APACHE_CONF_AVAILABLE_DIR}/other-vhosts-access-log.conf && \
         tmpfile=`mktemp` && head -n1 ${APACHE_CONFDIR}/envvars > $tmpfile && echo "export APACHE_LOG_DIR=${APACHE_LOG_DIR}" >> $tmpfile &&  tail -n +2 ${APACHE_CONFDIR}/envvars >> $tmpfile && mv -f $tmpfile ${APACHE_CONFDIR}/envvars && \
         php -i && \
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \

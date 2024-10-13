@@ -1,3 +1,12 @@
+---
+x-logging:
+  &default-logging
+  driver: "json-file"
+  options:
+    max-size: "100m"
+    max-file: "3"
+    compress: "true"
+
 services:
   suitecrm-app-php:
     container_name: suitecrm-app-php
@@ -11,7 +20,7 @@ services:
       context: "."
       target: final
     environment:
-      TZ: ${TZ:-Asia/Baku}
+      TZ: 'Asia/Baku'
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
       DATABASE_URL: mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-!ChangeMe!}@database:3306/${MYSQL_DATABASE:-app}?serverVersion=${MYSQL_VERSION:-8}&charset=${MYSQL_CHARSET:-utf8mb4}
       SYMFONY_VERSION: ${SYMFONY_VERSION:-}
@@ -31,14 +40,14 @@ services:
             nocopy: true
 #    entrypoint: /bin/bash
     depends_on:
-      database:
+      suitecrm-db:
         condition: service_healthy
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/public" ]
       interval: 1m30s
       timeout: 10s
-      retries: 3
-      start_period: 40s
+      retries: 5
+      start_period: 10s
     ports:
       # HTTP
       - target: 8080
@@ -51,25 +60,47 @@ services:
         published: 443
         protocol: tcp
     tty: true
+    cpus: 2
+    mem_limit: 1500Mb
+    logging: *default-logging
 
-  database:
+  suitecrm-db:
     container_name: suitecrm-db
-    image: mariadb
-    ports: [ "3306" ]
+    hostname: suitecrm-db
+    image: mariadb:10-ubi
+    ports:
+      - target: 3306
+        mode: host
+        published: 3306
+        protocol: tcp
     volumes:
       - mysql-data:/var/lib/mysql:rw
-      - ./mysql_init/:/docker-entrypoint-initdb.d:r
+      - ./mysql_init/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql:r
+      - ./mysql_init/mariadb.cnf:/etc/mysql/mariadb.conf.d/mariadb.cnf:r
+    secrets:
+      - secret_db_credentials
+    env_file:
+      - .db_credentials.env
     environment:
-      TZ: ${TZ:-Asia/Baku}
+      TZ: 'Asia/Baku'
       MYSQL_RANDOM_ROOT_PASSWORD: "true"
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-!ChangeMe!}
-      MYSQL_USER: ${MYSQL_USER:-app}
+      MARIADB_AUTO_UPGRADE: "true"
+    ulimits:
+      memlock: 2097152 # 2MB
+    cpus: 1
+    mem_limit: 2GB
     healthcheck:
       test: [ "CMD", "/usr/local/bin/healthcheck.sh" ,"--connect", "--innodb_initialized" ]
       timeout: 5s
       retries: 5
       start_period: 20s
+    logging: *default-logging
 
 volumes:
   mysql-data:
+    name: mysql-data
   app-data:
+
+secrets:
+  secret_db_credentials:
+    file: .db_credentials.env

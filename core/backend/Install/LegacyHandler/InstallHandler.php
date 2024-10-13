@@ -341,7 +341,16 @@ class InstallHandler extends LegacyHandler
                 $inputArray['db_password']
             );
         } catch (PDOException $e) {
-            $this->logger->error('An error occurred while checking the Database Host Connection ' . $e->getMessage());
+            $message = sprintf('An error occurred while checking the Database Host Connection %s File: %s Line: %d. Hostname: %s, Username: %s, Password: %s',
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine(),
+                $hostString,
+                $inputArray['db_username'],
+                $inputArray['db_password']
+            );
+            $this->logger->critical($message);
+            $this->logger->critical($e->getMessage(), $e->getTrace());
 
             return false;
         }

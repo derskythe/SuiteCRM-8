@@ -39,5 +39,17 @@ if ($_SERVER['APP_DEBUG']) {
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
 $application = new Application($kernel);
-$application->run($input);
+try {
+    $application->run($input);
+} catch (Exception $e) {
+    if (method_exists($application,  'getDefinition')) {
+        $definition = $application->getDefinition();
+        if(!empty($definition->getOptions())) {
+            var_dump($definition->getOptions());
+
+        }
+        var_dump($definition);
+    }
+    var_dump($application);
+}
 

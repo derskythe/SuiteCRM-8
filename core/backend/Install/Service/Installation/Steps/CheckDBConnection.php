@@ -91,14 +91,15 @@ class CheckDBConnection implements InstallStepInterface
 
         $isConnectionOk = $this->handler->checkDBConnection($inputs);
         $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['DB credentials ok']);
 
         if ($isConnectionOk === false) {
             $feedback->setSuccess(false);
             $feedback->setStatusCode(InstallStatus::DB_CREDENTIALS_NOT_OK);
             $feedback->setMessages(['Could not connect to db']);
             $feedback->setMessageLabels(['ERR_DB_LOGIN_FAILURE_SHORT']);
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages(['DB credentials ok']);
         }
 
         return $feedback;

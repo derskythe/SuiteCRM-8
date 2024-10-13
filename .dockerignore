@@ -507,6 +507,7 @@ Brewfile.lock.json
 !bin/console
 !bin/symfony_requirements
 /vendor/
+/vendor/.db_credentials
 
 # Assets and user uploads
 /web/bundles/
@@ -593,5 +594,6 @@ compose.yaml
 mysql_init
 LICENSE.txt
 *.md
-files.md5
 .editorconfig
+/.db_credentials.env
+/.dockerignore
