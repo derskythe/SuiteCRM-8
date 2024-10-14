@@ -7,6 +7,7 @@ app/**/*.js
 app/**/*.js.map
 .angular/
 /.angular/cache
+.curl_check_main_page
 
 ## SuiteCRM 8 ##
 ## SugarCRM

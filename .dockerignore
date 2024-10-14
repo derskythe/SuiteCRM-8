@@ -597,3 +597,13 @@ LICENSE.txt
 .editorconfig
 /.db_credentials.env
 /.dockerignore
+
+### Installed
+.curl_check_main_page
+.env.local
+.env.test
+public/legacy/config.php
+public/legacy/config_override.php
+public/legacy/config_si.php
+public/legacy/custom/modules/logic_hooks.php
+public/legacy/install/status.json
