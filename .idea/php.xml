@@ -287,6 +287,9 @@
       <path value="$PROJECT_DIR$/vendor/shivas/versioning-bundle" />
       <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
       <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/imagesloaded" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/ace" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/tinymce/tinymce" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

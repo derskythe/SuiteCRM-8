@@ -21,11 +21,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="fix: Taken from develop branch&#10;&#10;* Adjusted white space and indentation in multiple PHP and TS files.&#10;* Commented out configurations in .env and updated composer settings.&#10;* Added detailed file-level comments for autoloading.&#10;* Enhanced error handling and logging in console script.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/app/common/src/lib/common.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/common/src/lib/common.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="chore: Remove index.ts file&#10;&#10;The index.ts file has been deleted, removing all exports.&#10;* This cleanup may be necessary for project restructuring or refactoring.&#10;* Ensuring all exports are managed directly from their respective modules can improve maintainability.">
+      <change beforePath="$PROJECT_DIR$/Dockerfile.Apache" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile.Apache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -414,6 +411,9 @@
       <path value="$PROJECT_DIR$/vendor/shivas/versioning-bundle" />
       <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
       <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/imagesloaded" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/ace" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/tinymce/tinymce" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -775,7 +775,7 @@
       <workItem from="1728800451785" duration="3610000" />
       <workItem from="1728804155825" duration="3533000" />
       <workItem from="1728814094436" duration="39787000" />
-      <workItem from="1729091660189" duration="3957000" />
+      <workItem from="1729091660189" duration="4400000" />
     </task>
     <task id="LOCAL-00001" summary="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations.">
       <option name="closed" value="true" />
@@ -841,13 +841,22 @@
       <option name="project" value="LOCAL" />
       <updated>1729095510239</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="chore: Remove index.ts file&#10;&#10;The index.ts file has been deleted, removing all exports.&#10;* This cleanup may be necessary for project restructuring or refactoring.&#10;* Ensuring all exports are managed directly from their respective modules can improve maintainability.">
+      <option name="closed" value="true" />
+      <created>1729095903880</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1729095903880</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
     <option name="additionalRoots">
       <list>
+        <option value="$PROJECT_DIR$/dist/core" />
         <option value="$PROJECT_DIR$/dist/common" />
       </list>
     </option>
@@ -890,7 +899,8 @@
     <MESSAGE value="fix:: log level" />
     <MESSAGE value="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries." />
     <MESSAGE value="fix: Taken from develop branch&#10;&#10;* Adjusted white space and indentation in multiple PHP and TS files.&#10;* Commented out configurations in .env and updated composer settings.&#10;* Added detailed file-level comments for autoloading.&#10;* Enhanced error handling and logging in console script." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: Taken from develop branch&#10;&#10;* Adjusted white space and indentation in multiple PHP and TS files.&#10;* Commented out configurations in .env and updated composer settings.&#10;* Added detailed file-level comments for autoloading.&#10;* Enhanced error handling and logging in console script." />
+    <MESSAGE value="chore: Remove index.ts file&#10;&#10;The index.ts file has been deleted, removing all exports.&#10;* This cleanup may be necessary for project restructuring or refactoring.&#10;* Ensuring all exports are managed directly from their respective modules can improve maintainability." />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: Remove index.ts file&#10;&#10;The index.ts file has been deleted, removing all exports.&#10;* This cleanup may be necessary for project restructuring or refactoring.&#10;* Ensuring all exports are managed directly from their respective modules can improve maintainability." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
