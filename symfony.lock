@@ -385,9 +385,6 @@
     "nesbot/carbon": {
         "version": "2.46.0"
     },
-    "nikic/fast-route": {
-        "version": "v1.3.0"
-    },
     "nikic/php-parser": {
         "version": "v4.3.0"
     },
@@ -557,9 +554,6 @@
     },
     "shivas/versioning-bundle": {
         "version": "4.0.0"
-    },
-    "slim/slim": {
-        "version": "3.12.3"
     },
     "smarty/smarty": {
         "version": "v2.6.31"
@@ -986,47 +980,5 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"
-    },
-    "zf1/zend-cache": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-crypt": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-exception": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-gdata": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-http": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-loader": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-locale": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-mime": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-oauth": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-registry": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-uri": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-validate": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-version": {
-        "version": "1.12.20"
-    },
-    "zf1/zend-xml": {
-        "version": "1.12.20"
     }
 }
