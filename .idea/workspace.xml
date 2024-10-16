@@ -21,21 +21,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="fix: logger corrections and Dockerfile changes">
-      <change beforePath="$PROJECT_DIR$/.idea/symfony2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/symfony2.xml" afterDir="false" />
+    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/data/Link2.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/Link2.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/LangText.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/LangText.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/portability/System/Upgrade/PostUpgrade.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/portability/System/Upgrade/PostUpgrade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/utils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/install/install_defaults.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install/install_defaults.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/install/performSetup.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install/performSetup.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/lib/Log/SugarLoggerHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/lib/Log/SugarLoggerHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/utils/sugar_file_utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/utils/sugar_file_utils.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -655,8 +645,9 @@
     "npm.start:all.executor": "Run",
     "npm.start:shell.executor": "Run",
     "npm.test:core.executor": "Run",
+    "service.view.auto.scroll.from.source": "true",
     "service.view.auto.scroll.to.source": "true",
-    "settings.editor.selected.configurable": "reference.webide.settings.project.settings.php.composer",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "settings.editor.splitter.proportion": "0.20463847",
     "ts.external.directory.path": "/home/skif/Projects/SuiteCRM-Core/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
@@ -680,10 +671,9 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Docker.compose.yaml.suitecrm-app-php: Compose Deployment">
+  <component name="RunManager" selected="npm.Angular CLI Server">
     <configuration name="Tests (common)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/common/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/common" />
       <node-interpreter value="project" />
       <envs />
@@ -691,7 +681,6 @@
     </configuration>
     <configuration name="Tests (core)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/core/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/core" />
       <node-interpreter value="project" />
       <envs />
@@ -699,7 +688,6 @@
     </configuration>
     <configuration name="Tests (defaultExt)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/extensions/defaultExt/app/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/extensions/defaultExt" />
       <node-interpreter value="project" />
       <envs />
@@ -707,7 +695,6 @@
     </configuration>
     <configuration name="Tests (shell)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/shell/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/shell" />
       <node-interpreter value="project" />
       <envs />
@@ -952,6 +939,7 @@
       <workItem from="1728800451785" duration="3610000" />
       <workItem from="1728804155825" duration="3533000" />
       <workItem from="1728814094436" duration="39787000" />
+      <workItem from="1729091660189" duration="1593000" />
     </task>
     <task id="LOCAL-00001" summary="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations.">
       <option name="closed" value="true" />
@@ -993,7 +981,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729086260427</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fix:: log level">
+      <option name="closed" value="true" />
+      <created>1729091580846</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1729091580846</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1052,7 +1048,8 @@
     <MESSAGE value="fix: update Dockerfile, compose, and db scripts for consistency&#10;&#10;* Update base node image in Dockerfile to node:18-bookworm.&#10;* Add display_errors and error_log settings in PHP configuration.&#10;* Ensure proper ownership of Apache log directory.&#10;* Include `ext-mysqli` in composer.json and composer.lock for proper dependency.&#10;* Add development file sync configuration in compose.yaml.&#10;* Change database user references to app_user in compose.yaml and SQL script." />
     <MESSAGE value="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`." />
     <MESSAGE value="fix: logger corrections and Dockerfile changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: logger corrections and Dockerfile changes" />
+    <MESSAGE value="fix:: log level" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix:: log level" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

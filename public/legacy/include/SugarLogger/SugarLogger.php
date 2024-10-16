@@ -271,7 +271,7 @@ class SugarLogger implements LoggerTemplate
 
             fwrite(
                 $this->fp,
-                sprintf("%s %s%s",
+                sprintf("[%s] - %s%s",
                     date($this->dateFormat),
                     "Started Logger Write",
                     PHP_EOL));
@@ -280,7 +280,7 @@ class SugarLogger implements LoggerTemplate
         $final_message = '';
         // change to a string if there is just one entry
         if (is_array($message) && count($message) == 1) {
-            $final_message .= array_shift($message);
+            $final_message .= join(PHP_EOL, $message);
         } else if (is_array($message)) {
             // change to a human-readable array output if it's any other array
             $final_message .= print_r($message, true);
