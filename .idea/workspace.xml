@@ -21,11 +21,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries.">
+      <change afterPath="$PROJECT_DIR$/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.php-cs-fixer.dist.php" beforeDir="false" afterPath="$PROJECT_DIR$/.php-cs-fixer.dist.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/console" beforeDir="false" afterPath="$PROJECT_DIR$/bin/console" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/bootstrap.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bootstrap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/common/src/lib/common.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/common/src/lib/common.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/core/src/lib/core.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/core/src/lib/core.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/app/app-initializer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/app/app-initializer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/app/app-router-reuse-strategy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/app/app-router-reuse-strategy.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/app/app-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/app/app.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/bootstrap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/bootstrap.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/app/shell/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/shell/src/polyfills.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Install/Service/InstallPreChecks.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Install/Service/InstallPreChecks.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/custom/Extension/application/Ext/LogicHooks/AOW_WorkFlow_Hook.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/custom/Extension/application/Ext/LogicHooks/AOW_WorkFlow_Hook.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/OutboundEmail/OutboundEmail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/OutboundEmail/OutboundEmail.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/utils/sugar_file_utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/utils/sugar_file_utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/Sugar_Smarty.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/Sugar_Smarty.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,446 +167,7 @@
   </component>
   <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpWebServerValidation" path_to_validation_script="$PROJECT_DIR$" selected_validation_type="LOCAL" web_path_to_validation_script="http://127.0.0.1/" />
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP Local">
-    <include_path>
-      <path value="$PROJECT_DIR$/vendor/masterminds/html5" />
-      <path value="$PROJECT_DIR$/vendor/google/recaptcha" />
-      <path value="$PROJECT_DIR$/vendor/nikolaposa/version" />
-      <path value="$PROJECT_DIR$/vendor/shivas/versioning-bundle" />
-      <path value="$PROJECT_DIR$/vendor/google/auth" />
-      <path value="$PROJECT_DIR$/vendor/google/apiclient" />
-      <path value="$PROJECT_DIR$/vendor/php-webdriver/webdriver" />
-      <path value="$PROJECT_DIR$/vendor/google/apiclient-services" />
-      <path value="$PROJECT_DIR$/vendor/mikey179/vfsstream" />
-      <path value="$PROJECT_DIR$/vendor/codeception/lib-web" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-rest" />
-      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
-      <path value="$PROJECT_DIR$/vendor/nette/php-generator" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-phpbrowser" />
-      <path value="$PROJECT_DIR$/vendor/nette/utils" />
-      <path value="$PROJECT_DIR$/vendor/codeception/lib-xml" />
-      <path value="$PROJECT_DIR$/vendor/codeception/lib-asserts" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-webdriver" />
-      <path value="$PROJECT_DIR$/vendor/phpowermove/docblock" />
-      <path value="$PROJECT_DIR$/vendor/tedivm/jshrink" />
-      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
-      <path value="$PROJECT_DIR$/vendor/softcreatr/jsonpath" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
-      <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
-      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
-      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/lock" />
-      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
-      <path value="$PROJECT_DIR$/vendor/nelmio/cors-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/ldap" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-symfony" />
-      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/vendor/codeception/stub" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-filesystem" />
-      <path value="$PROJECT_DIR$/vendor/vlucas/phpdotenv" />
-      <path value="$PROJECT_DIR$/vendor/codeception/lib-innerbrowser" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
-      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
-      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-asserts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
-      <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
-      <path value="$PROJECT_DIR$/vendor/symfony/clock" />
-      <path value="$PROJECT_DIR$/vendor/symfony/runtime" />
-      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-messenger" />
-      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-locale" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-http" />
-      <path value="$PROJECT_DIR$/vendor/defuse/php-encryption" />
-      <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-crypt" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
-      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
-      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
-      <path value="$PROJECT_DIR$/vendor/smarty/smarty" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
-      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
-      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/rate-limiter" />
-      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-loader" />
-      <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
-      <path value="$PROJECT_DIR$/vendor/symfony/proxy-manager-bridge" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-xml" />
-      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-version" />
-      <path value="$PROJECT_DIR$/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
-      <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
-      <path value="$PROJECT_DIR$/vendor/dama/doctrine-test-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-cache" />
-      <path value="$PROJECT_DIR$/vendor/clue/ndjson-react" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-validate" />
-      <path value="$PROJECT_DIR$/vendor/symfony/maker-bundle" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-exception" />
-      <path value="$PROJECT_DIR$/vendor/symfony/expression-language" />
-      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-registry" />
-      <path value="$PROJECT_DIR$/vendor/zozlak/rdf-constants" />
-      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
-      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-uri" />
-      <path value="$PROJECT_DIR$/vendor/dflydev/dot-access-data" />
-      <path value="$PROJECT_DIR$/vendor/symfony/web-profiler-bundle" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-mime" />
-      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-oauth" />
-      <path value="$PROJECT_DIR$/vendor/symfony/web-link" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-gdata" />
-      <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-http" />
-      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
-      <path value="$PROJECT_DIR$/vendor/symfony/password-hasher" />
-      <path value="$PROJECT_DIR$/vendor/symfony/process" />
-      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
-      <path value="$PROJECT_DIR$/vendor/robrichards/xmlseclibs" />
-      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/vendor/symfony/notifier" />
-      <path value="$PROJECT_DIR$/vendor/symfony/flex" />
-      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
-      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
-      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
-      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
-      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
-      <path value="$PROJECT_DIR$/vendor/soundasleep/html2text" />
-      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
-      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
-      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
-      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
-      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
-      <path value="$PROJECT_DIR$/vendor/phootwork/lang" />
-      <path value="$PROJECT_DIR$/vendor/symfony/messenger" />
-      <path value="$PROJECT_DIR$/vendor/phootwork/collection" />
-      <path value="$PROJECT_DIR$/vendor/symfony/form" />
-      <path value="$PROJECT_DIR$/vendor/filp/whoops" />
-      <path value="$PROJECT_DIR$/vendor/symfony/config" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
-      <path value="$PROJECT_DIR$/vendor/tecnickcom/tcpdf" />
-      <path value="$PROJECT_DIR$/vendor/symfony/asset" />
-      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bridge" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
-      <path value="$PROJECT_DIR$/vendor/onelogin/php-saml" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/vendor/nikic/fast-route" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
-      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/output-formatters" />
-      <path value="$PROJECT_DIR$/vendor/elasticsearch/elasticsearch" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
-      <path value="$PROJECT_DIR$/vendor/slim/slim" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/self-update" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/annotated-command" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/config" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/log" />
-      <path value="$PROJECT_DIR$/vendor/phpmailer/phpmailer" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/robo" />
-      <path value="$PROJECT_DIR$/vendor/sweetrdf/rdf-interface" />
-      <path value="$PROJECT_DIR$/vendor/sweetrdf/easyrdf" />
-      <path value="$PROJECT_DIR$/vendor/sweetrdf/rdf-helpers" />
-      <path value="$PROJECT_DIR$/vendor/api-platform/schema-generator" />
-      <path value="$PROJECT_DIR$/vendor/api-platform/core" />
-      <path value="$PROJECT_DIR$/vendor/ezimuel/ringphp" />
-      <path value="$PROJECT_DIR$/vendor/behat/gherkin" />
-      <path value="$PROJECT_DIR$/vendor/ezimuel/guzzlestreams" />
-      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
-      <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
-      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
-      <path value="$PROJECT_DIR$/vendor/behat/transliterator" />
-      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
-      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
-      <path value="$PROJECT_DIR$/vendor/grasmash/expander" />
-      <path value="$PROJECT_DIR$/vendor/twig/twig" />
-      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
-      <path value="$PROJECT_DIR$/vendor/phpoption/phpoption" />
-      <path value="$PROJECT_DIR$/vendor/hamcrest/hamcrest-php" />
-      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
-      <path value="$PROJECT_DIR$/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/vendor/beberlei/assert" />
-      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
-      <path value="$PROJECT_DIR$/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
-      <path value="$PROJECT_DIR$/vendor/psr/cache" />
-      <path value="$PROJECT_DIR$/vendor/psr/link" />
-      <path value="$PROJECT_DIR$/vendor/psr/clock" />
-      <path value="$PROJECT_DIR$/vendor/league/oauth2-client" />
-      <path value="$PROJECT_DIR$/vendor/league/container" />
-      <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
-      <path value="$PROJECT_DIR$/vendor/league/event" />
-      <path value="$PROJECT_DIR$/vendor/league/oauth2-server" />
-      <path value="$PROJECT_DIR$/vendor/league/html-to-markdown" />
-      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
-      <path value="$PROJECT_DIR$/vendor/laminas/laminas-code" />
-      <path value="$PROJECT_DIR$/vendor/league/uri" />
-      <path value="$PROJECT_DIR$/vendor/jeroendesloovere/vcard" />
-      <path value="$PROJECT_DIR$/vendor/browserstack/browserstack-local" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/migrations" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/common" />
-      <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-migrations-bundle" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
-      <path value="$PROJECT_DIR$/vendor/psy/psysh" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
-      <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
-      <path value="$PROJECT_DIR$/vendor/wikimedia/composer-merge-plugin" />
-      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/vendor/mockery/mockery" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
-      <path value="$PROJECT_DIR$/vendor/javanile/php-imap2" />
-      <path value="$PROJECT_DIR$/vendor/zbateson/mail-mime-parser" />
-      <path value="$PROJECT_DIR$/vendor/zbateson/stream-decorators" />
-      <path value="$PROJECT_DIR$/vendor/zbateson/mb-wrapper" />
-      <path value="$PROJECT_DIR$/vendor/cebe/php-openapi" />
-      <path value="$PROJECT_DIR$/vendor/react/stream" />
-      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
-      <path value="$PROJECT_DIR$/vendor/react/dns" />
-      <path value="$PROJECT_DIR$/vendor/react/cache" />
-      <path value="$PROJECT_DIR$/vendor/react/child-process" />
-      <path value="$PROJECT_DIR$/vendor/react/event-loop" />
-      <path value="$PROJECT_DIR$/vendor/react/promise" />
-      <path value="$PROJECT_DIR$/vendor/lcobucci/clock" />
-      <path value="$PROJECT_DIR$/vendor/react/socket" />
-      <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
-      <path value="$PROJECT_DIR$/vendor/voku/anti-xss" />
-      <path value="$PROJECT_DIR$/vendor/voku/portable-utf8" />
-      <path value="$PROJECT_DIR$/vendor/justinrainbow/json-schema" />
-      <path value="$PROJECT_DIR$/vendor/voku/portable-ascii" />
-      <path value="$PROJECT_DIR$/vendor/scssphp/scssphp" />
-      <path value="$PROJECT_DIR$/vendor/nbgrp/onelogin-saml-bundle" />
-      <path value="$PROJECT_DIR$/vendor/gymadarasz/imagesloaded" />
-      <path value="$PROJECT_DIR$/vendor/gymadarasz/ace" />
-      <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
-      <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
-      <path value="$PROJECT_DIR$/vendor/webonyx/graphql-php" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/ace" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/imagesloaded" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/tinymce/tinymce" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/myclabs/deep-copy" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/voku/portable-ascii" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/voku/anti-xss" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/google/apiclient" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/voku/portable-utf8" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/google/auth" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/google/recaptcha" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/complexity" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/google/apiclient-services" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/recursion-context" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpmailer/phpmailer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/grasmash/expander" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/soundasleep/html2text" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-search-lucene" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/defuse/php-encryption" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/mikey179/vfsstream" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/ezyang/htmlpurifier" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpoption/phpoption" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/doctrine/lexer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/paragonie/constant_time_encoding" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/doctrine/annotations" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/paragonie/random_compat" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/doctrine/deprecations" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/doctrine/instantiator" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/behat/transliterator" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/behat/gherkin" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-mime" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/smarty/smarty" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-uri" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-xml" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-cache" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-exception" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-http" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-gdata" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-loader" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/tedivm/jshrink" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-validate" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-version" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/robrichards/xmlseclibs" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-registry" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-locale" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-search" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-crypt" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zf1/zend-oauth" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/consolidation/robo" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/consolidation/config" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/tecnickcom/tcpdf" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/consolidation/annotated-command" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/consolidation/self-update" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/consolidation/log" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/firebase/php-jwt" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zbateson/mail-mime-parser" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/consolidation/output-formatters" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zbateson/mb-wrapper" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/zbateson/stream-decorators" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/php-cs-fixer/diff" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/pimple/pimple" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/composer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpunit/phpunit" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpunit/php-code-coverage" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/slim/slim" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpunit/php-invoker" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpunit/php-timer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpunit/php-file-iterator" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/justinrainbow/json-schema" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/dflydev/dot-access-data" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/php-webdriver/webdriver" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/elasticsearch/elasticsearch" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/theseer/tokenizer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/carbonphp/carbon-doctrine-types" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/jeroendesloovere/vcard" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/onelogin/php-saml" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/hamcrest/hamcrest-php" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/rector/rector" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/monolog/monolog" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/event-dispatcher" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/league/container" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/friendsofphp/php-cs-fixer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/clock" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/league/oauth2-client" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/cache" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/league/event" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/league/uri-interfaces" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/league/oauth2-server" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/fakerphp/faker" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/league/uri" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/filp/whoops" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/lib-asserts" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/stub" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/module-rest" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/lib-innerbrowser" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/module-asserts" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/codeception" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/module-phpbrowser" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/http-client" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/phpunit-wrapper" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/module-webdriver" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/react/promise" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/codeception/module-filesystem" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/browser-kit" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/process" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-iconv" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/event-dispatcher" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-intl-normalizer" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/nikic/fast-route" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/stopwatch" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-intl-grapheme" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-php73" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/dom-crawler" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/finder" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/polyfill-ctype" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/event-dispatcher-contracts" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/softcreatr/jsonpath" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/translation-contracts" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/validator" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/browserstack/browserstack-local" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/yaml" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/string" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/css-selector" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/translation" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/vlucas/phpdotenv" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/javanile/php-imap2" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/ezimuel/guzzlestreams" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phar-io/manifest" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/scssphp/scssphp" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/ralouphie/getallheaders" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/wikimedia/composer-merge-plugin" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/object-enumerator" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/object-reflector" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/code-unit-reverse-lookup" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/cli-parser" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpstan/phpstan" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/type" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/nesbot/carbon" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/mockery/mockery" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phpseclib/phpseclib" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/code-unit" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/guzzlehttp/guzzle" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/resource-operations" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/lines-of-code" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/guzzlehttp/promises" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/comparator" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/lcobucci/clock" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/lcobucci/jwt" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/sebastian/exporter" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/ezimuel/ringphp" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/phar-io/version" />
-    </include_path>
-  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP Local" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -939,7 +523,7 @@
       <workItem from="1728800451785" duration="3610000" />
       <workItem from="1728804155825" duration="3533000" />
       <workItem from="1728814094436" duration="39787000" />
-      <workItem from="1729091660189" duration="1593000" />
+      <workItem from="1729091660189" duration="3576000" />
     </task>
     <task id="LOCAL-00001" summary="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations.">
       <option name="closed" value="true" />
@@ -989,17 +573,19 @@
       <option name="project" value="LOCAL" />
       <updated>1729091580846</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries.">
+      <option name="closed" value="true" />
+      <created>1729093533092</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1729093533092</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="additionalRoots">
-      <list>
-        <option value="$PROJECT_DIR$/dist/core" />
-        <option value="$PROJECT_DIR$/dist/common" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.History.Properties">
     <option name="COLUMN_ID_ORDER">
@@ -1049,7 +635,8 @@
     <MESSAGE value="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`." />
     <MESSAGE value="fix: logger corrections and Dockerfile changes" />
     <MESSAGE value="fix:: log level" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix:: log level" />
+    <MESSAGE value="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

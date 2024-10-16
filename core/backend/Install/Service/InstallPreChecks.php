@@ -104,7 +104,7 @@ class InstallPreChecks
         if (file_exists('legacy/config.php') && ($sugar_config['installer_locked'] ?? false) === true) {
             $loader = new FilesystemLoader(__DIR__ . '/../Resources');
             $twig = new Environment($loader);
-            $template = $twig->load('installer_locked.html.twig', );
+            $template = $twig->load('installer_locked.html.twig');
             echo $template->render([
                 'cssFile' => $cssFile,
                 'mod_strings' => $this->modStrings

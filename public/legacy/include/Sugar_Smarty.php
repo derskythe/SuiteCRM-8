@@ -204,17 +204,17 @@ class Sugar_Smarty extends Smarty
 
     function _get_auto_filename($auto_base, $auto_source = null, $auto_id = null)
     {
-        $_compile_dir_sep = $this->use_sub_dirs ? DIRECTORY_SEPARATOR : '^';
+        $_compile_dir_sep =  $this->use_sub_dirs ? DIRECTORY_SEPARATOR : '^';
         $_return = $auto_base . DIRECTORY_SEPARATOR;
 
-        if (isset($auto_id)) {
+        if(isset($auto_id)) {
             // make auto_id safe for directory names
-            $auto_id = str_replace('%7C', $_compile_dir_sep, (urlencode($auto_id)));
+            $auto_id = str_replace('%7C',$_compile_dir_sep,(urlencode($auto_id)));
             // split into separate directories
             $_return .= $auto_id . $_compile_dir_sep;
         }
 
-        if (isset($auto_source)) {
+        if(isset($auto_source)) {
             // make source name safe for filename
             $_filename = urlencode(basename($auto_source));
             $_crc32 = sprintf('%08X', crc32($auto_source));

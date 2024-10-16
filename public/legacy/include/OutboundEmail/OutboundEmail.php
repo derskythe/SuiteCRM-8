@@ -518,9 +518,9 @@ class OutboundEmail
                 $updvalues[] = "{$cols[$k]} = $val";
             }
             $q = "UPDATE outbound_email SET " . implode(
-                    ', ',
-                    $updvalues
-                ) . " WHERE id = " . $this->db->quoted($this->id);
+                ', ',
+                $updvalues
+            ) . " WHERE id = " . $this->db->quoted($this->id);
         }
 
         try {
@@ -626,8 +626,7 @@ class OutboundEmail
     private function _getOutboundServerDisplay(
         $smtptype,
         $smtpserver
-    )
-    {
+    ) {
         global $app_strings;
 
         switch ($smtptype) {

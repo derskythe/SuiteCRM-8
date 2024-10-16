@@ -42,14 +42,16 @@ $application = new Application($kernel);
 try {
     $application->run($input);
 } catch (Exception $e) {
+    $error = '';
     if (method_exists($application,  'getDefinition')) {
         $definition = $application->getDefinition();
         if(!empty($definition->getOptions())) {
-            var_dump($definition->getOptions());
+            $error .= var_export($definition->getOptions(), true);
 
         }
-        var_dump($definition);
+        $error .= var_export($definition, true);
     }
-    var_dump($application);
+    $error .= var_export($application, true);
+    trigger_error($error, E_USER_ERROR);
 }
 

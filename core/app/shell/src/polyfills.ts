@@ -24,11 +24,11 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-/***************************************************************************************************
+/** *************************************************************************************************
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
 import '@angular/localize/init';
-/***************************************************************************************************
+/** *************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js'; // Included with Angular CLI.
@@ -49,7 +49,7 @@ import 'zone.js'; // Included with Angular CLI.
  * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
  */
 
-/***************************************************************************************************
+/** *************************************************************************************************
  * BROWSER POLYFILLS
  */
 
@@ -75,6 +75,6 @@ import 'zone.js'; // Included with Angular CLI.
 /** Evergreen browsers require these. **/
 // Used for reflect-metadata in JIT. If you use AOT (and only Angular decorators), you can remove.
 
-/***************************************************************************************************
+/** *************************************************************************************************
  * APPLICATION IMPORTS
  */

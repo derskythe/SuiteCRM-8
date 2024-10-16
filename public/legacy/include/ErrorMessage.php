@@ -146,10 +146,9 @@ class ErrorMessage
     /**
      *
      * @param string $message
-     * @param string $level
-     * @throws ErrorMessageException
+     * @param integer $level
      */
-    public static function log(string $message, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL): void
+    public static function log(string $message, int $level = LoggerTemplate::DEFAULT_LOG_LEVEL): void
     {
         self::handler($message, $level, false);
     }

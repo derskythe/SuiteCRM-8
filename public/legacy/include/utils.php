@@ -5693,7 +5693,7 @@ if (file_exists('custom/application/Ext/Utils/custom_utils.ext.php')) {
 
 /**
  * @param $input - the input string to sanitize
- * @param int $quotes  - use quotes
+ * @param int    $quotes  - use quotes
  * @param string $charset - the default charset
  * @param bool   $remove  - strip tags or not
  *
