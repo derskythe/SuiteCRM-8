@@ -116,7 +116,8 @@
     "zf1/zend-gdata": "^1.12",
     "zf1/zend-loader": "^1.12",
     "zf1/zend-oauth": "^1.12",
-    "zf1/zend-registry": "^1.12"
+    "zf1/zend-registry": "^1.12",
+    "ext-mysqli": "*"
   },
   "require-dev": {
     "api-platform/schema-generator": "^5.2",

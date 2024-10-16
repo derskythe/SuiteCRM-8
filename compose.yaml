@@ -17,12 +17,32 @@ services:
     stop_grace_period: 10s
     build:
       dockerfile: Dockerfile.Apache
-      context: "."
+      context: .
       target: final
+    develop:
+      watch:
+        - action: sync
+          path: ./core/backend
+          target: /var/www/html/app/core/backend
+        - action: sync
+          path: ./core/app
+          target: /var/www/html/app/core/app
+        - action: sync
+          path: ./core/modules
+          target: /var/www/html/app/core/modules
+        - action: sync
+          path: ./public/legacy/include
+          target: /var/www/html/app/public/legacy/include
+        - action: sync
+          path: ./public/legacy/lib
+          target: /var/www/html/app/public/legacy/lib
+        - action: sync
+          path: ./public/legacy/modules
+          target: /var/www/html/app/public/legacy/modules
     environment:
       TZ: 'Asia/Baku'
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
-      DATABASE_URL: mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD:-!ChangeMe!}@database:3306/${MYSQL_DATABASE:-app}?serverVersion=${MYSQL_VERSION:-8}&charset=${MYSQL_CHARSET:-utf8mb4}
+      DATABASE_URL: mysql://${MYSQL_USER:-app_user}:${MYSQL_PASSWORD:-ChangeIt}@database:3306/${MYSQL_DATABASE:-app}?serverVersion=${MYSQL_VERSION:-8}&charset=${MYSQL_CHARSET:-utf8mb4}
       SYMFONY_VERSION: ${SYMFONY_VERSION:-}
       STABILITY: ${STABILITY:-dev}
     volumes:

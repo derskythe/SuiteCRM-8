@@ -60,7 +60,7 @@ class LoggerManager
      * This is the current log level
      * @var string
      */
-    private static string $_level = 'fatal';
+    private static string $_level = LoggerTemplate::DEFAULT_LOG_LEVEL;
 
     //this is a list of different loggers that have been loaded
     protected static array $_loggers = [];
@@ -69,7 +69,7 @@ class LoggerManager
      * This is the instance of the LoggerManager
      * @var null|LoggerManager
      */
-    private static ?LoggerManager $_instance;
+    private static ?LoggerManager $_instance = null;
 
     //these are the mappings for levels to different log types
     private static array $_logMapping = [
@@ -91,10 +91,8 @@ class LoggerManager
     //only let the getLogger instantiate this object
     private function __construct()
     {
-        $level = SugarConfig::getInstance()->get('logger.level', self::$_level);
-        if (!empty($level)) {
-            $this->setLevel($level);
-        }
+        $level = SugarConfig::getInstance()->get('logger.level', self::$_level) ?? LoggerTemplate::DEFAULT_LOG_LEVEL;
+        $this->setLevel($level);
 
         if (empty(self::$_loggers)) {
             $this->_findAvailableLoggers();
@@ -184,7 +182,7 @@ class LoggerManager
      */
     public static function getLogger(): ?LoggerManager
     {
-        if (!self::$_instance) {
+        if (!isset(self::$_instance)) {
             self::$_instance = new LoggerManager();
         }
 
@@ -213,7 +211,9 @@ class LoggerManager
                 continue;
             }
             while (($file = readdir($dir)) !== false) {
-                if ($file === '..'
+                if (
+                    empty($file)
+                    || $file === '..'
                     || $file === '.'
                     || $file === 'LoggerTemplate.php'
                     || $file === 'LoggerManager.php'
@@ -227,6 +227,10 @@ class LoggerManager
                     self::$_loggers[$loggerClass] = new $loggerClass();
                 }
             }
+        }
+
+        if (empty(self::$_loggers) || count(self::$_loggers) == 0) {
+            trigger_error('No loggers found', E_USER_WARNING);
         }
     }
 

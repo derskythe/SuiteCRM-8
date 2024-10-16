@@ -140,12 +140,42 @@ class SugarLogger implements LoggerTemplate
     }
 
     /**
+     * @param string $size
+     * @return int
+     */
+    private function parseUnits(string $size): int
+    {
+        static $units = [
+            'k' => 1024,
+            'm' => 1024 * 1024,
+            'g' => 1024 * 1024 * 1024,
+        ];
+        if (empty(($size) || strlen($size) < 2)) {
+            $size = self::DEFAULT_LOGGER_FILE_SIZE;
+        }
+        $rollAt = 0;
+        if (preg_match('/^\s*([0-9]+\.[0-9]+|\.?[0-9]+)\s*(k|m|g|b)(b?ytes)?/i', $size, $match)) {
+            $rollAt = (int)$match[1] * $units[strtolower($match[2])];
+        }
+
+        if ($rollAt == 0) {
+            // Ooops
+            return $units['g'];
+        }
+
+        return $rollAt;
+    }
+
+    /**
      * Handles the SugarLogger initialization
      */
     protected function _doInitialization(): void
     {
-        if ($this->file_suffix && array_key_exists($this->file_suffix, self::$filename_suffix)) { //if the global config contains date-format suffix, it will create suffix by parsing datetime
+        if ($this->file_suffix && array_key_exists($this->file_suffix, self::$filename_suffix)) {
+            //if the global config contains date-format suffix, it will create suffix by parsing datetime
             $this->date_suffix = sprintf('_%s', date($this->file_suffix));
+        } else {
+            $this->date_suffix = '';
         }
         $this->full_log_file = $this->log_dir . $this->logfile . $this->date_suffix . $this->ext;
         $this->initialized = $this->_fileCanBeCreatedAndWrittenTo();
@@ -182,18 +212,26 @@ class SugarLogger implements LoggerTemplate
      */
     private function getTraceString(): string
     {
-        $ret = '';
         $trace = debug_backtrace();
-        foreach ($trace as $call) {
+        if (empty($trace)) {
+            return "-empty-\n";
+        }
+        $ret = array(count($trace) + 2);
+        $ret[0] = PHP_EOL;
+        for ($i = 0; $i < count($ret); $i++) {
+            $call = $trace[$i];
+
             $file = $call['file'] ?? '???';
             $line = $call['line'] ?? '???';
             $class = $call['class'] ?? '';
             $type = $call['type'] ?? '';
             $function = $call['function'] ?? '???';
-            $ret .= "\nCall in {$file} at #{$line} from {$class}{$type}{$function}(...)";
+
+            $ret[$i + 1] = sprintf("Call in %s#%d from %s%s%s(..)", $file, $line, $class, $type, $function);
         }
-        $ret .= "\n";
-        return $ret;
+        $ret[count($ret) - 1] = PHP_EOL;
+
+        return join(PHP_EOL, $ret);
     }
 
     /**
@@ -220,18 +258,19 @@ class SugarLogger implements LoggerTemplate
             $this->fp = fopen($this->full_log_file, 'ab');
         }
 
+        $final_message = '';
         // change to a string if there is just one entry
         if (is_array($message) && count($message) == 1) {
-            $message = array_shift($message);
+            $final_message = array_shift($message);
         }
         // change to a human-readable array output if it's any other array
         if (is_array($message)) {
-            $message = print_r($message, true);
+            $final_message = print_r($message, true);
         }
 
         if (isset($sugar_config['show_log_trace']) && $sugar_config['show_log_trace']) {
             $trace = $this->getTraceString();
-            $message .= ("\n" . $trace);
+            $final_message .= (PHP_EOL . $trace);
         }
 
         //write out to the file including the time in the dateFormat the process id , the user id , and the log level as well as the message
@@ -243,8 +282,10 @@ class SugarLogger implements LoggerTemplate
                     getmypid(),
                     $userID,
                     strtoupper($method),
-                    $message)
+                    $final_message)
             );
+        } else {
+            trigger_error("SugarLogger::log() failed to open file pointer for file: {$this->full_log_file}", E_USER_WARNING);
         }
     }
 
@@ -257,19 +298,10 @@ class SugarLogger implements LoggerTemplate
             return;
         }
         // bug#50265: Parse the its unit string and get the size properly
-        $units = array(
-            'b' => 1,                   //Bytes
-            'k' => 1024,                //KBytes
-            'm' => 1024 * 1024,         //MBytes
-            'g' => 1024 * 1024 * 1024,  //GBytes
-        );
-        $rollAt = 0;
-        if (preg_match('/^\s*([0-9]+\.[0-9]+|\.?[0-9]+)\s*(k|m|g|b)(b?ytes)?/i', $this->logSize, $match)) {
-            $rollAt = (int)$match[1] * $units[strtolower($match[2])];
-        }
 
-        //check if our log file is greater than that or if we are forcing the log to roll if and only if roll size assigned the value correctly
-        if (!$force && (!$rollAt || filesize($this->full_log_file) < $rollAt)) {
+        // check if our log file is greater than that or if we are forcing the log to roll if and only if roll size assigned the value correctly
+        $rollAt = $this->parseUnits($this->logSize);
+        if (!$force && (filesize($this->full_log_file) < $rollAt)) {
             return;
         }
 

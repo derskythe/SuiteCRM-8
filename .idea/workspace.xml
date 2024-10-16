@@ -22,19 +22,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="feat: update data source configuration&#10;&#10;Renamed data source attributes and updated grants to new user 'app'. &#10;Changed default casing to 'lower/lower', and server version to '10.11.9'. &#10;Re-assigned schema and table associations to the new data source.">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/84a42712-1bee-47b5-a29a-56c5c93c1ae6.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.db_credentials.env" beforeDir="false" afterPath="$PROJECT_DIR$/.db_credentials.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.test" beforeDir="false" afterPath="$PROJECT_DIR$/.env.test" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile.Apache" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile.Apache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mysql_init/create_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/mysql_init/create_db.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/Sugar_Smarty.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/Sugar_Smarty.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +83,7 @@
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="hotfix" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -452,7 +448,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "credentialsType com.jetbrains.php.remote.interpreter.ui.PhpCreateRemoteSdkForm": "Docker",
     "credentialsType com.jetbrains.php.remote.interpreter.ui.PhpInplaceEditRemoteSdkForm": "Docker",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "try-to-log",
     "javascript.karma.karma_node_package_dir": "/home/skif/Projects/SuiteCRM-Core/node_modules/@angular/cli",
     "javascript.nodejs.core.library.configured.version": "20.18.0",
     "javascript.nodejs.core.library.typings.version": "20.16.11",
@@ -572,7 +568,9 @@
       <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml" />
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <configuration name="compose.yaml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
@@ -864,7 +862,7 @@
     <MESSAGE value="Remove user-specific configurations from Dockerfile&#10;&#10;Eliminated sudo and gosu packages and removed user and group settings to simplify the Dockerfile. This reduces unnecessary complexity and potential security vulnerabilities associated with user permissions. Additionally, updated IDE project files with relevant configurations." />
     <MESSAGE value="chore: remove unused user and group configuration&#10;&#10;Removed sudo and gosu from package list to streamline the Docker image.&#10;Eliminated unused arguments and environment variables related to user configuration.&#10;* Removed USER and GROUP arguments and environment variables.&#10;* Deleted user creation and permission-related commands.&#10;* Cleaned up .idea/workspace.xml configuration file." />
     <MESSAGE value="feat: update data source configuration&#10;&#10;Renamed data source attributes and updated grants to new user 'app'. &#10;Changed default casing to 'lower/lower', and server version to '10.11.9'. &#10;Re-assigned schema and table associations to the new data source." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: update data source configuration&#10;&#10;Renamed data source attributes and updated grants to new user 'app'. &#10;Changed default casing to 'lower/lower', and server version to '10.11.9'. &#10;Re-assigned schema and table associations to the new data source." />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
