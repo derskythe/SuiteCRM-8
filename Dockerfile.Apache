@@ -116,10 +116,10 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
         mv "${PHP_INI_DIR}/php.ini-development" "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/memory_limit *= *[[:digit:]]*M/memory_limit = 1024M/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/post_max_size *= *[[:digit:]]*M/post_max_size = 128M/' "${PHP_INI_DIR}/php.ini" && \
-        sed -ri -e 's/display_errors = Off/display_errors = stdout/' "${PHP_INI_DIR}/php.ini" && \
+        sed -ri -e 's/display_errors = (Off|On)/display_errors = stdout/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/upload_max_filesize *= *[[:digit:]]*M/upload_max_filesize = 128M/' "${PHP_INI_DIR}/php.ini" && \
-        sed -ri -e 's/\;error_log = syslog/error_log = stdout/' "${PHP_INI_DIR}/php.ini" && \
-        sed -ri -e 's/\;user_ini\.filename/user_ini\.filename/' "${PHP_INI_DIR}/php.ini" && \
+        sed -ri -e 's/\;error_log = syslog/error_log = \/var\/www\/html\/app\/logs\/php\.log/' "${PHP_INI_DIR}/php.ini" && \
+        sed -ri -e 's/user_ini\.filename = *$/user_ini\.filename = \"\.user\.ini\"/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/Listen *[[:digit:]]*/Listen 8080/' "${APACHE_CONFDIR}/ports.conf" && \
         sed -ri -e 's/^#AddDefaultCharset/AddDefaultCharset/' "${APACHE_CONF_AVAILABLE_DIR}/charset.conf" && \
         printf 'ServerName localhost\nCustomLog /dev/stdout combined\nCustomLog /dev/stdout vhost_combined\nErrorLog /dev/stderr\nLogLevel info\n' > ${APACHE_CONF_AVAILABLE_DIR}/other-vhosts-access-log.conf && \

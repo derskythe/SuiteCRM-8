@@ -99,8 +99,6 @@ class OutboundEmail
     }
 
 
-
-
     /**
      * Retrieves the mailer for a user if they have overriden the username
      * and password for the default system account.
@@ -520,12 +518,23 @@ class OutboundEmail
                 $updvalues[] = "{$cols[$k]} = $val";
             }
             $q = "UPDATE outbound_email SET " . implode(
-                ', ',
-                $updvalues
-            ) . " WHERE id = " . $this->db->quoted($this->id);
+                    ', ',
+                    $updvalues
+                ) . " WHERE id = " . $this->db->quoted($this->id);
         }
 
-        $this->db->query($q, true);
+        try {
+            $this->db->query($q, true);
+        } catch (Exception $exp) {
+            global $log;
+            $arr = array();
+            $arr[0] = $exp->getMessage();
+            $arr[1] = $exp->getFile();
+            $arr[2] = $exp->getLine();
+            $arr[3] = $exp->getTraceAsString();
+
+            $log->error($arr);
+        }
 
         return $this;
     }
@@ -617,7 +626,8 @@ class OutboundEmail
     private function _getOutboundServerDisplay(
         $smtptype,
         $smtpserver
-    ) {
+    )
+    {
         global $app_strings;
 
         switch ($smtptype) {

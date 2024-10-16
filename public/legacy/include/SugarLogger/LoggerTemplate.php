@@ -56,11 +56,12 @@ interface LoggerTemplate
     public const DEFAULT_LOGGER_FILE_SIZE = '10MB';
     public const DEFAULT_LOG_GER_MAX_LOGS = 10;
     public const DEFAULT_LOG_LEVEL = 'debug';
+
     /**
      * Main method for handling logging a message to the logger
      *
-     * @param $method
-     * @param string $message
+     * @param string $method
+     * @param array|string $message
      */
-    public function log($method, string $message);
+    public function log(string $method, array|string $message);
 }

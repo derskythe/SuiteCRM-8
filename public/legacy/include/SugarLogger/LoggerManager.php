@@ -42,6 +42,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+require_once(__DIR__ . '/LoggerTemplate.php');
+
 /**
  * Log management
  *
@@ -127,6 +129,8 @@ class LoggerManager
             }
             //tell the logger to log the message
             self::$_loggers[$logger]->log($method, $message);
+        } else {
+            trigger_error("Logger level '$method' is not enabled", E_USER_NOTICE);
         }
     }
 

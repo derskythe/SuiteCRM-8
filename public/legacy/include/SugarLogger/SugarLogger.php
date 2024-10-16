@@ -60,14 +60,14 @@ class SugarLogger implements LoggerTemplate
     /**
      * properties for the SugarLogger
      */
-    protected string $logfile = 'suitecrm';
-    protected string $ext = '.log';
-    protected string $dateFormat = 'yyyyMMddTHHmmss.SSZ';
-    protected string $logSize = '10MB';
+    protected string $logfile = LoggerTemplate::DEFAULT_LOGGER_FILE_NAME;
+    protected string $ext = LoggerTemplate::DEFAULT_LOGGER_FILE_EXTENSION;
+    protected string $dateFormat = LoggerTemplate::DEFAULT_LOGGER_DATE_FORMAT;
+    protected string $logSize = LoggerTemplate::DEFAULT_LOGGER_FILE_SIZE;
     protected int $maxLogs = 10;
-    protected string $file_suffix = '';
+    protected string $file_suffix = LoggerTemplate::DEFAULT_LOGGER_FILE_SUFFIX;
     protected string $date_suffix = '';
-    protected string $log_dir = '.';
+    protected string $log_dir = LoggerTemplate::DEFAULT_LOGGER_LOG_DIR;
     protected mixed $defaultPerms = 0664;
 
     /**
@@ -133,7 +133,14 @@ class SugarLogger implements LoggerTemplate
         $this->file_suffix = $config->get('logger.file.suffix', $this->file_suffix);
         $this->defaultPerms = $config->get('logger.file.perms', $this->defaultPerms);
         $log_dir = $config->get('log_dir', $this->log_dir);
-        $this->log_dir = $log_dir . (empty($log_dir) ? '' : '/');
+        if (empty($log_dir)) {
+            $this->log_dir = realpath(LoggerTemplate::DEFAULT_LOGGER_LOG_DIR);
+        } else {
+            // Check for last symbol is not '/'
+            $this->log_dir = !str_ends_with($log_dir, '/')
+                ? realpath($log_dir)
+                : realpath(substr($log_dir, 0, count($log_dir) - 1));
+        }
         unset($config);
         $this->_doInitialization();
         LoggerManager::setLogger('default', 'SugarLogger');
@@ -177,7 +184,7 @@ class SugarLogger implements LoggerTemplate
         } else {
             $this->date_suffix = '';
         }
-        $this->full_log_file = $this->log_dir . $this->logfile . $this->date_suffix . $this->ext;
+        $this->full_log_file = $this->log_dir . '/' . $this->logfile . $this->date_suffix . $this->ext;
         $this->initialized = $this->_fileCanBeCreatedAndWrittenTo();
         $this->rollLog();
     }
@@ -200,6 +207,8 @@ class SugarLogger implements LoggerTemplate
             }
 
             return is_writable($this->full_log_file);
+        } else {
+            trigger_error("SugarLogger::log() failed to open file pointer for file: {$this->full_log_file}", E_USER_NOTICE);
         }
 
         return false;
@@ -239,13 +248,16 @@ class SugarLogger implements LoggerTemplate
      * and show a backtrace information in log when
      * the 'show_log_trace' config variable is set and true
      * see LoggerTemplate::log()
+     * @param string $method
+     * @param array|string $message
      */
-    public function log($method, string $message): void
+    public function log(string $method, array|string $message): void
     {
         global /** @var array $sugar_config */
         $sugar_config;
 
         if (!$this->initialized) {
+            trigger_error("SugarLogger::log() not initialized and failed to log message: {$message}", E_USER_NOTICE);
             return;
         }
         //lets get the current user id or default to -none- if it is not set yet
@@ -254,18 +266,26 @@ class SugarLogger implements LoggerTemplate
             : '-none-';
 
         //if we haven't opened a file pointer yet let's do that
-        if ($this->fp != null) {
+        if (!isset($this->fp) || empty($this->fp)) {
             $this->fp = fopen($this->full_log_file, 'ab');
+
+            fwrite(
+                $this->fp,
+                sprintf("%s %s%s",
+                    date($this->dateFormat),
+                    "Started logger process",
+                    PHP_EOL));
         }
 
         $final_message = '';
         // change to a string if there is just one entry
         if (is_array($message) && count($message) == 1) {
-            $final_message = array_shift($message);
-        }
-        // change to a human-readable array output if it's any other array
-        if (is_array($message)) {
-            $final_message = print_r($message, true);
+            $final_message .= array_shift($message);
+        } else if (is_array($message)) {
+            // change to a human-readable array output if it's any other array
+            $final_message .= print_r($message, true);
+        } else {
+            $final_message .= $message . PHP_EOL;
         }
 
         if (isset($sugar_config['show_log_trace']) && $sugar_config['show_log_trace']) {
@@ -277,12 +297,14 @@ class SugarLogger implements LoggerTemplate
         if (isset($this->fp)) {
             fwrite(
                 $this->fp,
-                sprintf("%s [%s][%s][%s] %s\n",
+                sprintf("[%s] - [%s][%s][%s] | %s%s",
                     date($this->dateFormat),
                     getmypid(),
                     $userID,
                     strtoupper($method),
-                    $final_message)
+                    $final_message,
+                    PHP_EOL
+                )
             );
         } else {
             trigger_error("SugarLogger::log() failed to open file pointer for file: {$this->full_log_file}", E_USER_WARNING);
@@ -295,6 +317,7 @@ class SugarLogger implements LoggerTemplate
     protected function rollLog($force = false): void
     {
         if (!$this->initialized || empty($this->logSize) || empty($this->full_log_file)) {
+            trigger_error("SugarLogger::rollLog() not initialized and failed to roll log file: {$this->full_log_file}", E_USER_NOTICE);
             return;
         }
         // bug#50265: Parse the its unit string and get the size properly
@@ -332,6 +355,7 @@ class SugarLogger implements LoggerTemplate
         foreach (get_object_vars($this) as $k => $v) {
             $this->$k = null;
         }
+        trigger_error('SugarLogger::__wakeup() is not allowed', E_USER_NOTICE);
         throw new Exception('Not a serializable object');
     }
 
