@@ -21,16 +21,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`.">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.test" beforeDir="false" afterPath="$PROJECT_DIR$/.env.test" afterDir="false" />
+    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="fix: logger corrections and Dockerfile changes">
+      <change beforePath="$PROJECT_DIR$/.idea/symfony2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/symfony2.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile.Apache" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile.Apache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/.env.dist" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/.env.dist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/OutboundEmail/OutboundEmail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/OutboundEmail/OutboundEmail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/data/Link2.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/Link2.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/LangText.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/LangText.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/SugarLogger.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/portability/System/Upgrade/PostUpgrade.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/portability/System/Upgrade/PostUpgrade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/install/install_defaults.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install/install_defaults.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/install/performSetup.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install/performSetup.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/lib/Log/SugarLoggerHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/lib/Log/SugarLoggerHandler.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -980,7 +985,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729041753622</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fix: logger corrections and Dockerfile changes">
+      <option name="closed" value="true" />
+      <created>1729086260427</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1729086260427</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1038,7 +1051,8 @@
     <MESSAGE value="feat: update data source configuration&#10;&#10;Renamed data source attributes and updated grants to new user 'app'. &#10;Changed default casing to 'lower/lower', and server version to '10.11.9'. &#10;Re-assigned schema and table associations to the new data source." />
     <MESSAGE value="fix: update Dockerfile, compose, and db scripts for consistency&#10;&#10;* Update base node image in Dockerfile to node:18-bookworm.&#10;* Add display_errors and error_log settings in PHP configuration.&#10;* Ensure proper ownership of Apache log directory.&#10;* Include `ext-mysqli` in composer.json and composer.lock for proper dependency.&#10;* Add development file sync configuration in compose.yaml.&#10;* Change database user references to app_user in compose.yaml and SQL script." />
     <MESSAGE value="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`." />
+    <MESSAGE value="fix: logger corrections and Dockerfile changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: logger corrections and Dockerfile changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -52,6 +52,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 require_once 'data/Relationships/RelationshipFactory.php';
+require_once 'include/SugarLogger/LoggerTemplate.php';
 
 /**
  * Represents a relationship from a single beans perspective.

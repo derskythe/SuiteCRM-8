@@ -45,6 +45,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 require_once 'modules/DynamicFields/DynamicField.php';
 require_once "data/Relationships/RelationshipFactory.php";
 require_once 'include/portability/SaveHandlers/BeanSaveHandlersManager.php';
+require_once 'include/SugarLogger/LoggerTemplate.php';
 
 
 /**

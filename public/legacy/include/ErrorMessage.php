@@ -42,6 +42,7 @@
 namespace SuiteCRM;
 
 use LoggerManager;
+use LoggerTemplate;
 
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
@@ -59,31 +60,31 @@ class ErrorMessage
     /**
      * string
      */
-    public const DEFAULT_LOG_LEVEL = 'fatal';
+    public const DEFAULT_LOG_LEVEL = LoggerTemplate::DEFAULT_LOG_LEVEL;
 
     /**
      *
      * @var string
      */
-    protected $message;
+    protected string $message;
 
     /**
      *
      * @var integer
      */
-    protected $code;
+    protected int $code;
 
     /**
      *
      * @var string
      */
-    protected $level;
+    protected string $level;
 
     /**
      *
      * @var boolean
      */
-    protected $throw;
+    protected bool $throw;
 
     /**
      *
@@ -92,7 +93,7 @@ class ErrorMessage
      * @param string $level
      * @param boolean $throw
      */
-    public function __construct($message = '', $code = null, $level = self::DEFAULT_LOG_LEVEL, $throw = true)
+    public function __construct(string $message = '', int $code = null, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true)
     {
         $this->setState($message, $code, $level, $throw);
     }
@@ -104,7 +105,7 @@ class ErrorMessage
      * @param string $level
      * @param boolean $throw
      */
-    public function setState($message = '', $code = null, $level = self::DEFAULT_LOG_LEVEL, $throw = true)
+    public function setState(string $message = '', int $code = null, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true): void
     {
         $this->message = $message;
         $this->code = $code;
@@ -116,7 +117,7 @@ class ErrorMessage
      *
      * @throws ErrorMessageException
      */
-    public function handle()
+    public function handle(): void
     {
         if ($this->level) {
             $log = LoggerManager::getLogger();
@@ -136,7 +137,7 @@ class ErrorMessage
      * @param integer $code
      * @throws ErrorMessageException
      */
-    public static function handler($message, $level = self::DEFAULT_LOG_LEVEL, $throw = true, $code = self::DEFAULT_CODE)
+    public static function handler(string $message, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true, int $code = self::DEFAULT_CODE): void
     {
         $errorMessage = new ErrorMessage($message, $code, $level, $throw);
         $errorMessage->handle();
@@ -145,9 +146,10 @@ class ErrorMessage
     /**
      *
      * @param string $message
-     * @param integer $level
+     * @param string $level
+     * @throws ErrorMessageException
      */
-    public static function log($message, $level = self::DEFAULT_LOG_LEVEL)
+    public static function log(string $message, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL): void
     {
         self::handler($message, $level, false);
     }
@@ -156,8 +158,9 @@ class ErrorMessage
      *
      * @param string $message
      * @param integer $code
+     * @throws ErrorMessageException
      */
-    public static function drop($message, $code = self::DEFAULT_CODE)
+    public static function drop(string $message, int $code = self::DEFAULT_CODE): void
     {
         self::handler($message, $code);
     }

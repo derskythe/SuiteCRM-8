@@ -51,7 +51,7 @@ interface LoggerTemplate
     public const DEFAULT_LOGGER_FILE_NAME = 'legacy.suitecrm';
     public const DEFAULT_LOGGER_FILE_SUFFIX = '';
     public const DEFAULT_LOGGER_DEFAULT_PERMS = '0644';
-    public const DEFAULT_LOGGER_DATE_FORMAT = 'yyyyMMddTHHmmss.SSZ';
+    public const DEFAULT_LOGGER_DATE_FORMAT = DATE_ATOM;
     public const DEFAULT_LOGGER_FILE_EXTENSION = '.log';
     public const DEFAULT_LOGGER_FILE_SIZE = '10MB';
     public const DEFAULT_LOG_GER_MAX_LOGS = 10;

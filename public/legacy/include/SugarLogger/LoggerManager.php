@@ -130,7 +130,7 @@ class LoggerManager
             //tell the logger to log the message
             self::$_loggers[$logger]->log($method, $message);
         } else {
-            trigger_error("Logger level '$method' is not enabled", E_USER_NOTICE);
+            trigger_error(sprintf("Logger level '%s' is not enabled. Current level '%s'", $method, self::$_level), E_USER_NOTICE);
         }
     }
 

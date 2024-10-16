@@ -45,6 +45,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+use LoggerTemplate;
+
 /**
  * LangText
  *
@@ -57,7 +59,7 @@ class LangText
     /**
      * string
      */
-    public const LOG_LEVEL = 'fatal';
+    public const LOG_LEVEL = LoggerTemplate::DEFAULT_LOG_LEVEL;
 
     /**
      * integer

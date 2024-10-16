@@ -1739,7 +1739,7 @@ function generate_where_statement($where_clauses)
  *
  * @return bool False on failure
  */
-function is_guid($guid)
+function is_guid($guid): bool
 {
     if (strlen($guid) != 36) {
         return false;
@@ -1761,41 +1761,42 @@ function is_guid($guid)
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  */
-function create_guid()
+function create_guid() : string
 {
     $microTime = microtime();
     list($a_dec, $a_sec) = explode(' ', $microTime);
 
-    $dec_hex = dechex($a_dec * 1000000);
+    $dec_hex = dechex((int)($a_dec * 1000000.0));
     $sec_hex = dechex($a_sec);
 
     ensure_length($dec_hex, 5);
     ensure_length($sec_hex, 6);
 
-    $guid = '';
-    $guid .= $dec_hex;
-    $guid .= create_guid_section(3);
-    $guid .= '-';
-    $guid .= create_guid_section(4);
-    $guid .= '-';
-    $guid .= create_guid_section(4);
-    $guid .= '-';
-    $guid .= create_guid_section(4);
-    $guid .= '-';
-    $guid .= $sec_hex;
-    $guid .= create_guid_section(6);
+    $guid = array();
+    $i = 0;
+    $guid[$i++] = $dec_hex;
+    $guid[$i++] = create_guid_section(3);
+    $guid[$i++] = '-';
+    $guid[$i++] = create_guid_section(4);
+    $guid[$i++] = '-';
+    $guid[$i++] = create_guid_section(4);
+    $guid[$i++] = '-';
+    $guid[$i++] = create_guid_section(4);
+    $guid[$i++] = '-';
+    $guid[$i++] = $sec_hex;
+    $guid[$i++] = create_guid_section(6);
 
-    return $guid;
+    return join('', $guid);
 }
 
-function create_guid_section($characters)
+function create_guid_section($characters) : string
 {
-    $return = '';
+    $return = array();
     for ($i = 0; $i < $characters; ++$i) {
-        $return .= dechex(mt_rand(0, 15));
+        $return[$i] = dechex(mt_rand(0, 15));
     }
 
-    return $return;
+    return join('', $return);
 }
 
 function ensure_length(&$string, $length)
@@ -1907,7 +1908,7 @@ function is_admin_for_any_module($user)
 }
 
 // Check if user is admin for a specific module.
-function is_admin_for_module($user, $module)
+function is_admin_for_module($user, $module): bool
 {
     if (!isset($user)) {
         return false;
@@ -3496,7 +3497,7 @@ function _ppd($mixed)
  * @param $displayStackTrace also show stack trace
  * @deprecated This function is unused and will be removed in a future release.
  */
-function _ppl($mixed, $die = false, $displayStackTrace = false, $loglevel = 'fatal')
+function _ppl($mixed, $die = false, $displayStackTrace = false, $loglevel = ErrorMessage::DEFAULT_LOG_LEVEL)
 {
     if (!isset($GLOBALS['log']) || empty($GLOBALS['log'])) {
         $GLOBALS['log'] = LoggerManager:: getLogger();
@@ -5692,13 +5693,13 @@ if (file_exists('custom/application/Ext/Utils/custom_utils.ext.php')) {
 
 /**
  * @param $input - the input string to sanitize
- * @param int    $quotes  - use quotes
+ * @param int $quotes  - use quotes
  * @param string $charset - the default charset
  * @param bool   $remove  - strip tags or not
  *
  * @return string - the sanitized string
  */
-function sanitize($input, $quotes = ENT_QUOTES, $charset = 'UTF-8', $remove = false)
+function sanitize($input, int $quotes = ENT_QUOTES, string $charset = 'UTF-8', bool $remove = false) : string
 {
     return htmlentities((string) $input, $quotes, $charset);
 }

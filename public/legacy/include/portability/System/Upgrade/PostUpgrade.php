@@ -32,6 +32,7 @@ use BeanFactory;
 use DBManager;
 use DBManagerFactory;
 use LoggerManager;
+use LoggerTemplate;
 use RepairAndClear;
 use SugarBean;
 use Throwable;
@@ -240,13 +241,13 @@ class PostUpgrade
 
         if (!isset($sugar_config['logger'])) {
             $sugar_config['logger'] = [
-                'level' => 'fatal',
+                'level' => LoggerTemplate::DEFAULT_LOG_LEVEL,
                 'file' => [
-                    'ext' => '.log',
-                    'name' => 'suitecrm',
-                    'dateFormat' => '%c',
-                    'maxSize' => '10MB',
-                    'maxLogs' => 10,
+                    'ext' => LoggerTemplate::DEFAULT_LOGGER_FILE_EXTENSION,
+                    'name' => LoggerTemplate::DEFAULT_LOGGER_FILE_NAME,
+                    'dateFormat' => LoggerTemplate::DEFAULT_LOGGER_DATE_FORMAT,
+                    'maxSize' => LoggerTemplate::DEFAULT_LOGGER_FILE_SIZE,
+                    'maxLogs' => LoggerTemplate::DEFAULT_LOG_GER_MAX_LOGS,
                     'suffix' => '', // bug51583, change default suffix to blank for backwards comptability
                 ],
             ];

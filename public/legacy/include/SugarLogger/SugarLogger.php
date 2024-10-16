@@ -68,7 +68,7 @@ class SugarLogger implements LoggerTemplate
     protected string $file_suffix = LoggerTemplate::DEFAULT_LOGGER_FILE_SUFFIX;
     protected string $date_suffix = '';
     protected string $log_dir = LoggerTemplate::DEFAULT_LOGGER_LOG_DIR;
-    protected mixed $defaultPerms = 0664;
+    protected mixed $defaultPerms = LoggerTemplate::DEFAULT_LOGGER_DEFAULT_PERMS;
 
     /**
      * used for config screen
@@ -184,7 +184,7 @@ class SugarLogger implements LoggerTemplate
         } else {
             $this->date_suffix = '';
         }
-        $this->full_log_file = $this->log_dir . '/' . $this->logfile . $this->date_suffix . $this->ext;
+        $this->full_log_file = $this->log_dir . DIRECTORY_SEPARATOR . $this->logfile . $this->date_suffix . $this->ext;
         $this->initialized = $this->_fileCanBeCreatedAndWrittenTo();
         $this->rollLog();
     }
@@ -236,7 +236,7 @@ class SugarLogger implements LoggerTemplate
             $type = $call['type'] ?? '';
             $function = $call['function'] ?? '???';
 
-            $ret[$i + 1] = sprintf("Call in %s#%d from %s%s%s(..)", $file, $line, $class, $type, $function);
+            $ret[$i + 1] = sprintf("In %s#%d from %s%s%s(..)", $file, $line, $class, $type, $function);
         }
         $ret[count($ret) - 1] = PHP_EOL;
 
@@ -273,7 +273,7 @@ class SugarLogger implements LoggerTemplate
                 $this->fp,
                 sprintf("%s %s%s",
                     date($this->dateFormat),
-                    "Started logger process",
+                    "Started Logger Write",
                     PHP_EOL));
         }
 
@@ -301,7 +301,7 @@ class SugarLogger implements LoggerTemplate
                     date($this->dateFormat),
                     getmypid(),
                     $userID,
-                    strtoupper($method),
+                    str_pad(strtoupper($method), 5, ' '),
                     $final_message,
                     PHP_EOL
                 )
@@ -370,6 +370,7 @@ class SugarLogger implements LoggerTemplate
             return;
         }
 
+        $this->log('info', 'Shutting down SugarLogger');
         fflush($this->fp);
         fclose($this->fp);
         unset($this->fp);
