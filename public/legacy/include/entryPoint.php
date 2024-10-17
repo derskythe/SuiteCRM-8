@@ -38,6 +38,8 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
+use SuiteCRM\database\DatabasePDOManager;
+
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
@@ -120,6 +122,7 @@ set_session_name();
 
 require_once 'sugar_version.php'; // provides $sugar_version, $sugar_db_version, $sugar_flavor
 require_once 'include/database/DBManagerFactory.php';
+require_once 'include/database/DatabasePDOManager.php';
 require_once 'include/dir_inc.php';
 
 require_once 'include/Localization/Localization.php';
@@ -161,11 +164,12 @@ UploadStream::register();
 ///////////////////////////////////////////////////////////////////////////////
 ////    Handle loading and instantiation of various Sugar* class
 if (!defined('SUGAR_PATH')) {
-    define('SUGAR_PATH', realpath(__DIR__.'/..'));
+    define('SUGAR_PATH', realpath(__DIR__ . '/..'));
 }
 require_once 'include/SugarObjects/SugarRegistry.php';
 require_once 'include/SugarLogger/LoggerManager.php';
 $GLOBALS['log'] = LoggerManager::getLogger();
+
 
 if (empty($GLOBALS['installing']) && !empty($sugar_config['dbconfig']['db_name'])) {
     ///////////////////////////////////////////////////////////////////////////////
@@ -204,8 +208,21 @@ if (empty($GLOBALS['installing']) && !empty($sugar_config['dbconfig']['db_name']
     $GLOBALS['timedate'] = $timedate;
     $GLOBALS['js_version_key'] = md5($GLOBALS['sugar_config']['unique_key'].$GLOBALS['sugar_version'].$GLOBALS['sugar_flavor']);
 
+    DatabasePDOManager::initDatabasePDO([
+        'db_host' => $sugar_config['dbconfig']['db_host'],
+        'db_user' => $sugar_config['dbconfig']['db_user'],
+        'db_password' => $sugar_config['dbconfig']['db_password'],
+        'db_name' => $sugar_config['dbconfig']['db_name'],
+        'db_type' => $sugar_config['dbconfig']['db_type'],
+        'db_port' => $sugar_config['dbconfig']['db_port'],
+    ], $GLOBALS['log']);
+    $GLOBALS['pdo'] = DatabasePDOManager::getInstance();
+
     $db = DBManagerFactory::getInstance();
     $db->resetQueryCount();
+
+
+
     $GLOBALS['db'] = $db;
     $locale = new Localization();
     $GLOBALS['locale'] = $locale;

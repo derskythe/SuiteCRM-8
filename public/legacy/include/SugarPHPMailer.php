@@ -64,7 +64,7 @@ class SugarPHPMailer extends PHPMailer
     public $disclosureText;
     public $isHostEmpty = false;
     public $opensslOpened = true;
-    public $fullSmtpLog='';
+    public $fullSmtpLog = '';
 
     /**
      * @var string
@@ -110,7 +110,6 @@ class SugarPHPMailer extends PHPMailer
         $this->protocol = ($this->oe->mail_smtpssl == 1) ? 'ssl://' : $this->protocol;
         $this->SMTPAutoTLS = false;
     }
-
 
 
     /**
@@ -208,14 +207,14 @@ class SugarPHPMailer extends PHPMailer
             $this->Subject = $locale->translateCharset($subjectUTF8, 'UTF-8', $OBCharset);
 
             // HTML email RFC compliance
-            if ($this->ContentType === 'text/html' && strpos((string) $this->Body, '<html') === false) {
+            if ($this->ContentType === 'text/html' && strpos((string)$this->Body, '<html') === false) {
                 $langHeader = get_language_header();
 
                 $head = <<<eoq
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" {$langHeader}>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset={$OBCharset}" />
+ <meta http-equiv="Content-Type" content="text/html; charset={$OBCharset}" />
 <title>{$subject}</title>
 </head>
 <body>
@@ -255,7 +254,7 @@ eoq;
                 continue;
             }
             if ($object) {
-                if (preg_match('#&(?:amp;)?type=([\w]+)#i', (string) $matches[0][$i], $typematch)) {
+                if (preg_match('#&(?:amp;)?type=([\w]+)#i', (string)$matches[0][$i], $typematch)) {
                     switch (strtolower($typematch[1])) {
                         case 'documents':
                             $beanname = 'DocumentRevisions';
@@ -300,7 +299,7 @@ eoq;
         $this->clearAttachments();
 
         //replace references to cache/images with cid tag
-        $this->Body = preg_replace(';=\s*"' . preg_quote((string) sugar_cached('images/'), ';') . ';', '="cid:', $this->Body);
+        $this->Body = preg_replace(';=\s*"' . preg_quote((string)sugar_cached('images/'), ';') . ';', '="cid:', $this->Body);
 
         $this->replaceImageByRegex("(?:{$sugar_config['site_url']})?/?cache/images/", sugar_cached('images/'));
 
@@ -337,7 +336,7 @@ eoq;
             }
 
             $filename =
-                substr((string) $filename, 36, strlen((string) $filename)); // strip GUID	for PHPMailer class to name outbound file
+                substr((string)$filename, 36, strlen((string)$filename)); // strip GUID for PHPMailer class to name outbound file
             if (!$note->embed_flag) {
                 $this->addAttachment($file_location, $filename, 'base64', $mime_type);
             } // else
@@ -446,8 +445,8 @@ eoq;
 
         $ret = null;
 
-        $this->fullSmtpLog='';
-        $phpMailerExceptionMsg='';
+        $this->fullSmtpLog = '';
+        $phpMailerExceptionMsg = '';
 
         try {
             $saveExceptionsState = $this->exceptions;
@@ -467,14 +466,14 @@ eoq;
 
             $this->SMTPDebug = 3;
             $ret = parent::send();
-            $this->exceptions =  $saveExceptionsState;
+            $this->exceptions = $saveExceptionsState;
         } catch (Exception $e) {
-            $phpMailerExceptionMsg=$e->errorMessage(); //Pretty error messages from PHPMailer
+            $phpMailerExceptionMsg = $e->errorMessage(); //Pretty error messages from PHPMailer
             if ($phpMailerExceptionMsg) {
                 $GLOBALS['log']->error("send: PHPMailer Exception: { $phpMailerExceptionMsg }");
             }
         } catch (\Exception $e) { //The leading slash means the Global PHP Exception class will be caught
-            $phpMailerExceptionMsg=$e->getMessage(); //generic error messages from anything else
+            $phpMailerExceptionMsg = $e->getMessage(); //generic error messages from anything else
             if ($phpMailerExceptionMsg) {
                 $GLOBALS['log']->error("send: PHPMailer Exception: { $phpMailerExceptionMsg }");
             }

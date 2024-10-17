@@ -130,7 +130,7 @@ class MysqlManager extends DBManager
         'relate' => 'varchar',
         'multienum' => 'text',
         'html' => 'text',
-    'emailbody' => 'nvarchar(max)',
+        'emailbody' => 'nvarchar(max)',
         'longhtml' => 'longtext',
         'datetime' => 'datetime',
         'datetimecombo' => 'datetime',
@@ -165,11 +165,11 @@ class MysqlManager extends DBManager
     /**
      * Parses and runs queries
      *
-     * @param  string $sql SQL Statement to execute
-     * @param  bool $dieOnError True if we want to call die if the query returns errors
-     * @param  string $msg Message to log if error occurs
-     * @param  bool $suppress Flag to suppress all error output unless in debug logging mode.
-     * @param  bool $keepResult True if we want to push this result into the $lastResult array.
+     * @param string $sql SQL Statement to execute
+     * @param bool $dieOnError True if we want to call die if the query returns errors
+     * @param string $msg Message to log if error occurs
+     * @param bool $suppress Flag to suppress all error output unless in debug logging mode.
+     * @param bool $keepResult True if we want to push this result into the $lastResult array.
      * @return resource result set
      */
     public function query($sql, $dieOnError = false, $msg = '', $suppress = false, $keepResult = false)
@@ -213,9 +213,9 @@ class MysqlManager extends DBManager
      *
      * This function can't be reliably implemented on most DB, do not use it.
      * @abstract
-     * @deprecated
-     * @param  resource $result
+     * @param resource $result
      * @return int
+     * @deprecated
      */
     public function getRowCount($result)
     {
@@ -304,10 +304,10 @@ class MysqlManager extends DBManager
             if (empty($row['key'])) {
                 $badQuery[$row['table']] .= ' No Index Key Used;';
             }
-            if (!empty($row['Extra']) && substr_count((string) $row['Extra'], 'Using filesort') > 0) {
+            if (!empty($row['Extra']) && substr_count((string)$row['Extra'], 'Using filesort') > 0) {
                 $badQuery[$row['table']] .= ' Using FileSort;';
             }
-            if (!empty($row['Extra']) && substr_count((string) $row['Extra'], 'Using temporary') > 0) {
+            if (!empty($row['Extra']) && substr_count((string)$row['Extra'], 'Using temporary') > 0) {
                 $badQuery[$row['table']] .= ' Using Temporary Table;';
             }
         }
@@ -344,19 +344,19 @@ class MysqlManager extends DBManager
             $name = strtolower($row['Field']);
             $columns[$name]['name'] = $name;
             $matches = array();
-            preg_match_all('/(\w+)(?:\(([0-9]+,?[0-9]*)\)|)( unsigned)?/i', (string) $row['Type'], $matches);
+            preg_match_all('/(\w+)(?:\(([0-9]+,?[0-9]*)\)|)( unsigned)?/i', (string)$row['Type'], $matches);
             $columns[$name]['type'] = strtolower($matches[1][0]);
             if (isset($matches[2][0]) && in_array(
-                strtolower($matches[1][0]),
-                array('varchar', 'char', 'varchar2', 'int', 'decimal', 'float')
-            )
+                    strtolower($matches[1][0]),
+                    array('varchar', 'char', 'varchar2', 'int', 'decimal', 'float')
+                )
             ) {
                 $columns[$name]['len'] = strtolower($matches[2][0]);
             }
-            if (stristr((string) $row['Extra'], 'auto_increment')) {
+            if (stristr((string)$row['Extra'], 'auto_increment')) {
                 $columns[$name]['auto_increment'] = '1';
             }
-            if ($row['Null'] == 'NO' && !stristr((string) $row['Key'], 'PRI')) {
+            if ($row['Null'] == 'NO' && !stristr((string)$row['Key'], 'PRI')) {
                 $columns[$name]['required'] = 'true';
             }
             if (!empty($row['Default'])) {
@@ -554,11 +554,11 @@ class MysqlManager extends DBManager
             }
         }
 
-	// cn: using direct calls to prevent this from spamming the Logs
+        // cn: using direct calls to prevent this from spamming the Logs
         $charset = $this->getCharset();
 
-	if(!empty($charset)) {
-	    $msg = "Error setting character set";
+        if (!empty($charset)) {
+            $msg = "Error setting character set";
             $this->query("SET CHARACTER SET $charset", true, $msg);
 
             $names = "SET NAMES '$charset'";
@@ -566,11 +566,11 @@ class MysqlManager extends DBManager
 
             if (!empty($collation)) {
                 $names .= " COLLATE '$collation'";
-	    }
+            }
 
-	    $msg = "Error setting character set and collation";
+            $msg = "Error setting character set and collation";
             $this->query($names, true, $msg);
-	}
+        }
 
         if (!$this->checkError('Could Not Connect:', $dieOnError)) {
             $GLOBALS['log']->info("connected to db");
@@ -660,7 +660,7 @@ class MysqlManager extends DBManager
 
                     return "DATE_FORMAT($string,$format)";
                 }
-                // no break
+            // no break
             case 'ifnull':
                 if (empty($additional_parameters) && !strstr($all_strings, ",")) {
                     $all_strings .= ",''";
@@ -705,7 +705,7 @@ class MysqlManager extends DBManager
     /**
      * Returns the name of the engine to use or null if we are to use the default
      *
-     * @param  object $bean SugarBean instance
+     * @param object $bean SugarBean instance
      * @return string
      */
     protected function getEngine($bean)
@@ -722,7 +722,7 @@ class MysqlManager extends DBManager
     /**
      * Returns true if the engine given is enabled in the backend
      *
-     * @param  string $engine
+     * @param string $engine
      * @return bool
      */
     protected function isEngineEnabled($engine)
@@ -760,10 +760,10 @@ class MysqlManager extends DBManager
     /**
      * Generates sql for create table statement for a bean.
      *
-     * @param  string $tablename
-     * @param  array $fieldDefs
-     * @param  array $indices
-     * @param  string $engine optional, MySQL engine to use
+     * @param string $tablename
+     * @param array $fieldDefs
+     * @param array $indices
+     * @param string $engine optional, MySQL engine to use
      * @return string SQL Create Table statement
      */
     public function createTableSQLParams($tablename, $fieldDefs, $indices, $engine = null)
@@ -785,13 +785,13 @@ class MysqlManager extends DBManager
             $keys = ",$keys";
         }
 
-	// cn: bug 9873 - module tables do not get created in utf8 with assoc collation
+        // cn: bug 9873 - module tables do not get created in utf8 with assoc collation
         $collation = $this->getCollation();
-	$charset = $this->getCharset();
+        $charset = $this->getCharset();
 
-	$sql = "CREATE TABLE $tablename ($columns $keys) CHARACTER SET $charset COLLATE $collation";
+        $sql = "CREATE TABLE $tablename ($columns $keys) CHARACTER SET $charset COLLATE $collation";
 
-	if (!empty($engine)) {
+        if (!empty($engine)) {
             $sql .= " ENGINE=$engine";
         }
 
@@ -870,9 +870,9 @@ class MysqlManager extends DBManager
      * itself. The keys generated will be either primary, foreign, unique, index
      * or none at all depending on the setting of the "key" parameter of a field definition
      *
-     * @param  array $indices
-     * @param  bool $alter_table
-     * @param  string $alter_action
+     * @param array $indices
+     * @param bool $alter_table
+     * @param string $alter_action
      * @return string SQL Statement
      */
     protected function keysSQL($indices, $alter_table = false, $alter_action = '')
@@ -955,8 +955,8 @@ class MysqlManager extends DBManager
     /**
      * Sets the next auto-increment value of a column to a specific value.
      *
-     * @param  string $table tablename
-     * @param  string $field_name
+     * @param string $table tablename
+     * @param string $field_name
      */
     public function setAutoIncrementStart($table, $field_name, $start_value)
     {
@@ -968,8 +968,8 @@ class MysqlManager extends DBManager
     /**
      * Returns the next value for an auto increment
      *
-     * @param  string $table tablename
-     * @param  string $field_name
+     * @param string $table tablename
+     * @param string $field_name
      * @return string
      */
     public function getAutoIncrement($table, $field_name)
@@ -1005,7 +1005,7 @@ class MysqlManager extends DBManager
             $field = strtolower($row['Column_name']);
 
             if (is_numeric($row['Sub_part'])) {
-                $field = strtolower($row['Column_name'])." ({$row['Sub_part']})";
+                $field = strtolower($row['Column_name']) . " ({$row['Sub_part']})";
             }
             $indices[$name]['fields'][] = $field;
         }
@@ -1064,10 +1064,10 @@ class MysqlManager extends DBManager
     /**
      * Runs a query and returns a single row
      *
-     * @param  string $sql SQL Statement to execute
-     * @param  bool $dieOnError True if we want to call die if the query returns errors
-     * @param  string $msg Message to log if error occurs
-     * @param  bool $suppress Message to log if error occurs
+     * @param string $sql SQL Statement to execute
+     * @param bool $dieOnError True if we want to call die if the query returns errors
+     * @param string $msg Message to log if error occurs
+     * @param bool $suppress Message to log if error occurs
      * @return array    single row from the query
      */
     public function fetchOne($sql, $dieOnError = false, $msg = '', $suppress = false)
@@ -1127,7 +1127,7 @@ class MysqlManager extends DBManager
 
         if ($fieldDef['dbType'] == 'decimal') {
             if (isset($fieldDef['len'])) {
-                if (strstr((string) $fieldDef['len'], ",") === false) {
+                if (strstr((string)$fieldDef['len'], ",") === false) {
                     $fieldDef['len'] .= ",0";
                 }
             } else {
@@ -1139,7 +1139,7 @@ class MysqlManager extends DBManager
     /**
      * Generates SQL for dropping a table.
      *
-     * @param  string $name table name
+     * @param string $name table name
      * @return string SQL statement
      */
     public function dropTableNameSQL($name)
@@ -1372,7 +1372,7 @@ class MysqlManager extends DBManager
         }
         $create = $row['Create Table'];
         // rewrite DDL with _temp name
-        $tempTableQuery = str_replace("CREATE TABLE `{$table}`", "CREATE TABLE `{$table}__uw_temp`", (string) $create);
+        $tempTableQuery = str_replace("CREATE TABLE `{$table}`", "CREATE TABLE `{$table}__uw_temp`", (string)$create);
         $r2 = $this->query($tempTableQuery);
         if (empty($r2)) {
             return false;
@@ -1408,7 +1408,7 @@ class MysqlManager extends DBManager
 
         // test the query on the test table
         $this->log->debug('testing query: [' . $query . ']');
-        $tempTableTestQuery = str_replace("ALTER TABLE `{$table}`", "ALTER TABLE `{$table}__uw_temp`", (string) $query);
+        $tempTableTestQuery = str_replace("ALTER TABLE `{$table}`", "ALTER TABLE `{$table}__uw_temp`", (string)$query);
         if (strpos($tempTableTestQuery, 'idx') === false) {
             if (strpos($tempTableTestQuery, '__uw_temp') === false) {
                 return 'Could not use a temp table to test query!';
@@ -1440,7 +1440,7 @@ class MysqlManager extends DBManager
         }
         // test the query on the test table
         $this->log->debug('testing query: [' . $query . ']');
-        $tempTableTestQuery = str_replace("$querytype `{$table}`", "$querytype `{$table}__uw_temp`", (string) $query);
+        $tempTableTestQuery = str_replace("$querytype `{$table}`", "$querytype `{$table}__uw_temp`", (string)$query);
         if (strpos($tempTableTestQuery, '__uw_temp') === false) {
             return 'Could not use a temp table to test query!';
         }
@@ -1545,9 +1545,9 @@ class MysqlManager extends DBManager
     {
         $qpassword = $this->quote($password);
         $this->query("GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX
-							ON `$database_name`.*
-							TO \"$user\"@\"$host_name\"
-							IDENTIFIED BY '{$qpassword}';", true);
+       ON `$database_name`.*
+       TO \"$user\"@\"$host_name\"
+       IDENTIFIED BY '{$qpassword}';", true);
 
         $this->query("SET PASSWORD FOR \"{$user}\"@\"{$host_name}\" = password('{$qpassword}');", true);
         if ($host_name != 'localhost') {
@@ -1562,7 +1562,7 @@ class MysqlManager extends DBManager
     public function createDatabase($dbname)
     {
         $collation = $this->getCollation();
-	$charset = $this->getCharset();
+        $charset = $this->getCharset();
 
         $this->query("CREATE DATABASE `$dbname` CHARACTER SET $charset COLLATE $collation", true);
     }
@@ -1571,7 +1571,7 @@ class MysqlManager extends DBManager
     {
         $setup_db_database_name = '';
         $collation = $this->getCollation();
-	$charset = $this->getCharset();
+        $charset = $this->getCharset();
 
         $this->query("ALTER DATABASE `{$setup_db_database_name}` DEFAULT CHARACTER SET $charset", true);
         $this->query("ALTER DATABASE `{$setup_db_database_name}` DEFAULT COLLATE $collation", true);

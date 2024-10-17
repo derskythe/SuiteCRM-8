@@ -39,7 +39,7 @@
  */
 
 if (!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    die('Not A Valid Entry Point');
 }
 
 require_once('soap/SoapHelperFunctions.php');
@@ -1362,7 +1362,7 @@ function get_relationships($session, $module_name, $module_id, $related_module, 
     if (!empty($accessWhere)) {
         $sql .= ' AND ' . $accessWhere;
     }
-    
+
     $result = $related_mod->db->query($sql);
     while ($row = $related_mod->db->fetchByAssoc($result)) {
         $list[] = $row['id'];

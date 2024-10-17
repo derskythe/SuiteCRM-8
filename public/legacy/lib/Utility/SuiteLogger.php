@@ -63,6 +63,13 @@ class SuiteLogger extends AbstractLogger
     public function log($level, $message, array $context = [])
     {
         $log = \LoggerManager::getLogger();
+        if ($log === null) {
+            trigger_error(sprintf('Logger not initialized!%sMessage to log: [%s] %s',
+                PHP_EOL,
+                $level,
+                $message
+            ), E_USER_WARNING);
+        }
         $message = $this->interpolate($message, $context);
         switch ($level) {
             case LogLevel::EMERGENCY:

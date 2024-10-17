@@ -67,7 +67,6 @@ class SugarApplication
     }
 
 
-
     /**
      * Perform execution of the application. This method is called from index2.php
      */
@@ -116,15 +115,15 @@ class SugarApplication
         $authController = new AuthenticationController();
 
         if (($user_unique_key != $server_unique_key) && (!in_array($this->controller->action, $allowed_actions)) &&
-                (!isset($_SESSION['login_error']))) {
+            (!isset($_SESSION['login_error']))) {
             session_destroy();
 
             if (!empty($this->controller->action)) {
-                if (strtolower($this->controller->action) == 'delete') {
+                if (strtolower($this->controller->action) === 'delete') {
                     $this->controller->action = 'DetailView';
-                } elseif (strtolower($this->controller->action) == 'save') {
+                } elseif (strtolower($this->controller->action) === 'save') {
                     $this->controller->action = 'EditView';
-                } elseif (strtolower($this->controller->action) == 'quickcreate') {
+                } elseif (strtolower($this->controller->action) === 'quickcreate') {
                     $this->controller->action = 'index';
                     $this->controller->module = 'home';
                 } elseif (isset($_REQUEST['massupdate']) || isset($_GET['massupdate']) || isset($_POST['massupdate'])) {
@@ -134,7 +133,7 @@ class SugarApplication
                 } elseif ($this->controller->action == $this->default_action && $this->controller->module == $this->default_module) {
                     $this->controller->action = '';
                     $this->controller->module = '';
-                } elseif (strtolower($this->controller->module) == 'alerts' && strtolower($this->controller->action) == 'get') {
+                } elseif (strtolower($this->controller->module) === 'alerts' && strtolower($this->controller->action) === 'get') {
                     echo 'lost password';
                     if (preg_match('/\bentryPoint=Changenewpassword\b/', $_SERVER['HTTP_REFERER'])) {
                         echo ' - change new password';
@@ -167,23 +166,23 @@ class SugarApplication
 
         //set cookies
         if (isset($_SESSION['authenticated_user_id'])) {
-            $GLOBALS['log']->debug("setting cookie ck_login_id_20 to " . $_SESSION['authenticated_user_id']);
+            $GLOBALS['log']->debug('setting cookie ck_login_id_20 to ' . $_SESSION['authenticated_user_id']);
             self::setCookie('ck_login_id_20', $_SESSION['authenticated_user_id'], time() + 86400 * 90);
         }
         if (isset($_SESSION['authenticated_user_theme'])) {
-            $GLOBALS['log']->debug("setting cookie ck_login_theme_20 to " . $_SESSION['authenticated_user_theme']);
+            $GLOBALS['log']->debug('setting cookie ck_login_theme_20 to ' . $_SESSION['authenticated_user_theme']);
             self::setCookie('ck_login_theme_20', $_SESSION['authenticated_user_theme'], time() + 86400 * 90);
         }
         if (isset($_SESSION['authenticated_user_theme_color'])) {
-            $GLOBALS['log']->debug("setting cookie ck_login_theme_color_20 to " . $_SESSION['authenticated_user_theme_color']);
+            $GLOBALS['log']->debug('setting cookie ck_login_theme_color_20 to ' . $_SESSION['authenticated_user_theme_color']);
             self::setCookie('ck_login_theme_color_20', $_SESSION['authenticated_user_theme_color'], time() + 86400 * 90);
         }
         if (isset($_SESSION['authenticated_user_theme_font'])) {
-            $GLOBALS['log']->debug("setting cookie ck_login_theme_font_20 to " . $_SESSION['authenticated_user_theme_font']);
+            $GLOBALS['log']->debug('setting cookie ck_login_theme_font_20 to ' . $_SESSION['authenticated_user_theme_font']);
             self::setCookie('ck_login_theme_font_20', $_SESSION['authenticated_user_theme_font'], time() + 86400 * 90);
         }
         if (isset($_SESSION['authenticated_user_language'])) {
-            $GLOBALS['log']->debug("setting cookie ck_login_language_20 to " . $_SESSION['authenticated_user_language']);
+            $GLOBALS['log']->debug('setting cookie ck_login_language_20 to ' . $_SESSION['authenticated_user_language']);
             self::setCookie('ck_login_language_20', $_SESSION['authenticated_user_language'], time() + 86400 * 90);
         }
         //check if user can access
@@ -191,7 +190,7 @@ class SugarApplication
 
     public function ACLFilter()
     {
-        ACLController :: filterModuleList($GLOBALS['moduleList']);
+        ACLController:: filterModuleList($GLOBALS['moduleList']);
     }
 
     /**
@@ -234,11 +233,11 @@ class SugarApplication
 
     public function preProcess()
     {
-        $config = new Administration;
+        $config = new Administration();
         $config->retrieveSettings();
         if (!empty($_SESSION['authenticated_user_id'])) {
-            if (isset($_SESSION['hasExpiredPassword']) && $_SESSION['hasExpiredPassword'] == '1') {
-                if ($this->controller->action != 'Save' && $this->controller->action != 'Logout') {
+            if (isset($_SESSION['hasExpiredPassword']) && $_SESSION['hasExpiredPassword'] === '1') {
+                if ($this->controller->action !== 'Save' && $this->controller->action !== 'Logout') {
                     $this->controller->module = 'Users';
                     $this->controller->action = 'ChangePassword';
                     $record = $GLOBALS['current_user']->id;
@@ -247,12 +246,23 @@ class SugarApplication
                 }
             } else {
                 $ut = $GLOBALS['current_user']->getPreference('ut');
-                if (empty($ut) && $this->controller->action != 'AdminWizard' && $this->controller->action != 'EmailUIAjax' && $this->controller->action != 'Wizard' && $this->controller->action != 'SaveAdminWizard' && $this->controller->action != 'SaveUserWizard' && $this->controller->action != 'SaveTimezone' && $this->controller->action != 'Logout') {
+                if (empty($ut)
+                    && $this->controller->action !== 'AdminWizard'
+                    && $this->controller->action !== 'EmailUIAjax'
+                    && $this->controller->action !== 'Wizard'
+                    && $this->controller->action !== 'SaveAdminWizard'
+                    && $this->controller->action !== 'SaveUserWizard'
+                    && $this->controller->action !== 'SaveTimezone'
+                    && $this->controller->action !== 'Logout') {
                     $this->controller->module = 'Users';
                     $this->controller->action = 'SetTimezone';
                     $record = $GLOBALS['current_user']->id;
                 } else {
-                    if ($this->controller->action != 'AdminWizard' && $this->controller->action != 'EmailUIAjax' && $this->controller->action != 'Wizard' && $this->controller->action != 'SaveAdminWizard' && $this->controller->action != 'SaveUserWizard') {
+                    if ($this->controller->action !== 'AdminWizard'
+                        && $this->controller->action !== 'EmailUIAjax'
+                        && $this->controller->action !== 'Wizard'
+                        && $this->controller->action !== 'SaveAdminWizard'
+                        && $this->controller->action !== 'SaveUserWizard') {
                         $this->handleOfflineClient();
                     }
                 }
@@ -264,10 +274,10 @@ class SugarApplication
     public function handleOfflineClient()
     {
         if (isset($GLOBALS['sugar_config']['disc_client']) && $GLOBALS['sugar_config']['disc_client']) {
-            if (isset($_REQUEST['action']) && $_REQUEST['action'] != 'SaveTimezone') {
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] !== 'SaveTimezone') {
                 if (!file_exists('modules/Sync/file_config.php')) {
-                    if ($_REQUEST['action'] != 'InitialSync' && $_REQUEST['action'] != 'Logout' &&
-                            ($_REQUEST['action'] != 'Popup' && $_REQUEST['module'] != 'Sync')) {
+                    if ($_REQUEST['action'] !== 'InitialSync' && $_REQUEST['action'] !== 'Logout' &&
+                        ($_REQUEST['action'] !== 'Popup' && $_REQUEST['module'] !== 'Sync')) {
                         //echo $_REQUEST['action'];
                         //die();
                         $this->controller->module = 'Sync';
@@ -276,8 +286,8 @@ class SugarApplication
                 } else {
                     require_once('modules/Sync/file_config.php');
                     if (isset($file_sync_info['is_first_sync']) && $file_sync_info['is_first_sync']) {
-                        if ($_REQUEST['action'] != 'InitialSync' && $_REQUEST['action'] != 'Logout' &&
-                                ($_REQUEST['action'] != 'Popup' && $_REQUEST['module'] != 'Sync')) {
+                        if ($_REQUEST['action'] !== 'InitialSync' && $_REQUEST['action'] !== 'Logout' &&
+                            ($_REQUEST['action'] !== 'Popup' && $_REQUEST['module'] !== 'Sync')) {
                             $this->controller->module = 'Sync';
                             $this->controller->action = 'InitialSync';
                         }
@@ -298,7 +308,7 @@ class SugarApplication
         if ($GLOBALS['current_user']->isDeveloperForAnyModule()) {
             return;
         }
-        if (!empty($_REQUEST['action']) && $_REQUEST['action'] == "RetrieveEmail") {
+        if (!empty($_REQUEST['action']) && $_REQUEST['action'] === 'RetrieveEmail') {
             return;
         }
 
@@ -321,7 +331,7 @@ class SugarApplication
         }
 
         // Bug 20916 - Special case for check ACL access rights for Subpanel QuickCreates
-        if (isset($_POST['action']) && $_POST['action'] == 'SubpanelCreates') {
+        if (isset($_POST['action']) && $_POST['action'] === 'SubpanelCreates') {
             $actual_module = $_POST['target_module'];
             if (!empty($GLOBALS['modListHeader']) && !in_array($actual_module, $GLOBALS['modListHeader'])) {
                 $this->controller->hasAccess = false;
@@ -335,8 +345,8 @@ class SugarApplication
         }
 
         if (in_array($this->controller->module, $GLOBALS['modInvisList']) &&
-                ((in_array('Activities', $GLOBALS['moduleList']) &&
-                in_array('Calendar', $GLOBALS['moduleList'])) &&
+            ((in_array('Activities', $GLOBALS['moduleList']) &&
+                    in_array('Calendar', $GLOBALS['moduleList'])) &&
                 in_array($this->controller->module, $GLOBALS['modInvisListActivities']))
         ) {
             $this->controller->hasAccess = false;
@@ -385,15 +395,32 @@ class SugarApplication
         $row_count = sugar_cache_retrieve('checkDatabaseVersion_row_count');
         $sugarDbVersion = $GLOBALS['sugar_db_version'];
         $db = DBManagerFactory::getInstance();
-        if (empty($row_count)) {
-            $version_query = "SELECT count(*) as the_count FROM config WHERE category='info' AND name='sugar_version' AND " .
-                    $db->convert('value', 'text2char') . " = " .
-                    $db->quoted($sugarDbVersion);
+        if (\SuiteCRM\database\DatabasePDOManager::isInit()) {
+            $pdo = \SuiteCRM\database\DatabasePDOManager::getInstance();
 
-            $result = $db->query($version_query);
-            $row = $db->fetchByAssoc($result);
-            $row_count = $row['the_count'];
-            sugar_cache_put('checkDatabaseVersion_row_count', $row_count);
+            if ($row_count === null || count($row_count) === 0) {
+                $params = array(1);
+                $params[':version'] = $sugarDbVersion;
+                $result = $pdo->executeQueryResult(
+                    'SELECT COUNT(*) AS the_count
+                        FROM config
+                        WHERE category=\'info\' AND name=\'sugar_version\' AND value = :version',
+                    $params
+                );
+                $row = $pdo->fetchAssoc($result);
+                $row_count = $row['the_count'];
+                sugar_cache_put('checkDatabaseVersion_row_count', $row_count);
+            }
+        } else {
+            $GLOBALS['log']->errror('PDO is not initialized!');
+            if (empty($row_count)) {
+                $version_query = sprintf('SELECT COUNT(*) AS the_count FROM config WHERE category=\'info\' AND name=\'sugar_version\' AND %s = %s', $db->convert('value', 'text2char'), $db->quoted($sugarDbVersion));
+
+                $result = $db->query($version_query);
+                $row = $db->fetchByAssoc($result);
+                $row_count = $row['the_count'];
+                sugar_cache_put('checkDatabaseVersion_row_count', $row_count);
+            }
         }
 
         if ($row_count == 0 && empty($GLOBALS['sugar_config']['disc_client'])) {
@@ -431,7 +458,7 @@ class SugarApplication
                 }
             }
 
-            if (isset($_SESSION['authenticated_user_theme']) && $_SESSION['authenticated_user_theme'] != '') {
+            if (isset($_SESSION['authenticated_user_theme']) && $_SESSION['authenticated_user_theme'] !== '') {
                 $_SESSION['theme_changed'] = false;
             }
         }
@@ -453,7 +480,7 @@ class SugarApplication
         }
 
         if (isset($GLOBALS['current_user'])) {
-            $GLOBALS['gridline'] = (int) ($GLOBALS['current_user']->getPreference('gridline') == 'on');
+            $GLOBALS['gridline'] = (int)($GLOBALS['current_user']->getPreference('gridline') === 'on');
             $GLOBALS['current_user']->setPreference('user_theme', $theme, 0, 'global');
         }
     }
@@ -462,15 +489,15 @@ class SugarApplication
     {
         loadLicense();
         global $user_unique_key, $server_unique_key;
-        $user_unique_key = (isset($_SESSION['unique_key'])) ? $_SESSION['unique_key'] : '';
-        $server_unique_key = (isset($sugar_config['unique_key'])) ? $sugar_config['unique_key'] : '';
+        $user_unique_key = $_SESSION['unique_key'] ?? '';
+        $server_unique_key = $sugar_config['unique_key'] ?? '';
     }
 
     public function loadGlobals()
     {
         global $currentModule;
         $currentModule = $this->controller->module;
-        if ($this->controller->module == $this->default_module) {
+        if ($this->controller->module === $this->default_module) {
             $_REQUEST['module'] = $this->controller->module;
             if (empty($_REQUEST['action'])) {
                 $_REQUEST['action'] = $this->default_action;
@@ -510,27 +537,27 @@ class SugarApplication
         'Trackers' => array('trackersettings'),
         'SugarFavorites' => array('tag'),
         'Import' => array('last', 'undo'),
-        'Users' => array('changepassword', "generatepassword"),
+        'Users' => array('changepassword', 'generatepassword'),
     );
 
     protected function isModifyAction()
     {
         $action = strtolower($this->controller->action);
-        if (substr($action, 0, 4) == "save" || substr($action, 0, 6) == "delete") {
+        if (str_starts_with($action, 'save') || str_starts_with($action, 'delete')) {
             return true;
         }
         if (isset($this->modifyModules[$this->controller->module])) {
             if ($this->modifyModules[$this->controller->module] === true) {
                 return true;
             }
-            if (in_array($this->controller->action, $this->modifyModules[$this->controller->module])) {
+            if (in_array($this->controller->action, $this->modifyModules[$this->controller->module], true)) {
                 return true;
             }
         }
-        if (in_array($this->controller->action, $this->globalModifyActions)) {
+        if (in_array($this->controller->action, $this->globalModifyActions, true)) {
             return true;
         }
-        if (in_array($this->controller->action, $this->modifyActions)) {
+        if (in_array($this->controller->action, $this->modifyActions, true)) {
             return true;
         }
         return false;
@@ -540,7 +567,7 @@ class SugarApplication
      * The list of the actions excepted from referer checks by default
      * @var array
      */
-    protected $whiteListActions = array('index', 'ListView', 'DetailView', 'EditView', 'oauth', 'authorize', 'Authenticate', 'Login', 'SupportPortal');
+    protected $whiteListActions = ['index', 'ListView', 'DetailView', 'EditView', 'oauth', 'authorize', 'Authenticate', 'Login', 'SupportPortal'];
 
     /**
      *
@@ -564,14 +591,14 @@ class SugarApplication
             $whiteListReferers = array_merge($whiteListReferers, $sugar_config['http_referer']['list']);
         }
 
-        if ($strong && empty($_SERVER['HTTP_REFERER']) && !in_array($this->controller->action, $this->whiteListActions) && $this->isModifyAction()) {
+        if ($strong && empty($_SERVER['HTTP_REFERER']) && !in_array($this->controller->action, $this->whiteListActions, true) && $this->isModifyAction()) {
             $http_host = explode(':', $_SERVER['HTTP_HOST']);
             $whiteListActions = $this->whiteListActions;
             $whiteListActions[] = $this->controller->action;
             $whiteListString = "'" . implode("', '", $whiteListActions) . "'";
             if ($dieIfInvalid) {
-                header("Cache-Control: no-cache, must-revalidate");
-                $ss = new Sugar_Smarty;
+                header('Cache-Control: no-cache, must-revalidate');
+                $ss = new Sugar_Smarty();
                 $ss->assign('host', $http_host[0]);
                 $ss->assign('action', $this->controller->action);
                 $ss->assign('whiteListString', $whiteListString);
@@ -582,15 +609,15 @@ class SugarApplication
         } else {
             if (!empty($_SERVER['HTTP_REFERER']) && !empty($_SERVER['SERVER_NAME'])) {
                 $http_ref = parse_url($_SERVER['HTTP_REFERER']);
-                if ($http_ref['host'] !== $_SERVER['SERVER_NAME'] && !in_array($this->controller->action, $this->whiteListActions) &&
-                    (empty($whiteListReferers) || !in_array($http_ref['host'], $whiteListReferers))) {
+                if ($http_ref['host'] !== $_SERVER['SERVER_NAME'] && !in_array($this->controller->action, $this->whiteListActions, true) &&
+                    (empty($whiteListReferers) || !in_array($http_ref['host'], $whiteListReferers, true))) {
                     if ($dieIfInvalid) {
-                        header("Cache-Control: no-cache, must-revalidate");
+                        header('Cache-Control: no-cache, must-revalidate');
                         $whiteListActions = $this->whiteListActions;
                         $whiteListActions[] = $this->controller->action;
                         $whiteListString = "'" . implode("', '", $whiteListActions) . "'";
 
-                        $ss = new Sugar_Smarty;
+                        $ss = new Sugar_Smarty();
                         $ss->assign('host', $http_ref['host']);
                         $ss->assign('action', $this->controller->action);
                         $ss->assign('whiteListString', $whiteListString);
@@ -606,7 +633,7 @@ class SugarApplication
 
     public function startSession()
     {
-        $sessionIdCookie = isset($_COOKIE[session_name()]) ? $_COOKIE[session_name()] : null;
+        $sessionIdCookie = $_COOKIE[session_name()] ?? null;
         if (isset($_REQUEST['MSID'])) {
             session_id($_REQUEST['MSID']);
             session_start();
@@ -629,7 +656,7 @@ class SugarApplication
 
         //set session expired message if login module and action are set to a non login default
         //AND session id in cookie is set but super global session array is empty
-        if (isset($_REQUEST['login_module']) && isset($_REQUEST['login_action']) && !($_REQUEST['login_module'] == $default_module && $_REQUEST['login_action'] == 'index')) {
+        if (isset($_REQUEST['login_module'], $_REQUEST['login_action']) && !(($_REQUEST['login_module'] === $default_module) && ($_REQUEST['login_action'] === 'index'))) {
             if (!is_null($sessionIdCookie) && empty($_SESSION)) {
                 self::setCookie('loginErrorMessage', 'LBL_SESSION_EXPIRED', time() + 30, '/');
             }
@@ -647,12 +674,13 @@ class SugarApplication
     /**
      * Redirect to another URL
      *
-     * @access	public
-     * @param	string	$url	The URL to redirect to
+     * @access    public
+     * @param string $url The URL to redirect to
      */
     public static function redirect(
         $url
-    ) {
+    )
+    {
         /*
          * If the headers have been sent, then we cannot send an additional location header
          * so we will output a javascript redirect statement.
@@ -676,7 +704,7 @@ class SugarApplication
                 //@ob_end_clean(); // clear output buffer
                 session_write_close();
                 header('HTTP/1.1 301 Moved Permanently');
-                header("Location: " . $url);
+                header('Location: ' . $url);
             }
         }
         if (!defined('SUITE_PHPUNIT_RUNNER')) {
@@ -701,7 +729,7 @@ class SugarApplication
     /**
      * Storing messages into session
      *
-     * @access	public
+     * @access    public
      * @param string $message
      */
     public static function appendErrorMessage($message)
@@ -722,7 +750,7 @@ class SugarApplication
     /**
      * Storing messages into session
      *
-     * @access	public
+     * @access    public
      * @param string $message
      */
     public static function appendSuccessMessage($message)
@@ -768,9 +796,9 @@ class SugarApplication
             $msgs = $_SESSION[$type];
             unset($_SESSION[$type]);
             return $msgs;
-        } else {
-            return array();
         }
+
+        return array();
     }
 
     /**
@@ -804,13 +832,14 @@ class SugarApplication
         $domain = null,
         $secure = false,
         $httponly = true
-    ) {
+    )
+    {
         if (isSSL()) {
             $secure = true;
         }
         if ($domain === null) {
-            if (isset($_SERVER["HTTP_HOST"])) {
-                $domain = preg_replace('/(\:\d+)$/', '', $_SERVER["HTTP_HOST"]); // Fix #9898 Invalid cookie domain when using non-standard HTTP Port.
+            if (isset($_SERVER['HTTP_HOST'])) {
+                $domain = preg_replace('/(:\d+)$/', '', $_SERVER['HTTP_HOST']); // Fix #9898 Invalid cookie domain when using non-standard HTTP Port.
             } else {
                 $domain = 'localhost';
             }
@@ -818,7 +847,7 @@ class SugarApplication
 
         $defaultCookiePath = ini_get('session.cookie_path');
         if ($path === null) {
-            if(empty($defaultCookiePath)) {
+            if (empty($defaultCookiePath)) {
                 $path = '/';
             } else {
                 $path = $defaultCookiePath;
@@ -843,11 +872,11 @@ class SugarApplication
         $ret = array();
         foreach ($this->redirectVars as $var) {
             if (!empty($this->controller->$var)) {
-                $ret["login_" . $var] = $this->controller->$var;
+                $ret['login_' . $var] = $this->controller->$var;
                 continue;
             }
             if (!empty($_REQUEST[$var])) {
-                $ret["login_" . $var] = $_REQUEST[$var];
+                $ret['login_' . $var] = $_REQUEST[$var];
             }
         }
         if (isset($_REQUEST['mobile'])) {
@@ -859,7 +888,7 @@ class SugarApplication
         if (empty($ret)) {
             return '';
         }
-        return "&" . http_build_query($ret);
+        return '&' . http_build_query($ret);
     }
 
     /**
@@ -872,7 +901,7 @@ class SugarApplication
         $ret = array();
         foreach ($this->redirectVars as $var) {
             if (!empty($_REQUEST['login_' . $var]) || $add_empty) {
-                $ret["login_" . $var] = isset($_REQUEST['login_' . $var]) ? $_REQUEST['login_' . $var] : '';
+                $ret['login_' . $var] = isset($_REQUEST['login_' . $var]) ? $_REQUEST['login_' . $var] : '';
             }
         }
         return $ret;
@@ -895,9 +924,9 @@ class SugarApplication
             $vars['mobile'] = $_REQUEST['mobile'];
         }
         if (empty($vars)) {
-            return "index.php?module=Home&action=index";
-        } else {
-            return "index.php?" . http_build_query($vars);
+            return 'index.php?module=Home&action=index';
         }
+
+        return 'index.php?' . http_build_query($vars);
     }
 }

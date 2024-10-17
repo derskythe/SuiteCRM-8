@@ -199,6 +199,8 @@ class ConfiguratorController extends SugarController
             require_once 'modules/Home/dashlets.php';
 
             require_once 'install/suite_install/scenarios.php';
+            global $installation_scenarios;
+            global $enabled_tabs;
 
             foreach ($installation_scenarios as $scenario) {
                 //If the item is not in $_SESSION['scenarios'], then unset them as they are not required

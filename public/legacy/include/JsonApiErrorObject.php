@@ -49,7 +49,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
 }
 
 
-
 /**
  * implementation of http://jsonapi.org/format/#error-objects
  *
@@ -363,7 +362,7 @@ class JsonApiErrorObject
      */
     protected function getDefaultId()
     {
-        return (string) self::DEFAULT_ID;
+        return (string)self::DEFAULT_ID;
     }
 
     /**
@@ -372,7 +371,7 @@ class JsonApiErrorObject
      */
     protected function getDefaultCode()
     {
-        return (string) self::DEFAULT_CODE;
+        return (string)self::DEFAULT_CODE;
     }
 
     /**
@@ -381,7 +380,7 @@ class JsonApiErrorObject
      */
     protected function getDefaultStatus()
     {
-        return (string) self::DEFAULT_STATUS;
+        return (string)self::DEFAULT_STATUS;
     }
 
     /**
@@ -410,7 +409,7 @@ class JsonApiErrorObject
     {
         return [];
     }
-    
+
     /**
      *
      * @return string|null
@@ -419,7 +418,7 @@ class JsonApiErrorObject
     {
         return $this->id;
     }
-    
+
     /**
      *
      * @return array|null
@@ -428,7 +427,7 @@ class JsonApiErrorObject
     {
         return $this->links;
     }
-    
+
     /**
      *
      * @return string|null
@@ -437,7 +436,7 @@ class JsonApiErrorObject
     {
         return $this->status;
     }
-    
+
     /**
      *
      * @return string|null
@@ -446,7 +445,7 @@ class JsonApiErrorObject
     {
         return $this->code;
     }
-    
+
     /**
      *
      * @return string|null
@@ -455,7 +454,7 @@ class JsonApiErrorObject
     {
         return $this->title;
     }
-    
+
     /**
      *
      * @return string|null
@@ -464,7 +463,7 @@ class JsonApiErrorObject
     {
         return $this->detail;
     }
-    
+
     /**
      *
      * @return array|null
@@ -473,7 +472,7 @@ class JsonApiErrorObject
     {
         return $this->source;
     }
-    
+
     /**
      *
      * @return array|null
@@ -514,12 +513,12 @@ class JsonApiErrorObject
         }
         return $json;
     }
-    
+
     /**
      *
-     * @global array $sugar_config
      * @param Exception $e
      * @return array
+     * @global array $sugar_config
      */
     protected function retrieveMetaFromException(Exception $e)
     {
@@ -528,7 +527,7 @@ class JsonApiErrorObject
             'class' => get_class($e),
             'code' => $e->getCode(),
         ];
-        
+
         if ($e instanceof LangExceptionInterface) {
             $meta['langMessage'] = $e->getLangMessage();
         }
@@ -543,10 +542,10 @@ class JsonApiErrorObject
                 $meta['debug']['previous'] = $this->retrieveMetaFromException($previous);
             }
         }
-        
+
         return $meta;
     }
-    
+
     /**
      *
      * @param Exception $e
@@ -555,22 +554,22 @@ class JsonApiErrorObject
     public function retrieveFromException(Exception $e)
     {
         $this->setCode($e->getCode());
-        
+
         $meta = $this->retrieveMetaFromException($e);
-        
+
         $this->setMeta($meta);
-        
-        
+
+
         if ($e instanceof ApiException) {
             $this->setCode($e->getCode());
             $this->setStatus($e->getHttpStatus());
             $this->setDetail($e->getDetail());
             $this->setStatus($e->getHttpStatus());
         }
-        
+
         return $this;
     }
-    
+
     /**
      *
      * @param ServerRequestInterface $request
@@ -582,7 +581,7 @@ class JsonApiErrorObject
             'pointer' => $request->getUri(),
             'parametes' => $request->getQueryParams(),
         ]);
-        
+
         return $this;
     }
 }

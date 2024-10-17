@@ -88,7 +88,7 @@ class SugarSQLValidate
             return false;
         }
         // verify SELECT didn't change
-        if ((is_countable($parsed["SELECT"]) ? count($parsed["SELECT"]) : 0) != 1 || $parsed["SELECT"][0] !== array('expr_type' => 'colref','alias' => '`dummy`', 'base_expr' => 'dummy', 'sub_tree' => false)) {
+        if ((is_countable($parsed["SELECT"]) ? count($parsed["SELECT"]) : 0) != 1 || $parsed["SELECT"][0] !== array('expr_type' => 'colref', 'alias' => '`dummy`', 'base_expr' => 'dummy', 'sub_tree' => false)) {
             $GLOBALS['log']->debug("validation failed SELECT");
             return false;
         }
@@ -115,8 +115,8 @@ class SugarSQLValidate
      * @var array
      */
     protected $bad_functions = array("benchmark", "encode", "sleep",
-    "generate_series", "load_file", "sys_eval", "user_name",
-    "xp_cmdshell", "sys_exec", "sp_replwritetovarbin");
+        "generate_series", "load_file", "sys_eval", "user_name",
+        "xp_cmdshell", "sys_exec", "sp_replwritetovarbin");
 
     /**
      * Validate parsed SQL expression
@@ -130,7 +130,7 @@ class SugarSQLValidate
                 continue;
             }
             // check subtrees
-            if (isset($term['expr_type']) &&  $term['expr_type'] == 'subquery') {
+            if (isset($term['expr_type']) && $term['expr_type'] == 'subquery') {
                 if (!$allow_some_subqueries || !$this->allowedSubquery($term)) {
                     // subqueries are verboten, except for some very special ones
                     $GLOBALS['log']->debug("validation failed subquery");
@@ -160,8 +160,8 @@ class SugarSQLValidate
                 $GLOBALS['log']->debug("validation failed column name");
                 return false;
             }
-            if (!empty($term['alias']) && $term['alias'] != $term['base_expr'] && $term['alias'] != "`".$term['base_expr']."`") {
-                $GLOBALS['log']->debug("validation failed alias: ".var_export($term, true));
+            if (!empty($term['alias']) && $term['alias'] != $term['base_expr'] && $term['alias'] != "`" . $term['base_expr'] . "`") {
+                $GLOBALS['log']->debug("validation failed alias: " . var_export($term, true));
                 return false;
             }
         }
