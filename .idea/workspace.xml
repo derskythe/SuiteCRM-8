@@ -21,43 +21,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/phing.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/194d6ef2-6c15-4a2b-b4a5-70f03a353cbb.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/194d6ef2-6c15-4a2b-b4a5-70f03a353cbb.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/app/core/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/core/app/core/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/ModuleInstall/ModuleInstaller.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/ModuleInstall/ModuleInstaller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/ModuleInstall/PackageManager/PackageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/ModuleInstall/PackageManager/PackageController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/ModuleInstall/PackageManager/PackageManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/ModuleInstall/PackageManager/PackageManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/data/Link2.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/Link2.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/ErrorMessage.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/JsonApiErrorObject.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/JsonApiErrorObject.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/SugarApplication.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/SugarApplication.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarLogger/LoggerTemplate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarPHPMailer.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarPHPMailer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarSQLValidate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarSQLValidate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/clean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/clean.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/controller/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/controller/Controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/database/DBManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/database/DBManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/database/MysqlManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/database/MysqlManager.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/entryPoint.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/entryPoint.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/json_config.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/json_config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/utils/array_utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/utils/array_utils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/install.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/lib/Utility/StringUtils.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/lib/Utility/StringUtils.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/lib/Utility/SuiteLogger.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/lib/Utility/SuiteLogger.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Configurator/Forms.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Configurator/Forms.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Configurator/controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Configurator/controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/MySettings/StoreQuery.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/MySettings/StoreQuery.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Studio/Forms.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Studio/Forms.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/UserPreferences/UserPreference.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/UserPreferences/UserPreference.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/soap/SoapSugarUsers.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/soap/SoapSugarUsers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -810,7 +775,7 @@
       <workItem from="1729136127630" duration="273000" />
       <workItem from="1729136426374" duration="11787000" />
       <workItem from="1729154871641" duration="882000" />
-      <workItem from="1729155768973" duration="4569000" />
+      <workItem from="1729155768973" duration="4892000" />
     </task>
     <task id="LOCAL-00001" summary="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations.">
       <option name="closed" value="true" />
@@ -916,7 +881,39 @@
       <option name="project" value="LOCAL" />
       <updated>1729103369534</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="fix: Improve LoggerManager and update database collations&#10;&#10;Refactor LoggerManager for style and method content consistency.&#10;* Changed `die` to `exit` for better clarity.&#10;* Standardized require_once formatting to use no parentheses.&#10;* Applied consistent punctuation and spacing in comments.&#10;&#10;Replace database collations with simplified entries.&#10;* Removed redundant charset entries.&#10;* Ensured consistency and more precise charset configurations.">
+      <option name="closed" value="true" />
+      <created>1729160354505</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1729160354505</updated>
+    </task>
+    <task id="LOCAL-00015" summary="feat: Update inspection tools, PhpCSFixer, and core packages&#10;&#10;Add and configure various inspection tools and warnings. Update PhpCSFixer configuration with additional standards. Modify core packages for Angular and tslib dependencies.&#10;* Added multiple inspection tools to Project_Default.xml.&#10;* Updated PhpCSFixer standards in php.xml.&#10;* Adjusted package.json dependencies for Angular and tslib.">
+      <option name="closed" value="true" />
+      <created>1729160516229</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1729160516229</updated>
+    </task>
+    <task id="LOCAL-00016" summary="refactor: correct spacing and formatting issues&#10;&#10;Updated various files to correct spacing and formatting inconsistencies.&#10;&#10;* Fixed inconsistent use of spaces around assignment and concatenation operators.&#10;* Removed unnecessary blank lines and added missing ones.&#10;* Ensured consistent indentation across all updated files.">
+      <option name="closed" value="true" />
+      <created>1729160596333</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1729160596333</updated>
+    </task>
+    <task id="LOCAL-00017" summary="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.">
+      <option name="closed" value="true" />
+      <created>1729160647049</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1729160647049</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -983,7 +980,11 @@
     <MESSAGE value="chore(deps): Update composer dependencies and config&#10;&#10;Update composer dependencies to latest versions and modify configuration files for enhanced stability and performance.&#10;&#10;* Bump versions for various dependencies in composer.json.&#10;* Reflect changes in .idea/workspace.xml to align with updated settings." />
     <MESSAGE value="chore(deps): Update composer dependencies and config&#10;&#10;Update composer dependencies to latest versions and modify configuration files for enhanced stability and performance.&#10;* Bump versions for various dependencies in composer.json.&#10;* Reflect changes in .idea/workspace.xml to align with updated settings.&#10;* Add phpunit.phar to .gitignore." />
     <MESSAGE value="chore(deps): Update composer and package dependencies&#10;&#10;Update composer dependencies to latest versions and adjust configurations.&#10;&#10;* Bump versions for multiple dependencies in composer.json.&#10;* Update .idea/workspace.xml to reflect configuration changes.&#10;* Remove obsolete dependencies from composer.json.&#10;* Adjust package.json dependencies." />
-    <option name="LAST_COMMIT_MESSAGE" value="chore(deps): Update composer and package dependencies&#10;&#10;Update composer dependencies to latest versions and adjust configurations.&#10;&#10;* Bump versions for multiple dependencies in composer.json.&#10;* Update .idea/workspace.xml to reflect configuration changes.&#10;* Remove obsolete dependencies from composer.json.&#10;* Adjust package.json dependencies." />
+    <MESSAGE value="fix: Improve LoggerManager and update database collations&#10;&#10;Refactor LoggerManager for style and method content consistency.&#10;* Changed `die` to `exit` for better clarity.&#10;* Standardized require_once formatting to use no parentheses.&#10;* Applied consistent punctuation and spacing in comments.&#10;&#10;Replace database collations with simplified entries.&#10;* Removed redundant charset entries.&#10;* Ensured consistency and more precise charset configurations." />
+    <MESSAGE value="feat: Update inspection tools, PhpCSFixer, and core packages&#10;&#10;Add and configure various inspection tools and warnings. Update PhpCSFixer configuration with additional standards. Modify core packages for Angular and tslib dependencies.&#10;* Added multiple inspection tools to Project_Default.xml.&#10;* Updated PhpCSFixer standards in php.xml.&#10;* Adjusted package.json dependencies for Angular and tslib." />
+    <MESSAGE value="refactor: correct spacing and formatting issues&#10;&#10;Updated various files to correct spacing and formatting inconsistencies.&#10;&#10;* Fixed inconsistent use of spaces around assignment and concatenation operators.&#10;* Removed unnecessary blank lines and added missing ones.&#10;* Ensured consistent indentation across all updated files." />
+    <MESSAGE value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing." />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

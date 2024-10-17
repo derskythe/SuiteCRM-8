@@ -94,6 +94,7 @@ tests/_support/_generated/
 composer.phar
 composer*.phar
 phpunit.phar
+/*.phar
 
 # htacess
 /.htaccess
