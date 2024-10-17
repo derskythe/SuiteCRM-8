@@ -21,8 +21,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.">
+    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="feat: Add DatabasePDOManager for PDO database operations&#10;&#10;Introduces a new DatabasePDOManager class for managing PDO connections and interactions. &#10;* Implements singleton pattern for instance management.&#10;* Includes methods for connecting to database, executing queries, and logging.&#10;* Ensures proper error handling and logging throughout.">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -775,7 +776,7 @@
       <workItem from="1729136127630" duration="273000" />
       <workItem from="1729136426374" duration="11787000" />
       <workItem from="1729154871641" duration="882000" />
-      <workItem from="1729155768973" duration="4892000" />
+      <workItem from="1729155768973" duration="5898000" />
     </task>
     <task id="LOCAL-00001" summary="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations.">
       <option name="closed" value="true" />
@@ -913,7 +914,23 @@
       <option name="project" value="LOCAL" />
       <updated>1729160647049</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema to improve IDE management and project synchronization.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.&#10;```">
+      <option name="closed" value="true" />
+      <created>1729160703438</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1729160703438</updated>
+    </task>
+    <task id="LOCAL-00019" summary="feat: Add DatabasePDOManager for PDO database operations&#10;&#10;Introduces a new DatabasePDOManager class for managing PDO connections and interactions. &#10;* Implements singleton pattern for instance management.&#10;* Includes methods for connecting to database, executing queries, and logging.&#10;* Ensures proper error handling and logging throughout.">
+      <option name="closed" value="true" />
+      <created>1729160811939</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1729160811939</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -984,7 +1001,9 @@
     <MESSAGE value="feat: Update inspection tools, PhpCSFixer, and core packages&#10;&#10;Add and configure various inspection tools and warnings. Update PhpCSFixer configuration with additional standards. Modify core packages for Angular and tslib dependencies.&#10;* Added multiple inspection tools to Project_Default.xml.&#10;* Updated PhpCSFixer standards in php.xml.&#10;* Adjusted package.json dependencies for Angular and tslib." />
     <MESSAGE value="refactor: correct spacing and formatting issues&#10;&#10;Updated various files to correct spacing and formatting inconsistencies.&#10;&#10;* Fixed inconsistent use of spaces around assignment and concatenation operators.&#10;* Removed unnecessary blank lines and added missing ones.&#10;* Ensured consistent indentation across all updated files." />
     <MESSAGE value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing." />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing." />
+    <MESSAGE value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema to improve IDE management and project synchronization.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.&#10;```" />
+    <MESSAGE value="feat: Add DatabasePDOManager for PDO database operations&#10;&#10;Introduces a new DatabasePDOManager class for managing PDO connections and interactions. &#10;* Implements singleton pattern for instance management.&#10;* Includes methods for connecting to database, executing queries, and logging.&#10;* Ensures proper error handling and logging throughout." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add DatabasePDOManager for PDO database operations&#10;&#10;Introduces a new DatabasePDOManager class for managing PDO connections and interactions. &#10;* Implements singleton pattern for instance management.&#10;* Includes methods for connecting to database, executing queries, and logging.&#10;* Ensures proper error handling and logging throughout." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

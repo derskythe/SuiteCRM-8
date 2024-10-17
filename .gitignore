@@ -17,7 +17,24 @@ app/**/*.js.map
 # For development the cache directory can be safely ignored and
 # therefore it is ignored.
 /cache/*
+# Gatsby files
+.cache/
+/app/cache/*
+/var/cache/*
+# Optional stylelint cache
+.stylelintcache
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
 !/cache/index.html
+!app/cache/.gitkeep
+!var/cache/.gitkeep
+
 # Ignore some files and directories from the custom directory.
 /custom/history/
 /custom/modulebuilder/
@@ -33,8 +50,11 @@ app/**/*.js.map
 *.log
 # Ignore the new upload directories.
 /upload/*
-!/upload/index.html
+# Assets and user uploads
+/web/bundles/
+/web/uploads/
 /upload_backup/
+!/upload/index.html
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -42,14 +62,25 @@ app/**/*.js.map
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
+/public/dist/
+/public/extensions/
 /var/
 /vendor/
+# Parameters
+/app/config/parameters.yml
+/app/config/parameters.ini
+# Local configs
+config/autoload/*.local.php
+
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
 /phpunit.xml
+.phpunit.cache
+/app/phpunit.xml
+
 ###< symfony/phpunit-bridge ###
 
 ###> ng serve ###
@@ -65,17 +96,58 @@ app/**/*.js.map
 
 # Symfony Logs
 /logs/
+/app/logs/*
+/var/logs/*
+/var/log/*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+libpeerconnection.log/
+testem.log
+### Laravel template
 !logs/.gitkeep
+!app/logs/.gitkeep
+!var/logs/.gitkeep
+!var/log/.gitkeep
+/app/spool/*
 
-# Symfony Cache
-/cache/
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+.yarn/*
+### yarn template
+!.yarn/releases
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+!.yarn/cache
 
 # Dependencies
 node_modules
-
-# Compiled Output
-/public/
+jspm_packages/
 /dist/
+build/Release
+typings/
+.npm
+.eslintcache
+.node_repl_history
+*.tgz
+.yarn-integrity
+*.bna
+*.card
+**/Entity/*~
+*.mo
+*.tsbuildinfo
+# Next.js build output
+out
+# Nuxt.js build / generate output
+.nuxt
 
 # Custom
 /extensions/
@@ -91,90 +163,45 @@ tests/_support/_generated/
 !tests/_support/_generated/.gitkeep
 
 # Composer
-composer.phar
-composer*.phar
-phpunit.phar
 /*.phar
 
 # htacess
 /.htaccess
 
 # SASS
-/public/legacy/themes/suite8/css/Dawn/style.css
-/public/legacy/themes/suite8/css/Noon/style.css
+/public/legacy/themes/suite8/css/*/style.css
 ### Sass template
 .sass-cache/
 *.css.map
 *.sass.map
 *.scss.map
+/app/bootstrap.php.cache
+/var/bootstrap.php.cache
 
 ### PHPUnit template
-# Covers PHPUnit
-# Reference: https://phpunit.de/
-
 # Generated files
-.phpunit.cache
-
-# PHPUnit
-/app/phpunit.xml
 
 # Build data
 /build/
 
 ### Symfony template
-# Cache and logs (Symfony2)
-/app/cache/*
-/app/logs/*
-!app/cache/.gitkeep
-!app/logs/.gitkeep
-
-# Email spool folder
-/app/spool/*
-
 # Cache, session files and logs (Symfony3)
-/var/cache/*
-/var/logs/*
 /var/sessions/*
-!var/cache/.gitkeep
-!var/logs/.gitkeep
 !var/sessions/.gitkeep
 
 # Logs (Symfony4)
-/var/log/*
-!var/log/.gitkeep
-
-# Parameters
-/app/config/parameters.yml
-/app/config/parameters.ini
-
 # Managed by Composer
-/app/bootstrap.php.cache
-/var/bootstrap.php.cache
 /bin/*
 !bin/console
 !bin/symfony_requirements
-
-# Assets and user uploads
-/web/bundles/
-/web/uploads/
 
 # PHPUnit
 
 # Build data
 # Backup entities generated with doctrine:generate:entities command
-**/Entity/*~
 
 # Embedded web-server pid file
 /.web-server-pid
-
-### HyperledgerComposer template
-# Logs
-logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Runtime data
 pids
 *.pid
 *.seed
@@ -198,70 +225,18 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
-
-# Dependency directories
-node_modules/
-jspm_packages/
-
-# TypeScript v1 declaration files
-typings/
-
-# Optional npm cache directory
-.npm
-
-# Optional eslint cache
-.eslintcache
-
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
-# dotenv environment variables file
-.env
-
-# next.js build output
-.next
-
-# Output of Hyperledger 'composer' tools
-*.bna
-*.card
-
-### ZendFramework template
-# Composer files
-vendor/
-
-# Local configs
-config/autoload/*.local.php
-
-# Binary gettext files
-*.mo
-
 # Data
 data/logs/
 data/cache/
 data/sessions/
 data/tmp/
 temp/
-
-# Doctrine 2
 data/DoctrineORMModule/Proxy/
 data/DoctrineORMModule/cache/
 
 # Legacy ZF1
 demos/
 extras/documentation
-
-### Node template
-# Logs
-lerna-debug.log*
-.pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -271,39 +246,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Optional stylelint cache
-.stylelintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
-
-
-# dotenv environment variable files
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
-
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# Next.js build output
-out
-
-# Nuxt.js build / generate output
-.nuxt
-dist
-
-# Gatsby files
-.cache/
 
 # vuepress build output
 .vuepress/dist
@@ -329,13 +271,6 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-# yarn v2
-.yarn/cache
-.yarn/unplugged
-.yarn/build-state.yml
-.yarn/install-state.gz
-.pnp.*
-
 ### Vim template
 # Swap
 [._]*.s[a-v][a-z]
@@ -357,24 +292,6 @@ tags
 # Persistent undo
 [._]*.un~
 
-### yarn template
-.yarn/*
-!.yarn/releases
-!.yarn/patches
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-
-# if you are NOT using Zero-installs, then:
-# comment the following lines
-!.yarn/cache
-
-# and uncomment the following lines
-# .pnp.*
-
-### Laravel template
-npm-debug.log
-yarn-error.log
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -399,8 +316,6 @@ bower_components/
 # misc
 connect.lock/
 coverage/
-libpeerconnection.log/
-testem.log
 
 # e2e
 e2e/*.js
