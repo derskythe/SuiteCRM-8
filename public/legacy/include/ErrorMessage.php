@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
  *
@@ -41,71 +40,37 @@
 
 namespace SuiteCRM;
 
-use LoggerManager;
-use LoggerTemplate;
-
 if (!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    exit('Not A Valid Entry Point');
 }
 
 #[\AllowDynamicProperties]
 class ErrorMessage
 {
-
     /**
-     * integer
+     * integer.
      */
     public const DEFAULT_CODE = 1;
 
     /**
-     * string
+     * string.
      */
-    public const DEFAULT_LOG_LEVEL = LoggerTemplate::DEFAULT_LOG_LEVEL;
+    public const DEFAULT_LOG_LEVEL = \LoggerTemplate::DEFAULT_LOG_LEVEL;
 
-    /**
-     *
-     * @var string
-     */
     protected string $message;
 
-    /**
-     *
-     * @var integer
-     */
     protected int $code;
 
-    /**
-     *
-     * @var string
-     */
     protected string $level;
 
-    /**
-     *
-     * @var boolean
-     */
     protected bool $throw;
 
-    /**
-     *
-     * @param string $message
-     * @param integer|null $code
-     * @param string $level
-     * @param boolean $throw
-     */
-    public function __construct(string $message = '', int $code = null, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true)
+    public function __construct(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true)
     {
         $this->setState($message, $code, $level, $throw);
     }
 
-    /**
-     *
-     * @param string $message
-     * @param integer|null $code
-     * @param string $level
-     * @param boolean $throw
-     */
-    public function setState(string $message = '', int $code = null, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true): void
+    public function setState(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true): void
     {
         $this->message = $message;
         $this->code = $code;
@@ -114,15 +79,18 @@ class ErrorMessage
     }
 
     /**
-     *
      * @throws ErrorMessageException
      */
     public function handle(): void
     {
         if ($this->level) {
-            $log = LoggerManager::getLogger();
+            $log = \LoggerManager::getLogger();
             $level = $this->level;
-            $log->$level($this->message);
+            if (null !== $log) {
+                $log->$level($this->message);
+            } else {
+                trigger_error("Can't log message: {$this->message}");
+            }
         }
         if ($this->throw) {
             throw new ErrorMessageException($this->message, $this->code);
@@ -130,33 +98,24 @@ class ErrorMessage
     }
 
     /**
-     *
-     * @param string $message
-     * @param string $level
-     * @param boolean $throw
-     * @param integer $code
      * @throws ErrorMessageException
      */
-    public static function handler(string $message, string $level = LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true, int $code = self::DEFAULT_CODE): void
+    public static function handler(
+        string $message,
+        string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL,
+        bool $throw = true,
+        int $code = self::DEFAULT_CODE): void
     {
         $errorMessage = new ErrorMessage($message, $code, $level, $throw);
         $errorMessage->handle();
     }
 
-    /**
-     *
-     * @param string $message
-     * @param integer $level
-     */
-    public static function log(string $message, int $level = LoggerTemplate::DEFAULT_LOG_LEVEL): void
+    public static function log(string $message, int|string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL): void
     {
         self::handler($message, $level, false);
     }
 
     /**
-     *
-     * @param string $message
-     * @param integer $code
      * @throws ErrorMessageException
      */
     public static function drop(string $message, int $code = self::DEFAULT_CODE): void

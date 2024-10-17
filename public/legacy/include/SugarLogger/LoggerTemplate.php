@@ -1,9 +1,9 @@
 <?php
+
 if (!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    exit('Not A Valid Entry Point');
 }
 /**
- *
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
  *
@@ -42,12 +42,13 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 /**
- * Generic logger
+ * Generic logger.
+ *
  * @api
  */
 interface LoggerTemplate
 {
-    public const DEFAULT_LOGGER_LOG_DIR = __DIR__ .'/../../../../logs';
+    public const DEFAULT_LOGGER_LOG_DIR = __DIR__.'/../../../../logs';
     public const DEFAULT_LOGGER_FILE_NAME = 'legacy.suitecrm';
     public const DEFAULT_LOGGER_FILE_SUFFIX = '';
     public const DEFAULT_LOGGER_DEFAULT_PERMS = '0644';
@@ -58,10 +59,7 @@ interface LoggerTemplate
     public const DEFAULT_LOG_LEVEL = 'debug';
 
     /**
-     * Main method for handling logging a message to the logger
-     *
-     * @param string $method
-     * @param array|string $message
+     * Main method for handling logging a message to the logger.
      */
     public function log(string $method, array|string $message);
 }
