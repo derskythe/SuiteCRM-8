@@ -373,7 +373,7 @@ class Opportunity extends SugarBean
         return parent::save($check_notify);
     }
 
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
         //if account_id was replaced unlink the previous account_id.
         //this rel_fields_before_value is populated by sugarbean during the retrieve call.

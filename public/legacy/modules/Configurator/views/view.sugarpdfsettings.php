@@ -109,7 +109,7 @@ class ConfiguratorViewSugarpdfsettings extends SugarView
         if (!empty($_POST['restore'])) {
             $focus = BeanFactory::newBean('Administration');
             foreach ($_POST as $key => $val) {
-                $prefix = $focus->get_config_prefix($key);
+                $prefix = $focus->getConfigPrefix($key);
                 if (in_array($prefix[0], $focus->config_categories)) {
                     $result = $focus->db->query("SELECT count(*) AS the_count FROM config WHERE category = '{$prefix[0]}' AND name = '{$prefix[1]}'");
                     $row = $focus->db->fetchByAssoc($result);

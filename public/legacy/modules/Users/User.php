@@ -321,10 +321,10 @@ class User extends Person implements EmailInterface
         $butts = "<input class='button' onclick='javascript:{$jscall}(\"\", \"{$this->id}\");' value='{$mod_strings['LBL_BUTTON_CREATE']}' type='button'>&nbsp;";
         if ($defaultDisplay) {
             $butts .= '<span name="edit_sig" id="edit_sig" style="visibility:inherit;"><input class="button" onclick="javascript:' . $jscall . '(document.getElementById(\'signature_id\', \'\').value)" value="' . $mod_strings['LBL_BUTTON_EDIT'] . '" type="button" tabindex="392">&nbsp;
-					</span>';
+     </span>';
         } else {
             $butts .= '<span name="edit_sig" id="edit_sig" style="visibility:hidden;"><input class="button" onclick="javascript:' . $jscall . '(document.getElementById(\'signature_id\', \'\').value)" value="' . $mod_strings['LBL_BUTTON_EDIT'] . '" type="button" tabindex="392">&nbsp;
-					</span>';
+     </span>';
         }
 
         return $butts;
@@ -968,7 +968,7 @@ class User extends Person implements EmailInterface
             ////    PDF SETTINGS
             ///////////////////////////////////////////////////////////////////////////
             ///////////////////////////////////////////////////////////////////////////
-            ////	SIGNATURES
+            //// SIGNATURES
             if (isset($_POST['signature_id'])) {
                 $this->setPreference('signature_default', $_POST['signature_id'], 0, 'global');
             }
@@ -976,7 +976,7 @@ class User extends Person implements EmailInterface
             if (isset($_POST['signature_prepend'])) {
                 $this->setPreference('signature_prepend', $_POST['signature_prepend'], 0, 'global');
             }
-            ////	END SIGNATURES
+            //// END SIGNATURES
             ///////////////////////////////////////////////////////////////////////////
 
 
@@ -1148,9 +1148,9 @@ class User extends Person implements EmailInterface
         $email1 = strtoupper($email);
         $q = <<<EOQ
 
-		select id from users where id in ( SELECT  er.bean_id AS id FROM email_addr_bean_rel er,
-			email_addresses ea WHERE ea.id = er.email_address_id AND users.deleted = 0
-		    AND ea.deleted = 0 AND er.deleted = 0 AND er.bean_module = 'Users' AND email_address_caps IN ('{$email1}') )
+  select id from users where id in ( SELECT  er.bean_id AS id FROM email_addr_bean_rel er,
+   email_addresses ea WHERE ea.id = er.email_address_id AND users.deleted = 0
+      AND ea.deleted = 0 AND er.deleted = 0 AND er.bean_module = 'Users' AND email_address_caps IN ('{$email1}') )
 EOQ;
 
 
@@ -1553,7 +1553,7 @@ EOQ;
             }
         }
         ///////////////////////////////////////////////////////////////////////
-        ////	InboundEmail verification failure
+        //// InboundEmail verification failure
         if (!$ieVerified) {
             $verified = false;
             $this->error_string .= '<br />' . $mod_strings['ERR_EMAIL_NO_OPTS'];

@@ -54,7 +54,7 @@ $focus = BeanFactory::newBean('Administration');
 
 // filter for relevant POST data and update config table
 foreach ($_POST as $key => $val) {
-    $prefix = $focus->get_config_prefix($key);
+    $prefix = $focus->getConfigPrefix($key);
     if (in_array($prefix[0], $focus->config_categories)) {
         if ($prefix[0] == "license") {
             if ($prefix[1] == "expire_date") {

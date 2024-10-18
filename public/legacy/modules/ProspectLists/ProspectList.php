@@ -307,7 +307,7 @@ FROM prospect_lists_prospects plp
         return $query;
     }
 
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
         parent::save_relationship_changes($is_update, $exclude);
         if ($this->lead_id != "") {

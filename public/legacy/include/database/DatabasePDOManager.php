@@ -16,15 +16,15 @@ class DatabasePDOManager
     /**
      * @var DatabasePDOManager|null
      */
-    private static ?DatabasePDOManager $instance;
+    private static ?DatabasePDOManager $instance = null;
     /**
      * @var LoggerManager|null
      */
-    private static ?LoggerManager $log;
+    private static ?LoggerManager $log = null;
     /**
      * @var array|null
      */
-    private static ?array $dbConfig;
+    private static ?array $dbConfig = null;
     /**
      * @var bool
      */
@@ -32,7 +32,7 @@ class DatabasePDOManager
     /**
      * @var PDO|null
      */
-    private ?PDO $pdo;
+    private ?PDO $pdo = null;
 
     /**
      * Constructor
@@ -126,6 +126,7 @@ class DatabasePDOManager
     }
 
     /**
+     * @param bool $isThrowException
      * @return void
      * @throws \Exception
      */
@@ -133,7 +134,7 @@ class DatabasePDOManager
     {
         if (!self::$init) {
             $this->log(LogLevel::ERROR, 'Database PDO Manager not initialized');
-            trigger_error('Database PDO Manager not initialized', E_USER_ERROR);
+            return;
         }
 
         $dsn = '';
@@ -240,7 +241,7 @@ class DatabasePDOManager
             }
             if (!empty($params)) {
                 foreach ($params as $key => $value) {
-                    if ($statement->bindParam($key, $value, self::getDatabaseType($value)) === false) {
+                    if ($statement->bindParam($key, $value, self::getDatabaseFieldType($value)) === false) {
                         $this->log(LogLevel::ERROR, 'Failed to executeNonQuery bind param',
                             [
                                 'SQL' => $sql,
@@ -318,7 +319,7 @@ class DatabasePDOManager
             }
             if (!empty($params)) {
                 foreach ($params as $key => $value) {
-                    if ($statement->bindParam($key, $value, self::getDatabaseType($value)) === false) {
+                    if ($statement->bindParam($key, $value, self::getDatabaseFieldType($value)) === false) {
                         $this->log(LogLevel::ERROR, 'Failed to executeInsertQuery bind param',
                             [
                                 'SQL' => $sql,
@@ -369,7 +370,7 @@ class DatabasePDOManager
      * @throws \Exception
      */
     public
-    function executeQueryResult(string $sql, array $params, bool $isThrowException = true): \PDOStatement|null
+    function executeQueryResult(string $sql, array $params = [], bool $isThrowException = true): \PDOStatement|null
     {
         if (!self::$init) {
             $this->log(LogLevel::ERROR, 'Database PDO Manager not initialized. executeInsertQuery', [$sql]);
@@ -395,9 +396,9 @@ class DatabasePDOManager
 
                 return null;
             }
-            if (!empty($params)) {
+            if (!empty($params) && count($params) > 0) {
                 foreach ($params as $key => $value) {
-                    if ($statement->bindParam($key, $value, self::getDatabaseType($value)) === false) {
+                    if ($statement->bindParam($key, $value, self::getDatabaseFieldType($value)) === false) {
                         $this->log(LogLevel::ERROR, 'Failed to executeQueryResult bind param',
                             [
                                 'SQL' => $sql,
@@ -451,11 +452,11 @@ class DatabasePDOManager
     {
         if (!self::isInit()) {
             $this->log(LogLevel::ERROR, 'Database PDO Manager not initialized. fetchAssoc');
-            return array();
+            return [];
         }
         if($statement === null){
             $this->log(LogLevel::ERROR, 'Statement is null! Nothing to fetch. fetchAssoc');
-            return array();
+            return [];
         }
         try {
             return $statement->fetch(\PDO::FETCH_ASSOC);
@@ -474,7 +475,7 @@ class DatabasePDOManager
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -482,7 +483,7 @@ class DatabasePDOManager
      * @return int
      */
     private
-    static function getDatabaseType(mixed $value): int
+    static function getDatabaseFieldType(mixed $value): int
     {
         if (is_bool($value)) {
             return PDO::PARAM_BOOL;

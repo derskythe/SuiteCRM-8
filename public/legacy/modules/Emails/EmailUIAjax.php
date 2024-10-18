@@ -837,14 +837,14 @@ if (isset($_REQUEST['emailUIAction'])) {
                     if (!empty($out['meta']['email']['cc_addrs'])) {
                         $ccs = $email->et->generateExpandableAddrs($out['meta']['email']['cc_addrs']);
                         $out['meta']['email']['cc'] = <<<eoq
-        				<tr>
-        					<td NOWRAP valign="top" class="displayEmailLabel">
-        						{$app_strings['LBL_EMAIL_CC']}:
-        					</td>
-        					<td class="displayEmailValue">
-        						{$ccs}
-        					</td>
-        				</tr>
+            <tr>
+             <td NOWRAP valign="top" class="displayEmailLabel">
+              {$app_strings['LBL_EMAIL_CC']}:
+             </td>
+             <td class="displayEmailValue">
+              {$ccs}
+             </td>
+            </tr>
 eoq;
                     }
                     echo $json->encode($out);

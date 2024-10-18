@@ -184,7 +184,7 @@ class aCase extends Basic
      * @param bool $is_update
      * @param array $exclude
      */
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
         parent::save_relationship_changes($is_update, $exclude);
 

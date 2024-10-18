@@ -590,7 +590,7 @@ class Contact extends Person implements EmailInterface
         return empty($result) ? null : $result;
     }
 
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
 
         //if account_id was replaced unlink the previous account_id.

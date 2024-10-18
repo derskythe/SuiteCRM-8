@@ -633,6 +633,8 @@ class SugarApplication
 
     public function startSession()
     {
+        require_once(__DIR__.'/../utils.php');
+
         $sessionIdCookie = $_COOKIE[session_name()] ?? null;
         if (isset($_REQUEST['MSID'])) {
             session_id($_REQUEST['MSID']);
