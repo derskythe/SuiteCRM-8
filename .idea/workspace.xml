@@ -449,75 +449,75 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Composer Script.auto-scripts.executor": "Run",
-    "Composer Script.post-install-cmd.executor": "Run",
-    "Composer Script.post-update-cmd.executor": "Run",
-    "Docker.compose.yaml.database: Compose Deployment.executor": "Run",
-    "Docker.compose.yaml.suitecrm-app-php: Compose Deployment.executor": "Run",
-    "Docker.compose.yaml.suitecrm-db: Compose Deployment.executor": "Run",
-    "Docker.compose.yaml: Compose Deployment.executor": "Run",
-    "PHPUnit.public/legacy.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "credentialsType com.jetbrains.php.remote.interpreter.ui.PhpCreateRemoteSdkForm": "Docker",
-    "credentialsType com.jetbrains.php.remote.interpreter.ui.PhpInplaceEditRemoteSdkForm": "Docker",
-    "git-widget-placeholder": "try-to-remove",
-    "javascript.karma.karma_node_package_dir": "/home/skif/Projects/SuiteCRM-Core/node_modules/@angular/cli",
-    "javascript.nodejs.core.library.configured.version": "20.18.0",
-    "javascript.nodejs.core.library.typings.version": "20.16.11",
-    "last_opened_file_path": "/home/skif/Projects/SuiteCRM-Core",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.stylelint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.stylelint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs.protractor.protractor_package": "/usr/lib/node_modules/protractor",
-    "nodejs_interpreter_path": "node",
-    "nodejs_package_manager_path": "npm",
-    "npm.Angular CLI Server.executor": "Run",
-    "npm.build-dev.executor": "Run",
-    "npm.build-dev:common.executor": "Run",
-    "npm.build-dev:core.executor": "Run",
-    "npm.build-dev:defaultExt.executor": "Run",
-    "npm.build-dev:shell.executor": "Run",
-    "npm.build.executor": "Run",
-    "npm.build:common.executor": "Run",
-    "npm.build:core.executor": "Run",
-    "npm.build:defaultExt.executor": "Run",
-    "npm.build:shell.executor": "Run",
-    "npm.e2e.executor": "Run",
-    "npm.gen-index.executor": "Run",
-    "npm.gen-index:common.executor": "Run",
-    "npm.gen-index:core.executor": "Run",
-    "npm.lint.executor": "Run",
-    "npm.ng.executor": "Run",
-    "npm.serve:dist.executor": "Run",
-    "npm.start:all.executor": "Run",
-    "npm.start:shell.executor": "Run",
-    "npm.test:core.executor": "Run",
-    "php.override.implement.member.chooser.php.doc": "NONE",
-    "service.view.auto.scroll.from.source": "true",
-    "service.view.auto.scroll.to.source": "true",
-    "settings.editor.selected.configurable": "editor.preferences.completion",
-    "settings.editor.splitter.proportion": "0.20463847",
-    "ts.external.directory.path": "/home/skif/Projects/SuiteCRM-Core/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Composer Script.auto-scripts.executor&quot;: &quot;Run&quot;,
+    &quot;Composer Script.post-install-cmd.executor&quot;: &quot;Run&quot;,
+    &quot;Composer Script.post-update-cmd.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.compose.yaml.database: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.compose.yaml.suitecrm-app-php: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.compose.yaml.suitecrm-db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.compose.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;PHPUnit.public/legacy.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;credentialsType com.jetbrains.php.remote.interpreter.ui.PhpCreateRemoteSdkForm&quot;: &quot;Docker&quot;,
+    &quot;credentialsType com.jetbrains.php.remote.interpreter.ui.PhpInplaceEditRemoteSdkForm&quot;: &quot;Docker&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;try-to-remove&quot;,
+    &quot;javascript.karma.karma_node_package_dir&quot;: &quot;/home/skif/Projects/SuiteCRM-Core/node_modules/@angular/cli&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.18.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.16.11&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/skif/Projects/SuiteCRM-Core&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.protractor.protractor_package&quot;: &quot;/usr/lib/node_modules/protractor&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.Angular CLI Server.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-dev.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-dev:common.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-dev:core.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-dev:defaultExt.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build-dev:shell.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:common.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:core.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:defaultExt.executor&quot;: &quot;Run&quot;,
+    &quot;npm.build:shell.executor&quot;: &quot;Run&quot;,
+    &quot;npm.e2e.executor&quot;: &quot;Run&quot;,
+    &quot;npm.gen-index.executor&quot;: &quot;Run&quot;,
+    &quot;npm.gen-index:common.executor&quot;: &quot;Run&quot;,
+    &quot;npm.gen-index:core.executor&quot;: &quot;Run&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.ng.executor&quot;: &quot;Run&quot;,
+    &quot;npm.serve:dist.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start:all.executor&quot;: &quot;Run&quot;,
+    &quot;npm.start:shell.executor&quot;: &quot;Run&quot;,
+    &quot;npm.test:core.executor&quot;: &quot;Run&quot;,
+    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;NONE&quot;,
+    &quot;service.view.auto.scroll.from.source&quot;: &quot;true&quot;,
+    &quot;service.view.auto.scroll.to.source&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.20463847&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/skif/Projects/SuiteCRM-Core/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql",
-      "mariadb"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;,
+      &quot;mariadb&quot;
     ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JSON",
-      "TEXT"
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JSON&quot;,
+      &quot;TEXT&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -529,7 +529,6 @@
   <component name="RunManager" selected="npm.Angular CLI Server">
     <configuration name="Tests (common)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/common/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/common" />
       <node-interpreter value="project" />
       <envs />
@@ -537,7 +536,6 @@
     </configuration>
     <configuration name="Tests (core)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/core/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/core" />
       <node-interpreter value="project" />
       <envs />
@@ -545,7 +543,6 @@
     </configuration>
     <configuration name="Tests (defaultExt)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/extensions/defaultExt/app/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/extensions/defaultExt" />
       <node-interpreter value="project" />
       <envs />
@@ -553,7 +550,6 @@
     </configuration>
     <configuration name="Tests (shell)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/shell/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/shell" />
       <node-interpreter value="project" />
       <envs />

@@ -79,13 +79,13 @@ function compare($table_name, $db_indexes, $var_indexes)
 
         //no matching index in database.
         if (empty($sel_db_index)) {
-            $add_index[]=DBManagerFactory::getInstance()->add_drop_constraint($table_name, $var_i_def);
+            $add_index[] = DBManagerFactory::getInstance()->addDropConstraint($table_name, $var_i_def);
             continue;
         }
         if (!$field_list_match) {
             //drop the db index and create new index based on vardef
-            $drop_index[]=DBManagerFactory::getInstance()->add_drop_constraint($table_name, $sel_db_index, true);
-            $add_index[]=DBManagerFactory::getInstance()->add_drop_constraint($table_name, $var_i_def);
+            $drop_index[] = DBManagerFactory::getInstance()->addDropConstraint($table_name, $sel_db_index, true);
+            $add_index[] = DBManagerFactory::getInstance()->addDropConstraint($table_name, $var_i_def);
             continue;
         }
         //check for name match.
