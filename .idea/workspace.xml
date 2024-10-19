@@ -21,134 +21,54 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="chore: Add IDE configuration files&#10;&#10;* Added .idea/.gitignore to ignore IDE-specific files.&#10;* Included workspace changes and updated component settings.&#10;* Added new configuration for project styles in Project.xml.">
-      <change afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/194d6ef2-6c15-4a2b-b4a5-70f03a353cbb/storage_v2/_src_/schema/app.IXoBAA.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/194d6ef2-6c15-4a2b-b4a5-70f03a353cbb/storage_v2/_src_/schema/suite_crm.F8zDkg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/84a42712-1bee-47b5-a29a-56c5c93c1ae6.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile.Apache" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
-    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ChangesViewManager" show_ignored="true" />
   <component name="ComposerConfigs">
     <option name="configs">
-      <option value="$PROJECT_DIR$/public/legacy/composer.json" />
       <option value="$PROJECT_DIR$/public/legacy/include/social/facebook/facebook_sdk/composer.json" />
+      <option value="$PROJECT_DIR$/public/legacy/composer.json" />
     </option>
   </component>
   <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
-    <execution>
-      <phar pharPath="$PROJECT_DIR$/composer.phar" interpreterId="a5e7ec65-51ad-4533-96b3-837a186d32d6" />
-    </execution>
-    <testFrameworkAndSyncEnablingMap>
-      <testFrameworkAndSyncEnabling testFramework="PHPSpec" syncEnabling="true" />
-      <testFrameworkAndSyncEnabling testFramework="PHPUnit" syncEnabling="false" />
-      <testFrameworkAndSyncEnabling testFramework="Pest" syncEnabling="true" />
-    </testFrameworkAndSyncEnablingMap>
+    <execution />
   </component>
-  <component name="FileColors">
-    <fileColor scope="All Changed Files" color="Blue" />
-    <fileColor scope="Open Files" color="Gray" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Dockerfile" />
-      </list>
-    </option>
+  <component name="FormatOnSaveOptions">
+    <option name="myFormatOnlyChangedLines" value="true" />
+    <option name="myRunOnSave" value="true" />
   </component>
   <component name="Git.Settings">
-    <excluded-from-favorite>
-      <branch-storage>
-        <map>
-          <entry type="LOCAL">
-            <value>
-              <list>
-                <branch-info repo="$PROJECT_DIR$" source="master" />
-              </list>
-            </value>
-          </entry>
-        </map>
-      </branch-storage>
-    </excluded-from-favorite>
+    <option name="PREVIEW_PUSH_ON_COMMIT_AND_PUSH" value="false" />
     <option name="PUSH_AUTO_UPDATE" value="true" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="fix-legacy" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
+    &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
     &quot;assignee&quot;: &quot;derskythe&quot;
-  }
-}</component>
-  <component name="GitToolBoxStore">
-    <option name="recentBranches">
-      <RecentBranches>
-        <option name="branchesForRepo">
-          <list>
-            <RecentBranchesForRepo>
-              <option name="branches">
-                <list>
-                  <RecentBranch>
-                    <option name="branchName" value="try-to-remove" />
-                    <option name="lastUsedInstant" value="1729100798" />
-                  </RecentBranch>
-                  <RecentBranch>
-                    <option name="branchName" value="master" />
-                    <option name="lastUsedInstant" value="1728474193" />
-                  </RecentBranch>
-                </list>
-              </option>
-              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
-            </RecentBranchesForRepo>
-          </list>
-        </option>
-      </RecentBranches>
-    </option>
-  </component>
+    }
+    }</component>
   <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/salesagility/SuiteCRM-Core.git&quot;,
-    &quot;accountId&quot;: &quot;091bf2c7-9cfb-4bbf-8f35-fbfd89334711&quot;
-  }
-}</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/.dockerignore" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/.env" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/.env.test" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Dockerfile.Apache" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/angular.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/bin/console" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/compose.yaml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/composer.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/core/app/shell/src/app/app-initializer.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/logs/apache/access.log" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/logs/apache/error.log" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/proxy.conf.env.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/public/.htaccess" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="NamedScopeManager">
-    <scope name="config" pattern="file[SuiteCRM-Core]:config/*||file[SuiteCRM-Core]:config//*" />
-    <scope name="public" pattern="file[SuiteCRM-Core]:public/*" />
-  </component>
-  <component name="PHPCodeSnifferProjectConfiguration">
+    &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/derskythe/SuiteCRM-8.git&quot;,
+    &quot;accountId&quot;: &quot;5dfec84c-8160-4820-a2fe-63da828c0f97&quot;
+    }
+    }</component>
+  <component name="PHPCSFixerProjectConfiguration">
     <option name="selectedConfigurationId" value="DEFAULT_INTERPRETER" />
   </component>
-  <component name="PackageJsonUpdateNotifier">
-    <dismissed value="$PROJECT_DIR$/package.json" />
-  </component>
-  <component name="PhpDebugGeneral" listening_started="true" />
-  <component name="PhpWebServerValidation" path_to_validation_script="$PROJECT_DIR$" selected_validation_type="LOCAL" web_path_to_validation_script="http://127.0.0.1/" />
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP Local">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 8.2">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
       <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
@@ -405,127 +325,31 @@
       <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/imagesloaded" />
       <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/ace" />
       <path value="$PROJECT_DIR$/public/legacy/vendor/tinymce/tinymce" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-iconv" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
-      <path value="$PROJECT_DIR$/vendor/nikic/fast-route" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-registry" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-loader" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-validate" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-http" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-crypt" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-oauth" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-locale" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-version" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-xml" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-mime" />
-      <path value="$PROJECT_DIR$/vendor/slim/slim" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-gdata" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-cache" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-exception" />
-      <path value="$PROJECT_DIR$/vendor/zf1/zend-uri" />
     </include_path>
   </component>
-  <component name="ProblemsViewState">
-    <option name="groupByToolId" value="true" />
-    <hideBySeverity>
-      <option value="11" />
-      <option value="12" />
-      <option value="13" />
-      <option value="14" />
-      <option value="15" />
-      <option value="16" />
-      <option value="200" />
-    </hideBySeverity>
-    <option name="selectedTabId" value="CurrentFile" />
-    <option name="sortByName" value="true" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 4
-}</component>
-  <component name="ProjectId" id="2nBHfunPCmtOlfp8c7LIu8GsvAX" />
+    &quot;associatedIndex&quot;: 7
+    }</component>
+  <component name="ProjectId" id="2neSwK5PAsCK7zZtfo4fQNeveUS" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Composer Script.auto-scripts.executor&quot;: &quot;Run&quot;,
-    &quot;Composer Script.post-install-cmd.executor&quot;: &quot;Run&quot;,
-    &quot;Composer Script.post-update-cmd.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.compose.yaml.database: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.compose.yaml.suitecrm-app-php: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.compose.yaml.suitecrm-db: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.compose.yaml: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;PHPUnit.public/legacy.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;credentialsType com.jetbrains.php.remote.interpreter.ui.PhpCreateRemoteSdkForm&quot;: &quot;Docker&quot;,
-    &quot;credentialsType com.jetbrains.php.remote.interpreter.ui.PhpInplaceEditRemoteSdkForm&quot;: &quot;Docker&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;try-to-remove&quot;,
-    &quot;javascript.karma.karma_node_package_dir&quot;: &quot;/home/skif/Projects/SuiteCRM-Core/node_modules/@angular/cli&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.18.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.16.11&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/skif/Projects/SuiteCRM-Core&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs.protractor.protractor_package&quot;: &quot;/usr/lib/node_modules/protractor&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.Angular CLI Server.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build-dev.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build-dev:common.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build-dev:core.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build-dev:defaultExt.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build-dev:shell.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build:common.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build:core.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build:defaultExt.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build:shell.executor&quot;: &quot;Run&quot;,
-    &quot;npm.e2e.executor&quot;: &quot;Run&quot;,
-    &quot;npm.gen-index.executor&quot;: &quot;Run&quot;,
-    &quot;npm.gen-index:common.executor&quot;: &quot;Run&quot;,
-    &quot;npm.gen-index:core.executor&quot;: &quot;Run&quot;,
-    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
-    &quot;npm.ng.executor&quot;: &quot;Run&quot;,
-    &quot;npm.serve:dist.executor&quot;: &quot;Run&quot;,
-    &quot;npm.start:all.executor&quot;: &quot;Run&quot;,
-    &quot;npm.start:shell.executor&quot;: &quot;Run&quot;,
-    &quot;npm.test:core.executor&quot;: &quot;Run&quot;,
-    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;NONE&quot;,
-    &quot;service.view.auto.scroll.from.source&quot;: &quot;true&quot;,
-    &quot;service.view.auto.scroll.to.source&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.completion&quot;,
-    &quot;settings.editor.splitter.proportion&quot;: &quot;0.20463847&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/skif/Projects/SuiteCRM-Core/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
-  },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;,
-      &quot;mariadb&quot;
-    ],
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;JSON&quot;,
-      &quot;TEXT&quot;
-    ]
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "try-to-remove",
+    "javascript.nodejs.core.library.configured.version": "20.16.0",
+    "javascript.nodejs.core.library.typings.version": "20.16.13",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "settings.editor.selected.configurable": "StringManipulation",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager" selected="npm.Angular CLI Server">
     <configuration name="Tests (common)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/common/karma.conf.js" />
@@ -558,7 +382,6 @@
     <configuration name="E2E Tests (SuiteCRM-e2e)" type="JavaScriptTestRunnerProtractor">
       <config-file value="$PROJECT_DIR$/core/app/shell/e2e/protractor.conf.js" />
       <node-interpreter value="project" />
-      <protractor-package value="/usr/lib/node_modules/protractor" />
       <protractor-options value="" />
       <envs />
       <scope-kind value="ALL" />
@@ -567,70 +390,12 @@
     <configuration name="E2E Tests (defaultExt)" type="JavaScriptTestRunnerProtractor">
       <config-file value="$PROJECT_DIR$/extensions/defaultExt/app/e2e/protractor.conf.js" />
       <node-interpreter value="project" />
-      <protractor-package value="/usr/lib/node_modules/protractor" />
       <protractor-options value="" />
       <envs />
       <scope-kind value="ALL" />
       <method v="2" />
     </configuration>
     <configuration name="Angular Application" type="JavascriptDebugType" uri="http://localhost:4200">
-      <method v="2" />
-    </configuration>
-    <configuration name="public/legacy" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
-      <TestRunner configuration_file="$PROJECT_DIR$/public/legacy/tests/phpunit.xml.dist" scope="XML" use_alternative_configuration_file="true" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml">
-        <settings />
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="docker-compose.yaml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="sourceFilePath" value="docker-compose.yaml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="docker-compose.yaml.database: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="services">
-            <list>
-              <option value="database" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="docker-compose.yaml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="docker-compose.yaml.suitecrm-app-php: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="services">
-            <list>
-              <option value="suitecrm-app-php" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="docker-compose.yaml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="docker-compose.yaml.suitecrm-db: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="services">
-            <list>
-              <option value="suitecrm-db" />
-            </list>
-          </option>
-          <option name="sourceFilePath" value="docker-compose.yaml" />
-        </settings>
-      </deployment>
       <method v="2" />
     </configuration>
     <configuration name="Angular CLI Server" type="js.build_tools.npm">
@@ -643,41 +408,16 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build-dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build-dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <list>
-      <item itemvalue="Docker.docker-compose.yaml: Compose Deployment" />
-      <item itemvalue="Docker.docker-compose.yaml.database: Compose Deployment" />
-      <item itemvalue="Docker.docker-compose.yaml.suitecrm-app-php: Compose Deployment" />
-      <item itemvalue="Docker.docker-compose.yaml.suitecrm-db: Compose Deployment" />
       <item itemvalue="JavaScript Debug.Angular Application" />
       <item itemvalue="Karma.Tests (common)" />
       <item itemvalue="Karma.Tests (core)" />
       <item itemvalue="Karma.Tests (defaultExt)" />
       <item itemvalue="Karma.Tests (shell)" />
       <item itemvalue="npm.Angular CLI Server" />
-      <item itemvalue="npm.build-dev" />
-      <item itemvalue="PHPUnit.public/legacy" />
       <item itemvalue="Protractor.E2E Tests (SuiteCRM-e2e)" />
       <item itemvalue="Protractor.E2E Tests (defaultExt)" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="npm.build-dev" />
-        <item itemvalue="Docker.docker-compose.yaml.suitecrm-db: Compose Deployment" />
-        <item itemvalue="Docker.docker-compose.yaml.suitecrm-app-php: Compose Deployment" />
-        <item itemvalue="Docker.docker-compose.yaml.database: Compose Deployment" />
-        <item itemvalue="Docker.docker-compose.yaml: Compose Deployment" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -691,45 +431,20 @@
         <option value="php-doctrine_inflector-970fd879c5a4-c6654e4d" />
         <option value="php-doctrine_orm-970fd879c5a4-2dcce468" />
         <option value="php-egulias_email_validator-970fd879c5a4-9eb4eccc" />
-        <option value="php-fakerphp_faker-970fd879c5a4-24c97faa" />
         <option value="php-friendsofphp_php_cs_fixer-970fd879c5a4-9f611baa" />
-        <option value="php-friendsofphp_php_cs_fixer-970fd879c5a4-e58df5a5" />
         <option value="php-friendsofphp_proxy_manager_lts-970fd879c5a4-a42c75d5" />
-        <option value="php-google_auth-970fd879c5a4-e1f99034" />
-        <option value="php-guzzlehttp_guzzle-970fd879c5a4-fb32d013" />
-        <option value="php-guzzlehttp_promises-970fd879c5a4-6e25a05d" />
-        <option value="php-guzzlehttp_psr7-970fd879c5a4-4210a190" />
-        <option value="php-lcobucci_jwt-970fd879c5a4-81ff0973" />
         <option value="php-masterminds_html5-970fd879c5a4-c08280de" />
-        <option value="php-mockery_mockery-970fd879c5a4-7fbb312b" />
-        <option value="php-monolog_monolog-970fd879c5a4-12f4b811" />
-        <option value="php-monolog_monolog-970fd879c5a4-52a2a8c8" />
-        <option value="php-nesbot_carbon-970fd879c5a4-bd0c9e3d" />
         <option value="php-nette_utils-970fd879c5a4-31d281ad" />
-        <option value="php-nikic_php_parser-970fd879c5a4-ea02b00c" />
-        <option value="php-paragonie_random_compat-970fd879c5a4-b58dbecb" />
-        <option value="php-phar_io_version-970fd879c5a4-df0e2d90" />
         <option value="php-phpdocumentor_reflection_docblock-970fd879c5a4-65730a02" />
-        <option value="php-phpseclib_phpseclib-970fd879c5a4-c318b385" />
-        <option value="php-phpstan_phpstan-970fd879c5a4-9a88ac8f" />
-        <option value="php-phpunit_php_code_coverage-970fd879c5a4-19659224" />
-        <option value="php-phpunit_phpunit-970fd879c5a4-35b87395" />
         <option value="php-psy_psysh-970fd879c5a4-087440dc" />
-        <option value="php-react_promise-970fd879c5a4-1320ff65" />
         <option value="php-react_promise-970fd879c5a4-ef86c183" />
-        <option value="php-sebastian_comparator-970fd879c5a4-eb03be14" />
         <option value="php-symfony_cache-970fd879c5a4-44642cc9" />
         <option value="php-symfony_config-970fd879c5a4-3d352b2f" />
-        <option value="php-symfony_console-970fd879c5a4-2e98c33a" />
         <option value="php-symfony_console-970fd879c5a4-ce05fd45" />
         <option value="php-symfony_css_selector-970fd879c5a4-22b92dd3" />
         <option value="php-symfony_dependency_injection-970fd879c5a4-09895027" />
-        <option value="php-symfony_dom_crawler-970fd879c5a4-608e55a8" />
         <option value="php-symfony_error_handler-970fd879c5a4-c9539298" />
-        <option value="php-symfony_event_dispatcher-970fd879c5a4-1a5b5f9d" />
         <option value="php-symfony_expression_language-970fd879c5a4-428238f2" />
-        <option value="php-symfony_filesystem-970fd879c5a4-f7f4fba0" />
-        <option value="php-symfony_finder-970fd879c5a4-1c868a92" />
         <option value="php-symfony_finder-970fd879c5a4-581d5f84" />
         <option value="php-symfony_flex-970fd879c5a4-82166b49" />
         <option value="php-symfony_framework_bundle-970fd879c5a4-9eeb8a65" />
@@ -743,15 +458,12 @@
         <option value="php-symfony_monolog_bridge-970fd879c5a4-35c98b57" />
         <option value="php-symfony_monolog_bundle-970fd879c5a4-583e9e0e" />
         <option value="php-symfony_options_resolver-970fd879c5a4-bf1fdfbf" />
-        <option value="php-symfony_polyfill_iconv-970fd879c5a4-51d45ed9" />
         <option value="php-symfony_process-970fd879c5a4-eb2dee07" />
-        <option value="php-symfony_process-970fd879c5a4-f5bff2e9" />
         <option value="php-symfony_property_access-970fd879c5a4-65ce992c" />
         <option value="php-symfony_property_info-970fd879c5a4-aef9d395" />
         <option value="php-symfony_routing-970fd879c5a4-f49f10e4" />
         <option value="php-symfony_security_core-970fd879c5a4-e7cfdbeb" />
         <option value="php-symfony_serializer-970fd879c5a4-c99a29ca" />
-        <option value="php-symfony_string-970fd879c5a4-0463630a" />
         <option value="php-symfony_string-970fd879c5a4-46409843" />
         <option value="php-symfony_translation-970fd879c5a4-44617a86" />
         <option value="php-symfony_twig_bridge-970fd879c5a4-58b17791" />
@@ -759,223 +471,32 @@
         <option value="php-symfony_validator-970fd879c5a4-fe7c156f" />
         <option value="php-symfony_var_dumper-970fd879c5a4-1e515d35" />
         <option value="php-symfony_yaml-970fd879c5a4-50d00152" />
-        <option value="php-symfony_yaml-970fd879c5a4-a7f97337" />
         <option value="php-twig_twig-970fd879c5a4-a6a627dd" />
-        <option value="php-voku_portable_ascii-970fd879c5a4-a9692423" />
       </set>
     </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
-  <component name="SvnConfiguration">
-    <configuration>$USER_HOME$/.subversion</configuration>
-  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="d5458983-32e4-451f-b1cd-a0a63e0f2723" name="Changes" comment="" />
-      <created>1728439656349</created>
+      <changelist id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="" />
+      <created>1727051609861</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1728439656349</updated>
-      <workItem from="1728439657717" duration="64000" />
-      <workItem from="1728439742404" duration="915000" />
-      <workItem from="1728441539567" duration="820000" />
-      <workItem from="1728442368060" duration="4180000" />
-      <workItem from="1728466494165" duration="1146000" />
-      <workItem from="1728468003375" duration="1435000" />
-      <workItem from="1728474228116" duration="1714000" />
-      <workItem from="1728521925096" duration="1976000" />
-      <workItem from="1728523947918" duration="680000" />
-      <workItem from="1728525191547" duration="983000" />
-      <workItem from="1728526212074" duration="4227000" />
-      <workItem from="1728531431811" duration="56199000" />
-      <workItem from="1728673707591" duration="6323000" />
-      <workItem from="1728681773385" duration="6816000" />
-      <workItem from="1728796185310" duration="2949000" />
-      <workItem from="1728800334906" duration="108000" />
-      <workItem from="1728800451785" duration="3610000" />
-      <workItem from="1728804155825" duration="3533000" />
-      <workItem from="1728814094436" duration="39787000" />
-      <workItem from="1729091660189" duration="9275000" />
-      <workItem from="1729101350129" duration="5454000" />
-      <workItem from="1729133149611" duration="650000" />
-      <workItem from="1729133829102" duration="1080000" />
-      <workItem from="1729134930865" duration="254000" />
-      <workItem from="1729135193764" duration="889000" />
-      <workItem from="1729136092378" duration="25000" />
-      <workItem from="1729136127630" duration="273000" />
-      <workItem from="1729136426374" duration="11787000" />
-      <workItem from="1729154871641" duration="882000" />
-      <workItem from="1729155768973" duration="29218000" />
+      <updated>1727051609861</updated>
+      <workItem from="1727051611324" duration="1327000" />
+      <workItem from="1729332287309" duration="21000" />
+      <workItem from="1729332443435" duration="993000" />
+      <workItem from="1729333469593" duration="74000" />
     </task>
-    <task id="LOCAL-00001" summary="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations.">
+    <task id="LOCAL-00001" summary="feat: Add IntelliJ IDEA project configuration files&#10;&#10;Included various configuration files to set up IntelliJ IDEA project environment.&#10;* Implement .gitignore for IDEA-specific files.&#10;* Define project encodings, Git blame settings, and JavaScript library mappings.&#10;* Configure PHP tools, PHPUnit settings, and SQL dialect mappings.&#10;* Add module definitions and source folder configurations.">
       <option name="closed" value="true" />
-      <created>1728641178983</created>
+      <created>1729333507981</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1728641178983</updated>
+      <updated>1729333507981</updated>
     </task>
-    <task id="LOCAL-00002" summary="chore: remove unused user and group configuration&#10;&#10;Removed sudo and gosu from package list to streamline the Docker image.&#10;Eliminated unused arguments and environment variables related to user configuration.&#10;* Removed USER and GROUP arguments and environment variables.&#10;* Deleted user creation and permission-related commands.&#10;* Cleaned up .idea/workspace.xml configuration file.">
-      <option name="closed" value="true" />
-      <created>1728645767155</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1728645767155</updated>
-    </task>
-    <task id="LOCAL-00003" summary="feat: update data source configuration&#10;&#10;Renamed data source attributes and updated grants to new user 'app'. &#10;Changed default casing to 'lower/lower', and server version to '10.11.9'. &#10;Re-assigned schema and table associations to the new data source.">
-      <option name="closed" value="true" />
-      <created>1728858871584</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1728858871584</updated>
-    </task>
-    <task id="LOCAL-00004" summary="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`.">
-      <option name="closed" value="true" />
-      <created>1729041753622</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1729041753622</updated>
-    </task>
-    <task id="LOCAL-00005" summary="fix: logger corrections and Dockerfile changes">
-      <option name="closed" value="true" />
-      <created>1729086260427</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1729086260427</updated>
-    </task>
-    <task id="LOCAL-00006" summary="fix:: log level">
-      <option name="closed" value="true" />
-      <created>1729091580846</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1729091580846</updated>
-    </task>
-    <task id="LOCAL-00007" summary="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries.">
-      <option name="closed" value="true" />
-      <created>1729093533092</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1729093533092</updated>
-    </task>
-    <task id="LOCAL-00008" summary="fix: Taken from develop branch&#10;&#10;* Adjusted white space and indentation in multiple PHP and TS files.&#10;* Commented out configurations in .env and updated composer settings.&#10;* Added detailed file-level comments for autoloading.&#10;* Enhanced error handling and logging in console script.">
-      <option name="closed" value="true" />
-      <created>1729095510239</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1729095510239</updated>
-    </task>
-    <task id="LOCAL-00009" summary="chore: Remove index.ts file&#10;&#10;The index.ts file has been deleted, removing all exports.&#10;* This cleanup may be necessary for project restructuring or refactoring.&#10;* Ensuring all exports are managed directly from their respective modules can improve maintainability.">
-      <option name="closed" value="true" />
-      <created>1729095903880</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1729095903880</updated>
-    </task>
-    <task id="LOCAL-00010" summary="fix: Update php.ini display_errors setting and fix XML&#10;&#10;* Change php.ini display_errors setting from stdout to Off to enhance error visibility management.&#10;* Update .idea workspace.xml to reflect updated timestamp and new task details.&#10;* Add legacy vendor paths in PHP include path configuration.">
-      <option name="closed" value="true" />
-      <created>1729096339698</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1729096339698</updated>
-    </task>
-    <task id="LOCAL-00011" summary="chore(deps): Update composer dependencies and config&#10;&#10;Update composer dependencies to latest versions and modify configuration files for enhanced stability and performance.&#10;&#10;* Bump versions for various dependencies in composer.json.&#10;* Reflect changes in .idea/workspace.xml to align with updated settings.">
-      <option name="closed" value="true" />
-      <created>1729099262744</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1729099262744</updated>
-    </task>
-    <task id="LOCAL-00012" summary="chore(deps): Update composer dependencies and config&#10;&#10;Update composer dependencies to latest versions and modify configuration files for enhanced stability and performance.&#10;* Bump versions for various dependencies in composer.json.&#10;* Reflect changes in .idea/workspace.xml to align with updated settings.&#10;* Add phpunit.phar to .gitignore.">
-      <option name="closed" value="true" />
-      <created>1729099422235</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1729099422235</updated>
-    </task>
-    <task id="LOCAL-00013" summary="chore(deps): Update composer and package dependencies&#10;&#10;Update composer dependencies to latest versions and adjust configurations.&#10;&#10;* Bump versions for multiple dependencies in composer.json.&#10;* Update .idea/workspace.xml to reflect configuration changes.&#10;* Remove obsolete dependencies from composer.json.&#10;* Adjust package.json dependencies.">
-      <option name="closed" value="true" />
-      <created>1729103369534</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1729103369534</updated>
-    </task>
-    <task id="LOCAL-00014" summary="fix: Improve LoggerManager and update database collations&#10;&#10;Refactor LoggerManager for style and method content consistency.&#10;* Changed `die` to `exit` for better clarity.&#10;* Standardized require_once formatting to use no parentheses.&#10;* Applied consistent punctuation and spacing in comments.&#10;&#10;Replace database collations with simplified entries.&#10;* Removed redundant charset entries.&#10;* Ensured consistency and more precise charset configurations.">
-      <option name="closed" value="true" />
-      <created>1729160354505</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1729160354505</updated>
-    </task>
-    <task id="LOCAL-00015" summary="feat: Update inspection tools, PhpCSFixer, and core packages&#10;&#10;Add and configure various inspection tools and warnings. Update PhpCSFixer configuration with additional standards. Modify core packages for Angular and tslib dependencies.&#10;* Added multiple inspection tools to Project_Default.xml.&#10;* Updated PhpCSFixer standards in php.xml.&#10;* Adjusted package.json dependencies for Angular and tslib.">
-      <option name="closed" value="true" />
-      <created>1729160516229</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1729160516229</updated>
-    </task>
-    <task id="LOCAL-00016" summary="refactor: correct spacing and formatting issues&#10;&#10;Updated various files to correct spacing and formatting inconsistencies.&#10;&#10;* Fixed inconsistent use of spaces around assignment and concatenation operators.&#10;* Removed unnecessary blank lines and added missing ones.&#10;* Ensured consistent indentation across all updated files.">
-      <option name="closed" value="true" />
-      <created>1729160596333</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1729160596333</updated>
-    </task>
-    <task id="LOCAL-00017" summary="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.">
-      <option name="closed" value="true" />
-      <created>1729160647049</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1729160647049</updated>
-    </task>
-    <task id="LOCAL-00018" summary="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema to improve IDE management and project synchronization.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.&#10;```">
-      <option name="closed" value="true" />
-      <created>1729160703438</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1729160703438</updated>
-    </task>
-    <task id="LOCAL-00019" summary="feat: Add DatabasePDOManager for PDO database operations&#10;&#10;Introduces a new DatabasePDOManager class for managing PDO connections and interactions. &#10;* Implements singleton pattern for instance management.&#10;* Includes methods for connecting to database, executing queries, and logging.&#10;* Ensures proper error handling and logging throughout.">
-      <option name="closed" value="true" />
-      <created>1729160811939</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1729160811939</updated>
-    </task>
-    <task id="LOCAL-00020" summary="feat: Add DatabasePDOManager and update .gitignore&#10;&#10;Introduces DatabasePDOManager class for managing PDO operations. &#10;* Implements singleton pattern and provides methods for database interactions. &#10;* Updates .gitignore with additional cache, log, and build directories.&#10;* Ensures better organization and efficiency in project management.">
-      <option name="closed" value="true" />
-      <created>1729161834270</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1729161834270</updated>
-    </task>
-    <task id="LOCAL-00021" summary="chore: Add IDE configuration files&#10;&#10;* Added .idea/.gitignore to ignore IDE-specific files.&#10;* Included workspace changes and updated component settings.&#10;* Added new configuration for project styles in Project.xml.">
-      <option name="closed" value="true" />
-      <created>1729331189673</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1729331189673</updated>
-    </task>
-    <option name="localTasksCounter" value="22" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -988,10 +509,17 @@
         <option value="Default.Author" />
         <option value="Default.Date" />
         <option value="Default.Subject" />
+        <option value="Default.Hash" />
         <option value="GitHub.CommitStatus" />
       </list>
     </option>
+    <option name="COLUMN_ID_VISIBILITY">
+      <map>
+        <entry key="Table.Default.Hash.ColumnIdVisibility" value="true" />
+      </map>
+    </option>
     <option name="SHOW_DETAILS" value="true" />
+    <option name="SHOW_ROOT_NAMES" value="true" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -1004,7 +532,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="try-to-mysql" />
+                        <option value="master" />
                       </list>
                     </value>
                   </entry>
@@ -1021,56 +549,14 @@
     <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Add IDE, Docker, and config files&#10;&#10;Included new .idea configuration files for various settings such as web resources, Symfony, and PHPSpec. Added comprehensive .dockerignore and a new Dockerfile.Expanded workspace settings and watcher tasks to support SCSS and other configurations." />
-    <MESSAGE value="Remove user-specific configurations from Dockerfile&#10;&#10;Eliminated sudo and gosu packages and removed user and group settings to simplify the Dockerfile. This reduces unnecessary complexity and potential security vulnerabilities associated with user permissions. Additionally, updated IDE project files with relevant configurations." />
-    <MESSAGE value="chore: remove unused user and group configuration&#10;&#10;Removed sudo and gosu from package list to streamline the Docker image.&#10;Eliminated unused arguments and environment variables related to user configuration.&#10;* Removed USER and GROUP arguments and environment variables.&#10;* Deleted user creation and permission-related commands.&#10;* Cleaned up .idea/workspace.xml configuration file." />
-    <MESSAGE value="feat: update data source configuration&#10;&#10;Renamed data source attributes and updated grants to new user 'app'. &#10;Changed default casing to 'lower/lower', and server version to '10.11.9'. &#10;Re-assigned schema and table associations to the new data source." />
-    <MESSAGE value="fix: update Dockerfile, compose, and db scripts for consistency&#10;&#10;* Update base node image in Dockerfile to node:18-bookworm.&#10;* Add display_errors and error_log settings in PHP configuration.&#10;* Ensure proper ownership of Apache log directory.&#10;* Include `ext-mysqli` in composer.json and composer.lock for proper dependency.&#10;* Add development file sync configuration in compose.yaml.&#10;* Change database user references to app_user in compose.yaml and SQL script." />
-    <MESSAGE value="feat: enhance logging and Docker configuration&#10;&#10;Enhanced logging functionality and improved Dockerfile and Docker Compose setup.&#10;* Introduced `parseUnits` method for log file size parsing.&#10;* Refined `SugarLogger`, `LoggerManager`, and `LoggerTemplate` classes.&#10;* Modified `Dockerfile.Apache` to use Node 18 and updated PHP configs.&#10;* Added synchronization options to `compose.yaml` and improved database settings.&#10;* Updated `composer.json` and `composer.lock` to include `ext-mysqli`." />
-    <MESSAGE value="fix: logger corrections and Dockerfile changes" />
-    <MESSAGE value="fix:: log level" />
-    <MESSAGE value="fix: logging format and string handling adjustments&#10;&#10;* Adjust logger format to include brackets and hyphen.&#10;* Correct string handling in SugarLogger by replacing array_shift with join.&#10;* Update .idea configuration to remove obsolete entries." />
-    <MESSAGE value="fix: Taken from develop branch&#10;&#10;* Adjusted white space and indentation in multiple PHP and TS files.&#10;* Commented out configurations in .env and updated composer settings.&#10;* Added detailed file-level comments for autoloading.&#10;* Enhanced error handling and logging in console script." />
-    <MESSAGE value="chore: Remove index.ts file&#10;&#10;The index.ts file has been deleted, removing all exports.&#10;* This cleanup may be necessary for project restructuring or refactoring.&#10;* Ensuring all exports are managed directly from their respective modules can improve maintainability." />
-    <MESSAGE value="fix: Update php.ini display_errors setting and fix XML&#10;&#10;* Change php.ini display_errors setting from stdout to Off to enhance error visibility management.&#10;* Update .idea workspace.xml to reflect updated timestamp and new task details.&#10;* Add legacy vendor paths in PHP include path configuration." />
-    <MESSAGE value="chore(deps): Update composer dependencies and config&#10;&#10;Update composer dependencies to latest versions and modify configuration files for enhanced stability and performance.&#10;&#10;* Bump versions for various dependencies in composer.json.&#10;* Reflect changes in .idea/workspace.xml to align with updated settings." />
-    <MESSAGE value="chore(deps): Update composer dependencies and config&#10;&#10;Update composer dependencies to latest versions and modify configuration files for enhanced stability and performance.&#10;* Bump versions for various dependencies in composer.json.&#10;* Reflect changes in .idea/workspace.xml to align with updated settings.&#10;* Add phpunit.phar to .gitignore." />
-    <MESSAGE value="chore(deps): Update composer and package dependencies&#10;&#10;Update composer dependencies to latest versions and adjust configurations.&#10;&#10;* Bump versions for multiple dependencies in composer.json.&#10;* Update .idea/workspace.xml to reflect configuration changes.&#10;* Remove obsolete dependencies from composer.json.&#10;* Adjust package.json dependencies." />
-    <MESSAGE value="fix: Improve LoggerManager and update database collations&#10;&#10;Refactor LoggerManager for style and method content consistency.&#10;* Changed `die` to `exit` for better clarity.&#10;* Standardized require_once formatting to use no parentheses.&#10;* Applied consistent punctuation and spacing in comments.&#10;&#10;Replace database collations with simplified entries.&#10;* Removed redundant charset entries.&#10;* Ensured consistency and more precise charset configurations." />
-    <MESSAGE value="feat: Update inspection tools, PhpCSFixer, and core packages&#10;&#10;Add and configure various inspection tools and warnings. Update PhpCSFixer configuration with additional standards. Modify core packages for Angular and tslib dependencies.&#10;* Added multiple inspection tools to Project_Default.xml.&#10;* Updated PhpCSFixer standards in php.xml.&#10;* Adjusted package.json dependencies for Angular and tslib." />
-    <MESSAGE value="refactor: correct spacing and formatting issues&#10;&#10;Updated various files to correct spacing and formatting inconsistencies.&#10;&#10;* Fixed inconsistent use of spaces around assignment and concatenation operators.&#10;* Removed unnecessary blank lines and added missing ones.&#10;* Ensured consistent indentation across all updated files." />
-    <MESSAGE value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema in the project.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing." />
-    <MESSAGE value="chore: add new data source schema metadata file&#10;&#10;Added a new metadata file for the data source schema to improve IDE management and project synchronization.&#10;* Facilitates better management of data schema by IDE.&#10;* Ensures smoother project synchronization and sharing.&#10;```" />
-    <MESSAGE value="feat: Add DatabasePDOManager for PDO database operations&#10;&#10;Introduces a new DatabasePDOManager class for managing PDO connections and interactions. &#10;* Implements singleton pattern for instance management.&#10;* Includes methods for connecting to database, executing queries, and logging.&#10;* Ensures proper error handling and logging throughout." />
-    <MESSAGE value="feat: Add DatabasePDOManager and update .gitignore&#10;&#10;Introduces DatabasePDOManager class for managing PDO operations. &#10;* Implements singleton pattern and provides methods for database interactions. &#10;* Updates .gitignore with additional cache, log, and build directories.&#10;* Ensures better organization and efficiency in project management." />
-    <MESSAGE value="chore: Add IDE configuration files&#10;&#10;* Added .idea/.gitignore to ignore IDE-specific files.&#10;* Included workspace changes and updated component settings.&#10;* Added new configuration for project styles in Project.xml." />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: Add IDE configuration files&#10;&#10;* Added .idea/.gitignore to ignore IDE-specific files.&#10;* Included workspace changes and updated component settings.&#10;* Added new configuration for project styles in Project.xml." />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/core/backend/Engine/Service/ProcessSteps/ProcessStepExecutorInterface.php</url>
-          <line>69</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="php-line-method">
-          <url>file://$PROJECT_DIR$/public/legacy/include/database/MysqlManager.php</url>
-          <line>699</line>
-          <properties>
-            <option name="className" value="\MysqlManager" />
-            <option name="methodName" value="fromConvert" />
-          </properties>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="feat: Add IntelliJ IDEA project configuration files&#10;&#10;Included various configuration files to set up IntelliJ IDEA project environment.&#10;* Implement .gitignore for IDEA-specific files.&#10;* Define project encodings, Git blame settings, and JavaScript library mappings.&#10;* Configure PHP tools, PHPUnit settings, and SQL dialect mappings.&#10;* Add module definitions and source folder configurations." />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand>
       <path>
-        <item name="SuiteCRM-Core" type="b2602c69:ProjectViewProjectNode" />
-        <item name="dir{file:///home/skif/Projects/SuiteCRM-Core}" type="462c0819:PsiDirectoryNode" />
+        <item name="SuiteCRM-8" type="b2602c69:ProjectViewProjectNode" />
+        <item name="dir{file://D:/_repos/SuiteCRM-8}" type="462c0819:PsiDirectoryNode" />
       </path>
     </expand>
     <select />
