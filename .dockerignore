@@ -588,9 +588,9 @@ tags
 
 ### Docker
 Dockerfile
-Dockerfile.*
+Dockerfile
 compose.*.yaml
-compose.yaml
+docker-compose.yaml
 mysql_init
 LICENSE.txt
 *.md
