@@ -87,6 +87,7 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
     strace \
     ltrace \
     vim \
+    postgresql-dev \
     && \
     printf "PS1='\[\\\\033[32m\][\\\\u@\h\\\\[\\\\033[32m\\\\]]\\\\[\\\\033[00m\\\\] \\\\[\\\\033[36m\\\\]\\\\w\\\\[\\\\033[0m\\\\] \\\\[\\\\033[33m\\\\]\\\\$\\\\[\\\\033[00m\\\\] '\nalias ll='ls -lha --color=auto'\nalias ls='ls -ah --color=auto'\n" >> ~/.bashrc && \
     rm -Rf                                 \
@@ -103,7 +104,7 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
 
 FROM base AS install
 
-RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/log_debug.load && \
+RUN     ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/log_debug.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/info.load         ${APACHE_MOD_ENABLED_DIR}/info.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/rewrite.load      ${APACHE_MOD_ENABLED_DIR}/rewrite.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/vhost_alias.load  ${APACHE_MOD_ENABLED_DIR}/vhost_alias.load && \
@@ -136,6 +137,7 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
                 zip            \
                 gettext        \
                 imap           \
+                pdo            \
                 pdo_mysql      \
                 pdo_pgsql      \
                 pdo_odbc       \
@@ -155,6 +157,7 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
                 gettext        \
                 openssl        \
                 imap           \
+                pdo            \
                 pdo_mysql      \
                 pdo_pgsql      \
                 pdo_odbc       \
