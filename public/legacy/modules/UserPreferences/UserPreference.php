@@ -50,28 +50,28 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class UserPreference extends SugarBean
 {
-    public $db;
-    public $field_name_map;
+    public ?DBManager $db;
+    public ?array $field_name_map;
 
     // Stored fields
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $assigned_user_id;
+    public string $id;
+    public string $date_entered;
+    public string $date_modified;
+    public string $assigned_user_id;
     public $assigned_user_name;
-    public $name;
+    public string $name;
     public $category;
     public $contents;
-    public $deleted;
+    public int $deleted;
 
-    public $object_name = 'UserPreference';
-    public $table_name = 'user_preferences';
+    public string $object_name = 'UserPreference';
+    public string $table_name = 'user_preferences';
 
     public $disable_row_level_security = true;
-    public $module_dir = 'UserPreferences';
-    public $field_defs = array();
+    public string $module_dir = 'UserPreferences';
+    public ?array $field_defs = array();
     public $field_defs_map = array();
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     protected $_userFocus;
 
@@ -139,7 +139,7 @@ class UserPreference extends SugarBean
         global $sugar_config;
 
         // Doesn't support any prefs but global ones
-        if ($category != 'global') {
+        if ($category !== 'global') {
             return null;
         }
 
@@ -152,13 +152,13 @@ class UserPreference extends SugarBean
         if (isset($sugar_config['default_' . $name])) {
             return $sugar_config['default_' . $name];
         }
-        if ($name == 'datef') {
+        if ($name === 'datef') {
             return $sugar_config['default_date_format'];
         }
-        if ($name == 'timef') {
+        if ($name === 'timef') {
             return $sugar_config['default_time_format'];
         }
-        if ($name == 'email_link_type') {
+        if ($name === 'email_link_type') {
             return $sugar_config['email_default_client'];
         }
     }
@@ -215,7 +215,7 @@ class UserPreference extends SugarBean
 
         $user = $this->_userFocus;
 
-        if ($user->object_name != 'User') {
+        if ($user->object_name !== 'User') {
             return;
         }
 
@@ -239,7 +239,7 @@ class UserPreference extends SugarBean
     {
         $user = $this->_userFocus;
 
-        if ($user->object_name != 'User' || empty($user->id) || empty($user->user_name)) {
+        if ($user->object_name !== 'User' || empty($user->id) || empty($user->user_name)) {
             return false;
         }
         $GLOBALS['log']->debug('Loading Preferences DB ' . $user->user_name);
@@ -283,8 +283,8 @@ class UserPreference extends SugarBean
         if (!empty($user) && $this->loadPreferences('global')) {
             // forced to set this to a variable to compare b/c empty() wasn't working
             $timeZone = TimeDate::userTimezone($user);
-            $timeFormat = $user->getPreference("timef");
-            $dateFormat = $user->getPreference("datef");
+            $timeFormat = $user->getPreference('timef');
+            $dateFormat = $user->getPreference('datef');
 
             // cn: bug xxxx cron.php fails because of missing preference when admin hasn't logged in yet
             $timeZone = empty($timeZone) ? 'America/Los_Angeles' : $timeZone;
@@ -306,7 +306,7 @@ class UserPreference extends SugarBean
             $prefDate['date'] = $timedate->get_date_format();
             $prefDate['time'] = $timedate->get_time_format();
 
-            if (!empty($user) && $user->object_name == 'User') {
+            if (!empty($user) && $user->object_name === 'User') {
                 $timeZone = TimeDate::userTimezone($user);
                 // cn: bug 9171 - if user has no time zone, cron.php fails for InboundEmail
                 if (!empty($timeZone)) {
@@ -330,8 +330,10 @@ class UserPreference extends SugarBean
      * sugar_cleanup if a setPreference has been called during one round trip.
      *
      * @param user $user User object to retrieve, otherwise user current_user
-     * @param bool $all save all of the preferences? (Dangerous)
+     * @param bool $all  save all of the preferences? (Dangerous)
      *
+     * @throws Exception
+     * @throws Exception
      * @global user will use current_user if no user specificed in $user param
      */
     public function savePreferencesToDB(
@@ -406,12 +408,12 @@ class UserPreference extends SugarBean
 
 
         if ($category) {
-            unset($_SESSION[$user->user_name . "_PREFERENCES"][$category]);
+            unset($_SESSION[$user->user_name . '_PREFERENCES'][$category]);
         } else {
             if (!empty($_COOKIE['sugar_user_theme']) && !headers_sent()) {
                 SugarApplication::setCookie('sugar_user_theme', '', time() - 3600, null, null, isSSL(), true); // expire the sugar_user_theme cookie
             }
-            unset($_SESSION[$user->user_name . "_PREFERENCES"]);
+            unset($_SESSION[$user->user_name . '_PREFERENCES']);
             if ($user->id == $GLOBALS['current_user']->id) {
                 session_destroy();
             }
@@ -428,6 +430,8 @@ class UserPreference extends SugarBean
     /**
      * Updates every user pref with a new key value supports 2 levels deep, use append to
      * array if you want to append the value to an array
+     *
+     * @throws Exception
      */
     public static function updateAllUserPrefs(
         $key,
@@ -449,7 +453,7 @@ class UserPreference extends SugarBean
             return;
         }
 
-        $result = $db->query("SELECT id, user_preferences, user_name FROM users");
+        $result = $db->query('SELECT id, user_preferences, user_name FROM users');
         while ($row = $db->fetchByAssoc($result)) {
             $prefs = array();
             $newprefs = array();

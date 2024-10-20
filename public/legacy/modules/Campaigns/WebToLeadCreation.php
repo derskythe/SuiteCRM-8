@@ -58,22 +58,22 @@ require_once 'modules/Campaigns/utils.php';
 global $mod_strings, $app_list_strings, $app_strings, $current_user, $import_bean_map,$import_file_name, $theme;
 
 $xtpl=new XTemplate('modules/Campaigns/WebToLeadCreation.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 if (isset($_REQUEST['module'])) {
-    $xtpl->assign("MODULE", $_REQUEST['module']);
+    $xtpl->assign('MODULE', $_REQUEST['module']);
 }
 if (isset($_REQUEST['return_module'])) {
-    $xtpl->assign("RETURN_MODULE", $_REQUEST['return_module']);
+    $xtpl->assign('RETURN_MODULE', $_REQUEST['return_module']);
 }
 if (isset($_REQUEST['return_id'])) {
-    $xtpl->assign("RETURN_ID", $_REQUEST['return_id']);
+    $xtpl->assign('RETURN_ID', $_REQUEST['return_id']);
 }
 if (isset($_REQUEST['return_id'])) {
-    $xtpl->assign("RETURN_ACTION", $_REQUEST['return_action']);
+    $xtpl->assign('RETURN_ACTION', $_REQUEST['return_action']);
 }
 if (isset($_REQUEST['record'])) {
-    $xtpl->assign("RECORD", $_REQUEST['record']);
+    $xtpl->assign('RECORD', $_REQUEST['record']);
 }
 
 global $theme;
@@ -81,17 +81,17 @@ global $currentModule;
 
 $ev = new EditView;
 
-$subclasses = getListOfExtendingClasses("Person");
+$subclasses = getListOfExtendingClasses('Person');
 
 $beanList = filterFieldsFromBeans($subclasses);
 
-$xtpl->assign("BEAN_LIST", json_encode($beanList));
+$xtpl->assign('BEAN_LIST', json_encode($beanList));
 
 $personTypeList = "<select id='personTypeSelect'>";
 if ((is_countable($beanList) ? count($beanList) : 0) > 0) {
     $count=0;
     foreach ($beanList as $b) {
-        $personTypeList.="<option value='".$count."'>".$b->name."</option>";
+        $personTypeList.="<option value='".$count."'>".$b->name. '</option>';
         $count++;
     }
 } else {
@@ -126,7 +126,7 @@ $xtpl->assign('encoded_campaigns_popup_request_data', $json->encode($popup_reque
 
 $field_defs_js = "var field_defs = {'Contacts':[";
 
-$xtpl->assign("WEB_POST_URL", $web_post_url);
+$xtpl->assign('WEB_POST_URL', $web_post_url);
 
 if (!empty($focus)) {
     if (empty($focus->assigned_user_id) && empty($focus->id)) {
@@ -135,15 +135,15 @@ if (!empty($focus)) {
     if (empty($focus->assigned_name) && empty($focus->id)) {
         $focus->assigned_user_name = $current_user->user_name;
     }
-    $xtpl->assign("ASSIGNED_USER_NAME", $focus->assigned_user_name);
-    $xtpl->assign("ASSIGNED_USER_ID", $focus->assigned_user_id);
+    $xtpl->assign('ASSIGNED_USER_NAME', $focus->assigned_user_name);
+    $xtpl->assign('ASSIGNED_USER_ID', $focus->assigned_user_id);
 } else {
-    $xtpl->assign("ASSIGNED_USER_NAME", $current_user->user_name);
-    $xtpl->assign("ASSIGNED_USER_ID", $current_user->id);
+    $xtpl->assign('ASSIGNED_USER_NAME', $current_user->user_name);
+    $xtpl->assign('ASSIGNED_USER_ID', $current_user->id);
 }
 
 
-$xtpl->assign("REDIRECT_URL_DEFAULT", 'http://');
+$xtpl->assign('REDIRECT_URL_DEFAULT', 'http://');
 
 $isValidator = new SuiteValidator();
 
@@ -157,8 +157,8 @@ if (isset($_REQUEST['campaign_id']) && $isValidator->isValidId($_REQUEST['campai
     }
 }
 
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->parse('main');
+$xtpl->out('main');
 
 
 //This is a generic method to allow for returning all of the sub-classes of a particular class

@@ -36,7 +36,7 @@ class AOR_ChartsController extends SugarController
         require_once 'modules/AOR_Charts/lib/pChart/pChart.php';
         $img = new pImage(100, 100);
         $imageMapDir = create_cache_directory('modules/AOR_Charts/ImageMap/'.$current_user->id.'/');
-        $id = $current_user->id."-".(int)$_REQUEST['imageMapId'];
+        $id = $current_user->id. '-' .(int) $_REQUEST['imageMapId'];
         ob_clean();
         $img->dumpImageMap($id, IMAGE_MAP_STORAGE_FILE, $id, $imageMapDir);
     }

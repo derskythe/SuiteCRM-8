@@ -60,9 +60,10 @@ class ViewPopup extends SugarView
     }
 
 
-
     /**
      * @inheritdoc
+     * @throws Exception
+     * @throws SmartyException
      */
     public function display()
     {
@@ -73,13 +74,13 @@ class ViewPopup extends SugarView
             sugar_cleanup(true);
         }
 
-        if (isset($_REQUEST['metadata']) && strpos($_REQUEST['metadata'], "..") !== false) {
-            die("Directory navigation attack denied.");
+        if (isset($_REQUEST['metadata']) && str_contains($_REQUEST['metadata'], '..')) {
+            die('Directory navigation attack denied.');
         }
-        if (!empty($_REQUEST['metadata']) && $_REQUEST['metadata'] != 'undefined'
+        if (!empty($_REQUEST['metadata']) && $_REQUEST['metadata'] !== 'undefined'
             && file_exists('custom/modules/' . $this->module . '/metadata/' . $_REQUEST['metadata'] . '.php')) {
             require 'custom/modules/' . $this->module . '/metadata/' . $_REQUEST['metadata'] . '.php';
-        } elseif (!empty($_REQUEST['metadata']) && $_REQUEST['metadata'] != 'undefined'
+        } elseif (!empty($_REQUEST['metadata']) && $_REQUEST['metadata'] !== 'undefined'
             && file_exists('modules/' . $this->module . '/metadata/' . $_REQUEST['metadata'] . '.php')) {
             require 'modules/' . $this->module . '/metadata/' . $_REQUEST['metadata'] . '.php';
         } elseif (file_exists('custom/modules/' . $this->module . '/metadata/popupdefs.php')) {
@@ -131,7 +132,7 @@ class ViewPopup extends SugarView
                 $current_query_by_page = json_decode(html_entity_decode($_REQUEST['current_query_by_page']), true);
                 foreach ($current_query_by_page as $search_key=>$search_value) {
                     if ($search_key != $this->module.'2_'.strtoupper($this->bean->object_name).'_offset'
-                        && !in_array($search_key, $blockVariables)) {
+                        && !in_array($search_key, $blockVariables, true)) {
                         if (!is_array($search_value)) {
                             $_REQUEST[$search_key] = securexss($search_value);
                         } else {
@@ -156,7 +157,7 @@ class ViewPopup extends SugarView
                     foreach ($params['related_fields'] as $field) {
                         //id column is added by query construction function. This addition creates duplicates
                         //and causes issues in oracle. #10165
-                        if ($field != 'id') {
+                        if ($field !== 'id') {
                             $filter_fields[$field] = true;
                         }
                     }

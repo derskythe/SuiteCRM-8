@@ -51,7 +51,7 @@ class MyClosedOpportunitiesDashlet extends Dashlet
 {
     protected $total_opportunities;
     protected $total_opportunities_won;
-    
+
     /**
      * @see Dashlet::Dashlet()
      */
@@ -67,11 +67,11 @@ class MyClosedOpportunitiesDashlet extends Dashlet
         } else {
             $this->title = $def['title'];
         }
-        
+
         if (isset($def['autoRefresh'])) {
             $this->autoRefresh = $def['autoRefresh'];
         }
-        
+
         $this->seedBean = BeanFactory::newBean('Opportunities');
 
         $qry = "SELECT * from opportunities WHERE assigned_user_id = '" . $current_user->id . "' AND deleted=0";
@@ -85,23 +85,25 @@ class MyClosedOpportunitiesDashlet extends Dashlet
 
         $this->total_opportunities_won = $row['c'];
     }
-    
+
     /**
+     * @throws SmartyException
      * @see Dashlet::display()
      */
-    public function display()
+    public function display() : string
     {
         $ss = new Sugar_Smarty();
         $ss->assign('lblTotalOpportunities', translate('LBL_TOTAL_OPPORTUNITIES', 'Opportunities'));
         $ss->assign('lblClosedWonOpportunities', translate('LBL_CLOSED_WON_OPPORTUNITIES', 'Opportunities'));
-        
+
         $ss->assign('total_opportunities', $this->total_opportunities);
         $ss->assign('total_opportunities_won', $this->total_opportunities_won);
-        
+
         return parent::display() . $ss->fetch('modules/Opportunities/Dashlets/MyClosedOpportunitiesDashlet/MyClosedOpportunitiesDashlet.tpl');
     }
-    
+
     /**
+     * @throws SmartyException
      * @see Dashlet::displayOptions()
      */
     public function displayOptions()
@@ -117,7 +119,7 @@ class MyClosedOpportunitiesDashlet extends Dashlet
             $ss->assign('autoRefreshOptions', $this->getAutoRefreshOptions());
             $ss->assign('autoRefreshSelect', $this->autoRefresh);
         }
-        
+
         return $ss->fetch('modules/Opportunities/Dashlets/MyClosedOpportunitiesDashlet/MyClosedOpportunitiesDashletConfigure.tpl');
     }
 
@@ -127,12 +129,12 @@ class MyClosedOpportunitiesDashlet extends Dashlet
     public function saveOptions($req)
     {
         $options = array();
-        
+
         if (isset($req['title'])) {
             $options['title'] = $req['title'];
         }
         $options['autoRefresh'] = empty($req['autoRefresh']) ? '0' : $req['autoRefresh'];
-        
+
         return $options;
     }
 }

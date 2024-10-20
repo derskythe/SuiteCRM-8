@@ -57,14 +57,14 @@ class DayOfMonthField extends AbstractField
     public function isSatisfiedBy(\DateTime $date, $value)
     {
         // ? states that the field value is to be skipped
-        if ($value == '?') {
+        if ($value === '?') {
             return true;
         }
 
         $fieldValue = $date->format('d');
 
         // Check to see if this is the last day of the month
-        if ($value == 'L') {
+        if ($value === 'L') {
             return $fieldValue == $date->format('t');
         }
 
@@ -83,6 +83,9 @@ class DayOfMonthField extends AbstractField
         return $this->isSatisfied($date->format('d'), $value);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function increment(\DateTime $date, $invert = false)
     {
         if ($invert) {

@@ -51,7 +51,7 @@ class ViewMappingProperties extends ViewList
     /**
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         $this->options['show_all'] = false;
         $this->options['show_javascript'] = true;
@@ -59,8 +59,9 @@ class ViewMappingProperties extends ViewList
         $this->options['show_header'] = false;
         parent::process();
     }
-    
+
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()
@@ -77,7 +78,7 @@ class ViewMappingProperties extends ViewList
         if ($is_enabled) {
             $mapping = $source->getMapping();
             $source_defs = $source->getFieldDefs();
-        
+
             //Create the Javascript code to dynamically add the tables
             $json = getJSONobj();
             foreach ($mapping['beans'] as $module=>$field_mapping) {
@@ -88,28 +89,28 @@ class ViewMappingProperties extends ViewList
                 }
                 $field_defs = $bean->getFieldDefinitions();
                 $available_fields = array();
-    
+
                 $labels = array();
                 $duplicate_labels = array();
                 foreach ($field_defs as $id=>$def) {
-                    
+
                     //We are filtering out some fields here
-                    if ($def['type'] == 'relate' || $def['type'] == 'link' || (isset($def['dbType']) && $def['dbType'] == 'id')) {
+                    if ($def['type'] === 'relate' || $def['type'] === 'link' || (isset($def['dbType']) && $def['dbType'] === 'id')) {
                         continue;
                     }
-                       
-                    
+
+
                     if (isset($def['vname'])) {
                         $available_fields[$id] = !empty($mod_strings[$def['vname']]) ? $mod_strings[$def['vname']] : $id;
                     } else {
                         $available_fields[$id] = $id;
                     }
-                    
+
                     //Remove the ':' character in some labels
                     if (preg_match('/\:$/', (string) $available_fields[$id])) {
                         $available_fields[$id] = substr((string) $available_fields[$id], 0, strlen((string) $available_fields[$id])-1);
                     }
-                    
+
                     if (isset($labels[$available_fields[$id]])) {
                         $duplicate_labels[$labels[$available_fields[$id]]] = $labels[$available_fields[$id]];
                         $duplicate_labels[$id] = $id;
@@ -117,16 +118,16 @@ class ViewMappingProperties extends ViewList
                         $labels[$available_fields[$id]] = $id;
                     }
                 }
-    
+
                 foreach ($duplicate_labels as $id) {
                     $available_fields[$id] = $available_fields[$id] . " ({$id})";
                 }
-                
+
                 asort($available_fields);
-                
+
                 $field_keys = array();
                 $field_values = array();
-                
+
                 $source_fields = array();
                 foreach ($field_mapping as $id=>$field) {
                     if (!empty($source_defs[$id])) {
@@ -134,7 +135,7 @@ class ViewMappingProperties extends ViewList
                     }
                 }
                 $source_fields = array_merge($source_fields, $source_defs);
-                
+
                 foreach ($source_fields as $id=>$def) {
                     if (empty($def['hidden'])) {
                         $field_keys[strtolower($id)] = !empty($connector_strings[$source_fields[$id]['vname']]) ? $connector_strings[$source_fields[$id]['vname']] : $id;
@@ -160,7 +161,7 @@ class ViewMappingProperties extends ViewList
         $this->ss->assign('source_id', $source_id);
         $this->ss->assign('source_name', $sources[$source_id]['name']);
         $this->ss->assign('theme', $GLOBALS['theme']);
-        
+
         echo $this->ss->fetch($this->getCustomFilePathIfExists('modules/Connectors/tpls/mapping_properties.tpl'));
     }
 }

@@ -43,26 +43,26 @@ require_once 'modules/AOP_Case_Updates/util.php';
 #[\AllowDynamicProperties]
 class SurveyResponses extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'SurveyResponses';
-    public $object_name = 'SurveyResponses';
-    public $table_name = 'surveyresponses';
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'SurveyResponses';
+    public string $object_name = 'SurveyResponses';
+    public string $table_name = 'surveyresponses';
+    public bool $importable = false;
     public $disable_row_level_security = true; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
+    public string $assigned_user_id;
     public $assigned_user_name;
     public $assigned_user_link;
     public $SecurityGroups;
@@ -74,7 +74,7 @@ class SurveyResponses extends Basic
         parent::__construct();
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -116,7 +116,7 @@ class SurveyResponses extends Basic
             //Create case
             $case = BeanFactory::newBean('Cases');
             $case->name = 'SurveyFollowup';
-            $case->description = "Received the following dissatisfied response from " . $contact->name . "<br>";
+            $case->description = 'Received the following dissatisfied response from ' . $contact->name . '<br>';
             $case->description .= $this->happiness_text;
             $case->from_negative_survey = true;
             $case->status = 'Open_New';
@@ -142,9 +142,12 @@ class SurveyResponses extends Basic
         return $res;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     private function sendEmail($contact, $email, $emailTemplateId, $case)
     {
-        require_once("include/SugarPHPMailer.php");
+        require_once('include/SugarPHPMailer.php');
         $mailer = new SugarPHPMailer();
         $admin = BeanFactory::newBean('Administration');
         $admin->retrieveSettings();
@@ -156,7 +159,7 @@ class SurveyResponses extends Basic
         $email_template = $email_template->retrieve($emailTemplateId);
 
         if (!$email_template) {
-            $GLOBALS['log']->warn("SurveyResponse: Email template is empty");
+            $GLOBALS['log']->warn('SurveyResponse: Email template is empty');
 
             return false;
         }
@@ -172,7 +175,7 @@ class SurveyResponses extends Basic
 
         $mailer->AddAddress($email);
         if (!$mailer->Send()) {
-            $GLOBALS['log']->info("SurveyResponse: Could not send email:  " . $mailer->ErrorInfo);
+            $GLOBALS['log']->info('SurveyResponse: Could not send email:  ' . $mailer->ErrorInfo);
 
             return false;
         } else {
@@ -186,7 +189,7 @@ class SurveyResponses extends Basic
     {
         global $sugar_config;
         $beans = array(
-            "Contacts" => $contact->id,
+            'Contacts' => $contact->id,
         );
         if ($case) {
             $beans['Cases'] = $case->id;
@@ -207,6 +210,9 @@ class SurveyResponses extends Basic
         return $ret;
     }
 
+    /**
+     * @throws Exception
+     */
     private function logEmail($email, $mailer, $contactId = null)
     {
         require_once('modules/Emails/Email.php');
@@ -220,7 +226,7 @@ class SurveyResponses extends Basic
         $emailObj->from_addr = $mailer->From;
         isValidEmailAddress($emailObj->from_addr);
         if ($contactId) {
-            $emailObj->parent_type = "Contacts";
+            $emailObj->parent_type = 'Contacts';
             $emailObj->parent_id = $contactId;
         }
         $emailObj->date_sent_received = TimeDate::getInstance()->nowDb();

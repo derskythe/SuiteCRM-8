@@ -63,7 +63,7 @@ class SubpanelQuickCreate
         $this->viewType = $view;
 
         //treat quickedit and quickcreate views as the same
-        if ($this->viewType == 'QuickEdit') {
+        if ($this->viewType === 'QuickEdit') {
             $this->viewType = 'QuickCreate';
         }
 
@@ -161,7 +161,7 @@ class SubpanelQuickCreate
 
     public function process($module)
     {
-        if ($_REQUEST['target_action'] == 'QuickCreate') {
+        if ($_REQUEST['target_action'] === 'QuickCreate') {
             $this->ev->view = 'QuickCreate';
         }
         $form_name = 'form_Subpanel'.$this->ev->view .'_'.$module;

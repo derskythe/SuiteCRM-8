@@ -58,11 +58,11 @@ $authController->login($user_name, $password);
 // authController will set the authenticated_user_id session variable
 if (isset($_SESSION['authenticated_user_id'])) {
     // Login is successful
-    if ($_SESSION['hasExpiredPassword'] == '1' && $_REQUEST['action'] != 'Save') {
+    if ($_SESSION['hasExpiredPassword'] == '1' && $_REQUEST['action'] !== 'Save') {
         $GLOBALS['module'] = 'Users';
         $GLOBALS['action'] = 'ChangePassword';
         ob_clean();
-        header("Location: index.php?module=Users&action=ChangePassword");
+        header('Location: index.php?module=Users&action=ChangePassword');
         sugar_cleanup(true);
     }
     global $record;
@@ -89,9 +89,9 @@ if (isset($_SESSION['authenticated_user_id'])) {
 } else {
     // Login has failed
     if (isset($_POST['login_language']) && !empty($_POST['login_language'])) {
-        $url ="index.php?module=Users&action=Login&login_language=". $_POST['login_language'];
+        $url = 'index.php?module=Users&action=Login&login_language=' . $_POST['login_language'];
     } else {
-        $url ="index.php?module=Users&action=Login";
+        $url = 'index.php?module=Users&action=Login';
     }
 
     if (!empty($login_vars)) {

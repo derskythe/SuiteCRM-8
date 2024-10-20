@@ -148,7 +148,7 @@ function sugar_fclose($handle)
 
     $result = fclose($handle);
 
-    if ((new SplFileInfo($filename))->getExtension() == 'php') {
+    if ((new SplFileInfo($filename))->getExtension() === 'php') {
         SugarCache::cleanFile($filename);
     }
 
@@ -188,7 +188,7 @@ function sugar_file_put_contents($filename, $data, $flags = null, $context = nul
     }
 
     $result = file_put_contents($filename, $data, $flags, $context);
-    if ((new SplFileInfo($filename))->getExtension() == 'php') {
+    if ((new SplFileInfo($filename))->getExtension() === 'php') {
         SugarCache::cleanFile($filename);
     }
 
@@ -241,7 +241,7 @@ function sugar_file_put_contents_atomic($filename, $data, $mode = 'wb')
         }else{
             $result = sugar_chmod($filename, 0755);
         }
-        if ((new SplFileInfo($filename))->getExtension() == 'php') {
+        if ((new SplFileInfo($filename))->getExtension() === 'php') {
             SugarCache::cleanFile($filename);
         }
         return $result;

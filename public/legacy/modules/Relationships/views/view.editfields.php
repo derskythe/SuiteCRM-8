@@ -41,7 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
- 
+
 
 #[\AllowDynamicProperties]
 class ViewEditFields extends ViewAjax
@@ -53,7 +53,7 @@ class ViewEditFields extends ViewAjax
         $moduleName = $this->module = $_REQUEST['rel_module'];
 
         global $beanList;
-        require_once("data/Link.php");
+        require_once('data/Link.php');
 
         $beanName = $beanList [ $moduleName ];
         $link = new Link($this->rel, new $beanName(), array());
@@ -77,15 +77,15 @@ class ViewEditFields extends ViewAjax
         foreach ($this->fields as $def) {
             if (!empty($def['relationship_field'])) {
                 $label = !empty($def['vname']) ? $def['vname'] : $def['name'];
-                echo "<td>" . translate($label, $this->module) . ":</td>"
+                echo '<td>' . translate($label, $this->module) . ':</td>'
                    . "<td><input id='{$def['name']}' name='{$def['name']}'>"  ;
 
                 if ($count%1) {
-                    echo "</tr><tr>";
+                    echo '</tr><tr>';
                 }
                 $count++;
             }
         }
-        echo "</tr></table></form>";
+        echo '</tr></table></form>';
     }
 }

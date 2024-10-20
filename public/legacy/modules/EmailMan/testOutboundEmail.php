@@ -59,7 +59,7 @@ if (!empty($_REQUEST['mail_smtppass'])) {
     $pass = $_REQUEST['mail_smtppass'];
 } elseif (isset($_REQUEST['mail_type'])) {
     $oe = new OutboundEmail();
-    if (is_admin($current_user) && $_REQUEST['mail_type'] == 'system') {
+    if (is_admin($current_user) && $_REQUEST['mail_type'] === 'system') {
         $oe = $oe->getSystemMailerSettings();
     } else {
         $oe = $oe->getMailerByName($current_user, $_REQUEST['mail_type']);
@@ -73,7 +73,7 @@ $out = $email->sendEmailTest(
     $_REQUEST['mail_smtpserver'],
     $_REQUEST['mail_smtpport'],
     $_REQUEST['mail_smtpssl'],
-    ($_REQUEST['mail_smtpauth_req'] == 'true' ? 1 : 0),
+    ($_REQUEST['mail_smtpauth_req'] === 'true' ? 1 : 0),
     $_REQUEST['mail_smtpuser'],
     $pass,
     $_REQUEST['outboundtest_from_address'],

@@ -56,7 +56,7 @@ class SugarFieldParent extends SugarFieldRelate
     {
         $nolink = array('Users', 'Teams');
         $module = $vardef['module'] ?? '';
-        if (in_array($module, $nolink)) {
+        if (in_array($module, $nolink, true)) {
             $this->ss->assign('nolink', true);
         } else {
             $this->ss->assign('nolink', false);
@@ -223,14 +223,15 @@ class SugarFieldParent extends SugarFieldRelate
         require_once('include/QuickSearchDefaults.php');
         $json = getJSONobj();
 
-        $dynamicParentTypePlaceHolder = "**@**"; //Placeholder for dynamic parent so smarty tags are not escaped in json encoding.
+        $dynamicParentTypePlaceHolder =
+            '**@**'; //Placeholder for dynamic parent so smarty tags are not escaped in json encoding.
         $dynamicParentType = '{/literal}{if !empty($fields.parent_type.value)}{$fields.parent_type.value}{else}Accounts{/if}{literal}';
 
         //Get the parent sqs definition
         $qsd = QuickSearchDefaults::getQuickSearchDefaults();
         $qsd->setFormName($formName);
         $sqsFieldArray = $qsd->getQSParent($dynamicParentTypePlaceHolder);
-        $qsFieldName = $formName . "_" . $vardef['name'];
+        $qsFieldName = $formName . '_' . $vardef['name'];
 
         //Build the javascript
         $quicksearch_js = '<script language="javascript">';

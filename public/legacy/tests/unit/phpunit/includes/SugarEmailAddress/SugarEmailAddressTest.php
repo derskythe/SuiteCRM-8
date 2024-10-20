@@ -49,7 +49,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
      */
     public function testSave(): void
     {
-        $query = "SELECT * FROM email_addr_bean_rel";
+        $query = 'SELECT * FROM email_addr_bean_rel';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -68,9 +68,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
 
         $GLOBALS['log'] = $logger;
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addr_bean_rel");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addr_bean_rel');
         foreach ($tableEmailAddrBeanRel as $row) {
-            $query = "INSERT email_addr_bean_rel INTO (";
+            $query = 'INSERT email_addr_bean_rel INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -224,7 +224,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             $_request = $_REQUEST;
         }
 
-        $query = "SELECT * FROM email_addr_bean_rel";
+        $query = 'SELECT * FROM email_addr_bean_rel';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -232,7 +232,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         }
         $tableEmailAddrBeanRel = $rows;
 
-        $query = "SELECT * FROM contacts";
+        $query = 'SELECT * FROM contacts';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -240,7 +240,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         }
         $tableContacts = $rows;
 
-        $query = "SELECT * FROM email_addresses";
+        $query = 'SELECT * FROM email_addresses';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -397,9 +397,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             unset($_REQUEST);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addresses");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addresses');
         foreach ($tableEmailAddresses as $row) {
-            $query = "INSERT email_addresses INTO (";
+            $query = 'INSERT email_addresses INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -408,9 +408,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             DBManagerFactory::getInstance()->query($query);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM contacts");
+        DBManagerFactory::getInstance()->query('DELETE FROM contacts');
         foreach ($tableContacts as $row) {
-            $query = "INSERT contact INTO (";
+            $query = 'INSERT contact INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -419,9 +419,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             DBManagerFactory::getInstance()->query($query);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addr_bean_rel");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addr_bean_rel');
         foreach ($tableEmailAddrBeanRel as $row) {
-            $query = "INSERT email_addr_bean_rel INTO (";
+            $query = 'INSERT email_addr_bean_rel INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -436,7 +436,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
      */
     public function testGetCountEmailAddressByBean(): void
     {
-        $query = "SELECT * FROM email_addresses";
+        $query = 'SELECT * FROM email_addresses';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -497,9 +497,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
 
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addresses");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addresses');
         foreach ($tableEmailAddresses as $row) {
-            $query = "INSERT email_addresses INTO (";
+            $query = 'INSERT email_addresses INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -921,7 +921,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
      */
     public function testAddAddress(): void
     {
-        $query = "SELECT * FROM email_addr_bean_rel";
+        $query = 'SELECT * FROM email_addr_bean_rel';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -929,7 +929,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         }
         $tableEmailAddrBeanRel = $rows;
 
-        $query = "SELECT * FROM contacts";
+        $query = 'SELECT * FROM contacts';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -937,7 +937,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         }
         $tableContacts = $rows;
 
-        $query = "SELECT * FROM email_addresses";
+        $query = 'SELECT * FROM email_addresses';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -971,9 +971,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
 
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addresses");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addresses');
         foreach ($tableEmailAddresses as $row) {
-            $query = "INSERT email_addresses INTO (";
+            $query = 'INSERT email_addresses INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -982,9 +982,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             DBManagerFactory::getInstance()->query($query);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM contacts");
+        DBManagerFactory::getInstance()->query('DELETE FROM contacts');
         foreach ($tableContacts as $row) {
-            $query = "INSERT contact INTO (";
+            $query = 'INSERT contact INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -993,9 +993,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             DBManagerFactory::getInstance()->query($query);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addr_bean_rel");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addr_bean_rel');
         foreach ($tableEmailAddrBeanRel as $row) {
-            $query = "INSERT email_addr_bean_rel INTO (";
+            $query = 'INSERT email_addr_bean_rel INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -1166,7 +1166,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         $isValidator = new \SuiteCRM\Utility\SuiteValidator();
 
 
-        $query = "SELECT * FROM email_addr_bean_rel";
+        $query = 'SELECT * FROM email_addr_bean_rel';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -1174,7 +1174,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         }
         $tableEmailAddrBeanRel = $rows;
 
-        $query = "SELECT * FROM contacts";
+        $query = 'SELECT * FROM contacts';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -1182,7 +1182,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         }
         $tableContacts = $rows;
 
-        $query = "SELECT * FROM email_addresses";
+        $query = 'SELECT * FROM email_addresses';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -1226,9 +1226,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
 
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addresses");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addresses');
         foreach ($tableEmailAddresses as $row) {
-            $query = "INSERT email_addresses INTO (";
+            $query = 'INSERT email_addresses INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -1237,9 +1237,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             DBManagerFactory::getInstance()->query($query);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM contacts");
+        DBManagerFactory::getInstance()->query('DELETE FROM contacts');
         foreach ($tableContacts as $row) {
-            $query = "INSERT contact INTO (";
+            $query = 'INSERT contact INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -1248,9 +1248,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
             DBManagerFactory::getInstance()->query($query);
         }
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addr_bean_rel");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addr_bean_rel');
         foreach ($tableEmailAddrBeanRel as $row) {
-            $query = "INSERT email_addr_bean_rel INTO (";
+            $query = 'INSERT email_addr_bean_rel INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -1467,7 +1467,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
      */
     public function testGetEmailAddressWidgetEditView(): void
     {
-        $query = "SELECT * FROM accounts_cstm";
+        $query = 'SELECT * FROM accounts_cstm';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -1675,9 +1675,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
 
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM accounts_cstm");
+        DBManagerFactory::getInstance()->query('DELETE FROM accounts_cstm');
         foreach ($tableAccountsCstm as $row) {
-            $query = "INSERT accounts_cstm INTO (";
+            $query = 'INSERT accounts_cstm INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -2078,7 +2078,7 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
     {
         self::markTestIncomplete('environment dependecy in test');
 
-        $query = "SELECT * FROM accounts_cstm";
+        $query = 'SELECT * FROM accounts_cstm';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -2116,13 +2116,13 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
         $result = getEmailAddressWidget($c, null, null, 'DetailView');
         self::assertEquals(/** @lang html */
             '
-			<table cellpadding="0" cellspacing="0" border="0" width="100%">
-								<tr>
-					<td>
-						<i>--None--</i>
-					</td>
-				</tr>
-							</table>',
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                    <td>
+                        <i>--None--</i>
+                    </td>
+                </tr>
+                            </table>',
             $result
         );
 
@@ -2137,9 +2137,9 @@ class SugarEmailAddressTest extends SuitePHPUnitFrameworkTestCase
 
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM accounts_cstm");
+        DBManagerFactory::getInstance()->query('DELETE FROM accounts_cstm');
         foreach ($tableAccountsCstm as $row) {
-            $query = "INSERT accounts_cstm INTO (";
+            $query = 'INSERT accounts_cstm INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";

@@ -24,6 +24,9 @@ class MonthField extends AbstractField
         return $this->isSatisfied($date->format('m'), $value);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function increment(DateTime $date, $invert = false)
     {
         if ($invert) {

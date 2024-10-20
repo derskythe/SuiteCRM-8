@@ -52,7 +52,7 @@ class iFrameDashlet extends Dashlet
     public $configureTpl = 'modules/Home/Dashlets/iFrameDashlet/configure.tpl';
     public $defaultURL = 'http://apps.sugarcrm.com/dashlet/sugarcrm-news-dashlet.html?lang=@@LANG@@&edition=@@EDITION@@&ver=@@VER@@';
     public $url;
-    protected $allowed_schemes = array("http", "https");
+    protected $allowed_schemes = array( 'http', 'https' );
 
     public function __construct($id, $options = null)
     {
@@ -95,13 +95,16 @@ class iFrameDashlet extends Dashlet
     protected function checkURL()
     {
         $scheme = parse_url((string) $this->url, PHP_URL_SCHEME);
-        if (!in_array($scheme, $this->allowed_schemes)) {
+        if (!in_array($scheme, $this->allowed_schemes, true)) {
             $this->url = 'about:blank';
             return false;
         }
         return true;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function displayOptions()
     {
         global $app_strings;
@@ -143,7 +146,7 @@ class iFrameDashlet extends Dashlet
         return $options;
     }
 
-    public function display()
+    public function display() : string
     {
         $sugar_edition = 'COM';
 

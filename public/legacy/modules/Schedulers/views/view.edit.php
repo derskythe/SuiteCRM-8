@@ -65,11 +65,11 @@ class SchedulersViewEdit extends ViewEdit
     /**
      * @see SugarView::_getModuleTitleListParam()
      */
-    protected function _getModuleTitleListParam($browserTitle = false)
+    protected function _getModuleTitleListParam(bool $browserTitle = false) : string
     {
         global $mod_strings;
 
-        return "<a href='index.php?module=Schedulers&action=index'>".$mod_strings['LBL_MODULE_TITLE']."</a>";
+        return "<a href='index.php?module=Schedulers&action=index'>".$mod_strings['LBL_MODULE_TITLE']. '</a>';
     }
 
 
@@ -81,13 +81,13 @@ class SchedulersViewEdit extends ViewEdit
         // job functions
         $this->bean->job_function = $this->bean->job;
         $this->ss->assign('JOB', $this->bean->job);
-        if (substr((string) $this->bean->job, 0, 5) == "url::") {
+        if (str_starts_with((string) $this->bean->job, 'url::')) {
             $this->bean->job_url = substr((string) $this->bean->job, 5);
             $this->ss->assign('JOB', 'url::');
         }
         // interval
         if (!empty($this->bean->job_interval)) {
-            $exInterval = explode("::", $this->bean->job_interval);
+            $exInterval = explode('::', $this->bean->job_interval);
         } else {
             $exInterval = array('*','*','*','*','*');
         }
@@ -98,10 +98,10 @@ class SchedulersViewEdit extends ViewEdit
         $this->ss->assign('day_of_week', $exInterval[4]);
 
         // Handle cron weekdays
-        if ($exInterval[4] == '*') {
-            $this->ss->assign('ALL', "CHECKED");
+        if ($exInterval[4] === '*') {
+            $this->ss->assign('ALL', 'CHECKED');
             foreach (self::$xtDays as $day) {
-                $this->ss->assign($day, "CHECKED");
+                $this->ss->assign($day, 'CHECKED');
             }
         } elseif (strpos($exInterval[4], ',')) {
             // 1,2,4
@@ -110,19 +110,19 @@ class SchedulersViewEdit extends ViewEdit
                 if (strpos($days, '-')) {
                     $exDaysRange = explode('-', $days);
                     for ($i=$exDaysRange[0]; $i<=$exDaysRange[1]; $i++) {
-                        $this->ss->assign(self::$xtDays[$days], "CHECKED");
+                        $this->ss->assign(self::$xtDays[$days], 'CHECKED');
                     }
                 } else {
-                    $this->ss->assign(self::$xtDays[$days], "CHECKED");
+                    $this->ss->assign(self::$xtDays[$days], 'CHECKED');
                 }
             }
         } elseif (strpos($exInterval[4], '-')) {
             $exDaysRange = explode('-', $exInterval[4]);
             for ($i=$exDaysRange[0]; $i<=$exDaysRange[1]; $i++) {
-                $this->ss->assign(self::$xtDays[$i], "CHECKED");
+                $this->ss->assign(self::$xtDays[$i], 'CHECKED');
             }
         } else {
-            $this->ss->assign(self::$xtDays[$exInterval[4]], "CHECKED");
+            $this->ss->assign(self::$xtDays[$exInterval[4]], 'CHECKED');
         }
 
         // Hours
@@ -133,15 +133,15 @@ class SchedulersViewEdit extends ViewEdit
         $this->bean->adv_interval = false;
         $this->ss->assign('basic_intervals', $ints);
         $this->ss->assign('basic_periods', $app_list_strings['scheduler_period_dom']);
-        if ($exInterval[0] == '*' && $exInterval[1] == '*') {
+        if ($exInterval[0] === '*' && $exInterval[1] === '*') {
             // hours
-        } elseif (strpos($exInterval[1], '*/') !== false && $exInterval[0] == '0') {
+        } elseif (str_contains($exInterval[1], '*/') && $exInterval[0] == '0') {
             // we have a "BASIC" type of hour setting
             $exHours = explode('/', $exInterval[1]);
             $this->ss->assign('basic_interval', $exInterval[1]);
             $this->ss->assign('basic_period', 'hour');
         // Minutes
-        } elseif (strpos($exInterval[0], '*/') !== false && $exInterval[1] == '*') {
+        } elseif (str_contains($exInterval[0], '*/') && $exInterval[1] === '*') {
             // we have a "BASIC" type of min setting
             $exMins = explode('/', $exInterval[0]);
             $this->ss->assign('basic_interval', $exMins[1]);
@@ -156,9 +156,9 @@ class SchedulersViewEdit extends ViewEdit
             $this->bean->adv_interval = true;
         }
 
-        $this->ss->assign("adv_interval", $this->bean->adv_interval?"true":"false");
-        $this->ss->assign("adv_visibility", $this->bean->adv_interval?"":"display: none");
-        $this->ss->assign("basic_visibility", $this->bean->adv_interval?"display: none":"");
+        $this->ss->assign('adv_interval', $this->bean->adv_interval? 'true' : 'false');
+        $this->ss->assign('adv_visibility', $this->bean->adv_interval? '' : 'display: none');
+        $this->ss->assign('basic_visibility', $this->bean->adv_interval? 'display: none' : '');
 
         parent::display();
     }

@@ -72,7 +72,7 @@ class ProjectViewQuickedit extends ViewQuickEdit
     protected $defaultButtons = array('DCMENUSAVE', 'DCMENUCANCEL', 'DCMENUFULLFORM');
 
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         if (!empty($_REQUEST['record'])) {
             $this->bean->retrieve($_REQUEST['record']);

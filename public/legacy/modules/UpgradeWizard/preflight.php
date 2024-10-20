@@ -74,7 +74,7 @@ if (version_compare(phpversion(), '5.2.0') >=0) {
 
 
     if (check_php_version() === -1) {
-        $phpVersion = "<b><span class=stop>{$mod_strings['ERR_CHECKSYS_PHP_INVALID_VER']} ".constant('PHP_VERSION')." </span></b>";
+        $phpVersion = "<b><span class=stop>{$mod_strings['ERR_CHECKSYS_PHP_INVALID_VER']} ".constant('PHP_VERSION'). ' </span></b>';
         $error_txt = '<span class="error">'.$phpVersion.'</span>';
         if ((is_countable($errors) ? count($errors) : 0) == 0) {
             $errors[] = '';
@@ -93,7 +93,7 @@ if (version_compare(phpversion(), '5.2.0') >=0) {
     if (((is_countable($errors) ? count($errors) : 0) == 1)) { // only diffs
         logThis('file preflight check passed successfully.');
         $stop = false;
-        $out  = $mod_strings['LBL_UW_PREFLIGHT_TESTS_PASSED']."<BR><BR><font color='red'>".$mod_strings['LBL_UW_PREFLIGHT_TESTS_PASSED3']."</font>";
+        $out  = $mod_strings['LBL_UW_PREFLIGHT_TESTS_PASSED']."<BR><BR><font color='red'>".$mod_strings['LBL_UW_PREFLIGHT_TESTS_PASSED3']. '</font>';
         $stop = false;
 
         $disableEmail = (empty($current_user->email1)) ? 'DISABLED' : 'CHECKED';
@@ -102,59 +102,59 @@ if (version_compare(phpversion(), '5.2.0') >=0) {
             $preserveFiles = array();
 
             $diffs =<<<eoq
-			<script type="text/javascript" language="Javascript">
-				function preflightToggleAll(cb) {
-					var checkAll = false;
-					var form = document.getElementById('diffs');
+            <script type="text/javascript" language="Javascript">
+                function preflightToggleAll(cb) {
+                    var checkAll = false;
+                    var form = document.getElementById('diffs');
 
-					if(cb.checked == true) {
-						checkAll = true;
-					}
+                    if(cb.checked == true) {
+                        checkAll = true;
+                    }
 
-					for(i=0; i<form.elements.length; i++) {
-						if(form.elements[i].type == 'checkbox') {
-							form.elements[i].checked = checkAll;
-						}
-					}
-					return;
-				}
-			</script>
+                    for(i=0; i<form.elements.length; i++) {
+                        if(form.elements[i].type == 'checkbox') {
+                            form.elements[i].checked = checkAll;
+                        }
+                    }
+                    return;
+                }
+            </script>
 
-			<table cellpadding='0' cellspacing='0' border='0'>
-				<tr>
-					<td valign='top'>
-						<input type='checkbox' name='addTask' id='addTask' CHECKED>
-					</td>
-					<td valign='top'>
-						{$mod_strings['LBL_UW_PREFLIGHT_ADD_TASK']}
-					</td>
-				</tr>
-				<tr>
-					<td valign='top'>
-						<input type='checkbox' name='addEmail' id='addEmail' $disableEmail>
-					</td>
-					<td valign='top'>
-						{$mod_strings['LBL_UW_PREFLIGHT_EMAIL_REMINDER']}
-					</td>
-				</tr>
-			</table>
+            <table cellpadding='0' cellspacing='0' border='0'>
+                <tr>
+                    <td valign='top'>
+                        <input type='checkbox' name='addTask' id='addTask' CHECKED>
+                    </td>
+                    <td valign='top'>
+                        {$mod_strings['LBL_UW_PREFLIGHT_ADD_TASK']}
+                    </td>
+                </tr>
+                <tr>
+                    <td valign='top'>
+                        <input type='checkbox' name='addEmail' id='addEmail' $disableEmail>
+                    </td>
+                    <td valign='top'>
+                        {$mod_strings['LBL_UW_PREFLIGHT_EMAIL_REMINDER']}
+                    </td>
+                </tr>
+            </table>
 
-			<form name='diffs' id='diffs'>
-			<p><a href='javascript:void(0); toggleNwFiles("diffsHide");'>{$mod_strings['LBL_UW_SHOW_DIFFS']}</a></p>
-			<div id='diffsHide' style='display:none'>
-				<table cellpadding='0' cellspacing='0' border='0'>
-					<tr>
-						<td valign='top' colspan='2'>
-							{$mod_strings['LBL_UW_PREFLIGHT_FILES_DESC']}
-							<br />&nbsp;
-						</td>
-					</tr>
-					<tr>
-						<td valign='top' colspan='2'>
-							<input type='checkbox' onchange='preflightToggleAll(this);'>&nbsp;<i><b>{$mod_strings['LBL_UW_PREFLIGHT_TOGGLE_ALL']}</b></i>
-							<br />&nbsp;
-						</td>
-					</tr>
+            <form name='diffs' id='diffs'>
+            <p><a href='javascript:void(0); toggleNwFiles("diffsHide");'>{$mod_strings['LBL_UW_SHOW_DIFFS']}</a></p>
+            <div id='diffsHide' style='display:none'>
+                <table cellpadding='0' cellspacing='0' border='0'>
+                    <tr>
+                        <td valign='top' colspan='2'>
+                            {$mod_strings['LBL_UW_PREFLIGHT_FILES_DESC']}
+                            <br />&nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign='top' colspan='2'>
+                            <input type='checkbox' onchange='preflightToggleAll(this);'>&nbsp;<i><b>{$mod_strings['LBL_UW_PREFLIGHT_TOGGLE_ALL']}</b></i>
+                            <br />&nbsp;
+                        </td>
+                    </tr>
 eoq;
             foreach ($errors['manual'] as $diff) {
                 $diff = clean_path($diff);
@@ -170,11 +170,11 @@ eoq;
                 $diffs .= "<input type='checkbox' name='diff_files[]' value='{$diff}' $checked>";
                 $diffs .= "</td><td valign='top'>";
                 $diffs .= str_replace(getcwd(), '.', (string) $diff);
-                $diffs .= "</td></tr>";
+                $diffs .= '</td></tr>';
             }
-            $diffs .= "</table>";
-            $diffs .= "</div></p>";
-            $diffs .= "</form>";
+            $diffs .= '</table>';
+            $diffs .= '</div></p>';
+            $diffs .= '</form>';
 
             // list preserved files (templates, etc.)
             $preserve = '';
@@ -182,9 +182,9 @@ eoq;
                 if (empty($preserve)) {
                     $preserve .= "<table cellpadding='0' cellspacing='0' border='0'><tr><td><b>";
                     $preserve .= $mod_strings['LBL_UW_PREFLIGHT_PRESERVE_FILES'];
-                    $preserve .= "</b></td></tr>";
+                    $preserve .= '</b></td></tr>';
                 }
-                $preserve .= "<tr><td valign='top'><i>".str_replace(getcwd(), '.', (string) $pf)."</i></td></tr>";
+                $preserve .= "<tr><td valign='top'><i>".str_replace(getcwd(), '.', (string) $pf). '</i></td></tr>';
             }
             if (!empty($preserve)) {
                 $preserve .= '</table><br>';
@@ -205,13 +205,13 @@ eoq;
                 $out .= "{$error}<br />";
             }
         }
-        $out .= "</span><br />";
+        $out .= '</span><br />';
     }
 
     $diffs ='';
 
     ///////////////////////////////////////////////////////////////////////////////
-    ////	SCHEMA SCRIPT HANDLING
+    ////    SCHEMA SCRIPT HANDLING
     logThis('starting schema preflight check...');
     //Check the current and target versions and store them in session variables
     if (empty($sugar_db_version)) {
@@ -254,7 +254,7 @@ eoq;
         }
     } else {
         $type = $db->dbType;
-        if ($type == 'oci8') {
+        if ($type === 'oci8') {
             $type = 'oracle';
         }
         $sqlFile = $origVersion . '_to_' . $destVersion . '_' . $type;
@@ -289,7 +289,7 @@ eoq;
         $schema  = "<p><a href='javascript:void(0); toggleNwFiles(\"schemashow\");'>{$mod_strings['LBL_UW_SHOW_SCHEMA']}</a>";
         $schema .= "<div id='schemashow' style='display:none;'>";
         $schema .= "<textarea readonly cols='80' rows='10'>{$contents}</textarea>";
-        $schema .= "</div></p>";
+        $schema .= '</div></p>';
 
         if (!empty($sqlErrors)) {
             $stop = true;
@@ -298,19 +298,19 @@ eoq;
             foreach ($sqlErrors as $sqlError) {
                 $out .= "<br><span class='error'>{$sqlError}</span>";
             }
-            $out .= "</div><hr />";
+            $out .= '</div><hr />';
         }
     } else {
         $customTableSchema = '';
         logThis('no schema script found - all schema preflight skipped');
     }
     logThis('schema preflight done.');
-    ////	END SCHEMA SCRIPT HANDLING
+    ////    END SCHEMA SCRIPT HANDLING
     ///////////////////////////////////////////////////////////////////////////////
     //php version suggestion
     $php_suggested_ver = '';
     if (check_php_version() === 0) {
-        $php_suggested_ver=$mod_strings['LBL_CURRENT_PHP_VERSION'].phpversion().". ".$mod_strings['LBL_RECOMMENDED_PHP_VERSION_1'].constant('SUITECRM_PHP_REC_VERSION').$mod_strings['LBL_RECOMMENDED_PHP_VERSION_2'];
+        $php_suggested_ver=$mod_strings['LBL_CURRENT_PHP_VERSION'].phpversion(). '. ' . $mod_strings['LBL_RECOMMENDED_PHP_VERSION_1'].constant('SUITECRM_PHP_REC_VERSION'). $mod_strings['LBL_RECOMMENDED_PHP_VERSION_2'];
     }
     if (empty($mod_strings['LBL_UPGRADE_TAKES_TIME_HAVE_PATIENCE'])) {
         $mod_strings['LBL_UPGRADE_TAKES_TIME_HAVE_PATIENCE'] = 'Upgrade may take some time';
@@ -389,13 +389,13 @@ eoq5;
     }
 
     $php_verison_warning =<<<eoq
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th colspan="2" align="left">
-				<span class='error'><b>{$mod_strings['LBL_INCOMPATIBLE_PHP_VERSION']}</b></span>
-			</th>
-		</tr>
-	</table>
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th colspan="2" align="left">
+                <span class='error'><b>{$mod_strings['LBL_INCOMPATIBLE_PHP_VERSION']}</b></span>
+            </th>
+        </tr>
+    </table>
 eoq;
     $php_warnings = $php_verison_warning;
 }
@@ -406,14 +406,14 @@ if ($php_warnings != null) {
 }
 
 $GLOBALS['top_message'] = "<b>{$mod_strings['LBL_UW_PREFLIGHT_TESTS_PASSED2']}</b>";
-$showBack		= false;
-$showCancel		= true;
-$showRecheck	= true;
-$showNext		= ($stop) ? false : true;
+$showBack        = false;
+$showCancel        = true;
+$showRecheck    = true;
+$showNext        = ($stop) ? false : true;
 
-$stepBack		= $_REQUEST['step'] - 1;
-$stepNext		= $_REQUEST['step'] + 1;
-$stepCancel		= -1;
-$stepRecheck	= $_REQUEST['step'];
+$stepBack        = $_REQUEST['step'] - 1;
+$stepNext        = $_REQUEST['step'] + 1;
+$stepCancel        = -1;
+$stepRecheck    = $_REQUEST['step'];
 
 $_SESSION['step'][$steps['files'][$_REQUEST['step']]] = ($stop) ? 'failed' : 'success';

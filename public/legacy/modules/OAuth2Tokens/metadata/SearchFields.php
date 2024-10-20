@@ -57,10 +57,10 @@ $searchFields[$module_name] = [
         'query_type' => 'format',
         'operator' => 'subquery',
         'checked_only' => true,
-        'subquery' => "SELECT tokenTableAlias.id " .
-            "FROM oauth2tokens as tokenTableAlias " .
-            "WHERE tokenTableAlias.id = oauth2tokens.id " .
-            "AND tokenTableAlias.access_token_expires > " . OAuth2Tokens::getNowDateString(),
+        'subquery' => 'SELECT tokenTableAlias.id ' .
+            'FROM oauth2tokens as tokenTableAlias ' .
+            'WHERE tokenTableAlias.id = oauth2tokens.id ' .
+            'AND tokenTableAlias.access_token_expires > ' . OAuth2Tokens::getNowDateString(),
         'db_field' => array('id')
     ],
     'grant_type' =>

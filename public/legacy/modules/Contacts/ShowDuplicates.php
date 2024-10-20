@@ -43,12 +43,12 @@ if (!defined('sugarEntry') || !sugarEntry) {
 }
 
 if (!isset($_SESSION['SHOW_DUPLICATES'])) {
-    sugar_die("Unauthorized access to this area.");
+    sugar_die('Unauthorized access to this area.');
 }
 // retrieve $_POST values out of the $_SESSION variable - placed in there by ContactFormBase to avoid the length limitations on URLs implicit with GETS
 //$GLOBALS['log']->debug('ShowDuplicates.php: _POST = '.print_r($_SESSION['SHOW_DUPLICATES'],true));
 parse_str($_SESSION['SHOW_DUPLICATES'], $_POST);
-$post = array_map("securexss", $_POST);
+$post = array_map('securexss', $_POST);
 foreach ($post as $k => $v) {
     $_POST[$k] = $v;
 }
@@ -65,16 +65,16 @@ $mod_strings = return_module_language($current_language, 'Contacts');
 $moduleName = $GLOBALS['app_list_strings']['moduleList']['Contacts'];
 echo getClassicModuleTitle('Contacts', array($moduleName,$mod_strings['LBL_SAVE_CONTACT']), true);
 $xtpl=new XTemplate('modules/Contacts/ShowDuplicates.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
-$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("MODULE", $_REQUEST['module']);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
+$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('MODULE', $_REQUEST['module']);
 if ($error_msg !== '') {
-    $xtpl->assign("ERROR", $error_msg);
-    $xtpl->parse("main.error");
+    $xtpl->assign('ERROR', $error_msg);
+    $xtpl->parse('main.error');
 }
 
-if ((isset($_REQUEST['popup']) && $_REQUEST['popup'] == 'true') ||(isset($_POST['popup']) && $_POST['popup']==true)) {
+if ((isset($_REQUEST['popup']) && $_REQUEST['popup'] === 'true') ||(isset($_POST['popup']) && $_POST['popup']==true)) {
     insert_popup_header($theme);
 }
 
@@ -90,7 +90,7 @@ $duplicates = $_POST['duplicate'];
 $count = is_countable($duplicates) ? count($duplicates) : 0;
 $db = DBManagerFactory::getInstance();
 if ($count > 0) {
-    $query .= "and (";
+    $query .= 'and (';
     $first = true;
     foreach ($duplicates as $duplicate_id) {
         if (!$first) {
@@ -143,17 +143,17 @@ $get = '';
 if (!empty($_POST['return_module'])) {
     $xtpl->assign('RETURN_MODULE', $_POST['return_module']);
 } else {
-    $get .= "Contacts";
+    $get .= 'Contacts';
 }
-$get .= "&return_action=";
+$get .= '&return_action=';
 if (!empty($_POST['return_action'])) {
     $xtpl->assign('RETURN_ACTION', $_POST['return_action']);
 } else {
-    $get .= "DetailView";
+    $get .= 'DetailView';
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	INBOUND EMAIL WORKFLOW
+////    INBOUND EMAIL WORKFLOW
 if (isset($_REQUEST['inbound_email_id'])) {
     $xtpl->assign('INBOUND_EMAIL_ID', $_REQUEST['inbound_email_id']);
     $xtpl->assign('RETURN_MODULE', 'Emails');
@@ -162,7 +162,7 @@ if (isset($_REQUEST['inbound_email_id'])) {
         $xtpl->assign('START', $_REQUEST['start']);
     }
 }
-////	END INBOUND EMAIL WORKFLOW
+////    END INBOUND EMAIL WORKFLOW
 ///////////////////////////////////////////////////////////////////////////////
 
 

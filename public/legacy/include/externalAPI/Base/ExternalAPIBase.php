@@ -74,7 +74,7 @@ abstract class ExternalAPIBase implements ExternalAPIPlugin
     {
         // FIXME: check if the bean is validated, if not, refuse it?
         $this->eapmBean = $eapmBean;
-        if ($this->authMethod == 'password') {
+        if ($this->authMethod === 'password') {
             $this->account_name = $eapmBean->name;
             $this->account_password = $eapmBean->password;
         }
@@ -165,7 +165,7 @@ abstract class ExternalAPIBase implements ExternalAPIPlugin
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 
-        $GLOBALS['log']->debug("ExternalAPIBase->postData Where: ".$url);
+        $GLOBALS['log']->debug('ExternalAPIBase->postData Where: ' . $url);
         $GLOBALS['log']->debug("Headers:\n".print_r($headers, true));
         // $GLOBALS['log']->debug("Postfields:\n".print_r($postfields,true));
         $rawResponse = curl_exec($ch);

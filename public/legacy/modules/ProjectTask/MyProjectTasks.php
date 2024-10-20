@@ -71,12 +71,12 @@ $ListView->initNewXTemplate(
 $header_text = '';
 
 if (is_admin($current_user)
-    && $_REQUEST['module'] != 'DynamicLayout'
+    && $_REQUEST['module'] !== 'DynamicLayout'
     && !empty($_SESSION['editinplace'])) {
     $header_text = "&nbsp;<a href='index.php?action=index&module=DynamicLayout&from_action=MyTasks&from_module=Tasks'>"
-        . SugarThemeRegistry::current()->getImage("EditLayout", "border='0' align='bottom'", null, null, '.gif', $mod_strings['LBL_EDITLAYOUT'])
+        . SugarThemeRegistry::current()->getImage('EditLayout', "border='0' align='bottom'", null, null, '.gif', $mod_strings['LBL_EDITLAYOUT'])
         . '</a>';
 }
 $ListView->setHeaderTitle($current_module_strings['LBL_LIST_MY_PROJECT_TASKS'].$header_text);
-$ListView->setQuery($where, "", "date_due,priority desc", "PROJECT_TASK");
-$ListView->processListView($seedProjectTask, "main", "PROJECT_TASK");
+$ListView->setQuery($where, '', 'date_due,priority desc', 'PROJECT_TASK');
+$ListView->processListView($seedProjectTask, 'main', 'PROJECT_TASK');

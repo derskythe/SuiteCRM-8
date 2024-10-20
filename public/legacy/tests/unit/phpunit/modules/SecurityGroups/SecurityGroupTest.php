@@ -54,8 +54,8 @@ class SecurityGroupTest extends SuitePHPUnitFrameworkTestCase
                             ON secg.id = secr.securitygroup_id
                                AND secr.deleted = 0
                                AND secr.module = '$module'
-                       WHERE   secr.record_id = ".$table_name.".id
-                               AND secg.deleted = 0) ";
+                       WHERE   secr.record_id = ".$table_name. '.id
+                               AND secg.deleted = 0) ';
         $actual = $securityGroup::getGroupWhere($table_name, $module, $user_id);
         self::assertSame($expected, $actual);
     }

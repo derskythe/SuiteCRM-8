@@ -48,10 +48,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
- 
+
 global $app_strings;
 
-$dashletMeta['FavoritesDashlet'] = array('module'		=> 'Favorites',
+$dashletMeta['FavoritesDashlet'] = array('module'        => 'Favorites',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'Favorites'),
                                           'description' => 'A customizable view into Favorites',
                                           'icon'        => 'icon_Favorites_32.gif',

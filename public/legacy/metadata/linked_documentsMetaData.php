@@ -53,9 +53,9 @@ $dictionary['linked_documents'] = array( 'table' => 'linked_documents'
    )
    , 'indices' => array(
         array('name' =>'linked_documentspk', 'type' =>'primary', 'fields'=>array('id')),
-        array(	'name'			=> 'idx_parent_document',
-                'type'			=> 'alternate_key',
-                'fields'		=> array('parent_type','parent_id','document_id'),
+        array(    'name'            => 'idx_parent_document',
+                'type'            => 'alternate_key',
+                'fields'        => array('parent_type','parent_id','document_id'),
         ),
    )
    , 'relationships' => array(

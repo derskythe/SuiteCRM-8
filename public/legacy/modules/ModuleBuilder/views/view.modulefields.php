@@ -40,25 +40,28 @@
 
 require_once('modules/ModuleBuilder/MB/AjaxCompose.php');
 require_once('modules/ModuleBuilder/views/view.modulefield.php');
- 
+
 #[\AllowDynamicProperties]
 class ViewModulefields extends SugarView
 {
     public $mbModule;
-    
+
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
            );
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $titleLBL = [];
@@ -80,7 +83,7 @@ class ViewModulefields extends SugarView
         //add datetimecombo type field from the vardef overrides to point to Datetime type
         $fieldTypes['datetime'] = $fieldTypes['datetimecombo'];
 
-        if (!isset($_REQUEST['view_package']) || $_REQUEST['view_package'] == 'studio') {
+        if (!isset($_REQUEST['view_package']) || $_REQUEST['view_package'] === 'studio') {
             //$this->loadPackageHelp($module_name);
             $studioClass = new stdClass;
             $studioClass->name = $module_name;
@@ -95,7 +98,7 @@ class ViewModulefields extends SugarView
                 if ($this->isValidStudioField($def)) {
                     $def['label'] = translate($def['vname'], $module_name);
                     //Custom relate fields will have a non-db source, but custom_module set
-                    if (isset($def['source']) && $def['source'] == 'custom_fields' || isset($def['custom_module'])) {
+                    if (isset($def['source']) && $def['source'] === 'custom_fields' || isset($def['custom_module'])) {
                         $f[$mod_strings['LBL_HCUSTOM']][$def['name']] = $def;
                         $def['custom'] = true;
                     } else {
@@ -162,7 +165,7 @@ class ViewModulefields extends SugarView
 
             foreach ($this->mbModule->mbvardefs->vardefs['fields'] as $k=>$v) {
                 if ($k != $module_name) {
-                    $titleLBL[$k]=translate("LBL_".strtoupper($k), 'ModuleBuilder');
+                    $titleLBL[$k]=translate('LBL_' .strtoupper($k), 'ModuleBuilder');
                 } else {
                     $titleLBL[$k]=$k;
                 }
@@ -206,7 +209,7 @@ class ViewModulefields extends SugarView
             $ajax->addCrumb($package->name, 'ModuleBuilder.getContent("module=ModuleBuilder&action=package&package='.$package->name.'")');
             $ajax->addCrumb($module_name, 'ModuleBuilder.getContent("module=ModuleBuilder&action=module&view_package='.$package->name.'&view_module='. $module_name . '")');
             $ajax->addCrumb($bak_mod_strings['LBL_FIELDS'], '');
-            $ajax->addSection('center', $bak_mod_strings["LBL_FIELDS"], $smarty->fetch('modules/ModuleBuilder/tpls/MBModule/fields.tpl'));
+            $ajax->addSection('center', $bak_mod_strings['LBL_FIELDS'], $smarty->fetch('modules/ModuleBuilder/tpls/MBModule/fields.tpl'));
             $_REQUEST['field'] = '';
 
             echo $ajax->getJavascript();
@@ -235,7 +238,7 @@ class ViewModulefields extends SugarView
         }
         return $def;
     }
-    
+
     public function isValidStudioField(
         $def
         ) {
@@ -248,20 +251,20 @@ class ViewModulefields extends SugarView
                     return true;
                 }
             } else {
-                if ($def['studio'] == 'visible') {
+                if ($def['studio'] === 'visible') {
                     return true;
                 }
-                if ($def['studio'] == 'hidden' || $def['studio'] == 'false' || !$def['studio']) {
+                if ($def['studio'] === 'hidden' || $def['studio'] === 'false' || !$def['studio']) {
                     return false;
                 }
             }
         }
-        if (empty($def ['source']) || $def ['source'] == 'db' || $def ['source'] == 'custom_fields') {
-            if ($def ['type'] != 'id' && (empty($def ['dbType']) || $def ['dbType'] != 'id')) {
+        if (empty($def ['source']) || $def ['source'] === 'db' || $def ['source'] === 'custom_fields') {
+            if ($def ['type'] !== 'id' && (empty($def ['dbType']) || $def ['dbType'] !== 'id')) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }

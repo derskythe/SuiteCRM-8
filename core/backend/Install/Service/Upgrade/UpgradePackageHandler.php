@@ -194,8 +194,11 @@ class UpgradePackageHandler extends PackageHandler
 
     /**
      * Run compare and install package
+     *
      * @param string $version
+     *
      * @return Feedback
+     * @throws \JsonException
      */
     public function install(string $version): Feedback
     {

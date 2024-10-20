@@ -1,6 +1,6 @@
 <?php
 
-$dictionary["securitygroups_users"] = array(
+$dictionary['securitygroups_users'] = array(
   'table' => 'securitygroups_users',
   'fields' =>
   array(

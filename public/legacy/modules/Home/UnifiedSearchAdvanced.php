@@ -78,9 +78,11 @@ class UnifiedSearchAdvanced
     }
 
     /**
-     * @deprecated since v7.12.0
      * @param string $tpl
+     *
      * @return string
+     * @throws SmartyException
+     * @deprecated since v7.12.0
      */
     public function getDropDownDiv($tpl = 'modules/Home/UnifiedSearchAdvanced.tpl')
     {
@@ -147,9 +149,9 @@ class UnifiedSearchAdvanced
         foreach ($modules_to_search as $module=>$data) {
             $label = isset($app_list_strings['moduleList'][$module]) ? $app_list_strings['moduleList'][$module] : $module;
             if (!empty($data['checked'])) {
-                $json_enabled[] = array("module" => $module, 'label' => $label);
+                $json_enabled[] = array( 'module' => $module, 'label' => $label);
             } else {
-                $json_disabled[] = array("module" => $module, 'label' => $label);
+                $json_disabled[] = array( 'module' => $module, 'label' => $label);
             }
         }
 
@@ -168,8 +170,9 @@ class UnifiedSearchAdvanced
 
 
     /**
+     * @throws SmartyException
      * @deprecated since v7.12.0
-     * search
+     *             search
      *
      * Search function run when user goes to Show All and runs a search again.  This outputs the search results
      * calling upon the various listview display functions for each module searched on.
@@ -191,7 +194,7 @@ class UnifiedSearchAdvanced
 
         $this->query_string = securexss(from_html(clean_string($this->query_string, 'UNIFIED_SEARCH')));
 
-        if (!empty($_REQUEST['advanced']) && $_REQUEST['advanced'] != 'false') {
+        if (!empty($_REQUEST['advanced']) && $_REQUEST['advanced'] !== 'false') {
             $modules_to_search = array();
             if (!empty($_REQUEST['search_modules'])) {
                 foreach (explode(',', $_REQUEST['search_modules']) as $key) {
@@ -282,7 +285,7 @@ class UnifiedSearchAdvanced
 
                     if (isset($seed->field_defs[$field]['type'])) {
                         $type = $seed->field_defs[$field]['type'];
-                        if ($type == 'int' && !is_numeric($this->query_string)) {
+                        if ($type === 'int' && !is_numeric($this->query_string)) {
                             continue;
                         }
                     }
@@ -304,7 +307,7 @@ class UnifiedSearchAdvanced
                 $searchForm->setup(array( $moduleName => array() ), $unifiedSearchFields, '', 'saved_views' /* hack to avoid setup doing further unwanted processing */) ;
                 $where_clauses = $searchForm->generateSearchWhere() ;
                 //add inner joins back into the where clause
-                $params = array('custom_select' => "");
+                $params = array('custom_select' => '' );
                 foreach ($innerJoins as $field=>$def) {
                     if (isset($def['db_field'])) {
                         foreach ($def['db_field'] as $dbfield) {
@@ -429,12 +432,12 @@ class UnifiedSearchAdvanced
                     // the searchFields entry for 'email' doesn't correspond to any vardef entry. Instead it contains SQL to directly perform the search.
                     // So as a proxy we allow any field in the vardefs that has a name starting with 'email...' to be tagged with the 'unified_search' parameter
 
-                    if (strpos((string) $field, 'email') !== false) {
+                    if (str_contains((string) $field, 'email')) {
                         $field = 'email' ;
                     }
 
                     //bug: 38139 - allow phone to be searched through Global Search
-                    if (strpos((string) $field, 'phone') !== false) {
+                    if (str_contains((string) $field, 'phone')) {
                         $field = 'phone' ;
                     }
 
@@ -483,9 +486,9 @@ class UnifiedSearchAdvanced
         foreach ($unified_search_modules_display as $module=>$data) {
             $label = isset($app_list_strings['moduleList'][$module]) ? $app_list_strings['moduleList'][$module] : $module;
             if ($data['visible'] === true) {
-                $json_enabled[] = array("module" => $module, 'label' => $label);
+                $json_enabled[] = array( 'module' => $module, 'label' => $label);
             } else {
-                $json_disabled[] = array("module" => $module, 'label' => $label);
+                $json_disabled[] = array( 'module' => $module, 'label' => $label);
             }
         }
 
@@ -501,9 +504,9 @@ class UnifiedSearchAdvanced
             if (!isset($unified_search_modules_display[$module])) {
                 $label = isset($app_list_strings['moduleList'][$module]) ? $app_list_strings['moduleList'][$module] : $module;
                 if ($data['default']) {
-                    $json_enabled[] = array("module" => $module, 'label' => $label);
+                    $json_enabled[] = array( 'module' => $module, 'label' => $label);
                 } else {
-                    $json_disabled[] = array("module" => $module, 'label' => $label);
+                    $json_disabled[] = array( 'module' => $module, 'label' => $label);
                 }
             }
         }
@@ -513,10 +516,11 @@ class UnifiedSearchAdvanced
 
 
     /**
+     * @throws Exception
      * @deprecated since v7.12.0
-     * saveGlobalSearchSettings
-     * This method handles the administrator's request to save the searchable modules selected and stores
-     * the results in the unified_search_modules_display.php file
+     *             saveGlobalSearchSettings
+     *             This method handles the administrator's request to save the searchable modules selected and stores
+     *             the results in the unified_search_modules_display.php file
      *
      */
     public function saveGlobalSearchSettings()
@@ -584,13 +588,14 @@ class UnifiedSearchAdvanced
 
 
     /**
+     * @return     $unified_search_modules_display Array value of modules that have enabled for searching
+     * @throws Exception
      * @deprecated since v7.12.0
-     * getUnifiedSearchModulesDisplay
+     *             getUnifiedSearchModulesDisplay
      *
      * Returns the value of the $unified_search_modules_display variable which is based on the $unified_search_modules
      * entries that have been selected to be allowed for searching.
      *
-     * @return $unified_search_modules_display Array value of modules that have enabled for searching
      */
     public function getUnifiedSearchModulesDisplay()
     {
@@ -628,7 +633,7 @@ class UnifiedSearchAdvanced
             return false;
         }
 
-        if (!write_array_to_file("unified_search_modules_display", $unified_search_modules_display, 'custom/modules/unified_search_modules_display.php')) {
+        if (!write_array_to_file('unified_search_modules_display', $unified_search_modules_display, 'custom/modules/unified_search_modules_display.php')) {
             //Log error message and throw Exception
             global $app_strings;
             $msg = string_format($app_strings['ERR_FILE_WRITE'], array('custom/modules/unified_search_modules_display.php'));

@@ -51,13 +51,13 @@ class SugarHtml
 {
     const SINGLE_QUOTE = "'";
     const DOUBLE_QUOTE = '"';
-    const ASSIGN_SIGN = "=";
-    const HTML_TAG_BEGIN = "<";
-    const HTML_TAG_END = ">";
-    const SMARTY_TAG_BEGIN = "{";
-    const SMARTY_TAG_END = "}";
-    const CLAUSE_TAG_BEGIN = "(";
-    const CLAUSE_TAG_END = ")";
+    const ASSIGN_SIGN      = '=';
+    const HTML_TAG_BEGIN   = '<';
+    const HTML_TAG_END     = '>';
+    const SMARTY_TAG_BEGIN = '{';
+    const SMARTY_TAG_END   = '}';
+    const CLAUSE_TAG_BEGIN = '(';
+    const CLAUSE_TAG_END   = ')';
 
     /**
      * @var integer the counter for generating automatic input field names.
@@ -75,7 +75,7 @@ class SugarHtml
      */
     public static function createOpenTag($tagName, $params = array(), $self_closing = false)
     {
-        $self_closing_tag = ($self_closing) ? "/" : "";
+        $self_closing_tag = ($self_closing) ? '/' : '';
         if (empty($params)) {
             return "<{$tagName}{$self_closing_tag}>";
         }
@@ -150,7 +150,7 @@ class SugarHtml
      */
     public static function createHtml($dom_tree = array())
     {
-        $out = "";
+        $out = '';
         if (isset($dom_tree[0])) { //dom contains sibling items
             foreach ($dom_tree as $dom) {
                 $out .= is_array($dom) ? self::createHtml($dom) : $dom;
@@ -217,7 +217,7 @@ class SugarHtml
             'submit', 'button', 'hidden', 'checkbox', 'input'
         );
 
-        if (in_array($sugar_html['type'], $input_types)) {
+        if (in_array($sugar_html['type'], $input_types, true)) {
             $sugar_html['htmlOptions']['type'] = (empty($sugar_html['htmlOptions']['type'])) ? $sugar_html['type'] : $sugar_html['htmlOptions']['type'];
             $sugar_html['htmlOptions']['value'] = $sugar_html['value'];
 
@@ -302,7 +302,7 @@ class SugarHtml
 
         $_str = ltrim(substr($code, $offset + 1));
 
-        preg_match("/^[$\w]+/", $_str, $statement);
+        preg_match('/^[$\w]+/', $_str, $statement);
         $_smarty_closing = self::SMARTY_TAG_BEGIN.'/'.$statement[0];
         $_left = strlen($statement[0]);
 
@@ -323,7 +323,7 @@ class SugarHtml
 
         $clauses = array_slice(
             //split into each clause
-            preg_split("/[\{\}]/i", $smarty_string),
+            preg_split('/[\{\}]/i', $smarty_string),
             1,
             -1 //slice out the first and last items, which is empty.
         );
@@ -348,7 +348,7 @@ class SugarHtml
             $is_literal = $is_literal || !empty($current_literal_string);
 
             foreach ($reserved_strings as $str) {
-                if (substr(ltrim($clauses[$seq]), 0, strlen($str)) == $str) {
+                if (str_starts_with(ltrim($clauses[$seq]), $str)) {
                     $is_reserved = true;
                     break;
                 }
@@ -359,7 +359,7 @@ class SugarHtml
                 } else {
                     $clauses[--$queue] .= self::SMARTY_TAG_BEGIN.$clauses[$seq].self::SMARTY_TAG_END;
                 }
-                $is_literal = $is_literal && (substr(ltrim($clauses[$seq]), 0, strlen("/".$current_literal_string)) != "/".$current_literal_string);
+                $is_literal = $is_literal && (!str_starts_with(ltrim($clauses[$seq]), '/' . $current_literal_string));
                 $current_literal_string = ($is_literal) ? $current_literal_string : '';
                 if ($seq < count($clauses) - 1) {
                     $clauses[$queue++] .= $clauses[++$seq];
@@ -375,7 +375,7 @@ class SugarHtml
         $count = 0;
         $queue = 0;
         for ($seq = 0; $seq < count($clauses); $seq++) {
-            if ($seq > 0 && substr(ltrim($clauses[$seq]), 0, 2) == 'if') {
+            if ($seq > 0 && str_starts_with(ltrim($clauses[$seq]), 'if')) {
                 $count++;
             }
             if ($count > 0) {
@@ -387,7 +387,7 @@ class SugarHtml
                 $clauses[$queue++] = $clauses[$seq];
             }
 
-            if ($seq > 0 && substr(ltrim($clauses[$seq - 1]), 0, 3) == '/if') {
+            if ($seq > 0 && str_starts_with(ltrim($clauses[$seq - 1]), '/if')) {
                 $count--;
             }
         }
@@ -471,7 +471,7 @@ class SugarHtml
                         $smarty_encoded = false;
                         array_push($cache, $char);
                     } else {
-                        if (!$quote_encoded && $char == ' ') {
+                        if (!$quote_encoded && $char === ' ') {
                             if (!empty($cache)) {
                                 $string = implode('', $cache);
                                 if (empty($var_name)) {
@@ -492,7 +492,7 @@ class SugarHtml
                                     $output[$var_name] = '';
                                 }
                                 $string = implode('', $cache);
-                                if (trim($string) != "") {
+                                if (trim($string) != '') {
                                     $var_name = $string;
                                 }
                                 $var_assign = true;
@@ -535,7 +535,7 @@ class SugarHtml
      */
     public static function createAttributes($params)
     {
-        $options = "";
+        $options = '';
         foreach ($params as $attr => $value) {
             if (is_numeric($attr) === false) {
                 $attr = trim($attr);

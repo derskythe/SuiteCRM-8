@@ -64,7 +64,9 @@ class CreateUser
      *
      * @param string $name
      * @param array $fields
+     *
      * @return SugarBean|null
+     * @throws Exception
      */
     public function create(string $name, array $fields): ?SugarBean
     {

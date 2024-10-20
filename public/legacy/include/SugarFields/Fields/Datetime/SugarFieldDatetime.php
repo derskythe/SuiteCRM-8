@@ -68,7 +68,7 @@ class SugarFieldDatetime extends SugarFieldBase
 
         // jpereira@dri - #Bug49552 - Datetime field unable to follow parent class methods
         //jchi , bug #24557 , 10/31/2008
-        if (isset($vardef['name']) && ($vardef['name'] == 'date_entered' || $vardef['name'] == 'date_modified')) {
+        if (isset($vardef['name']) && ($vardef['name'] === 'date_entered' || $vardef['name'] === 'date_modified')) {
             return $this->getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex);
         }
         //end
@@ -116,7 +116,7 @@ class SugarFieldDatetime extends SugarFieldBase
         } else {
             $user = $GLOBALS['current_user'];
         }
-        if ($vardef['type'] == 'date') {
+        if ($vardef['type'] === 'date') {
             if (!$timedate->check_matching_format($inputField, TimeDate::DB_DATE_FORMAT)) {
                 return $inputField;
             }
@@ -170,7 +170,7 @@ class SugarFieldDatetime extends SugarFieldBase
             } else {
                 $timepart = $parts[1];
                 // see if we can get by stripping the seconds
-                if (strpos($settings->timeformat, 's') === false) {
+                if (!str_contains($settings->timeformat, 's')) {
                     $sep = $timedate->timeSeparatorFormat($settings->timeformat);
                     // We are assuming here seconds are the last component, which
                     // is kind of reasonable - no sane time format puts seconds first

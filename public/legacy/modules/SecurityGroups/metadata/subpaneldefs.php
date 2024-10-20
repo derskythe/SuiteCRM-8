@@ -11,7 +11,7 @@ $layout_defs['SecurityGroups'] = array(
     'subpanel_setup' => array(
 
         'users' => array(
-            'top_buttons' => array(	array('widget_class' => 'SubPanelTopSelectButton', 'mode' => 'MultiSelect', 'popup_module' => 'Users'),),
+            'top_buttons' => array(    array('widget_class' => 'SubPanelTopSelectButton', 'mode' => 'MultiSelect', 'popup_module' => 'Users'),),
             'order' => 10,
             'module' => 'Users',
             'sort_by' => 'user_name',
@@ -37,7 +37,7 @@ $layout_defs['SecurityGroups'] = array(
         ),
 
     ),
-    
+
 );
 $layout_defs['SecurityGroupRoles'] = array(
     // sets up which panels to show, in which order, and with what linked_fields
@@ -62,6 +62,6 @@ if (is_admin($current_user)) {
     $layout_defs['SecurityGroupRoles']['subpanel_setup']['aclroles']['subpanel_name'] = 'admin';
 } else {
     $layout_defs['SecurityGroups']['subpanel_setup']['aclroles']['top_buttons'] = array();
-    
+
     $layout_defs['SecurityGroupRoles']['subpanel_setup']['aclroles']['top_buttons'] = array();
 }

@@ -61,11 +61,11 @@ class Administration extends SugarBean
     /**
      * @var string
      */
-    public $table_name = 'config';
+    public string $table_name = 'config';
     /**
      * @var string
      */
-    public $object_name = 'Administration';
+    public string $object_name = 'Administration';
     /**
      * @var bool
      */
@@ -73,7 +73,7 @@ class Administration extends SugarBean
     /**
      * @var string
      */
-    public $module_dir = 'Administration';
+    public string $module_dir = 'Administration';
     public array $config_categories = [
         // 'mail', // cn: moved to include/OutboundEmail
         'disclosure', // appended to all outbound emails
@@ -89,7 +89,7 @@ class Administration extends SugarBean
     /**
      * @var bool
      */
-    public $disable_custom_fields = true;
+    public bool $disable_custom_fields = true;
     /**
      * @var array|string[]
      */
@@ -246,6 +246,8 @@ class Administration extends SugarBean
 
     /**
      * @return void
+     * @throws Exception
+     * @throws Exception
      */
     public function saveConfig(): void
     {
@@ -303,7 +305,7 @@ class Administration extends SugarBean
             $result = $this->db->query("UPDATE config SET value = '$quoted_value' WHERE category = '$quoted_category' AND name = '$quoted_key'");
         }
         sugar_cache_clear('admin_settings_cache');
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('app-metadata-navigation-'.$current_user->id);
 
         return $this->db->getAffectedRowCount($result);

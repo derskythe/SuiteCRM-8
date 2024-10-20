@@ -57,7 +57,7 @@ class AM_ProjectTemplatesViewEdit extends ViewEdit
         global $json;
 
         $this->bean->is_template = 0;
-        $this->ev->ss->assign("is_template", 0);
+        $this->ev->ss->assign('is_template', 0);
 
         $json = getJSONobj();
         $json_config = new json_config();

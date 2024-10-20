@@ -50,22 +50,22 @@ class SugarCacheRedis extends SugarCacheAbstract
      * @var Redis server name string
      */
     protected $_host = 'localhost';
-    
+
     /**
      * @var Redis server port int
      */
     protected $_port = 6379;
-    
+
     /**
      * @var Redis object
      */
     protected $_redis = null;
-    
+
     /**
      * @see SugarCacheAbstract::$_priority
      */
     protected $_priority = 920;
-    
+
     /**
      * @see SugarCacheAbstract::useBackend()
      */
@@ -74,16 +74,16 @@ class SugarCacheRedis extends SugarCacheAbstract
         if (!parent::useBackend()) {
             return false;
         }
-        
-        if (extension_loaded("redis")
+
+        if (extension_loaded('redis')
                 && empty($GLOBALS['sugar_config']['external_cache_disabled_redis'])
                 && $this->_getRedisObject()) {
             return true;
         }
-            
+
         return false;
     }
-    
+
     /**
      * @see SugarCacheAbstract::__construct()
      */
@@ -91,7 +91,7 @@ class SugarCacheRedis extends SugarCacheAbstract
     {
         parent::__construct();
     }
-    
+
     /**
      * Get the memcache object; initialize if needed
      */
@@ -109,10 +109,10 @@ class SugarCacheRedis extends SugarCacheAbstract
         } catch (RedisException $e) {
             return false;
         }
-        
+
         return $this->_redis;
     }
-    
+
     /**
      * @see SugarCacheAbstract::_setExternal()
      */
@@ -122,11 +122,11 @@ class SugarCacheRedis extends SugarCacheAbstract
         ) {
         $value = serialize($value);
         $key = $this->_fixKeyName($key);
-        
+
         $this->_getRedisObject()->set($key, $value);
         $this->_getRedisObject()->expire($key, $this->_expireTimeout);
     }
-    
+
     /**
      * @see SugarCacheAbstract::_getExternal()
      */
@@ -139,12 +139,12 @@ class SugarCacheRedis extends SugarCacheAbstract
         if ($returnValue === false) {
             return null;
         }
-        
+
         return is_string($returnValue) ?
             unserialize($returnValue) :
             $returnValue;
     }
-    
+
     /**
      * @see SugarCacheAbstract::_clearExternal()
      */
@@ -154,7 +154,7 @@ class SugarCacheRedis extends SugarCacheAbstract
         $key = $this->_fixKeyName($key);
         $this->_getRedisObject()->del($key);
     }
-    
+
     /**
      * @see SugarCacheAbstract::_resetExternal()
      */
@@ -162,7 +162,7 @@ class SugarCacheRedis extends SugarCacheAbstract
     {
         $this->_getRedisObject()->flushAll();
     }
-    
+
     /**
      * Fixed the key naming used so we don't have any spaces
      *

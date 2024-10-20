@@ -278,7 +278,7 @@ class RenameModules
      */
     public function process($options = '')
     {
-        if ($options == 'SaveDropDown') {
+        if ($options === 'SaveDropDown') {
             $this->save();
         }
 
@@ -289,6 +289,7 @@ class RenameModules
      * Main display function.
      *
      * @return void
+     * @throws SmartyException
      */
     protected function display()
     {
@@ -300,7 +301,7 @@ class RenameModules
 
         $smarty = new Sugar_Smarty();
         $smarty->assign('MOD', $GLOBALS['mod_strings']);
-        $title=getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array("<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>", $mod_strings['LBL_RENAME_TABS']), false);
+        $title=getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array( "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>', $mod_strings['LBL_RENAME_TABS']), false);
         $smarty->assign('title', $title);
 
         $selected_lang = (!empty($_REQUEST['dropdown_lang'])?$_REQUEST['dropdown_lang']:$_SESSION['authenticated_user_language']);
@@ -345,7 +346,7 @@ class RenameModules
         $smarty->assign('editImage', $editImage);
         $deleteImage = SugarThemeRegistry::current()->getImage('delete_inline', '');
         $smarty->assign('deleteImage', $deleteImage);
-        $smarty->display("modules/Studio/wizards/RenameModules.tpl");
+        $smarty->display('modules/Studio/wizards/RenameModules.tpl');
     }
 
     /**
@@ -370,7 +371,7 @@ class RenameModules
             $this->renameCertainModuleModStrings($module, $labelsArr);
         }
 
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('app-metadata-language-strings-' . $this->selectedLanguage);
 
         //Refresh the page again so module tabs are changed as the save process happens after module tabs are already generated.
@@ -427,7 +428,7 @@ class RenameModules
             $GLOBALS['log']->debug("Examining subpanel definition for potential rename: $subpanelName ");
             //For each subpanel def, check if they are in our changed modules set.
             foreach ($this->changedModules as $changedModuleName => $renameFields) {
-                if (!(isset($subpanelMetaData['type']) &&  $subpanelMetaData['type'] == 'collection') //Dont bother with collections
+                if (!(isset($subpanelMetaData['type']) &&  $subpanelMetaData['type'] === 'collection') //Dont bother with collections
                     && isset($subpanelMetaData['module']) && $subpanelMetaData['module'] == $changedModuleName && isset($subpanelMetaData['title_key'])) {
                     $replaceKey = $subpanelMetaData['title_key'];
                     if (!isset($mod_strings[$replaceKey])) {
@@ -526,7 +527,7 @@ class RenameModules
 
         $relatedFields = $bean->get_related_fields();
         foreach ($relatedFields as $field => $defs) {
-            if (isset($defs['module']) && in_array($defs['module'], $changedModules)) {
+            if (isset($defs['module']) && in_array($defs['module'], $changedModules, true)) {
                 $arrayToRename[$field] = $defs;
             }
         }
@@ -535,7 +536,7 @@ class RenameModules
             $fieldName = $defs['name'];
             if ($bean->load_relationship($fieldName)) {
                 $relModule = $bean->$fieldName->getRelatedModuleName();
-                if (in_array($relModule, $changedModules)) {
+                if (in_array($relModule, $changedModules, true)) {
                     $defs['module'] = $relModule;
                     $arrayToRename[$field] = $defs;
                 }
@@ -554,7 +555,10 @@ class RenameModules
             $oldStringValue = translate($replaceKey, $moduleName);
             $renameFields = $this->changedModules[$linkEntry['module']];
 
-            if (strlen((string) $renameFields['prev_plural']) > strlen((string) $renameFields['prev_singular']) && strpos((string) $oldStringValue, (string) $renameFields['prev_plural']) !== false) {
+            if (strlen((string) $renameFields['prev_plural']) > strlen((string) $renameFields['prev_singular']) && str_contains(
+                    (string) $oldStringValue,
+                    (string) $renameFields['prev_plural']
+                )) {
                 $key = 'plural';
             } else {
                 $key = 'singular';
@@ -881,7 +885,7 @@ class RenameModules
             $key = (isset($params['key_' . $index]))?SugarCleaner::stripTags($params['key_' . $index]): 'BLANK';
             $value = (isset($params['value_' . $index]))?SugarCleaner::stripTags($params['value_' . $index]): '';
             $svalue = (isset($params['svalue_' . $index]))?SugarCleaner::stripTags($params['svalue_' . $index]): $value;
-            if ($key == 'BLANK') {
+            if ($key === 'BLANK') {
                 $key = '';
             }
 

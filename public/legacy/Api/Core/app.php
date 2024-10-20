@@ -1,6 +1,8 @@
 <?php
 // Swagger needs this, but should remove - CORS
-header("Access-Control-Allow-Origin: *");
+use Slim\App;
+
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With');
 
@@ -20,7 +22,7 @@ if (!isset($_SERVER['HTTP_AUTHORIZATION']) && isset($_SERVER['REDIRECT_HTTP_AUTH
 chdir(__DIR__ . '/../../');
 require_once __DIR__ . '/../../include/entryPoint.php';
 
-$app = new \Slim\App(\Api\Core\Loader\ContainerLoader::configure());
+$app = new App(\Api\Core\Loader\ContainerLoader::configure());
 // closure shouldn't be created in static context under PHP7
 $routeLoader = new \Api\Core\Loader\RouteLoader();
 $routeLoader->configureRoutes($app);

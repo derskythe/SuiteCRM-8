@@ -73,7 +73,7 @@ class StoreQuery
                         if (isset($bean->field_defs[$field]['type']) && empty($bean->field_defs[$field]['disable_num_format'])) {
                             $type = $bean->field_defs[$field]['type'];
 
-                            if (($type == 'date' || $type == 'datetime' || $type == 'datetimecombo') && !preg_match('/^\[.*?\]$/', (string)$value)) {
+                            if (($type === 'date' || $type === 'datetime' || $type === 'datetimecombo') && !preg_match('/^\[.*?\]$/', (string)$value)) {
                                 // If the value is already in the db date format (e.g. '2019-03-21'), don't re-convert
                                 // it as that causes $db_format to be set to nothing. If the value isn't in
                                 // the format that the db wants (e.g. '3/21/2019'), then we can convert it.
@@ -84,14 +84,14 @@ class StoreQuery
                                 }
                                 $this->query[$key] = $db_format;
                             } else {
-                                if ($type == 'int' || $type == 'currency' || $type == 'decimal' || $type == 'float') {
+                                if ($type === 'int' || $type === 'currency' || $type === 'decimal' || $type === 'float') {
                                     if (preg_match('/[^\d]/', (string)$value)) {
                                         require_once('modules/Currencies/Currency.php');
                                         $this->query[$key] = unformat_number($value);
                                         //Flag this value as having been unformatted
                                         $this->query[$key . '_unformatted_number'] = true;
                                         //If the type is of currency and there was a currency symbol (non-digit), save the symbol
-                                        if ($type == 'currency' && preg_match('/^([^\d])/', (string)$value, $match)) {
+                                        if ($type === 'currency' && preg_match('/^([^\d])/', (string)$value, $match)) {
                                             $this->query[$key . '_currency_symbol'] = $match[1];
                                         }
                                     } else {
@@ -124,7 +124,7 @@ class StoreQuery
     public function loadQuery($name)
     {
         $saveType = $this->getSaveType($name);
-        if ($saveType == 'all' || $saveType == 'myitems') {
+        if ($saveType === 'all' || $saveType === 'myitems') {
             global $current_user;
             $this->query = StoreQuery::getStoredQueryForUser($name);
             if (empty($this->query)) {
@@ -147,20 +147,20 @@ class StoreQuery
 
         foreach ($this->query as $key => $value) {
             // todo wp: remove this
-            if ($key != 'advanced' && $key != 'module' && $key != 'lvso') {
+            if ($key !== 'advanced' && $key !== 'module' && $key !== 'lvso') {
                 //Filter date fields to ensure it is saved to DB format, but also avoid empty values
                 if (!empty($value) && !empty($bean) && preg_match('/^(start_range_|end_range_|range_)?(.*?)(_advanced|_basic)$/', (string)$key, $match)) {
                     $field = $match[2];
                     if (isset($bean->field_defs[$field]['type']) && empty($bean->field_defs[$field]['disable_num_format'])) {
                         $type = $bean->field_defs[$field]['type'];
 
-                        if (($type == 'date' || $type == 'datetime' || $type == 'datetimecombo') && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$value) && !preg_match('/^\[.*?\]$/', (string)$value)) {
+                        if (($type === 'date' || $type === 'datetime' || $type === 'datetimecombo') && preg_match('/^\d{4}-\d{2}-\d{2}$/', (string)$value) && !preg_match('/^\[.*?\]$/', (string)$value)) {
                             $value = $timedate->to_display_date($value, false);
                         } else {
-                            if (($type == 'int' || $type == 'currency' || $type == 'decimal' || $type == 'float') && isset($this->query[$key . '_unformatted_number']) && preg_match('/^\d+$/', (string)$value)) {
+                            if (($type === 'int' || $type === 'currency' || $type === 'decimal' || $type === 'float') && isset($this->query[$key . '_unformatted_number']) && preg_match('/^\d+$/', (string)$value)) {
                                 require_once('modules/Currencies/Currency.php');
                                 $value = format_number($value);
-                                if ($type == 'currency' && isset($this->query[$key . '_currency_symbol'])) {
+                                if ($type === 'currency' && isset($this->query[$key . '_currency_symbol'])) {
                                     $value = $this->query[$key . '_currency_symbol'] . $value;
                                 }
                             }
@@ -192,7 +192,7 @@ class StoreQuery
         } else {
             $saveType = $save_query;
         }
-        if ($saveType == 'populate_only') {
+        if ($saveType === 'populate_only') {
             $saveType = 'all';
             $this->populate_only = true;
         }
@@ -204,7 +204,7 @@ class StoreQuery
     public function saveFromRequest($name)
     {
         if (isset($_REQUEST['query'])) {
-            if (!empty($_REQUEST['clear_query']) && $_REQUEST['clear_query'] == 'true') {
+            if (!empty($_REQUEST['clear_query']) && $_REQUEST['clear_query'] === 'true') {
                 $this->loadQuery($name);
                 $_REQUEST['displayColumns'] =
                     !empty($this->query['displayColumns']) ? $this->query['displayColumns'] : null;
@@ -216,14 +216,14 @@ class StoreQuery
             }
             $saveType = $this->getSaveType($name);
 
-            if ($saveType == 'myitems') {
+            if ($saveType === 'myitems') {
                 if (!empty($_REQUEST['current_user_only'])) {
                     $this->query['current_user_only'] = $_REQUEST['current_user_only'];
                     $this->query['query'] = true;
                 }
                 $this->saveQuery($name);
             } else {
-                if ($saveType == 'all') {
+                if ($saveType === 'all') {
                     // Bug 39580 - Added 'EmailTreeLayout','EmailGridWidths' to the list as these are added merely as side-effects of the fact that we store the entire
                     // $_REQUEST object which includes all cookies.  These are potentially quite long strings as well.
                     $blockVariables = array('mass', 'uid', 'massupdate', 'delete', 'merge', 'selectCount', 'current_query_by_page', 'EmailTreeLayout', 'EmailGridWidths');
@@ -244,21 +244,21 @@ class StoreQuery
     public function saveFromGet($name)
     {
         if (isset($_GET['query'])) {
-            if (!empty($_GET['clear_query']) && $_GET['clear_query'] == 'true') {
+            if (!empty($_GET['clear_query']) && $_GET['clear_query'] === 'true') {
                 $this->clearQuery($name);
 
                 return;
             }
             $saveType = $this->getSaveType($name);
 
-            if ($saveType == 'myitems') {
+            if ($saveType === 'myitems') {
                 if (!empty($_GET['current_user_only'])) {
                     $this->query['current_user_only'] = $_GET['current_user_only'];
                     $this->query['query'] = true;
                 }
                 $this->saveQuery($name);
             } else {
-                if ($saveType == 'all') {
+                if ($saveType === 'all') {
                     $this->query = $_GET;
                     $this->saveQuery($name);
                 }

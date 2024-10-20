@@ -48,12 +48,12 @@ global $dictionary;
 include_once 'modules/TableDictionary.php';
 require_once 'data/BeanFactory.php';
 
-define('REL_LHS', 'LHS');
-define('REL_RHS', 'RHS');
-define('REL_BOTH', 'BOTH_SIDES');
-define('REL_MANY_MANY', 'many-to-many');
-define('REL_ONE_MANY', 'one-to-many');
-define('REL_ONE_ONE', 'one-to-one');
+const REL_LHS = 'LHS';
+const REL_RHS = 'RHS';
+const REL_BOTH = 'BOTH_SIDES';
+const REL_MANY_MANY = 'many-to-many';
+const REL_ONE_MANY = 'one-to-many';
+const REL_ONE_ONE = 'one-to-one';
 
 /**
  * A relationship is between two modules.
@@ -500,7 +500,7 @@ abstract class SugarRelationship
     {
         //check role fields to see if this is a parent (flex relate) relationship
         if (!empty($this->def['relationship_role_column']) && !empty($this->def['relationship_role_column_value'])
-            && $this->def['relationship_role_column'] == 'parent_type' && $this->def['rhs_key'] == 'parent_id'
+            && $this->def['relationship_role_column'] === 'parent_type' && $this->def['rhs_key'] === 'parent_id'
         ) {
             return true;
         }

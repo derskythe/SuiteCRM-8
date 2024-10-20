@@ -104,7 +104,7 @@ class BaseHandler
      */
     protected function getJavascipt()
     {
-        $this->ss->assign("JAVASCRIPT", $this->protectedJavascript());
+        $this->ss->assign('JAVASCRIPT', $this->protectedJavascript());
     }
 
     /**

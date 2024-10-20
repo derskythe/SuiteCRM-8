@@ -76,10 +76,10 @@ class SugarLogger implements LoggerTemplate
      */
     public static array $filename_suffix = array(
         //bug#50265: Added none option for previous version users
-        '' => 'None',
-        "MM_yyyy" => 'Month_Year',
-        "dd_MM" => 'Day_Month',
-        "MM_dd_yyyy" => 'Month_Day_Year',
+        ''           => 'None',
+        'MM_yyyy'    => 'Month_Year',
+        'dd_MM'      => 'Day_Month',
+        'MM_dd_yyyy' => 'Month_Day_Year',
     );
 
     /**
@@ -115,7 +115,7 @@ class SugarLogger implements LoggerTemplate
      */
     public function getLogFileName(): string
     {
-        return ltrim($this->full_log_file, "./");
+        return ltrim($this->full_log_file, './');
     }
 
     /**
@@ -237,7 +237,7 @@ class SugarLogger implements LoggerTemplate
             $type = $call['type'] ?? '';
             $function = $call['function'] ?? '???';
 
-            $ret[$i + 1] = sprintf("In %s#%d from %s%s%s(..)", $file, $line, $class, $type, $function);
+            $ret[$i + 1] = sprintf('In %s#%d from %s%s%s(..)', $file, $line, $class, $type, $function);
         }
         $ret[count($ret) - 1] = PHP_EOL;
 
@@ -272,9 +272,10 @@ class SugarLogger implements LoggerTemplate
 
             fwrite(
                 $this->fp,
-                sprintf("[%s] - %s%s",
+                sprintf(
+                    '[%s] - %s%s',
                     date($this->dateFormat),
-                    "Started Logger Write",
+                    'Started Logger Write',
                     PHP_EOL));
         }
 
@@ -298,7 +299,8 @@ class SugarLogger implements LoggerTemplate
         if (isset($this->fp)) {
             fwrite(
                 $this->fp,
-                sprintf("[%s] - [%s][%s][%s] | %s%s",
+                sprintf(
+                    '[%s] - [%s][%s][%s] | %s%s',
                     date($this->dateFormat),
                     getmypid(),
                     $userID,
@@ -331,10 +333,10 @@ class SugarLogger implements LoggerTemplate
 
         //now lets move the logs starting at the oldest and going to the newest
         for ($i = $this->maxLogs - 2; $i > 0; $i--) {
-            $old_name = sprintf("%s%s%s_%d%s", $this->log_dir, $this->logfile, $this->date_suffix, $i, $this->ext);
+            $old_name = sprintf('%s%s%s_%d%s', $this->log_dir, $this->logfile, $this->date_suffix, $i, $this->ext);
             if (file_exists($old_name)) {
                 $to = $i + 1;
-                $new_name = sprintf("%s%s%s_%d%s", $this->log_dir, $this->logfile, $this->date_suffix, $to, $this->ext);
+                $new_name = sprintf('%s%s%s_%d%s', $this->log_dir, $this->logfile, $this->date_suffix, $to, $this->ext);
                 //nsingh- Bug 22548  Win systems fail if new file name already exists. The fix below checks for that.
                 //if/else branch is necessary as suggested by someone on php-doc ( see rename function ).
                 sugar_rename($old_name, $new_name);
@@ -343,7 +345,10 @@ class SugarLogger implements LoggerTemplate
             }
         }
         //now lets move the current .log file
-        sugar_rename($this->full_log_file, sprintf("%s%s%s_1%s", $this->log_dir, $this->logfile, $this->date_suffix, $this->ext));
+        sugar_rename(
+            $this->full_log_file,
+            sprintf('%s%s%s_1%s', $this->log_dir, $this->logfile, $this->date_suffix, $this->ext)
+        );
     }
 
     /**

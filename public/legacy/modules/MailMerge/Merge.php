@@ -58,7 +58,7 @@ global $app_list_strings;
 global $mod_strings;
 
 $xtpl = new XTemplate('modules/MailMerge/Merge.html');
-$xtpl->assign("MAILMERGE_IS_REDIRECT", false);
+$xtpl->assign('MAILMERGE_IS_REDIRECT', false);
 
 $mTime = microtime();
 $redirectUrl = 'index.php?action=index&step=5&module=MailMerge&mtime=' . $mTime;
@@ -68,7 +68,7 @@ $redirectUrl = 'index.php?action=index&step=5&module=MailMerge&mtime=' . $mTime;
  * Just refresh download page to get file which was banned by IE security
  */
 if (empty($_SESSION['MAILMERGE_MODULE']) && !empty($_SESSION['mail_merge_file_location']) && !empty($_SESSION['mail_merge_file_name'])) {
-    $xtpl->assign("MAILMERGE_REDIRECT", true);
+    $xtpl->assign('MAILMERGE_REDIRECT', true);
 } else {
     $module = $_SESSION['MAILMERGE_MODULE'];
     $document_id = $_SESSION['MAILMERGE_DOCUMENT_ID'];
@@ -81,7 +81,7 @@ if (empty($_SESSION['MAILMERGE_MODULE']) && !empty($_SESSION['mail_merge_file_lo
     }
 
     if ($_SESSION['MAILMERGE_MODULE'] == null) {
-        sugar_die("Error during Mail Merge process.  Please try again.");
+        sugar_die('Error during Mail Merge process.  Please try again.');
     }
 
     $_SESSION['MAILMERGE_MODULE'] = null;
@@ -92,7 +92,7 @@ if (empty($_SESSION['MAILMERGE_MODULE']) && !empty($_SESSION['mail_merge_file_lo
     $item_ids = array();
     parse_str(stripslashes(html_entity_decode($selObjs, ENT_QUOTES)), $item_ids);
 
-    if ($module == 'CampaignProspects') {
+    if ($module === 'CampaignProspects') {
         $module = 'Prospects';
         if (!empty($_SESSION['MAILMERGE_CAMPAIGN_ID'])) {
             $targets = array_keys($item_ids);
@@ -165,17 +165,17 @@ if (empty($_SESSION['MAILMERGE_MODULE']) && !empty($_SESSION['mail_merge_file_lo
     $_SESSION['mail_merge_file_location'] = sugar_cached('MergedDocuments/') . $rtfFileName;
     $_SESSION['mail_merge_file_name'] = $rtfFileName;
 
-    $xtpl->assign("MAILMERGE_FIREFOX_URL", $site_url . '/' . $GLOBALS['sugar_config']['cache_dir'] . 'MergedDocuments/' . $rtfFileName);
-    $xtpl->assign("MAILMERGE_START_URL", $startUrl);
-    $xtpl->assign("MAILMERGE_TEMPLATE_FILE", $templateFile);
-    $xtpl->assign("MAILMERGE_DATA_FILE", $dataFile);
-    $xtpl->assign("MAILMERGE_MODULE", $module);
+    $xtpl->assign('MAILMERGE_FIREFOX_URL', $site_url . '/' . $GLOBALS['sugar_config']['cache_dir'] . 'MergedDocuments/' . $rtfFileName);
+    $xtpl->assign('MAILMERGE_START_URL', $startUrl);
+    $xtpl->assign('MAILMERGE_TEMPLATE_FILE', $templateFile);
+    $xtpl->assign('MAILMERGE_DATA_FILE', $dataFile);
+    $xtpl->assign('MAILMERGE_MODULE', $module);
 
-    $xtpl->assign("MAILMERGE_REL_MODULE", $relModule);
+    $xtpl->assign('MAILMERGE_REL_MODULE', $relModule);
 }
 
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
-$xtpl->assign("MAILMERGE_REDIRECT_URL", $redirectUrl);
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
+$xtpl->assign('MAILMERGE_REDIRECT_URL', $redirectUrl);
+$xtpl->parse('main');
+$xtpl->out('main');

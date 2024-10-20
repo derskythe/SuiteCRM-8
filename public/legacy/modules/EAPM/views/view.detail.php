@@ -49,7 +49,7 @@ class EAPMViewDetail extends ViewDetail
 {
     private $_returnId;
 
-    protected function _getModuleTab()
+    protected function _getModuleTab() : ?string
     {
         return 'Users';
     }
@@ -57,7 +57,7 @@ class EAPMViewDetail extends ViewDetail
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -66,8 +66,8 @@ class EAPMViewDetail extends ViewDetail
         $returnId = $GLOBALS['current_user']->id;
         $returnName = $GLOBALS['current_user']->full_name;
         if (!empty($_REQUEST['return_action']) && !empty($_REQUEST['return_module'])) {
-            if ('Users' == $_REQUEST['return_module']) {
-                if ('EditView' == $_REQUEST['return_action']) {
+            if ('Users' === $_REQUEST['return_module']) {
+                if ('EditView' === $_REQUEST['return_action']) {
                     $returnAction = 'EditView';
                 }
                 if (!empty($_REQUEST['return_name'])) {
@@ -88,8 +88,8 @@ class EAPMViewDetail extends ViewDetail
         } else {
             $params[] = translate('LBL_MODULE_NAME', 'Users');
         }
-        $params[] = "<a href='index.php?module={$returnModule}&action=EditView&record={$returnId}'>".$returnName."</a>";
-        if ($returnAction == 'EditView') {
+        $params[] = "<a href='index.php?module={$returnModule}&action=EditView&record={$returnId}'>".$returnName. '</a>';
+        if ($returnAction === 'EditView') {
             $params[] = $GLOBALS['app_strings']['LBL_EDIT_BUTTON_LABEL'];
         }
         return $params;
@@ -98,7 +98,7 @@ class EAPMViewDetail extends ViewDetail
     /**
      * @see SugarView::getModuleTitleIconPath()
      */
-    protected function getModuleTitleIconPath($module)
+    protected function getModuleTitleIconPath($module) : string
     {
         return parent::getModuleTitleIconPath('Users');
     }

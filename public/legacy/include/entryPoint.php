@@ -107,12 +107,12 @@ if (empty($GLOBALS['installing']) && empty($sugar_config['dbconfig']['db_name'])
 $GLOBALS['sugar_config'] = !empty($sugar_config) ? $sugar_config : [];
 
 ///////////////////////////////////////////////////////////////////////////////
-////	DATA SECURITY MEASURES
+////    DATA SECURITY MEASURES
 require_once 'include/utils.php';
 require_once 'include/clean.php';
 clean_special_arguments();
 clean_incoming_data();
-////	END DATA SECURITY MEASURES
+////    END DATA SECURITY MEASURES
 ///////////////////////////////////////////////////////////////////////////////
 
 // cn: set php.ini settings at entry points
@@ -173,7 +173,7 @@ $GLOBALS['log'] = LoggerManager::getLogger();
 
 if (empty($GLOBALS['installing']) && !empty($sugar_config['dbconfig']['db_name'])) {
     ///////////////////////////////////////////////////////////////////////////////
-    ////	SETTING DEFAULT VAR VALUES
+    ////    SETTING DEFAULT VAR VALUES
     $error_notice = '';
     $use_current_user_login = false;
 
@@ -202,6 +202,7 @@ if (empty($GLOBALS['installing']) && !empty($sugar_config['dbconfig']['db_name']
     SugarApplication::preLoadLanguages();
 
     $timedate = TimeDate::getInstance();
+    global $current_language, $sugar_version, $sugar_flavor, $sugar_config;
 
     $GLOBALS['sugar_version'] = $sugar_version;
     $GLOBALS['sugar_flavor'] = $sugar_flavor;
@@ -242,7 +243,7 @@ if (empty($GLOBALS['installing']) && !empty($sugar_config['dbconfig']['db_name']
     LogicHook::initialize()->call_custom_logic('', 'after_entry_point');
 }
 
-////	END SETTING DEFAULT VAR VALUES
+////    END SETTING DEFAULT VAR VALUES
 ///////////////////////////////////////////////////////////////////////////////
 
 //It does a check to see if the host is valid

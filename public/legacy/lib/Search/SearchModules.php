@@ -312,9 +312,9 @@ class SearchModules
         foreach ($unified_search_modules_display as $module=>$data) {
             $label = $app_list_strings['moduleList'][$module] ?? $module;
             if ($data['visible'] === true) {
-                $json_enabled[] = ["module" => $module, 'label' => $label];
+                $json_enabled[] = [ 'module' => $module, 'label' => $label];
             } else {
-                $json_disabled[] = ["module" => $module, 'label' => $label];
+                $json_disabled[] = [ 'module' => $module, 'label' => $label];
             }
         }
 
@@ -331,9 +331,9 @@ class SearchModules
             if (!isset($unified_search_modules_display[$module])) {
                 $label = $app_list_strings['moduleList'][$module] ?? $module;
                 if ($data['default']) {
-                    $json_enabled[] = ["module" => $module, 'label' => $label];
+                    $json_enabled[] = [ 'module' => $module, 'label' => $label];
                 } else {
-                    $json_disabled[] = ["module" => $module, 'label' => $label];
+                    $json_disabled[] = [ 'module' => $module, 'label' => $label];
                 }
             }
         }

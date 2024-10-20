@@ -82,13 +82,13 @@ class _parse_propfind
         }
 
         // create XML parser
-        $xml_parser = xml_parser_create_ns("UTF-8", " ");
+        $xml_parser = xml_parser_create_ns('UTF-8', ' ');
 
         // set tag and data handlers
         xml_set_element_handler(
             $xml_parser,
-            array(&$this, "_startElement"),
-            array(&$this, "_endElement")
+            array( &$this, '_startElement' ),
+            array( &$this, '_endElement' )
         );
 
         // we want a case sensitive parser
@@ -110,7 +110,7 @@ class _parse_propfind
 
         // finish parsing
         if ($had_input) {
-            $this->success &= xml_parse($xml_parser, "", true);
+            $this->success &= xml_parse($xml_parser, '', true);
         }
 
         // free parser
@@ -121,7 +121,7 @@ class _parse_propfind
 
         // if no input was parsed it was a request
         if (!count($this->props)) {
-            $this->props = "all";
+            $this->props = 'all';
         } // default
     }
 
@@ -137,32 +137,32 @@ class _parse_propfind
     public function _startElement($parser, $name, $attrs)
     {
         // name space handling
-        if (strstr((string) $name, " ")) {
-            list($ns, $tag) = explode(" ", $name);
-            if ($ns == "") {
+        if (str_contains((string) $name, ' ')) {
+            list($ns, $tag) = explode(' ', $name);
+            if ($ns == '') {
                 $this->success = false;
             }
         } else {
-            $ns = "";
+            $ns = '';
             $tag = $name;
         }
 
         // special tags at level 1: <allprop> and <propname>
         if ($this->depth == 1) {
-            if ($tag == "allprop") {
-                $this->props = "all";
+            if ($tag === 'allprop') {
+                $this->props = 'all';
             }
 
-            if ($tag == "propname") {
-                $this->props = "names";
+            if ($tag === 'propname') {
+                $this->props = 'names';
             }
         }
 
         // requested properties are found at level 2
         if ($this->depth == 2) {
-            $prop = array("name" => $tag);
+            $prop = array( 'name' => $tag );
             if ($ns) {
-                $prop["xmlns"] = $ns;
+                $prop['xmlns'] = $ns;
             }
             $this->props[] = $prop;
         }

@@ -59,16 +59,16 @@ class VariableCleanupRule extends BaseRule
     {
     }
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
-        if ($view == 'DetailView') {
+        if ($view === 'DetailView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {
                         //This converts variable ended with "_c_checked" to just "_c" (for checkboxes in DetailView)
                         if (!is_array($column) && isset($column) && preg_match('/(.*?)_c_checked$/s', $column, $matches)) {
                             if (count($matches) == 2) {
-                                $panels[$name][$rowCount][$key] = $matches[1] . "_c";
+                                $panels[$name][$rowCount][$key] = $matches[1] . '_c';
                             }
                         } else {
                             if ($this->matches($column, '/^parent_id$/si')) {
@@ -83,7 +83,7 @@ class VariableCleanupRule extends BaseRule
                 } //foreach
             } //foreach
         } else {
-            if ($view == 'EditView') {
+            if ($view === 'EditView') {
                 foreach ($panels as $name=>$panel) {
                     foreach ($panel as $rowCount=>$row) {
                         foreach ($row as $key=>$column) {

@@ -61,4 +61,4 @@ if (!empty($_REQUEST['mtime'])) {
     }
 }
 
-header("Location: index.php?module=MailMerge");
+header('Location: index.php?module=MailMerge');

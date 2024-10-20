@@ -130,9 +130,9 @@ class ModuleService
 
         // Detect if bean has email field
         if ((property_exists($bean, 'email1')
-                && strpos($where, 'email1') !== false)
+                && str_contains($where, 'email1'))
             || (property_exists($bean, 'email2')
-                && strpos($where, 'email2') !== false)
+                && str_contains($where, 'email2'))
         ) {
 
             $selectedModule = strtolower($module);
@@ -462,7 +462,7 @@ class ModuleService
      * @param $attributes
      * @return bool
      */
-    protected function processAttributes(&$bean, $attributes)
+    protected function processAttributes($bean, $attributes)
     {
         $createFile = false;
 
@@ -495,8 +495,9 @@ class ModuleService
 
     /**
      * @param DeleteModuleParams $params
+     *
      * @return DocumentResponse
-     * @throws AccessDeniedException
+     * @throws AccessDeniedException*@throws Exception
      */
     public function deleteRecord(DeleteModuleParams $params)
     {

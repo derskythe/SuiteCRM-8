@@ -223,8 +223,11 @@ function getConditionsAsParameters($report, $override = array())
 
 /**
  * getPeriodDate
+ *
  * @param $date_time_period_list_selected
+ *
  * @return DateTime
+ * @throws DateMalformedStringException
  */
 function getPeriodDate($date_time_period_list_selected, $type = '')
 {
@@ -238,23 +241,23 @@ function getPeriodDate($date_time_period_list_selected, $type = '')
         $q = calculateQuarters();
     }
 
-    if ($date_time_period_list_selected == 'today') {
+    if ($date_time_period_list_selected === 'today') {
         $datetime_period = new DateTime();
-    } elseif ($date_time_period_list_selected == 'yesterday') {
-        $datetime_period = $datetime_period->sub(new DateInterval("P1D"));
-    } elseif ($date_time_period_list_selected == 'this_week') {
+    } elseif ($date_time_period_list_selected === 'yesterday') {
+        $datetime_period = $datetime_period->sub(new DateInterval('P1D'));
+    } elseif ($date_time_period_list_selected === 'this_week') {
         $datetime_period = $datetime_period->setTimestamp(strtotime('this week'));
-    } elseif ($date_time_period_list_selected == 'last_week') {
+    } elseif ($date_time_period_list_selected === 'last_week') {
         $datetime_period = $datetime_period->setTimestamp(strtotime('last week'));
-    } elseif ($date_time_period_list_selected == 'this_month') {
+    } elseif ($date_time_period_list_selected === 'this_month') {
         $datetime_period = $datetime_period->setDate(
             $datetime_period->format('Y'),
             $datetime_period->format('m'),
             1
         );
-    } elseif ($date_time_period_list_selected == 'last_month') {
+    } elseif ($date_time_period_list_selected === 'last_month') {
         $datetime_period = $datetime_period->modify('first day of last month');
-    } elseif ($date_time_period_list_selected == 'this_quarter') {
+    } elseif ($date_time_period_list_selected === 'this_quarter') {
         $thisMonth = $datetime_period->setDate(
             $datetime_period->format('Y'),
             $datetime_period->format('m'),
@@ -289,7 +292,7 @@ function getPeriodDate($date_time_period_list_selected, $type = '')
                 $q[4]['start']->format('d')
             );
         }
-    } elseif ($date_time_period_list_selected == 'last_quarter') {
+    } elseif ($date_time_period_list_selected === 'last_quarter') {
         $thisMonth = $datetime_period->setDate(
             $datetime_period->format('Y'),
             $datetime_period->format('m'),
@@ -308,13 +311,13 @@ function getPeriodDate($date_time_period_list_selected, $type = '')
             // quarter 4 - 3 months
             $datetime_period = $q[3]['start']->sub(new DateInterval('P3M'));
         }
-    } elseif ($date_time_period_list_selected == 'this_year') {
+    } elseif ($date_time_period_list_selected === 'this_year') {
         $datetime_period = $datetime_period = $datetime_period->setDate(
             $datetime_period->format('Y'),
             1,
             1
         );
-    } elseif ($date_time_period_list_selected == 'last_year') {
+    } elseif ($date_time_period_list_selected === 'last_year') {
         $datetime_period = $datetime_period = $datetime_period->setDate(
             $datetime_period->format('Y') - 1,
             1,
@@ -347,19 +350,19 @@ function getPeriodEndDate($dateTimePeriodListSelected, $type = '')
             $datetimePeriod = new DateTime();
             break;
         case 'yesterday':
-            $datetimePeriod = new DateTime("yesterday");
+            $datetimePeriod = new DateTime('yesterday');
             if($type === 'datetime') {
                 $datetimePeriod->setTime(23, 59, 59);
             }
             break;
         case 'this_week':
-            $datetimePeriod = new DateTime("this week sunday");
+            $datetimePeriod = new DateTime('this week sunday');
             if($type === 'datetime') {
                 $datetimePeriod->setTime(23, 59, 59);
             }
             break;
         case 'last_week':
-            $datetimePeriod = new DateTime("last week sunday");
+            $datetimePeriod = new DateTime('last week sunday');
             if($type === 'datetime') {
                 $datetimePeriod->setTime(23, 59, 59);
             }
@@ -371,7 +374,7 @@ function getPeriodEndDate($dateTimePeriodListSelected, $type = '')
             }
             break;
         case 'last_month':
-            $datetimePeriod = new DateTime("last day of last month");
+            $datetimePeriod = new DateTime('last day of last month');
             if($type === 'datetime') {
                 $datetimePeriod->setTime(23, 59, 59);
             }
@@ -441,7 +444,7 @@ function getPeriodEndDate($dateTimePeriodListSelected, $type = '')
             }
             break;
         case 'last_year':
-            $datetimePeriod = new DateTime("last year last day of december");
+            $datetimePeriod = new DateTime('last year last day of december');
             if($type === 'datetime') {
                 $datetimePeriod->setTime(23, 59, 59);
             }
@@ -457,7 +460,9 @@ function getPeriodEndDate($dateTimePeriodListSelected, $type = '')
 
 /**
  * @param int $offsetMonths - defines start of the year.
+ *
  * @return array - The each quarters boundary
+ * @throws DateMalformedIntervalStringException
  */
 function calculateQuarters($offsetMonths = 0)
 {
@@ -514,8 +519,11 @@ function calculateQuarters($offsetMonths = 0)
 
 /**
  * convertDateValue
+ *
  * @param string $value - date in any user format
+ *
  * @return DateTime $dateTime - converted string
+ * @throws DateInvalidTimeZoneException
  */
 function convertToDateTime($value)
 {

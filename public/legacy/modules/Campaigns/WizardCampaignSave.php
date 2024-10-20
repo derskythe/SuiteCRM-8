@@ -67,12 +67,12 @@ function getTemplateValidationMessages($templateId)
 $campaignId = $db->quote($_POST['campaignId']);
 $marketingId = $db->quote($_POST['marketingId']);
 $func = isset($_REQUEST['func']) ? $_REQUEST['func'] : null;
-if ($func == 'getTemplateValidation') {
+if ($func === 'getTemplateValidation') {
     if (!empty($_POST['templateId'])) {
         $templateId = $db->quote($_POST['templateId']);
     } else {
         if (!$marketingId) {
-            if (!empty($_SESSION['campaignWizard'][$campaignId]['defaultSelectedMarketingId']) && $func != 'createEmailMarketing') {
+            if (!empty($_SESSION['campaignWizard'][$campaignId]['defaultSelectedMarketingId']) && $func !== 'createEmailMarketing') {
                 $marketingId = $_SESSION['campaignWizard'][$campaignId]['defaultSelectedMarketingId'];
             }
         }
@@ -87,9 +87,9 @@ if ($func == 'getTemplateValidation') {
     echo json_encode($return);
 } else {
     if (!$marketingId) {
-        if (!empty($_SESSION['campaignWizard'][$campaignId]['defaultSelectedMarketingId']) && $func != 'createEmailMarketing') {
+        if (!empty($_SESSION['campaignWizard'][$campaignId]['defaultSelectedMarketingId']) && $func !== 'createEmailMarketing') {
             $marketingId = $_SESSION['campaignWizard'][$campaignId]['defaultSelectedMarketingId'];
-        } elseif ($func != 'createEmailMarketing') {
+        } elseif ($func !== 'createEmailMarketing') {
             $marketing = BeanFactory::newBean('EmailMarketing');
             $marketing->save();
             $marketingId = $marketing->id;
@@ -108,7 +108,7 @@ if ($func == 'getTemplateValidation') {
     if (!empty($_POST['templateId'])) {
         $marketing->template_id = $templateId;
     }
-    if ($func != 'createEmailMarketing') {
+    if ($func !== 'createEmailMarketing') {
         $marketing->save();
     }
 

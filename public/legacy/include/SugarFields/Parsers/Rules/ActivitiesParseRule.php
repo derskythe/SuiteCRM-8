@@ -41,17 +41,16 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 require_once('include/SugarFields/Parsers/Rules/BaseRule.php');
 
 class ActivitiesParseRule extends BaseRule
 {
     public function preParse($panels, $view)
     {
-        if ($view == 'DetailView') {
-            foreach ($panels as $name=>$panel) {
-                foreach ($panel as $rowCount=>$row) {
-                    foreach ($row as $key=>$column) {
+        if ($view === 'DetailView') {
+            foreach ($panels as $name => $panel) {
+                foreach ($panel as $rowCount => $row) {
+                    foreach ($row as $key => $column) {
                         if ($this->matches($column, '/^duration_minutes$/')) {
                             $panels[$name][$rowCount][$key] = 'duration_hours';
                         } else {
@@ -63,20 +62,23 @@ class ActivitiesParseRule extends BaseRule
                 } //foreach
             } //foreach
         }
+
         return $panels;
     }
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
-        foreach ($panels as $name=>$panel) {
-            foreach ($panel as $rowCount=>$row) {
-                foreach ($row as $key=>$column) {
+        parent::parsePanels($panels, $view);
+        foreach ($panels as $name => $panel) {
+            foreach ($panel as $rowCount => $row) {
+                foreach ($row as $key => $column) {
                     if ($this->matches($column, '/^duration_minutes$/si')) {
                         $panels[$name][$rowCount][$key] = '';
                     }
                 } //foreach
             } //foreach
         } //foreach
-   return $panels;
+
+        return $panels;
     }
 }

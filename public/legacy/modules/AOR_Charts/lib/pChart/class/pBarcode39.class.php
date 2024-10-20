@@ -25,23 +25,23 @@
      public $MOD43;
 
      /* Class creator */
-     public function __construct($BasePath = "", $EnableMOD43 = false)
+     public function __construct($BasePath = '', $EnableMOD43 = false)
      {
      $this->MOD43  = $EnableMOD43;
-     $this->Codes   = "";
-     $this->Reverse = "";
+     $this->Codes   = '';
+     $this->Reverse = '';
 
-         $FileHandle = @fopen($BasePath."data/39.db", 'rb');
+         $FileHandle = @fopen($BasePath. 'data/39.db', 'rb');
 
          if (!$FileHandle) {
-             die("Cannot find barcode database (".$BasePath."data/39.db).");
+             die('Cannot find barcode database (' .$BasePath. 'data/39.db).');
          }
 
          while (!feof($FileHandle)) {
              $Buffer = fgets($FileHandle, 4096);
-             $Buffer = str_replace(chr(10), "", $Buffer);
-             $Buffer = str_replace(chr(13), "", $Buffer);
-             $Values = preg_split("/;/", $Buffer);
+             $Buffer = str_replace(chr(10), '', $Buffer);
+             $Buffer = str_replace(chr(13), '', $Buffer);
+             $Values = preg_split('/;/', $Buffer);
 
              $this->Codes[$Values[0]] = $Values[1];
          }
@@ -49,14 +49,14 @@
      }
 
      /* Return the projected size of a barcode */
-     public function getSize($TextString, $Format="")
+     public function getSize($TextString, $Format= '')
      {
-         $Angle		= isset($Format["Angle"]) ? $Format["Angle"] : 0;
-         $ShowLegend	= isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : false;
-         $LegendOffset	= isset($Format["LegendOffset"]) ? $Format["LegendOffset"] : 5;
-         $DrawArea		= isset($Format["DrawArea"]) ? $Format["DrawArea"] : false;
-         $FontSize		= isset($Format["FontSize"]) ? $Format["FontSize"] : 12;
-         $Height		= isset($Format["Height"]) ? $Format["Height"] : 30;
+         $Angle        = isset($Format['Angle']) ? $Format['Angle'] : 0;
+         $ShowLegend    = isset($Format['ShowLegend']) ? $Format['ShowLegend'] : false;
+         $LegendOffset    = isset($Format['LegendOffset']) ? $Format['LegendOffset'] : 5;
+         $DrawArea        = isset($Format['DrawArea']) ? $Format['DrawArea'] : false;
+         $FontSize        = isset($Format['FontSize']) ? $Format['FontSize'] : 12;
+         $Height        = isset($Format['Height']) ? $Format['Height'] : 30;
 
          $TextString    = $this->encode39($TextString);
          $BarcodeLength = strlen((string) $this->Result);
@@ -82,14 +82,14 @@
          $AreaWidth  = max(abs($X1), abs($X2));
          $AreaHeight = max(abs($Y1), abs($Y2));
 
-         return(array("Width"=>$AreaWidth,"Height"=>$AreaHeight));
+         return(array( 'Width' =>$AreaWidth, 'Height' =>$AreaHeight));
      }
 
      /* Create the encoded string */
      public function encode39($Value)
      {
-         $this->Result = "100101101101"."0";
-         $TextString   = "";
+         $this->Result = '100101101101' . '0';
+         $TextString   = '';
          for ($i=1;$i<=strlen((string) $Value);$i++) {
              $CharCode = ord($this->mid($Value, $i, 1));
              if ($CharCode >= 97 && $CharCode <= 122) {
@@ -97,42 +97,42 @@
              }
 
              if (isset($this->Codes[chr($CharCode)])) {
-                 $this->Result = $this->Result.$this->Codes[chr($CharCode)]."0";
+                 $this->Result = $this->Result.$this->Codes[chr($CharCode)]. '0';
                  $TextString = $TextString.chr($CharCode);
              }
          }
 
          if ($this->MOD43) {
              $Checksum = $this->checksum($TextString);
-             $this->Result = $this->Result.$this->Codes[$Checksum]."0";
+             $this->Result = $this->Result.$this->Codes[$Checksum]. '0';
          }
 
-         $this->Result = $this->Result."100101101101";
-         $TextString   = "*".$TextString."*";
+         $this->Result = $this->Result. '100101101101';
+         $TextString   = '*' .$TextString. '*';
 
          return($TextString);
      }
 
      /* Create the encoded string */
-     public function draw($Object, $Value, $X, $Y, $Format="")
+     public function draw($Object, $Value, $X, $Y, $Format= '')
      {
          $this->pChartObject = $Object;
 
-         $R			= isset($Format["R"]) ? $Format["R"] : 0;
-         $G			= isset($Format["G"]) ? $Format["G"] : 0;
-         $B			= isset($Format["B"]) ? $Format["B"] : 0;
-         $Alpha		= isset($Format["Alpha"]) ? $Format["Alpha"] : 100;
-         $Height		= isset($Format["Height"]) ? $Format["Height"] : 30;
-         $Angle		= isset($Format["Angle"]) ? $Format["Angle"] : 0;
-         $ShowLegend	= isset($Format["ShowLegend"]) ? $Format["ShowLegend"] : false;
-         $LegendOffset	= isset($Format["LegendOffset"]) ? $Format["LegendOffset"] : 5;
-         $DrawArea		= isset($Format["DrawArea"]) ? $Format["DrawArea"] : false;
-         $AreaR		= isset($Format["AreaR"]) ? $Format["AreaR"] : 255;
-         $AreaG		= isset($Format["AreaG"]) ? $Format["AreaG"] : 255;
-         $AreaB		= isset($Format["AreaB"]) ? $Format["AreaB"] : 255;
-         $AreaBorderR	= isset($Format["AreaBorderR"]) ? $Format["AreaBorderR"] : $AreaR;
-         $AreaBorderG	= isset($Format["AreaBorderG"]) ? $Format["AreaBorderG"] : $AreaG;
-         $AreaBorderB	= isset($Format["AreaBorderB"]) ? $Format["AreaBorderB"] : $AreaB;
+         $R            = isset($Format['R']) ? $Format['R'] : 0;
+         $G            = isset($Format['G']) ? $Format['G'] : 0;
+         $B            = isset($Format['B']) ? $Format['B'] : 0;
+         $Alpha        = isset($Format['Alpha']) ? $Format['Alpha'] : 100;
+         $Height        = isset($Format['Height']) ? $Format['Height'] : 30;
+         $Angle        = isset($Format['Angle']) ? $Format['Angle'] : 0;
+         $ShowLegend    = isset($Format['ShowLegend']) ? $Format['ShowLegend'] : false;
+         $LegendOffset    = isset($Format['LegendOffset']) ? $Format['LegendOffset'] : 5;
+         $DrawArea        = isset($Format['DrawArea']) ? $Format['DrawArea'] : false;
+         $AreaR        = isset($Format['AreaR']) ? $Format['AreaR'] : 255;
+         $AreaG        = isset($Format['AreaG']) ? $Format['AreaG'] : 255;
+         $AreaB        = isset($Format['AreaB']) ? $Format['AreaB'] : 255;
+         $AreaBorderR    = isset($Format['AreaBorderR']) ? $Format['AreaBorderR'] : $AreaR;
+         $AreaBorderG    = isset($Format['AreaBorderG']) ? $Format['AreaBorderG'] : $AreaG;
+         $AreaBorderB    = isset($Format['AreaBorderB']) ? $Format['AreaBorderB'] : $AreaB;
 
          $TextString   = $this->encode39($Value);
 
@@ -155,7 +155,8 @@
              $Y4 = $Y3 + sin(($Angle+180) * PI / 180) * (strlen((string) $this->Result)+20);
 
              $Polygon  = array($X1,$Y1,$X2,$Y2,$X3,$Y3,$X4,$Y4);
-             $Settings = array("R"=>$AreaR,"G"=>$AreaG,"B"=>$AreaB,"BorderR"=>$AreaBorderR,"BorderG"=>$AreaBorderG,"BorderB"=>$AreaBorderB);
+             $Settings = array( 'R'       =>$AreaR, 'G' =>$AreaG, 'B' =>$AreaB, 'BorderR' =>$AreaBorderR, 'BorderG' =>$AreaBorderG,
+                                'BorderB' =>$AreaBorderB);
              $this->pChartObject->drawPolygon($Polygon, $Settings);
          }
 
@@ -166,7 +167,7 @@
                  $X2 = $X1 + cos(($Angle+90) * PI / 180) * $Height;
                  $Y2 = $Y1 + sin(($Angle+90) * PI / 180) * $Height;
 
-                 $Settings = array("R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha);
+                 $Settings = array( 'R' =>$R, 'G' =>$G, 'B' =>$B, 'Alpha' =>$Alpha);
                  $this->pChartObject->drawLine($X1, $Y1, $X2, $Y2, $Settings);
              }
          }
@@ -178,7 +179,7 @@
              $LegendX = $X1 + cos(($Angle+90) * PI / 180) * ($Height+$LegendOffset);
              $LegendY = $Y1 + sin(($Angle+90) * PI / 180) * ($Height+$LegendOffset);
 
-             $Settings = array("R"=>$R,"G"=>$G,"B"=>$B,"Alpha"=>$Alpha,"Angle"=>-$Angle,"Align"=>TEXT_ALIGN_TOPMIDDLE);
+             $Settings = array( 'R' =>$R, 'G' =>$G, 'B' =>$B, 'Alpha' =>$Alpha, 'Angle' =>-$Angle, 'Align' =>TEXT_ALIGN_TOPMIDDLE);
              $this->pChartObject->drawText($LegendX, $LegendY, $TextString, $Settings);
          }
      }

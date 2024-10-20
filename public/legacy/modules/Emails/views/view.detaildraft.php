@@ -52,8 +52,10 @@ class EmailsViewDetailDraft extends ViewDetail
      * @var Email $focus
      */
     public $focus;
+
     /**
      * EmailsViewDetaildraft constructor.
+     *
      * @inheritdoc
      */
     public function __construct()
@@ -66,7 +68,7 @@ class EmailsViewDetailDraft extends ViewDetail
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $metadataFile = parent::getMetaDataFile();
         $this->dv = new EmailsDraftDetailView();

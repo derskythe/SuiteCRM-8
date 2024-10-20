@@ -65,9 +65,11 @@ class DBManagerFactory
     /**
      * Returns a reference to the DB object of specific type
      *
-     * @param  string $type DB type
+     * @param string $type  DB type
      * @param array $config DB configuration
+     *
      * @return object DBManager instance
+     * @throws Exception
      */
     public static function getTypeInstance($type, $config = array())
     {
@@ -76,19 +78,19 @@ class DBManagerFactory
         if (empty($config['db_manager'])) {
             // standard types
             switch ($type) {
-                case "mysql":
+                case 'mysql':
                     if (empty($sugar_config['mysqli_disabled']) && function_exists('mysqli_connect')) {
                         $my_db_manager = 'MysqliManager';
                     } else {
-                        $my_db_manager = "MysqlManager";
+                        $my_db_manager = 'MysqlManager';
                     }
                     break;
-                case "mssql":
+                case 'mssql':
                       if (function_exists('sqlsrv_connect')
-                                && (empty($config['db_mssql_force_driver']) || $config['db_mssql_force_driver'] == 'sqlsrv')) {
+                                && (empty($config['db_mssql_force_driver']) || $config['db_mssql_force_driver'] === 'sqlsrv')) {
                           $my_db_manager = 'SqlsrvManager';
                       } elseif (self::isFreeTDS()
-                                && (empty($config['db_mssql_force_driver']) || $config['db_mssql_force_driver'] == 'freetds')) {
+                                && (empty($config['db_mssql_force_driver']) || $config['db_mssql_force_driver'] === 'freetds')) {
                           $my_db_manager = 'FreeTDSManager';
                       } else {
                           $my_db_manager = 'MssqlManager';
@@ -98,7 +100,7 @@ class DBManagerFactory
                     $my_db_manager = self::getManagerByType($type, false);
                     if (empty($my_db_manager)) {
                         $GLOBALS['log']->fatal("unable to load DB manager for: $type");
-                        sugar_die("Cannot load DB manager");
+                        sugar_die('Cannot load DB manager');
                     }
             }
         } else {
@@ -106,7 +108,7 @@ class DBManagerFactory
         }
 
         // sanitize the name
-        $my_db_manager = preg_replace("/[^A-Za-z0-9_-]/", "", (string) $my_db_manager);
+        $my_db_manager = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $my_db_manager);
 
         if (!empty($config['db_manager_class'])) {
             $my_db_manager = $config['db_manager_class'];
@@ -209,10 +211,10 @@ class DBManagerFactory
             return;
         }
         while (($name = readdir($scandir)) !== false) {
-            if (substr($name, -11) != "Manager.php") {
+            if (!str_ends_with($name, 'Manager.php')) {
                 continue;
             }
-            if ($name == "DBManager.php") {
+            if ($name === 'DBManager.php') {
                 continue;
             }
             require_once("$dir/$name");
@@ -250,8 +252,8 @@ class DBManagerFactory
     public static function getDbDrivers($validate = true)
     {
         $drivers = array();
-        self::scanDriverDir("include/database", $drivers, $validate);
-        self::scanDriverDir("custom/include/database", $drivers, $validate);
+        self::scanDriverDir('include/database', $drivers, $validate);
+        self::scanDriverDir('custom/include/database', $drivers, $validate);
 
         $result = array();
         foreach ($drivers as $type => $tdrivers) {
@@ -259,7 +261,7 @@ class DBManagerFactory
                 continue;
             }
             if ((is_countable($tdrivers) ? count($tdrivers) : 0) > 1) {
-                usort($tdrivers, array(__CLASS__, "_compareDrivers"));
+                usort($tdrivers, array( __CLASS__, '_compareDrivers' ));
             }
             $result[$type] = $tdrivers[0];
         }
@@ -282,7 +284,7 @@ class DBManagerFactory
             $info=ob_get_contents();
             ob_end_clean();
 
-            $is_freetds = (strpos($info, 'FreeTDS') !== false);
+            $is_freetds = (str_contains($info, 'FreeTDS'));
         }
 
         return $is_freetds;

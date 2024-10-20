@@ -50,7 +50,7 @@ $configurator = new Configurator();
 $confirmOptInEnabled = $configurator->isConfirmOptInEnabled();
 
 $test = false;
-if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'test') {
+if (isset($_REQUEST['mode']) && $_REQUEST['mode'] === 'test') {
     $test = true;
 }
 if (isset($_REQUEST['send_all']) && $_REQUEST['send_all']) {
@@ -81,9 +81,9 @@ if (isset($admin->settings['massemailer_email_copy'])) {
 $emailsPerSecond = 10;
 
 $mail->setMailerForSystem();
-$mail->From = "no-reply@example.com";
-$mail->FromName = "no-reply";
-$mail->ContentType = "text/html";
+$mail->From = 'no-reply@example.com';
+$mail->FromName = 'no-reply';
+$mail->ContentType = 'text/html';
 
 $campaign_id = null;
 if (isset($_REQUEST['campaign_id']) && !empty($_REQUEST['campaign_id'])) {
@@ -101,30 +101,38 @@ if ($test) {
     //2. campaign matches the current campaign
     //3. recipient belongs to a prospect list of type test, attached to this campaign
 
-    $select_query = " SELECT em.* FROM emailman em";
-    $select_query .= " join prospect_list_campaigns plc on em.campaign_id = plc.campaign_id";
-    $select_query .= " join prospect_lists pl on pl.id = plc.prospect_list_id ";
+    $select_query = ' SELECT em.* FROM emailman em';
+    $select_query .= ' join prospect_list_campaigns plc on em.campaign_id = plc.campaign_id';
+    $select_query .= ' join prospect_lists pl on pl.id = plc.prospect_list_id ';
     $select_query .= " WHERE em.list_id = pl.id and pl.list_type = 'test'";
-    $select_query .= " AND pl.deleted = 0 AND plc.deleted = 0 AND em.deleted = 0";
-    $select_query .= " AND em.send_date_time <= " . $db->now();
-    $select_query .= " AND (em.in_queue ='0' OR em.in_queue IS NULL OR (em.in_queue ='1' AND em.in_queue_date <= " . $db->convert($db->quoted($timedate->fromString("-1 day")->asDb()), "datetime") . "))";
+    $select_query .= ' AND pl.deleted = 0 AND plc.deleted = 0 AND em.deleted = 0';
+    $select_query .= ' AND em.send_date_time <= ' . $db->now();
+    $select_query .= " AND (em.in_queue ='0' OR em.in_queue IS NULL OR (em.in_queue ='1' AND em.in_queue_date <= " . $db->convert($db->quoted($timedate->fromString(
+            '-1 day'
+        )->asDb()),
+                                                                                                                                  'datetime'
+        ) . '))';
     $select_query .= " AND em.campaign_id='{$campaign_id}'";
-    $select_query .= " ORDER BY em.send_date_time ASC, em.user_id, em.list_id";
+    $select_query .= ' ORDER BY em.send_date_time ASC, em.user_id, em.list_id';
 } else {
     //this is not a test..
     //find all the message that meet the following criteria.
     //1. scheduled send date time is now
     //2. were never processed or last attempt was 24 hours ago
-    $select_query = " SELECT *";
+    $select_query = ' SELECT *';
     $select_query .= " FROM $emailman->table_name";
-    $select_query .= " WHERE send_date_time <= " . $db->now();
-    $select_query .= " AND deleted = 0";
-    $select_query .= " AND (in_queue ='0' OR in_queue IS NULL OR ( in_queue ='1' AND in_queue_date <= " . $db->convert($db->quoted($timedate->fromString("-1 day")->asDb()), "datetime") . ")) " . ($confirmOptInEnabled ? ' OR related_confirm_opt_in = 1 ' : ' AND related_confirm_opt_in = 0');
+    $select_query .= ' WHERE send_date_time <= ' . $db->now();
+    $select_query .= ' AND deleted = 0';
+    $select_query .= " AND (in_queue ='0' OR in_queue IS NULL OR ( in_queue ='1' AND in_queue_date <= " . $db->convert($db->quoted($timedate->fromString(
+            '-1 day'
+        )->asDb()),
+                                                                                                                       'datetime'
+        ) . ')) ' . ($confirmOptInEnabled ? ' OR related_confirm_opt_in = 1 ' : ' AND related_confirm_opt_in = 0');
 
     if (!empty($campaign_id)) {
         $select_query .= " AND campaign_id='{$campaign_id}'";
     }
-    $select_query .= " ORDER BY send_date_time ASC,user_id, list_id";
+    $select_query .= ' ORDER BY send_date_time ASC,user_id, list_id';
 }
 
 //bug 26926 fix start
@@ -189,20 +197,21 @@ do {
             $current_campaign_id = $row['campaign_id'];
 
             //is this email address suppressed?
-            $plc_query = " SELECT prospect_list_id, prospect_lists.list_type,prospect_lists.domain_name FROM prospect_list_campaigns ";
-            $plc_query .= " LEFT JOIN prospect_lists on prospect_lists.id = prospect_list_campaigns.prospect_list_id";
-            $plc_query .= " WHERE ";
+            $plc_query =
+                ' SELECT prospect_list_id, prospect_lists.list_type,prospect_lists.domain_name FROM prospect_list_campaigns ';
+            $plc_query .= ' LEFT JOIN prospect_lists on prospect_lists.id = prospect_list_campaigns.prospect_list_id';
+            $plc_query .= ' WHERE ';
             $plc_query .= " campaign_id='{$current_campaign_id}' ";
             $plc_query .= " AND prospect_lists.list_type in ('exempt_address','exempt_domain')";
-            $plc_query .= " AND prospect_list_campaigns.deleted=0";
-            $plc_query .= " AND prospect_lists.deleted=0";
+            $plc_query .= ' AND prospect_list_campaigns.deleted=0';
+            $plc_query .= ' AND prospect_lists.deleted=0';
 
             $emailman->restricted_domains = array();
             $emailman->restricted_addresses = array();
 
             $result1 = $db->query($plc_query);
             while ($row1 = $db->fetchByAssoc($result1)) {
-                if ($row1['list_type'] == 'exempt_domain') {
+                if ($row1['list_type'] === 'exempt_domain') {
                     $emailman->restricted_domains[strtolower($row1['domain_name'])] = 1;
                 } else {
                     //find email address of targets in this prospect list.
@@ -256,9 +265,9 @@ do {
 
         if ((empty($row['related_confirm_opt_in']) || $row['related_confirm_opt_in'] == '0')) {
             if (!$emailman->sendEmail($mail, $massemailer_email_copy, $test)) {
-                $GLOBALS['log']->fatal("Email delivery FAILURE:" . print_r($row, true));
+                $GLOBALS['log']->fatal('Email delivery FAILURE:' . print_r($row, true));
             } else {
-                $GLOBALS['log']->debug("Email delivery SUCCESS:" . print_r($row, true));
+                $GLOBALS['log']->debug('Email delivery SUCCESS:' . print_r($row, true));
             }
         } else {
             if ($confirmOptInEnabled) {
@@ -268,10 +277,10 @@ do {
                 $now = TimeDate::getInstance()->nowDb();
 
                 if (!$emailman->sendOptInEmail($emailAddress, $row['related_type'], $row['related_id'])) {
-                    $GLOBALS['log']->fatal("Confirm Opt In Email delivery FAILURE:" . print_r($row, true));
+                    $GLOBALS['log']->fatal('Confirm Opt In Email delivery FAILURE:' . print_r($row, true));
                     $emailAddress->confirm_opt_in_fail_date = $now;
                 } else {
-                    $GLOBALS['log']->debug("Confirm Opt In Email delivery SUCCESS:" . print_r($row, true));
+                    $GLOBALS['log']->debug('Confirm Opt In Email delivery SUCCESS:' . print_r($row, true));
 
                     if (is_string($emailAddress->email_address)) {
                         $emailAddressString = $emailAddress->email_address;
@@ -297,7 +306,7 @@ do {
         }
 
         if ($mail->isError()) {
-            $GLOBALS['log']->fatal("Email delivery error:" . print_r($row, true) . $mail->ErrorInfo);
+            $GLOBALS['log']->fatal('Email delivery error:' . print_r($row, true) . $mail->ErrorInfo);
         }
         $count++;
     }
@@ -315,9 +324,9 @@ if (isset($_REQUEST['return_module']) && isset($_REQUEST['return_action']) && is
     $from_wiz = ' ';
     if (isset($_REQUEST['from_wiz']) && $_REQUEST['from_wiz']) {
         if (isset($_REQUEST['WizardMarketingSave']) && $_REQUEST['WizardMarketingSave']) {
-            $header_URL = "Location: index.php?action=WizardMarketing&module=Campaigns&return_module=Campaigns&return_action=Wi" .
-                    "zardMarketing&return_id=" . $_REQUEST['campaign_id'] . "&campaign_id=" . $_REQUEST['campaign_id'] .
-                    "&show_wizard_marketing&jump=3&marketing_id=" . (isset($_POST['marketing_id']) && $_POST['marketing_id'] ? $_POST['marketing_id'] : $_REQUEST['marketing_id']) . "&record=" . (isset($_POST['marketing_id']) && $_POST['marketing_id'] ? $_POST['marketing_id'] : $_REQUEST['marketing_id']);
+            $header_URL = 'Location: index.php?action=WizardMarketing&module=Campaigns&return_module=Campaigns&return_action=Wi' .
+                'zardMarketing&return_id=' . $_REQUEST['campaign_id'] . '&campaign_id=' . $_REQUEST['campaign_id'] .
+                '&show_wizard_marketing&jump=3&marketing_id=' . (isset($_POST['marketing_id']) && $_POST['marketing_id'] ? $_POST['marketing_id'] : $_REQUEST['marketing_id']) . '&record=' . (isset($_POST['marketing_id']) && $_POST['marketing_id'] ? $_POST['marketing_id'] : $_REQUEST['marketing_id']);
             header($header_URL);
         } else {
             header("Location: index.php?module={$_REQUEST['return_module']}&action={$_REQUEST['return_action']}&record={$_REQUEST['return_id']}&from=test");
@@ -330,6 +339,6 @@ if (isset($_REQUEST['return_module']) && isset($_REQUEST['return_action']) && is
      * Mass Email Queue Manager.
      */
     if (isset($_POST['manual'])) {
-        header("Location: index.php?module=EmailMan&action=index");
+        header('Location: index.php?module=EmailMan&action=index');
     }
 }

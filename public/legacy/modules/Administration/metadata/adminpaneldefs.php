@@ -357,7 +357,7 @@ $admin_option_defs['Administration']['rename_tabs'] = [
     'RenameTabs',
     'LBL_RENAME_TABS',
     'LBL_CHANGE_NAME_MODULES',
-    "./index.php?action=wizard&module=Studio&wizard=StudioWizard&option=RenameTabs",
+    './index.php?action=wizard&module=Studio&wizard=StudioWizard&option=RenameTabs',
     'admin-rename-modules'
 ];
 $admin_option_defs['Administration']['moduleBuilder'] = [
@@ -451,10 +451,10 @@ foreach ($admin_group_header as $key => $values) {
     $module_index = array_keys($values[3]);  //get the actual links..
     foreach ($module_index as $mod_key => $mod_val) {
         if (is_admin($current_user) ||
-            in_array($mod_val, $access) ||
-            $mod_val == 'studio' ||
-            ($mod_val == 'Forecasts' && in_array('ForecastSchedule', $access)) ||
-            ($mod_val == 'any')
+            in_array($mod_val, $access, true) ||
+            $mod_val === 'studio' ||
+            ($mod_val === 'Forecasts' && in_array('ForecastSchedule', $access, true)) ||
+            ($mod_val === 'any')
         ) {
             if (!is_admin($current_user) && isset($values[3]['Administration'])) {
                 unset($values[3]['Administration']);
@@ -468,15 +468,15 @@ foreach ($admin_group_header as $key => $values) {
             }
 
             // Need this check because Quotes and Products share the header group
-            if (!in_array('Quotes', $access) && isset($values[3]['Quotes'])) {
+            if (!in_array('Quotes', $access, true) && isset($values[3]['Quotes'])) {
                 unset($values[3]['Quotes']);
             }
-            if (!in_array('Products', $access) && isset($values[3]['Products'])) {
+            if (!in_array('Products', $access, true) && isset($values[3]['Products'])) {
                 unset($values[3]['Products']);
             }
 
             // Need this check because Emails and Campaigns share the header group
-            if (!in_array('Campaigns', $access) && isset($values[3]['Campaigns'])) {
+            if (!in_array('Campaigns', $access, true) && isset($values[3]['Campaigns'])) {
                 unset($values[3]['Campaigns']);
             }
 

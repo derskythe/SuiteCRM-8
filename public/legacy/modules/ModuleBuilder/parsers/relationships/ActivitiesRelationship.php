@@ -155,7 +155,7 @@ class ActivitiesRelationship extends OneToManyRelationship
         return $vardefs ;
     }
 
-    protected function getLinkFieldDefinition($sourceModule, $relationshipName, $right_side = false, $vname = "", $id_name = false)
+    protected function getLinkFieldDefinition($sourceModule, $relationshipName, $right_side = false, $vname = '', $id_name = false)
     {
         $vardef = array( ) ;
         $vardef [ 'name' ] = $relationshipName;
@@ -178,7 +178,7 @@ class ActivitiesRelationship extends OneToManyRelationship
             return array() ;
         }
 
-        return array( $this->rhs_module => $this->relationship_name . "_name" ) ; // this must match the name of the relate field from buildVardefs
+        return array( $this->rhs_module => $this->relationship_name . '_name' ) ; // this must match the name of the relate field from buildVardefs
     }
 
     public function buildSubpanelDefinitions()

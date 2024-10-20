@@ -48,8 +48,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class MergeRecord extends SugarBean
 {
-    public $object_name = 'MergeRecord';
-    public $module_dir = 'MergeRecords';
+    public string $object_name = 'MergeRecord';
+    public string $module_dir = 'MergeRecords';
     public $acl_display_only = true;
     public $merge_module;
     public $merge_bean_class;
@@ -93,7 +93,7 @@ class MergeRecord extends SugarBean
      */
     public function retrieve($id = -1, $encode = true, $deleted = true)
     {
-        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Step2') {
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Step2') {
             $this->load_merge_bean($this->merge_bean, false, $id);
         } else {
             parent::retrieve($id, $encode, $deleted);
@@ -106,6 +106,8 @@ class MergeRecord extends SugarBean
      * @param $merge_module
      * @param bool $load_module_strings
      * @param string $merge_id
+     *
+     * @throws Exception
      */
     public function load_merge_bean($merge_module, $load_module_strings = false, $merge_id = '')
     {
@@ -161,7 +163,7 @@ class MergeRecord extends SugarBean
         }
     }
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     //-----------------------------------------------------------------------
     //-------------Wrapping Necessary Merge Bean Calls-----------------------
@@ -208,7 +210,7 @@ class MergeRecord extends SugarBean
      * @param $interface
      * @return bool
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -277,7 +279,7 @@ class MergeRecord extends SugarBean
                 } else {
                     LoggerManager::getLogger('MergeRecord::get_inputs_for_search_params: search params type string is not defined');
                 }
-                
+
                 $returnString .= "<input type='hidden' name='$searchFieldString' value='{$search_params[$searchFieldString]}' />\n";
                 $returnString .= "<input type='hidden' name='$searchTypeString' value='{$searchParamSearchTypeString}' />\n";
             }
@@ -309,9 +311,9 @@ class MergeRecord extends SugarBean
     public function release_name_query($search_type, $value)
     {
         $this->load_merge_bean2('Releases');
-        if ($search_type == 'like') {
+        if ($search_type === 'like') {
             $where = "releases.name LIKE '%".DBManagerFactory::getInstance()->quote($value)."%'";
-        } elseif ($search_type == 'start') {
+        } elseif ($search_type === 'start') {
             $where = "releases.name LIKE '".DBManagerFactory::getInstance()->quote($value)."%'";
         } else {
             $where = "releases.name = '".DBManagerFactory::getInstance()->quote($value)."'";
@@ -332,7 +334,7 @@ class MergeRecord extends SugarBean
     {
         $where_clauses = array();
         foreach ($this->field_search_params as $merge_field => $vDefArray) {
-            if (isset($vDefArray['source']) && $vDefArray['source'] == 'custom_fields') {
+            if (isset($vDefArray['source']) && $vDefArray['source'] === 'custom_fields') {
                 $table_name = $this->merge_bean->table_name.'_cstm';
             } else {
                 $table_name = $this->merge_bean->table_name;
@@ -340,12 +342,12 @@ class MergeRecord extends SugarBean
 
             //Should move these if's into a central location for extensibility and addition for other search filters
             //Must do the same for pulling values in js dropdown
-            if (isset($vDefArray['search_type']) && $vDefArray['search_type'] == 'like') {
-                if ($merge_field != 'email1' && $merge_field != 'email2' && $merge_field != 'release_name') {
+            if (isset($vDefArray['search_type']) && $vDefArray['search_type'] === 'like') {
+                if ($merge_field !== 'email1' && $merge_field !== 'email2' && $merge_field !== 'release_name') {
                     if ($vDefArray['value'] != '') {
                         array_push($where_clauses, $table_name.'.'.$merge_field." LIKE '%".DBManagerFactory::getInstance()->quote($vDefArray['value'])."%'");
                     }
-                } elseif ($merge_field == 'release_name') {
+                } elseif ($merge_field === 'release_name') {
                     if (isset($vDefArray['value'])) {
                         $in = $this->release_name_query('like', $vDefArray['value']);
                         array_push($where_clauses, $table_name.".found_in_release IN ($in)");
@@ -355,10 +357,10 @@ class MergeRecord extends SugarBean
                     $query .= " AND ea.email_address LIKE '%".DBManagerFactory::getInstance()->quote($vDefArray['value'])."%')";
                     $where_clauses[] = $query;
                 }
-            } elseif (isset($vDefArray['search_type']) && $vDefArray['search_type'] == 'start') {
-                if ($merge_field != 'email1' && $merge_field != 'email2' && $merge_field != 'release_name') {
+            } elseif (isset($vDefArray['search_type']) && $vDefArray['search_type'] === 'start') {
+                if ($merge_field !== 'email1' && $merge_field !== 'email2' && $merge_field !== 'release_name') {
                     array_push($where_clauses, $table_name.'.'.$merge_field." LIKE '".DBManagerFactory::getInstance()->quote($vDefArray['value'])."%'");
-                } elseif ($merge_field == 'release_name') {
+                } elseif ($merge_field === 'release_name') {
                     if (isset($vDefArray['value'])) {
                         $in = $this->release_name_query('start', $vDefArray['value']);
                         array_push($where_clauses, $table_name.".found_in_release IN ($in)");
@@ -369,9 +371,9 @@ class MergeRecord extends SugarBean
                     $where_clauses[] = $query;
                 }
             } else {
-                if ($merge_field != 'email1' && $merge_field != 'email2' && $merge_field != 'release_name') {
+                if ($merge_field !== 'email1' && $merge_field !== 'email2' && $merge_field !== 'release_name') {
                     array_push($where_clauses, $table_name.'.'.$merge_field."='".DBManagerFactory::getInstance()->quote($vDefArray['value'])."'");
-                } elseif ($merge_field == 'release_name') {
+                } elseif ($merge_field === 'release_name') {
                     if (isset($vDefArray['value'])) {
                         $in = $this->release_name_query('exact', $vDefArray['value']);
                         array_push($where_clauses, $table_name.".found_in_release IN ($in)");

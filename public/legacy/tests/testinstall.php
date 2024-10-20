@@ -1,6 +1,6 @@
 <?php
 $sapi_type = php_sapi_name();
-if (substr($sapi_type, 0, 3) != 'cli') {
+if (substr($sapi_type, 0, 3) !== 'cli') {
     die('testinstall.php is CLI only.');
 }
 

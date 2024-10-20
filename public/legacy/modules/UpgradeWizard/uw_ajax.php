@@ -44,7 +44,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 
 
-////	COMMON
+////    COMMON
 
 function ajaxSqlProgress($persistence, $sql, $type)
 {
@@ -56,7 +56,7 @@ function ajaxSqlProgress($persistence, $sql, $type)
     ob_start();
     $out  = "<b>{$mod_strings['LBL_UW_PREFLIGHT_QUERY']}</b><br />";
     $out .= round((($persistence['sql_total'] - $whatsLeft) / $persistence['sql_total']) * 100, 1)."%
-				{$mod_strings['LBL_UW_DONE']} - {$mod_strings['LBL_UW_PREFLIGHT_QUERIES_LEFT']}: {$whatsLeft}";
+                {$mod_strings['LBL_UW_DONE']} - {$mod_strings['LBL_UW_PREFLIGHT_QUERIES_LEFT']}: {$whatsLeft}";
     $out .= "<br /><textarea cols='60' rows='3' DISABLED>{$sql}</textarea>";
     echo $out;
     ob_flush();
@@ -70,11 +70,15 @@ function ajaxSqlProgress($persistence, $sql, $type)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	COMMIT AJAX
+////    COMMIT AJAX
 /**
  * does post-post-install stuff
+ *
  * @param array persistence
+ *
  * @return array persistence
+ * @throws Exception
+ * @throws Exception
  */
 function commitAjaxFinalTouches($persistence)
 {
@@ -105,7 +109,7 @@ function commitAjaxFinalTouches($persistence)
 
     // reminders if needed
     ///////////////////////////////////////////////////////////////////////////////
-    ////	HANDLE REMINDERS
+    ////    HANDLE REMINDERS
     if ((is_countable($persistence['skipped_files']) ? count($persistence['skipped_files']) : 0) > 0) {
         $desc  = $mod_strings['LBL_UW_COMMIT_ADD_TASK_OVERVIEW']."\n\n";
         $desc .= $mod_strings['LBL_UW_COMMIT_ADD_TASK_DESC_1'];
@@ -121,7 +125,7 @@ function commitAjaxFinalTouches($persistence)
         $nowTime = $timedate->asDbTime($timedate->getNow());
         $nowDateTime = $nowDate.' '.$nowTime;
 
-        if ($_REQUEST['addTaskReminder'] == 'remind') {
+        if ($_REQUEST['addTaskReminder'] === 'remind') {
             logThis('Adding Task for admin for manual merge.');
 
             $task = BeanFactory::newBean('Tasks');
@@ -138,7 +142,7 @@ function commitAjaxFinalTouches($persistence)
             $task->save();
         }
 
-        if ($_REQUEST['addEmailReminder'] == 'remind') {
+        if ($_REQUEST['addEmailReminder'] === 'remind') {
             logThis('Sending Reminder for admin for manual merge.');
 
             $email = BeanFactory::newBean('Emails');
@@ -158,7 +162,7 @@ function commitAjaxFinalTouches($persistence)
             $email->save();
         }
     }
-    ////	HANDLE REMINDERS
+    ////    HANDLE REMINDERS
     ///////////////////////////////////////////////////////////////////////////////
 
     // clean up
@@ -185,7 +189,7 @@ function commitAjaxRunSql($persistence)
     }
 
     // This flag is determined by the preflight check in the installer
-    if ($persistence['schema_change'] == 'sugar') {
+    if ($persistence['schema_change'] === 'sugar') {
         if (isset($persistence['sql_to_run'])
             && (is_countable($persistence['sql_to_run']) ? count($persistence['sql_to_run']) : 0) > 0
             && !empty($persistence['sql_to_run'])) {
@@ -235,7 +239,7 @@ function commitAjaxGetSqlErrors($persistence)
         foreach ($persistence['commit_sql_errors'] as $error) {
             $out .= $error;
         }
-        $out .= "</div>";
+        $out .= '</div>';
     }
 
     if (empty($out)) {
@@ -279,16 +283,16 @@ function commitAjaxPostInstall($persistence)
 
     logThis('Starting post_install()...');
     $postInstallResults = "<b>{$mod_strings['LBL_UW_COMMIT_POSTINSTALL_RESULTS']}</b><br />
-							<a href='javascript:toggleNwFiles(\"postInstallResults\");'>{$mod_strings['LBL_UW_SHOW']}</a><br />
-							<div id='postInstallResults' style='display:none'>";
-    $file = $persistence['unzip_dir']. "/" . constant('SUGARCRM_POST_INSTALL_FILE');
+                            <a href='javascript:toggleNwFiles(\"postInstallResults\");'>{$mod_strings['LBL_UW_SHOW']}</a><br />
+                            <div id='postInstallResults' style='display:none'>";
+    $file = $persistence['unzip_dir']. '/' . constant('SUGARCRM_POST_INSTALL_FILE');
     if (is_file($file)) {
         include($file);
         ob_start();
         post_install();
     }
 
-    require("sugar_version.php");
+    require('sugar_version.php');
 
     if (!rebuildConfigFile($sugar_config, $sugar_version)) {
         logThis('*** ERROR: could not write config.php! - upgrade will fail!');
@@ -297,7 +301,7 @@ function commitAjaxPostInstall($persistence)
 
     $res = ob_get_contents();
     $postInstallResults .= (empty($res)) ? $mod_strings['LBL_UW_SUCCESS'] : $res;
-    $postInstallResults .= "</div>";
+    $postInstallResults .= '</div>';
 
     ob_start();
     echo $postInstallResults;
@@ -305,13 +309,13 @@ function commitAjaxPostInstall($persistence)
 
     logThis('post_install() done.');
 }
-////	END COMMIT AJAX
+////    END COMMIT AJAX
 ///////////////////////////////////////////////////////////////////////////////
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PREFLIGHT JSON STYLE
+////    PREFLIGHT JSON STYLE
 
 function preflightCheckJsonFindUpgradeFiles($persistence)
 {
@@ -323,38 +327,38 @@ function preflightCheckJsonFindUpgradeFiles($persistence)
     unset($persistence['rebuild_extensions']);
 
     // don't bother if are rechecking
-    $manualDiff			= array();
+    $manualDiff            = array();
     if (!isset($persistence['unzip_dir']) || empty($persistence['unzip_dir'])) {
         logThis('unzipping files in upgrade archive...');
 
-        $errors					= array();
-        $base_upgrade_dir      = "upload://upgrades";
-        $base_tmp_upgrade_dir  = sugar_cached("upgrades/temp");
-        $install_file			= urldecode($persistence['install_file']);
-        $show_files				= true;
-        $unzip_dir				= mk_temp_dir($base_tmp_upgrade_dir);
-        $zip_from_dir			= ".";
-        $zip_to_dir			= ".";
-        $zip_force_copy			= array();
+        $errors                    = array();
+        $base_upgrade_dir      = 'upload://upgrades';
+        $base_tmp_upgrade_dir  = sugar_cached('upgrades/temp');
+        $install_file            = urldecode($persistence['install_file']);
+        $show_files                = true;
+        $unzip_dir                = mk_temp_dir($base_tmp_upgrade_dir);
+        $zip_from_dir            = '.';
+        $zip_to_dir            = '.';
+        $zip_force_copy            = array();
 
         unzip($install_file, $unzip_dir);
 
         // assumption -- already validated manifest.php at time of upload
         include("$unzip_dir/manifest.php");
 
-        if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] != "") {
+        if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] != '') {
             $zip_from_dir   = $manifest['copy_files']['from_dir'];
         }
-        if (isset($manifest['copy_files']['to_dir']) && $manifest['copy_files']['to_dir'] != "") {
+        if (isset($manifest['copy_files']['to_dir']) && $manifest['copy_files']['to_dir'] != '') {
             $zip_to_dir     = $manifest['copy_files']['to_dir'];
         }
-        if (isset($manifest['copy_files']['force_copy']) && $manifest['copy_files']['force_copy'] != "") {
+        if (isset($manifest['copy_files']['force_copy']) && $manifest['copy_files']['force_copy'] != '') {
             $zip_force_copy     = $manifest['copy_files']['force_copy'];
         }
         if (isset($manifest['version'])) {
             $version    = $manifest['version'];
         }
-        if (!is_writable("config.php")) {
+        if (!is_writable('config.php')) {
             logThis('BAD error');
             return $mod_strings['ERR_UW_CONFIG'];
         }
@@ -396,7 +400,7 @@ function preflightCheckJsonDiffFiles($persistence)
 
     // file preflight checks
     logThis('verifying md5 checksums for files...');
-    $cache_html_files = findAllFilesRelative(sugar_cached("layout"), array());
+    $cache_html_files = findAllFilesRelative(sugar_cached('layout'), array());
 
     foreach ($persistence['upgrade_files'] as $file) {
         if (strpos((string) $file, '.md5')) {
@@ -408,21 +412,21 @@ function preflightCheckJsonDiffFiles($persistence)
 
         // check that we can move/delete the upgraded file
         if (!is_writable($file)) {
-            $errors[] = $mod_strings['ERR_UW_FILE_NOT_WRITABLE'].": ".$file;
+            $errors[] = $mod_strings['ERR_UW_FILE_NOT_WRITABLE']. ': ' .$file;
         }
         // check that destination files are writable
         $destFile = getcwd().str_replace($finalZipDir, '', (string) $file);
 
         if (is_file($destFile)) { // of course it needs to exist first...
             if (!is_writable($destFile)) {
-                $errors[] = $mod_strings['ERR_UW_FILE_NOT_WRITABLE'].": ".$destFile;
+                $errors[] = $mod_strings['ERR_UW_FILE_NOT_WRITABLE']. ': ' .$destFile;
             }
         }
 
         ///////////////////////////////////////////////////////////////////////
-        ////	DIFFS
+        ////    DIFFS
         // compare md5s and build up a manual merge list
-        $targetFile = clean_path(".".str_replace(getcwd(), '', $destFile));
+        $targetFile = clean_path('.' .str_replace(getcwd(), '', $destFile));
         $targetMd5 = '0';
         if (is_file($destFile)) {
             if (strpos((string) $targetFile, '.php')) {
@@ -441,9 +445,9 @@ function preflightCheckJsonDiffFiles($persistence)
             logThis('found a file with a differing md5: ['.$targetFile.']');
             $manualDiff[] = $destFile;
         }
-        ////	END DIFFS
+        ////    END DIFFS
         ///////////////////////////////////////////////////////////////////////
-        echo ".";
+        echo '.';
     }
     logThis('md5 verification done.');
 
@@ -468,59 +472,59 @@ function preflightCheckJsonGetDiff($persistence)
         $preserveFiles = array();
 
         $diffs =<<<eoq
-			<script type="text/javascript" language="Javascript">
-				function preflightToggleAll(cb) {
-					var checkAll = false;
-					var form = document.getElementById('diffs');
+            <script type="text/javascript" language="Javascript">
+                function preflightToggleAll(cb) {
+                    var checkAll = false;
+                    var form = document.getElementById('diffs');
 
-					if(cb.checked == true) {
-						checkAll = true;
-					}
+                    if(cb.checked == true) {
+                        checkAll = true;
+                    }
 
-					for(i=0; i<form.elements.length; i++) {
-						if(form.elements[i].type == 'checkbox') {
-							form.elements[i].checked = checkAll;
-						}
-					}
-					return;
-				}
-			</script>
+                    for(i=0; i<form.elements.length; i++) {
+                        if(form.elements[i].type == 'checkbox') {
+                            form.elements[i].checked = checkAll;
+                        }
+                    }
+                    return;
+                }
+            </script>
 
-			<table cellpadding='0' cellspacing='0' border='0'>
-				<tr>
-					<td valign='top'>
-						<input type='checkbox' name='addTask' id='addTask' CHECKED>
-					</td>
-					<td valign='top'>
-						{$mod_strings['LBL_UW_PREFLIGHT_ADD_TASK']}
-					</td>
-				</tr>
-				<tr>
-					<td valign='top'>
-						<input type='checkbox' name='addEmail' id='addEmail' $disableEmail>
-					</td>
-					<td valign='top'>
-						{$mod_strings['LBL_UW_PREFLIGHT_EMAIL_REMINDER']}
-					</td>
-				</tr>
-			</table>
+            <table cellpadding='0' cellspacing='0' border='0'>
+                <tr>
+                    <td valign='top'>
+                        <input type='checkbox' name='addTask' id='addTask' CHECKED>
+                    </td>
+                    <td valign='top'>
+                        {$mod_strings['LBL_UW_PREFLIGHT_ADD_TASK']}
+                    </td>
+                </tr>
+                <tr>
+                    <td valign='top'>
+                        <input type='checkbox' name='addEmail' id='addEmail' $disableEmail>
+                    </td>
+                    <td valign='top'>
+                        {$mod_strings['LBL_UW_PREFLIGHT_EMAIL_REMINDER']}
+                    </td>
+                </tr>
+            </table>
 
-			<form name='diffs' id='diffs'>
-			<p><a href='javascript:void(0); toggleNwFiles("diffsHide");'>{$mod_strings['LBL_UW_SHOW_DIFFS']}</a></p>
-			<div id='diffsHide' style='display:none'>
-				<table cellpadding='0' cellspacing='0' border='0'>
-					<tr>
-						<td valign='top' colspan='2'>
-							{$mod_strings['LBL_UW_PREFLIGHT_FILES_DESC']}
-							<br />&nbsp;
-						</td>
-					</tr>
-					<tr>
-						<td valign='top' colspan='2'>
-							<input type='checkbox' onchange='preflightToggleAll(this);'>&nbsp;<i><b>{$mod_strings['LBL_UW_PREFLIGHT_TOGGLE_ALL']}</b></i>
-							<br />&nbsp;
-						</td>
-					</tr>
+            <form name='diffs' id='diffs'>
+            <p><a href='javascript:void(0); toggleNwFiles("diffsHide");'>{$mod_strings['LBL_UW_SHOW_DIFFS']}</a></p>
+            <div id='diffsHide' style='display:none'>
+                <table cellpadding='0' cellspacing='0' border='0'>
+                    <tr>
+                        <td valign='top' colspan='2'>
+                            {$mod_strings['LBL_UW_PREFLIGHT_FILES_DESC']}
+                            <br />&nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign='top' colspan='2'>
+                            <input type='checkbox' onchange='preflightToggleAll(this);'>&nbsp;<i><b>{$mod_strings['LBL_UW_PREFLIGHT_TOGGLE_ALL']}</b></i>
+                            <br />&nbsp;
+                        </td>
+                    </tr>
 eoq;
         foreach ($persistence['manual'] as $diff) {
             $diff = clean_path($diff);
@@ -536,11 +540,11 @@ eoq;
             $diffs .= "<input type='checkbox' name='diff_files[]' value='{$diff}' $checked>";
             $diffs .= "</td><td valign='top'>";
             $diffs .= str_replace(getcwd(), '.', (string) $diff);
-            $diffs .= "</td></tr>";
+            $diffs .= '</td></tr>';
         }
-        $diffs .= "</table>";
-        $diffs .= "</div></p>";
-        $diffs .= "</form>";
+        $diffs .= '</table>';
+        $diffs .= '</div></p>';
+        $diffs .= '</form>';
 
         // list preserved files (templates, etc.)
         $preserve = '';
@@ -548,9 +552,9 @@ eoq;
             if (empty($preserve)) {
                 $preserve .= "<table cellpadding='0' cellspacing='0' border='0'><tr><td><b>";
                 $preserve .= $mod_strings['LBL_UW_PREFLIGHT_PRESERVE_FILES'];
-                $preserve .= "</b></td></tr>";
+                $preserve .= '</b></td></tr>';
             }
-            $preserve .= "<tr><td valign='top'><i>".str_replace(getcwd(), '.', (string) $pf)."</i></td></tr>";
+            $preserve .= "<tr><td valign='top'><i>".str_replace(getcwd(), '.', (string) $pf). '</i></td></tr>';
         }
         if (!empty($preserve)) {
             $preserve .= '</table><br>';
@@ -620,9 +624,9 @@ function preflightCheckJsonPrepSchemaCheck($persistence, $preflight=true)
         if (!empty($fp)) {
             $completeLine = '';
             while ($line = fgets($fp)) {
-                if (strpos($line, '--') === false) {
-                    $completeLine .= " ".trim($line);
-                    if (strpos($line, ';') !== false) {
+                if (!str_contains($line, '--')) {
+                    $completeLine .= ' ' .trim($line);
+                    if (str_contains($line, ';')) {
                         $completeLine = str_replace(';', '', $completeLine);
                         $persistence['sql_to_check'][] = $completeLine;
                         $completeLine = ''; //reset for next loop
@@ -641,7 +645,7 @@ function preflightCheckJsonPrepSchemaCheck($persistence, $preflight=true)
     if ($preflight) {
         $persistence['sql_to_check_backup'] = $persistence['sql_to_check'];
         $persistence['sql_to_run'] = $persistence['sql_to_check'];
-        echo "1% ".$mod_strings['LBL_UW_DONE'];
+        echo '1% ' . $mod_strings['LBL_UW_DONE'];
     } else {
         $persistence['sql_to_run'] = $persistence['sql_to_check'];
         unset($persistence['sql_to_check']);
@@ -662,7 +666,7 @@ function preflightCheckJsonSchemaCheck($persistence)
 
         // populate newTables array to prevent "getting sample data" from non-existent tables
         $newTables = array();
-        if (strtoupper(substr((string) $completeLine, 1, 5)) == 'CREAT') {
+        if (strtoupper(substr((string) $completeLine, 1, 5)) === 'CREAT') {
             $newTables[] = getTableFromQuery($completeLine);
         }
 
@@ -695,7 +699,7 @@ function preflightCheckJsonGetSchemaErrors($persistence)
         foreach ($persistence['sql_errors'] as $sqlError) {
             $out .= "<br><span class='error'>{$sqlError}</span>";
         }
-        $out .= "</div><hr />";
+        $out .= '</div><hr />';
     } else {
         $out = '';
     }
@@ -727,7 +731,7 @@ function preflightCheckJsonFillSchema()
     }
 
     ///////////////////////////////////////////////////////////////////////////////
-    ////	SCHEMA SCRIPT HANDLING
+    ////    SCHEMA SCRIPT HANDLING
     $schema = '';
     $alterTableSchemaOut = '';
 
@@ -744,9 +748,9 @@ function preflightCheckJsonFillSchema()
         $schema  = "<p><a href='javascript:void(0); toggleNwFiles(\"schemashow\");'>{$mod_strings['LBL_UW_SHOW_SCHEMA']}</a>";
         $schema .= "<div id='schemashow' style='display:none;'>";
         $schema .= "<textarea readonly cols='80' rows='10'>{$contents}</textarea>";
-        $schema .= "</div></p>";
+        $schema .= '</div></p>';
     }
-    ////	END SCHEMA SCRIPT HANDLING
+    ////    END SCHEMA SCRIPT HANDLING
     ///////////////////////////////////////////////////////////////////////////////
 
     ob_start();
@@ -774,7 +778,7 @@ function preflightCheckJsonAlterTableCharset()
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	SYSTEMCHECK AJAX FUNCTIONS
+////    SYSTEMCHECK AJAX FUNCTIONS
 
 function systemCheckJsonGetFiles($persistence)
 {
@@ -793,7 +797,7 @@ function systemCheckJsonGetFiles($persistence)
         $dir = getcwd();
         $d = dir($dir);
         while ($f = $d->read()) {
-            if ($f == "." || $f == "..") { // skip *nix self/parent
+            if ($f === '.' || $f === '..') { // skip *nix self/parent
                 continue;
             }
 
@@ -805,7 +809,7 @@ function systemCheckJsonGetFiles($persistence)
         }
         $persistence['files_to_check'] = $files;
         $persistence['dirs_to_check'] = $the_array;
-        $persistence['dirs_total']	= count($the_array);
+        $persistence['dirs_total']    = count($the_array);
         $persistence['dirs_checked'] = false;
 
         $out = "1% {$mod_strings['LBL_UW_DONE']}";
@@ -828,7 +832,7 @@ function systemCheckJsonGetFiles($persistence)
         $out  = round((($persistence['dirs_total'] - $whatsLeft) / 21) * 100, 1)."% {$mod_strings['LBL_UW_DONE']}";
         $out .= " [{$mod_strings['LBL_UW_SYSTEM_CHECK_CHECKING_JSON']} {$dir}]";
     } else {
-        $out = "Done";
+        $out = 'Done';
     }
 
     echo trim($out);
@@ -851,15 +855,15 @@ function systemCheckJsonCheckFiles($persistence)
     $filesNotWritable = array();
     $i=0;
     $filesOut = "
-		<a href='javascript:void(0); toggleNwFiles(\"filesNw\");'>{$mod_strings['LBL_UW_SHOW_NW_FILES']}</a>
-		<div id='filesNw' style='display:none;'>
-		<table cellpadding='3' cellspacing='0' border='0'>
-		<tr>
-			<th align='left'>{$mod_strings['LBL_UW_FILE']}</th>
-			<th align='left'>{$mod_strings['LBL_UW_FILE_PERMS']}</th>
-			<th align='left'>{$mod_strings['LBL_UW_FILE_OWNER']}</th>
-			<th align='left'>{$mod_strings['LBL_UW_FILE_GROUP']}</th>
-		</tr>";
+        <a href='javascript:void(0); toggleNwFiles(\"filesNw\");'>{$mod_strings['LBL_UW_SHOW_NW_FILES']}</a>
+        <div id='filesNw' style='display:none;'>
+        <table cellpadding='3' cellspacing='0' border='0'>
+        <tr>
+            <th align='left'>{$mod_strings['LBL_UW_FILE']}</th>
+            <th align='left'>{$mod_strings['LBL_UW_FILE_PERMS']}</th>
+            <th align='left'>{$mod_strings['LBL_UW_FILE_OWNER']}</th>
+            <th align='left'>{$mod_strings['LBL_UW_FILE_GROUP']}</th>
+        </tr>";
 
     $isWindows = is_windows();
     foreach ($persistence['files_to_check'] as $file) {
@@ -882,12 +886,12 @@ function systemCheckJsonCheckFiles($persistence)
                 $groupData = posix_getgrgid($group);
                 $group = !empty($groupData) ? $groupData['name'] : $group;
             }
-            $filesOut .= "<tr>" .
+            $filesOut .= '<tr>' .
                 "<td><span class='error'>{$file}</span></td>" .
                 "<td>{$perms}</td>" .
                 "<td>{$owner}</td>" .
                 "<td>{$group}</td>" .
-                "</tr>";
+                '</tr>';
         }
 
         $i++;

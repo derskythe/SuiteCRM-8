@@ -93,8 +93,11 @@ class ListViewFacade
      *
      * @param string $module
      * @param array $request
+     *
      * @return array
      * @description Returns all columns(default and non-default) defined for a Module List View
+     * @throws Exception
+     * @throws Exception
      */
     public static function getAllColumns($module, $request = [])
     {

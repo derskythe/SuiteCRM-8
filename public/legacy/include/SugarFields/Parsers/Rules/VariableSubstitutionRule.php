@@ -60,9 +60,9 @@ class VariableSubstitutionRule extends BaseRule
     {
     }
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
-        if ($view == 'DetailView') {
+        if ($view === 'DetailView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {
@@ -133,7 +133,7 @@ class VariableSubstitutionRule extends BaseRule
                 } //foreach
             } //foreach
         } else {
-            if ($view == 'EditView') {
+            if ($view === 'EditView') {
                 foreach ($panels as $name=>$panel) {
                     foreach ($panel as $rowCount=>$row) {
                         foreach ($row as $key=>$column) {

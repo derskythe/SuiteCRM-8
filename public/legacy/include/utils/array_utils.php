@@ -64,9 +64,10 @@ function var_export_helper($tempArray)
 
 function override_value_to_string($array_name, $value_name, $value)
 {
-    $string = "\${$array_name}[" . var_export($value_name, true) . "] = ";
+    $string = "\${$array_name}[" . var_export($value_name, true) . '] = ';
     $string .= var_export_helper($value, true);
-    return $string . ";";
+
+    return $string . ';';
 }
 
 function add_blank_option($options)
@@ -103,10 +104,11 @@ function override_value_to_string_recursive($key_names, $array_name, $value, $ev
 function override_recursive_helper($key_names, $array_name, $value)
 {
     if (empty($key_names)) {
-        return "=" . var_export_helper($value, true) . ";";
+        return '=' . var_export_helper($value, true) . ';';
     } else {
         $key = array_shift($key_names);
-        return "[" . var_export($key, true) . "]" . override_recursive_helper($key_names, $array_name, $value);
+
+        return '[' . var_export($key, true) . ']' . override_recursive_helper($key_names, $array_name, $value);
     }
 }
 
@@ -122,7 +124,7 @@ function override_value_to_string_recursive2($array_name, $value_name, $value, $
         return $str;
     } else {
         if (!$save_empty && empty($value)) {
-            return;
+            return '';
         } else {
             return "\$$array_name" . "[$quoted_vname] = " . var_export($value, true) . ";\n";
         }
@@ -195,7 +197,7 @@ function deepArrayDiff($array1, $array2, $allowEmpty = false)
 function setDeepArrayValue(&$array, $key, $value)
 {
     //if _ is at position zero, that is invalid.
-    if (strrpos($key, "_")) {
+    if (strrpos($key, '_')) {
         list($key, $remkey) = explode('_', $key, 2);
         if (!isset($array[$key]) || !is_array($array[$key])) {
             $array[$key] = array();
@@ -270,7 +272,7 @@ function array_search_insensitive($key, $haystack)
 function fixIndexArrayFormat($indexArray)
 {
     foreach ($indexArray as $key => $value) {
-        $indexArray[$key] = preg_replace("/\s+/u", " ", (string)$value);
+        $indexArray[$key] = preg_replace('/\s+/u', ' ', (string) $value);
         $indexArray[$key] = trim($indexArray[$key]);
         $indexArray[$key] = str_replace(['( ', ' )'], ['(', ')'], $indexArray[$key]);
     }
@@ -323,7 +325,7 @@ class SugarArray extends ArrayObject
 
     private function _getFromSource($key, $default)
     {
-        if (strpos((string)$key, '.') === false) {
+        if (!str_contains((string) $key, '.')) {
             return isset($this[$key]) ? $this[$key] : $default;
         }
 

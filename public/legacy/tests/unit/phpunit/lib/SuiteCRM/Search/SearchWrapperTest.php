@@ -64,7 +64,7 @@ class SearchWrapperTest extends SearchTestAbstract
             $searchEngine = $this->invokeMethod($search, 'fetchEngine', ['ElasticSearchEngine']);
             self::assertInstanceOf(ElasticSearchEngine::class, $searchEngine);
         } catch (ReflectionException $exception) {
-            self::fail("Failed to use reflection!");
+            self::fail('Failed to use reflection!');
         }
     }
 
@@ -159,7 +159,7 @@ class SearchWrapperTest extends SearchTestAbstract
     public function testSearchCustomEngine(): void
     {
         $mockEngine = Mockery::mock(SearchEngine::class);
-        $query = SearchQuery::fromString("Test");
+        $query = SearchQuery::fromString('Test');
 
         $mockEngine
             ->shouldReceive('search')

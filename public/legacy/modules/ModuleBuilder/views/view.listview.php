@@ -51,10 +51,10 @@ class ViewListView extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
@@ -79,10 +79,13 @@ class ViewListView extends SugarView
     }
 
     // DO NOT REMOVE - overrides parent ViewEdit preDisplay() which attempts to load a bean for a non-existent module
-    public function preDisplay()
+    public function preDisplay() : void
     {
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display($preview = false)
     {
         $packageName = (! empty($_REQUEST [ 'view_package' ])) ? $_REQUEST [ 'view_package' ] : null ;
@@ -92,10 +95,12 @@ class ViewListView extends SugarView
         $smarty = $this->constructSmarty($parser) ;
 
         if ($preview) {
-            echo $smarty->fetch("modules/ModuleBuilder/tpls/Preview/listView.tpl") ;
+            echo $smarty->fetch('modules/ModuleBuilder/tpls/Preview/listView.tpl') ;
         } else {
             $ajax = $this->constructAjax() ;
-            $ajax->addSection('center', $this->translatedViewType, $smarty->fetch("modules/ModuleBuilder/tpls/listView.tpl")) ;
+            $ajax->addSection('center', $this->translatedViewType, $smarty->fetch(
+                'modules/ModuleBuilder/tpls/listView.tpl'
+            )) ;
 
             echo $ajax->getJavascript() ;
         }
@@ -123,7 +128,7 @@ class ViewListView extends SugarView
             $ajax->addCrumb(translate('LBL_MODULEBUILDER', 'ModuleBuilder'), 'ModuleBuilder.main("mb")') ;
             $ajax->addCrumb($_REQUEST [ 'view_package' ], 'ModuleBuilder.getContent("module=ModuleBuilder&action=package&package=' . $_REQUEST [ 'view_package' ] . '")') ;
             $ajax->addCrumb($this->editModule, 'ModuleBuilder.getContent("module=ModuleBuilder&action=module&view_package=' . $_REQUEST [ 'view_package' ] . '&view_module=' . $_REQUEST [ 'view_module' ] . '")') ;
-            if ($this->subpanel != "") {
+            if ($this->subpanel != '') {
                 $ajax->addCrumb(translate('LBL_AVAILABLE_SUBPANELS', 'ModuleBuilder'), '') ;
                 if ($this->subpanelLabel) {
                     $subpanelLabel = $this->subpanelLabel;
@@ -133,10 +138,10 @@ class ViewListView extends SugarView
                     }
 
                     $ajax->addCrumb($subpanelLabel, '');
-                    $this->translatedViewType = $subpanelLabel . "&nbsp;" . translate("LBL_SUBPANEL", "ModuleBuilder");
+                    $this->translatedViewType = $subpanelLabel . '&nbsp;' . translate('LBL_SUBPANEL', 'ModuleBuilder');
                 } else {
                     $ajax->addCrumb($this->subpanel, '') ;
-                    $this->translatedViewType = translate("LBL_SUBPANEL", "ModuleBuilder");
+                    $this->translatedViewType = translate('LBL_SUBPANEL', 'ModuleBuilder');
                 }
             } else {
                 $ajax->addCrumb(translate($layoutLabel, 'ModuleBuilder'), 'ModuleBuilder.getContent("module=ModuleBuilder&MB=true&action=wizard&view_module=' . $_REQUEST [ 'view_module' ] . '&view_package=' . $_REQUEST [ 'view_package' ] . '")') ;
@@ -156,10 +161,10 @@ class ViewListView extends SugarView
                     }
 
                     $ajax->addCrumb($subpanelLabel, '');
-                    $this->translatedViewType = $subpanelLabel . "&nbsp;" . translate("LBL_SUBPANEL", "ModuleBuilder");
+                    $this->translatedViewType = $subpanelLabel . '&nbsp;' . translate('LBL_SUBPANEL', 'ModuleBuilder');
                 } else {
                     $ajax->addCrumb($this->subpanel, '') ;
-                    $this->translatedViewType = translate("LBL_SUBPANEL", "ModuleBuilder");
+                    $this->translatedViewType = translate('LBL_SUBPANEL', 'ModuleBuilder');
                 }
             } else {
                 $ajax->addCrumb(translate($layoutLabel, 'ModuleBuilder'), 'ModuleBuilder.getContent("module=ModuleBuilder&action=wizard&view='.$layoutView.'&view_module=' . $this->editModule . '")') ;
@@ -177,7 +182,7 @@ class ViewListView extends SugarView
         $smarty->assign('language', $parser->getLanguage()) ;
 
         $smarty->assign('view', $this->editLayout) ;
-        $smarty->assign('module', "ModuleBuilder") ;
+        $smarty->assign('module', 'ModuleBuilder') ;
         $smarty->assign('field_defs', $parser->getFieldDefs()) ;
         $smarty->assign('action', 'listViewSave') ;
         $smarty->assign('view_module', $this->editModule) ;
@@ -187,7 +192,7 @@ class ViewListView extends SugarView
             if (!$this->fromModuleBuilder) {
                 $subList =  SubPanel::getModuleSubpanels($this->editModule);
                 $subRef = $subList[strtolower($this->subpanel)];
-                $subTitleKey = !empty($subRef) ? $subRef : "LBL_" . strtoupper($this->subpanel) . "_SUBPANEL_TITLE";
+                $subTitleKey = !empty($subRef) ? $subRef : 'LBL_' . strtoupper($this->subpanel) . '_SUBPANEL_TITLE';
                 $subTitle    = !empty($subRef) ? translate($subTitleKey, $this->editModule) : UCfirst($this->subpanel);
                 $smarty->assign('subpanel_label', $subTitleKey) ;
                 $smarty->assign('subpanel_title', $subTitle) ;
@@ -207,7 +212,7 @@ class ViewListView extends SugarView
         foreach ($groups as $groupKey => $group) {
             foreach ($group as $fieldKey => $field) {
                 if (isset($field [ 'width' ])) {
-                    if (substr((string) $field [ 'width' ], - 1, 1) == '%') {
+                    if (str_ends_with((string) $field ['width'], '%')) {
                         $groups [ $groupKey ] [ $fieldKey ] [ 'width' ] = substr((string) $field [ 'width' ], 0, strlen((string) $field [ 'width' ]) - 1) ;
                     }
                 }
@@ -261,13 +266,13 @@ class ViewListView extends SugarView
                 if (isset($_REQUEST [ 'local' ])) {
                     $smarty->assign('local', '1') ;
                 }
-                $smarty->assign("subpanel", $this->subpanel) ;
+                $smarty->assign('subpanel', $this->subpanel) ;
             } else {
                 $smarty->assign('description', $GLOBALS [ 'mod_strings' ] [ 'LBL_LISTVIEW_DESCRIPTION' ]) ;
             }
         } else {
             if ($this->subpanel) {
-                $smarty->assign("subpanel", (string)$this->subpanel) ;
+                $smarty->assign('subpanel', (string)$this->subpanel) ;
             } else {
                 $smarty->assign('description', $GLOBALS [ 'mod_strings' ] [ 'LBL_LISTVIEW_DESCRIPTION' ]) ;
             }
@@ -282,7 +287,7 @@ class ViewListView extends SugarView
 
         if ($this->fromModuleBuilder) {
             $title = $this->editModule ;
-            if ($this->subpanel != "") {
+            if ($this->subpanel != '') {
                 $title .= ":$this->subpanel" ;
             }
         } else {
@@ -301,18 +306,18 @@ class ViewListView extends SugarView
             if (! $horizontal) {
                 $text .= '</tr><tr>' ;
             }
-            if ($button['id'] == "spacer") {
+            if ($button['id'] === 'spacer') {
                 $text .= "<td style='width:{$button['width']}'> </td>";
                 continue;
             }
 
             if (! empty($button [ 'plain' ])) {
                 $text .= <<<EOQ
-	             <td><input name={$button['name']} id={$button['id']} class="button" type="button" valign='center' {$button['actionScript']}
+                 <td><input name={$button['name']} id={$button['id']} class="button" type="button" valign='center' {$button['actionScript']}
 EOQ;
             } else {
                 $text .= <<<EOQ
-	          <td><input name={$button['name']} id={$button['id']} class="button" type="button" valign='center' style='cursor:default'  {$button['actionScript']}
+              <td><input name={$button['name']} id={$button['id']} class="button" type="button" valign='center' style='cursor:default'  {$button['actionScript']}
 EOQ;
             }
             $text .= "value=\"{$button['text']}\"/></td>" ;

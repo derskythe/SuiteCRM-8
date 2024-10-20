@@ -48,20 +48,20 @@ class UserDemoData
     public $_user;
     public $_large_scale_test;
     public $guids = array(
-        'jim'	=> 'seed_jim_id',
-        'sarah'	=> 'seed_sarah_id',
-        'sally'	=> 'seed_sally_id',
-        'max'	=> 'seed_max_id',
-        'will'	=> 'seed_will_id',
-        'chris'	=> 'seed_chris_id',
+        'jim'    => 'seed_jim_id',
+        'sarah'    => 'seed_sarah_id',
+        'sally'    => 'seed_sally_id',
+        'max'    => 'seed_max_id',
+        'will'    => 'seed_will_id',
+        'chris'    => 'seed_chris_id',
     /*
      * Pending fix of demo data mechanism
-        'jim'	=> 'jim00000-0000-0000-0000-000000000000',
-        'sarah'	=> 'sarah000-0000-0000-0000-000000000000',
-        'sally'	=> 'sally000-0000-0000-0000-000000000000',
-        'max'	=> 'max00000-0000-0000-0000-000000000000',
-        'will'	=> 'will0000-0000-0000-0000-000000000000',
-        'chris'	=> 'chris000-0000-0000-0000-000000000000',
+        'jim'    => 'jim00000-0000-0000-0000-000000000000',
+        'sarah'    => 'sarah000-0000-0000-0000-000000000000',
+        'sally'    => 'sally000-0000-0000-0000-000000000000',
+        'max'    => 'max00000-0000-0000-0000-000000000000',
+        'will'    => 'will0000-0000-0000-0000-000000000000',
+        'chris'    => 'chris000-0000-0000-0000-000000000000',
     */
     );
 
@@ -97,6 +97,8 @@ class UserDemoData
 
     /**
      *  Create a user in the seed data.
+     *
+     * @throws Exception
      */
     public function _create_seed_user(
         $id,
@@ -124,8 +126,8 @@ class UserDemoData
         $u->reports_to_id = $reports_to;
         $u->reports_to_name = $reports_to_name;
         $u->emailAddress->addAddress($email, true);
-        $u->emailAddress->addAddress("reply.".$email, false, true);
-        $u->emailAddress->addAddress("alias.".$email);
+        $u->emailAddress->addAddress('reply.' .$email, false, true);
+        $u->emailAddress->addAddress('alias.' .$email);
 
         // bug 15371 tyoung set a user preference so that Users/DetailView.php can find something without repeatedly querying the db in vain
         $u->setPreference('max_tabs', '7');
@@ -141,25 +143,25 @@ class UserDemoData
     {
         $users = array();
         //bug 28138 todo
-        $users[] = "north";
-        $users[] = "south";
-        $users[] = "east";
-        $users[] = "west";
-        $users[] = "left";
-        $users[] = "right";
-        $users[] = "in";
-        $users[] = "out";
-        $users[] = "fly";
-        $users[] = "walk";
-        $users[] = "crawl";
-        $users[] = "pivot";
-        $users[] = "money";
-        $users[] = "dinero";
-        $users[] = "shadow";
-        $users[] = "roof";
-        $users[] = "sales";
-        $users[] = "pillow";
-        $users[] = "feather";
+        $users[] = 'north';
+        $users[] = 'south';
+        $users[] = 'east';
+        $users[] = 'west';
+        $users[] = 'left';
+        $users[] = 'right';
+        $users[] = 'in';
+        $users[] = 'out';
+        $users[] = 'fly';
+        $users[] = 'walk';
+        $users[] = 'crawl';
+        $users[] = 'pivot';
+        $users[] = 'money';
+        $users[] = 'dinero';
+        $users[] = 'shadow';
+        $users[] = 'roof';
+        $users[] = 'sales';
+        $users[] = 'pillow';
+        $users[] = 'feather';
 
         return $users;
     }
@@ -178,8 +180,8 @@ class UserDemoData
                 $name,
                 $sugar_demodata['users'][0]['title'],
                 $sugar_demodata['users'][0]['is_admin'],
-                "seed_jim_id",
-                $sugar_demodata['users'][0]['last_name'].", ".$sugar_demodata['users'][0]['first_name'],
+                'seed_jim_id',
+                $sugar_demodata['users'][0]['last_name']. ', ' . $sugar_demodata['users'][0]['first_name'],
                 $sugar_demodata['users'][0]['email']
             );
         }

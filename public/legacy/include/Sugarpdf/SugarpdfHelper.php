@@ -44,27 +44,27 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
     function wrapTD($html, $options)
     {
-        return wrapTag("td", $html, $options);
+        return wrapTag('td', $html, $options);
     }
 
     function wrapTR($html, $options)
     {
-        return wrapTag("tr", $html, $options);
+        return wrapTag('tr', $html, $options);
     }
 
     function wrapTable($html, $options)
     {
-        return wrapTag("table", $html, $options);
+        return wrapTag('table', $html, $options);
     }
 
     function wrapB($html)
     {
-        return "<b>".$html."</b>";
+        return '<b>' . $html . '</b>';
     }
 
     function wrapI($html)
     {
-        return "<i>".$html."</i>";
+        return '<i>' . $html . '</i>';
     }
     function wrapTag($tag, $html, $options)
     {
@@ -85,7 +85,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
                 }
             }
         }
-        return $return.">".$html."</$tag>";
+
+        return $return . '>' . $html . "</$tag>";
     }
 
     /**
@@ -163,7 +164,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
                 $symbol = $currency->getPdfCurrencySymbol();
                 $symbol_space = false;
             }*/
-            elseif (!empty($params['type']) && $params['type'] == 'sugarpdf') {
+            elseif (!empty($params['type']) && $params['type'] === 'sugarpdf') {
                 $symbol = $currency->symbol;
                 $symbol_space = false;
             }

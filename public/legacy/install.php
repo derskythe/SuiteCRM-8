@@ -118,7 +118,7 @@ global $silentInstall;
 $silentInstall = true;
 
 //Todo, check if there is an instance where goto is not set, but a silent install is in place
-if (isset($_REQUEST['goto']) && $_REQUEST['goto'] != 'SilentInstall') {
+if (isset($_REQUEST['goto']) && $_REQUEST['goto'] !== 'SilentInstall') {
     require_once('jssource/minify.php');
     $silentInstall = false;
 }
@@ -131,7 +131,7 @@ global $locale;
 $locale = new Localization();
 
 $GLOBALS['log'] = LoggerManager::getLogger();
-global $setup_sugar_version;
+global $setup_sugar_version, $suitecrm_version;
 $setup_sugar_version = $suitecrm_version;
 global $install_script;
 $install_script = true;
@@ -143,9 +143,10 @@ $icon = 'include/images/sugar_icon.ico';
 $sugar_md = 'include/images/sugar_md_open.png';
 $loginImage = 'include/images/suitecrm_login.png';
 $common = 'install/installCommon.js';
+global $installer_defaults;
 
 ///////////////////////////////////////////////////////////////////////////////
-////	INSTALLER LANGUAGE
+////    INSTALLER LANGUAGE
 function getSupportedInstallLanguages()
 {
     $supportedLanguages = array(
@@ -197,7 +198,7 @@ if (file_exists("install/language/{$current_language}.lang.php")) {
 
 global $mod_strings;
 
-if ($current_language != 'en_us') {
+if ($current_language !== 'en_us') {
     $my_mod_strings = $mod_strings;
     include('install/language/en_us.lang.php');
     $mod_strings = sugarLangArrayMerge($mod_strings, $my_mod_strings);
@@ -205,7 +206,7 @@ if ($current_language != 'en_us') {
 
 global $app_list_strings;
 $app_list_strings = return_app_list_strings_language($current_language);
-////	END INSTALLER LANGUAGE
+////    END INSTALLER LANGUAGE
 ///////////////////////////////////////////////////////////////////////////////
 
 //get the url for the helper link
@@ -244,12 +245,12 @@ EOQ;
 
 
 //if this license print, then redirect and exit,
-if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'licensePrint') {
+if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'licensePrint') {
     include('install/licensePrint.php');
     exit();
 }
 
-if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == "1") {
+if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == '1') {
     //if this is a system check, then just run the check and return,
     //this is an ajax call and there is no need for further processing
 
@@ -268,7 +269,7 @@ if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == "1") 
             case UPLOAD_ERR_OK:
                 $allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG/*, IMAGETYPE_GIF */);
                 $detectedType = exif_imagetype($_FILES['company_logo']['tmp_name']);
-                if (!in_array($detectedType, $allowedTypes)) {
+                if (!in_array($detectedType, $allowedTypes, true)) {
                     $errors[] = $mod_strings['ERR_UPLOAD_FILETYPE'];
                 } else {
                     // uploaded image stored in the /custom path instead of put into the original theme directory..
@@ -323,7 +324,7 @@ if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == "1") 
         // TODO--low: validate file size & image width/height and save, show status result to client js
 
         if (isset($_REQUEST['callback']) && $_REQUEST['callback'] === 'uploadLogoCallback') {
-            echo "<script>window.top.window.uploadLogoCallback(" . json_encode($result) . ");</script>";
+            echo '<script>window.top.window.uploadLogoCallback(' . json_encode($result) . ');</script>';
         }
 
         return;
@@ -389,7 +390,7 @@ if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == "1") 
 }
 
 //maintaining the install_type if earlier set to custom
-if (isset($_REQUEST['install_type']) && $_REQUEST['install_type'] == 'custom') {
+if (isset($_REQUEST['install_type']) && $_REQUEST['install_type'] === 'custom') {
     $_SESSION['install_type'] = $_REQUEST['install_type'];
 }
 
@@ -430,13 +431,13 @@ if ($_SERVER['SERVER_PORT'] == '80') {
 } else {
     $web_root = $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['PHP_SELF'];
 }
-$web_root = str_replace("/install.php", "", $web_root);
+$web_root = str_replace('/install.php', '', $web_root);
 $web_root = "http://$web_root";
 
 if (!isset($_SESSION['oc_install']) || $_SESSION['oc_install'] == false) {
     //$workflow[] = 'siteConfig_a.php';
     if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) &&
-        $_SESSION['install_type'] == 'custom') {
+        $_SESSION['install_type'] === 'custom') {
         $workflow[] = 'siteConfig_b.php';
     }
 } else {
@@ -478,7 +479,7 @@ if (!isset($_SESSION['cache_dir']) || empty($_SESSION['cache_dir'])) {
 $workflow[] = 'performSetup.php';
 
 if (!isset($_SESSION['oc_install']) || $_SESSION['oc_install'] == false) {
-    if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) && $_SESSION['install_type'] == 'custom') {
+    if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) && $_SESSION['install_type'] === 'custom') {
         //$workflow[] = 'download_patches.php';
         $workflow[] = 'download_modules.php';
     }
@@ -531,10 +532,10 @@ elseif (is_file('config_si.php') && empty($sugar_config['installer_locked'])) {
         <td colspan="2" id="help"><a href="{$help_url}" target='_blank'>{$mod_strings['LBL_HELP']} </a></td></tr>
     <tr>
       <th width="500">
-		<p>
-		<img src="{$sugar_md}" alt="SugarCRM" border="0">
-		</p>
-		{$mod_strings['LBL_TITLE_WELCOME']} {$setup_sugar_version} {$mod_strings['LBL_WELCOME_SETUP_WIZARD']}</th>
+        <p>
+        <img src="{$sugar_md}" alt="SugarCRM" border="0">
+        </p>
+        {$mod_strings['LBL_TITLE_WELCOME']} {$setup_sugar_version} {$mod_strings['LBL_WELCOME_SETUP_WIZARD']}</th>
 
       <th width="200" height="30" style="text-align: right;"><a href="http://www.sugarcrm.com" target="_blank"><IMG src="{$loginImage}" alt="SugarCRM" border="0"></a>
       </th>
@@ -556,18 +557,22 @@ EOHTML;
 
 $exclude_files = array('complete_install.php', 'register.php', 'download_modules.php');
 
-if (isset($next_step) && isset($workflow[$next_step]) && !in_array($workflow[$next_step], $exclude_files) && isset($sugar_config['installer_locked']) && $sugar_config['installer_locked'] == true) {
+if (isset($next_step) && isset($workflow[$next_step]) && !in_array(
+        $workflow[$next_step],
+        $exclude_files,
+        true
+    ) && isset($sugar_config['installer_locked']) && $sugar_config['installer_locked'] == true) {
     $the_file = 'installDisabled.php';
     $disabled_title = $mod_strings['LBL_DISABLED_DESCRIPTION'];
     $disabled_title_2 = $mod_strings['LBL_DISABLED_TITLE_2'];
     $disabled_text = <<<EOQ
-		<p>{$mod_strings['LBL_DISABLED_DESCRIPTION']}</p>
-		<pre>
-			'installer_locked' => false,
-		</pre>
-		<p>{$mod_strings['LBL_DISABLED_DESCRIPTION_2']}</p>
+        <p>{$mod_strings['LBL_DISABLED_DESCRIPTION']}</p>
+        <pre>
+            'installer_locked' => false,
+        </pre>
+        <p>{$mod_strings['LBL_DISABLED_DESCRIPTION_2']}</p>
 
-		<p>{$mod_strings['LBL_DISABLED_HELP_1']} <a href="{$mod_strings['LBL_DISABLED_HELP_LNK']}" target="_blank">{$mod_strings['LBL_DISABLED_HELP_2']}</a>.</p>
+        <p>{$mod_strings['LBL_DISABLED_HELP_1']} <a href="{$mod_strings['LBL_DISABLED_HELP_LNK']}" target="_blank">{$mod_strings['LBL_DISABLED_HELP_2']}</a>.</p>
 EOQ;
 } else {
     $validation_errors = array();
@@ -629,7 +634,7 @@ EOQ;
                 //validation is now done through ajax call to checkDBSettings.php
                 if (isset($_REQUEST['setup_db_drop_tables'])) {
                     $_SESSION['setup_db_drop_tables'] = $_REQUEST['setup_db_drop_tables'];
-                    if ($_SESSION['setup_db_drop_tables'] === true || $_SESSION['setup_db_drop_tables'] == 'true') {
+                    if ($_SESSION['setup_db_drop_tables'] === true || $_SESSION['setup_db_drop_tables'] === 'true') {
                         $_SESSION['setup_db_create_database'] = false;
                     }
                 }
@@ -653,9 +658,8 @@ EOQ;
                 $_SESSION['setup_site_admin_password_retype'] = $_REQUEST['setup_site_admin_password_retype'];
                 $_SESSION['siteConfig_submitted'] = true;
 
-                $validation_errors = array();
                 $validation_errors = validate_siteConfig('a');
-                if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0 || $_REQUEST['goto'] == 'resend') {
+                if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0 || $_REQUEST['goto'] === 'resend') {
                     $next_step--;
                 }
                 //break;
@@ -690,7 +694,6 @@ EOQ;
                     $_SESSION['setup_site_sugarbeet_anonymous_stats'] = 0;
                 }
 
-                $validation_errors = array();
                 $validation_errors = validate_siteConfig('b');
                 if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0) {
                     $next_step--;
@@ -727,7 +730,7 @@ EOQ;
             if (!isset($_SESSION['test_session'])) {
                 $the_file = 'installDisabled.php';
                 // PHP.ini location -
-                $phpIniLocation = get_cfg_var("cfg_file_path");
+                $phpIniLocation = get_cfg_var('cfg_file_path');
                 $disabled_title = $mod_strings['LBL_SESSION_ERR_TITLE'];
                 $disabled_title_2 = $mod_strings['LBL_SESSION_ERR_TITLE'];
                 $disabled_text = $mod_strings['LBL_SESSION_ERR_DESCRIPTION'] . "<pre>{$phpIniLocation}</pre>";
@@ -742,13 +745,13 @@ EOQ;
                     $disabled_title = $mod_strings['LBL_DISABLED_DESCRIPTION'];
                     $disabled_title_2 = $mod_strings['LBL_DISABLED_TITLE_2'];
                     $disabled_text = <<<EOQ
-					<p>{$mod_strings['LBL_DISABLED_DESCRIPTION']}</p>
-					<pre>
-						'installer_locked' => false,
-					</pre>
-					<p>{$mod_strings['LBL_DISABLED_DESCRIPTION_2']}</p>
+                    <p>{$mod_strings['LBL_DISABLED_DESCRIPTION']}</p>
+                    <pre>
+                        'installer_locked' => false,
+                    </pre>
+                    <p>{$mod_strings['LBL_DISABLED_DESCRIPTION_2']}</p>
 
-					<p>{$mod_strings['LBL_DISABLED_HELP_1']} <a href="{$mod_strings['LBL_DISABLED_HELP_LNK']}" target="_blank">{$mod_strings['LBL_DISABLED_HELP_2']}</a>.</p>
+                    <p>{$mod_strings['LBL_DISABLED_HELP_1']} <a href="{$mod_strings['LBL_DISABLED_HELP_LNK']}" target="_blank">{$mod_strings['LBL_DISABLED_HELP_2']}</a>.</p>
 EOQ;
                     //if this is an offline client installation but the conversion did not succeed,
                     //then try to convert again
@@ -830,13 +833,13 @@ EOQ;
             // check whether we're getting this request from a command line tool
             // we want to output brief messages if we're outputting to a command line tool
             $cli_mode = false;
-            if (isset($_REQUEST['cli']) && ($_REQUEST['cli'] == 'true')) {
+            if (isset($_REQUEST['cli']) && ($_REQUEST['cli'] === 'true')) {
                 $_SESSION['cli'] = true;
                 // if we have errors, just shoot them back now
                 if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0) {
                     foreach ($validation_errors as $error) {
                         print($mod_strings['ERR_ERROR_GENERAL'] . "\n");
-                        print("    " . $error . "\n");
+                        print('    ' . $error . "\n");
                         print("Exit 1\n");
                         exit(1);
                     }

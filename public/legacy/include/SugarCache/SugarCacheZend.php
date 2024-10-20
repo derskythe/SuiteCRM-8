@@ -57,7 +57,7 @@ class SugarCacheZend extends SugarCacheAbstract
             return false;
         }
 
-        if (function_exists("zend_shm_cache_fetch")
+        if (function_exists('zend_shm_cache_fetch')
                 && empty($GLOBALS['sugar_config']['external_cache_disabled_zend'])) {
             return true;
         }

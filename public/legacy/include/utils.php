@@ -52,6 +52,8 @@ use voku\helper\AntiXSS;
 
 /**
  * @param $sugar_config
+ *
+ * @throws \Random\RandomException
  */
 function make_sugar_config(&$sugar_config)
 {
@@ -668,13 +670,14 @@ function addCronAllowedUser($addUser)
     if (!array_key_exists('allowed_cron_users', $sugar_config['cron'])) {
         $sugar_config['cron']['allowed_cron_users'] = array();
     }
-    if (!in_array($addUser, $sugar_config['cron']['allowed_cron_users'])) {
-        if ($addUser == 'root') {
+    if (!in_array($addUser, $sugar_config['cron']['allowed_cron_users'], true)) {
+        if ($addUser === 'root') {
             $addUser = 'root_REMOVE_THIS_NOTICE_IF_YOU_REALLY_WANT_TO_ALLOW_ROOT';
-            if (!in_array($addUser, $sugar_config['cron']['allowed_cron_users'])) {
+            if (!in_array($addUser, $sugar_config['cron']['allowed_cron_users'], true)) {
                 $sugar_config['cron']['allowed_cron_users'][] = $addUser;
                 $GLOBALS['log']->error("You're using 'root' as the web-server user. This should be avoided " .
-                    "for security reasons. Review allowed_cron_users configuration in config.php.");
+                                       'for security reasons. Review allowed_cron_users configuration in config.php.'
+                );
             }
         } else {
             $sugar_config['cron']['allowed_cron_users'][] = $addUser;
@@ -991,7 +994,7 @@ function get_user_array($add_blank = true, $status = 'Active', $user_id = '', $u
         }
         /* BEGIN - SECURITY GROUPS */
         global $current_user, $sugar_config;
-        if (!is_admin($current_user) && isset($sugar_config['securitysuite_filter_user_list']) && $sugar_config['securitysuite_filter_user_list'] == true && (empty($_REQUEST['module']) || $_REQUEST['module'] != 'Home') && (empty($_REQUEST['action']) || $_REQUEST['action'] != 'DynamicAction')
+        if (!is_admin($current_user) && isset($sugar_config['securitysuite_filter_user_list']) && $sugar_config['securitysuite_filter_user_list'] == true && (empty($_REQUEST['module']) || $_REQUEST['module'] !== 'Home') && (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'DynamicAction')
         ) {
             require_once 'modules/SecurityGroups/SecurityGroup.php';
             global $current_user;
@@ -1135,7 +1138,7 @@ function showFullName()
         $userPref = (is_object($current_user)) ? $current_user->getPreference('use_real_names') : null;
 
         if ($userPref != null && $userPref !== 'off') {
-            $showFullName = ($userPref == 'on');
+            $showFullName = ($userPref === 'on');
         }
     }
 
@@ -1168,7 +1171,7 @@ function safe_map($request_var, &$focus, $always_copy = false)
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  */
-function safe_map_named($request_var, &$focus, $member_var, $always_copy)
+function safe_map_named($request_var, $focus, $member_var, $always_copy)
 {
     if (isset($_REQUEST[$request_var]) && ($always_copy || is_null($focus->$member_var))) {
         $GLOBALS['log']->debug("safe map named called assigning '{$_REQUEST[$request_var]}' to $member_var");
@@ -1205,10 +1208,10 @@ function return_app_list_strings_language($language)
     $temp_app_list_strings = $app_list_strings;
 
     $langs = array();
-    if ($language != 'en_us') {
+    if ($language !== 'en_us') {
         $langs[] = 'en_us';
     }
-    if ($default_language != 'en_us' && $language != $default_language) {
+    if ($default_language !== 'en_us' && $language != $default_language) {
         $langs[] = $default_language;
     }
     $langs[] = $language;
@@ -1297,7 +1300,7 @@ function _mergeCustomAppListStrings($file, $app_list_strings)
     $exemptDropdowns = array_merge($exemptDropdowns, getTypeDisplayList());
 
     foreach ($app_list_strings as $key => $value) {
-        if (!in_array($key, $exemptDropdowns) && array_key_exists($key, $app_list_strings_original)) {
+        if (!in_array($key, $exemptDropdowns, true) && array_key_exists($key, $app_list_strings_original)) {
             unset($app_list_strings_original[(string)$key]);
         }
     }
@@ -1334,10 +1337,10 @@ function return_application_language($language)
     $default_language = isset($sugar_config['default_language']) ? $sugar_config['default_language'] : null;
 
     $langs = array();
-    if ($language != 'en_us') {
+    if ($language !== 'en_us') {
         $langs[] = 'en_us';
     }
-    if ($default_language != 'en_us' && $language != $default_language) {
+    if ($default_language !== 'en_us' && $language != $default_language) {
         $langs[] = $default_language;
     }
 
@@ -1507,7 +1510,7 @@ function return_module_language($language, $module, $refresh = false)
     }
 
     // Load in en_us strings by default
-    if ($language != 'en_us' && $sugar_config['default_language'] != 'en_us') {
+    if ($language !== 'en_us' && $sugar_config['default_language'] !== 'en_us') {
         $loaded_mod_strings = sugarLangArrayMerge(
             LanguageManager::loadModuleLanguage($module, 'en_us', $refresh),
             $loaded_mod_strings
@@ -1746,7 +1749,7 @@ function is_guid($guid): bool
         return false;
     }
 
-    if (preg_match("/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/i", $guid)) {
+    if (preg_match('/\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/i', $guid)) {
         return true;
     }
 
@@ -1884,7 +1887,11 @@ function get_workflow_admin_modules_for_user($user)
         $workflow_admin_modules['Forecasts'] = 'Forecasts';
     }
     foreach ($workflow_mod_list as $key => $val) {
-        if (!in_array($val, $workflow_admin_modules) && ($val != 'iFrames' && $val != 'Feeds' && $val != 'Home' && $val != 'Dashboard' && $val != 'Calendar' && $val != 'Activities' && $val != 'Reports') &&
+        if (!in_array(
+                $val,
+                $workflow_admin_modules,
+                true
+            ) && ($val !== 'iFrames' && $val !== 'Feeds' && $val !== 'Home' && $val !== 'Dashboard' && $val !== 'Calendar' && $val !== 'Activities' && $val !== 'Reports') &&
             ($user->isDeveloperForModule($key))
         ) {
             $workflow_admin_modules[$key] = $val;
@@ -2029,7 +2036,7 @@ function get_select_options_with_id_separate_key($label_list, $key_list, $select
         if (
             ($option_key !== '' && $selected_key == $option_key) || (
                 $option_key === '' && (($selected_key === '' && !$massupdate) || $selected_key === '__SugarMassUpdateClearField__')
-            ) || (is_array($selected_key) && in_array($option_key, $selected_key))
+            ) || (is_array($selected_key) && in_array($option_key, $selected_key, true))
         ) {
             $selected_string = 'selected ';
         }
@@ -2116,6 +2123,8 @@ function get_select_full_options_with_id($option_list = array(), $selected_key =
  * Call this method instead of die().
  * We print the error message and then die with an appropriate
  * exit code.
+ *
+ * @throws Exception
  */
 function sugar_die($error_message, $exit_code = 1)
 {
@@ -2372,7 +2381,7 @@ function getDefaultXssTags()
         'frame' => 'frame',
         'frameset' => 'frameset',
         'iframe' => 'iframe',
-        'import' => "\?import",
+        'import' => '\?import',
         'layer' => 'layer',
         'link' => 'link',
         'object' => 'object',
@@ -2435,7 +2444,7 @@ function clean_xss($str, $cleanImg = true)
     $matches = array();
     preg_match_all($tagsrex, (string)$str, $tagmatches, PREG_PATTERN_ORDER);
     foreach ($tagmatches[1] as $no => $tag) {
-        if (in_array($tag, $xsstags)) {
+        if (in_array($tag, $xsstags, true)) {
             // dangerous tag - take out whole
             $matches[] = $tagmatches[0][$no];
             continue;
@@ -2470,7 +2479,7 @@ function clean_xss($str, $cleanImg = true)
                 $domain = strtolower(substr(strstr($match, '://'), 3));
                 $baseUrl = substr($domain, 0, strpos($domain, '/'));
 
-                if (!in_array($baseUrl, $sugar_config['security_trusted_domains'])) {
+                if (!in_array($baseUrl, $sugar_config['security_trusted_domains'], true)) {
                     $matches[] = $match;
                 }
             }
@@ -2896,10 +2905,11 @@ function getWebPath($relative_path)
 {
     $current_theme = SugarThemeRegistry::current();
     $theme_directory = $current_theme->dirName;
-    if (strpos((string)$relative_path, "themes" . DIRECTORY_SEPARATOR . $theme_directory) === false) {
-        $test_path = SUGAR_PATH . DIRECTORY_SEPARATOR . "themes" . DIRECTORY_SEPARATOR . $theme_directory . DIRECTORY_SEPARATOR . $relative_path;
+    if (!str_contains((string) $relative_path, 'themes' . DIRECTORY_SEPARATOR . $theme_directory)) {
+        $test_path =
+            SUGAR_PATH . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . $theme_directory . DIRECTORY_SEPARATOR . $relative_path;
         if (file_exists($test_path)) {
-            $resource_name = "themes" . DIRECTORY_SEPARATOR . $theme_directory . DIRECTORY_SEPARATOR . $relative_path;
+            $resource_name = 'themes' . DIRECTORY_SEPARATOR . $theme_directory . DIRECTORY_SEPARATOR . $relative_path;
         }
     }
     //if it has  a :// then it isn't a relative path
@@ -3002,7 +3012,7 @@ function getSQLDate($date_str)
 /**
  * @deprecated This function is unused and will be removed in a future release.
  */
-function clone_history(&$db, $from_id, $to_id, $to_type)
+function clone_history($db, $from_id, $to_id, $to_type)
 {
     global $timedate;
     $old_note_id = null;
@@ -3023,7 +3033,7 @@ function clone_history(&$db, $from_id, $to_id, $to_type)
         }
 
         $bProcessingNotes = false;
-        if ($table == 'notes') {
+        if ($table === 'notes') {
             $bProcessingNotes = true;
         }
         $query = "SELECT id FROM $table WHERE parent_id='$from_id'";
@@ -3040,7 +3050,7 @@ function clone_history(&$db, $from_id, $to_id, $to_type)
             $bean->id = null;
             $bean->parent_id = $to_id;
             $bean->parent_type = $to_type;
-            if ($to_type == 'Contacts' && in_array('contact_id', $bean->column_fields)) {
+            if ($to_type === 'Contacts' && in_array('contact_id', $bean->column_fields, true)) {
                 $bean->contact_id = $to_id;
             }
             $bean->update_date_modified = false;
@@ -3088,10 +3098,10 @@ function values_to_keys($array)
  * @param $from_id
  * @param $to_id
  */
-function clone_relationship(&$db, $tables, $from_column = null, $from_id = null, $to_id = null)
+function clone_relationship($db, $tables, $from_column = null, $from_id = null, $to_id = null)
 {
     foreach ((array)$tables as $table) {
-        if ($table == 'emails_beans') {
+        if ($table === 'emails_beans') {
             $query = "SELECT * FROM $table WHERE $from_column='$from_id' and bean_module='Leads'";
         } else {
             $query = "SELECT * FROM $table WHERE $from_column='$from_id'";
@@ -3103,8 +3113,8 @@ function clone_relationship(&$db, $tables, $from_column = null, $from_id = null,
             $values = '';
             $row[$from_column] = $to_id;
             $row['id'] = create_guid();
-            if ($table == 'emails_beans') {
-                $row['bean_module'] == 'Contacts';
+            if ($table === 'emails_beans') {
+                $row['bean_module'] === 'Contacts';
             }
 
             foreach ($row as $name => $value) {
@@ -3246,7 +3256,7 @@ function get_emails_by_assign_or_link($params)
     //$return_array['join'] = '';
     $return_array['join_tables'][0] = '';
 
-    if ($bean->object_name == 'Case' && !empty($bean->case_number)) {
+    if ($bean->object_name === 'Case' && !empty($bean->case_number)) {
         $where = str_replace('%1', $bean->case_number, (string)$bean->getEmailSubjectMacro());
         $return_array['where'] .= "\n AND (email_ids.source = 'direct' OR emails.name LIKE '%$where%')";
     }
@@ -3295,7 +3305,7 @@ function get_bean_select_array(
     $focus = new $bean_name();
     $user_array = array();
 
-    $key = ($bean_name == 'EmailTemplate') ? $bean_name : $bean_name . $display_columns . $where . $order_by;
+    $key = ($bean_name === 'EmailTemplate') ? $bean_name : $bean_name . $display_columns . $where . $order_by;
     $user_array = get_register_value('select_array', $key);
     if (!$user_array) {
         $db = DBManagerFactory::getInstance();
@@ -3348,7 +3358,7 @@ function get_bean_select_array(
  */
 // function parse_list_modules
 // searches a list for items in a user's allowed tabs and returns an array that removes unallowed tabs from list
-function parse_list_modules(&$listArray)
+function parse_list_modules($listArray)
 {
     global $modListHeader;
     $returnArray = array();
@@ -3391,10 +3401,13 @@ function display_notice($msg = false)
 function skype_formatted($number)
 {
     //kbrill - BUG #15375
-    if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Popup') {
+    if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Popup') {
         return false;
     }
-    return substr((string)$number, 0, 1) == '+' || substr((string)$number, 0, 2) == '00' || substr((string)$number, 0, 3) == '011';
+    return str_starts_with((string) $number, '+') || str_starts_with((string) $number, '00') || str_starts_with(
+            (string) $number,
+            '011'
+        );
 
     // return substr($number, 0, 1) == '+' || substr($number, 0, 2) == '00' || substr($number, 0, 2) == '011';
 }
@@ -3635,7 +3648,7 @@ function check_iis_version($sys_iis_version = '')
 {
     $server_software = $_SERVER['SERVER_SOFTWARE'];
     $iis_version = '';
-    if (strpos((string)$server_software, 'Microsoft-IIS') !== false && preg_match_all("/^.*\/(\d+\.?\d*)$/", (string)$server_software, $out)) {
+    if (str_contains((string) $server_software, 'Microsoft-IIS') && preg_match_all('/^.*\/(\d+\.?\d*)$/', (string)$server_software, $out)) {
         $iis_version = $out[1][0];
     }
 
@@ -3662,7 +3675,7 @@ function check_iis_version($sys_iis_version = '')
 
     // supported version check overrides default unsupported
     foreach ($supported_iis_versions as $ver) {
-        if (1 == version_compare($sys_iis_version, $ver, 'eq') || strpos((string)$sys_iis_version, $ver) !== false) {
+        if (1 == version_compare($sys_iis_version, $ver, 'eq') || str_contains((string) $sys_iis_version, $ver)) {
             $retval = 1;
             break;
         }
@@ -3670,7 +3683,10 @@ function check_iis_version($sys_iis_version = '')
 
     // unsupported version check overrides default unsupported
     foreach ($unsupported_iis_versions as $ver) {
-        if (1 == version_compare($sys_iis_version, $ver, 'eq') && strpos((string)$sys_iis_version, (string)$ver) !== false) {
+        if (1 == version_compare($sys_iis_version, $ver, 'eq') && str_contains(
+                (string) $sys_iis_version,
+                (string) $ver
+            )) {
             $retval = 0;
             break;
         }
@@ -3678,7 +3694,7 @@ function check_iis_version($sys_iis_version = '')
 
     // invalid version check overrides default unsupported
     foreach ($invalid_iis_versions as $ver) {
-        if (1 == version_compare($sys_iis_version, $ver, 'eq') && strpos((string)$sys_iis_version, $ver) !== false) {
+        if (1 == version_compare($sys_iis_version, $ver, 'eq') && str_contains((string) $sys_iis_version, $ver)) {
             $retval = -1;
             break;
         }
@@ -3690,7 +3706,7 @@ function check_iis_version($sys_iis_version = '')
 function pre_login_check()
 {
     global $action, $login_error;
-    if (!empty($action) && $action == 'Login') {
+    if (!empty($action) && $action === 'Login') {
         if (!empty($login_error)) {
             $login_error = htmlentities((string)$login_error);
             $login_error = str_replace(array('&lt;pre&gt;', '&lt;/pre&gt;', "\r\n", "\n"), '<br>', $login_error);
@@ -3724,6 +3740,9 @@ function suite_exit($status = 0)
         exit($status);
 }
 
+/**
+ * @throws Exception
+ */
 function sugar_cleanup($exit = false)
 {
     static $called = false;
@@ -3759,7 +3778,7 @@ function sugar_cleanup($exit = false)
 
     //check to see if this is not an `ajax call AND the user preference error flag is set
     if (
-        (isset($_SESSION['USER_PREFRENCE_ERRORS']) && $_SESSION['USER_PREFRENCE_ERRORS']) && ($_REQUEST['action'] != 'modulelistmenu' && $_REQUEST['action'] != 'DynamicAction') && ($_REQUEST['action'] != 'favorites' && $_REQUEST['action'] != 'DynamicAction') && (empty($_REQUEST['to_pdf']) || !$_REQUEST['to_pdf']) && (empty($_REQUEST['sugar_body_only']) || !$_REQUEST['sugar_body_only'])
+        (isset($_SESSION['USER_PREFRENCE_ERRORS']) && $_SESSION['USER_PREFRENCE_ERRORS']) && ($_REQUEST['action'] !== 'modulelistmenu' && $_REQUEST['action'] !== 'DynamicAction') && ($_REQUEST['action'] !== 'favorites' && $_REQUEST['action'] !== 'DynamicAction') && (empty($_REQUEST['to_pdf']) || !$_REQUEST['to_pdf']) && (empty($_REQUEST['sugar_body_only']) || !$_REQUEST['sugar_body_only'])
     ) {
         global $app_strings;
         //this is not an ajax call and the user preference error flag is set, so reset the flag and print js to flash message
@@ -4048,7 +4067,7 @@ function return_bytes($val)
 {
     $val = trim($val);
     $last = strtolower($val[strlen($val) - 1]);
-    $val = preg_replace("/[^0-9,.]/", "", $val);
+    $val = preg_replace('/[^0-9,.]/', '', $val);
 
     switch ($last) {
         case 'g':
@@ -4081,7 +4100,7 @@ function is_windows()
 {
     static $is_windows = null;
     if (!isset($is_windows)) {
-        $is_windows = strtoupper(substr(PHP_OS, 0, 3)) == 'WIN';
+        $is_windows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 
     return $is_windows;
@@ -4096,7 +4115,7 @@ function is_windows()
  */
 function is_writable_windows($file)
 {
-    if ($file[strlen((string)$file) - 1] == '/') {
+    if ($file[strlen((string)$file) - 1] === '/') {
         return is_writable_windows($file . uniqid(mt_rand()) . '.tmp');
     }
 
@@ -4144,10 +4163,10 @@ function convert_module_to_singular($module_array)
             $module_array[$key] = $beanList[$value];
         }
 
-        if ($value == 'Cases') {
+        if ($value === 'Cases') {
             $module_array[$key] = 'Case';
         }
-        if ($key == 'projecttask') {
+        if ($key === 'projecttask') {
             $module_array['ProjectTask'] = 'Project Task';
             unset($module_array[$key]);
         }
@@ -4224,7 +4243,7 @@ function get_label($label_tag, $temp_module_strings)
     //end function get_label
 }
 
-function search_filter_rel_info(&$focus, $tar_rel_module, $relationship_name)
+function search_filter_rel_info($focus, $tar_rel_module, $relationship_name)
 {
     $rel_list = array();
 
@@ -4241,7 +4260,7 @@ function search_filter_rel_info(&$focus, $tar_rel_module, $relationship_name)
 
     foreach ($focus->field_defs as $field_name => $field_def) {
         //Check if the relationship_name matches a "relate" field
-        if (!empty($field_def['type']) && $field_def['type'] == 'relate' && !empty($field_def['id_name']) && !empty($focus->field_defs[$field_def['id_name']]) && !empty($focus->field_defs[$field_def['id_name']]['relationship']) && $focus->field_defs[$field_def['id_name']]['relationship'] == $relationship_name
+        if (!empty($field_def['type']) && $field_def['type'] === 'relate' && !empty($field_def['id_name']) && !empty($focus->field_defs[$field_def['id_name']]) && !empty($focus->field_defs[$field_def['id_name']]['relationship']) && $focus->field_defs[$field_def['id_name']]['relationship'] == $relationship_name
         ) {
             $temp_bean = BeanFactory::getBean($tar_rel_module, $field_def['id_name']);
             if ($temp_bean) {
@@ -4294,7 +4313,7 @@ function get_valid_bean_name($module_name)
     global $beanList;
 
     $vardef_name = $beanList[$module_name];
-    if ($vardef_name == 'aCase') {
+    if ($vardef_name === 'aCase') {
         $bean_name = 'Case';
     } else {
         $bean_name = $vardef_name;
@@ -4404,7 +4423,7 @@ function string_format($format, $args, $escape = true)
     }
     $argsCount = count($args);
     for ($i = 0; $i < $argsCount; ++$i) {
-        if (strpos((string)$args[$i], ',') !== false) {
+        if (str_contains((string) $args[$i], ',')) {
             $values = explode(',', $args[$i]);
             if ($escape) {
                 foreach ($values as &$value) {
@@ -4717,7 +4736,7 @@ function getTrackerSubstring($name)
 function generate_search_where(
     $field_list,
     $values,
-    &$bean = null,
+    $bean = null,
     $add_custom_fields = false,
     $module = ''
 )
@@ -4735,7 +4754,7 @@ function generate_search_where(
                 $operator = 'in';
                 $field_value = '';
                 foreach ($values[$field] as $key => $val) {
-                    if ($val != ' ' && $val != '') {
+                    if ($val !== ' ' && $val != '') {
                         if (!empty($field_value)) {
                             $field_value .= ',';
                         }
@@ -4759,10 +4778,10 @@ function generate_search_where(
             $itr = 0;
             if ($field_value != '') {
                 foreach ($parms['db_field'] as $db_field) {
-                    if (strstr((string)$db_field, '.') === false) {
+                    if (!str_contains((string) $db_field, '.')) {
                         $db_field = $bean->table_name . '.' . $db_field;
                     }
-                    if (DBManagerFactory::getInstance()->supports('case_sensitive') && isset($parms['query_type']) && $parms['query_type'] == 'case_insensitive') {
+                    if (DBManagerFactory::getInstance()->supports('case_sensitive') && isset($parms['query_type']) && $parms['query_type'] === 'case_insensitive') {
                         $db_field = 'upper(' . $db_field . ')';
                         $field_value = strtoupper($field_value);
                     }
@@ -4817,6 +4836,7 @@ function add_quotes($str)
  * @param   $sugar_version
  *
  * @return bool true if successful
+ * @throws Exception
  */
 function rebuildConfigFile($sugar_config, $sugar_version)
 {
@@ -4919,6 +4939,7 @@ function array_depth($array, $depth_count = -1, $depth_array = array())
  * @param string $name Name of Group User
  *
  * @return string GUID of new Group User
+ * @throws Exception
  */
 function createGroupUser($name)
 {
@@ -5136,7 +5157,7 @@ function getAbsolutePath(
     $path = trim($path);
 
     // try to match absolute paths like \\server\share, /directory or c:\
-    if ((substr($path, 0, 2) == '\\\\') || ($path[0] == '/') || preg_match('/^[A-z]:/i', $path) || $currentServer
+    if ((str_starts_with($path, '\\\\')) || ($path[0] === '/') || preg_match('/^[A-z]:/i', $path) || $currentServer
     ) {
         return $path;
     }
@@ -5173,7 +5194,7 @@ function isTouchScreen()
     }
 
     // next check if we should use the touch interface with our device
-    if (strpos($ua, 'ipad') !== false) {
+    if (str_contains($ua, 'ipad')) {
         return true;
     }
 
@@ -5192,10 +5213,10 @@ function get_alt_hot_key()
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
         $ua = strtolower($_SERVER['HTTP_USER_AGENT']);
     }
-    $isMac = strpos($ua, 'mac') !== false;
-    $isLinux = strpos($ua, 'linux') !== false;
+    $isMac = str_contains($ua, 'mac');
+    $isLinux = str_contains($ua, 'linux');
 
-    if (!$isMac && !$isLinux && strpos($ua, 'mozilla') !== false) {
+    if (!$isMac && !$isLinux && str_contains($ua, 'mozilla')) {
         if (preg_match('/firefox\/(\d)?\./', $ua, $matches)) {
             return $matches[1] < 2 ? 'Alt+' : 'Alt+Shift+';
         }
@@ -5311,7 +5332,7 @@ function unencodeMultienum($string)
     if (is_array($string)) {
         return $string;
     }
-    if (substr($string, 0, 1) == '^' && substr($string, -1) == '^') {
+    if (str_starts_with($string, '^') && str_ends_with($string, '^')) {
         $string = substr(substr($string, 1), 0, strlen($string) - 2);
     }
 
@@ -5355,7 +5376,7 @@ function create_export_query_relate_link_patch($module, $searchFields, $where)
     }
     $seed = BeanFactory::getBean($module);
     foreach ($seed->field_defs as $name => $field) {
-        if ($field['type'] == 'relate' && isset($field['link']) && !empty($searchFields[$name]['value'])) {
+        if ($field['type'] === 'relate' && isset($field['link']) && !empty($searchFields[$name]['value'])) {
             $seed->load_relationship($field['link']);
             $params = array();
             if (empty($join_type)) {
@@ -5538,7 +5559,8 @@ function verify_image_file($path, $jpeg = false)
         $data .= fread($fp, 8192);
     }
     fclose($fp);
-    if (preg_match("/<(\?php|html|!doctype|script|body|head|plaintext|table|img |pre(>| )|frameset|iframe|object|link|base|style|font|applet|meta|center|form|isindex)/i", $data, $m)) {
+    if (preg_match(
+        '/<(\?php|html|!doctype|script|body|head|plaintext|table|img |pre(>| )|frameset|iframe|object|link|base|style|font|applet|meta|center|form|isindex)/i', $data, $m)) {
         $GLOBALS['log']->fatal("Found {$m[0]} in $path, not allowing upload");
 
         return false;
@@ -5552,7 +5574,7 @@ function verify_image_file($path, $jpeg = false)
         $img_size = getimagesize($path);
         $filetype = $img_size['mime'];
         //if filetype is jpeg or if we are only allowing jpegs, create jpg image
-        if ($filetype == 'image/jpeg' || $jpeg) {
+        if ($filetype === 'image/jpeg' || $jpeg) {
             ob_start();
             imagejpeg($img);
             $image = ob_get_clean();
@@ -5560,7 +5582,7 @@ function verify_image_file($path, $jpeg = false)
             if (file_put_contents($path, $image)) {
                 return true;
             }
-        } elseif ($filetype == 'image/png') {
+        } elseif ($filetype === 'image/png') {
             // else if the filetype is png, create png
             imagealphablending($img, true);
             imagesavealpha($img, true);
@@ -5611,7 +5633,7 @@ function verify_uploaded_image($path, $jpeg_only = false)
     }
 
     if (substr_count('..', $path) > 0 || ($ext !== $path && !isset($supportedExtensions[strtolower($ext)])) ||
-        !in_array($filetype, array_values($supportedExtensions))
+        !in_array($filetype, array_values($supportedExtensions), true)
     ) {
         return false;
     }
@@ -6003,7 +6025,7 @@ function sugar_unserialize($value)
     return unserialize($value);
 }
 
-define('DEFAULT_UTIL_SUITE_ENCODING', 'UTF-8');
+const DEFAULT_UTIL_SUITE_ENCODING = 'UTF-8';
 
 /**
  * @deprecated This function is unused and will be removed in a future release.
@@ -6103,6 +6125,9 @@ function isValidEmailAddress($email, $message = 'Invalid email address given', $
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function displayAdminError($errorString)
 {
     SugarApplication::appendErrorMessage($errorString);
@@ -6381,7 +6406,7 @@ function isAllowedModuleName(string $value): bool
         return false;
     }
 
-    $result = preg_match("/^[\w\-\_\.]+$/", $value);
+    $result = preg_match('/^[\w\-\_\.]+$/', $value);
 
     if (!empty($result)) {
         return true;
@@ -6397,8 +6422,8 @@ function isAllowedModuleName(string $value): bool
 function isSelfRequest($endpoint): bool
 {
     $domain = 'localhost';
-    if (isset($_SERVER["HTTP_HOST"])) {
-        $domain = $_SERVER["HTTP_HOST"];
+    if (isset($_SERVER['HTTP_HOST'])) {
+        $domain = $_SERVER['HTTP_HOST'];
     }
 
     $siteUrl = SugarConfig::getInstance()->get('site_url');
@@ -6437,8 +6462,8 @@ function check_trusted_hosts(): void
     }
 
     $host = '';
-    if (!empty($_SERVER["HTTP_HOST"])) {
-        $host = $_SERVER["HTTP_HOST"];
+    if (!empty($_SERVER['HTTP_HOST'])) {
+        $host = $_SERVER['HTTP_HOST'];
     }
 
     if (empty($host)) {
@@ -6458,7 +6483,7 @@ function check_trusted_hosts(): void
     if (\count($trustedHostPatterns) > 0) {
 
         foreach ($trustedHostPatterns as $pattern) {
-            if (preg_match("/" . $pattern . "/", $host)) {
+            if (preg_match('/' . $pattern . '/', $host)) {
                 return;
             }
         }
@@ -6526,7 +6551,7 @@ function isWebToLeadAllowedRedirectHost(string $url): bool
             continue;
         }
 
-        if (substr($allowedRedirectHost, 0, 7) !== 'http://' && substr($allowedRedirectHost, 0, 8) !== 'https://') {
+        if (!str_starts_with($allowedRedirectHost, 'http://') && !str_starts_with($allowedRedirectHost, 'https://')) {
             $allowedRedirectHost = 'http://' . $allowedRedirectHost;
         }
 

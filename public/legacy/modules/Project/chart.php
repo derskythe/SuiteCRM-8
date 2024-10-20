@@ -72,9 +72,9 @@ class chart
         global $current_user, $mod_strings;
         $db = DBManagerFactory::getInstance();
 
-        if ($chart_type == "monthly") {
+        if ($chart_type === 'monthly') {
             list($time_span, $day_count) = $this->year_week($start_date, $end_date);
-        } elseif ($chart_type == "quarterly") {
+        } elseif ($chart_type === 'quarterly') {
             list($time_span, $day_count) = $this->year_quarter($start_date, $end_date);
         } else {
             $time_span = $this->year_month($start_date, $end_date);
@@ -87,7 +87,7 @@ class chart
 
 
         //Get projects. This is for the Select box values
-        $projects_query = "SELECT DISTINCT id, name FROM project WHERE deleted =0";
+        $projects_query = 'SELECT DISTINCT id, name FROM project WHERE deleted =0';
         $projects_list = $db->query($projects_query);
 
         $project_list = array();
@@ -128,23 +128,27 @@ class chart
 
         //Generate main table and the first row containing the months
 
-        echo '<div class="moduleTitle"><h2> ' . $mod_strings["LBL_RESOURCE_CHART"] . ' </h2></div>
+        echo '<div class="moduleTitle"><h2> ' . $mod_strings['LBL_RESOURCE_CHART'] . ' </h2></div>
               <hr class="spacer">
               <table id="header_table_chart" border="0" cellpadding="0" cellspacing="0" width="100%">
                   <tr>
                       <td scope="row_label" nowrap="nowrap" >
-                          <label for="projects">'.$mod_strings["LBL_PROJECTS_SEARCH"].'</label>
+                          <label for="projects">'. $mod_strings['LBL_PROJECTS_SEARCH'].'</label>
                       </td>
                       <td scope="row_val" nowrap="nowrap" >
                           <select id="projects" name="projects" multiple size="6" style="width: 250px" >
-                          <option value="">'.$mod_strings["LBL_ALL_PROJECTS"].'</option>';
+                          <option value="">'. $mod_strings['LBL_ALL_PROJECTS'].'</option>';
 
         //From the query above, populates the select box
         foreach ($project_list as $project) {
-            if (in_array($project->id, $sel_projects)) {//Check if the select box option matches the resource passed in.
+            if (in_array(
+                $project->id,
+                $sel_projects,
+                true
+            )) {//Check if the select box option matches the resource passed in.
                 $selected = "selected='selected'"; //if so set it to selected
             } else {
-                $selected = "";
+                $selected = '';
             }
 
             echo '<option '.$selected.'  value="'.$project->id.'">'.$project->name.'</option>';
@@ -158,22 +162,22 @@ class chart
 
         echo '</td>
               <td scope="row_label" nowrap="nowrap" >
-                  <label for="users">'.$mod_strings["LBL_USERS_SEARCH"].'</label>
+                  <label for="users">'. $mod_strings['LBL_USERS_SEARCH'].'</label>
               </td>
               <td scope="row_val" nowrap="nowrap" >
                   <select id="users" name="users" multiple size="6" style="width: 250px" >
-                  <option ' . ($sel_users[0] == ''? "selected='selected'" : "") . ' value="">'.$mod_strings['LBL_ALL_USERS'].'</option>
-                  <option ' . ($sel_users[0] == 'none'? "selected='selected'" : "") . ' value="none">None</option>';
+                  <option ' . ($sel_users[0] == ''? "selected='selected'" : '') . ' value="">'. $mod_strings['LBL_ALL_USERS'].'</option>
+                  <option ' . ($sel_users[0] === 'none'? "selected='selected'" : '') . ' value="none">None</option>';
 
         //From the query above, populates the select box
         foreach ($user_list as $user) {
             $user_obj = BeanFactory::newBean('Users');
             $user_obj->retrieve($user->id);
             var_dump($user_obj->id);
-            if (in_array($user->id, $sel_users)) {//Check if the select box option matches the resource passed in.
+            if (in_array($user->id, $sel_users, true)) {//Check if the select box option matches the resource passed in.
                 $selected = "selected='selected'"; //if so set it to selected
             } else {
-                $selected = "";
+                $selected = '';
             }
             echo '<option '.$selected.' data-type="'.$user->type.'" value="'.$user->id.'">'. $user_obj->full_name .'</option>'; //$user->last_name
         }
@@ -186,22 +190,26 @@ class chart
 
         echo '</td>
               <td scope="row_label" nowrap="nowrap" >
-                  <label for="contacts">'.$mod_strings["LBL_CONTACTS_SEARCH"].'</label>
+                  <label for="contacts">'. $mod_strings['LBL_CONTACTS_SEARCH'].'</label>
               </td>
               <td scope="row_val" nowrap="nowrap" >
                   <select id="contacts" name="contacts" multiple size="6" style="width: 250px" >
-                  <option ' . ($sel_contacts[0] == ''? "selected='selected'" : "") . ' value="">'.$mod_strings['LBL_ALL_CONTACTS'].'</option>
-                  <option ' . ($sel_contacts[0] == 'none'? "selected='selected'" : "") . ' value="none">None</option>';
+                  <option ' . ($sel_contacts[0] == ''? "selected='selected'" : '') . ' value="">'. $mod_strings['LBL_ALL_CONTACTS'].'</option>
+                  <option ' . ($sel_contacts[0] === 'none'? "selected='selected'" : '') . ' value="none">None</option>';
 
         //From the query above, populates the select box
         foreach ($contact_list as $contact) {
             $contact_obj = BeanFactory::newBean('Contacts');
             $contact_obj->retrieve($contact->id);
 
-            if (in_array($contact->id, $sel_contacts)) {//Check if the select box option matches the resource passed in.
+            if (in_array(
+                $contact->id,
+                $sel_contacts,
+                true
+            )) {//Check if the select box option matches the resource passed in.
                 $selected = "selected='selected'"; //if so set it to selected
             } else {
-                $selected = "";
+                $selected = '';
             }
 
             echo '<option '.$selected.' data-type="'.$contact->type.'" value="'.$contact->id.'">'.$contact_obj->full_name.'</option>';
@@ -217,19 +225,22 @@ class chart
         echo '</td></tr>';
         echo '<tr>
                   <td scope="row_label" nowrap="nowrap" >
-                      <label for="chart_type">'.$mod_strings["LBL_CHART_TYPE"].'</label>
+                      <label for="chart_type">'. $mod_strings['LBL_CHART_TYPE'].'</label>
                   </td>
                   <td scope="row_val" nowrap="nowrap" >
                       <select id="chart_type" name="chart_type" style="width: 250px">';
-        echo '<option '. ($chart_type == "weekly" ? "selected" : "") .'  value="weekly">'.$mod_strings['LBL_CHART_WEEKLY'].'</option>';
-        echo '<option '. ($chart_type == "monthly" ? "selected" : "") .'  value="monthly">'.$mod_strings['LBL_CHART_MONTHLY'].'</option>';
-        echo '<option '. ($chart_type == "quarterly" ? "selected" : "") .'  value="quarterly">'.$mod_strings['LBL_CHART_QUARTERLY'].'</option>';
+        echo '<option '. ($chart_type === 'weekly' ? 'selected'
+                : '') .'  value="weekly">'. $mod_strings['LBL_CHART_WEEKLY'].'</option>';
+        echo '<option '. ($chart_type === 'monthly' ? 'selected'
+                : '') .'  value="monthly">'. $mod_strings['LBL_CHART_MONTHLY'].'</option>';
+        echo '<option '. ($chart_type === 'quarterly' ? 'selected'
+                : '') .'  value="quarterly">'. $mod_strings['LBL_CHART_QUARTERLY'].'</option>';
         echo '</select><br /><br />';
         echo '</td>';
 
-            
+
         echo '<td scope="row_label" nowrap="nowrap" >
-                  <label for="field_chart">'.$mod_strings["LBL_DATE_START"].'</label>
+                  <label for="field_chart">'. $mod_strings['LBL_DATE_START'].'</label>
               </td>
               <td scope="row_val" nowrap="nowrap" >
                   <input id="date_start" type="text" name="date_start" value="'.$start_date.'" size=8 readonly/>
@@ -244,8 +255,8 @@ class chart
 
         echo '<script type="text/javascript">
                 var now = new Date();
-                Calendar.setup 
-				({
+                Calendar.setup
+                ({
                   inputField : "date_start",
                     ifFormat : cal_date_format,
                     daFormat : "%m/%d/%Y %I:%M%P",
@@ -259,7 +270,7 @@ class chart
 
         echo '</tr>
               <tr>
-                  <td style="padding:5px;">                             
+                  <td style="padding:5px;">
                       &nbsp;<a class="utilsLink" href="#" id="create_link">'.$mod_strings['LBL_RESOURCE_CHART_SEARCH_BUTTON'].'</a>
                   </td>
               </tr>
@@ -272,7 +283,7 @@ class chart
                   <tr class="select_row">
                       <td colspan="100%">
                       </td>
-                  </tr>    
+                  </tr>
                   <tr>
                       <td colspan="100%">
                           <table style="border: none; table-layout: fixed; width: 100%;" class="main_table" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -287,7 +298,7 @@ class chart
         echo '<tr>';
 
         //weekly view
-        if ($chart_type == "weekly" || $chart_type == "") {
+        if ($chart_type === 'weekly' || $chart_type == '') {
             echo '<td class="main_table week">'.$mod_strings['LBL_RESOURCE_CHART_WEEK'].'</td>';
             foreach ($weeks as $week) {
                 echo '<td class="main_table weeks" colspan="7">'.$week.'</td>';
@@ -296,7 +307,7 @@ class chart
             echo '</tr><tr><td rowspan="3" class="main_table day">'.$mod_strings['LBL_RESOURCE_CHART_DAY'].'</td>';
             foreach ($time_span as $year => $months) {
                 foreach ($months as $month => $days) {//count the number of days in each month
-                    
+
                     $daycount=0;
                     foreach ($days as $day) {
                         $daycount++;
@@ -330,16 +341,16 @@ class chart
             foreach ($resources as $resource) {
                 $count = $resource->task_count;
 
-                if ($resource->type == 'project_users_1_c') {
+                if ($resource->type === 'project_users_1_c') {
                     $user_obj = BeanFactory::newBean('Users');
                     $user_obj->retrieve($resource->id);
 
-                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'.$mod_strings["LBL_RESOURCE_TYPE_TITLE_USER"].'" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$user_obj->full_name.'</a></td>';
-                } elseif ($resource->type == 'project_contacts_1_c') {
+                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'. $mod_strings['LBL_RESOURCE_TYPE_TITLE_USER'].'" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$user_obj->full_name.'</a></td>';
+                } elseif ($resource->type === 'project_contacts_1_c') {
                     $contact_obj = BeanFactory::newBean('Contacts');
                     $contact_obj->retrieve($resource->id);
 
-                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'.$mod_strings["LBL_RESOURCE_TYPE_TITLE_CONTACT"].'" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$contact_obj->full_name.'</a></td>';
+                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'. $mod_strings['LBL_RESOURCE_TYPE_TITLE_CONTACT'].'" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$contact_obj->full_name.'</a></td>';
                 }
 
                 $i=0;
@@ -348,11 +359,11 @@ class chart
 
                     $class = '';
 
-                    if ($this->check_weekend($dateq) == 'today') {
+                    if ($this->check_weekend($dateq) === 'today') {
                         $class = 'today';
-                    } elseif ($this->check_weekend($dateq) == 'weekend') {
+                    } elseif ($this->check_weekend($dateq) === 'weekend') {
                         $class = 'weekend';
-                    } elseif ($this->check_weekend($dateq) == 'weekend-today') {
+                    } elseif ($this->check_weekend($dateq) === 'weekend-today') {
                         $class = 'weekend-today';
                     }
                     $square = '';
@@ -377,7 +388,7 @@ class chart
             }
         }//end weekly view
 
-        elseif ($chart_type == "monthly") {
+        elseif ($chart_type === 'monthly') {
             echo '<td class="main_table week">'.$mod_strings['LBL_RESOURCE_CHART_MONTH'].'</td>';
             /*foreach ($weeks as $week)
             {
@@ -430,16 +441,16 @@ class chart
                 foreach ($resources as $resource) {
                     $count = $resource->task_count;
 
-                if ($resource->type == 'project_users_1_c') {
+                if ($resource->type === 'project_users_1_c') {
                     $user_obj = BeanFactory::newBean('Users');
                     $user_obj->retrieve($resource->id);
 
-                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'.$mod_strings["LBL_RESOURCE_TYPE_TITLE_USER"].'" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$user_obj->full_name.'</a></td>';
-                } elseif ($resource->type == 'project_contacts_1_c') {
+                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'. $mod_strings['LBL_RESOURCE_TYPE_TITLE_USER'].'" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$user_obj->full_name.'</a></td>';
+                } elseif ($resource->type === 'project_contacts_1_c') {
                     $contact_obj = BeanFactory::newBean('Contacts');
                     $contact_obj->retrieve($resource->id);
 
-                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'.$mod_strings["LBL_RESOURCE_TYPE_TITLE_CONTACT"].'" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$contact_obj->full_name.'</a></td>';
+                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'. $mod_strings['LBL_RESOURCE_TYPE_TITLE_CONTACT'].'" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$contact_obj->full_name.'</a></td>';
                 }
 
                 $i=0;
@@ -472,11 +483,11 @@ class chart
         }
         //end monthly view
 
-        elseif ($chart_type == "quarterly") {
+        elseif ($chart_type === 'quarterly') {
             echo '<td class="main_table week">'.$mod_strings['LBL_RESOURCE_CHART_QUARTER'].'</td>';
             foreach ($time_span as $year => $quarters) {
                 foreach ($quarters as $quarter => $months) {//count the number of days in each month
-                    
+
                     echo '<td class="main_table weeks" colspan="' . (is_countable($months) ? count($months) : 0) . '">'.$quarter .'</td>';
                 }
             }
@@ -485,7 +496,7 @@ class chart
             foreach ($time_span as $year => $quarters) {
                 $qcount= 0;
                 foreach ($quarters as $quarter => $months) {//count the number of months in each quarter
-                
+
                     $qcount+= is_countable($months) ? count($months) : 0;
                 }
                 $width = $qcount * 26; //used to set width on years row. width needed for css text clipping
@@ -517,16 +528,16 @@ class chart
             foreach ($resources as $resource) {
                 $count = $resource->task_count;
 
-                if ($resource->type == 'project_users_1_c') {
+                if ($resource->type === 'project_users_1_c') {
                     $user_obj = BeanFactory::newBean('Users');
                     $user_obj->retrieve($resource->id);
 
-                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'.$mod_strings["LBL_RESOURCE_TYPE_TITLE_USER"].'" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$user_obj->full_name.'</a></td>';
-                } elseif ($resource->type == 'project_contacts_1_c') {
+                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'. $mod_strings['LBL_RESOURCE_TYPE_TITLE_USER'].'" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$user_obj->full_name.'</a></td>';
+                } elseif ($resource->type === 'project_contacts_1_c') {
                     $contact_obj = BeanFactory::newBean('Contacts');
                     $contact_obj->retrieve($resource->id);
 
-                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'.$mod_strings["LBL_RESOURCE_TYPE_TITLE_CONTACT"].'" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$contact_obj->full_name.'</a></td>';
+                    echo '<tr id="'.$resource->id.'" class="task_row"><td no class="main_table no_wrap"><a title="'. $mod_strings['LBL_RESOURCE_TYPE_TITLE_CONTACT'].'" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$contact_obj->full_name.'</a></td>';
                 }
 
 
@@ -565,6 +576,11 @@ class chart
 
 
     //Returns an array containing the years, months and weeks between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateMalformedPeriodStringException
+     */
     public function year_quarter($start_date, $end_date)
     {
         $begin = new DateTime($start_date);
@@ -580,7 +596,7 @@ class chart
             $y = $dt->format('Y');
             $c = ceil($dt->format('m')/3);
             $m = mb_substr($GLOBALS['app_list_strings']['dom_cal_month_short'][$dt->format('n')], 0, 3);
-            
+
             $aResult[$y][$c][$count] = $m;
         }
 
@@ -589,6 +605,11 @@ class chart
 
 
     //Returns an array containing the years, months and weeks between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateMalformedPeriodStringException
+     */
     public function year_week($start_date, $end_date)
     {
         $begin = new DateTime($start_date);
@@ -607,12 +628,17 @@ class chart
 
             $aResult[$y][$m][] = $w;
         }
-        
+
         return array($aResult, $count);
     }
 
 
     //Returns an array containing the years, months and days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateMalformedPeriodStringException
+     */
     public function year_month($start_date, $end_date)
     {
         $begin = new DateTime($start_date);
@@ -621,7 +647,7 @@ class chart
         $interval = new DateInterval('P1D'); // 1 month interval
         $period = new DatePeriod($begin, $interval, $end);
         $aResult = array();
-    
+
         foreach ($period as $dt) {
             $y = $dt->format('Y');
             $m = mb_substr($GLOBALS['app_list_strings']['dom_cal_month_short'][$dt->format('n')], 0, 3);
@@ -634,6 +660,10 @@ class chart
         return $aResult;
     }
 
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateMalformedPeriodStringException
+     */
     public function get_weeks($start_date, $end_date)
     {
         $begin = new DateTime($start_date);
@@ -642,7 +672,7 @@ class chart
         $interval = new DateInterval('P1W'); // 1 week interval
         $period = new DatePeriod($begin, $interval, $end);
         $aResult = array();
-    
+
         foreach ($period as $dt) {
             $aResult[] = $dt->format('W');
         }
@@ -652,6 +682,10 @@ class chart
 
 
     //count number of months between task start day and chart current month
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function count_months($start, $day, $x)
     {
         $sdate = DateTime::createFromFormat('Y-m-d', $start);
@@ -672,6 +706,10 @@ class chart
 
 
     //Returns the total number of days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function count_days($start_date, $end_date)
     {
         $d1 = new DateTime($start_date);
@@ -689,6 +727,10 @@ class chart
 
 
     //returns first and last date of a week
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function get_week_dates($start, $weeks)
     {
         $date = DateTime::createFromFormat('Y-m-d', $start);
@@ -697,21 +739,29 @@ class chart
 
         $ts = strtotime($date->format('Y-m-d'));
         $start = (date('w', $ts) == 0) ? $ts : strtotime('last monday', $ts);
-        return date('Y-m-d', $start) . "|" . date('Y-m-d', strtotime('next sunday', $start));
+        return date('Y-m-d', $start) . '|' . date('Y-m-d', strtotime('next sunday', $start));
     }
 
     //returns first and last date of a month
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function get_month_dates($start, $months)
     {
         $date = DateTime::createFromFormat('Y-m-d', $start);
 
         $date->modify('+'.($months).' months');
 
-        return $date->format('Y-m-01') . "|" . $date->format('Y-m-t');
+        return $date->format('Y-m-01') . '|' . $date->format('Y-m-t');
     }
 
 
     //get date of passed in day in relation to the charts start date
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function get_date($start, $day)
     {
         $date = DateTime::createFromFormat('Y-m-d', $start);
@@ -723,6 +773,10 @@ class chart
 
 
     //checks if the day is a weekend and if the day is today.
+
+    /**
+     * @throws DateInvalidTimeZoneException
+     */
     public function check_weekend($day)
     {
         global $current_user;
@@ -735,13 +789,13 @@ class chart
         $now = $now->format('Y-m-d');
         // $GLOBALS['log']->fatal("date2 ".$now);
 
-        if ($date1->format('l') == 'Sunday' && $date === $now) {
+        if ($date1->format('l') === 'Sunday' && $date === $now) {
             return 'weekend-today';
-        } elseif ($date1->format('l') == 'Saturday' && $date === $now) {
+        } elseif ($date1->format('l') === 'Saturday' && $date === $now) {
             return 'weekend-today';
-        } elseif ($date1->format('l') == 'Sunday') {
+        } elseif ($date1->format('l') === 'Sunday') {
             return 'weekend';
-        } elseif ($date1->format('l') == 'Saturday') {
+        } elseif ($date1->format('l') === 'Saturday') {
             return 'weekend';
         } elseif ($date === $now) {
             return 'today';
@@ -752,6 +806,10 @@ class chart
 
 
     //Returns the time span between two dates in years months and days
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function time_range($start_date, $end_date)
     {
         $datetime1 = new DateTime($start_date);
@@ -764,8 +822,8 @@ class chart
     public function get_cell_class($days)
     {
         if ($days > 1) {
-            return " d";
+            return ' d';
         }
-        return " h";
+        return ' h';
     }
 }

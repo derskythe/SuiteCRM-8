@@ -83,7 +83,8 @@ class ListViewSmartyEmails extends ListViewSmarty
         $filter_fields = array(),
         $id_field = 'id',
         $id = null
-    ) {
+    ) : bool
+    {
         $this->should_process = true;
         if (isset($seed->module_dir) && !$this->shouldProcess($seed->module_dir)) {
             return false;

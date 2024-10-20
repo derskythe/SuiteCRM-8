@@ -99,7 +99,7 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
         $contents = file_get_contents($htAccessPath);
 
         $matches = [];
-        $matchFound = preg_match("/RewriteBase\s*(\/)?(.*)(\/)?/", $contents, $matches);
+        $matchFound = preg_match('/RewriteBase\s*(\/)?(.*)(\/)?/', $contents, $matches);
 
         $match = $matches[0] ?? '';
 
@@ -113,10 +113,10 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
             return $feedback;
         }
 
-        $replacement = preg_replace("/RewriteBase\s*(\/)?(.*)(\/)?$/", "RewriteBase /$2/public/legacy", $match);
+        $replacement = preg_replace('/RewriteBase\s*(\/)?(.*)(\/)?$/', 'RewriteBase /$2/public/legacy', $match);
         $replacement = str_replace('//', '/', $replacement);
 
-        $contents = preg_replace("/RewriteBase\s*(.*)/", $replacement, $contents);
+        $contents = preg_replace('/RewriteBase\s*(.*)/', $replacement, $contents);
 
         file_put_contents($htAccessPath, $contents);
 

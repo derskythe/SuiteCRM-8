@@ -34,10 +34,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
- 
+
 global $app_strings;
 
-$dashletMeta['AOS_QuotesDashlet'] = array('module'		=> 'AOS_Quotes',
+$dashletMeta['AOS_QuotesDashlet'] = array('module'        => 'AOS_Quotes',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'AOS_Quotes'),
                                           'description' => 'A customizable view into AOS_Quotes',
                                           'icon'        => 'themes/default/images/icon_AOS_Quotes_32.gif',

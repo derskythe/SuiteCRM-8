@@ -80,29 +80,29 @@ if (!empty($_REQUEST['duplicateId'])) {
 
 
 
-if (isset($_POST['return_module']) && $_POST['return_module'] != "") {
+if (isset($_POST['return_module']) && $_POST['return_module'] != '') {
     $return_module = $_POST['return_module'];
 } else {
-    $return_module = "ProspectLists";
+    $return_module = 'ProspectLists';
 }
-if (isset($_POST['return_action']) && $_POST['return_action'] != "") {
+if (isset($_POST['return_action']) && $_POST['return_action'] != '') {
     $return_action = $_POST['return_action'];
 } else {
-    $return_action = "DetailView";
+    $return_action = 'DetailView';
 }
-if (isset($_POST['return_id']) && $_POST['return_id'] != "") {
+if (isset($_POST['return_id']) && $_POST['return_id'] != '') {
     $return_id = $_POST['return_id'];
 }
 
-if ($return_action == "SaveCampaignProspectListRelationshipNew") {
+if ($return_action === 'SaveCampaignProspectListRelationshipNew') {
     $prospect_list_id = $focus->id;
-    handleRedirect($return_id, $return_module, array("prospect_list_id" => $prospect_list_id));
+    handleRedirect($return_id, $return_module, array( 'prospect_list_id' => $prospect_list_id));
 } else {
     //eggsurplus Bug 23816: maintain VCR after an edit/save. If it is a duplicate then don't worry about it. The offset is now worthless.
     $redirect_url = "Location: index.php?action=$return_action&module=$return_module&record=$return_id";
     if (isset($_REQUEST['offset']) && empty($_REQUEST['duplicateSave'])) {
-        $redirect_url .= "&offset=".$_REQUEST['offset'];
+        $redirect_url .= '&offset=' . $_REQUEST['offset'];
     }
-    $GLOBALS['log']->debug("Saved record with id of ".$return_id);
+    $GLOBALS['log']->debug('Saved record with id of ' .$return_id);
     handleRedirect($return_id, $return_module);
 }

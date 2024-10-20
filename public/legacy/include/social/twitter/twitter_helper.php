@@ -38,7 +38,12 @@ function replace_hashtags($db, $array)
 
     while ($i < $count) {
 
-        $array['text'] = str_replace('#' . $array['entities']['hashtags'][$i]['text'], "<a href=http://twitter.com/#" . $array['entities']['hashtags'][$i]['text'] . ">" . "#" . $array['entities']['hashtags'][$i]['text'] . "</a>", $array['text']);
+        $array['text'] =
+            str_replace(
+                '#' . $array['entities']['hashtags'][$i]['text'],
+                '<a href=http://twitter.com/#' . $array['entities']['hashtags'][$i]['text'] . '>' . '#' . $array['entities']['hashtags'][$i]['text'] . '</a>',
+                $array['text']
+            );
         $i++;
     }
 
@@ -54,7 +59,12 @@ function replace_users($db, $array)
 
     while ($i < $count) {
 
-        $array['text'] = str_replace('@' . $array['entities']['user_mentions'][$i]['screen_name'], "<a href=http://twitter.com/" . $array['entities']['user_mentions'][$i]['screen_name'] . ">" . "@" . $array['entities']['user_mentions'][$i]['screen_name'] . "</a>", $array['text']);
+        $array['text'] =
+            str_replace(
+                '@' . $array['entities']['user_mentions'][$i]['screen_name'],
+                '<a href=http://twitter.com/' . $array['entities']['user_mentions'][$i]['screen_name'] . '>' . '@' . $array['entities']['user_mentions'][$i]['screen_name'] . '</a>',
+                $array['text']
+            );
         $i++;
     }
 
@@ -80,7 +90,7 @@ function duplicate_check($db, $text, $date)
 function check_auth($url)
 {
 
-    $url = $url . "/include/social/twitter/twitter_auth/callback.php";
+    $url = $url . '/include/social/twitter/twitter_auth/callback.php';
 
     $config = '';
 

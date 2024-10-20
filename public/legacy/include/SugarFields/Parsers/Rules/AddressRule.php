@@ -41,7 +41,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 /**
  * AddressRule.php
  *
@@ -50,6 +49,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * address panel will be removed as the new metadata definition will be merged later.
  * If the address fields are outside the address panel, we will keep them as is, but
  * ensure that they are not defined as Arrays.
+ *
  * @author Collin Lee
  */
 
@@ -59,27 +59,31 @@ class AddressRule extends BaseRule
 {
     public function __construct()
     {
+        parent::__construct();
     }
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
+        parent::parsePanels($panels, $view);
         $searchedAddressPanel = array();
 
-        foreach ($panels as $name=>$panel) {
-            $isAddressPanel = $name == 'lbl_address_information';
+        foreach ($panels as $name => $panel) {
+            $isAddressPanel = $name === 'lbl_address_information';
 
-            foreach ($panel as $rowCount=>$row) {
-                foreach ($row as $key=>$column) {
+            foreach ($panel as $rowCount => $row) {
+                foreach ($row as $key => $column) {
                     if ($this->matches($column, '/_address_(city|state|country|postalcode)$/si')) {
-                        if ($view == 'DetailView' && !is_array($column)) {
+                        if ($view === 'DetailView' && !is_array($column)) {
                             $panels[$name][$rowCount][$key] = '';
                         } else {
-                            if ($view == 'DetailView' && $this->matches($column, '/_address_country$/') && is_array($column)) {
+                            if ($view === 'DetailView' && $this->matches($column, '/_address_country$/') && is_array(
+                                    $column
+                                )) {
                                 $match = $this->getMatch($column, '/(.*?)_address_country$/');
                                 $panels[$name][$rowCount][$key]['name'] = $match[1] . '_address_street';
                                 $panels[$name][$rowCount][$key]['label'] = 'LBL_' . strtoupper($match[1]) . '_ADDRESS';
                             } else {
-                                if ($view == 'EditView' && $isAddressPanel) {
+                                if ($view === 'EditView' && $isAddressPanel) {
                                     $field = is_array($column) ? $column['name'] : $column;
                                     preg_match('/^(.*?)_address_/si', $field, $matches);
 
@@ -110,7 +114,8 @@ class AddressRule extends BaseRule
                 } //foreach
             } //foreach
         } //foreach
-   return $panels;
+
+        return $panels;
     }
 
     /**
@@ -120,20 +125,22 @@ class AddressRule extends BaseRule
      * have not been moved from the address panel
      *
      * @param $addressPanel Array of address panel contents
-     * @param $suffix The address suffix (billing, shipping, primary, alternate) to check for
+     * @param $suffix       The address suffix (billing, shipping, primary, alternate) to check for
+     *
      * @return boolean
      */
     public function hasAddressFieldsIntact($addressPanel, $suffix)
     {
         $expression = '/^' . $suffix . '_address_(street|city|state|country|postalcode)$/si';
         $count = 0;
-        foreach ($addressPanel as $rowCount=>$row) {
-            foreach ($row as $key=>$column) {
+        foreach ($addressPanel as $rowCount => $row) {
+            foreach ($row as $key => $column) {
                 if ($this->matches($column, $expression)) {
                     $count++;
                 }
             }
         }
+
         return $count == 5;
     }
 
@@ -142,6 +149,7 @@ class AddressRule extends BaseRule
      * removeStreetFieldOverride
      * This function scans the panels and locates the street address field for the given key
      * and replaces the Array definition (from the merging process) with a String value.
+     *
      * @param $panels Array of the view's panels
      * @param $street String key value of the street to search for
      * @returns $panels Array of view's panels with street value substituted
@@ -149,15 +157,16 @@ class AddressRule extends BaseRule
     public function removeStreetFieldOverride($panels, $street)
     {
         $expression = '/^' . $street . '_address_street$/si';
-        foreach ($panels as $name=>$panel) {
-            foreach ($panel as $rowCount=>$row) {
-                foreach ($row as $key=>$column) {
+        foreach ($panels as $name => $panel) {
+            foreach ($panel as $rowCount => $row) {
+                foreach ($row as $key => $column) {
                     if ($this->matches($column, $expression)) {
                         $panels[$name][$rowCount][$key] = $street . '_address_street';
                     }
                 }
             }
         }
+
         return $panels;
     }
 }

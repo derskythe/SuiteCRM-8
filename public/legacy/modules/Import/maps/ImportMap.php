@@ -56,8 +56,8 @@ class ImportMap extends SugarBean
     /**
      * Fields in the table
      */
-    public $id;
-    public $name;
+    public string $id;
+    public string $name;
     public $module;
     public $source;
     public $delimiter;
@@ -65,38 +65,40 @@ class ImportMap extends SugarBean
     public $content;
     public $default_values;
     public $has_header;
-    public $deleted;
-    public $date_entered;
-    public $date_modified;
-    public $assigned_user_id;
+    public int $deleted;
+    public string $date_entered;
+    public string $date_modified;
+    public string $assigned_user_id;
     public $is_published;
 
     /**
      * Set the default settings from Sugarbean
      */
-    public $table_name  = "import_maps";
-    public $object_name = "ImportMap";
-    public $module_dir  = 'Import';
-    public $new_schema  = true;
-    public $disable_custom_fields = true;
-    public $column_fields = array(
-        "id",
-        "name",
-        "module",
-        "source",
-        "enclosure",
-        "delimiter",
-        "content",
-        "has_header",
-        "deleted",
-        "date_entered",
-        "date_modified",
-        "assigned_user_id",
-        "is_published",
+    public string $table_name  = 'import_maps';
+    public string $object_name = 'ImportMap';
+    public string $module_dir  = 'Import';
+    public bool $new_schema  = true;
+    public bool $disable_custom_fields = true;
+    public array $column_fields = array(
+        'id',
+        'name',
+        'module',
+        'source',
+        'enclosure',
+        'delimiter',
+        'content',
+        'has_header',
+        'deleted',
+        'date_entered',
+        'date_modified',
+        'assigned_user_id',
+        'is_published',
         );
 
     /**
      * Constructor
+     *
+     * @throws Exception
      */
     public function __construct()
     {
@@ -112,9 +114,9 @@ class ImportMap extends SugarBean
     {
         $mapping_arr = array();
         if (!empty($this->content)) {
-            $pairs = explode("&", $this->content);
+            $pairs = explode('&', $this->content);
             foreach ($pairs as $pair) {
-                list($name, $value) = explode("=", $pair);
+                list($name, $value) = explode('=', $pair);
                 $mapping_arr[trim($name)] = $value;
             }
         }
@@ -134,7 +136,7 @@ class ImportMap extends SugarBean
         foreach ($mapping_arr as $key => $item) {
             $output[] = "$key=$item";
         }
-        $this->content = implode("&", $output);
+        $this->content = implode('&', $output);
     }
 
     /**
@@ -146,9 +148,9 @@ class ImportMap extends SugarBean
     {
         $defa_arr = array();
         if (!empty($this->default_values)) {
-            $pairs = explode("&", $this->default_values);
+            $pairs = explode('&', $this->default_values);
             foreach ($pairs as $pair) {
-                list($name, $value) = explode("=", $pair);
+                list($name, $value) = explode('=', $pair);
                 $defa_arr[trim($name)] = $value;
             }
         }
@@ -168,7 +170,7 @@ class ImportMap extends SugarBean
         foreach ($defa_arr as $key => $item) {
             $output[] = "$key=$item";
         }
-        $this->default_values = implode("&", $output);
+        $this->default_values = implode('&', $output);
     }
 
     /**
@@ -182,7 +184,7 @@ class ImportMap extends SugarBean
             return $returnVal;
         }
 
-        if ($this->source == 'tab' && $this->delimiter == '') {
+        if ($this->source === 'tab' && $this->delimiter == '') {
             $this->delimiter = "\t";
         }
 
@@ -206,6 +208,10 @@ class ImportMap extends SugarBean
         $args = func_get_args();
         return call_user_func_array(array($this, '_save'), $args);
     }
+
+    /**
+     * @throws Exception
+     */
     public function _save(
         $owner_id,
         $name,
@@ -244,7 +250,7 @@ class ImportMap extends SugarBean
         parent::save();
 
         // Bug 29365 - The enclosure character isn't saved correctly if it's a tab using MssqlManager, so resave it
-        if ($enclosure == '\\t' && $this->db instanceof MssqlManager) {
+        if ($enclosure === '\\t' && $this->db instanceof MssqlManager) {
             $this->enclosure = $enclosure;
             parent::save();
         }
@@ -257,6 +263,8 @@ class ImportMap extends SugarBean
      * If true, then call parent function
      *
      * @param $id
+     *
+     * @throws Exception
      */
     public function mark_deleted(
         $id
@@ -324,7 +332,7 @@ class ImportMap extends SugarBean
                         assigned_user_id = '$user_id'
                     WHERE id = '{$this->id}'";
 
-        $this->db->query($query, true, "Error marking import map published: ");
+        $this->db->query($query, true, 'Error marking import map published: ');
 
         return true;
     }
@@ -342,7 +350,7 @@ class ImportMap extends SugarBean
                     FROM {$this->table_name}
                     " . $this->get_where($fields_array);
 
-        $result = $this->db->query($query, true, " Error: ");
+        $result = $this->db->query($query, true, ' Error: ');
         $obj_arr = array();
 
         while ($row = $this->db->fetchByAssoc($result, false)) {

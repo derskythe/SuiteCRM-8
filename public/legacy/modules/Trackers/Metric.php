@@ -49,7 +49,7 @@ class Metric
     {
         $this->_name = $name;
         $this->_type = $type;
-        $this->_mutable = $name == 'monitor_id' ? false : true;
+        $this->_mutable = $name === 'monitor_id' ? false : true;
     }
 
     public function type()

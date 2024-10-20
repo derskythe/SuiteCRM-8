@@ -64,7 +64,7 @@ class TemplateDatetimecombo extends TemplateRange
         'six months'=> '+6 months',
         'next year'=> '+1 year',
     );
-    
+
     public $hoursStrings = array(
         '' => '',
         '01' => '01',
@@ -80,7 +80,7 @@ class TemplateDatetimecombo extends TemplateRange
         '11' => '11',
         '12' => '12',
     );
-    
+
     public $hoursStrings24 = array(
         '' => '',
         '00' => '00',
@@ -108,7 +108,7 @@ class TemplateDatetimecombo extends TemplateRange
         '22' => '22',
         '23' => '23',
     );
-    
+
     public $minutesStrings = array(
         '' => '',
         '00' => '00',
@@ -116,7 +116,7 @@ class TemplateDatetimecombo extends TemplateRange
         '30' => '30',
         '45' => '45',
     );
-    
+
     public $meridiemStrings = array(
         '' => '',
         'am' => 'am',
@@ -138,7 +138,7 @@ class TemplateDatetimecombo extends TemplateRange
         }
         return $def;
     }
-    
+
     public function populateFromPost()
     {
         parent::populateFromPost();
@@ -172,12 +172,12 @@ class TemplateDatetimecombo extends TemplateRange
         }
         unset($_REQUEST['defaultDate']);
         unset($_REQUEST['defaultTime']);
-        
+
         foreach ($this->vardef_map as $vardef=>$field) {
             if (isset($_REQUEST[$vardef])) {
                 //  Bug #48826. Some fields are allowed to have special characters and must be decoded from the request
                 // Bug 49774, 49775: Strip html tags from 'formula' and 'dependency'.
-                if (is_string($_REQUEST[$vardef]) && in_array($vardef, $this->decode_from_request_fields_map)) {
+                if (is_string($_REQUEST[$vardef]) && in_array($vardef, $this->decode_from_request_fields_map, true)) {
                     $this->$vardef = html_entity_decode(strip_tags(from_html($_REQUEST[$vardef])));
                 } else {
                     $this->$vardef = $_REQUEST[$vardef];

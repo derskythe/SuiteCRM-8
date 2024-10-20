@@ -58,7 +58,7 @@ if (empty($current_user) || empty($current_user->id)) {
     die($GLOBALS['app_strings']['ERR_EXPORT_DISABLED']);
 }
 
-if ($sugar_config['disable_export'] 	|| (!empty($sugar_config['admin_export_only']) && !(is_admin($current_user) || (ACLController::moduleSupportsACL($the_module)  && ACLAction::getUserAccessLevel($current_user->id, $the_module, 'access') == ACL_ALLOW_ENABLED &&
+if ($sugar_config['disable_export']     || (!empty($sugar_config['admin_export_only']) && !(is_admin($current_user) || (ACLController::moduleSupportsACL($the_module)  && ACLAction::getUserAccessLevel($current_user->id, $the_module, 'access') == ACL_ALLOW_ENABLED &&
     (ACLAction::getUserAccessLevel($current_user->id, $the_module, 'admin') == ACL_ALLOW_ADMIN ||
      ACLAction::getUserAccessLevel($current_user->id, $the_module, 'admin') == ACL_ALLOW_ADMIN_DEV))))) {
     die($GLOBALS['app_strings']['ERR_EXPORT_DISABLED']);
@@ -92,7 +92,7 @@ if (!empty($_REQUEST['members'])) {
     $filename .= '_'.'members';
 }
 ///////////////////////////////////////////////////////////////////////////////
-////	BUILD THE EXPORT FILE
+////    BUILD THE EXPORT FILE
 
 ob_clean();
 printCSV($content, $filename);

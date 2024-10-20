@@ -58,7 +58,7 @@ class OAuth2ClientsViewEdit extends ViewEdit
     /**
      * @see SugarView::preDisplay()
      */
-    public function getMetaDataFile()
+    public function getMetaDataFile() : ?string
     {
         $this->setViewType();
         return parent::getMetaDataFile();

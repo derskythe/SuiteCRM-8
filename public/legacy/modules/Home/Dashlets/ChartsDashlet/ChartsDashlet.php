@@ -77,12 +77,13 @@ class ChartsDashlet extends Dashlet
      * Displays the dashlet
      *
      * @return string html to display dashlet
+     * @throws SmartyException
      */
-    public function display()
+    public function display() : string
     {
-        require_once("modules/Reports/Report.php");
+        require_once('modules/Reports/Report.php');
 
-        //		ini_set('display_errors', 'false');
+        //        ini_set('display_errors', 'false');
 
         $chartReport = new SavedReport();
         $chartExists = $chartReport->retrieve($this->report_id, false);
@@ -97,7 +98,7 @@ class ChartsDashlet extends Dashlet
             $reporter->get_total_header_row();
             $reporter->run_chart_queries();
 
-            require_once("modules/Reports/templates/templates_chart.php");
+            require_once('modules/Reports/templates/templates_chart.php');
 
             ob_start();
             template_chart($reporter, true, true, $this->id);
@@ -106,7 +107,7 @@ class ChartsDashlet extends Dashlet
 
             $xmlFile = get_cache_file_name($reporter);
 
-            $html = parent::display() . "<div align='center'>" . $str . "</div>" . "<br />"; // return parent::display for title and such
+            $html = parent::display() . "<div align='center'>" . $str . '</div>' . '<br />'; // return parent::display for title and such
 
             $ss = new Sugar_Smarty();
             $ss->assign('chartName', $this->id);
@@ -114,7 +115,7 @@ class ChartsDashlet extends Dashlet
             $script = $ss->fetch('modules/Home/Dashlets/ChartsDashlet/ChartsDashletScript.tpl');
             $json = getJSONobj();
 
-            return parent::display() . "<div align='center'>" . $str . "</div>" . "<br />"; // return parent::display for title and such
+            return parent::display() . "<div align='center'>" . $str . '</div>' . '<br />'; // return parent::display for title and such
         }
     }
 
@@ -125,7 +126,7 @@ class ChartsDashlet extends Dashlet
      */
     public function displayScript()
     {
-        require_once("modules/Reports/Report.php");
+        require_once('modules/Reports/Report.php');
 
 
         $chartReport = new SavedReport();
@@ -134,7 +135,7 @@ class ChartsDashlet extends Dashlet
         if (!is_null($chartExists)) {
             $this->title = $chartReport->name;
 
-            require_once("modules/Reports/templates/templates_chart.php");
+            require_once('modules/Reports/templates/templates_chart.php');
             require_once('include/SugarCharts/SugarChartFactory.php');
 
             $sugarChart = SugarChartFactory::getInstance();

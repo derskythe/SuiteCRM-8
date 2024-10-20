@@ -157,11 +157,11 @@ abstract class AbstractMetaDataParser
                     (empty($def ['source']) || $def ['source'] === 'db' || $def ['source'] === 'custom_fields')
                     && isset($def ['type']) && $def ['type'] !== 'id' && $def ['type'] !== 'parent_type'
                     && (empty($def ['dbType']) || $def ['dbType'] !== 'id')
-                    && (isset($def ['name']) && strcmp($def ['name'], 'deleted') != 0)
+                    && (isset($def ['name']) && strcmp($def ['name'], 'deleted') !== 0)
                 ) // db and custom fields that aren't ID fields
                 ||
                 // exclude fields named *_name regardless of their type...just convention
-                (isset($def ['name']) && substr((string) $def ['name'], -5) === '_name'));
+                (isset($def ['name']) && str_ends_with((string) $def ['name'], '_name')));
     }
 
     /**

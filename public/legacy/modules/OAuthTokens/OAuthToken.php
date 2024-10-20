@@ -50,9 +50,9 @@ require_once 'modules/OAuthKeys/OAuthKey.php';
 #[\AllowDynamicProperties]
 class OAuthToken extends SugarBean
 {
-    public $module_dir = 'OAuthTokens';
-    public $object_name = 'OAuthToken';
-    public $table_name = 'oauth_tokens';
+    public string $module_dir = 'OAuthTokens';
+    public string $object_name = 'OAuthToken';
+    public string $table_name = 'oauth_tokens';
     public $disable_row_level_security = true;
 
     public $token;
@@ -61,7 +61,7 @@ class OAuthToken extends SugarBean
     public $token_ts;
     public $verify;
     public $consumer;
-    public $assigned_user_id;
+    public string $assigned_user_id;
     public $consumer_obj;
     public $callback_url;
     // authdata is not preserved so far since we don't have any useful data yet
@@ -126,7 +126,9 @@ class OAuthToken extends SugarBean
 
     /**
      * Generate random token/secret pair and create token
+     *
      * @return OAuthToken
+     * @throws Exception
      */
     public static function generate()
     {
@@ -159,7 +161,7 @@ class OAuthToken extends SugarBean
         }
         $ltoken->token = $ltoken->id;
         if (!empty($ltoken->consumer)) {
-            $ltoken->consumer_obj = BeanFactory::getBean("OAuthKeys", $ltoken->consumer);
+            $ltoken->consumer_obj = BeanFactory::getBean('OAuthKeys', $ltoken->consumer);
             if (empty($ltoken->consumer_obj->id)) {
                 return null;
             }
@@ -169,6 +171,8 @@ class OAuthToken extends SugarBean
 
     /**
      * Invalidate token
+     *
+     * @throws Exception
      */
     public function invalidate()
     {
@@ -180,9 +184,12 @@ class OAuthToken extends SugarBean
     /**
      * Create a new authorized token for specific user
      * This bypasses normal OAuth process and creates a ready-made access token
+     *
      * @param OAuthKey $consumer
      * @param User $user
+     *
      * @return OAuthToken
+     * @throws Exception
      */
     public static function createAuthorized($consumer, $user)
     {
@@ -196,8 +203,11 @@ class OAuthToken extends SugarBean
 
     /**
      * Authorize request token
+     *
      * @param mixed $authdata
+     *
      * @return string Validation token
+     * @throws Exception
      */
     public function authorize($authdata)
     {
@@ -240,9 +250,9 @@ class OAuthToken extends SugarBean
     {
         $db = DBManagerFactory::getInstance();
         // delete invalidated tokens older than 1 day
-        $db->query("DELETE FROM oauth_tokens WHERE tstate = ".self::INVALID." AND token_ts < ".(time()-60*60*24));
+        $db->query('DELETE FROM oauth_tokens WHERE tstate = ' .self::INVALID. ' AND token_ts < ' .(time()-60*60*24));
         // delete request tokens older than 1 day
-        $db->query("DELETE FROM oauth_tokens WHERE tstate = ".self::REQUEST." AND token_ts < ".(time()-60*60*24));
+        $db->query('DELETE FROM oauth_tokens WHERE tstate = ' .self::REQUEST. ' AND token_ts < ' .(time()-60*60*24));
     }
 
     /**

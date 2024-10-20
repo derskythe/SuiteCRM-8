@@ -51,17 +51,17 @@ if (isset($_REQUEST['record'])) {
 ?>
 <form action="index.php" method="post" name="DetailView" id="form">
 
-			<input type="hidden" name="module" value="Users">
-			<input type="hidden" name="user_id" value="">
-			<input type="hidden" name="record" value="<?php echo $record; ?>">
-			<input type="hidden" name="isDuplicate" value=''>		
-			
-			<input type="hidden" name="action">
+            <input type="hidden" name="module" value="Users">
+            <input type="hidden" name="user_id" value="">
+            <input type="hidden" name="record" value="<?php echo $record; ?>">
+            <input type="hidden" name="isDuplicate" value=''>
+
+            <input type="hidden" name="action">
 </form>
 
 <?php
 
-$users = get_user_array(true, "Active", $record);
+$users = get_user_array(true, 'Active', $record);
 
 echo '<div class="role-list">';
 
@@ -71,7 +71,7 @@ echo "<form action='index.php' name='Users'>
 <input type='hidden' name='module' value='Users'>
 <select name='record' onchange='document.Users.submit();'>";
 echo get_select_options_with_id($users, $record);
-echo "</select></form>";
+echo '</select></form>';
 
 
 if (!empty($record)) {

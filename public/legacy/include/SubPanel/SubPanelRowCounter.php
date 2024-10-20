@@ -110,6 +110,7 @@ class SubPanelRowCounter
 
     /**
      * @return int
+     * @throws \Exception
      */
     public function getSingleSubPanelRowCount()
     {
@@ -134,6 +135,7 @@ class SubPanelRowCounter
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function makeSubPanelRowCountQuery()
     {
@@ -142,7 +144,7 @@ class SubPanelRowCounter
             throw new \Exception('relationship name can not be empty');
         }
 
-        if (0 === strpos($relationshipName, 'function:')) {
+        if (str_starts_with($relationshipName, 'function:')) {
             return $this->makeFunctionCountQuery($relationshipName);
         }
 
@@ -201,14 +203,14 @@ class SubPanelRowCounter
         }
 
         $selectPart = trim(substr($selectQuery, 7, $fromPos - 7));
-        if (false !== strpos($selectPart, ',')) {
+        if (str_contains($selectPart, ',')) {
             return '';
         }
 
         $selectArr = explode(' ', $selectPart);
         $selectPartFirst = $selectArr[0];
 
-        if (strpos($selectPartFirst, '*') !== false) {
+        if (str_contains($selectPartFirst, '*')) {
             $selectPartFirst = \str_replace('*', 'id', $selectPartFirst);
         }
 

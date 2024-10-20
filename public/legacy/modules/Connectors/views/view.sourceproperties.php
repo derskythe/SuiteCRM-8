@@ -53,8 +53,9 @@ class ViewSourceProperties extends ViewList
     }
 
 
-
-
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         global $sugar_config;

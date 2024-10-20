@@ -93,8 +93,8 @@ class MBVardefs
                     'fields'=>array(),
                     'relationships'=>array(),
         );
-        //		$object_name = $this->key_name;
-        //		$_object_name = strtolower($this->name);
+        //        $object_name = $this->key_name;
+        //        $_object_name = strtolower($this->name);
         $module_name = $this->name;
         $this->loadTemplate($by_group, 'basic', MB_TEMPLATES . '/basic/vardefs.php');
         foreach ($this->iTemplates as $template=>$val) {
@@ -102,7 +102,7 @@ class MBVardefs
             $this->loadTemplate($by_group, $template, $file);
         }
         foreach ($this->templates as $template=>$val) {
-            if ($template == 'basic') {
+            if ($template === 'basic') {
                 continue;
             }
             $file = MB_TEMPLATES . '/' . $template . '/vardefs.php';

@@ -49,7 +49,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 if (file_exists("include/language/{$current_language}.lang.php")) {
     require_once("include/language/{$current_language}.lang.php");
 } else {
-    require_once("include/language/en_us.lang.php");
+    require_once('include/language/en_us.lang.php');
 }
 require_once('install/UserDemoData.php');
 require_once('install/TeamDemoData.php');
@@ -58,7 +58,7 @@ global $sugar_demodata;
 if (file_exists("install/demoData.{$current_language}.php")) {
     require_once("install/demoData.{$current_language}.php");
 } else {
-    require_once("install/demoData.en_us.php");
+    require_once('install/demoData.en_us.php');
 }
 
 $last_name_count = is_countable($sugar_demodata['last_name_array']) ? count($sugar_demodata['last_name_array']) : 0;
@@ -68,7 +68,7 @@ $street_address_count = is_countable($sugar_demodata['street_address_array']) ? 
 $city_array_count = is_countable($sugar_demodata['city_array']) ? count($sugar_demodata['city_array']) : 0;
 global $app_list_strings;
 global $sugar_config;
-$_REQUEST['useEmailWidget'] = "true";
+$_REQUEST['useEmailWidget'] = 'true';
 if (empty($app_list_strings)) {
     $app_list_strings = return_app_list_strings_language('en_us');
 }
@@ -80,15 +80,15 @@ mt_srand(93285903);
 $db = DBManagerFactory::getInstance();
 $timedate = TimeDate::getInstance();
 // Set the max time to one hour (helps Windows load the seed data)
-ini_set("max_execution_time", "3600");
+ini_set('max_execution_time', '3600');
 // ensure we have enough memory
 $memory_needed  = 256;
 $memory_limit   = ini_get('memory_limit');
-if ($memory_limit != "" && $memory_limit != "-1") { // if memory_limit is set
+if ($memory_limit != '' && $memory_limit != '-1') { // if memory_limit is set
     rtrim($memory_limit, 'M');
     $memory_limit_int = (int) $memory_limit;
     if ($memory_limit_int < $memory_needed) {
-        ini_set("memory_limit", $memory_needed . "M");
+        ini_set('memory_limit', $memory_needed . 'M');
     }
 }
 $large_scale_test = empty($sugar_config['large_scale_test']) ?
@@ -104,7 +104,7 @@ $large_scale_test = empty($sugar_config['large_scale_test']) ? false : $sugar_co
 // If large scale test is set to true, increase the seed data.
 if ($large_scale_test) {
     // increase the cuttoff time to 1 hour
-    ini_set("max_execution_time", "3600");
+    ini_set('max_execution_time', '3600');
     $number_contacts = 100000;
     $number_companies = 15000;
     $number_leads = 100000;
@@ -118,7 +118,7 @@ $accounts = array();
 $opportunity_ids = array();
 
 // Determine the assigned user for all demo data.  This is the default user if set, or admin
-$assigned_user_name = "admin";
+$assigned_user_name = 'admin';
 if (!empty($sugar_config['default_user_name']) &&
     !empty($sugar_config['create_default_user']) &&
     $sugar_config['create_default_user']) {
@@ -138,7 +138,7 @@ $replacements[] = '';
 $replacements[] = '';
 
 ///////////////////////////////////////////////////////////////////////////////
-////	ACCOUNTS
+////    ACCOUNTS
 
 for ($i = 0; $i < $number_companies; $i++) {
     $account_name = $sugar_demodata['company_name_array'][mt_rand(0, $company_name_count-1)];
@@ -153,29 +153,29 @@ for ($i = 0; $i < $number_companies; $i++) {
     $account->billing_address_street = $sugar_demodata['street_address_array'][mt_rand(0, $street_address_count-1)];
     $account->billing_address_city = $sugar_demodata['city_array'][mt_rand(0, $city_array_count-1)];
     if ($i % 3 == 1) {
-        $account->billing_address_state = "NY";
+        $account->billing_address_state = 'NY';
         $assigned_user_id = mt_rand(9, 10);
         if ($assigned_user_id == 9) {
-            $account->assigned_user_name = "seed_will";
-            $account->assigned_user_id = $account->assigned_user_name."_id";
+            $account->assigned_user_name = 'seed_will';
+            $account->assigned_user_id = $account->assigned_user_name. '_id';
         } else {
-            $account->assigned_user_name = "seed_chris";
-            $account->assigned_user_id = $account->assigned_user_name."_id";
+            $account->assigned_user_name = 'seed_chris';
+            $account->assigned_user_id = $account->assigned_user_name. '_id';
         }
 
-        $account->assigned_user_id = $account->assigned_user_name."_id";
+        $account->assigned_user_id = $account->assigned_user_name. '_id';
     } else {
-        $account->billing_address_state = "CA";
+        $account->billing_address_state = 'CA';
         $assigned_user_id = mt_rand(6, 8);
         if ($assigned_user_id == 6) {
-            $account->assigned_user_name = "seed_sarah";
+            $account->assigned_user_name = 'seed_sarah';
         } elseif ($assigned_user_id == 7) {
-            $account->assigned_user_name = "seed_sally";
+            $account->assigned_user_name = 'seed_sally';
         } else {
-            $account->assigned_user_name = "seed_max";
+            $account->assigned_user_name = 'seed_max';
         }
 
-        $account->assigned_user_id = $account->assigned_user_name."_id";
+        $account->assigned_user_id = $account->assigned_user_name. '_id';
     }
 
     $account->billing_address_postalcode = mt_rand(10000, 99999);
@@ -186,7 +186,7 @@ for ($i = 0; $i < $number_companies; $i++) {
     $account->shipping_address_postalcode = $account->billing_address_postalcode;
     $account->shipping_address_country = $account->billing_address_country;
     $account->industry = array_rand($app_list_strings['industry_dom']);
-    $account->account_type = "Customer";
+    $account->account_type = 'Customer';
     $account->save();
     $account_ids[] = $account->id;
     $accounts[] = $account;
@@ -243,19 +243,19 @@ for ($i = 0; $i < $number_companies; $i++) {
     $opp = BeanFactory::newBean('Opportunities');
     $opp->assigned_user_id = $account->assigned_user_id;
     $opp->assigned_user_name = $account->assigned_user_name;
-    $opp->name = substr($account_name." - 1000 units", 0, 50);
+    $opp->name = substr($account_name. ' - 1000 units', 0, 50);
     $opp->date_closed = create_date();
     $opp->lead_source = array_rand($app_list_strings['lead_source_dom']);
     $opp->sales_stage = array_rand($app_list_strings['sales_stage_dom']);
     // If the deal is already one, make the date closed occur in the past.
-    if ($opp->sales_stage == "Closed Won" || $opp->sales_stage == "Closed Lost") {
+    if ($opp->sales_stage === 'Closed Won' || $opp->sales_stage === 'Closed Lost') {
         $opp->date_closed = create_past_date();
     }
     $opp->opportunity_type = array_rand($app_list_strings['opportunity_type_dom']);
-    $amount = array("10000", "25000", "50000", "75000");
+    $amount = array( '10000', '25000', '50000', '75000' );
     $key = array_rand($amount);
     $opp->amount = $amount[$key];
-    $probability = array("10", "70", "40", "60");
+    $probability = array( '10', '70', '40', '60' );
     $key = array_rand($probability);
     $opp->probability = $probability[$key];
     $opp->save();
@@ -274,7 +274,7 @@ $lead_source_max = (is_countable($app_list_strings['lead_source_dom']) ? count($
 $lead_status_max = (is_countable($app_list_strings['lead_status_dom']) ? count($app_list_strings['lead_status_dom']) : 0) - 1;
 $title_max = (is_countable($titles) ? count($titles) : 0) - 1;
 ///////////////////////////////////////////////////////////////////////////////
-////	DEMO CONTACTS
+////    DEMO CONTACTS
 for ($i=0; $i<$number_contacts; $i++) {
     $contact = BeanFactory::newBean('Contacts');
     $contact->first_name = $sugar_demodata['first_name_array'][mt_rand(0, $first_name_max)];
@@ -327,7 +327,7 @@ for ($i=0; $i<$number_contacts; $i++) {
     $task->priority = array_rand($app_list_strings['task_priority_dom']);
     $task->status = array_rand($app_list_strings['task_status_dom']);
     $task->contact_id = $contact->id;
-    if ($contact->primary_address_city == "San Mateo") {
+    if ($contact->primary_address_city === 'San Mateo') {
         $task->parent_id = $account_id;
         $task->parent_type = 'Accounts';
     }
@@ -407,28 +407,28 @@ for ($i=0; $i<$number_leads; $i++) {
         $lead->billing_address_state = $sugar_demodata['billing_address_state']['east'];
         $assigned_user_id = mt_rand(9, 10);
         if ($assigned_user_id == 9) {
-            $lead->assigned_user_name = "seed_will";
-            $lead->assigned_user_id = $lead->assigned_user_name."_id";
+            $lead->assigned_user_name = 'seed_will';
+            $lead->assigned_user_id = $lead->assigned_user_name. '_id';
         } else {
-            $lead->assigned_user_name = "seed_chris";
-            $lead->assigned_user_id = $lead->assigned_user_name."_id";
+            $lead->assigned_user_name = 'seed_chris';
+            $lead->assigned_user_id = $lead->assigned_user_name. '_id';
         }
 
-        $lead->assigned_user_id = $lead->assigned_user_name."_id";
+        $lead->assigned_user_id = $lead->assigned_user_name. '_id';
     } else {
         $lead->billing_address_state = $sugar_demodata['billing_address_state']['west'];
         $assigned_user_id = mt_rand(6, 8);
         if ($assigned_user_id == 6) {
-            $lead->assigned_user_name = "seed_sarah";
+            $lead->assigned_user_name = 'seed_sarah';
         } else {
             if ($assigned_user_id == 7) {
-                $lead->assigned_user_name = "seed_sally";
+                $lead->assigned_user_name = 'seed_sally';
             } else {
-                $lead->assigned_user_name = "seed_max";
+                $lead->assigned_user_name = 'seed_max';
             }
         }
 
-        $lead->assigned_user_id = $lead->assigned_user_name."_id";
+        $lead->assigned_user_id = $lead->assigned_user_name. '_id';
     }
 
 

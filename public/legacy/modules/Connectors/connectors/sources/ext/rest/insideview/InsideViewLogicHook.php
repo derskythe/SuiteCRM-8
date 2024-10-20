@@ -75,9 +75,9 @@ class InsideViewLogicHook
         foreach ($outArray as $k => $v) {
             $outStr .= $k.'='.rawurlencode(html_entity_decode((string) $v, ENT_QUOTES)).'&';
         }
-        
+
         $outStr = rtrim($outStr, '&');
-        
+
         return $outStr;
     }
 
@@ -93,9 +93,9 @@ class InsideViewLogicHook
                           'crm_account_country'=>array('primary_address_country', 'secondary_address_country', 'billing_address_country', 'shipping_address_country'),
                           'crm_account_postalcode'=>array('primary_address_postalcode', 'secondary_address_postalcode', 'billing_address_postalcode', 'shipping_address_postalcode')
         );
-        
+
         $url .= $this->handleFieldMap($bean, $fieldMap).'&'.$extraUrl;
-        
+
         return $url;
     }
 
@@ -106,9 +106,9 @@ class InsideViewLogicHook
                           'crm_account_id'=>'account_id',
                           'crm_opportunity_id'=>'id',
         );
-        
+
         $url .= $this->handleFieldMap($bean, $fieldMap).'&'.$extraUrl;
-        
+
         return $url;
     }
     protected function getLeadFrameUrl($bean, $extraUrl)
@@ -122,9 +122,9 @@ class InsideViewLogicHook
                           'crm_account_name'=>'account_name',
                           'crm_account_website'=>'website',
         );
-        
+
         $url .= $this->handleFieldMap($bean, $fieldMap).'&'.$extraUrl;
-        
+
         return $url;
     }
     protected function getContactFrameUrl($bean, $extraUrl)
@@ -137,16 +137,19 @@ class InsideViewLogicHook
                           'crm_account_id'=>'account_id',
                           'crm_account_name'=>'account_name',
         );
-        
+
         $url .= $this->handleFieldMap($bean, $fieldMap).'&'.$extraUrl;
-        
+
         return $url;
     }
 
 
+    /**
+     * @throws SmartyException
+     */
     public function showFrame($event, $args)
     {
-        if ($GLOBALS['app']->controller->action != 'DetailView') {
+        if ($GLOBALS['app']->controller->action !== 'DetailView') {
             return;
         }
         require_once('include/connectors/utils/ConnectorUtils.php');
@@ -173,7 +176,7 @@ class InsideViewLogicHook
             .'&crm_org_name='.(!empty($GLOBALS['system_config']->settings['system_name']) ? urlencode($GLOBALS['system_config']->settings['system_name']) : '')
             .'&crm_server_url='.urlencode($GLOBALS['sugar_config']['site_url'])
             .'&crm_session_id=&crm_version=v62&crm_deploy_id=3&crm_size=400&is_embed_version=true';
-        
+
         // Use the per-module functions to build the frame
         if (is_a($bean, 'Account')) {
             $url = $this->getAccountFrameUrl($bean, $extraUrl);

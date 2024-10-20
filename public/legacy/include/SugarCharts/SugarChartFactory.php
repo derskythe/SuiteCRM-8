@@ -59,7 +59,7 @@ class SugarChartFactory
     public static function getInstance($chartEngine = '', $module = '')
     {
         global $sugar_config;
-        $defaultEngine = "Jit";
+        $defaultEngine = 'Jit';
         //fall back to the default Js Engine if config is not defined
         if (empty($sugar_config['chartEngine'])) {
             $sugar_config['chartEngine'] = $defaultEngine;
@@ -69,7 +69,7 @@ class SugarChartFactory
             $chartEngine = $sugar_config['chartEngine'];
         }
 
-        $file = "include/SugarCharts/".$chartEngine."/".$chartEngine.$module.".php";
+        $file = 'include/SugarCharts/' . $chartEngine . '/' . $chartEngine . $module . '.php';
         $customFile = 'custom/' . $file;
 
         if (file_exists($customFile)) {
@@ -79,12 +79,12 @@ class SugarChartFactory
         } else {
 
             LoggerManager::getLogger()->debug(
-                "Using default engine include/SugarCharts/" .
-                $defaultEngine . "/" .
-                $defaultEngine.$module.".php"
+                'Using default engine include/SugarCharts/' .
+                $defaultEngine . '/' .
+                $defaultEngine . $module . '.php'
             );
 
-            $defaultFile = "include/SugarCharts/".$defaultEngine."/".$defaultEngine.$module.".php";
+            $defaultFile = 'include/SugarCharts/' . $defaultEngine . '/' . $defaultEngine . $module . '.php';
             require_once($defaultFile);
 
             $chartEngine = $defaultEngine;

@@ -56,7 +56,7 @@ class CallsParseRule extends ActivitiesParseRule
     public function preParse($panels, $view)
     {
         $panels = parent::preParse($panels, $view);
-        if ($view == 'EditView') {
+        if ($view === 'EditView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {
@@ -70,7 +70,7 @@ class CallsParseRule extends ActivitiesParseRule
    return $panels;
     }
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
         $panels = parent::parsePanels($panels, $view);
         return $panels;

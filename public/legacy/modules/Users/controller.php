@@ -62,7 +62,9 @@ class UsersController extends SugarController
             if ($u->id == $GLOBALS['current_user']->id) {
                 SugarApplication::redirect('index.php');
             } else {
-                SugarApplication::redirect("index.php?module=Users&record=" . $_REQUEST['record'] . "&action=DetailView"); //bug 48170]
+                SugarApplication::redirect(
+                    'index.php?module=Users&record=' . $_REQUEST['record'] . '&action=DetailView'
+                ); //bug 48170]
             }
         }
     }
@@ -71,6 +73,9 @@ class UsersController extends SugarController
         return $_REQUEST['record'] === $GLOBALS['current_user']->id;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function action_delete()
     {
         global $app_strings, $mod_strings;
@@ -91,7 +96,7 @@ class UsersController extends SugarController
             $eapm->delete_user_accounts($_REQUEST['record']);
             $GLOBALS['log']->info("Removing user's External Accounts");
 
-            SugarApplication::redirect("index.php?module=Users&action=index");
+            SugarApplication::redirect('index.php?module=Users&action=index');
         } else {
             if ($this->currentUserEqualsRecordUser()) {
                 sugar_die($mod_strings['ERR_DELETE_USER']);
@@ -106,6 +111,9 @@ class UsersController extends SugarController
         $this->view = 'wizard';
     }
 
+    /**
+     * @throws Exception
+     */
     protected function action_saveuserwizard()
     {
         global $current_user, $sugar_config;
@@ -230,7 +238,7 @@ class UsersController extends SugarController
     {
         $this->view = 'edit';
         if (!(is_admin($GLOBALS['current_user']) || $_REQUEST['record'] == $GLOBALS['current_user']->id)) {
-            SugarApplication::redirect("index.php?module=Home&action=index");
+            SugarApplication::redirect('index.php?module=Home&action=index');
         }
     }
 
@@ -238,7 +246,7 @@ class UsersController extends SugarController
     {
         $this->view = 'detail';
         if (!(is_admin($GLOBALS['current_user']) || $_REQUEST['record'] == $GLOBALS['current_user']->id)) {
-            SugarApplication::redirect("index.php?module=Home&action=index");
+            SugarApplication::redirect('index.php?module=Home&action=index');
         }
     }
 }

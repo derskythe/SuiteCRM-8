@@ -118,7 +118,7 @@ class PackageController
         foreach ($types as $type) {
             $type_str .= "'" . $type . "'";
             if ($index < $count) {
-                $type_str .= ",";
+                $type_str .= ',';
             }
             $index++;
         }
@@ -173,16 +173,16 @@ class PackageController
         if (isset($_REQUEST['release_id'])) {
             $release_id = nl2br($_REQUEST['release_id']);
         }
-        $GLOBALS['log']->debug("PACKAGE ID: " . $package_id);
-        $GLOBALS['log']->debug("CATEGORY ID: " . $category_id);
-        $GLOBALS['log']->debug("RELEASE ID: " . $release_id);
+        $GLOBALS['log']->debug('PACKAGE ID: ' . $package_id);
+        $GLOBALS['log']->debug('CATEGORY ID: ' . $category_id);
+        $GLOBALS['log']->debug('RELEASE ID: ' . $release_id);
         $result = $this->_pm->download($category_id, $package_id, $release_id);
-        $GLOBALS['log']->debug("RESULT: " . print_r($result, true));
+        $GLOBALS['log']->debug('RESULT: ' . print_r($result, true));
         $success = 'false';
         if ($result != null) {
-            $GLOBALS['log']->debug("Performing Setup");
+            $GLOBALS['log']->debug('Performing Setup');
             $this->_pm->performSetup($result, 'module', false);
-            $GLOBALS['log']->debug("Complete Setup");
+            $GLOBALS['log']->debug('Complete Setup');
             $success = 'true';
         }
         echo 'result = ' . $json->encode(array('success' => $success));
@@ -201,7 +201,7 @@ class PackageController
         if (isset($_REQUEST['category_id'])) {
             $node_id = nl2br($_REQUEST['category_id']);
         }
-        $GLOBALS['log']->debug("NODE ID: " . $node_id);
+        $GLOBALS['log']->debug('NODE ID: ' . $node_id);
         $nodes = PackageManager::getCategories($node_id);
         echo 'result = ' . $json->encode(array('nodes' => $nodes));
     }
@@ -213,7 +213,7 @@ class PackageController
         if (isset($_REQUEST['category_id'])) {
             $category_id = nl2br($_REQUEST['category_id']);
         }
-        $GLOBALS['log']->debug("CATEGORY ID: " . $category_id);
+        $GLOBALS['log']->debug('CATEGORY ID: ' . $category_id);
         $nodes = PackageManager::getModuleLoaderCategoryPackages($category_id);
         $GLOBALS['log']->debug(var_export($nodes, true));
         echo 'result = ' . $json->encode(array('nodes' => $nodes));
@@ -263,7 +263,7 @@ class PackageController
         if (isset($_REQUEST['file'])) {
             $file = hashToFile($_REQUEST['file']);
         }
-        $GLOBALS['log']->debug("FILE : " . $file);
+        $GLOBALS['log']->debug('FILE : ' . $file);
         echo 'result = ' . $json->encode(array('license_display' => PackageManagerDisplay::buildLicenseOutput($file)));
     }
 
@@ -313,7 +313,7 @@ class PackageController
         }
         if (isset($_REQUEST['terms_checked'])) {
             $terms_checked = $_REQUEST['terms_checked'];
-            if ($terms_checked == 'on') {
+            if ($terms_checked === 'on') {
                 $terms_checked = true;
             }
         }
@@ -347,7 +347,7 @@ class PackageController
         }
 
         $documents = PackageManager::getDocumentation($package_id, $release_id);
-        $GLOBALS['log']->debug("DOCUMENTS: " . var_export($documents, true));
+        $GLOBALS['log']->debug('DOCUMENTS: ' . var_export($documents, true));
         echo 'result = ' . $json->encode(array('documents' => $documents));
     }
 
@@ -359,7 +359,7 @@ class PackageController
         if (isset($_REQUEST['document_id'])) {
             $document_id = nl2br($_REQUEST['document_id']);
         }
-        $GLOBALS['log']->debug("Downloading Document: " . $document_id);
+        $GLOBALS['log']->debug('Downloading Document: ' . $document_id);
         PackageManagerComm::downloadedDocumentation($document_id);
         echo 'result = ' . $json->encode(array('result' => 'true'));
     }
@@ -372,7 +372,7 @@ class PackageController
      */
     protected function rmMetaFile($file, $meta)
     {
-        $metafile = pathinfo($file, PATHINFO_DIRNAME) . "/" . pathinfo($file, PATHINFO_FILENAME) . "-$meta.php";
+        $metafile = pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . "-$meta.php";
         if (file_exists($metafile)) {
             unlink($metafile);
         }
@@ -386,10 +386,10 @@ class PackageController
         if (isset($_REQUEST['file'])) {
             $file = urldecode(hashToFile($_REQUEST['file']));
         }
-        $GLOBALS['log']->debug("FILE TO REMOVE: " . $file);
+        $GLOBALS['log']->debug('FILE TO REMOVE: ' . $file);
         if (!empty($file)) {
             unlink($file);
-            foreach (array("manifest", "icon") as $meta) {
+            foreach (array( 'manifest', 'icon' ) as $meta) {
                 $this->rmMetaFile($file, $meta);
             }
         }

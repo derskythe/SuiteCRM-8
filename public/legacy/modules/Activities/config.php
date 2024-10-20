@@ -47,4 +47,4 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 //defines the call and meeting status.  Values are keys, not translated strings
-$open_status[] = "Planned";
+$open_status[] = 'Planned';

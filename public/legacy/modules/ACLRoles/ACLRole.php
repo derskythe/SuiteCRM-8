@@ -45,17 +45,17 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class ACLRole extends SugarBean
 {
-    public $module_dir = 'ACLRoles';
-    public $object_name = 'ACLRole';
-    public $table_name = 'acl_roles';
-    public $new_schema = true;
+    public string $module_dir = 'ACLRoles';
+    public string $object_name = 'ACLRole';
+    public string $table_name = 'acl_roles';
+    public bool $new_schema = true;
     public $disable_row_level_security = true;
-    public $disable_custom_fields = true;
-    public $relationship_fields = array(
+    public bool $disable_custom_fields = true;
+    public array $relationship_fields = array(
                                     'user_id'=>'users'
                                 );
 
-    public $created_by;
+    public string $created_by;
 
 
     // bug 16790 - missing get_summary_text method led Tracker to display SugarBean's "base implementation"
@@ -94,11 +94,11 @@ class ACLRole extends SugarBean
 
         //if we don't have it loaded then lets check against the db
         $additional_where = '';
-        $query = "SELECT acl_roles.* ".
-            "FROM acl_roles ".
+        $query = 'SELECT acl_roles.* ' .
+            'FROM acl_roles ' .
             "INNER JOIN acl_roles_users ON acl_roles_users.user_id = '$user_id' ".
-                "AND acl_roles_users.role_id = acl_roles.id AND acl_roles_users.deleted = 0 ".
-            "WHERE acl_roles.deleted=0 ";
+            'AND acl_roles_users.role_id = acl_roles.id AND acl_roles_users.deleted = 0 ' .
+            'WHERE acl_roles.deleted=0 ';
 
         $result = DBManagerFactory::getInstance()->query($query);
         $user_roles = array();
@@ -125,16 +125,16 @@ class ACLRole extends SugarBean
      */
     public static function getUserRoleNames($user_id)
     {
-        $user_roles = sugar_cache_retrieve("RoleMembershipNames_".$user_id);
+        $user_roles = sugar_cache_retrieve('RoleMembershipNames_' .$user_id);
 
         if (!$user_roles) {
             //if we don't have it loaded then lets check against the db
             $additional_where = '';
-            $query = "SELECT acl_roles.* ".
-                "FROM acl_roles ".
+            $query = 'SELECT acl_roles.* ' .
+                'FROM acl_roles ' .
                 "INNER JOIN acl_roles_users ON acl_roles_users.user_id = '$user_id' ".
-                    "AND acl_roles_users.role_id = acl_roles.id AND acl_roles_users.deleted = 0 ".
-                "WHERE acl_roles.deleted=0 ";
+                'AND acl_roles_users.role_id = acl_roles.id AND acl_roles_users.deleted = 0 ' .
+                'WHERE acl_roles.deleted=0 ';
 
             $result = DBManagerFactory::getInstance()->query($query);
             $user_roles = array();
@@ -143,7 +143,7 @@ class ACLRole extends SugarBean
                 $user_roles[] = $row['name'];
             }
 
-            sugar_cache_put("RoleMembershipNames_".$user_id, $user_roles);
+            sugar_cache_put('RoleMembershipNames_' .$user_id, $user_roles);
         }
 
         return $user_roles;
@@ -159,8 +159,8 @@ class ACLRole extends SugarBean
     public function getAllRoles($returnAsArray = false)
     {
         $db = DBManagerFactory::getInstance();
-        $query = "SELECT acl_roles.* FROM acl_roles
-                    WHERE acl_roles.deleted=0 ORDER BY name";
+        $query = 'SELECT acl_roles.* FROM acl_roles
+                    WHERE acl_roles.deleted=0 ORDER BY name';
 
         $result = $db->query($query);
         $roles = array();
@@ -191,17 +191,17 @@ class ACLRole extends SugarBean
         //if we don't have it loaded then lets check against the db
         $additional_where = '';
         $db = DBManagerFactory::getInstance();
-        $query = "SELECT acl_actions.*";
+        $query = 'SELECT acl_actions.*';
         //only if we have a role id do we need to join the table otherwise lets use the ones defined in acl_actions as the defaults
         if (!empty($role_id)) {
-            $query .=" ,acl_roles_actions.access_override ";
+            $query .= ' ,acl_roles_actions.access_override ';
         }
-        $query .=" FROM acl_actions ";
+        $query .= ' FROM acl_actions ';
 
         if (!empty($role_id)) {
-            $query .=		" LEFT JOIN acl_roles_actions ON acl_roles_actions.role_id = '$role_id' AND  acl_roles_actions.action_id = acl_actions.id AND acl_roles_actions.deleted = 0";
+            $query .=        " LEFT JOIN acl_roles_actions ON acl_roles_actions.role_id = '$role_id' AND  acl_roles_actions.action_id = acl_actions.id AND acl_roles_actions.deleted = 0";
         }
-        $query .= " WHERE acl_actions.deleted=0 ORDER BY acl_actions.category, acl_actions.name";
+        $query .= ' WHERE acl_actions.deleted=0 ORDER BY acl_actions.category, acl_actions.name';
         $result = $db->query($query);
         $role_actions = array();
 
@@ -227,7 +227,7 @@ class ACLRole extends SugarBean
         }
 
         // Sort by translated categories
-        uksort($role_actions, "ACLRole::langCompare");
+        uksort($role_actions, 'ACLRole::langCompare');
         return $role_actions;
     }
 

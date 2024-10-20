@@ -136,7 +136,7 @@ class SearchForm
         $tokens = explode('_', $this->displayView);
         $this->searchFields = isset($searchFields[$this->module]) ? $searchFields[$this->module] : null;
         $this->parsedView = $tokens[0];
-        if ($this->displayView != 'saved_views') {
+        if ($this->displayView !== 'saved_views') {
             $this->_build_field_defs();
         }
 
@@ -162,11 +162,11 @@ class SearchForm
         if (isset($this->showCustom) && is_array($this->showCustom)) {
             foreach ($this->showCustom as $v) {
                 $this->nbTabs++;
-                $this->tabs[] = array('title' => $GLOBALS['app_strings']["LNK_" . strtoupper($v)],
-                    'link' => $this->module . '|' . $v,
-                    'key' => $this->module . '|' . $v,
-                    'name' => str_replace('_search', '', $v),
-                    'displayDiv' => 'display:none',);
+                $this->tabs[] = array( 'title' => $GLOBALS['app_strings']['LNK_' . strtoupper($v)],
+                                       'link' => $this->module . '|' . $v,
+                                       'key' => $this->module . '|' . $v,
+                                       'name' => str_replace('_search', '', $v),
+                                       'displayDiv' => 'display:none', );
             }
         }
     }
@@ -213,35 +213,35 @@ class SearchForm
         $this->th->ss->assign('CALENDAR_FDOW', $current_user->get_first_day_of_week());
 
         $date_format = $timedate->get_cal_date_format();
-        $time_separator = ":";
+        $time_separator = ':';
         if (preg_match('/\d+([^\d])\d+([^\d]*)/s', $time_format, $match)) {
             $time_separator = $match[1];
         }
         // Create Smarty variables for the Calendar picker widget
-        $t23 = strpos($time_format, '23') !== false ? '%H' : '%I';
+        $t23 = str_contains($time_format, '23') ? '%H' : '%I';
         if (!isset($match[2]) || $match[2] == '') {
-            $this->th->ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . "%M");
+            $this->th->ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . '%M');
         } else {
-            $pm = $match[2] == "pm" ? "%P" : "%p";
-            $this->th->ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . "%M" . $pm);
+            $pm = $match[2] === 'pm' ? '%P' : '%p';
+            $this->th->ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . '%M' . $pm);
         }
         $this->th->ss->assign('TIME_SEPARATOR', $time_separator);
 
         //Show and hide the good tab form
         foreach ($this->tabs as $tabkey => $viewtab) {
             $viewName = str_replace(array($this->module . '|', '_search'), '', $viewtab['key']);
-            if (strpos($this->view, $viewName) !== false) {
+            if (str_contains($this->view, $viewName)) {
                 $this->tabs[$tabkey]['displayDiv'] = '';
                 //if this is advanced tab, use form with saved search sub form built in
-                if ($viewName == 'advanced') {
+                if ($viewName === 'advanced') {
                     $this->tpl = 'SearchFormGenericAdvanced.tpl';
-                    if ($this->action == 'ListView') {
+                    if ($this->action === 'ListView') {
                         $this->th->ss->assign('DISPLAY_SEARCH_HELP', true);
                     }
                     $this->th->ss->assign('DISPLAY_SAVED_SEARCH', $this->displaySavedSearch);
                     $this->th->ss->assign('SAVED_SEARCH', $this->displaySavedSearch($orderBySelectOnly));
                     //this determines whether the saved search subform should be rendered open or not
-                    if (isset($_REQUEST['showSSDIV']) && $_REQUEST['showSSDIV'] == 'yes') {
+                    if (isset($_REQUEST['showSSDIV']) && $_REQUEST['showSSDIV'] === 'yes') {
                         $this->th->ss->assign('SHOWSSDIV', 'yes');
                         $this->th->ss->assign('DISPLAYSS', '');
                     } else {
@@ -285,7 +285,7 @@ class SearchForm
             $this->th->ss->assign('SAVED_SEARCHES_OPTIONS', $this->displaySavedSearchSelect());
             $this->th->ss->assign('savedSearchData', $this->getSavedSearchData());
         }
-        if ($this->module == 'Documents') {
+        if ($this->module === 'Documents') {
             $this->th->ss->assign('DOCUMENTS_MODULE', true);
         }
 
@@ -295,8 +295,12 @@ class SearchForm
 
         $this->th->ss->assign('searchInfoJson', $this->getSearchInfoJson());
 
-
-        $searchFormInPopup = !in_array($this->module, isset($sugar_config['enable_legacy_search']) ? $sugar_config['enable_legacy_search'] : array());
+        $searchFormInPopup = !in_array(
+            $this->module,
+            isset($sugar_config['enable_legacy_search'])
+                ? $sugar_config['enable_legacy_search'] : array(),
+            true
+        );
         $this->th->ss->assign('searchFormInPopup', $searchFormInPopup);
 
         if (isset($this->th)) {
@@ -393,7 +397,11 @@ class SearchForm
             if (preg_match('/(.*)_advanced$/', $name, $match)) {
                 $searchTypeKey = $match[1];
             }
-            if (in_array($name, $searchFieldsKeys) || ($searchTypeKey && in_array($searchTypeKey, $searchFieldsKeys))) {
+            if (in_array($name, $searchFieldsKeys, true) || ($searchTypeKey && in_array(
+                        $searchTypeKey,
+                        $searchFieldsKeys,
+                        true
+                    ))) {
                 $vname = isset($defs['vname']) ? $defs['vname'] : null;
                 $label = isset($defs['label']) ? $defs['label'] : null;
                 $value = isset($defs['value']) ? $defs['value'] : null;
@@ -415,7 +423,7 @@ class SearchForm
                             if (isset($defs['options'][$key]) && $defs['options'][$key]) {
                                 $values[$key] = $defs['options'][$key];
                             } else {
-                                if (in_array($key, $value)) {
+                                if (in_array($key, $value, true)) {
                                     try {
                                         $values[$key] = $this->findFieldOptionValue($fields, $key);
                                     } catch (Exception $e) {
@@ -430,7 +438,7 @@ class SearchForm
                         }
                         $value = implode(', ', $values);
                     }
-                    $data[$labelText] = $type == 'bool' ? '&#10004' : $value;
+                    $data[$labelText] = $type === 'bool' ? '&#10004' : $value;
                 }
             }
         }
@@ -532,6 +540,9 @@ class SearchForm
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     public function displaySavedSearch($orderBySelectOnly = false)
     {
         $orderBy = !empty($this->lv->data['pageData']['ordering']['orderBy']) ? $this->lv->data['pageData']['ordering']['orderBy'] : null;
@@ -545,6 +556,9 @@ class SearchForm
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function displaySavedSearchSelect()
     {
         if (!isset($this->listViewDefs[$this->module])) {
@@ -585,7 +599,7 @@ class SearchForm
      */
     public function _displayTabs($currentKey)
     {
-        if (isset($_REQUEST['saved_search_select']) && $_REQUEST['saved_search_select'] != '_none') {
+        if (isset($_REQUEST['saved_search_select']) && $_REQUEST['saved_search_select'] !== '_none') {
             $saved_search = loadBean('SavedSearch');
             $saved_search->retrieveSavedSearch($_REQUEST['saved_search_select']);
         }
@@ -643,7 +657,7 @@ class SearchForm
         if ($this->seed) {
             $this->seed->fill_in_additional_detail_fields();
             // hack to make the employee status field for the Users/Employees module display correctly
-            if ($this->seed->object_name == 'Employee' || $this->seed->object_name == 'User') {
+            if ($this->seed->object_name === 'Employee' || $this->seed->object_name === 'User') {
                 $this->seed->field_defs['employee_status']['type'] = 'enum';
                 $this->seed->field_defs['employee_status']['massupdate'] = true;
                 $this->seed->field_defs['employee_status']['options'] = 'employee_status_dom';
@@ -659,7 +673,7 @@ class SearchForm
                     $this->fieldDefs[$fvName]['name'] = (isset($this->fieldDefs[$fvName]['name']) ? $this->fieldDefs[$fvName]['name'] : null) . '_' . $this->parsedView;
                 }
 
-                if (isset($this->fieldDefs[$fvName]['type']) && $this->fieldDefs[$fvName]['type'] == 'relate') {
+                if (isset($this->fieldDefs[$fvName]['type']) && $this->fieldDefs[$fvName]['type'] === 'relate') {
                     if (isset($this->fieldDefs[$fvName]['id_name'])) {
                         $this->fieldDefs[$fvName]['id_name'] .= '_' . $this->parsedView;
                     }
@@ -670,7 +684,7 @@ class SearchForm
                     $this->fieldDefs[$fvName]['options'] = $GLOBALS['app_list_strings'][$this->fieldDefs[$fvName]['options']];
                     //Hack to add blanks for parent types on search views
                     //53131 - add blank option for SearchField options with def 'options_add_blank' set to true
-                    if ($this->fieldDefs[$fvName]['type'] == "parent_type" || $this->fieldDefs[$fvName]['type'] == "parent" || (isset($this->searchFields[$name]['options_add_blank']) && $this->searchFields[$name]['options_add_blank'])) {
+                    if ($this->fieldDefs[$fvName]['type'] === 'parent_type' || $this->fieldDefs[$fvName]['type'] === 'parent' || (isset($this->searchFields[$name]['options_add_blank']) && $this->searchFields[$name]['options_add_blank'])) {
                         if (!array_key_exists('', $this->fieldDefs[$fvName]['options'])) {
                             $this->fieldDefs[$fvName]['options'] =
                                 array('' => '') + $this->fieldDefs[$fvName]['options'];
@@ -697,7 +711,7 @@ class SearchForm
                         require_once($this->fieldDefs[$fvName]['function']['include']);
                     }
 
-                    if (!empty($this->fieldDefs[$fvName]['function']['returns']) && $this->fieldDefs[$fvName]['function']['returns'] == 'html') {
+                    if (!empty($this->fieldDefs[$fvName]['function']['returns']) && $this->fieldDefs[$fvName]['function']['returns'] === 'html') {
                         $value = call_user_func($function_name, $this->seed, $name, $value, $this->view);
                         $this->fieldDefs[$fvName]['value'] = $value;
                     } else {
@@ -708,7 +722,7 @@ class SearchForm
                         }
                     }
                 }
-                if (isset($this->fieldDefs[$name]['type']) && $this->fieldDefs[$fvName]['type'] == 'function'
+                if (isset($this->fieldDefs[$name]['type']) && $this->fieldDefs[$fvName]['type'] === 'function'
                     && isset($this->fieldDefs[$fvName]['function_name'])
                 ) {
                     $value = $this->callFunction($this->fieldDefs[$fvName]);
@@ -745,7 +759,7 @@ class SearchForm
             }
             //name of  the search tab
             $SearchName = str_replace('_search', '', $switchVar);
-            if ($switchVar == 'saved_views') {
+            if ($switchVar === 'saved_views') {
                 foreach ($this->searchFields as $name => $params) {
                     foreach ($this->tabs as $tabName) {
                         if (!empty($array[$name . '_' . $tabName['name']])) {
@@ -758,9 +772,9 @@ class SearchForm
                 }
                 if ($addAllBeanFields) {
                     foreach ($this->seed->field_name_map as $key => $params) {
-                        if (!in_array($key, $searchFieldsKeys)) {
+                        if (!in_array($key, $searchFieldsKeys, true)) {
                             foreach ($this->tabs->name as $tabName) {
-                                if (in_array($key . '_' . $tabName['name'], $arrayKeys)) {
+                                if (in_array($key . '_' . $tabName['name'], $arrayKeys, true)) {
                                     $this->searchFields[$key] = array('query_type' => 'default',
                                         'value' => $array[$key . '_' . $tabName['name']]);
                                 }
@@ -774,7 +788,7 @@ class SearchForm
                 foreach ($this->searchFields as $name => $params) {
                     $long_name = $name . '_' . $SearchName;
                     /*nsingh 21648: Add additional check for bool values=0. empty() considers 0 to be empty Only repopulates if value is 0 or 1:( */
-                    if (isset($array[$long_name]) && ($array[$long_name] !== '' || (isset($this->fieldDefs[$long_name]['type']) && $this->fieldDefs[$long_name]['type'] == 'bool' && ($array[$long_name] == '0' || $array[$long_name] == '1')))) {
+                    if (isset($array[$long_name]) && ($array[$long_name] !== '' || (isset($this->fieldDefs[$long_name]['type']) && $this->fieldDefs[$long_name]['type'] === 'bool' && ($array[$long_name] == '0' || $array[$long_name] == '1')))) {
                         $this->searchFields[$name]['value'] = $array[$long_name];
                         if (empty($this->fieldDefs[$long_name]['value'])) {
                             $this->fieldDefs[$long_name]['value'] = $array[$long_name];
@@ -809,15 +823,19 @@ class SearchForm
                     }
                 }
 
-                if ((empty($array['massupdate']) || $array['massupdate'] == 'false') && $addAllBeanFields) {
+                if ((empty($array['massupdate']) || $array['massupdate'] === 'false') && $addAllBeanFields) {
                     foreach ($this->seed->field_name_map as $key => $params) {
-                        if ($key != 'assigned_user_name' && $key != 'modified_by_name') {
+                        if ($key !== 'assigned_user_name' && $key !== 'modified_by_name') {
                             $long_name = $key . '_' . $SearchName;
 
-                            if (in_array($key . '_' . $SearchName, $arrayKeys) && !in_array($key, $searchFieldsKeys)) {
+                            if (in_array($key . '_' . $SearchName, $arrayKeys, true) && !in_array(
+                                    $key,
+                                    $searchFieldsKeys,
+                                    true
+                                )) {
                                 $this->searchFields[$key] = array('query_type' => 'default', 'value' => $array[$long_name]);
 
-                                if (!empty($params['type']) && $params['type'] == 'parent'
+                                if (!empty($params['type']) && $params['type'] === 'parent'
                                     && !empty($params['type_name']) && !empty($this->searchFields[$key]['value'])
                                 ) {
                                     require_once('include/SugarFields/SugarFieldHandler.php');
@@ -868,11 +886,11 @@ class SearchForm
      */
     protected function parseDateExpression($operator, $db_field, $field_type = '')
     {
-        if ($field_type == "date") {
-            $type = "date";
+        if ($field_type === 'date') {
+            $type = 'date';
             $adjForTZ = false;
         } else {
-            $type = "datetime";
+            $type = 'datetime';
             $adjForTZ = true;
         }
         $dates = TimeDate::getInstance()->parseDateRange($operator, null, $adjForTZ);
@@ -933,7 +951,7 @@ class SearchForm
                         $parms['operator'] = 'between';
 
                         $field_type = isset($this->seed->field_name_map[$real_field]['type']) ? $this->seed->field_name_map[$real_field]['type'] : '';
-                        if ($field_type == 'datetimecombo' || $field_type == 'datetime') {
+                        if ($field_type === 'datetimecombo' || $field_type === 'datetime') {
                             $type = $field_type;
                         }
 
@@ -948,12 +966,18 @@ class SearchForm
                         $real_field = $match[1];
 
                         //Special case for datetime and datetimecombo fields.  By setting the type here we allow an actual between search
-                        if (in_array($parms['operator'], array('=', 'between', "not_equal", 'less_than', 'greater_than', 'less_than_equals', 'greater_than_equals'))) {
+                        if (in_array($parms['operator'], array( '=',
+                                                                'between',
+                                                                'not_equal',
+                                                                'less_than',
+                                                                'greater_than',
+                                                                'less_than_equals',
+                                                                'greater_than_equals' ))) {
                             $field_type = isset($this->seed->field_name_map[$real_field]['type']) ? $this->seed->field_name_map[$real_field]['type'] : '';
-                            if (strtolower($field_type) == 'readonly' && isset($this->seed->field_name_map[$real_field]['dbType'])) {
+                            if (strtolower($field_type) === 'readonly' && isset($this->seed->field_name_map[$real_field]['dbType'])) {
                                 $field_type = $this->seed->field_name_map[$real_field]['dbType'];
                             }
-                            if ($field_type == 'datetimecombo' || $field_type == 'datetime' || $field_type == 'int') {
+                            if ($field_type === 'datetimecombo' || $field_type === 'datetime' || $field_type === 'int') {
                                 $type = $field_type;
                             }
                         }
@@ -973,26 +997,25 @@ class SearchForm
 
             //Test to mark whether or not the field is a custom field
             if (!empty($this->seed->field_name_map[$field]['source'])
-                && ($this->seed->field_name_map[$field]['source'] == 'custom_fields' ||
+                && ($this->seed->field_name_map[$field]['source'] === 'custom_fields' ||
                     //Non-db custom fields, such as custom relates
-                    ($this->seed->field_name_map[$field]['source'] == 'non-db'
+                    ($this->seed->field_name_map[$field]['source'] === 'non-db'
                         && (!empty($this->seed->field_name_map[$field]['custom_module']) ||
                             isset($this->seed->field_name_map[$field]['ext2']))))
             ) {
                 $customField = true;
             }
 
-            if ($type == 'int' && isset($parms['value']) && !empty($parms['value'])) {
+            if ($type === 'int' && isset($parms['value']) && !empty($parms['value'])) {
                 require_once('include/SugarFields/SugarFieldHandler.php');
                 $intField = SugarFieldHandler::getSugarField('int');
                 $newVal = $intField->getSearchWhereValue($parms['value']);
                 $parms['value'] = $newVal;
-            } elseif ($type == 'html' && $customField) {
+            } elseif ($type === 'html' && $customField) {
                 continue;
             }
 
-
-            if (isset($parms['value']) && $parms['value'] != "") {
+            if (isset($parms['value']) && $parms['value'] != '') {
                 $operator = $db->isNumericType($type) ? '=' : 'like';
                 if (!empty($parms['operator'])) {
                     $operator = strtolower($parms['operator']);
@@ -1012,19 +1035,19 @@ class SearchForm
                         // this alias-name is automatically replaced by the join table and rname through sugarbean::create_new_list_query
                         if (isset($this->seed->field_name_map[$field]) &&
                             isset($this->seed->field_name_map[$field]['source']) &&
-                            $this->seed->field_name_map[$field]['source'] == 'non-db'
+                            $this->seed->field_name_map[$field]['source'] === 'non-db'
                         ) {
                             $db_field = $this->seed->field_name_map[$field]['name'];
                         } else {
                             $table_name = $this->seed->table_name;
                             if ($customField) {
-                                $table_name .= "_cstm";
+                                $table_name .= '_cstm';
                             }
-                            $db_field = $table_name . "." . $field;
+                            $db_field = $table_name . '.' . $field;
                         }
 
                         foreach ($parms['value'] as $val) {
-                            if ($val != ' ' and $val != '') {
+                            if ($val !== ' ' and $val != '') {
                                 $qVal = $db->quote($val);
                                 if (!empty($field_value)) {
                                     $field_value .= ' or ';
@@ -1035,13 +1058,13 @@ class SearchForm
                             }
                         }
                     } else {
-                        $operator = $operator != 'subquery' ? 'in' : $operator;
+                        $operator = $operator !== 'subquery' ? 'in' : $operator;
                         foreach ($parms['value'] as $val) {
-                            if ($val != ' ' && $val != '') {
+                            if ($val !== ' ' && $val != '') {
                                 if (!empty($field_value)) {
                                     $field_value .= ',';
                                 }
-                                if ($operator == 'subquery') {
+                                if ($operator === 'subquery') {
                                     $field_value .= $val;
                                 } else {
                                     $field_value .= $db->quoteType($type, $val);
@@ -1053,7 +1076,7 @@ class SearchForm
                             // When $val is empty, we need to use "IS NULL",
                             // as "in (null)" won't work
                             else {
-                                if ($operator == 'in') {
+                                if ($operator === 'in') {
                                     $operator = 'isnull';
                                 }
                             }
@@ -1084,7 +1107,7 @@ class SearchForm
                     } else {
                         $field_value = '';
                         foreach ($parms['closed_values'] as $closed_value) {
-                            $field_value .= "," . $db->quoted($closed_value);
+                            $field_value .= ',' . $db->quoted($closed_value);
                         }
                         $field_value = substr($field_value, 1);
                     }
@@ -1095,13 +1118,13 @@ class SearchForm
                 $where = '';
                 $itr = 0;
 
-                if ($field_value != '' || $operator == 'isnull') {
+                if ($field_value != '' || $operator === 'isnull') {
                     $this->searchColumns [strtoupper($field)] = $field;
 
                     foreach ($parms['db_field'] as $db_field) {
-                        if (strstr($db_field, '.') === false) {
+                        if (!str_contains($db_field, '.')) {
                             //Try to get the table for relate fields from link defs
-                            if ($type == 'relate' && !empty($this->seed->field_name_map[$field]['link'])
+                            if ($type === 'relate' && !empty($this->seed->field_name_map[$field]['link'])
                                 && !empty($this->seed->field_name_map[$field]['rname'])
                             ) {
                                 $link = $this->seed->field_name_map[$field]['link'];
@@ -1113,7 +1136,7 @@ class SearchForm
                                     $db_field = strtolower($link['module']) . '.' . $db_field;
                                 }
                             } else {
-                                if ($type == 'parent') {
+                                if ($type === 'parent') {
                                     if (!empty($this->searchFields['parent_type'])) {
                                         $parentType = $this->searchFields['parent_type'];
                                         $rel_module = $parentType['value'];
@@ -1126,7 +1149,7 @@ class SearchForm
                                     }
                                 } // Relate fields in custom modules and custom relate fields
                                 else {
-                                    if ($type == 'relate' && $customField && !empty($this->seed->field_name_map[$field]['module'])) {
+                                    if ($type === 'relate' && $customField && !empty($this->seed->field_name_map[$field]['module'])) {
                                         $db_field = !empty($this->seed->field_name_map[$field]['name']) ? $this->seed->field_name_map[$field]['name'] : 'name';
                                     } else {
                                         if (!$customField) {
@@ -1135,15 +1158,19 @@ class SearchForm
                                             }
                                             // Relationship fields get the name directly from the field_name_map
                                             else {
-                                                if (!(isset($this->seed->field_name_map[$db_field]) && isset($this->seed->field_name_map[$db_field]['source']) && $this->seed->field_name_map[$db_field]['source'] == 'non-db')) {
-                                                    $db_field = $this->seed->table_name . "." . $db_field;
+                                                if (!(isset($this->seed->field_name_map[$db_field]) && isset($this->seed->field_name_map[$db_field]['source']) && $this->seed->field_name_map[$db_field]['source'] === 'non-db')) {
+                                                    $db_field = $this->seed->table_name . '.' . $db_field;
                                                 }
                                             }
                                         } else {
                                             if (!empty($this->seed->field_name_map[$field]['db_concat_fields'])) {
-                                                $db_field = $db->concat($this->seed->table_name . "_cstm.", $this->seed->field_name_map[$db_field]['db_concat_fields']);
+                                                $db_field =
+                                                    $db->concat(
+                                                        $this->seed->table_name . '_cstm.',
+                                                        $this->seed->field_name_map[$db_field]['db_concat_fields']
+                                                    );
                                             } else {
-                                                $db_field = $this->seed->table_name . "_cstm." . $db_field;
+                                                $db_field = $this->seed->table_name . '_cstm.' . $db_field;
                                             }
                                         }
                                     }
@@ -1151,24 +1178,24 @@ class SearchForm
                             }
                         }
 
-                        if ($type == 'date') {
+                        if ($type === 'date') {
                             // The regular expression check is to circumvent special case YYYY-MM
                             $operator = '=';
                             if (preg_match('/^\d{4}.\d{1,2}$/', $field_value) != 0) { // preg_match returns number of matches
-                                $db_field = $this->seed->db->convert($db_field, "date_format", array("%Y-%m"));
+                                $db_field = $this->seed->db->convert($db_field, 'date_format', array( '%Y-%m' ));
                             } else {
                                 $field_value = $timedate->to_db_date($field_value, false);
-                                $db_field = $this->seed->db->convert($db_field, "date_format", array("%Y-%m-%d"));
+                                $db_field = $this->seed->db->convert($db_field, 'date_format', array( '%Y-%m-%d' ));
                             }
                         }
 
-                        if ($type == 'datetime' || $type == 'datetimecombo') {
+                        if ($type === 'datetime' || $type === 'datetimecombo') {
                             try {
-                                if ($operator == '=' || $operator == 'between') {
+                                if ($operator === '=' || $operator === 'between') {
                                     // FG - bug45287 - If User asked for a range, takes edges from it.
-                                    $placeholderPos = strpos($field_value, "<>");
+                                    $placeholderPos = strpos($field_value, '<>');
                                     if ($placeholderPos !== false && $placeholderPos > 0) {
-                                        $datesLimit = explode("<>", $field_value);
+                                        $datesLimit = explode('<>', $field_value);
                                         $dateStart = $timedate->getDayStartEndGMT($datesLimit[0]);
                                         $dateEnd = $timedate->getDayStartEndGMT($datesLimit[1]);
                                         $dates = $dateStart;
@@ -1179,29 +1206,29 @@ class SearchForm
                                         $dates = $timedate->getDayStartEndGMT($field_value);
                                     }
                                     // FG - bug45287 - Note "start" and "end" are the correct interval at GMT timezone
-                                    $field_value = array($dates["start"], $dates["end"]);
+                                    $field_value = array( $dates['start'], $dates['end'] );
                                     $operator = 'between';
                                 } else {
-                                    if ($operator == 'not_equal') {
+                                    if ($operator === 'not_equal') {
                                         $dates = $timedate->getDayStartEndGMT($field_value);
-                                        $field_value = array($dates["start"], $dates["end"]);
+                                        $field_value = array( $dates['start'], $dates['end'] );
                                         $operator = 'date_not_equal';
                                     } else {
-                                        if ($operator == 'greater_than') {
+                                        if ($operator === 'greater_than') {
                                             $dates = $timedate->getDayStartEndGMT($field_value);
-                                            $field_value = $dates["end"];
+                                            $field_value = $dates['end'];
                                         } else {
-                                            if ($operator == 'less_than') {
+                                            if ($operator === 'less_than') {
                                                 $dates = $timedate->getDayStartEndGMT($field_value);
-                                                $field_value = $dates["start"];
+                                                $field_value = $dates['start'];
                                             } else {
-                                                if ($operator == 'greater_than_equals') {
+                                                if ($operator === 'greater_than_equals') {
                                                     $dates = $timedate->getDayStartEndGMT($field_value);
-                                                    $field_value = $dates["start"];
+                                                    $field_value = $dates['start'];
                                                 } else {
-                                                    if ($operator == 'less_than_equals') {
+                                                    if ($operator === 'less_than_equals') {
                                                         $dates = $timedate->getDayStartEndGMT($field_value);
-                                                        $field_value = $dates["end"];
+                                                        $field_value = $dates['end'];
                                                     }
                                                 }
                                             }
@@ -1217,7 +1244,7 @@ class SearchForm
                             }
                         }
 
-                        if ($type == 'decimal' || $type == 'float' || $type == 'currency' || (!empty($parms['enable_range_search']) && empty($parms['is_date_field']))) {
+                        if ($type === 'decimal' || $type === 'float' || $type === 'currency' || (!empty($parms['enable_range_search']) && empty($parms['is_date_field']))) {
                             require_once('modules/Currencies/Currency.php');
 
                             //we need to handle formatting either a single value or 2 values in case the 'between' search option is set
@@ -1229,7 +1256,7 @@ class SearchForm
                                 //reset the field value, it will be rebuild in the foreach loop below
                                 $tmpfield_value = unformat_number($fv);
 
-                                if ($type == 'currency' && stripos($field, '_usdollar') !== false) {
+                                if ($type === 'currency' && stripos($field, '_usdollar') !== false) {
                                     // It's a US Dollar field, we need to do some conversions from the user's local currency
                                     $currency_id = $GLOBALS['current_user']->getPreference('currency');
                                     if (empty($currency_id)) {
@@ -1246,7 +1273,7 @@ class SearchForm
 
                             $field_value = implode('<>', $values);
 
-                            if (!empty($parms['enable_range_search']) && $parms['operator'] == '=' && $type != 'int') {
+                            if (!empty($parms['enable_range_search']) && $parms['operator'] === '=' && $type !== 'int') {
                                 // Databases can't really search for floating point numbers, because they can't be accurately described in binary,
                                 // So we have to fuzz out the math a little bit
                                 $field_value = array(($field_value - 0.01), ($field_value + 0.01));
@@ -1254,15 +1281,16 @@ class SearchForm
                             }
                         }
 
-
-                        if ($db->supports("case_sensitive") && isset($parms['query_type']) && $parms['query_type'] == 'case_insensitive') {
-                            $db_field = 'upper(' . $db_field . ")";
+                        if ($db->supports(
+                                'case_sensitive'
+                            ) && isset($parms['query_type']) && $parms['query_type'] === 'case_insensitive') {
+                            $db_field = 'upper(' . $db_field . ')';
                             $field_value = strtoupper($field_value);
                         }
 
                         $itr++;
                         if (!empty($where)) {
-                            $where .= " OR ";
+                            $where .= ' OR ';
                         }
 
                         //Here we make a last attempt to determine the field type if possible
@@ -1294,12 +1322,17 @@ class SearchForm
                                         if (!$first) {
                                             $where .= $and_or;
                                         }
-                                        $where .= " {$db_field} $in ({$q} " . $this->seed->db->quoted($field_value . '%') . ") ";
+                                        $where .= " {$db_field} $in ({$q} " . $this->seed->db->quoted(
+                                                $field_value . '%'
+                                            ) . ') ';
                                         $first = false;
                                     }
-                                } elseif (!empty($parms['query_type']) && $parms['query_type'] == 'format') {
+                                } elseif (!empty($parms['query_type']) && $parms['query_type'] === 'format') {
                                     $stringFormatParams = array(0 => $field_value, 1 => $GLOBALS['current_user']->id);
-                                    $where .= "{$db_field} $in (" . string_format($parms['subquery'], $stringFormatParams) . ")";
+                                    $where .= "{$db_field} $in (" . string_format(
+                                            $parms['subquery'],
+                                            $stringFormatParams
+                                        ) . ')';
                                 } else {
                                     //Bug#37087: Re-write our sub-query to it is executed first and contents stored in a derived table to avoid mysql executing the query
                                     //outside in. Additional details: http://bugs.mysql.com/bug.php?id=9021
@@ -1314,20 +1347,25 @@ class SearchForm
                                 break;
 
                             case 'like':
-                                if ($type == 'bool' && $field_value == 0) {
+                                if ($type === 'bool' && $field_value == 0) {
                                     // Bug 43452 - FG - Added parenthesis surrounding the OR (without them the WHERE clause would be broken)
-                                    $where .= "( " . $db_field . " = '0' OR " . $db_field . " IS NULL )";
+                                    $where .= '( ' . $db_field . " = '0' OR " . $db_field . ' IS NULL )';
                                 } else {
                                     // check to see if this is coming from unified search or not
                                     $UnifiedSearch = !empty($parms['force_unifiedsearch']);
-                                    if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'UnifiedSearch') {
+                                    if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'UnifiedSearch') {
                                         $UnifiedSearch = true;
                                     }
 
                                     // If it is a unified search and if the search contains more then 1 word (contains space)
                                     // and if it's the last element from db_field (so we do the concat only once, not for every db_field element)
                                     // we concat the db_field array() (both original, and in reverse order) and search for the whole string in it
-                                    if ($UnifiedSearch && strpos($field_value, ' ') !== false && strpos($db_field, $parms['db_field'][count($parms['db_field']) - 1]) !== false) {
+                                    if ($UnifiedSearch && str_contains($field_value, ' ') && str_contains(
+                                            $db_field,
+                                            $parms['db_field'][count(
+                                                $parms['db_field']
+                                            ) - 1]
+                                        )) {
                                         // Get the table name used for concat
                                         $concat_table = explode('.', $db_field);
                                         $concat_table = $concat_table[0];
@@ -1336,22 +1374,39 @@ class SearchForm
 
                                         // If db_fields (e.g. contacts.first_name) contain table name, need to remove it
                                         for ($i = 0; $i < count($concat_fields); $i++) {
-                                            if (strpos($concat_fields[$i], $concat_table) !== false) {
+                                            if (str_contains($concat_fields[$i], $concat_table)) {
                                                 $concat_fields[$i] = substr($concat_fields[$i], strlen($concat_table) + 1);
                                             }
                                         }
 
                                         // Concat the fields and search for the value
-                                        $where .= $this->seed->db->concat($concat_table, $concat_fields) . " LIKE " . $this->seed->db->quoted(sql_like_string($field_value, $like_char));
-                                        $where .= ' OR ' . $this->seed->db->concat($concat_table, array_reverse($concat_fields)) . " LIKE " . $this->seed->db->quoted(sql_like_string($field_value, $like_char));
+                                        $where .= $this->seed->db->concat(
+                                                $concat_table,
+                                                $concat_fields
+                                            ) . ' LIKE ' . $this->seed->db->quoted(
+                                                sql_like_string($field_value, $like_char)
+                                            );
+                                        $where .= ' OR ' . $this->seed->db->concat(
+                                                $concat_table,
+                                                array_reverse($concat_fields)
+                                            ) . ' LIKE ' . $this->seed->db->quoted(
+                                                sql_like_string($field_value, $like_char)
+                                            );
                                     } else {
                                         //Check if this is a first_name, last_name search
                                         if (isset($this->seed->field_name_map) && isset($this->seed->field_name_map[$db_field])) {
                                             $vardefEntry = $this->seed->field_name_map[$db_field];
-                                            if (!empty($vardefEntry['db_concat_fields']) && in_array('first_name', $vardefEntry['db_concat_fields']) && in_array('last_name', $vardefEntry['db_concat_fields'])) {
+                                            if (!empty($vardefEntry['db_concat_fields']) && in_array(
+                                                    'first_name',
+                                                    $vardefEntry['db_concat_fields'],
+                                                    true
+                                                ) && in_array('last_name', $vardefEntry['db_concat_fields'], true)) {
                                                 if (!empty($GLOBALS['app_list_strings']['salutation_dom']) && is_array($GLOBALS['app_list_strings']['salutation_dom'])) {
                                                     foreach ($GLOBALS['app_list_strings']['salutation_dom'] as $salutation) {
-                                                        if (!empty($salutation) && strpos($field_value, $salutation) === 0) {
+                                                        if (!empty($salutation) && str_starts_with(
+                                                                $field_value,
+                                                                $salutation
+                                                            )) {
                                                             $field_value = trim(substr($field_value, strlen($salutation)));
                                                             break;
                                                         }
@@ -1361,7 +1416,9 @@ class SearchForm
                                         }
 
                                         //field is not last name or this is not from global unified search, so do normal where clause
-                                        $where .= $db_field . " like " . $this->seed->db->quoted(sql_like_string($field_value, $like_char));
+                                        $where .= $db_field . ' like ' . $this->seed->db->quoted(
+                                                sql_like_string($field_value, $like_char)
+                                            );
                                     }
                                 }
                                 break;
@@ -1372,10 +1429,10 @@ class SearchForm
                                 $where .= $db_field . ' in (' . $field_value . ')';
                                 break;
                             case '=':
-                                if ($type == 'bool' && $field_value == 0) {
+                                if ($type === 'bool' && $field_value == 0) {
                                     $where .= "($db_field = 0 OR $db_field IS NULL)";
                                 } else {
-                                    $where .= $db_field . " = " . $db->quoteType($type, $field_value);
+                                    $where .= $db_field . ' = ' . $db->quoteType($type, $field_value);
                                 }
                                 break;
                             // tyoung bug 15971 - need to add these special cases into the $where query
@@ -1440,7 +1497,7 @@ class SearchForm
                             case 'isnull':
                                 $where .= "($db_field IS NULL OR $db_field = '')";
                                 if ($field_value != '') {
-                                    $where .= ' OR ' . $db_field . " in (" . $field_value . ')';
+                                    $where .= ' OR ' . $db_field . ' in (' . $field_value . ')';
                                 }
                                 break;
                         }

@@ -85,7 +85,7 @@ $focus->saveConfig();
 /**************************** Add New Monitored Box  *****************************/
 //perform this if the option to create new mail box has been checked
 if (isset($_REQUEST['wiz_new_mbox']) && ($_REQUEST['wiz_new_mbox']=='1')) {
-    
+
    //Populate the Request variables that inboundemail expects
     $_REQUEST['mark_read'] = 1;
     $_REQUEST['only_since'] = 1;
@@ -99,11 +99,11 @@ if (isset($_REQUEST['wiz_new_mbox']) && ($_REQUEST['wiz_new_mbox']=='1')) {
     if (!empty($_REQUEST['error'])) {
         //an error was found during inbound save.  This means the save was allowed but the inbound box had problems, return user to wizard
         //and display error message
-        $header_URL = "Location: index.php?action=WizardEmailSetup&module=Campaigns&error=true";
+        $header_URL = 'Location: index.php?action=WizardEmailSetup&module=Campaigns&error=true';
         SugarApplication::headerRedirect($header_URL);
     } else {
         //set navigation details
-        $header_URL = "Location: index.php?action=index&module=Campaigns";
+        $header_URL = 'Location: index.php?action=index&module=Campaigns';
         SugarApplication::headerRedirect($header_URL);
     }
 

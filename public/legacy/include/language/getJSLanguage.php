@@ -60,8 +60,8 @@ function getJSLanguage()
     $lang = clean_path($_REQUEST['lang']);
     $languages = get_languages();
 
-    if (!preg_match("/^\w\w_\w\w$/", (string) $lang) || !isset($languages[$lang])) {
-        if (!preg_match("/^\w\w_\w\w$/", (string) $lang)) {
+    if (!preg_match('/^\w\w_\w\w$/', (string) $lang) || !isset($languages[$lang])) {
+        if (!preg_match('/^\w\w_\w\w$/', (string) $lang)) {
             echo 'did not match regex<br/>';
         } else {
             echo  "$lang was not in list . <pre>".print_r($languages, true).'</pre>';
@@ -78,7 +78,7 @@ function getJSLanguage()
     } else {
         $module = clean_path($_REQUEST['modulename']);
         $fullModuleList = array_merge($GLOBALS['moduleList'], $GLOBALS['modInvisList']);
-        if (!isset($app_list_strings['moduleList'][$module]) && !in_array($module, $fullModuleList)) {
+        if (!isset($app_list_strings['moduleList'][$module]) && !in_array($module, $fullModuleList, true)) {
             echo 'Invalid module specified';
 
             return;

@@ -77,6 +77,9 @@ class View extends AbstractView
     }
 
     /**
+     * @throws \SmartyException
+     * @throws \JsonException
+     * @throws \JsonException
      * @see SugarView::display()
      */
     public function display(): void

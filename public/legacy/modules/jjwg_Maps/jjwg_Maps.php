@@ -297,7 +297,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $rev = array();
         if (!empty($settings) && (is_countable($settings) ? count($settings) : 0) > 0) {
             foreach ($settings as $category_name => $value) {
-                if (substr((string) $category_name, 0, 5) == 'jjwg_') {
+                if (str_starts_with((string) $category_name, 'jjwg_')) {
                     $name = substr((string) $category_name, 5);
                     // Set revised settings array
                     $rev[$name] = $value;
@@ -309,7 +309,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
             foreach ($rev as $name => $value) {
 
                 // Set geocode_modules_to_address_type
-                if (substr($name, 0, 13) == 'address_type_') {
+                if (str_starts_with($name, 'address_type_')) {
                     $module = substr($name, 13);
                     if (in_array($value, array('billing', 'shipping', 'primary', 'alt', 'flex_relate', 'custom', 'address'))) {
                         $this->settings['geocode_modules_to_address_type'][$module] = $value;
@@ -317,7 +317,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
                 }
 
                 // Set map_markers_grouping_field
-                if (substr($name, 0, 15) == 'grouping_field_') {
+                if (str_starts_with($name, 'grouping_field_')) {
                     $module = substr($name, 15);
                     if (!empty($value)) {
                         $this->settings['map_markers_grouping_field'][$module] = $value;
@@ -425,9 +425,9 @@ class jjwg_Maps extends jjwg_Maps_sugar
                 $value = trim($value);
 
                 // Set geocode_modules_to_address_type
-                if (substr((string) $name, 0, 13) == 'address_type_') {
+                if (str_starts_with((string) $name, 'address_type_')) {
                     $module = substr((string) $name, 13);
-                    if (in_array($module, $this->settings['valid_geocode_modules'])) {
+                    if (in_array($module, $this->settings['valid_geocode_modules'], true)) {
                         if (in_array($value, array('billing', 'shipping', 'primary', 'alt', 'flex_relate', 'custom', 'address'))) {
                             $admin->saveSetting($category, $name, $value);
                         }
@@ -435,9 +435,9 @@ class jjwg_Maps extends jjwg_Maps_sugar
                 }
 
                 // Set map_markers_grouping_field
-                if (substr((string) $name, 0, 15) == 'grouping_field_') {
+                if (str_starts_with((string) $name, 'grouping_field_')) {
                     $module = substr((string) $name, 15);
-                    if (in_array($module, $this->settings['valid_geocode_modules'])) {
+                    if (in_array($module, $this->settings['valid_geocode_modules'], true)) {
                         if (!empty($value)) {
                             $admin->saveSetting($category, $name, $value);
                         }
@@ -508,7 +508,10 @@ class jjwg_Maps extends jjwg_Maps_sugar
                 $dataGeocodingApiUrl = $data['geocoding_api_url'];
             }
 
-            if (substr((string) $dataGeocodingApiUrl, 0, 4) != 'http' && substr((string) $dataGeocodingApiUrl, 0, 2) != '//') {
+            if (!str_starts_with((string) $dataGeocodingApiUrl, 'http') && !str_starts_with(
+                    (string) $dataGeocodingApiUrl,
+                    '//'
+                )) {
                 $data['geocoding_api_url'] = $this->settings['geocoding_api_url'];
             }
 
@@ -634,9 +637,9 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $addressQ = (!empty($aInfo['address'])) ? $this->db->quote($aInfo['address']) : '';
 
         // Find the Related Meetings by parent_type & parent_id (this relationship is special)
-        $query = "SELECT meetings.id, meetings_cstm.id_c FROM meetings " .
-                " LEFT JOIN meetings_cstm ON meetings.id = meetings_cstm.id_c " .
-                " WHERE meetings.deleted = 0 AND " .
+        $query = 'SELECT meetings.id, meetings_cstm.id_c FROM meetings ' .
+            ' LEFT JOIN meetings_cstm ON meetings.id = meetings_cstm.id_c ' .
+            ' WHERE meetings.deleted = 0 AND ' .
                 " meetings.parent_type = '" . $this->db->quote($bean->module_name) . "' AND " .
                 " meetings.parent_id = '" . $this->db->quote($bean->id) . "'";
         $result = $this->db->query($query);
@@ -645,7 +648,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
             $idQ = $this->db->quote($row['id']);
             if (!empty($row['id_c'])) {
                 // Update Custom Fields
-                $query = "UPDATE meetings_cstm SET" .
+                $query = 'UPDATE meetings_cstm SET' .
                         " jjwg_maps_lat_c = '" . $latQ . "'," .
                         " jjwg_maps_lng_c = '" . $lngQ . "'," .
                         " jjwg_maps_geocode_status_c = '".$statusQ."'," .
@@ -654,8 +657,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
                 $update_result = $this->db->query($query);
             } else {
                 // Insert Custom Fields
-                $query = "INSERT INTO meetings_cstm" .
-                        " (id_c, jjwg_maps_lat_c, jjwg_maps_lng_c, jjwg_maps_geocode_status_c, jjwg_maps_address_c)" .
+                $query = 'INSERT INTO meetings_cstm' .
+                    ' (id_c, jjwg_maps_lat_c, jjwg_maps_lng_c, jjwg_maps_geocode_status_c, jjwg_maps_address_c)' .
                         " VALUES ('" . $idQ . "', '" . $latQ . "', '" . $lngQ . "', '".$statusQ."', '" . $addressQ . "') ";
                 $insert_result = $this->db->query($query);
             }
@@ -728,7 +731,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
         }
         $GLOBALS['log']->info(__METHOD__.' $display[\'id\']: '.$display['id']);
 
-        if (!(in_array($table_name, $this->settings['valid_geocode_tables']))) {
+        if (!(in_array($table_name, $this->settings['valid_geocode_tables'], true))) {
             return false;
         }
         $idQ = $this->db->quote($display['id']);
@@ -738,15 +741,15 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $addressQ = (!empty($aInfo['address'])) ? $this->db->quote($aInfo['address']) : '';
 
         // Find record by id
-        $query = "SELECT ".$table_name.".id, ".$table_name."_cstm.id_c FROM ".$table_name." " .
-                " LEFT JOIN ".$table_name."_cstm ON ".$table_name.".id = ".$table_name."_cstm.id_c " .
-                " WHERE ".$table_name.".deleted = 0 AND ".$table_name.".id = '" . $idQ . "'";
+        $query = 'SELECT ' .$table_name. '.id, ' .$table_name. '_cstm.id_c FROM ' .$table_name. ' ' .
+            ' LEFT JOIN ' .$table_name. '_cstm ON ' .$table_name. '.id = ' .$table_name. '_cstm.id_c ' .
+            ' WHERE ' .$table_name. '.deleted = 0 AND ' .$table_name.".id = '" . $idQ . "'";
         $result = $this->db->query($query);
         $row = $this->db->fetchByAssoc($result);
 
         if (!empty($row['id_c'])) {
             // Update Custom Fields
-            $query = "UPDATE " . $table_name . "_cstm SET" .
+            $query = 'UPDATE ' . $table_name . '_cstm SET' .
                     " jjwg_maps_lat_c = '" . $latQ . "'," .
                     " jjwg_maps_lng_c = '" . $lngQ . "'," .
                     " jjwg_maps_geocode_status_c = '".$statusQ."'," .
@@ -755,8 +758,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
             $update_result = $this->db->query($query);
         } else {
             // Insert Custom Fields
-            $query = "INSERT INTO " . $table_name . "_cstm" .
-                    " (id_c, jjwg_maps_lat_c, jjwg_maps_lng_c, jjwg_maps_geocode_status_c, jjwg_maps_address_c)" .
+            $query = 'INSERT INTO ' . $table_name . '_cstm' .
+                ' (id_c, jjwg_maps_lat_c, jjwg_maps_lng_c, jjwg_maps_geocode_status_c, jjwg_maps_address_c)' .
                     " VALUES ('" . $idQ . "', '" . $latQ . "', '" . $lngQ . "', '".$statusQ."', '" . $addressQ . "') ";
             $insert_result = $this->db->query($query);
         }
@@ -778,7 +781,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $GLOBALS['log']->info(__METHOD__.' $bean->object_name: '.$bean->object_name);
 
         $table_name = $bean->table_name;
-        if (!(in_array($table_name, $this->settings['valid_geocode_tables']))) {
+        if (!(in_array($table_name, $this->settings['valid_geocode_tables'], true))) {
             return false;
         }
         $idQ = $this->db->quote($bean->id);
@@ -788,15 +791,15 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $addressQ = (!empty($aInfo['address'])) ? $this->db->quote($aInfo['address']) : '';
 
         // Find record by id
-        $query = "SELECT ".$table_name.".id, ".$table_name."_cstm.id_c FROM ".$table_name." " .
-                " LEFT JOIN ".$table_name."_cstm ON ".$table_name.".id = ".$table_name."_cstm.id_c " .
-                " WHERE ".$table_name.".deleted = 0 AND ".$table_name.".id = '" . $idQ . "'";
+        $query = 'SELECT ' .$table_name. '.id, ' .$table_name. '_cstm.id_c FROM ' .$table_name. ' ' .
+            ' LEFT JOIN ' .$table_name. '_cstm ON ' .$table_name. '.id = ' .$table_name. '_cstm.id_c ' .
+            ' WHERE ' .$table_name. '.deleted = 0 AND ' .$table_name.".id = '" . $idQ . "'";
         $result = $this->db->query($query);
         $row = $this->db->fetchByAssoc($result);
 
         if (!empty($row['id_c'])) {
             // Update Custom Fields
-            $query = "UPDATE " . $table_name . "_cstm SET" .
+            $query = 'UPDATE ' . $table_name . '_cstm SET' .
                     " jjwg_maps_lat_c = '" . $latQ . "'," .
                     " jjwg_maps_lng_c = '" . $lngQ . "'," .
                     " jjwg_maps_geocode_status_c = '".$statusQ."'," .
@@ -805,8 +808,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
             $update_result = $this->db->query($query);
         } else {
             // Insert Custom Fields
-            $query = "INSERT INTO " . $table_name . "_cstm" .
-                    " (id_c, jjwg_maps_lat_c, jjwg_maps_lng_c, jjwg_maps_geocode_status_c, jjwg_maps_address_c)" .
+            $query = 'INSERT INTO ' . $table_name . '_cstm' .
+                ' (id_c, jjwg_maps_lat_c, jjwg_maps_lng_c, jjwg_maps_geocode_status_c, jjwg_maps_address_c)' .
                     " VALUES ('" . $idQ . "', '" . $latQ . "', '" . $lngQ . "', '".$statusQ."', '" . $addressQ . "') ";
             $insert_result = $this->db->query($query);
         }
@@ -827,17 +830,17 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $GLOBALS['log']->info(__METHOD__.' $bean->object_name: '.$bean->object_name);
 
         $table_name = $bean->table_name;
-        if (!(in_array($table_name, $this->settings['valid_geocode_tables']))) {
+        if (!(in_array($table_name, $this->settings['valid_geocode_tables'], true))) {
             return false;
         }
 
         // Update Fields to NULL
-        $query = "UPDATE " . $table_name . "_cstm SET" .
-                " jjwg_maps_lat_c = NULL," .
-                " jjwg_maps_lng_c = NULL," .
-                " jjwg_maps_geocode_status_c = NULL," .
-                " jjwg_maps_address_c = NULL" .
-                " WHERE 1=1";
+        $query = 'UPDATE ' . $table_name . '_cstm SET' .
+            ' jjwg_maps_lat_c = NULL,' .
+            ' jjwg_maps_lng_c = NULL,' .
+            ' jjwg_maps_geocode_status_c = NULL,' .
+            ' jjwg_maps_address_c = NULL' .
+            ' WHERE 1=1';
         $update_result = $this->db->query($query);
     }
 
@@ -849,7 +852,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
      */
     public function getGeocodeAddressesResult($table_name, $limit = 0, $id = '')
     {
-        if (!(in_array($table_name, $this->settings['valid_geocode_tables']))) {
+        if (!(in_array($table_name, $this->settings['valid_geocode_tables'], true))) {
             return false;
         }
         if (empty($limit) || !is_int($limit)) {
@@ -857,16 +860,16 @@ class jjwg_Maps extends jjwg_Maps_sugar
         }
         // Find the Items to Geocode
         // Assume there is no address at 0,0; it's in the Atlantic Ocean
-        $where_conds = "(" .
-                "(" . $table_name . "_cstm.jjwg_maps_lat_c = 0 AND " .
-                "" . $table_name . "_cstm.jjwg_maps_lng_c = 0)" .
-                " OR " .
-                "(" . $table_name . "_cstm.jjwg_maps_lat_c IS NULL AND " .
-                "" . $table_name . "_cstm.jjwg_maps_lng_c IS NULL)" .
-                ")" .
-                " AND " .
-                "(" . $table_name . "_cstm.jjwg_maps_geocode_status_c = '' OR " .
-                "" . $table_name . "_cstm.jjwg_maps_geocode_status_c IS NULL)";
+        $where_conds = '(' .
+            '(' . $table_name . '_cstm.jjwg_maps_lat_c = 0 AND ' .
+            '' . $table_name . '_cstm.jjwg_maps_lng_c = 0)' .
+            ' OR ' .
+            '(' . $table_name . '_cstm.jjwg_maps_lat_c IS NULL AND ' .
+            '' . $table_name . '_cstm.jjwg_maps_lng_c IS NULL)' .
+            ')' .
+            ' AND ' .
+            '(' . $table_name . "_cstm.jjwg_maps_geocode_status_c = '' OR " .
+            '' . $table_name . '_cstm.jjwg_maps_geocode_status_c IS NULL)';
         // Limit to only one result
         if (@is_guid($id)) {
             $where_conds .= " AND id = '".$id."'";
@@ -874,10 +877,10 @@ class jjwg_Maps extends jjwg_Maps_sugar
         // Create Simple Query
         // Note: Do not use create_new_list_query() or process_list_query()
         // as they will typically exceeded memory allowed.
-        $query = "SELECT " . $table_name . ".*, " . $table_name . "_cstm.* FROM " . $table_name .
-                " LEFT JOIN " . $table_name . "_cstm " .
-                " ON " . $table_name . ".id = " . $table_name . "_cstm.id_c " .
-                " WHERE " . $table_name . ".deleted = 0 AND " . $where_conds;
+        $query = 'SELECT ' . $table_name . '.*, ' . $table_name . '_cstm.* FROM ' . $table_name .
+            ' LEFT JOIN ' . $table_name . '_cstm ' .
+            ' ON ' . $table_name . '.id = ' . $table_name . '_cstm.id_c ' .
+            ' WHERE ' . $table_name . '.deleted = 0 AND ' . $where_conds;
         $display_result = $this->db->limitQuery($query, 0, $limit);
 
         return $display_result;
@@ -909,14 +912,16 @@ class jjwg_Maps extends jjwg_Maps_sugar
             $base_url .= '?';
         }
         // Add Address Parameter
-        $request_url = $base_url . "&address=" . urlencode($address);
-        $request_url.="&key=".urlencode($this->settings['google_maps_api_key']);
+        $request_url = $base_url . '&address=' . urlencode($address);
+        $request_url.= '&key=' .urlencode($this->settings['google_maps_api_key']);
 
         $GLOBALS['log']->info(__METHOD__.' cURL Request URL: '.$request_url);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $request_url);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1");
+        curl_setopt($ch, CURLOPT_USERAGENT,
+                    'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1'
+        );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -965,10 +970,10 @@ class jjwg_Maps extends jjwg_Maps_sugar
         $aInfo = array('address' => $address);
         if (!empty($googlemaps) && isset($googlemaps['status'])) {
             $resultsGeography = $googlemaps['results'][0]['geometry'] ?? [];
-            if ($googlemaps['status'] == 'OVER_QUERY_LIMIT') {
+            if ($googlemaps['status'] === 'OVER_QUERY_LIMIT') {
                 // Debug: Log Over Limit
                 $GLOBALS['log']->warn(__METHOD__.' Google Maps API Status of OVER_QUERY_LIMIT: Over Your Quota');
-            } elseif (!$allow_approximate && ($resultsGeography['location_type'] ?? '') == 'APPROXIMATE') {
+            } elseif (!$allow_approximate && ($resultsGeography['location_type'] ?? '') === 'APPROXIMATE') {
                 // Consider 'APPROXIMATE' to be similar to 'ZERO_RESULTS'
                 @$aInfo = array(
                     'address' => $address,
@@ -1042,8 +1047,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
         } elseif ($object_name == 'Opportunity') {
 
             // Find Account - Assume only one related Account
-            $query = "SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c " .
-                    " LEFT JOIN accounts_opportunities ON accounts.id = accounts_opportunities.account_id AND accounts_opportunities.deleted = 0 " .
+            $query = 'SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c ' .
+                ' LEFT JOIN accounts_opportunities ON accounts.id = accounts_opportunities.account_id AND accounts_opportunities.deleted = 0 ' .
                     " WHERE accounts.deleted = 0 AND accounts_opportunities.opportunity_id = '" . $display['id'] . "'";
             $GLOBALS['log']->debug(__METHOD__.' Opportunity to Account');
             $result = $this->db->limitQuery($query, 0, 1);
@@ -1063,7 +1068,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
                 $displayAccountId = $display['account_id'];
             }
 
-            $query = "SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c " .
+            $query = 'SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c ' .
                     " WHERE accounts.deleted = 0 AND id = '" . $displayAccountId . "'";
             $GLOBALS['log']->debug(__METHOD__.' Case to Account');
             $result = $this->db->limitQuery($query, 0, 1);
@@ -1071,8 +1076,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
 
             // If Account is not found; Find many to many Account - Assume only one related Account
             if (empty($fields)) {
-                $query = "SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c " .
-                        " LEFT JOIN accounts_cases ON accounts.id = accounts_cases.account_id AND accounts_cases.deleted = 0 " .
+                $query = 'SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c ' .
+                    ' LEFT JOIN accounts_cases ON accounts.id = accounts_cases.account_id AND accounts_cases.deleted = 0 ' .
                         " WHERE accounts.deleted = 0 AND accounts_cases.case_id = '" . $display['id'] . "'";
                 $GLOBALS['log']->debug(__METHOD__.' Case to Accounts');
                 $result = $this->db->limitQuery($query, 0, 1);
@@ -1085,8 +1090,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
         } elseif ($object_name == 'Project') {
 
             // Check relationship from Project to Account - Assume only one related Account
-            $query = "SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c " .
-                    " LEFT JOIN projects_accounts ON accounts.id = projects_accounts.account_id AND projects_accounts.deleted = 0 " .
+            $query = 'SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c ' .
+                ' LEFT JOIN projects_accounts ON accounts.id = projects_accounts.account_id AND projects_accounts.deleted = 0 ' .
                     " WHERE accounts.deleted = 0 AND projects_accounts.project_id = '" . $display['id'] . "'";
             $GLOBALS['log']->debug(__METHOD__.' Project to Account');
             $result = $this->db->limitQuery($query, 0, 1);
@@ -1094,8 +1099,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
 
             if (empty($fields)) {
                 // Find Opportunity - Assuming that the Project was created from an Opportunity (Closed Won) Detial View
-                $query = "SELECT opportunities.*, opportunities_cstm.* FROM opportunities LEFT JOIN opportunities_cstm ON opportunities.id = opportunities_cstm.id_c " .
-                        " LEFT JOIN projects_opportunities ON opportunities.id = projects_opportunities.opportunity_id AND projects_opportunities.deleted = 0 " .
+                $query = 'SELECT opportunities.*, opportunities_cstm.* FROM opportunities LEFT JOIN opportunities_cstm ON opportunities.id = opportunities_cstm.id_c ' .
+                    ' LEFT JOIN projects_opportunities ON opportunities.id = projects_opportunities.opportunity_id AND projects_opportunities.deleted = 0 ' .
                         " WHERE opportunities.deleted = 0 AND projects_opportunities.project_id = '" . $display['id'] . "'";
                 $GLOBALS['log']->debug(__METHOD__.' Project to Opportunity');
                 $result = $this->db->limitQuery($query, 0, 1);
@@ -1105,8 +1110,8 @@ class jjwg_Maps extends jjwg_Maps_sugar
                     $fields = null;
                 } else {
                     // Find Account - Assume only one related Account for the Opportunity
-                    $query = "SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c " .
-                            " LEFT JOIN accounts_opportunities ON accounts.id = accounts_opportunities.account_id AND accounts_opportunities.deleted = 0 " .
+                    $query = 'SELECT accounts.*, accounts_cstm.* FROM accounts LEFT JOIN accounts_cstm ON accounts.id = accounts_cstm.id_c ' .
+                        ' LEFT JOIN accounts_opportunities ON accounts.id = accounts_opportunities.account_id AND accounts_opportunities.deleted = 0 ' .
                             " WHERE accounts.deleted = 0 AND accounts_opportunities.opportunity_id = '" . $opportunity['id'] . "'";
                     $GLOBALS['log']->debug(__METHOD__.' Opportunity to Account');
                     $result = $this->db->limitQuery($query, 0, 1);
@@ -1120,7 +1125,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
         } elseif ($object_name == 'Meeting') {
 
             // Find Meeting - Flex Relate Fields: meetings.parent_type and meetings.parent_id
-            $query = "SELECT meetings.*, meetings_cstm.* FROM meetings LEFT JOIN meetings_cstm ON meetings.id = meetings_cstm.id_c " .
+            $query = 'SELECT meetings.*, meetings_cstm.* FROM meetings LEFT JOIN meetings_cstm ON meetings.id = meetings_cstm.id_c ' .
                     " WHERE meetings.deleted = 0 AND meetings.id = '" . $display['id'] . "'";
             $GLOBALS['log']->debug(__METHOD__.' Meeting');
             $result = $this->db->limitQuery($query, 0, 1);
@@ -1138,7 +1143,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
 
             // If the parent_type is valid module to geocode
             if (array_key_exists($parent_type, $this->settings['valid_geocode_modules'])
-                    && !empty($parent_id) && $parent_type != 'Meeting') {
+                    && !empty($parent_id) && $parent_type !== 'Meeting') {
 
                 // Define parent object
                 $parent = get_module_info($parent_type);
@@ -1159,7 +1164,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
 
 
         // If related account address has already been geocoded
-        if (!empty($address) && !is_bool($fields) && $fields['jjwg_maps_geocode_status_c'] == 'OK' &&
+        if (!empty($address) && !is_bool($fields) && $fields['jjwg_maps_geocode_status_c'] === 'OK' &&
                 !empty($fields['jjwg_maps_lat_c']) && !empty($fields['jjwg_maps_lng_c'])) {
             $aInfo = array(
                 'address' => $address,
@@ -1262,7 +1267,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
         );
         $log_output = array();
         foreach (get_object_vars($bean) as $key=>$value) {
-            if (in_array($key, $log_keys)) {
+            if (in_array($key, $log_keys, true)) {
                 $log_output[$key] = $value;
             }
         }
@@ -1282,7 +1287,7 @@ class jjwg_Maps extends jjwg_Maps_sugar
 
 function getProspectLists()
 {
-    $query = "SELECT id, name, list_type FROM prospect_lists WHERE deleted = 0 ORDER BY name ASC";
+    $query = 'SELECT id, name, list_type FROM prospect_lists WHERE deleted = 0 ORDER BY name ASC';
     $result = DBManagerFactory::getInstance()->query($query, false);
 
     $list = array();

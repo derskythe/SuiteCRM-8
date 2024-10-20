@@ -48,31 +48,33 @@ class ViewBackups extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
-           "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>',
            $mod_strings['LBL_BACKUPS_TITLE']
            );
     }
-    
+
     /**
+     * @throws Exception
+     * @throws Exception
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $current_user;
-        
+
         if (!is_admin($current_user)) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
         if (isset($GLOBALS['sugar_config']['hide_admin_backup']) && $GLOBALS['sugar_config']['hide_admin_backup']) {
-            sugar_die("Unauthorized access to backups.");
+            sugar_die('Unauthorized access to backups.');
         }
     }
-    
+
     /**
      * @see SugarView::display()
      */
@@ -80,48 +82,48 @@ class ViewBackups extends SugarView
     {
         require_once('include/utils/php_zip_utils.php');
 
-        $form_action = "index.php?module=Administration&action=Backups";
-        
-        $backup_dir = "";
-        $backup_zip = "";
-        $run        = "confirm";
-        $input_disabled = "";
+        $form_action = 'index.php?module=Administration&action=Backups';
+
+        $backup_dir = '';
+        $backup_zip = '';
+        $run        = 'confirm';
+        $input_disabled = '';
         global $mod_strings;
         $errors = array();
-        
+
         // process "run" commands
-        if (isset($_REQUEST['run']) && ($_REQUEST['run'] != "")) {
+        if (isset($_REQUEST['run']) && ($_REQUEST['run'] != '')) {
             $run = $_REQUEST['run'];
-        
+
             $backup_dir = $_REQUEST['backup_dir'];
             $backup_zip = $_REQUEST['backup_zip'];
-            if (strpos((string) $backup_dir, 'phar://') !== false) {
+            if (str_contains((string) $backup_dir, 'phar://')) {
                 $errors[] = $mod_strings['LBL_BACKUP_DIRECTORY_WRITABLE'];
 
                 return $errors;
             }
-            if ($run == "confirm") {
-                if ($backup_dir == "") {
+            if ($run === 'confirm') {
+                if ($backup_dir == '') {
                     $errors[] = $mod_strings['LBL_BACKUP_DIRECTORY_ERROR'];
                 }
-                if ($backup_zip == "") {
+                if ($backup_zip == '') {
                     $errors[] = $mod_strings['LBL_BACKUP_FILENAME_ERROR'];
                 }
-        
+
                 if (count($errors) > 0) {
                     return($errors);
                 }
-        
+
                 if (!is_dir($backup_dir)) {
                     if (!mkdir_recursive($backup_dir)) {
                         $errors[] = $mod_strings['LBL_BACKUP_DIRECTORY_EXISTS'];
                     }
                 }
-        
+
                 if (!is_writable($backup_dir)) {
                     $errors[] = $mod_strings['LBL_BACKUP_DIRECTORY_NOT_WRITABLE'];
                 }
-        
+
                 if (is_file("$backup_dir/$backup_zip")) {
                     $errors[] = $mod_strings['LBL_BACKUP_FILE_EXISTS'];
                 }
@@ -129,14 +131,14 @@ class ViewBackups extends SugarView
                     $errors[] = $mod_strings['LBL_BACKUP_FILE_AS_SUB'];
                 }
                 if (count($errors) == 0) {
-                    $run = "confirmed";
-                    $input_disabled = "readonly";
+                    $run = 'confirmed';
+                    $input_disabled = 'readonly';
                 }
-            } elseif ($run == "confirmed") {
-                ini_set("memory_limit", "-1");
-                ini_set("max_execution_time", "0");
-                zip_dir(".", "$backup_dir/$backup_zip");
-                $run = "done";
+            } elseif ($run === 'confirmed') {
+                ini_set('memory_limit', '-1');
+                ini_set('max_execution_time', '0');
+                zip_dir('.', "$backup_dir/$backup_zip");
+                $run = 'done';
             }
         }
         if (count($errors) > 0) {
@@ -144,18 +146,18 @@ class ViewBackups extends SugarView
                 print("<font color=\"red\">$error</font><br>");
             }
         }
-        if ($run == "done") {
+        if ($run === 'done') {
             $size = filesize("$backup_dir/$backup_zip");
             print($mod_strings['LBL_BACKUP_FILE_STORED'] . " $backup_dir/$backup_zip ($size bytes).<br>\n");
             print("<a href=\"index.php?module=Administration&action=index\">" . $mod_strings['LBL_BACKUP_BACK_HOME']. "</a>\n");
         } else {
             ?>
-        
+
             <?php
             echo getClassicModuleTitle(
-                "Administration",
+                'Administration',
                 array(
-                    "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration')."</a>",
+                    "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration'). '</a>',
                    $mod_strings['LBL_BACKUPS_TITLE'],
                    ),
                 false
@@ -175,26 +177,26 @@ class ViewBackups extends SugarView
             </tr>
             </table>
             <input type=hidden name="run" value="<?php print($run); ?>" />
-        
-        <?php
+
+                <?php
             switch ($run) {
-                case "confirm":
+                case 'confirm':
         ?>
                     <input type="submit" value="<?php echo $mod_strings['LBL_BACKUP_CONFIRM']; ?>" />
         <?php
                     break;
-                case "confirmed":
+                case 'confirmed':
         ?>
                     <?php echo $mod_strings['LBL_BACKUP_CONFIRMED']; ?><br>
                     <input type="submit" value="<?php echo $mod_strings['LBL_BACKUP_RUN_BACKUP']; ?>" />
         <?php
                     break;
             } ?>
-        
+
             </form>
-        
-        <?php
+
+            <?php
         }   // end if/else of $run options
-        $GLOBALS['log']->info("Backups");
+        $GLOBALS['log']->info('Backups');
     }
 }

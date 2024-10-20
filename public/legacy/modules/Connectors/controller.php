@@ -56,7 +56,7 @@ class ConnectorsController extends SugarController
 
     public function process()
     {
-        if (!is_admin($GLOBALS['current_user']) && in_array($this->action, $this->admin_actions)) {
+        if (!is_admin($GLOBALS['current_user']) && in_array($this->action, $this->admin_actions, true)) {
             $this->hasAccess = false;
         }
         parent::process();
@@ -116,6 +116,7 @@ class ConnectorsController extends SugarController
     /**
      * This action it meant to handle the hover action on the listview.
      *
+     * @throws Exception
      */
     public function action_RetrieveSourceDetails()
     {
@@ -165,6 +166,9 @@ class ConnectorsController extends SugarController
     }
 
 
+    /**
+     * @throws SmartyException
+     */
     public function action_GetSearchForm()
     {
         $this->view = 'ajax';
@@ -275,6 +279,9 @@ class ConnectorsController extends SugarController
         $this->view = 'ajax';
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_CallSoap()
     {
         $this->view = 'ajax';
@@ -301,6 +308,9 @@ class ConnectorsController extends SugarController
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function action_DefaultSoapPopup()
     {
         $this->view = 'ajax';
@@ -351,7 +361,7 @@ class ConnectorsController extends SugarController
         $sources = array();
         $properties = array();
         foreach ($_REQUEST as $name=>$value) {
-            if (preg_match("/^source[0-9]+$/", $name, $matches)) {
+            if (preg_match('/^source[0-9]+$/', $name, $matches)) {
                 $source_id = $value;
                 $properties = array();
                 foreach ($_REQUEST as $arg=>$val) {
@@ -372,7 +382,7 @@ class ConnectorsController extends SugarController
         // BEGIN SUGAR INT
         if (empty($_REQUEST['from_unit_test'])) {
             // END SUGAR INT
-            header("Location: index.php?action=ConnectorSettings&module=Connectors");
+            header('Location: index.php?action=ConnectorSettings&module=Connectors');
             // BEGIN SUGAR INT
         }
         // END SUGAR INT
@@ -486,7 +496,7 @@ class ConnectorsController extends SugarController
 
         //Write the new searchdefs out
         if (!write_array_to_file('searchdefs', $searchdefs, 'custom/modules/Connectors/metadata/searchdefs.php')) {
-            $GLOBALS['log']->fatal("Cannot write file custom/modules/Connectors/metadata/searchdefs.php");
+            $GLOBALS['log']->fatal('Cannot write file custom/modules/Connectors/metadata/searchdefs.php');
         }
 
         //Unset the $_SESSION['searchDefs'] variable
@@ -549,7 +559,7 @@ class ConnectorsController extends SugarController
                 } //if
             } //foreach
 
-            if ($id == 'ext_rest_twitter' || $id == 'ext_rest_facebook') {
+            if ($id === 'ext_rest_twitter' || $id === 'ext_rest_facebook') {
                 $full_list = array_keys($mapping['beans']);
 
                 $new_modules = array_diff($full_list, $mapped_modules);
@@ -587,9 +597,9 @@ class ConnectorsController extends SugarController
 
         // save eapm configs
         foreach ($connectors as $connector_name => $data) {
-            if (isset($sources[$connector_name]) && !empty($data["eapm"])) {
+            if (isset($sources[$connector_name]) && !empty($data['eapm'])) {
                 // if we touched it AND it has EAPM data
-                $connectors[$connector_name]["eapm"]["enabled"] = !empty($_REQUEST[$connector_name . "_external"]);
+                $connectors[$connector_name]['eapm']['enabled'] = !empty($_REQUEST[$connector_name . '_external']);
             }
         }
         ConnectorUtils::saveConnectors($connectors);
@@ -598,7 +608,7 @@ class ConnectorsController extends SugarController
         // BEGIN SUGAR INT
         if (empty($_REQUEST['from_unit_test'])) {
             // END SUGAR INT
-            header("Location: index.php?action=ConnectorSettings&module=Connectors");
+            header('Location: index.php?action=ConnectorSettings&module=Connectors');
             // BEGIN SUGAR INT
         }
         // END SUGAR INT
@@ -673,7 +683,7 @@ class ConnectorsController extends SugarController
         // BEGIN SUGAR INT
         if (empty($_REQUEST['from_unit_test'])) {
             // END SUGAR INT
-            header("Location: index.php?action=ConnectorSettings&module=Connectors");
+            header('Location: index.php?action=ConnectorSettings&module=Connectors');
             // BEGIN SUGAR INT
         }
         // END SUGAR INT
@@ -790,7 +800,7 @@ class ConnectorsController extends SugarController
             //if the panel already exists we need to push items on to it.
             foreach ($parser->_viewdefs['panels'][ $panel_name ] as $row_key => $row) {
                 foreach ($row as $key_field => $single_field) {
-                    if ($single_field == "(empty)") {
+                    if ($single_field === '(empty)') {
                         $parser->_viewdefs['panels'][ $panel_name ][ $row_key ][ $key_field ] = $field['0']['name'];
                     }
                 }

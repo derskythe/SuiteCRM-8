@@ -57,14 +57,14 @@ if (file_exists('ModuleInstall/PackageManager/PackageManagerDisplay.php')) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	UPLOAD FILE PROCESSING
+////    UPLOAD FILE PROCESSING
 switch ($run) {
     case 'upload':
         logThis('running upload');
         $perform = false;
         $tempFile = '';
 
-        if (isset($_REQUEST['release_id']) && $_REQUEST['release_id'] != "") {
+        if (isset($_REQUEST['release_id']) && $_REQUEST['release_id'] != '') {
             require_once('ModuleInstall/PackageManager/PackageManager.php');
             $pm = new PackageManager();
             $tempFile = '';
@@ -74,7 +74,7 @@ switch ($run) {
                 if (!empty($release_map)) {
                     $tempFile = $pm->download($release_map['category_id'], $release_map['package_id'], $_REQUEST['release_id']);
                     $perform = true;
-                    if ($release_map['type'] != 'patch') {
+                    if ($release_map['type'] !== 'patch') {
                         $pm->performSetup($tempFile, $release_map['type'], false);
                         header('Location: index.php?module=Administration&action=UpgradeWizard&view=module');
                     }
@@ -99,7 +99,7 @@ switch ($run) {
                     $out = "<b><span class='error'>{$mod_strings['ERR_UW_PHP_FILE_ERRORS'][$error]}</span></b><br />";
                 }
             } else {
-                $tempFile = "upload://".$upload->get_stored_file_name();
+                $tempFile = 'upload://' .$upload->get_stored_file_name();
                 if (!$upload->final_move($tempFile)) {
                     logThis('ERROR: could not move temporary file to final destination!');
                     unlinkUWTempFiles();
@@ -147,7 +147,7 @@ switch ($run) {
                 $upgrade_zip_type = $manifest['type'];
 
                 // exclude the bad permutations
-                if ($upgrade_zip_type != "patch") {
+                if ($upgrade_zip_type !== 'patch') {
                     logThis('ERROR: incorrect patch type found: '.$upgrade_zip_type);
                     unlinkUWTempFiles();
                     $out = "<b><span class='error'>{$mod_strings['ERR_UW_ONLY_PATCHES']}</span></b><br />";
@@ -156,13 +156,13 @@ switch ($run) {
 
                 sugar_mkdir("$base_upgrade_dir/$upgrade_zip_type", 0775, true);
                 $target_path = "$base_upgrade_dir/$upgrade_zip_type/$base_filename";
-                $target_manifest = remove_file_extension($target_path) . "-manifest.php";
+                $target_manifest = remove_file_extension($target_path) . '-manifest.php';
 
-                if (isset($manifest['icon']) && $manifest['icon'] != "") {
+                if (isset($manifest['icon']) && $manifest['icon'] != '') {
                     logThis('extracting icons.');
                     $icon_location = extractFile($tempFile, $manifest['icon']);
                     $path_parts = pathinfo((string) $icon_location);
-                    copy($icon_location, remove_file_extension($target_path) . "-icon." . pathinfo((string) $icon_location, PATHINFO_EXTENSION));
+                    copy($icon_location, remove_file_extension($target_path) . '-icon.' . pathinfo((string) $icon_location, PATHINFO_EXTENSION));
                 }
 
                 if (rename($tempFile, $target_path)) {
@@ -201,7 +201,7 @@ switch ($run) {
     case 'delete':
         logThis('running delete');
 
-        if (!isset($_REQUEST['install_file']) || ($_REQUEST['install_file'] == "")) {
+        if (!isset($_REQUEST['install_file']) || ($_REQUEST['install_file'] == '')) {
             logThis('ERROR: trying to delete non-existent file: ['.$_REQUEST['install_file'].']');
             $error = $mod_strings['ERR_UW_NO_FILE_UPLOADED'];
         }
@@ -226,16 +226,16 @@ switch ($run) {
 
     break;
 }
-////	END UPLOAD FILE PROCESSING FORM
+////    END UPLOAD FILE PROCESSING FORM
 ///////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	READY TO INSTALL UPGRADES
+////    READY TO INSTALL UPGRADES
 $validReturn = getValidPatchName();
 $ready = $validReturn['ready'];
 $disabled = $validReturn['disabled'];
-////	END READY TO INSTALL UPGRADES
+////    END READY TO INSTALL UPGRADES
 ///////////////////////////////////////////////////////////////////////////////
 
 if (isset($_SESSION['install_file']) && !empty($_SESSION['install_file']) && is_file($_SESSION['install_file'])) {
@@ -250,47 +250,47 @@ $frozen = $out;
 
 if (!$stop) {
     if (!empty($GLOBALS['top_message'])) {
-        $GLOBALS['top_message'] .= "<br />";
+        $GLOBALS['top_message'] .= '<br />';
     } else {
         $GLOBALS['top_message'] = '';
     }
     $GLOBALS['top_message'] .= "<b>{$mod_strings['LBL_UPLOAD_SUCCESS']}</b>";
 } else {
     if (!$frozen) {
-        $GLOBALS['top_message'] .= "<br />";
+        $GLOBALS['top_message'] .= '<br />';
     } else {
         $GLOBALS['top_message'] = "<b>{$frozen}</b>";
     }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	UPLOAD FORM
+////    UPLOAD FORM
 $form = '';
 if (empty($GLOBALS['sugar_config']['disable_uw_upload'])) {
     $form =<<<eoq
 <form name="the_form" id='the_form' enctype="multipart/form-data" action="index.php" method="post">
-	<input type="hidden" name="module" value="UpgradeWizard">
-	<input type="hidden" name="action" value="index">
-	<input type="hidden" name="step" value="{$_REQUEST['step']}">
-	<input type="hidden" name="run" value="upload">
+    <input type="hidden" name="module" value="UpgradeWizard">
+    <input type="hidden" name="action" value="index">
+    <input type="hidden" name="step" value="{$_REQUEST['step']}">
+    <input type="hidden" name="run" value="upload">
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="edit view">
 <tr><td>
-	<table width="450" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>
-				{$mod_strings['LBL_SELECT_FILE']}
-				<input type="file" onchange="uploadCheck();" name="upgrade_zip" id="upgrade_zip" size="40" />
-			</td>
-			<td valign="bottom">&nbsp;
-				<input id="upload_button" class='button' type=button
-						{$disabled}
-						disabled="disabled"
-						value="{$mod_strings['LBL_UW_TITLE_UPLOAD']}"
-						onClick="uploadCheck();upgradeP('uploadingUpgradePackage', false);document.the_form.upgrade_zip_escaped.value = escape( document.the_form.upgrade_zip.value );document.the_form.submit();" />
-				<input type=hidden name="upgrade_zip_escaped" value="" />
-			</td>
-		</tr>
-	</table>
+    <table width="450" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+                {$mod_strings['LBL_SELECT_FILE']}
+                <input type="file" onchange="uploadCheck();" name="upgrade_zip" id="upgrade_zip" size="40" />
+            </td>
+            <td valign="bottom">&nbsp;
+                <input id="upload_button" class='button' type=button
+                        {$disabled}
+                        disabled="disabled"
+                        value="{$mod_strings['LBL_UW_TITLE_UPLOAD']}"
+                        onClick="uploadCheck();upgradeP('uploadingUpgradePackage', false);document.the_form.upgrade_zip_escaped.value = escape( document.the_form.upgrade_zip.value );document.the_form.submit();" />
+                <input type=hidden name="upgrade_zip_escaped" value="" />
+            </td>
+        </tr>
+    </table>
 </td></tr>
 </table>
 </form>
@@ -316,65 +316,65 @@ $form3 =<<<eoq2
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="edit view">
 <tr><td>
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>
-				{$mod_strings['LBL_UW_FILES_QUEUED']}<br>
-				{$ready}
-			</td>
-		</tr>
-	</table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>
+                {$mod_strings['LBL_UW_FILES_QUEUED']}<br>
+                {$ready}
+            </td>
+        </tr>
+    </table>
 </td></tr>
 </table>
 <script>
  function fileBrowseLoaded(){
- 	//alert(document.the_form.upgrade_zip.value.length);
- 	if(escape(document.the_form.upgrade_zip.value).length == 0 || escape(document.the_form.upgrade_zip.value) == 'undefined'){
+     //alert(document.the_form.upgrade_zip.value.length);
+     if(escape(document.the_form.upgrade_zip.value).length == 0 || escape(document.the_form.upgrade_zip.value) == 'undefined'){
        document.the_form.upload_button.disabled= 'disabled';
- 	}
- 	else{
- 		document.the_form.upload_button.disabled= '';
- 	}
- 	var len = escape(document.the_form.upgrade_zip.value).length;
+     }
+     else{
+         document.the_form.upload_button.disabled= '';
+     }
+     var len = escape(document.the_form.upgrade_zip.value).length;
  }
 
  function uploadCheck(){
    var len = escape(document.the_form.upgrade_zip.value).length;
    var file_extn = escape(document.the_form.upgrade_zip.value).substr(len-3,len);
    if(file_extn.toLowerCase() !='zip'){
-   		//document.the_form.upgrade_zip.value = '';
-   		//document.getElementById("upgrade_zip").value = '';
-   		alert('Not a zip file');
-   		document.getElementById("upgrade_zip").value='';
-   		document.getElementById("upload_button").disabled='disabled';
+           //document.the_form.upgrade_zip.value = '';
+           //document.getElementById("upgrade_zip").value = '';
+           alert('Not a zip file');
+           document.getElementById("upgrade_zip").value='';
+           document.getElementById("upload_button").disabled='disabled';
    } else {
-	//AJAX call for checking the file size and comparing with php.ini settings.
-	var callback = {
-		 success:function(r) {
-		     var file_size = r.responseText;
-		     //alert(file_size.length);
-		     if(file_size.length >0){
-		       var msg = SUGAR.language.get('UpgradeWizard','LBL_UW_FILE_SIZE');
-		       msg1 =SUGAR.language.get('UpgradeWizard','LBL_UW_FILE_BIGGER_MSG');
-		       msg2 = SUGAR.language.get('UpgradeWizard','LBL_BYTES_WEBSERVER_MSG');
-		       if(msg  == 'undefined') msg = 'The file size, ';
-		       if(msg1 == 'undefined') msg1 = ' Bytes, is greater than what is allowed by the upload_max_filesize and/or the post_max_size settings in php.ini. Change the settings so that they are greater than ';
-		       if(msg2 == 'undefined') msg2 = ' Bytes and restart the webserver.';
-		       msg = msg+file_size+msg1;
-		       msg = msg+file_size+msg2;
-		       alert(msg);
-		       document.getElementById("upload_button").disabled='disabled';
-		     }
-		     else{
-		       document.getElementById("upload_button").disabled='';
-		     }
-		 }
-	}
+    //AJAX call for checking the file size and comparing with php.ini settings.
+    var callback = {
+         success:function(r) {
+             var file_size = r.responseText;
+             //alert(file_size.length);
+             if(file_size.length >0){
+               var msg = SUGAR.language.get('UpgradeWizard','LBL_UW_FILE_SIZE');
+               msg1 =SUGAR.language.get('UpgradeWizard','LBL_UW_FILE_BIGGER_MSG');
+               msg2 = SUGAR.language.get('UpgradeWizard','LBL_BYTES_WEBSERVER_MSG');
+               if(msg  == 'undefined') msg = 'The file size, ';
+               if(msg1 == 'undefined') msg1 = ' Bytes, is greater than what is allowed by the upload_max_filesize and/or the post_max_size settings in php.ini. Change the settings so that they are greater than ';
+               if(msg2 == 'undefined') msg2 = ' Bytes and restart the webserver.';
+               msg = msg+file_size+msg1;
+               msg = msg+file_size+msg2;
+               alert(msg);
+               document.getElementById("upload_button").disabled='disabled';
+             }
+             else{
+               document.getElementById("upload_button").disabled='';
+             }
+         }
+    }
 
     //var file_name = document.getElementById('upgrade_zip').value;
-	var file_name = document.the_form.upgrade_zip.value;
-	postData = 'file_name=' + YAHOO.lang.JSON.stringify(file_name) + '&module=UpgradeWizard&action=UploadFileCheck&to_pdf=1';
-	YAHOO.util.Connect.asyncRequest('POST', 'index.php', callback, postData);
+    var file_name = document.the_form.upgrade_zip.value;
+    postData = 'file_name=' + YAHOO.lang.JSON.stringify(file_name) + '&module=UpgradeWizard&action=UploadFileCheck&to_pdf=1';
+    YAHOO.util.Connect.asyncRequest('POST', 'index.php', callback, postData);
    }
 }
 </script>
@@ -391,21 +391,21 @@ $form5 =<<<eoq5
 
 eoq5;
 $uwMain = $form2.$form3.$form5;
-////	END UPLOAD FORM
+////    END UPLOAD FORM
 ///////////////////////////////////////////////////////////////////////////////
 //set the upgrade progress status. actually it should be set when a file is uploaded
 //set_upgrade_progress('upload','done');
 
 
-$showBack		= true;
-$showCancel		= true;
-$showRecheck	= false;
-$showNext		= true;
+$showBack        = true;
+$showCancel        = true;
+$showRecheck    = false;
+$showNext        = true;
 
-$stepBack		= $_REQUEST['step'] - 1;
-$stepNext		= $_REQUEST['step'] + 1;
-$stepCancel		= -1;
-$stepRecheck	= $_REQUEST['step'];
+$stepBack        = $_REQUEST['step'] - 1;
+$stepNext        = $_REQUEST['step'] + 1;
+$stepCancel        = -1;
+$stepRecheck    = $_REQUEST['step'];
 
 
 $_SESSION['step'][$steps['files'][$_REQUEST['step']]] = ($stop) ? 'failed' : 'success';

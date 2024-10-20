@@ -81,6 +81,8 @@ class CaseUpdatesHook
 
     /**
      * @param aCase $case
+     *
+     * @throws Exception
      */
     public function saveUpdate($case)
     {
@@ -146,7 +148,7 @@ class CaseUpdatesHook
         }
         $postPrefix = 'case_update_id_';
         foreach ($_POST as $key => $val) {
-            if (empty($val) || strpos($key, $postPrefix) !== 0) {
+            if (empty($val) || !str_starts_with($key, $postPrefix)) {
                 continue;
             }
             //Val is selected doc id
@@ -183,6 +185,8 @@ class CaseUpdatesHook
     /**
      * @param $case_id
      * @param $account_id
+     *
+     * @throws Exception
      */
     private function linkAccountAndCase($case_id, $account_id)
     {
@@ -221,6 +225,9 @@ class CaseUpdatesHook
      * Called when saving a new email and adds the case update to the case.
      *
      * @param Email $email
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public function saveEmailUpdate($email)
     {
@@ -288,6 +295,8 @@ class CaseUpdatesHook
      * Changes the status of the supplied case based on the case_status_changes config values.
      *
      * @param $caseId
+     *
+     * @throws Exception
      */
     private function updateCaseStatus($caseId)
     {
@@ -361,6 +370,7 @@ class CaseUpdatesHook
      * @param aCase $case
      *
      * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     private function sendClosureEmail(aCase $case)
     {
@@ -512,6 +522,7 @@ class CaseUpdatesHook
      * @param $contact
      *
      * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     private function sendCreationEmail(aCase $bean, $contact)
     {
@@ -570,6 +581,8 @@ class CaseUpdatesHook
      * @param string $email
      * @param SugarPHPMailer $mailer
      * @param string $caseId
+     *
+     * @throws Exception
      */
     private function logEmail($email, SugarPHPMailer $mailer, $caseId = null)
     {

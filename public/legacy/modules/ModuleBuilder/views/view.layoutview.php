@@ -74,7 +74,7 @@ class ViewLayoutView extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -85,10 +85,13 @@ class ViewLayoutView extends SugarView
     }
 
     // DO NOT REMOVE - overrides parent ViewEdit preDisplay() which attempts to load a bean for a non-existent module
-    public function preDisplay()
+    public function preDisplay() : void
     {
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display($preview = false)
     {
         global $mod_strings ;
@@ -198,18 +201,18 @@ class ViewLayoutView extends SugarView
             }
         }
 
-        $html = "" ;
+        $html = '';
         foreach ($buttons as $button) {
-            if ($button['id'] == "spacer") {
+            if ($button['id'] === 'spacer') {
                 $html .= "<td style='width:{$button['width']}'> </td>";
             } else {
                 $html .= "<td><input id='{$button['id']}' type='button' valign='center' class='button' style='cursor:pointer' "
                    . "onmousedown='this.className=\"buttonOn\";return false;' onmouseup='this.className=\"button\"' "
                    . "onmouseout='this.className=\"button\"' {$button['actionScript']} value = '{$button['text']}'" ;
                 if (!empty($button['disabled'])) {
-                    $html .= " disabled";
+                    $html .= ' disabled';
                 }
-                $html .= "></td>";
+                $html .= '></td>';
             }
         }
 
@@ -260,7 +263,7 @@ class ViewLayoutView extends SugarView
                     }
                 }
                 if (empty($translatedViewType)) {
-                    $label = "LBL_" . strtoupper($this->editLayout);
+                    $label = 'LBL_' . strtoupper($this->editLayout);
                     $translated = translate($label, $this->editModule);
                     if ($translated != $label) {
                         $translatedViewType =  $translated;

@@ -48,7 +48,7 @@ class ViewModule extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -58,6 +58,9 @@ class ViewModule extends SugarView
            );
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $translated_type = [];
@@ -96,7 +99,7 @@ class ViewModule extends SugarView
         }
         $ajax->addCrumb($module_name, '');
         $html=$smarty->fetch('modules/ModuleBuilder/tpls/MBModule/module.tpl');
-        if (!empty($_REQUEST['action']) && $_REQUEST['action']=='SaveModule') {
+        if (!empty($_REQUEST['action']) && $_REQUEST['action'] === 'SaveModule') {
             $html .="<script>ModuleBuilder.treeRefresh('ModuleBuilder')</script>";
         }
         $ajax->addSection('center', translate('LBL_SECTION_MODULE', 'ModuleBuilder'), $html);

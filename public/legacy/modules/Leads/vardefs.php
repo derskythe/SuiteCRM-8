@@ -157,7 +157,7 @@ $dictionary['Lead'] = array('table' => 'leads', 'audited' => true, 'unified_sear
             'name' => 'contacts',
             'type' => 'link',
             'relationship' => 'contact_leads',
-            'module' => "Contacts",
+            'module' => 'Contacts',
             'source' => 'non-db',
             'vname' => 'LBL_CONTACTS',
             'reportable' => false

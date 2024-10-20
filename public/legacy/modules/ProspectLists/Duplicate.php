@@ -63,8 +63,9 @@ if (isset($_POST['isDuplicate']) && $_POST['isDuplicate'] == true) {
     $result = $focus->db->query($query);
     if ($result != null) {
         while (($row = $focus->db->fetchByAssoc($result)) != null) {
-            $iquery ="INSERT INTO prospect_lists_prospects (id,prospect_list_id, related_id, related_type,date_modified) ";
-            $iquery .= "VALUES ("."'".create_guid()."',"."'".$focus->id."',"."'".$row['related_id']."',"."'".$row['related_type']."',"."'".TimeDate::getInstance()->nowDb()."')";
+            $iquery =
+                'INSERT INTO prospect_lists_prospects (id,prospect_list_id, related_id, related_type,date_modified) ';
+            $iquery .= 'VALUES (' ."'".create_guid()."',"."'".$focus->id."',"."'". $row['related_id']."',"."'". $row['related_type']."',"."'".TimeDate::getInstance()->nowDb()."')";
             $focus->db->query($iquery); //save the record.
         }
     }

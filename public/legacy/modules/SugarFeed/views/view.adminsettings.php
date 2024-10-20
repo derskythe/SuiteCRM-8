@@ -47,7 +47,7 @@ class ViewAdminsettings extends SugarView
     /**
      * @see SugarView::_getModuleTab()
      */
-    protected function _getModuleTab()
+    protected function _getModuleTab() : ?string
     {
         return 'Administration';
     }
@@ -55,17 +55,18 @@ class ViewAdminsettings extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
         return array(
-            "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . "</a>",
+            "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . '</a>',
             $mod_strings['LBL_MODULE_NAME'],
         );
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()
@@ -81,7 +82,7 @@ class ViewAdminsettings extends SugarView
             check_logic_hook_file('Users', 'after_login', array(1, 'SugarFeed old feed entry remover', 'modules/SugarFeed/SugarFeedFlush.php', 'SugarFeedFlush', 'flushStaleEntries'));
 
             // We have data posted
-            if ($_REQUEST['process'] == 'true') {
+            if ($_REQUEST['process'] === 'true') {
                 // They want us to process it, the false will just fall outside of this statement
                 if ($_REQUEST['feed_enable'] == '1') {
                     // The feed is enabled, pay attention to what categories should be enabled or disabled
@@ -125,7 +126,7 @@ class ViewAdminsettings extends SugarView
                 $admin->retrieveSettings(false, true);
                 SugarFeed::flushBackendCache();
             } else {
-                if ($_REQUEST['process'] == 'deleteRecords') {
+                if ($_REQUEST['process'] === 'deleteRecords') {
                     if (!isset($db)) {
                         $db = DBManagerFactory::getInstance();
                     }
@@ -135,7 +136,7 @@ class ViewAdminsettings extends SugarView
             }
 
 
-            if ($_REQUEST['process'] == 'true' || $_REQUEST['process'] == 'false') {
+            if ($_REQUEST['process'] === 'true' || $_REQUEST['process'] === 'false') {
                 header('Location: index.php?module=Administration&action=index');
                 return;
             }
@@ -163,11 +164,11 @@ class ViewAdminsettings extends SugarView
             }
 
             $currModule['module'] = $module;
-            if ($module == 'UserFeed') {
+            if ($module === 'UserFeed') {
                 // Fake module, need to handle specially
                 $userFeedEnabled = $currModule['enabled'];
                 continue;
-            } elseif ($module == 'Facebook' || $module == 'Twitter') {
+            } elseif ($module === 'Facebook' || $module === 'Twitter') {
                 $currModule['label'] = $module;
             } else {
                 $currModule['label'] = $GLOBALS['app_list_strings']['moduleList'][$module];
@@ -179,13 +180,13 @@ class ViewAdminsettings extends SugarView
         $sugar_smarty->assign('user_feed_enabled', $userFeedEnabled);
         echo '<div class="activity-stream">';
         echo getClassicModuleTitle(
-            "Administration",
+            'Administration',
             array(
-                "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . "</a>",
+                "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . '</a>',
                 $mod_strings['LBL_MODULE_NAME'],
             ),
             false
-        );       
+        );
         $sugar_smarty->display('modules/SugarFeed/tpls/AdminSettings.tpl');
         echo '</div>';
     }

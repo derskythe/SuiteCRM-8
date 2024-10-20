@@ -51,10 +51,10 @@ class ViewHistory extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
@@ -64,15 +64,15 @@ class ViewHistory extends SugarView
     public function display()
     {
         $this->layout = strtolower($_REQUEST [ 'view' ]) ;
-        
+
         $subpanelName = null ;
-        if ((strtolower($this->layout) == 'listview') && (!empty($_REQUEST [ 'subpanel' ]))) {
+        if ((strtolower($this->layout) === 'listview') && (!empty($_REQUEST ['subpanel' ]))) {
             $subpanelName = $_REQUEST [ 'subpanel' ] ;
         }
-        
-        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST [ 'view_package' ]) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
+
+        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST [ 'view_package' ]) !== 'studio')) ? $_REQUEST ['view_package' ] : null ;
         $this->module = $_REQUEST [ 'view_module' ] ;
-        
+
         $this->parser = ParserFactory::getParser($this->layout, $this->module, $packageName, $subpanelName) ;
         $this->history = $this->parser->getHistory() ;
         $action = ! empty($_REQUEST [ 'histAction' ]) ? $_REQUEST [ 'histAction' ] : 'browse' ;
@@ -80,6 +80,9 @@ class ViewHistory extends SugarView
         $this->$action() ;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function browse()
     {
         $smarty = new Sugar_Smarty() ;
@@ -87,7 +90,7 @@ class ViewHistory extends SugarView
         $smarty->assign('mod_strings', $mod_strings) ;
         $smarty->assign('view_module', $this->module) ;
         $smarty->assign('view', $this->layout) ;
-        
+
         if (! empty($_REQUEST [ 'subpanel' ])) {
             $smarty->assign('subpanel', $_REQUEST [ 'subpanel' ]) ;
         }
@@ -102,7 +105,7 @@ class ViewHistory extends SugarView
             $dbDate = $timedate->fromTimestamp($ts)->asDb();
             $displayTS = $timedate->to_display_date_time($dbDate) ;
             if ($page * $this->pageSize + $i + 1 == $count) {
-                $displayTS = translate("LBL_MB_DEFAULT_LAYOUT");
+                $displayTS = translate('LBL_MB_DEFAULT_LAYOUT');
             }
             $snapshots [ $ts ] = $displayTS ;
             $ts = $this->history->getNext() ;
@@ -113,7 +116,7 @@ class ViewHistory extends SugarView
         $snapshots = array_slice($snapshots, 0, $this->pageSize, true) ;
         $smarty->assign('currentPage', $page) ;
         $smarty->assign('snapshots', $snapshots) ;
-        
+
         $html = $smarty->fetch('modules/ModuleBuilder/tpls/history.tpl') ;
         echo $html ;
     }
@@ -136,29 +139,29 @@ class ViewHistory extends SugarView
                 "class='button' onclick='ModuleBuilder.history.revert(\"$this->module\",\"{$this->layout}\",\"$sid\"$subpanel);' style='margin:5px;'>" ;
         $this->history->restoreByTimestamp($sid) ;
         $view ;
-        if ($this->layout == 'listview') {
-            require_once("modules/ModuleBuilder/views/view.listview.php") ;
+        if ($this->layout === 'listview') {
+            require_once('modules/ModuleBuilder/views/view.listview.php') ;
             $view = new ViewListView() ;
         } else {
-            if ($this->layout == 'basic_search' || $this->layout == 'advanced_search') {
-                require_once("modules/ModuleBuilder/views/view.searchview.php") ;
+            if ($this->layout === 'basic_search' || $this->layout === 'advanced_search') {
+                require_once('modules/ModuleBuilder/views/view.searchview.php') ;
                 $view = new ViewSearchView() ;
             } else {
-                if ($this->layout == 'dashlet' || $this->layout == 'dashletsearch') {
-                    require_once("modules/ModuleBuilder/views/view.dashlet.php") ;
+                if ($this->layout === 'dashlet' || $this->layout === 'dashletsearch') {
+                    require_once('modules/ModuleBuilder/views/view.dashlet.php') ;
                     $view = new ViewDashlet() ;
                 } else {
-                    if ($this->layout == 'popuplist' || $this->layout == 'popupsearch') {
-                        require_once("modules/ModuleBuilder/views/view.popupview.php") ;
+                    if ($this->layout === 'popuplist' || $this->layout === 'popupsearch') {
+                        require_once('modules/ModuleBuilder/views/view.popupview.php') ;
                         $view = new ViewPopupview() ;
                     } else {
-                        require_once("modules/ModuleBuilder/views/view.layoutview.php") ;
+                        require_once('modules/ModuleBuilder/views/view.layoutview.php') ;
                         $view = new ViewLayoutView() ;
                     }
                 }
             }
         }
-        
+
         $view->display(true) ;
         $this->history->undoRestore() ;
     }

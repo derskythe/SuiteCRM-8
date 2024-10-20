@@ -58,6 +58,8 @@ class ImportViewStep2 extends ImportView
 
 
     /**
+     * @throws SmartyException
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()
@@ -67,25 +69,28 @@ class ImportViewStep2 extends ImportView
         $this->instruction = 'LBL_SELECT_UPLOAD_INSTRUCTION';
         $this->ss->assign('INSTRUCTION', $this->getInstruction());
 
-        $this->ss->assign("MODULE_TITLE", $this->getModuleTitle(false));
-        $this->ss->assign("IMP", $import_mod_strings);
-        $this->ss->assign("CURRENT_STEP", $this->currentStep);
-        $this->ss->assign("TYPE", (!empty($_REQUEST['type']) ? $_REQUEST['type'] : "import"));
-        $this->ss->assign("CUSTOM_DELIMITER", (!empty($_REQUEST['custom_delimiter']) ? $_REQUEST['custom_delimiter'] : ","));
-        $this->ss->assign("CUSTOM_ENCLOSURE", htmlentities(
-            ((string) (!empty($_REQUEST['custom_enclosure']) && $_REQUEST['custom_enclosure'] != 'other'
+        $this->ss->assign('MODULE_TITLE', $this->getModuleTitle(false));
+        $this->ss->assign('IMP', $import_mod_strings);
+        $this->ss->assign('CURRENT_STEP', $this->currentStep);
+        $this->ss->assign('TYPE', (!empty($_REQUEST['type']) ? $_REQUEST['type'] : 'import'));
+        $this->ss->assign('CUSTOM_DELIMITER', (!empty($_REQUEST['custom_delimiter']) ? $_REQUEST['custom_delimiter'] : ','));
+        $this->ss->assign(
+            'CUSTOM_ENCLOSURE', htmlentities(
+            ((string) (!empty($_REQUEST['custom_enclosure']) && $_REQUEST['custom_enclosure'] !== 'other'
                 ? $_REQUEST['custom_enclosure'] :
                 (!empty($_REQUEST['custom_enclosure_other'])
-                    ? $_REQUEST['custom_enclosure_other'] : "")))
+                    ? $_REQUEST['custom_enclosure_other'] : '')))
         ));
 
-        $this->ss->assign("IMPORT_MODULE", $_REQUEST['import_module']);
-        $this->ss->assign("HEADER", $app_strings['LBL_IMPORT']." ". $mod_strings['LBL_MODULE_NAME']);
-        $this->ss->assign("JAVASCRIPT", $this->_getJS());
-        $this->ss->assign("SAMPLE_URL", "<a href=\"javascript: void(0);\" onclick=\"window.location.href='index.php?entryPoint=export&module=".urlencode($_REQUEST['import_module'])."&action=index&all=true&sample=true'\" >".$mod_strings['LBL_EXAMPLE_FILE']."</a>");
+        $this->ss->assign('IMPORT_MODULE', $_REQUEST['import_module']);
+        $this->ss->assign('HEADER', $app_strings['LBL_IMPORT']. ' ' . $mod_strings['LBL_MODULE_NAME']);
+        $this->ss->assign('JAVASCRIPT', $this->_getJS());
+        $this->ss->assign(
+            'SAMPLE_URL', "<a href=\"javascript: void(0);\" onclick=\"window.location.href='index.php?entryPoint=export&module=".urlencode($_REQUEST['import_module'])."&action=index&all=true&sample=true'\" >". $mod_strings['LBL_EXAMPLE_FILE']. '</a>'
+        );
 
-        $displayBackBttn = isset($_REQUEST['action']) && $_REQUEST['action'] == 'Step2' && isset($_REQUEST['current_step']) && $_REQUEST['current_step']!=='2'? true : false; //bug 51239
-        $this->ss->assign("displayBackBttn", $displayBackBttn);
+        $displayBackBttn = isset($_REQUEST['action']) && $_REQUEST['action'] === 'Step2' && isset($_REQUEST['current_step']) && $_REQUEST['current_step']!=='2'? true : false; //bug 51239
+        $this->ss->assign('displayBackBttn', $displayBackBttn);
 
         // get user defined import maps
         $is_admin = is_admin($current_user);
@@ -104,7 +109,7 @@ class ImportViewStep2 extends ImportView
         if (is_countable($custom_imports_arr) ? count($custom_imports_arr) : 0) {
             $custom = array();
             foreach ($custom_imports_arr as $import) {
-                $custom[] = array( "IMPORT_NAME" => $import->name,"IMPORT_ID"   => $import->id);
+                $custom[] = array( 'IMPORT_NAME' => $import->name, 'IMPORT_ID' => $import->id);
             }
             $this->ss->assign('custom_imports', $custom);
         }
@@ -114,7 +119,7 @@ class ImportViewStep2 extends ImportView
         if (is_countable($published_imports_arr) ? count($published_imports_arr) : 0) {
             $published = array();
             foreach ($published_imports_arr as $import) {
-                $published[] = array("IMPORT_NAME" => $import->name, "IMPORT_ID"   => $import->id);
+                $published[] = array( 'IMPORT_NAME' => $import->name, 'IMPORT_ID' => $import->id);
             }
             $this->ss->assign('published_imports', $published);
         }
@@ -122,19 +127,19 @@ class ImportViewStep2 extends ImportView
 
         // add instructions for anything other than custom_delimited
         $instructions = array();
-        $lang_key = "CUSTOM";
+        $lang_key = 'CUSTOM';
 
         for ($i = 1; isset($mod_strings["LBL_{$lang_key}_NUM_$i"]);$i++) {
             $instructions[] = array(
-                "STEP_NUM"         => $mod_strings["LBL_NUM_$i"],
-                "INSTRUCTION_STEP" => $mod_strings["LBL_{$lang_key}_NUM_$i"],
+                'STEP_NUM'         => $mod_strings["LBL_NUM_$i"],
+                'INSTRUCTION_STEP' => $mod_strings["LBL_{$lang_key}_NUM_$i"],
             );
         }
 
-        $this->ss->assign("instructions", $instructions);
+        $this->ss->assign('instructions', $instructions);
 
         $content = $this->ss->fetch('modules/Import/tpls/step2.tpl');
-        $this->ss->assign("CONTENT", $content);
+        $this->ss->assign('CONTENT', $content);
         $this->ss->display('modules/Import/tpls/wizardWrapper.tpl');
     }
 

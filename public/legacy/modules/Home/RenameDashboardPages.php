@@ -50,14 +50,14 @@ $pages = $current_user->getPreference('pages', $type);
 if ((is_countable($pages) ? count($pages) : 0) > 1) {
     if (!isset($_POST['dashName'])) {
         $html = "<form method='post' name='removepageform'/>";
-        $html .= "<table>";
-        $html .= "<tr>";
-        $html .= "<td><label for='dashName'>".$GLOBALS['app_strings']['LBL_ENTER_DASHBOARD_NAME']." </label></td>";
+        $html .= '<table>';
+        $html .= '<tr>';
+        $html .= "<td><label for='dashName'>".$GLOBALS['app_strings']['LBL_ENTER_DASHBOARD_NAME']. ' </label></td>';
         $html .= "<td><input name='dashName' id='dashName' value='" .$pages[$_POST['page_id']]['pageTitle'] ."'/></td>";
         $html .= "<input type='hidden' id='page_id' name='page_id' value='" . $_POST['page_id']. "' />";
-        $html .= "</tr>";
-        $html .= "</table>";
-        $html .="</form>";
+        $html .= '</tr>';
+        $html .= '</table>';
+        $html .= '</form>';
 
         echo $html;
     } else {

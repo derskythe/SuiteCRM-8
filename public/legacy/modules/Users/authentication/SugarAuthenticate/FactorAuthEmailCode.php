@@ -53,7 +53,8 @@ class FactorAuthEmailCode implements FactorAuthInterface
     /**
      * Shows an input form for email code authentication
      * (like login page for pwd)
-     * @throws \RuntimeException
+     *
+     * @throws \RuntimeException*@throws SmartyException
      */
     public function showTokenInput()
     {
@@ -86,8 +87,10 @@ class FactorAuthEmailCode implements FactorAuthInterface
      * otherwise false.
      *
      * @param string $token
+     *
      * @return bool
-     * @throws \phpmailerException
+     * @throws \phpmailerException*@throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public function sendToken($token)
     {
@@ -141,6 +144,9 @@ class FactorAuthEmailCode implements FactorAuthInterface
         return $ret;
     }
 
+    /**
+     * @throws Exception
+     */
     public function validateTokenMessage()
     {
         global $sugar_config, $mod_strings;

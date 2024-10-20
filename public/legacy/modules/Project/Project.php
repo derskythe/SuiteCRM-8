@@ -46,21 +46,21 @@ if (!defined('sugarEntry') || !sugarEntry) {
 class Project extends SugarBean
 {
     // database table columns
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $assigned_user_id;
-    public $modified_user_id;
-    public $created_by;
-    public $name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $date_entered;
+    public string $date_modified;
+    public string $assigned_user_id;
+    public string $modified_user_id;
+    public string $created_by;
+    public string $name;
+    public string $description;
+    public int $deleted;
 
 
     // related information
     public $assigned_user_name;
-    public $modified_by_name;
-    public $created_by_name;
+    public string $modified_by_name;
+    public string $created_by_name;
 
     public $account_id;
     public $contact_id;
@@ -73,21 +73,21 @@ class Project extends SugarBean
     public $total_estimated_effort;
     public $total_actual_effort;
 
-    public $object_name = 'Project';
-    public $module_dir = 'Project';
-    public $new_schema = true;
-    public $table_name = 'project';
+    public string $object_name = 'Project';
+    public string $module_dir = 'Project';
+    public bool $new_schema = true;
+    public string $table_name = 'project';
 
-    public $importable = true;
+    public bool $importable = true;
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array(
+    public array $additional_column_fields = array(
         'account_id',
         'contact_id',
         'opportunity_id',
     );
 
-    public $relationship_fields = array(
+    public array $relationship_fields = array(
         'account_id' => 'accounts',
         'contact_id'=>'contacts',
         'opportunity_id'=>'opportunities',
@@ -100,6 +100,7 @@ class Project extends SugarBean
 
     /**
      *
+     * @throws Exception
      */
     public function __construct()
     {
@@ -147,7 +148,11 @@ class Project extends SugarBean
         $new_rel_id = false;
         $new_rel_link = false;
         //this allows us to dynamically relate modules without adding it to the relationship_fields array
-        if (!empty($_REQUEST['relate_id']) && !in_array($_REQUEST['relate_to'], $exclude) && $_REQUEST['relate_id'] != $this->id) {
+        if (!empty($_REQUEST['relate_id']) && !in_array(
+                $_REQUEST['relate_to'],
+                $exclude,
+                true
+            ) && $_REQUEST['relate_id'] != $this->id) {
             $new_rel_id = $_REQUEST['relate_id'];
             $new_rel_relname = $_REQUEST['relate_to'];
             if (!empty($this->in_workflow) && !empty($this->not_use_rel_in_req)) {
@@ -157,12 +162,12 @@ class Project extends SugarBean
             $new_rel_link = $new_rel_relname;
             //Try to find the link in this bean based on the relationship
             foreach ($this->field_defs as $key => $def) {
-                if (isset($def['type']) && $def['type'] == 'link'
+                if (isset($def['type']) && $def['type'] === 'link'
                 && isset($def['relationship']) && $def['relationship'] == $new_rel_relname) {
                     $new_rel_link = $key;
                 }
             }
-            if ($new_rel_link == 'contacts') {
+            if ($new_rel_link === 'contacts') {
                 $accountId = $this->db->getOne('SELECT account_id FROM accounts_contacts WHERE contact_id=' . $this->db->quoted($new_rel_id));
                 if ($accountId !== false) {
                     if ($this->load_relationship('accounts')) {
@@ -179,11 +184,11 @@ class Project extends SugarBean
     {
         $return_value = '';
 
-        $query = 'SELECT SUM('.$this->db->convert('estimated_effort', "IFNULL", 0).') total_estimated_effort';
+        $query = 'SELECT SUM('.$this->db->convert('estimated_effort', 'IFNULL', 0).') total_estimated_effort';
         $query.= ' FROM project_task';
         $query.= " WHERE parent_id='{$project_id}' AND deleted=0";
 
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             $return_value = $row['total_estimated_effort'];
@@ -199,11 +204,11 @@ class Project extends SugarBean
     {
         $return_value = '';
 
-        $query = 'SELECT SUM('.$this->db->convert('actual_effort', "IFNULL", 0).') total_actual_effort';
+        $query = 'SELECT SUM('.$this->db->convert('actual_effort', 'IFNULL', 0).') total_actual_effort';
         $query.=  ' FROM project_task';
         $query.=  " WHERE parent_id='{$project_id}' AND deleted=0";
 
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             $return_value = $row['total_actual_effort'];
@@ -232,7 +237,7 @@ class Project extends SugarBean
         $the_where = '';
         foreach ($where_clauses as $clause) {
             if ($the_where != '') {
-                $the_where .= " OR ";
+                $the_where .= ' OR ';
             }
             $the_where .= $clause;
         }
@@ -247,7 +252,7 @@ class Project extends SugarBean
         $field_list['ASSIGNED_USER_NAME'] = $this->assigned_user_name;
         return $field_list;
     }
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':return true;
@@ -255,31 +260,31 @@ class Project extends SugarBean
         return false;
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join='')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $query = "SELECT
-				project.*,
-                users.user_name as assigned_user_name ";
+        $query = 'SELECT
+                project.*,
+                users.user_name as assigned_user_name ';
         $query .=  $custom_join['select'];
-        $query .= " FROM project ";
+        $query .= ' FROM project ';
 
         $query .=  $custom_join['join'];
-        $query .= " LEFT JOIN users
-                   	ON project.assigned_user_id=users.id ";
+        $query .= ' LEFT JOIN users
+                       ON project.assigned_user_id=users.id ';
 
-        $where_auto = " project.deleted=0 ";
+        $where_auto = ' project.deleted=0 ';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where ($where) AND ".$where_auto;
         } else {
-            $query .= "where ".$where_auto;
+            $query .= 'where ' .$where_auto;
         }
 
         if (!empty($order_by)) {
             //check to see if order by variable already has table name by looking for dot "."
-            $table_defined_already = strpos((string) $order_by, ".");
+            $table_defined_already = strpos((string) $order_by, '.');
 
             if ($table_defined_already === false) {
                 //table not defined yet, define accounts to avoid "ambigous column" SQL error
@@ -296,7 +301,7 @@ class Project extends SugarBean
         $projectTasks = array();
 
         $query = "SELECT * FROM project_task WHERE project_id = '" . $this->id. "' AND deleted = 0 ORDER BY project_task_id";
-        $result = $this->db->query($query, true, "Error retrieving project tasks");
+        $result = $this->db->query($query, true, 'Error retrieving project tasks');
         $row = $this->db->fetchByAssoc($result);
 
         while ($row != null) {
@@ -336,7 +341,7 @@ class Project extends SugarBean
         //--- check if project template is same or changed.
         $new_template_id = property_exists($focus, 'am_projecttemplates_project_1am_projecttemplates_ida') ?
             $focus->am_projecttemplates_project_1am_projecttemplates_ida : null;
-        $current_template_id = "";
+        $current_template_id = '';
 
         $focus->load_relationship('am_projecttemplates_project_1');
         $project_template = $focus->get_linked_beans('am_projecttemplates_project_1', 'AM_ProjectTemplates');
@@ -348,11 +353,11 @@ class Project extends SugarBean
 
 
         //if(!empty($this->id))
-        //	$focus->retrieve($this->id);
+        //    $focus->retrieve($this->id);
 
-        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] == 'true') ||
+        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] === 'true') ||
             (isset($_POST['is_ajax_call']) && !empty($_POST['is_ajax_call']) && !empty($focus->id) ||
-            (isset($_POST['return_action']) && $_POST['return_action'] == 'SubPanelViewer') && !empty($focus->id))||
+            (isset($_POST['return_action']) && $_POST['return_action'] === 'SubPanelViewer') && !empty($focus->id))||
              !isset($_POST['user_invitees']) // we need to check that user_invitees exists before processing, it is ok to be empty
         ) {
             parent::save($check_notify) ; //$focus->save(true);
@@ -382,14 +387,14 @@ class Project extends SugarBean
 
                 //$focus->retrieve($this->id);
 
-                ////	REMOVE RESOURCE RELATIONSHIPS
+                ////    REMOVE RESOURCE RELATIONSHIPS
                 // Calculate which users to flag as deleted and which to add
 
                 // Get all users for the project
                 $focus->load_relationship('users');
                 $users = $focus->get_linked_beans('project_users_1', 'User');
                 foreach ($users as $a) {
-                    if (!in_array($a->id, $userInvitees)) {
+                    if (!in_array($a->id, $userInvitees, true)) {
                         $deleteUsers[$a->id] = $a->id;
                     } else {
                         $existingUsers[$a->id] = $a->id;
@@ -412,7 +417,7 @@ class Project extends SugarBean
                 $focus->load_relationship('contacts');
                 $contacts = $focus->get_linked_beans('project_contacts_1', 'Contact');
                 foreach ($contacts as $a) {
-                    if (!in_array($a->id, $contactInvitees)) {
+                    if (!in_array($a->id, $contactInvitees, true)) {
                         $deleteContacts[$a->id] = $a->id;
                     } else {
                         $existingContacts[$a->id] = $a->id;
@@ -459,7 +464,7 @@ class Project extends SugarBean
                 $focus->project_contacts_1->add($contact_id);
             }
 
-            ////	END REBUILD INVITEE RELATIONSHIPS
+            ////    END REBUILD INVITEE RELATIONSHIPS
             ///////////////////////////////////////////////////////////////////////////
         }
 
@@ -495,8 +500,8 @@ class Project extends SugarBean
 
             $dateformat = $current_user->getPreference('datef');
 
-            $days = array("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday");
-            $businessHours = BeanFactory::getBean("AOBH_BusinessHours");
+            $days = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' );
+            $businessHours = BeanFactory::getBean('AOBH_BusinessHours');
             $bhours = array();
             foreach ($days as $day) {
                 $bh = $businessHours->getBusinessHoursForDay($day);
@@ -553,15 +558,15 @@ class Project extends SugarBean
 
             //Get related project template tasks. Using sql query so that the results can be ordered.
             $get_tasks_sql = "SELECT * FROM am_tasktemplates
-							WHERE id
-							IN (
-								SELECT am_tasktemplates_am_projecttemplatesam_tasktemplates_idb
-								FROM am_tasktemplates_am_projecttemplates_c
-								WHERE am_tasktemplates_am_projecttemplatesam_projecttemplates_ida = '".$new_template_id."'
-								AND deleted =0
-							)
-							AND deleted =0
-							ORDER BY am_tasktemplates.order_number ASC";
+                            WHERE id
+                            IN (
+                                SELECT am_tasktemplates_am_projecttemplatesam_tasktemplates_idb
+                                FROM am_tasktemplates_am_projecttemplates_c
+                                WHERE am_tasktemplates_am_projecttemplatesam_projecttemplates_ida = '".$new_template_id."'
+                                AND deleted =0
+                            )
+                            AND deleted =0
+                            ORDER BY am_tasktemplates.order_number ASC";
             $tasks = $db->query($get_tasks_sql);
 
             //Create new project tasks from the template tasks

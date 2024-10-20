@@ -48,7 +48,7 @@ if (!isset($install_script) || !$install_script) {
     die($mod_strings['ERR_NO_DIRECT_SCRIPT']);
 }
 
-if (is_file("config.php")) {
+if (is_file('config.php')) {
     if (!empty($sugar_config['default_theme'])) {
         $_SESSION['site_default_theme'] = $sugar_config['default_theme'];
     }
@@ -90,12 +90,12 @@ if (is_file("config.php")) {
             $language_values[] = $value;
         }
 
-        $_SESSION['language_keys'] = urlencode(implode(",", $language_keys));
-        $_SESSION['language_values'] = urlencode(implode(",", $language_values));
+        $_SESSION['language_keys'] = urlencode(implode(',', $language_keys));
+        $_SESSION['language_values'] = urlencode(implode(',', $language_values));
     }
 }
 
-////	errors
+////    errors
 $errors = '';
 if (isset($validation_errors) && is_array($validation_errors)) {
     if (count($validation_errors) > 0) {
@@ -109,7 +109,7 @@ if (isset($validation_errors) && is_array($validation_errors)) {
 }
 
 
-////	ternaries
+////    ternaries
 $sugarUpdates = (isset($_SESSION['setup_site_sugarbeet']) && !empty($_SESSION['setup_site_sugarbeet'])) ? 'checked="checked"' : '';
 $siteSecurity = (isset($_SESSION['setup_site_defaults']) && !empty($_SESSION['setup_site_defaults'])) ? 'checked="checked"' : '';
 $customSession = (isset($_SESSION['setup_site_custom_session_path']) && !empty($_SESSION['setup_site_custom_session_path'])) ? 'checked="checked"' : '';
@@ -117,7 +117,7 @@ $customLog = (isset($_SESSION['setup_site_custom_log_dir']) && !empty($_SESSION[
 $customId = (isset($_SESSION['setup_site_specify_guid']) && !empty($_SESSION['setup_site_specify_guid'])) ? 'checked="checked"' : '';
 
 ///////////////////////////////////////////////////////////////////////////////
-////	START OUTPUT
+////    START OUTPUT
 $langHeader = get_language_header();
 $out =<<<EOQ
 <!DOCTYPE HTML>
@@ -154,7 +154,7 @@ $out =<<<EOQ
 EOQ;
 
 //hide this in typical mode
-if (!empty($_SESSION['install_type'])  && strtolower($_SESSION['install_type'])=='custom') {
+if (!empty($_SESSION['install_type'])  && strtolower($_SESSION['install_type']) === 'custom') {
     $out .=<<<EOQ
 <div class='install_block'>
     {$mod_strings['LBL_SITECFG_URL_MSG']}
@@ -168,7 +168,7 @@ if (!empty($_SESSION['install_type'])  && strtolower($_SESSION['install_type'])=
 </div>
 EOQ;
     $db = getDbConnection();
-    if ($db->supports("collation")) {
+    if ($db->supports('collation')) {
         $collationOptions = $db->getCollationList();
     }
     if (!empty($collationOptions)) {

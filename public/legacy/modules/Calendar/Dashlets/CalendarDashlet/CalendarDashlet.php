@@ -85,17 +85,17 @@ class CalendarDashlet extends Dashlet
     /**
      * @see Dashlet::display()
      */
-    public function display()
+    public function display() : string
     {
         ob_start();
 
         if (isset($GLOBALS['cal_strings'])) {
-            return parent::display() . "Only one Calendar dashlet is allowed.";
+            return parent::display() . 'Only one Calendar dashlet is allowed.';
         }
 
         require_once('modules/Calendar/Calendar.php');
         require_once('modules/Calendar/CalendarDisplay.php');
-        require_once("modules/Calendar/CalendarGrid.php");
+        require_once('modules/Calendar/CalendarGrid.php');
 
         global $cal_strings, $current_language;
         $cal_strings = return_module_language($current_language, 'Calendar');
@@ -121,6 +121,7 @@ class CalendarDashlet extends Dashlet
     }
 
     /**
+     * @throws SmartyException
      * @see Dashlet::displayOptions()
      */
     public function displayOptions()

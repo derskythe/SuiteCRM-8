@@ -66,17 +66,17 @@ class OAuth2Clients extends SugarBean
     /**
      * @var string
      */
-    public $table_name = 'oauth2clients';
+    public string $table_name = 'oauth2clients';
 
     /**
      * @var string
      */
-    public $object_name = 'OAuth2Clients';
+    public string $object_name = 'OAuth2Clients';
 
     /**
      * @var string
      */
-    public $module_dir = 'OAuth2Clients';
+    public string $module_dir = 'OAuth2Clients';
 
     /**
      * @var bool
@@ -92,10 +92,12 @@ class OAuth2Clients extends SugarBean
     }
 
     /**
+     * @param bool $check_notify
+     *
+     * @return string ID
+     * @throws Exception
      * @see SugarBean::save()
      *
-     * @param bool $check_notify
-     * @return string ID
      */
     public function save($check_notify = false)
     {

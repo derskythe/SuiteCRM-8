@@ -60,8 +60,8 @@ $us->save();
 $js = '
 <script type="text/javascript">
 function refreshTemplates() {
-	window.opener.refresh_signature_list("'.$us->id.'","'.$us->name.'");
-	window.close();
+    window.opener.refresh_signature_list("'.$us->id.'","'.$us->name.'");
+    window.close();
 }
 
 refreshTemplates();

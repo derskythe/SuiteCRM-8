@@ -44,6 +44,9 @@ class OAuth2TokensController extends SugarController
 
     /**
      * Mass update is only used for revoking tokens at the moment
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public function action_massupdate()
     {

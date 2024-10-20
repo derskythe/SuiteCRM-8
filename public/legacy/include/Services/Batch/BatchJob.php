@@ -68,6 +68,8 @@ abstract class BatchJob implements RunnableSchedulerJob
 
     /**
      * @inheritDoc
+     * @throws JsonException
+     * @throws JsonException
      */
     public function run($data)
     {
@@ -77,7 +79,7 @@ abstract class BatchJob implements RunnableSchedulerJob
             $data = json_decode(html_entity_decode($data), true, 512, JSON_THROW_ON_ERROR);
         }
 
-        if (!$this->shouldRun($data)) {
+        if (!$this->shouldRun()) {
             return false;
         }
 
@@ -178,7 +180,7 @@ abstract class BatchJob implements RunnableSchedulerJob
         $chunkSize = 2500;
         $recordIds = array_chunk($ids, $chunkSize, true);
 
-        $baseQuery = "INSERT INTO " . $table . " (id) VALUES ";
+        $baseQuery = 'INSERT INTO ' . $table . ' (id) VALUES ';
 
         foreach ($recordIds as $chunk) {
 
@@ -353,7 +355,10 @@ abstract class BatchJob implements RunnableSchedulerJob
 
     /**
      * Update job status and data
+     *
      * @param $data
+     *
+     * @throws JsonException
      */
     protected function updateJobStatus($data): void
     {

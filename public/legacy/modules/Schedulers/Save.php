@@ -47,8 +47,8 @@ $focus = BeanFactory::newBean('Schedulers');
 $focus = populateFromPost('', $focus);
 
 ///////////////////////////////////////////////////////////////////////////////
-////	USE_ADV override
-if (!isset($_REQUEST['adv_interval']) || $_REQUEST['adv_interval'] == 'false' || $_REQUEST['adv_interval'] == '0') {
+////    USE_ADV override
+if (!isset($_REQUEST['adv_interval']) || $_REQUEST['adv_interval'] === 'false' || $_REQUEST['adv_interval'] == '0') {
     // Fix for issue #1142 - basic Scheduler settings do not allow to specify  day_of_month or which month it should run on,
     // so both of these options should be set to '*'; . These is especially important in case user moves from advanced to basic settings.
     $_REQUEST['day_of_month'] = '*';
@@ -62,19 +62,19 @@ if (!isset($_REQUEST['adv_interval']) || $_REQUEST['adv_interval'] == 'false' ||
                     5 => 'fri',
                     6 => 'sat',
                     0 => 'sun');
-                    
-    if ((isset($_REQUEST['mon']) && $_REQUEST['mon'] == 'true') &&
-        (isset($_REQUEST['tue']) && $_REQUEST['tue'] == 'true') &&
-        (isset($_REQUEST['wed']) && $_REQUEST['wed'] == 'true') &&
-        (isset($_REQUEST['thu']) && $_REQUEST['thu'] == 'true') &&
-        (isset($_REQUEST['fri']) && $_REQUEST['fri'] == 'true') &&
-        (isset($_REQUEST['sat']) && $_REQUEST['sat'] == 'true') &&
-        (isset($_REQUEST['sun']) && $_REQUEST['sun'] == 'true')) {
+
+    if ((isset($_REQUEST['mon']) && $_REQUEST['mon'] === 'true') &&
+        (isset($_REQUEST['tue']) && $_REQUEST['tue'] === 'true') &&
+        (isset($_REQUEST['wed']) && $_REQUEST['wed'] === 'true') &&
+        (isset($_REQUEST['thu']) && $_REQUEST['thu'] === 'true') &&
+        (isset($_REQUEST['fri']) && $_REQUEST['fri'] === 'true') &&
+        (isset($_REQUEST['sat']) && $_REQUEST['sat'] === 'true') &&
+        (isset($_REQUEST['sun']) && $_REQUEST['sun'] === 'true')) {
         $_REQUEST['day_of_week'] = '*';
     } else {
         $day_string = '';
         foreach ($xtDays as $k => $day) {
-            if (isset($_REQUEST[$day]) && $_REQUEST[$day] == 'true') {
+            if (isset($_REQUEST[$day]) && $_REQUEST[$day] === 'true') {
                 if ($day_string != '') {
                     $day_string .= ',';
                 }
@@ -85,7 +85,7 @@ if (!isset($_REQUEST['adv_interval']) || $_REQUEST['adv_interval'] == 'false' ||
     }
 
 
-    if ($_REQUEST['basic_period'] == 'min') {
+    if ($_REQUEST['basic_period'] === 'min') {
         $_REQUEST['mins'] = '*/'.$_REQUEST['basic_interval'];
         $_REQUEST['hours'] = '*';
     } else {
@@ -99,20 +99,20 @@ if (!isset($_REQUEST['adv_interval']) || $_REQUEST['adv_interval'] == 'false' ||
     }
 }
 
-////	END USE_ADV override
+////    END USE_ADV override
 ///////////////////////////////////////////////////////////////////////////////
-$focus->job_interval = $_REQUEST['mins']."::".$_REQUEST['hours']."::".$_REQUEST['day_of_month']."::".$_REQUEST['months']."::".$_REQUEST['day_of_week'];
+$focus->job_interval = $_REQUEST['mins']. '::' . $_REQUEST['hours']. '::' . $_REQUEST['day_of_month']. '::' . $_REQUEST['months']. '::' . $_REQUEST['day_of_week'];
 // deal with job types
 // neither
-if (($_REQUEST['job_function'] == 'url::') && ($_REQUEST['job_url'] == '' || $_REQUEST['job_url'] == 'http://')) {
+if (($_REQUEST['job_function'] === 'url::') && ($_REQUEST['job_url'] == '' || $_REQUEST['job_url'] === 'http://')) {
     $GLOBALS['log']->fatal('Scheduler save did not get a job_url or job_function');
-} elseif (($_REQUEST['job_function'] != 'url::') && ($_REQUEST['job_url'] != '' && $_REQUEST['job_url'] != 'http://')) {
+} elseif (($_REQUEST['job_function'] !== 'url::') && ($_REQUEST['job_url'] != '' && $_REQUEST['job_url'] !== 'http://')) {
     $GLOBALS['log']->fatal('Scheduler got both a job_url and job_function');
 }
 //function
-if (($_REQUEST['job_function'] != 'url::')) {
+if (($_REQUEST['job_function'] !== 'url::')) {
     $focus->job = $_REQUEST['job_function'];
-} elseif ($_REQUEST['job_url'] != '' && $_REQUEST['job_url'] != 'http://') { // url
+} elseif ($_REQUEST['job_url'] != '' && $_REQUEST['job_url'] !== 'http://') { // url
     $focus->job = 'url::'.$_REQUEST['job_url'];
 } // url wins if both passed
 
@@ -121,17 +121,17 @@ $focus->save();
 $return_id = $focus->id;
 
 $edit='';
-if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != "") {
+if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != '') {
     $return_module = $_REQUEST['return_module'];
 } else {
-    $return_module = "Schedulers";
+    $return_module = 'Schedulers';
 }
-if (isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != "") {
+if (isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != '') {
     $return_action = $_REQUEST['return_action'];
 } else {
-    $return_action = "DetailView";
+    $return_action = 'DetailView';
 }
-if (isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != "") {
+if (isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != '') {
     $return_id = $_REQUEST['return_id'];
 }
 if (!empty($_REQUEST['edit'])) {
@@ -139,6 +139,6 @@ if (!empty($_REQUEST['edit'])) {
     $edit='edit=true';
 }
 
-$GLOBALS['log']->debug("Saved record with id of ".$return_id);
+$GLOBALS['log']->debug('Saved record with id of ' .$return_id);
 
 header("Location: index.php?action=$return_action&module=$return_module&record=$return_id&$edit");

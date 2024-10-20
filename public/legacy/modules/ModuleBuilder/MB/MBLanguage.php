@@ -70,7 +70,7 @@ class MBLanguage
 
         $d = dir($file);
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) != '.' && is_file($file . '/' . $e)) {
+            if (!str_starts_with($e, '.') && is_file($file . '/' . $e)) {
                 include($file.'/'. $e);
                 if (empty($this->strings[$e])) {
                     $this->strings[$e] = $mod_strings;
@@ -94,7 +94,7 @@ class MBLanguage
 
         $d = dir($file);
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) != '.' && is_file($file . '/' . $e)) {
+            if (!str_starts_with($e, '.') && is_file($file . '/' . $e)) {
                 include($file.'/'. $e);
                 if (empty($this->appListStrings[$e])) {
                     $this->appListStrings[$e] = $app_list_strings;
@@ -121,14 +121,14 @@ class MBLanguage
         }
         $this->loadStrings($this->path . '/language');
 
-        //reset global mod_string to prevent conflicts with Module Builder modules 
+        //reset global mod_string to prevent conflicts with Module Builder modules
         $GLOBALS['mod_strings'] = $current_mod_strings;
     }
 
     public function getModStrings($language='en_us')
     {
         $language .= '.lang.php';
-        if (!empty($this->strings[$language]) && $language != 'en_us.lang.php') {
+        if (!empty($this->strings[$language]) && $language !== 'en_us.lang.php') {
             return sugarLangArrayMerge($this->strings['en_us.lang.php'], $this->strings[$language]);
         }
         if (!empty($this->strings['en_us.lang.php'])) {
@@ -140,7 +140,7 @@ class MBLanguage
     public function getAppListStrings($language='en_us')
     {
         $language .= '.lang.php';
-        if (!empty($this->appListStrings[$language]) && $language != 'en_us.lang.php') {
+        if (!empty($this->appListStrings[$language]) && $language !== 'en_us.lang.php') {
             return sugarLangArrayMerge($this->appListStrings['en_us.lang.php'], $this->appListStrings[$language]);
         }
         if (!empty($this->appListStrings['en_us.lang.php'])) {
@@ -154,7 +154,7 @@ class MBLanguage
     {
         $this->appListStrings = array('en_us.lang.php'=>array());
         //By default, generate app strings for the current language as well.
-        $this->appListStrings[$GLOBALS [ 'current_language' ] . ".lang.php"] = array();
+        $this->appListStrings[$GLOBALS [ 'current_language' ] . '.lang.php'] = array();
         $this->loadAppListStrings($this->path . '/../../language/application');
 
         if ($buildFromTemplate) {
@@ -179,19 +179,19 @@ class MBLanguage
             $renameLang = $rename || empty($values) || (isset($values['LBL_MODULE_NAME']) && $this->label != $values['LBL_MODULE_NAME']);
             $mod_strings = return_module_language(str_replace('.lang.php', '', (string) $lang), 'ModuleBuilder');
             $required = array(
-                'LBL_LIST_FORM_TITLE'=>$this->label . " " . $mod_strings['LBL_LIST'],
+                'LBL_LIST_FORM_TITLE'=>$this->label . ' ' . $mod_strings['LBL_LIST'],
                 'LBL_MODULE_NAME'=>$this->label,
                 'LBL_MODULE_TITLE'=>$this->label,
-                'LBL_HOMEPAGE_TITLE'=>$mod_strings['LBL_HOMEPAGE_PREFIX'] . " " . $this->label,
+                'LBL_HOMEPAGE_TITLE'=>$mod_strings['LBL_HOMEPAGE_PREFIX'] . ' ' . $this->label,
                 //FOR GENERIC MENU
-                'LNK_NEW_RECORD'=>$mod_strings['LBL_CREATE'] ." ". $this->label,
-                'LNK_LIST'=>$mod_strings['LBL_VIEW'] ." ". $this->label,
-                'LNK_IMPORT_'.strtoupper($this->key_name)=>translate('LBL_IMPORT') ." ". $this->label,
-                'LBL_SEARCH_FORM_TITLE'=>$mod_strings['LBL_SEARCH_BUTTON'] ." ". $this->label,
+                'LNK_NEW_RECORD'=>$mod_strings['LBL_CREATE'] . ' ' . $this->label,
+                'LNK_LIST'=>$mod_strings['LBL_VIEW'] . ' ' . $this->label,
+                'LNK_IMPORT_'.strtoupper($this->key_name)=>translate('LBL_IMPORT') . ' ' . $this->label,
+                'LBL_SEARCH_FORM_TITLE'=>$mod_strings['LBL_SEARCH_BUTTON'] . ' ' . $this->label,
                 'LBL_HISTORY_SUBPANEL_TITLE'=>$mod_strings['LBL_HISTORY'],
                 'LBL_ACTIVITIES_SUBPANEL_TITLE'=>$mod_strings['LBL_ACTIVITIES'],
                 'LBL_'.strtoupper($this->key_name).'_SUBPANEL_TITLE'=>$this->label,
-                'LBL_NEW_FORM_TITLE' => $mod_strings['LBL_NEW'] ." ". $this->label,
+                'LBL_NEW_FORM_TITLE' => $mod_strings['LBL_NEW'] . ' ' . $this->label,
                 );
             foreach ($required as $k=>$v) {
                 if (empty($values[$k]) || $renameLang) {
@@ -255,7 +255,7 @@ class MBLanguage
     public function getGlobalAppListStringsForMB(&$values)
     {
         //Ensure it comes from MB
-        if (!empty($_REQUEST['view_package']) && !empty($_REQUEST['type']) && $_REQUEST['type'] == 'enum'  && !empty($_REQUEST['options'])) {
+        if (!empty($_REQUEST['view_package']) && !empty($_REQUEST['type']) && $_REQUEST['type'] === 'enum'  && !empty($_REQUEST['options'])) {
             if (!isset($values[$_REQUEST['options']])) {
                 global $app_list_strings;
                 if (!empty($app_list_strings[$_REQUEST['options']])) {
@@ -302,9 +302,9 @@ class MBLanguage
      * @param string $language Language to use to translate the label
      * @return string
      */
-    public function translate($label, $language = "en_us")
+    public function translate($label, $language = 'en_us')
     {
-        $language = $language . ".lang.php";
+        $language = $language . '.lang.php';
         if (isset($this->strings[$language][$label])) {
             return $this->strings[$language][$label];
         }

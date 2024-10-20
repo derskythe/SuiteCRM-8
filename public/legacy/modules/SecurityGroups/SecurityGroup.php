@@ -31,7 +31,7 @@ class SecurityGroup extends SecurityGroup_sugar
         $quotedUserId = $db->quote($user_id);
 
         //need a different query if doing a securitygroups check
-        if ($module == 'SecurityGroups') {
+        if ($module === 'SecurityGroups') {
             return " $table_name.id in (
                 select secg.id from securitygroups secg
                 inner join securitygroups_users secu on secg.id = secu.securitygroup_id and secu.deleted = 0
@@ -93,7 +93,7 @@ class SecurityGroup extends SecurityGroup_sugar
         $quotedUserId = $db->quote($user_id);
 
         //need a different query if doing a securitygroups check
-        if ($module == 'SecurityGroups') {
+        if ($module === 'SecurityGroups') {
             return " LEFT JOIN (select distinct secg.id from securitygroups secg
     inner join securitygroups_users secu on secg.id = secu.securitygroup_id and secu.deleted = 0
             and secu.user_id = '" . $quotedUserId . "'
@@ -138,7 +138,7 @@ class SecurityGroup extends SecurityGroup_sugar
      */
     public static function groupHasAccess($module, $id, $action = '')
     {
-        if (!isset($id) || $id == '[SELECT_ID_LIST]') {
+        if (!isset($id) || $id === '[SELECT_ID_LIST]') {
             return true; //means that this is a listview and everybody is an owner of the listview
         }
 
@@ -198,7 +198,7 @@ class SecurityGroup extends SecurityGroup_sugar
         //don't if saving from a popup (subpanel_field_name check. Save2 is the action but to be safe use the subpanel check)
         if (
             (isset($sugar_config['securitysuite_popup_select']) && $sugar_config['securitysuite_popup_select'] == true
-                && isset($_REQUEST['action']) && $_REQUEST['action'] == 'Save')
+                && isset($_REQUEST['action']) && $_REQUEST['action'] === 'Save')
             || (!empty($_REQUEST['subpanel_field_name']))
         ) {
             //check to see if a member of more than 1 group...if not then just inherit the one.
@@ -235,8 +235,8 @@ class SecurityGroup extends SecurityGroup_sugar
 
             $defaultGroups = self::retrieveDefaultGroups();
             foreach ($defaultGroups as $default_id => $defaultGroup) {
-                if ($defaultGroup['module'] == 'All' || $defaultGroup['module'] == $focus->module_dir) {
-                    if ($focus->module_dir == 'Users') {
+                if ($defaultGroup['module'] === 'All' || $defaultGroup['module'] == $focus->module_dir) {
+                    if ($focus->module_dir === 'Users') {
                         $query = 'insert into securitygroups_users(id,date_modified,deleted,securitygroup_id,user_id,noninheritable) '
                             . "select distinct '" . create_guid() . "'," . $focus->db->convert(
                                 '',
@@ -279,9 +279,9 @@ class SecurityGroup extends SecurityGroup_sugar
             if (array_key_exists($focus->module_dir, $security_modules)) {
                 $query = 'INSERT INTO securitygroups_records(id,securitygroup_id,record_id,module,date_modified,deleted) '
                     . 'SELECT DISTINCT ';
-                if ($focus->db->dbType == 'mysql') {
+                if ($focus->db->dbType === 'mysql') {
                     $query .= ' uuid() ';
-                } elseif ($focus->db->dbType == 'mssql') {
+                } elseif ($focus->db->dbType === 'mssql') {
                     $query .= ' lower(newid()) ';
                 }
                 $currentUserId = isset($current_user->id) ? $focus->db->quote($current_user->id) : null;
@@ -313,9 +313,9 @@ class SecurityGroup extends SecurityGroup_sugar
                 if (array_key_exists($focus->module_dir, $security_modules)) {
                     $query = 'INSERT INTO securitygroups_records(id,securitygroup_id,record_id,module,date_modified,deleted) '
                         . 'SELECT DISTINCT ';
-                    if ($focus->db->dbType == 'mysql') {
+                    if ($focus->db->dbType === 'mysql') {
                         $query .= ' uuid() ';
-                    } elseif ($focus->db->dbType == 'mssql') {
+                    } elseif ($focus->db->dbType === 'mssql') {
                         $query .= ' lower(newid()) ';
                     }
                     $recordId =  $focus->db->quote($focus->id);
@@ -401,8 +401,8 @@ class SecurityGroup extends SecurityGroup_sugar
             /* need to find relate fields...for example for Cases look to see if account_id is set */
             //allow inheritance for all relate field types....iterate through and inherit each related field
             foreach ($focus->field_name_map as $name => $def) {
-                if ((!isset($def['type']) || ($def['type'] == 'relate' && isset($def['id_name'])))
-                    && isset($def['module']) && strtolower($def['module']) != 'users'
+                if ((!isset($def['type']) || ($def['type'] === 'relate' && isset($def['id_name'])))
+                    && isset($def['module']) && strtolower($def['module']) !== 'users'
                 ) {
                     if (isset($_REQUEST[$def['id_name']])) {
                         $relate_parent_id = $_REQUEST[$def['id_name']];
@@ -454,9 +454,9 @@ class SecurityGroup extends SecurityGroup_sugar
         //WE NEED A UNIQUE GUID SO USE THE BUILT IN SQL GUID METHOD
         $query = 'INSERT INTO securitygroups_records(id,securitygroup_id,record_id,module,date_modified,deleted) '
             . 'SELECT DISTINCT ';
-        if ($focus->db->dbType == 'mysql') {
+        if ($focus->db->dbType === 'mysql') {
             $query .= ' uuid() ';
-        } elseif ($focus->db->dbType == 'mssql') {
+        } elseif ($focus->db->dbType === 'mssql') {
             $query .= ' lower(newid()) ';
         }
         $query .= ",r.securitygroup_id,'$focus_id','$focus_module_dir'," . $focus->db->convert('', 'today') . ',0 '
@@ -626,7 +626,7 @@ class SecurityGroup extends SecurityGroup_sugar
 
         while (($row = $rs->db->fetchByAssoc($result)) != null) {
             if ($row['lhs_module'] === 'SecurityGroups') {
-                if (in_array($row['rhs_module'], $module_blacklist)) {
+                if (in_array($row['rhs_module'], $module_blacklist, true)) {
                     continue;
                 }
 
@@ -634,7 +634,7 @@ class SecurityGroup extends SecurityGroup_sugar
                     $security_modules[$row['rhs_module']] = $app_list_strings['moduleList'][$row['rhs_module']];//rost fix
                 }
             } else {
-                if (in_array($row['lhs_module'], $module_blacklist)) {
+                if (in_array($row['lhs_module'], $module_blacklist, true)) {
                     continue;
                 }
 
@@ -648,9 +648,12 @@ class SecurityGroup extends SecurityGroup_sugar
     }
 
     /** To get the link name used to call load_relationship
+     *
      * @param string $this_module
      * @param string $rel_module
+     *
      * @return
+     * @throws Exception
      */
     public static function getLinkName($this_module, $rel_module)
     {
@@ -671,7 +674,7 @@ class SecurityGroup extends SecurityGroup_sugar
             return;
         }
         if (isset($_REQUEST['subpanel_id'])){
-            require_once "include/portability/Services/Cache/CacheManager.php";
+            require_once 'include/portability/Services/Cache/CacheManager.php';
             (new CacheManager())->markAsNeedsUpdate('app-metadata-navigation-'.$_REQUEST['subpanel_id']);
             (new CacheManager())->markAsNeedsUpdate('app-metadata-user-preferences-'.$_REQUEST['subpanel_id']);
             (new CacheManager())->markAsNeedsUpdate('app-metadata-module-metadata-'. $focus->module_name .'-'.$_REQUEST['subpanel_id']);
@@ -796,7 +799,7 @@ class SecurityGroup extends SecurityGroup_sugar
         global $current_user;
         $db = DBManagerFactory::getInstance();
         $query = 'select ';
-        if ($db->dbType == 'mssql') {
+        if ($db->dbType === 'mssql') {
             $query .= ' top 1 ';
         }
         $userId = $db->quote($current_user->id);
@@ -805,7 +808,7 @@ inner join securitygroups on securitygroups_users.securitygroup_id = securitygro
       and securitygroups.deleted = 0
 where securitygroups_users.user_id='" . $userId . "' and securitygroups_users.deleted = 0
 order by securitygroups_users.primary_group desc ";
-        if ($db->dbType == 'mysql') {
+        if ($db->dbType === 'mysql') {
             $query .= ' limit 0,1 ';
         }
 

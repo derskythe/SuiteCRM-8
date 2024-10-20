@@ -55,7 +55,7 @@ class SubpanelQuickEdit
     public function __construct($module, $view='QuickEdit', $proccessOverride = false)
     {
         //treat quickedit and quickcreate views as the same
-        if ($view == 'QuickEdit') {
+        if ($view === 'QuickEdit') {
             $view = 'QuickCreate';
         }
 

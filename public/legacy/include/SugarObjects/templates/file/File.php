@@ -68,13 +68,13 @@ class File extends Basic
     }
 
 
-
     /**
-     * @see SugarBean::save()
-     *
      * @param bool $check_notify
      *
      * @return string
+     * @throws Exception
+     * @see SugarBean::save()
+     *
      */
     public function save($check_notify = false)
     {

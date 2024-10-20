@@ -134,7 +134,7 @@ $fields_array['User'] = array(
         ,'is_group'
 
     ),
-    'required_fields' =>   array("last_name"=>1,'user_name'=>2,'status'=>3),
+    'required_fields' =>   array( 'last_name' =>1, 'user_name' =>2, 'status' =>3),
 );
 
 $fields_array['UserSignature'] = array(

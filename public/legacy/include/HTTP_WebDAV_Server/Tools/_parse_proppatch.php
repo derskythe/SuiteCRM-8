@@ -90,17 +90,17 @@ class _parse_proppatch
             return;
         }
 
-        $xml_parser = xml_parser_create_ns("UTF-8", " ");
+        $xml_parser = xml_parser_create_ns('UTF-8', ' ');
 
         xml_set_element_handler(
             $xml_parser,
-            array(&$this, "_startElement"),
-            array(&$this, "_endElement")
+            array( &$this, '_startElement' ),
+            array( &$this, '_endElement' )
         );
 
         xml_set_character_data_handler(
             $xml_parser,
-            array(&$this, "_data")
+            array( &$this, '_data' )
         );
 
         xml_parser_set_option(
@@ -118,7 +118,7 @@ class _parse_proppatch
         }
 
         if ($had_input) {
-            $this->success &= xml_parse($xml_parser, "", true);
+            $this->success &= xml_parse($xml_parser, '', true);
         }
 
         xml_parser_free($xml_parser);
@@ -137,34 +137,34 @@ class _parse_proppatch
      */
     public function _startElement($parser, $name, $attrs)
     {
-        if (strstr((string) $name, " ")) {
-            list($ns, $tag) = explode(" ", $name);
-            if ($ns == "") {
+        if (str_contains((string) $name, ' ')) {
+            list($ns, $tag) = explode(' ', $name);
+            if ($ns == '') {
                 $this->success = false;
             }
         } else {
-            $ns = "";
+            $ns = '';
             $tag = $name;
         }
 
-        if ($this->depth == 1) {
+        if ($this->depth === 1) {
             $this->mode = $tag;
         }
 
-        if ($this->depth == 3) {
-            $prop = array("name" => $tag);
-            $this->current = array("name" => $tag, "ns" => $ns, "status"=> 200);
-            if ($this->mode == "set") {
-                $this->current["val"] = "";     // default set val
+        if ($this->depth === 3) {
+            $prop = array( 'name' => $tag );
+            $this->current = array( 'name' => $tag, 'ns' => $ns, 'status' => 200 );
+            if ($this->mode === 'set') {
+                $this->current['val'] = '';     // default set val
             }
         }
 
         if ($this->depth >= 4) {
-            $this->current["val"] .= "<$tag";
+            $this->current['val'] .= "<$tag";
             foreach ($attr as $key => $val) {
-                $this->current["val"] .= ' '.$key.'="'.str_replace('"', '&quot;', (string) $val).'"';
+                $this->current['val'] .= ' ' . $key . '="' . str_replace('"', '&quot;', (string) $val) . '"';
             }
-            $this->current["val"] .= ">";
+            $this->current['val'] .= '>';
         }
 
 
@@ -182,20 +182,20 @@ class _parse_proppatch
      */
     public function _endElement($parser, $name)
     {
-        if (strstr((string) $name, " ")) {
-            list($ns, $tag) = explode(" ", $name);
-            if ($ns == "") {
+        if (str_contains((string) $name, ' ')) {
+            list($ns, $tag) = explode(' ', $name);
+            if ($ns == '') {
                 $this->success = false;
             }
         } else {
-            $ns = "";
+            $ns = '';
             $tag = $name;
         }
 
         $this->depth--;
 
         if ($this->depth >= 4) {
-            $this->current["val"] .= "</$tag>";
+            $this->current['val'] .= "</$tag>";
         }
 
         if ($this->depth == 3) {
@@ -217,7 +217,7 @@ class _parse_proppatch
     public function _data($parser, $data)
     {
         if (isset($this->current)) {
-            $this->current["val"] .= $data;
+            $this->current['val'] .= $data;
         }
     }
 }

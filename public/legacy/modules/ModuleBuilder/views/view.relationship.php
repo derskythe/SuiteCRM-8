@@ -51,7 +51,7 @@ class ViewRelationship extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -76,12 +76,15 @@ class ViewRelationship extends SugarView
         return $definition ;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $selected_lang = (!empty($_REQUEST['relationship_lang'])?$_REQUEST['relationship_lang']:$_SESSION['authenticated_user_language']);
         $this->smarty = new Sugar_Smarty() ;
         $ac = new AjaxCompose() ;
-        $this->fromModuleBuilder = isset($_REQUEST [ 'MB' ]) || (!empty($_REQUEST [ 'view_package' ]) && $_REQUEST [ 'view_package' ] != 'studio') ;
+        $this->fromModuleBuilder = isset($_REQUEST [ 'MB' ]) || (!empty($_REQUEST [ 'view_package' ]) && $_REQUEST [ 'view_package' ] !== 'studio') ;
         $this->smarty->assign('fromModuleBuilder', $this->fromModuleBuilder) ;
 
         if (!$this->fromModuleBuilder) {
@@ -175,16 +178,16 @@ class ViewRelationship extends SugarView
                 unset($cardinality [ MB_ONETOMANY ]) ;
             }
 
-            if (isset($definition['rhs_module']) && $definition['rhs_module'] == 'Activities') {
+            if (isset($definition['rhs_module']) && $definition['rhs_module'] === 'Activities') {
                 $cardinality = array( MB_ONETOMANY => translate('LBL_ONETOMANY'));
             }
             //Bug 23139, Campaigns module current cannot display custom subpanels, so we need to ban it from any
             //relationships that would require a new subpanel to be shown in Campaigns.
-            if (isset($definition['lhs_module']) && $definition['lhs_module'] == 'Campaigns') {
+            if (isset($definition['lhs_module']) && $definition['lhs_module'] === 'Campaigns') {
                 unset($cardinality [ MB_MANYTOMANY ]) ;
                 unset($cardinality [ MB_ONETOMANY ]) ;
             }
-            if (isset($definition['rhs_module']) && $definition['rhs_module'] == 'Campaigns' && isset($cardinality [ MB_MANYTOMANY ])) {
+            if (isset($definition['rhs_module']) && $definition['rhs_module'] === 'Campaigns' && isset($cardinality [MB_MANYTOMANY ])) {
                 unset($cardinality [ MB_MANYTOMANY ]) ;
                 unset($cardinality [ MB_MANYTOONE ]);
             }
@@ -252,7 +255,7 @@ class ViewRelationship extends SugarView
         }
 
         //see if we use the new system
-        if (isset($_REQUEST [ 'json' ]) && $_REQUEST [ 'json' ] == 'false') {
+        if (isset($_REQUEST [ 'json' ]) && $_REQUEST [ 'json' ] === 'false') {
             echo $this->smarty->fetch('modules/ModuleBuilder/tpls/studioRelationship.tpl') ;
         } else {
             $ac->addSection('east', $module->name . ' ' . $GLOBALS [ 'mod_strings' ] [ 'LBL_RELATIONSHIPS' ], $this->smarty->fetch('modules/ModuleBuilder/tpls/studioRelationship.tpl')) ;

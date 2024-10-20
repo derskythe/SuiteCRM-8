@@ -61,7 +61,7 @@ foreach ($sugar_grp1_yui as $jsFile => $grp) {
     $jsSrc .= "\t<script src=\"$jsFile\"></script>\n";
 }
 
-////	START OUTPUT
+////    START OUTPUT
 
 $msg = sprintf(
     $mod_strings['LBL_OLD_PHP_MSG'],
@@ -103,15 +103,15 @@ $out = <<<EOQ
                 <h1 id="welcomelink">{$mod_strings['LBL_TITLE_WELCOME']} {$setup_sugar_version} {$mod_strings['LBL_WELCOME_SETUP_WIZARD']}</h1>
                 <div class="install_img"><a href="https://suitecrm.com" target="_blank"><img src="{$sugar_md}" alt="SuiteCRM"></a></div>
             </header>
-		<div id="content">
-			<h2>{$mod_strings['LBL_OLD_PHP']}</h2>
-			<div class="floatbox full">{$msg}
+        <div id="content">
+            <h2>{$mod_strings['LBL_OLD_PHP']}</h2>
+            <div class="floatbox full">{$msg}
             <div id="licenseaccept">
                 <input type="checkbox" class="checkbox" name="setup_old_php" id="button_next2" onClick='toggleNextButton();' {$checked} />
                 <a href='javascript:void(0)' onClick='toggleOldPHP();toggleNextButton();'>{$mod_strings['LBL_OLD_PHP_OK']}</a>
             </div>
             </div>
-		</div>
+        </div>
             <hr>
             <div id="installcontrols">
 
@@ -121,15 +121,15 @@ $out = <<<EOQ
                 <input type="hidden" name="goto" id='hidden_goto' value="{$mod_strings['LBL_NEXT']}" />
             </div>
 
-	    </form>
-	    <div style="clear:both;"></div>
-	    <div id='sysCheckMsg'></div>
-	    <div style="clear:both;"></div>
-	</div>
-	<div id="checkingDiv" style="display:none">
+        </form>
+        <div style="clear:both;"></div>
+        <div id='sysCheckMsg'></div>
+        <div style="clear:both;"></div>
+    </div>
+    <div id="checkingDiv" style="display:none">
             <p><img src='install/processing.gif' alt="{$mod_strings['LBL_LICENSE_CHECKING']}"> <br>{$mod_strings['LBL_LICENSE_CHECKING']}</p>
     </div>
-	<footer id="install_footer">
+    <footer id="install_footer">
         <p id="footer_links"><a href="https://suitecrm.com" target="_blank">Visit suitecrm.com</a> | <a href="https://suitecrm.com/suitecrm/forum" target="_blank">Support Forums</a> | <a href="https://docs.suitecrm.com/admin/installation-guide/" target="_blank">Installation Guide</a> | <a href="LICENSE.txt" target="_blank">License</a>
     </footer>
     </div>

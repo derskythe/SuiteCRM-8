@@ -53,9 +53,7 @@ class UsersViewDetail extends ViewDetail
     }
 
 
-
-
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $current_user, $app_strings, $sugar_config;
 
@@ -79,7 +77,7 @@ class UsersViewDetail extends ViewDetail
         $viewHelper = new UserViewHelper($this->ss, $this->bean, 'DetailView');
         $viewHelper->setupAdditionalFields();
 
-        $errors = "";
+        $errors = '';
         $msgGood = false;
         if (isset($_REQUEST['pwd_set']) && $_REQUEST['pwd_set'] != 0) {
             if ($_REQUEST['pwd_set'] == '4') {
@@ -95,17 +93,17 @@ class UsersViewDetail extends ViewDetail
                 $errors .= translate('ERR_USER_IS_LOCKED_OUT', 'Users');
             }
         }
-        $this->ss->assign("ERRORS", $errors);
+        $this->ss->assign('ERRORS', $errors);
         $this->ss->assign(
-            "ERROR_MESSAGE",
+            'ERROR_MESSAGE',
             $msgGood ? translate('LBL_PASSWORD_SENT', 'Users') : translate('LBL_CANNOT_SEND_PASSWORD', 'Users')
         );
         $buttons = array();
 
-        $this->ss->assign("CURRENT_USER_ID", $GLOBALS['current_user']->id);
+        $this->ss->assign('CURRENT_USER_ID', $GLOBALS['current_user']->id);
 
         if ((
-            is_admin($current_user) || $_REQUEST['record'] == $current_user->id
+                is_admin($current_user) || $_REQUEST['record'] == $current_user->id
             )
             && !empty($sugar_config['default_user_name'])
             && $sugar_config['default_user_name'] == $this->bean->user_name
@@ -113,28 +111,58 @@ class UsersViewDetail extends ViewDetail
             && $sugar_config['lock_default_user_name']) {
             $this->dv->defs['templateMeta']['form']['buttons'][] = 'EDIT';
 
-        } elseif (is_admin($current_user)|| ($GLOBALS['current_user']->isAdminForModule('Users')&& !$this->bean->is_admin)
+        } elseif (is_admin($current_user) || ($GLOBALS['current_user']->isAdminForModule(
+                    'Users'
+                ) && !$this->bean->is_admin)
             || $_REQUEST['record'] == $current_user->id) {
             $this->dv->defs['templateMeta']['form']['buttons'][] = 'EDIT';
             if ((
-                is_admin($current_user)|| $GLOBALS['current_user']->isAdminForModule('Users')
+                is_admin($current_user) || $GLOBALS['current_user']->isAdminForModule('Users')
             )) {
                 if (!$current_user->is_group) {
-                    $this->dv->defs['templateMeta']['form']['buttons'][] = array('customCode' => "<input id='duplicate_button' title='" . $app_strings['LBL_DUPLICATE_BUTTON_TITLE'] . "' accessKey='" . $app_strings['LBL_DUPLICATE_BUTTON_KEY'] . "' class='button' onclick=\"this.form.return_module.value='Users'; this.form.return_action.value='DetailView'; this.form.isDuplicate.value=true; this.form.action.value='EditView'\" type='submit' name='Duplicate' value='" . $app_strings['LBL_DUPLICATE_BUTTON_LABEL'] . "'>");
+                    $this->dv->defs['templateMeta']['form']['buttons'][] =
+                        array( 'customCode' => "<input id='duplicate_button' title='" . $app_strings['LBL_DUPLICATE_BUTTON_TITLE'] . "' accessKey='" . $app_strings['LBL_DUPLICATE_BUTTON_KEY'] . "' class='button' onclick=\"this.form.return_module.value='Users'; this.form.return_action.value='DetailView'; this.form.isDuplicate.value=true; this.form.action.value='EditView'\" type='submit' name='Duplicate' value='" . $app_strings['LBL_DUPLICATE_BUTTON_LABEL'] . "'>" );
 
-                    $this->dv->defs['templateMeta']['form']['buttons'][] = array('customCode' => "<input name='delete' id='delete_button' title='" . $app_strings['LBL_DELETE_BUTTON_LABEL'] . "' type='button' class='button' onclick='confirmDelete();' value='" . $app_strings['LBL_DELETE_BUTTON_LABEL'] . "'>");
+                    $this->dv->defs['templateMeta']['form']['buttons'][] =
+                        array( 'customCode' => "<input name='delete' id='delete_button' title='" . $app_strings['LBL_DELETE_BUTTON_LABEL'] . "' type='button' class='button' onclick='confirmDelete();' value='" . $app_strings['LBL_DELETE_BUTTON_LABEL'] . "'>" );
 
                     if (!$this->bean->portal_only && !$this->bean->is_group && !$this->bean->external_auth_only
                         && isset($sugar_config['passwordsetting']['SystemGeneratedPasswordON']) && $sugar_config['passwordsetting']['SystemGeneratedPasswordON']) {
-                        $this->dv->defs['templateMeta']['form']['buttons'][] = array('customCode' => '<input title="'.translate('LBL_GENERATE_PASSWORD_BUTTON_TITLE', 'Users').'" class="button" LANGUAGE=javascript data-toggle="dropdown" onclick="generatepwd(\'{$fields.id.value}\');" type="button" name="password" value="'.translate('LBL_GENERATE_PASSWORD_BUTTON_LABEL', 'Users').'">"');
+                        $this->dv->defs['templateMeta']['form']['buttons'][] =
+                            array( 'customCode' => '<input title="' . translate(
+                                    'LBL_GENERATE_PASSWORD_BUTTON_TITLE',
+                                    'Users'
+                                ) . '" class="button" LANGUAGE=javascript data-toggle="dropdown" onclick="generatepwd(\'{$fields.id.value}\');" type="button" name="password" value="' . translate(
+                                    'LBL_GENERATE_PASSWORD_BUTTON_LABEL',
+                                    'Users'
+                                ) . '">"' );
                     }
                 }
             }
         }
 
-
-        $this->dv->defs['templateMeta']['form']['buttons'][] = array('customCode' => '<input title="'.translate('LBL_RESET_PREFERENCES', 'Users').'" class="button" LANGUAGE=javascript onclick="if(confirm(\''.translate('LBL_RESET_PREFERENCES_WARNING_USER', 'Users').'\')) window.location=\'index.php?module=Users&action=resetPreferences&reset_preferences=true&record={$fields.id.value}\';" type="button" name="password" value="'.translate('LBL_RESET_PREFERENCES', 'Users').'">"');
-        $this->dv->defs['templateMeta']['form']['buttons'][] = array('customCode' => '<input title="'.translate('LBL_RESET_HOMEPAGE', 'Users').'" class="button" LANGUAGE=javascript onclick="if(confirm(\''.translate('LBL_RESET_HOMEPAGE_WARNING', 'Users').'\')) window.location=\'index.php?module=Users&action=DetailView&reset_homepage=true&record={$fields.id.value}\';" type="button" name="password" value="'.translate('LBL_RESET_HOMEPAGE', 'Users').'">"');
+        $this->dv->defs['templateMeta']['form']['buttons'][] =
+            array( 'customCode' => '<input title="' . translate(
+                    'LBL_RESET_PREFERENCES',
+                    'Users'
+                ) . '" class="button" LANGUAGE=javascript onclick="if(confirm(\'' . translate(
+                    'LBL_RESET_PREFERENCES_WARNING_USER',
+                    'Users'
+                ) . '\')) window.location=\'index.php?module=Users&action=resetPreferences&reset_preferences=true&record={$fields.id.value}\';" type="button" name="password" value="' . translate(
+                    'LBL_RESET_PREFERENCES',
+                    'Users'
+                ) . '">"' );
+        $this->dv->defs['templateMeta']['form']['buttons'][] =
+            array( 'customCode' => '<input title="' . translate(
+                    'LBL_RESET_HOMEPAGE',
+                    'Users'
+                ) . '" class="button" LANGUAGE=javascript onclick="if(confirm(\'' . translate(
+                    'LBL_RESET_HOMEPAGE_WARNING',
+                    'Users'
+                ) . '\')) window.location=\'index.php?module=Users&action=DetailView&reset_homepage=true&record={$fields.id.value}\';" type="button" name="password" value="' . translate(
+                    'LBL_RESET_HOMEPAGE',
+                    'Users'
+                ) . '">"' );
 
         $show_roles = (!($this->bean->is_group == '1' || $this->bean->portal_only == '1'));
         if (is_admin($this->bean)) {
@@ -152,32 +180,34 @@ class UsersViewDetail extends ViewDetail
 
             require_once('modules/ACLRoles/DetailUserAccess.php');
 
-
             $role_html = ob_get_contents();
             ob_end_clean();
             $this->ss->assign('ROLE_HTML', $role_html);
         }
     }
 
-    public function getMetaDataFile()
+    public function getMetaDataFile() : ?string
     {
         $userType = 'Regular';
         if ($this->bean->is_group == 1) {
             $userType = 'Group';
         }
 
-        if ($userType != 'Regular') {
+        if ($userType !== 'Regular') {
             $oldType = $this->type;
             $this->type = $oldType . 'group';
         }
         $metadataFile = parent::getMetaDataFile();
-        if ($userType != 'Regular') {
+        if ($userType !== 'Regular') {
             $this->type = $oldType;
         }
 
         return $metadataFile;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         if ($this->bean->portal_only == 1 || $this->bean->is_group == 1) {
@@ -212,6 +242,7 @@ class UsersViewDetail extends ViewDetail
      * meets the valid criteria.
      *
      * @param $module String the formatted module name
+     *
      * @return $theTitle String the HTML for the help text
      */
     protected function getHelpText($module)
@@ -223,12 +254,12 @@ class UsersViewDetail extends ViewDetail
             $createImageURL = SugarThemeRegistry::current()->getImageURL('create-record.gif');
             $url = ajaxLink("index.php?module=$module&action=EditView&return_module=$module&return_action=DetailView");
             $theTitle = <<<EOHTML
-&nbsp;
-<img src='{$createImageURL}' alt='{$GLOBALS['app_strings']['LNK_CREATE']}'>
-<a href="{$url}" class="utilsLink">
-{$GLOBALS['app_strings']['LNK_CREATE']}
-</a>
-EOHTML;
+                &nbsp;
+                <img src='{$createImageURL}' alt='{$GLOBALS['app_strings']['LNK_CREATE']}'>
+                <a href="{$url}" class="utilsLink">
+                {$GLOBALS['app_strings']['LNK_CREATE']}
+                </a>
+                EOHTML;
         }
 
         return $theTitle;

@@ -51,7 +51,7 @@ class ListViewDisplay
 
     public $show_mass_update_form = false;
     public $show_action_dropdown = true;
-
+private array $displayColumns = array();
     public $rowCount;
     public $mass = null;
     public $seed;
@@ -69,6 +69,7 @@ class ListViewDisplay
      */
     public $mergeDisplayColumns = false;
     public $actionsMenuExtraItems = array();
+    private array $searchColumns;
 
     /**
      * Constructor
@@ -76,62 +77,63 @@ class ListViewDisplay
     public function __construct()
     {
         $this->lvd = new ListViewData();
-        $this->searchColumns = array() ;
+        $this->searchColumns = array();
     }
 
 
-
-
-    public function shouldProcess($moduleDir)
+    public function shouldProcess(string $moduleDir) : bool
     {
         $searching = false;
         $sessionSearchQuery = "{$moduleDir}2_QUERY_QUERY";
         if (!empty($_SESSION[$sessionSearchQuery])) {
             $searching = true;
         }
-        if (!empty($GLOBALS['sugar_config']['save_query']) && $GLOBALS['sugar_config']['save_query'] == 'populate_only') {
-            if (empty($GLOBALS['displayListView'])
-                    && (!empty($_REQUEST['clear_query'])
-                        || $_REQUEST['module'] == $moduleDir
-                            && ((empty($_REQUEST['query']) || $_REQUEST['query'] == 'MSI')
-                                && (!$searching)))) {
-                $_SESSION['last_search_mod'] = $_REQUEST['module'] ;
-                $this->should_process = false;
-                return false;
-            }
+        if (!empty($GLOBALS['sugar_config']['save_query']) && $GLOBALS['sugar_config']['save_query'] === 'populate_only'
+            && empty($GLOBALS['displayListView'])
+            && ((!empty($_REQUEST['clear_query'])
+                    || $_REQUEST['module'] === $moduleDir)
+                && ((empty($_REQUEST['query']) || $_REQUEST['query'] === 'MSI')
+                    && (!$searching)))) {
+            $_SESSION['last_search_mod'] = $_REQUEST['module'];
+            $this->should_process = false;
+
+            return false;
         }
         $this->should_process = true;
+
         return true;
     }
 
     /**
      * Setup the class
-     * @param SugarBean $seed  Seed SugarBean to use
-     * @param File $file Template file to use
+     *
+     * @param SugarBean $seed Seed SugarBean to use
+     * @param File $file      Template file to use
      * @param string $where
-     * @param int $offset :0 offset to start at
+     * @param int $offset     :0 offset to start at
      * @param int :-1 $limit
      * @param string []:array() $filter_fields
      * @param array :array() $params Array
-     *     $params = [
-     *         'distinct' => bool Whether to use distinct key word,
-     *         'include_custom_fields' => bool :true,
-     *         'massupdate'  => bool :true Whether a mass update, true by default,
-     *         'handleMassupdate' => string :true Have massupdate.php handle massupdates?,
-     *    ]
-     * @param string :'id' $id_field
+     *                        $params = [
+     *                        'distinct' => bool Whether to use distinct key word,
+     *                        'include_custom_fields' => bool :true,
+     *                        'massupdate'  => bool :true Whether a mass update, true by default,
+     *                        'handleMassupdate' => string :true Have massupdate.php handle massupdates?,
+     *                        ]
+     * @param string :'id'     _field
      */
     public function setup(
-        $seed,
-        $file,
-        $where,
-        $params = array(),
-        $offset = 0,
-        $limit = -1,
-        $filter_fields = array(),
-        $id_field = 'id',
-        $id = null
-    ) {
+        array|\SugarBean $seed,
+        string $file,
+        string $where,
+        array $params = array(),
+        int $offset = 0,
+        int $limit = -1,
+        array $filter_fields = array(),
+        string $id_field = 'id',
+        string $id = null
+    ) : bool
+    {
         $this->should_process = true;
         if (isset($seed->module_dir) && !$this->shouldProcess($seed->module_dir)) {
             return false;
@@ -142,7 +144,7 @@ class ListViewDisplay
         if (!empty($params['multiSelectPopup'])) {
             $this->multi_select_popup = $params['multiSelectPopup'];
         }
-        if (!empty($params['massupdate']) && $params['massupdate'] != false) {
+        if (!empty($params['massupdate']) && $params['massupdate'] !== false) {
             $this->show_mass_update_form = true;
             $this->mass = $this->getMassUpdate();
             $this->mass->setSugarBean($seed);
@@ -163,7 +165,7 @@ class ListViewDisplay
             $params,
             $id_field,
             true,
-            $id
+
         );
 
         $this->fillDisplayColumnsWithVardefs();
@@ -173,20 +175,19 @@ class ListViewDisplay
         return true;
     }
 
-    public function setupFilterFields($filter_fields = array())
+    public function setupFilterFields(array $filter_fields = array()) : array
     {
         // create filter fields based off of display columns
         if (empty($filter_fields) || $this->mergeDisplayColumns) {
-            if (!is_array($this->displayColumns)) {
-                LoggerManager::getLogger()->warn('displayColumns is not an array');
-            }
 
-            foreach ((array)$this->displayColumns as $columnName => $def) {
+            foreach ((array) $this->displayColumns as $columnName => $def) {
                 $filter_fields[strtolower($columnName)] = true;
 
-                if (isset($this->seed->field_defs[strtolower($columnName)]['type']) &&
-               strtolower($this->seed->field_defs[strtolower($columnName)]['type']) == 'currency' &&
-               isset($this->seed->field_defs['currency_id'])) {
+                if (isset(
+                        $this->seed->field_defs[strtolower(
+                            $columnName
+                        )]['type'], $this->seed->field_defs['currency_id']
+                    ) && strtolower($this->seed->field_defs[strtolower($columnName)]['type']) === 'currency') {
                     $filter_fields['currency_id'] = true;
                 }
 
@@ -194,13 +195,13 @@ class ListViewDisplay
                     foreach ($def['related_fields'] as $field) {
                         //id column is added by query construction function. This addition creates duplicates
                         //and causes issues in oracle. #10165
-                        if ($field != 'id') {
+                        if ($field !== 'id') {
                             $filter_fields[$field] = true;
                         }
                     }
                 }
                 if (!empty($this->seed->field_defs[strtolower($columnName)]['db_concat_fields'])) {
-                    foreach ($this->seed->field_defs[strtolower($columnName)]['db_concat_fields'] as $index=>$field) {
+                    foreach ($this->seed->field_defs[strtolower($columnName)]['db_concat_fields'] as $index => $field) {
                         if (!isset($filter_fields[strtolower($field)]) || !$filter_fields[strtolower($field)]) {
                             $filter_fields[strtolower($field)] = true;
                         }
@@ -212,40 +213,45 @@ class ListViewDisplay
             }
         }
 
-
         return $filter_fields;
     }
 
     /**
      * Any additional processing
      *
-     * @param $file (legacy, unused) File template file to use
-     * @param array $data array row data
+     * @param $file           (legacy, unused) File template file to use
+     * @param array $data     array row data
      * @param string $htmlVar html string to be passed back and forth
+     *
      * @return bool
      */
-    public function process($file, $data, $htmlVar)
+    public function process(string $file, mixed $data, string $htmlVar) : bool
     {
         if (!is_array($data)) {
-            LoggerManager::getLogger()->warn('Row data must be an array, ' . gettype($data) . ' given.');
+            LoggerManager::getLogger()?->warn('Row data must be an array, ' . gettype($data) . ' given.');
             $data = [];
-        } else if (is_array($data) && !is_array($data['data'])) {
-            LoggerManager::getLogger()->warn('Row data must be an array, ' . gettype($data['data']) . ' given and converting to an array.');
+        } else if (!is_array($data['data'])) {
+            LoggerManager::getLogger()?->warn(
+                'Row data must be an array, ' . gettype($data['data']) . ' given and converting to an array.'
+            );
         }
-        $this->rowCount = count((array)($data['data'] ?? []));
+        $this->rowCount = count((array) ($data['data'] ?? []));
         if (!isset($data['pageData']['bean'])) {
-            $GLOBALS['log']->warn("List view process error: Invalid data, bean is not set");
+            $GLOBALS['log']->warn('List view process error: Invalid data, bean is not set');
+
             return false;
         }
         $this->moduleString = ($data['pageData']['bean']['moduleDir'] ?? '') . '2_' . strtoupper($htmlVar) . '_offset';
+
         return true;
     }
 
     /**
      * Display the listview
+     *
      * @return string ListView contents
      */
-    public function display()
+    public function display() : string
     {
         if (!$this->should_process) {
             return '';
@@ -253,60 +259,82 @@ class ListViewDisplay
 
         $str = '';
         if ($this->show_mass_update_form) {
-            $str = $this->mass->getDisplayMassUpdateForm(true, $this->multi_select_popup).$this->mass->getMassUpdateFormHeader($this->multi_select_popup);
+            $str =
+                $this->mass->getDisplayMassUpdateForm(
+                    true,
+                    $this->multi_select_popup
+                ) . $this->mass->getMassUpdateFormHeader($this->multi_select_popup);
         }
 
         return $str;
     }
+
     /**
      * Display the select link
-     * @return string select link html
-     * @param echo Bool set true if you want it echo'd, set false to have contents returned
+     *
+     * @param string $id
+     * @param int $total
+     * @param int $pageTotal
+     * @param string $location
+     *
+     * @return array|string select link html
+     * @throws SmartyException
      */
-    public function buildSelectLink($id = 'select_link', $total=0, $pageTotal=0, $location="top")
+    public function buildSelectLink(string $id = 'select_link', int $total = 0, int $pageTotal = 0, string $location = 'top') : array|string
     {
         global $app_strings;
         if ($pageTotal < 0) {
             $pageTotal = $total;
         }
 
-
-        $total_label = "";
-        if (!empty($GLOBALS['sugar_config']['disable_count_query']) && $GLOBALS['sugar_config']['disable_count_query'] === true && $total > $pageTotal) {
+        $total_label = '';
+        if (!empty($GLOBALS['sugar_config']['disable_count_query'])
+            && $GLOBALS['sugar_config']['disable_count_query'] === true && $total > $pageTotal) {
             $this->show_plus = true;
-            $total_label =  $pageTotal.'+';
+            $total_label = $pageTotal . '+';
             $total = $pageTotal;
         } else {
             $total_label = $total;
         }
 
-        $close_inline_img = SugarThemeRegistry::current()->getImage('close_inline', 'border=0', null, null, ".gif", $app_strings['LBL_CLOSEINLINE']);
+        $close_inline_img =
+            SugarThemeRegistry::current()->getImage(
+                'close_inline',
+                'border=0',
+                null,
+                null,
+                '.gif',
+                $app_strings['LBL_CLOSEINLINE']
+            );
         $selectObjectSpan = $this->buildSelectedObjectsSpan();
         $menuItems = array(
-            "<label class=\"hidden glyphicon bootstrap-checkbox glyphicon-unchecked\"><span class='suitepicon suitepicon-action-caret'></span></label><input title=\"".$app_strings['LBL_SELECT_ALL_TITLE']."\" type='checkbox' class='bootstrap-checkbox-hidden checkbox massall' name='massall' id='massall_".$location."' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked);' />$selectObjectSpan<a id='$id'  href='javascript: void(0);'></a>",
-            "<a  name='thispage' id='button_select_this_page_".$location."' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", true, $pageTotal);' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$pageTotal}&#x29;&#x200E;</a>",
-            "<a  name='selectall' id='button_select_all_".$location."' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$total});' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$total_label}&#x29;&#x200E;</a>",
-            "<a name='deselect' id='button_deselect_".$location."' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.clear_all(document.MassUpdate, \"mass[]\", false);' href='#'>{$app_strings['LBL_LISTVIEW_NONE']}</a>",
+            "<label class=\"hidden glyphicon bootstrap-checkbox glyphicon-unchecked\"><span class='suitepicon suitepicon-action-caret'></span></label><input title=\"" . $app_strings['LBL_SELECT_ALL_TITLE'] . "\" type='checkbox' class='bootstrap-checkbox-hidden checkbox massall' name='massall' id='massall_" . $location . "' value='' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", this.checked);' />$selectObjectSpan<a id='    '  href='javascript: void(0);'></a>",
+            "<a  name='thispage' id='button_select_this_page_" . $location . "' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.check_all(document.MassUpdate, \"mass[]\", true, $pageTotal);' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_CURRENT']}&nbsp;&#x28;{$pageTotal}&#x29;&#x200E;</a>",
+            "<a  name='selectall' id='button_select_all_" . $location . "' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.check_entire_list(document.MassUpdate, \"mass[]\",true,{$total});' href='#'>{$app_strings['LBL_LISTVIEW_OPTION_ENTIRE']}&nbsp;&#x28;{$total_label}&#x29;&#x200E;</a>",
+            "<a name='deselect' id='button_deselect_" . $location . "' class='menuItem' onmouseover='hiliteItem(this,\"yes\");' onmouseout='unhiliteItem(this);' onclick='sListView.clear_all(document.MassUpdate, \"mass[]\", false);' href='#'>{$app_strings['LBL_LISTVIEW_NONE']}</a>",
         );
 
-        $link = array(
-            'class' => 'clickMenu selectmenu',
-            'id' => 'selectLink',
+        return array(
+            'class'   => 'clickMenu selectmenu',
+            'id'      => 'selectLink',
             'buttons' => $menuItems,
-            'flat' => false,
+            'flat'    => false,
         );
-        return $link;
     }
 
     /**
      * Display the actions link
      *
-     * @param  string $id link id attribute, defaults to 'actions_link'
+     * @param string $id
+     * @param string $location
+     *
+     * @return array|string HTML source
+     * @throws JsonException
+     * @throws SmartyException
      * @global $app_strings
      * @global $mod_strings
-     * @return string HTML source
      */
-    protected function buildActionsLink($id = 'actions_link', $location = 'top')
+    protected function buildActionsLink(string $id = 'actions_link', string $location = 'top') : array|string
     {
         global $app_strings;
         global $mod_strings;
@@ -316,7 +344,7 @@ class ListViewDisplay
             'border=0',
             null,
             null,
-            ".gif",
+            '.gif',
             $app_strings['LBL_CLOSEINLINE']
         );
         $moreDetailImage = SugarThemeRegistry::current()->getImageURL('MoreDetail.png');
@@ -329,11 +357,11 @@ class ListViewDisplay
                     $template = new Sugar_Smarty();
                     $template->assign('APP', $app_strings);
                     $template->assign('MOD', $mod_strings);
-                    $template->assign('id', $id);
+                    $template->assign('id');
                     $template->assign('location', $location);
                     $template->assign('customCode', $action['customCode']);
 
-                    $menuItems[] =  $template->fetch("include/ListView/ListViewEval.tpl");
+                    $menuItems[] = $template->fetch('include/ListView/ListViewEval.tpl');
                 }
             }
         } else {
@@ -387,7 +415,6 @@ class ListViewDisplay
                 $menuItems[] = $item;
             }
 
-
             if (
                 $this->delete &&
                 ACLController::checkAccess($this->seed->module_dir, 'delete', true)
@@ -397,24 +424,26 @@ class ListViewDisplay
                 $menuItems[] = "<a style='display:none'></a>";
             }
         }
-        $link = array(
-            'class' => 'clickMenu selectActions fancymenu',
-            'id' => 'selectActions',
-            'name' => 'selectActions',
+
+        return array(
+            'class'   => 'clickMenu selectActions fancymenu',
+            'id'      => 'selectActions',
+            'name'    => 'selectActions',
             'buttons' => $menuItems,
-            'flat' => false,
+            'flat'    => false,
         );
-        return $link;
     }
+
     /**
      * Builds the export link
      *
      * @return string HTML
      */
-    protected function buildExportLink($loc = 'top')
+    protected function buildExportLink(string $loc = 'top') : string
     {
         global $app_strings;
-        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"export_listview_". $loc ." \" onclick=\"return sListView.send_form(true, '{$this->seed->module_dir}', 'index.php?entryPoint=export','{$app_strings['LBL_LISTVIEW_NO_SELECTED']}')\">{$app_strings['LBL_EXPORT']}</a>";
+
+        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"export_listview_" . $loc . " \" onclick=\"return sListView.send_form(true, '{$this->seed->module_dir}', 'index.php?entryPoint=export','{$app_strings['LBL_LISTVIEW_NO_SELECTED']}')\">{$app_strings['LBL_EXPORT']}</a>";
     }
 
     /**
@@ -422,12 +451,14 @@ class ListViewDisplay
      *
      * @return string HTML
      */
-    protected function buildMassUpdateLink($loc = 'top')
+    protected function buildMassUpdateLink(string $loc = 'top') : string
     {
         global $app_strings;
 
-        $onClick = "document.getElementById('massupdate_form').style.display = ''; var yLoc = YAHOO.util.Dom.getY('massupdate_form'); scroll(0,yLoc);";
-        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"massupdate_listview_". $loc ."\" onclick=\"$onClick\">{$app_strings['LBL_MASS_UPDATE']}</a>";
+        $onClick =
+            "document.getElementById('massupdate_form').style.display = ''; var yLoc = YAHOO.util.Dom.getY('massupdate_form'); scroll(0,yLoc);";
+
+        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"massupdate_listview_" . $loc . "\" onclick=\"$onClick\">{$app_strings['LBL_MASS_UPDATE']}</a>";
     }
 
     /**
@@ -435,10 +466,11 @@ class ListViewDisplay
      *
      * @param int $totalCount
      * @param string $loc
-     * @global
+     *
      * @return string HTML
+     * @global
      */
-    protected function buildComposeEmailLink($totalCount, $loc = 'top')
+    protected function buildComposeEmailLink(int $totalCount, string $loc = 'top') : string
     {
         global $app_strings;
         global $dictionary;
@@ -451,10 +483,10 @@ class ListViewDisplay
         // Search for fields that look like an email address
         foreach ($this->seed->field_defs as $field) {
             if (
-                isset($field['type'])
+                isset($field['type'],
+                    $field['relationship'],
+                    $dictionary[$this->seed->object_name]['relationships'][$field['relationship']])
                 && $field['type'] === 'link'
-                && isset($field['relationship'])
-                && isset($dictionary[$this->seed->object_name]['relationships'][$field['relationship']])
                 && $dictionary[$this->seed->object_name]['relationships'][$field['relationship']]['rhs_module'] === 'EmailAddresses'
             ) {
                 $foundEmailField = true;
@@ -466,7 +498,6 @@ class ListViewDisplay
             return '';
         }
 
-
         $client = $GLOBALS['current_user']->getEmailClient();
 
         if ($client === 'sugar') {
@@ -475,55 +506,60 @@ class ListViewDisplay
             $script = $emailUI->createBulkActionEmailLink();
         } else {
             $script = "<a href='javascript:void(0)' " .
-                "class=\"parent-dropdown-action-handler\" id=\"composeemail_listview_" . $loc . "\"" .
+                'class="parent-dropdown-action-handler" id="composeemail_listview_' . $loc . '"' .
                 "onclick=\"return sListView.use_external_mail_client('{$app_strings['LBL_LISTVIEW_NO_SELECTED']}', '{$_REQUEST['module']}');\">" .
                 $app_strings['LBL_EMAIL_COMPOSE'] . '</a>';
         }
 
         return $script;
     } // fn
+
     /**
      * Builds the delete link
      *
      * @return string HTML
      */
-    protected function buildDeleteLink($loc = 'top')
+    protected function buildDeleteLink(string $loc = 'top') : string
     {
         global $app_strings;
-        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"delete_listview_". $loc ."\" onclick=\"return sListView.send_mass_update('selected', '{$app_strings['LBL_LISTVIEW_NO_SELECTED']}', 1)\">{$app_strings['LBL_DELETE_BUTTON_LABEL']}</a>";
+
+        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"delete_listview_" . $loc . "\" onclick=\"return sListView.send_mass_update('selected', '{$app_strings['LBL_LISTVIEW_NO_SELECTED']}', 1)\">{$app_strings['LBL_DELETE_BUTTON_LABEL']}</a>";
     }
 
     /**
      * Generate Bulk Action button
      *
      * @param string $loc position on list view
+     *
      * @return string HTML of Bulk Action Button
      */
-    protected function buildBulkActionButton($loc = 'top')
+    protected function buildBulkActionButton(string $loc = 'top') : string
     {
         global $app_strings;
-        return "<a href='javascript:void(0)' class=\"parent-dropdown-handler\" id=\"delete_listview_". $loc ."\" onclick=\"return false;\"><label class=\"selected-actions-label hidden-mobile\">{$app_strings['LBL_BULK_ACTION_BUTTON_LABEL_MOBILE']}<span class='suitepicon suitepicon-action-caret'></span></label><label class=\"selected-actions-label hidden-desktop\">{$app_strings['LBL_BULK_ACTION_BUTTON_LABEL']}<span class='suitepicon suitepicon-action-caret'></span></label></a>";
+
+        return "<a href='javascript:void(0)' class=\"parent-dropdown-handler\" id=\"delete_listview_" . $loc . "\" onclick=\"return false;\"><label class=\"selected-actions-label hidden-mobile\">{$app_strings['LBL_BULK_ACTION_BUTTON_LABEL_MOBILE']}<span class='suitepicon suitepicon-action-caret'></span></label><label class=\"selected-actions-label hidden-desktop\">{$app_strings['LBL_BULK_ACTION_BUTTON_LABEL']}<span class='suitepicon suitepicon-action-caret'></span></label></a>";
     }
 
     /**
      * Display the selected object span object
      *
      * @return string select object span
+     * @throws SmartyException
      */
-    public function buildSelectedObjectsSpan($echo = true, $total=0)
+    public function buildSelectedObjectsSpan(bool $echo = true, int $total = 0) : string
     {
         global $app_strings;
 
-        $displayStyle = $total > 0 ? "" : "display: none;";
+        $displayStyle = $total > 0 ? '' : 'display: none;';
         $template = new Sugar_Smarty();
 
         $template->assign('DISPLAY_STYLE', $displayStyle);
         $template->assign('APP', $app_strings);
         $template->assign('TOTAL_ITEMS_SELECTED', $total);
-        $selectedObjectSpan = $template->fetch('include/ListView/ListViewSelectObjects.tpl');
 
-        return $selectedObjectSpan;
+        return $template->fetch('include/ListView/ListViewSelectObjects.tpl');
     }
+
     /**
      * Builds the mail merge link
      * The link can be disabled by setting module level duplicate_merge property to false
@@ -531,34 +567,39 @@ class ListViewDisplay
      *
      * @return string HTML
      */
-    protected function buildMergeDuplicatesLink($loc = 'top')
+    protected function buildMergeDuplicatesLink(string $loc = 'top') : string
     {
         global $app_strings, $dictionary;
 
-        $return_string='';
-        $return_string.= isset($_REQUEST['module']) ? "&return_module={$_REQUEST['module']}" : "";
-        $return_string.= isset($_REQUEST['action']) ? "&return_action={$_REQUEST['action']}" : "";
-        $return_string.= isset($_REQUEST['record']) ? "&return_id={$_REQUEST['record']}" : "";
+        $return_string = isset($_REQUEST['module']) ? "&return_module={$_REQUEST['module']}" : '';
+        $return_string .= isset($_REQUEST['action']) ? "&return_action={$_REQUEST['action']}" : '';
+        $return_string .= isset($_REQUEST['record']) ? "&return_id={$_REQUEST['record']}" : '';
         //need delete and edit access.
-        if (!(ACLController::checkAccess($this->seed->module_dir, 'edit', true)) or !(ACLController::checkAccess($this->seed->module_dir, 'delete', true))) {
-            return "";
+        if (!(ACLController::checkAccess($this->seed->module_dir, 'edit', true))
+            or !(ACLController::checkAccess(
+                $this->seed->module_dir,
+                'delete',
+                true
+            ))) {
+            return '';
         }
 
-        if (isset($dictionary[$this->seed->object_name]['duplicate_merge']) && $dictionary[$this->seed->object_name]['duplicate_merge']==true) {
-            return "<a href='javascript:void(0)' ".
-                            "class=\"parent-dropdown-action-handler\" id='mergeduplicates_listview_". $loc ."'".
-                            "onclick='if (sugarListView.get_checks_count()> 1) {sListView.send_form(true, \"MergeRecords\", \"index.php\", \"{$app_strings['LBL_LISTVIEW_NO_SELECTED']}\", \"{$this->seed->module_dir}\",\"$return_string\");} else {alert(\"{$app_strings['LBL_LISTVIEW_TWO_REQUIRED']}\");return false;}'>".
-                            $app_strings['LBL_MERGE_DUPLICATES'].'</a>';
+        if (isset($dictionary[$this->seed->object_name]['duplicate_merge']) && $dictionary[$this->seed->object_name]['duplicate_merge'] == true) {
+            return "<a href='javascript:void(0)' " .
+                "class=\"parent-dropdown-action-handler\" id='mergeduplicates_listview_" . $loc . "'" .
+                "onclick='if (sugarListView.get_checks_count()> 1) {sListView.send_form(true, \"MergeRecords\", \"index.php\", \"{$app_strings['LBL_LISTVIEW_NO_SELECTED']}\", \"{$this->seed->module_dir}\",\"$return_string\");} else {alert(\"{$app_strings['LBL_LISTVIEW_TWO_REQUIRED']}\");return false;}'>" .
+                $app_strings['LBL_MERGE_DUPLICATES'] . '</a>';
         }
 
-        return "";
+        return '';
     }
+
     /**
      * Builds the mail merge link
      *
      * @return string HTML
      */
-    protected function buildMergeLink(array $modules_array = null, $loc = 'top')
+    protected function buildMergeLink(array $modules_array = null, string $loc = 'top') : string
     {
         if (empty($modules_array)) {
             require('modules/MailMerge/modules_array.php');
@@ -571,12 +612,13 @@ class ListViewDisplay
         $module_dir = (!empty($this->seed->module_dir) ? $this->seed->module_dir : '');
         $str = '';
 
-        if ($user_merge == 'on' && isset($admin->settings['system_mailmerge_on']) && $admin->settings['system_mailmerge_on'] && !empty($modules_array[$module_dir])) {
+        if ($user_merge === 'on' && isset($admin->settings['system_mailmerge_on']) && $admin->settings['system_mailmerge_on'] && !empty($modules_array[$module_dir])) {
             return "<a href='javascript:void(0)'  " .
-                    "id='merge_listview_". $loc ."'"  .
-                    'onclick="if (document.MassUpdate.select_entire_list.value==1){document.location.href=\'index.php?action=index&module=MailMerge&entire=true\'} else {return sListView.send_form(true, \'MailMerge\',\'index.php\',\''.$app_strings['LBL_LISTVIEW_NO_SELECTED'].'\');}">' .
-                    $app_strings['LBL_MAILMERGE'].'</a>';
+                "id='merge_listview_" . $loc . "'" .
+                'onclick="if (document.MassUpdate.select_entire_list.value==1){document.location.href=\'index.php?action=index&module=MailMerge&entire=true\'} else {return sListView.send_form(true, \'MailMerge\',\'index.php\',\'' . $app_strings['LBL_LISTVIEW_NO_SELECTED'] . '\');}">' .
+                $app_strings['LBL_MAILMERGE'] . '</a>';
         }
+
         return $str;
     }
 
@@ -584,88 +626,91 @@ class ListViewDisplay
      * Builds the add to target list link
      *
      * @return string HTML
+     * @throws JsonException
      */
-    protected function buildTargetList($loc = 'top')
+    protected function buildTargetList(string $loc = 'top') : string
     {
         global $app_strings;
         unset($_REQUEST[session_name()]);
-        unset($_REQUEST[session_name()]);
-        $current_query_by_page = htmlentities(json_encode($_REQUEST));
+        $current_query_by_page = htmlentities(json_encode($_REQUEST, JSON_THROW_ON_ERROR));
 
         $js = <<<EOF
-            if(sugarListView.get_checks_count() < 1) {
-                alert('{$app_strings['LBL_LISTVIEW_NO_SELECTED']}');
-                return false;
+                     if(sugarListView.get_checks_count() < 1) {
+                         alert('{$app_strings['LBL_LISTVIEW_NO_SELECTED']}');
+                         return false;
+                     }
+            if ( document.forms['targetlist_form'] ) {
+                var form = document.forms['targetlist_form'];
+                form.reset;
+            } else
+                var form = document.createElement ( 'form' ) ;
+            form.setAttribute ( 'name' , 'targetlist_form' );
+            form.setAttribute ( 'method' , 'post' ) ;
+            form.setAttribute ( 'action' , 'index.php' );
+            document.body.appendChild ( form ) ;
+            if ( !form.module ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'module' );
+                input.setAttribute ( 'value' , '{$this->seed->module_dir}' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'action' );
+                input.setAttribute ( 'value' , 'TargetListUpdate' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
             }
-			if ( document.forms['targetlist_form'] ) {
-				var form = document.forms['targetlist_form'];
-				form.reset;
-			} else
-				var form = document.createElement ( 'form' ) ;
-			form.setAttribute ( 'name' , 'targetlist_form' );
-			form.setAttribute ( 'method' , 'post' ) ;
-			form.setAttribute ( 'action' , 'index.php' );
-			document.body.appendChild ( form ) ;
-			if ( !form.module ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'module' );
-			    input.setAttribute ( 'value' , '{$this->seed->module_dir}' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'action' );
-			    input.setAttribute ( 'value' , 'TargetListUpdate' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			if ( !form.uids ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'uids' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			if ( !form.prospect_list ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'prospect_list' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			if ( !form.return_module ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'return_module' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			if ( !form.return_action ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'return_action' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			if ( !form.select_entire_list ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'select_entire_list' );
-			    input.setAttribute ( 'value', document.MassUpdate.select_entire_list.value);
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			if ( !form.current_query_by_page ) {
-			    var input = document.createElement('input');
-			    input.setAttribute ( 'name' , 'current_query_by_page' );
-			    input.setAttribute ( 'value', '{$current_query_by_page}' );
-			    input.setAttribute ( 'type' , 'hidden' );
-			    form.appendChild ( input ) ;
-			}
-			open_popup('ProspectLists','600','400','',true,false,{ 'call_back_function':'set_return_and_save_targetlist','form_name':'targetlist_form','field_to_name_array':{'id':'prospect_list'} } );
-EOF;
-        $js = str_replace(array("\r","\n"), '', $js);
-        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"targetlist_listview_". $loc ." \" onclick=\"$js\">{$app_strings['LBL_ADD_TO_PROSPECT_LIST_BUTTON_LABEL']}</a>";
+            if ( !form.uids ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'uids' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+            }
+            if ( !form.prospect_list ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'prospect_list' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+            }
+            if ( !form.return_module ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'return_module' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+            }
+            if ( !form.return_action ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'return_action' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+            }
+            if ( !form.select_entire_list ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'select_entire_list' );
+                input.setAttribute ( 'value', document.MassUpdate.select_entire_list.value);
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+            }
+            if ( !form.current_query_by_page ) {
+                var input = document.createElement('input');
+                input.setAttribute ( 'name' , 'current_query_by_page' );
+                input.setAttribute ( 'value', '{$current_query_by_page}' );
+                input.setAttribute ( 'type' , 'hidden' );
+                form.appendChild ( input ) ;
+            }
+            open_popup('ProspectLists','600','400','',true,false,{ 'call_back_function':'set_return_and_save_targetlist','form_name':'targetlist_form','field_to_name_array':{'id':'prospect_list'} } );
+            EOF;
+        $js = str_replace(array( "\r", "\n" ), '', $js);
+
+        return "<a href='javascript:void(0)' class=\"parent-dropdown-action-handler\" id=\"targetlist_listview_" . $loc . " \" onclick=\"$js\">{$app_strings['LBL_ADD_TO_PROSPECT_LIST_BUTTON_LABEL']}</a>";
     }
+
     /**
      * Display the bottom of the ListView (ie MassUpdate
+     *
      * @return string contents
      */
-    public function displayEnd()
+    public function displayEnd() : string
     {
         $str = '';
         if ($this->show_mass_update_form) {
@@ -678,27 +723,32 @@ EOF;
 
     /**
      * Display the multi select data box etc.
+     *
      * @return string contents
      */
-    public function getMultiSelectData()
+    public function getMultiSelectData() : string
     {
         $str = "<script>YAHOO.util.Event.addListener(window, \"load\", sListView.check_boxes);</script>\n";
 
-        $massUpdateRun = isset($_REQUEST['massupdate']) && $_REQUEST['massupdate'] == 'true';
+        $massUpdateRun = isset($_REQUEST['massupdate']) && $_REQUEST['massupdate'] === 'true';
         $uids = empty($_REQUEST['uid']) || $massUpdateRun ? '' : $_REQUEST['uid'];
-        $select_entire_list = ($massUpdateRun) ? 0 : (isset($_POST['select_entire_list']) ? $_POST['select_entire_list'] : (isset($_REQUEST['select_entire_list']) ? $_REQUEST['select_entire_list'] : 0));
+        $select_entire_list =
+            ($massUpdateRun)
+                ? 0
+                : ($_POST['select_entire_list'] ?? ($_REQUEST['select_entire_list'] ?? 0));
 
         $str .= "<textarea style='display: none' name='uid'>{$uids}</textarea>\n" .
-                "<input type='hidden' name='select_entire_list' value='{$select_entire_list}'>\n".
-                "<input type='hidden' name='{$this->moduleString}' value='0'>\n".
-                "<input type='hidden' name='show_plus' value='{$this->show_plus}'>\n";
+            "<input type='hidden' name='select_entire_list' value='{$select_entire_list}'>\n" .
+            "<input type='hidden' name='{$this->moduleString}' value='0'>\n" .
+            "<input type='hidden' name='show_plus' value='{$this->show_plus}'>\n";
+
         return $str;
     }
 
     /**
-    * @return MassUpdate instance
-    */
-    protected function getMassUpdate()
+     * @return MassUpdate instance
+     */
+    protected function getMassUpdate() : MassUpdate
     {
         return new MassUpdate();
     }
@@ -706,23 +756,26 @@ EOF;
     /**
      * Fill displayColumns with additional field values from vardefs of the current bean seed.
      * We need vardefs to be in displayColumns for a further processing (e.g. in SugarField)
-     * Similar vardef field values do not override field values from displayColumns, only necessary and missing ones are added
+     * Similar vardef field values do not override field values from displayColumns, only necessary and missing ones
+     * are added
      */
-    protected function fillDisplayColumnsWithVardefs()
+    protected function fillDisplayColumnsWithVardefs() : void
     {
         if (!is_array($this->displayColumns)) {
-            LoggerManager::getLogger()->warn('displayColumns is not an array');
+            LoggerManager::getLogger()?->warn('displayColumns is not an array');
+            return;
         }
 
-        foreach ((array)$this->displayColumns as $columnName => $def) {
-            $seedName =  strtolower($columnName);
+        foreach ($this->displayColumns as $columnName => $def) {
+            $seedName = strtolower($columnName);
             if (!empty($this->lvd->seed->field_defs[$seedName])) {
                 $seedDef = $this->lvd->seed->field_defs[$seedName];
             }
 
             if (empty($this->displayColumns[$columnName]['type'])) {
                 if (!empty($seedDef['type'])) {
-                    $this->displayColumns[$columnName]['type'] = (!empty($seedDef['custom_type']))?$seedDef['custom_type']:$seedDef['type'];
+                    $this->displayColumns[$columnName]['type'] =
+                        (!empty($seedDef['custom_type'])) ? $seedDef['custom_type'] : $seedDef['type'];
                 } else {
                     $this->displayColumns[$columnName]['type'] = '';
                 }
@@ -733,9 +786,9 @@ EOF;
             }
 
             //C.L. Fix for 11177
-            if ($this->displayColumns[$columnName]['type'] == 'html') {
+            if ($this->displayColumns[$columnName]['type'] === 'html') {
                 $cField = $this->seed->custom_fields;
-                if (isset($cField) && isset($cField->bean->$seedName)) {
+                if (isset($cField->bean->$seedName)) {
                     $seedName2 = strtoupper($columnName);
                     $htmlDisplay = html_entity_decode($cField->bean->$seedName);
                     $count = 0;
@@ -747,10 +800,11 @@ EOF;
             }//fi == 'html'
 
             //Bug 40511, make sure relate fields have the correct module defined
-            if ($this->displayColumns[$columnName]['type'] == "relate" && !empty($seedDef['link']) && empty($this->displayColumns[$columnName]['module'])) {
+            if ($this->displayColumns[$columnName]['type'] === 'relate' && !empty($seedDef['link']) && empty($this->displayColumns[$columnName]['module'])) {
                 $link = $seedDef['link'];
                 if (!empty($this->lvd->seed->field_defs[$link]) && !empty($this->lvd->seed->field_defs[$seedDef['link']]['module'])) {
-                    $this->displayColumns[$columnName]['module'] = $this->lvd->seed->field_defs[$seedDef['link']]['module'];
+                    $this->displayColumns[$columnName]['module'] =
+                        $this->lvd->seed->field_defs[$seedDef['link']]['module'];
                 }
             }
 
@@ -760,7 +814,7 @@ EOF;
 
             if (isset($seedDef)) {
                 // Merge the two arrays together, making sure the seedDef doesn't override anything explicitly set in the displayColumns array.
-                $this->displayColumns[$columnName] = $this->displayColumns[$columnName] + $seedDef;
+                $this->displayColumns[$columnName] += $seedDef;
             }
 
             //C.L. Bug 38388 - ensure that ['id'] is set for related fields

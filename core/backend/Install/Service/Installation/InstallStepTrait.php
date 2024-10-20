@@ -25,7 +25,7 @@ trait InstallStepTrait
             $inputsValid = false;
         }
 
-        if (empty($inputs["db_host"]) || empty($inputs["db_username"]) || empty($inputs["db_password"])) {
+        if (empty($inputs['db_host']) || empty($inputs['db_username']) || empty($inputs['db_password'])) {
             $inputsValid = false;
         }
 

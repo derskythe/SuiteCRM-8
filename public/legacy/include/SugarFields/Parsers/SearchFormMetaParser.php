@@ -48,23 +48,30 @@ class SearchFormMetaParser extends MetaParser
     }
 
 
-
-
     /**
      * parse
+     *
      * @param $mixed
+     *
      * @return $obj A MetaDataBean instance
      **/
-    public function parse($filePath, $vardefs = array(), $moduleDir = '', $merge=false, $masterCopy=null)
+    public function parse(
+        string $filePath,
+        array  $vardefs = array(),
+        string $moduleDir = '',
+        bool   $merge = false,
+        bool   $masterCopy = null
+    ) : string
     {
+        parent::parse($filePath, $vardefs, $moduleDir, $merge, $masterCopy);
         $contents = file_get_contents($filePath);
         $contents = $this->trimHTML($contents);
 
         // Get the second table in the page and onward
-        $tables = $this->getElementsByType("table", $contents);
+        $tables = $this->getElementsByType('table', $contents);
         //basic search table
-        $basicSection = $this->processSection("basic", $tables[0], $filePath, $vardefs);
-        $advancedSection = $this->processSection("advanced", $tables[1], $filePath, $vardefs);
+        $basicSection = $this->processSection('basic', $tables[0], $filePath, $vardefs);
+        $advancedSection = $this->processSection('advanced', $tables[1], $filePath, $vardefs);
         if (file_exists($masterCopy)) {
             require($masterCopy);
             $layouts = $searchdefs[$moduleDir]['layout'];
@@ -93,25 +100,26 @@ class SearchFormMetaParser extends MetaParser
 );
 ?>";
 
-        $header = preg_replace('/(\d+)[\s]=>[\s]?/', "", $header);
+        $header = preg_replace('/(\d+)[\s]=>[\s]?/', '', $header);
+
         return $header;
     }
 
     public function mergeSection($section, $masterSection)
     {
 
-  // Get all the names in the panel
+        // Get all the names in the panel
         $existingElements = array();
         $existingLocation = array();
 
-        foreach ($section as $rowKey=>$row) {
+        foreach ($section as $rowKey => $row) {
             if (is_array($row) && !empty($row['name'])) {
                 $existingElements[$row['name']] = $row['name'];
-                $existingLocation[$row['name']] = array("row"=>$rowKey);
+                $existingLocation[$row['name']] = array( 'row' => $rowKey );
             } else {
                 if (!is_array($row) && !empty($row)) {
                     $existingElements[$row] = $row;
-                    $existingLocation[$row] = array("row"=>$rowKey);
+                    $existingLocation[$row] = array( 'row' => $rowKey );
                 }
             }
         } //foreach
@@ -133,36 +141,39 @@ class SearchFormMetaParser extends MetaParser
             }
 
             // Add it to the $panels
-     /*
-     if(!empty($addEntry)) {
-         $section[] = $addEntry;
-     }
-     */
+            /*
+            if(!empty($addEntry)) {
+                $section[] = $addEntry;
+            }
+            */
         } //foreach
 
         return $section;
     }
 
-    public function processSection($section, $table, $filePath, $vardefs=array())
+    public function processSection($section, $table, $filePath, $vardefs = array())
     {
-        $toptr = $this->getElementsByType("tr", $table);
+        $toptr = $this->getElementsByType('tr', $table);
 
         if (!is_array($toptr) || empty($toptr)) {
             $GLOBALS['log']->error("Could not process top row (<tr>) for $section section");
             $GLOBALS['log']->error($table);
+
             return array();
         }
 
-        $tabledata = $this->getElementsByType("table", $toptr[0]);
+        $tabledata = $this->getElementsByType('table', $toptr[0]);
 
         if (empty($tabledata)) {
-            $GLOBALS['log']->error("Error: HTML format for SearchForm.html not as expected, results may not be accurate");
+            $GLOBALS['log']->error(
+                'Error: HTML format for SearchForm.html not as expected, results may not be accurate'
+            );
             $GLOBALS['log']->error($toptr[0]);
             $tabledata[0] = "<table>{$table}</table>";
         }
 
         if (is_array($tabledata) && !empty($tabledata[0])) {
-            $rows = $this->getElementsByType("tr", $tabledata[0]);
+            $rows = $this->getElementsByType('tr', $tabledata[0]);
         } else {
             $rows = $toptr[0];
         }
@@ -173,17 +184,17 @@ class SearchFormMetaParser extends MetaParser
 
         $metarow = array();
         foreach ($rows as $trow) {
-            $tablecolumns = $this->getElementsByType("td", $trow);
+            $tablecolumns = $this->getElementsByType('td', $trow);
 
             $emptyCount = 0;
             $metacolumn = array();
             $col = null;
 
             foreach ($tablecolumns as $tcols) {
-                $spanValue = strtolower($this->getElementValue("span", $tcols));
-                $spanValue2 = strtolower($this->getElementValue("slot", $tcols));
+                $spanValue = strtolower($this->getElementValue('span', $tcols));
+                $spanValue2 = strtolower($this->getElementValue('slot', $tcols));
                 $spanValue = !empty($spanValue2) ? $spanValue2 : $spanValue;
-                $spanValue3 = strtolower($this->getElementValue("td", $tcols));
+                $spanValue3 = strtolower($this->getElementValue('td', $tcols));
                 $spanValue = !empty($spanValue3) ? $spanValue3 : $spanValue;
 
                 //Get all the editable form elements' names
@@ -199,7 +210,7 @@ class SearchFormMetaParser extends MetaParser
                     $name = $customField;
                 } else {
                     if (is_array($formElementNames) && count($formElementNames) == 1
-                       && (isset($vardefs[$formElementNames[0]]) || $formElementNames[0] == 'current_user_only')) {
+                        && (isset($vardefs[$formElementNames[0]]) || $formElementNames[0] === 'current_user_only')) {
                         $name = $formElementNames[0];
                     }
                 }
@@ -210,11 +221,11 @@ class SearchFormMetaParser extends MetaParser
                 }
 
                 // Build the entry
-                if (preg_match("/<textarea/si", $spanValue)) {
+                if (preg_match('/<textarea/si', $spanValue)) {
                     //special case for textarea form elements (add the displayParams)
                     $displayParams = array();
-                    $displayParams['rows'] = $this->getTagAttribute("rows", $spanValue);
-                    $displayParams['cols'] = $this->getTagAttribute("cols", $spanValue);
+                    $displayParams['rows'] = $this->getTagAttribute('rows', $spanValue);
+                    $displayParams['cols'] = $this->getTagAttribute('cols', $spanValue);
 
                     if (!empty($displayParams['rows']) && !empty($displayParams['cols'])) {
                         $field = array();
@@ -255,21 +266,23 @@ class SearchFormMetaParser extends MetaParser
         return $metarow;
     }
 
-    public function applyRules($moduleDir, $section=array())
+    public function applyRules($moduleDir, $section = array())
     {
         require_once('include/SugarFields/Parsers/Rules/BaseRule.php');
         $baseRule = new BaseRule();
         if (!is_array($section)) {
-            $GLOBALS['log']->error("Error: SearchFormMetaParser->applyRules expects Array");
+            $GLOBALS['log']->error('Error: SearchFormMetaParser->applyRules expects Array');
+
             return $section;
         }
 
-        foreach ($section as $key=>$row) {
+        foreach ($section as $key => $row) {
             //Override email1 fields
             if ($baseRule->matches($row, '/^email1$/si')) {
-                $section[$key] = array('name' => 'email', 'label' =>'LBL_ANY_EMAIL', 'type' => 'name');
+                $section[$key] = array( 'name' => 'email', 'label' => 'LBL_ANY_EMAIL', 'type' => 'name' );
             }
         }
+
         return $section;
     }
 }

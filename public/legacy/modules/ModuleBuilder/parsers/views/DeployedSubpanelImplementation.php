@@ -93,8 +93,11 @@ class DeployedSubpanelImplementation extends AbstractMetaDataImplementation impl
 
     /**
      * Constructor
+     *
      * @param string $subpanelName The name of this subpanel
-     * @param string $moduleName The name of the module to which this subpanel belongs
+     * @param string $moduleName   The name of the module to which this subpanel belongs
+     *
+     * @throws Exception
      */
     public function __construct($subpanelName, $moduleName)
     {
@@ -133,7 +136,7 @@ class DeployedSubpanelImplementation extends AbstractMetaDataImplementation impl
                 // now check if there is a restored subpanel in the history area - if there is, then go ahead and use it
                 if (file_exists($this->historyPathname)) {
                     // load in the subpanelDefOverride from the history file
-                    $GLOBALS ['log']->debug(get_class($this) . ": loading from history");
+                    $GLOBALS ['log']->debug(get_class($this) . ': loading from history');
                     require $this->historyPathname;
                     $this->_viewdefs = $layout_defs;
                 } else {
@@ -201,11 +204,15 @@ class DeployedSubpanelImplementation extends AbstractMetaDataImplementation impl
     /**
      * Construct a full pathname for the requested metadata
      * Can be called statically
-     * @param string $view The view type, that is, EditView, DetailView etc
+     *
+     * @param string $view       The view type, that is, EditView, DetailView etc
      * @param string $moduleName The name of the module that will use this layout
      * @param string $packageName
      * @param string $type
+     *
      * @return array
+     * @throws Exception
+     * @throws Exception
      */
     public function getFileName($view, $moduleName, $packageName, $type = MB_CUSTOMMETADATALOCATION)
     {

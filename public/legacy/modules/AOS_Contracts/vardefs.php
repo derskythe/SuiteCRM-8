@@ -681,7 +681,7 @@ $dictionary['AOS_Contracts'] = array(
                 ),
                 'len' => '26,6',
             ),
-        
+
         'accounts' =>
             array(
                 'name' => 'accounts',
@@ -760,7 +760,7 @@ $dictionary['AOS_Contracts'] = array(
                 'source' => 'non-db',
                 'module' => 'AOS_Quotes',
             ),
-        "documents" =>
+        'documents' =>
             array(
                 'name' => 'documents',
                 'vname' => 'LBL_DOCUMENTS',
@@ -769,7 +769,7 @@ $dictionary['AOS_Contracts'] = array(
                 'source' => 'non-db',
                 'module' => 'Documents',
             ),
-        "aos_products_quotes" =>
+        'aos_products_quotes' =>
             array(
                 'name' => 'aos_products_quotes',
                 'vname' => 'LBL_AOS_PRODUCT_QUOTES',

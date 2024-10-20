@@ -45,4 +45,4 @@ if (!defined('sugarEntry')) {
 
 ob_start();
 require_once('include/entryPoint.php');
-require("modules/iCals/Server.php");
+require('modules/iCals/Server.php');

@@ -38,6 +38,8 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
+use SuiteCRM\API\JsonApi\v1\Enumerator\RelationshipType;
+
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
@@ -54,7 +56,6 @@ class SugarRelationshipFactory
 {
     public static $rfInstance;
 
-    protected $relationships;
 
     /**
      * SugarRelationshipFactory constructor.
@@ -109,7 +110,7 @@ class SugarRelationshipFactory
 
         $type = isset($def['true_relationship_type']) ? $def['true_relationship_type'] : $def['relationship_type'];
         switch ($type) {
-            case 'many-to-many':
+            case REL_MANY_MANY:
                 if (isset($def['rhs_module']) && $def['rhs_module'] === 'EmailAddresses') {
                     require_once 'data/Relationships/EmailAddressRelationship.php';
 
@@ -119,7 +120,7 @@ class SugarRelationshipFactory
 
                 return new M2MRelationship($def);
                 break;
-            case 'one-to-many':
+            case REL_ONE_MANY:
                 require_once 'data/Relationships/One2MBeanRelationship.php';
                 //If a relationship has no table or join keys, it must be bean based
                 if (empty($def['true_relationship_type']) || (empty($def['table']) && empty($def['join_table'])) || empty($def['join_key_rhs'])) {
@@ -128,7 +129,7 @@ class SugarRelationshipFactory
                     return new One2MRelationship($def);
                 }
                 break;
-            case 'one-to-one':
+            case REL_ONE_ONE:
                 if (empty($def['true_relationship_type'])) {
                     require_once 'data/Relationships/One2OneBeanRelationship.php';
 
@@ -138,7 +139,6 @@ class SugarRelationshipFactory
 
                     return new One2OneRelationship($def);
                 }
-                break;
         }
 
         $GLOBALS['log']->fatal("$relationshipName had an unknown type $type ");
@@ -171,6 +171,9 @@ class SugarRelationshipFactory
         }
     }
 
+    /**
+     * @throws Exception
+     */
     protected function buildRelationshipCache()
     {
         global $beanList, $dictionary, $buildingRelCache;

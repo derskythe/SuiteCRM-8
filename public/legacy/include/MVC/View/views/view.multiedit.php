@@ -57,8 +57,8 @@ require_once('include/EditView/EditView2.php');
      public function display()
      {
          global $beanList, $beanFiles;
-         if ($this->action == 'AjaxFormSave') {
-             echo "<a href='index.php?action=DetailView&module=".$this->module."&record=".$this->bean->id."'>".$this->bean->id."</a>";
+         if ($this->action === 'AjaxFormSave') {
+             echo "<a href='index.php?action=DetailView&module=" . $this->module . '&record=' . $this->bean->id . "'>" . $this->bean->id . '</a>';
          } else {
              if (!empty($_REQUEST['modules'])) {
                  $js_array = 'Array(';
@@ -74,7 +74,7 @@ require_once('include/EditView/EditView2.php');
                  }
                  //$js_array = "Array(".implode(",", $js_array). ")";
                  $js_array .= ');';
-                 echo "<script language='javascript'>var ajaxFormArray = new ".$js_array."</script>";
+                 echo "<script language='javascript'>var ajaxFormArray = new " . $js_array . '</script>';
                  if ($count > 1) {
                      echo '<input type="button" class="button" value="Save All" id=\'ajaxsaveall\' onclick="return saveForms(\'Saving...\', \'Save Complete\');"/>';
                  }
@@ -86,7 +86,7 @@ require_once('include/EditView/EditView2.php');
                      $ev->process();
                      echo "<div id='multiedit_form_".$module."'>";
                      echo $ev->display(true, true);
-                     echo "</div>";
+                     echo '</div>';
                  }
              }
          }

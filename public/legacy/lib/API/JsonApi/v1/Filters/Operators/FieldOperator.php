@@ -40,6 +40,7 @@
 
 namespace SuiteCRM\API\JsonApi\v1\Filters\Operators;
 
+use SuiteCRM\Exception\Exception;
 use SuiteCRM\Exception\InvalidArgumentException;
 
 /**
@@ -89,8 +90,10 @@ class FieldOperator extends Operator
 
     /**
      * @param string $operator
+     *
      * @return bool
-     * @throws Exception
+     * @throws Exception*@throws Exception
+     * @throws InvalidArgumentException
      */
     public function isOperator($operator)
     {

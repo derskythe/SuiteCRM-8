@@ -61,11 +61,11 @@ if (empty($_REQUEST['record'])) {
     $folder->updateFolder($_REQUEST);
 }
 $body1 = "
-	<script type='text/javascript'>
-		function refreshOpener() {
-			window.opener.refresh_group_folder_list('$folder->id','$folder->name')
-			window.close();
-		} // fn
-		refreshOpener();
-	</script>";
+    <script type='text/javascript'>
+        function refreshOpener() {
+            window.opener.refresh_group_folder_list('$folder->id','$folder->name')
+            window.close();
+        } // fn
+        refreshOpener();
+    </script>";
 echo  $body1;

@@ -42,6 +42,9 @@
 #[\AllowDynamicProperties]
 class OAuthTokensController extends SugarController
 {
+    /**
+     * @throws Exception
+     */
     protected function action_delete()
     {
         global $current_user;
@@ -54,7 +57,7 @@ class OAuthTokensController extends SugarController
             }
             $this->bean->mark_deleted($_REQUEST['record']);
         } else {
-            sugar_die("A record number must be specified to delete");
+            sugar_die('A record number must be specified to delete');
         }
     }
 

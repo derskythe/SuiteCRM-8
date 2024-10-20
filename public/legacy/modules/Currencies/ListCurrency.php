@@ -59,11 +59,15 @@ if (!defined('sugarEntry') || !sugarEntry) {
              $this->list = array($this->focus);
          }
      }
+
+     /**
+      * @throws Exception
+      */
      public function handleAdd()
      {
          global $current_user;
          if ($current_user->is_admin) {
-             if (isset($_POST['edit']) && $_POST['edit'] == 'true' && isset($_POST['name']) && !empty($_POST['name']) && isset($_POST['conversion_rate']) && !empty($_POST['conversion_rate']) && isset($_POST['symbol']) && !empty($_POST['symbol'])) {
+             if (isset($_POST['edit']) && $_POST['edit'] === 'true' && isset($_POST['name']) && !empty($_POST['name']) && isset($_POST['conversion_rate']) && !empty($_POST['conversion_rate']) && isset($_POST['symbol']) && !empty($_POST['symbol'])) {
                  $currency = BeanFactory::newBean('Currencies');
                  if (isset($_POST['record']) && !empty($_POST['record'])) {
                      $currency->retrieve($_POST['record']);
@@ -79,6 +83,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
          }
      }
 
+     /**
+      * @throws Exception
+      */
      public function handleUpdate()
      {
          global $current_user;
@@ -112,55 +119,55 @@ if (!defined('sugarEntry') || !sugarEntry) {
          // wp: DO NOT add formatting and unformatting numbers in here, add them prior to calling these to avoid double calling
          // of unformat number
          return $this->javascript . <<<EOQ
-					function get_rate(id){
-						return ConversionRates[id];
-					}
-					function ConvertToDollar(amount, rate){
-						return amount / rate;
-					}
-					function ConvertFromDollar(amount, rate){
-						return amount * rate;
-					}
-					function ConvertRate(id,fields){
-							for(var i = 0; i < fields.length; i++){
-								fields[i].value = toDecimal(ConvertFromDollar(toDecimal(ConvertToDollar(toDecimal(fields[i].value), lastRate)), ConversionRates[id]));
-							}
-							lastRate = ConversionRates[id];
-						}
-					function ConvertRateSingle(id,field){
-						var temp = field.innerHTML.substring(1, field.innerHTML.length);
-						unformattedNumber = unformatNumber(temp, num_grp_sep, dec_sep);
+                    function get_rate(id){
+                        return ConversionRates[id];
+                    }
+                    function ConvertToDollar(amount, rate){
+                        return amount / rate;
+                    }
+                    function ConvertFromDollar(amount, rate){
+                        return amount * rate;
+                    }
+                    function ConvertRate(id,fields){
+                            for(var i = 0; i < fields.length; i++){
+                                fields[i].value = toDecimal(ConvertFromDollar(toDecimal(ConvertToDollar(toDecimal(fields[i].value), lastRate)), ConversionRates[id]));
+                            }
+                            lastRate = ConversionRates[id];
+                        }
+                    function ConvertRateSingle(id,field){
+                        var temp = field.innerHTML.substring(1, field.innerHTML.length);
+                        unformattedNumber = unformatNumber(temp, num_grp_sep, dec_sep);
 
-						field.innerHTML = CurrencySymbols[id] + formatNumber(toDecimal(ConvertFromDollar(ConvertToDollar(unformattedNumber, lastRate), ConversionRates[id])), num_grp_sep, dec_sep, 2, 2);
-						lastRate = ConversionRates[id];
-					}
-					function CurrencyConvertAll(form){
+                        field.innerHTML = CurrencySymbols[id] + formatNumber(toDecimal(ConvertFromDollar(ConvertToDollar(unformattedNumber, lastRate), ConversionRates[id])), num_grp_sep, dec_sep, 2, 2);
+                        lastRate = ConversionRates[id];
+                    }
+                    function CurrencyConvertAll(form){
                         try {
                         var id = form.currency_id.options[form.currency_id.selectedIndex].value;
-						var fields = new Array();
+                        var fields = new Array();
 
-						for(i in currencyFields){
-							var field = currencyFields[i];
-							if(typeof(form[field]) != 'undefined'){
-								form[field].value = unformatNumber(form[field].value, num_grp_sep, dec_sep);
-								fields.push(form[field]);
-							}
+                        for(i in currencyFields){
+                            var field = currencyFields[i];
+                            if(typeof(form[field]) != 'undefined'){
+                                form[field].value = unformatNumber(form[field].value, num_grp_sep, dec_sep);
+                                fields.push(form[field]);
+                            }
 
-						}
+                        }
 
-							ConvertRate(id, fields);
-						for(i in fields){
-							fields[i].value = formatNumber(fields[i].value, num_grp_sep, dec_sep);
+                            ConvertRate(id, fields);
+                        for(i in fields){
+                            fields[i].value = formatNumber(fields[i].value, num_grp_sep, dec_sep);
 
-						}
+                        }
 
-						} catch (err) {
+                        } catch (err) {
                             // Do nothing, if we can't find the currency_id field we will just not attempt to convert currencies
                             // This typically only happens in lead conversion and quick creates, where the currency_id field may be named somethnig else or hidden deep inside a sub-form.
                         }
 
-					}
-				</script>
+                    }
+                </script>
 EOQ;
      }
 
@@ -175,13 +182,13 @@ EOQ;
          $setLastRate = false;
          if (isset($this->list) && !empty($this->list)) {
              foreach ($this->list as $data) {
-                 if ($data->status == 'Active') {
+                 if ($data->status === 'Active') {
                      if ($id == $data->id) {
                          $options .= '<option value="'. $data->id . '" selected>';
                          $setLastRate = true;
                          $this->javascript .= 'var lastRate = "' . $data->conversion_rate . '";';
                      } else {
-                         $options .= '<option value="'. $data->id . '">'	;
+                         $options .= '<option value="'. $data->id . '">'    ;
                      }
                      $options .= $data->name . ' : ' . $data->symbol;
                      $this->javascript .=" ConversionRates['".$data->id."'] = '".$data->conversion_rate."';\n";
@@ -208,13 +215,13 @@ EOQ;
 
          $form = $html = "<br><table cellpadding='0' cellspacing='0' border='0'  class='tabForm'><tr><td><tableborder='0' cellspacing='0' cellpadding='0'>";
          $form .= <<<EOQ
-					<form name='DeleteCurrency' action='index.php' method='post'><input type='hidden' name='action' value='{$_REQUEST['action']}'>
-					<input type='hidden' name='module' value='{$_REQUEST['module']}'><input type='hidden' name='deleteCur' value=''></form>
+                    <form name='DeleteCurrency' action='index.php' method='post'><input type='hidden' name='action' value='{$_REQUEST['action']}'>
+                    <input type='hidden' name='module' value='{$_REQUEST['module']}'><input type='hidden' name='deleteCur' value=''></form>
 
-					<tr><td><B>$currency</B></td><td><B>ISO 4217</B>&nbsp;</td><td><B>$currency_sym</B></td><td colspan='2'><B>$conv_rate</B></td></tr>
-					<tr><td>$usdollar</td><td>USD</td><td>$</td><td colspan='2'>1</td></tr>
-					<form name="UpdateCurrency" action="index.php" method="post"><input type='hidden' name='action' value='{$_REQUEST['action']}'>
-					<input type='hidden' name='module' value='{$_REQUEST['module']}'>
+                    <tr><td><B>$currency</B></td><td><B>ISO 4217</B>&nbsp;</td><td><B>$currency_sym</B></td><td colspan='2'><B>$conv_rate</B></td></tr>
+                    <tr><td>$usdollar</td><td>USD</td><td>$</td><td colspan='2'>1</td></tr>
+                    <form name="UpdateCurrency" action="index.php" method="post"><input type='hidden' name='action' value='{$_REQUEST['action']}'>
+                    <input type='hidden' name='module' value='{$_REQUEST['module']}'>
 EOQ;
          if (isset($this->list) && !empty($this->list)) {
              foreach ($this->list as $data) {
@@ -222,13 +229,13 @@ EOQ;
              }
          }
          $form .= <<<EOQ
-					<tr><td></td><td></td><td></td><td></td><td></td><td>&nbsp;<input type='submit' name='Update' value='$update' class='button'></TD></form> </td></tr>
-					<tr><td colspan='3'><br></td></tr>
-					<form name="AddCurrency" action="index.php" method="post">
-					<input type='hidden' name='action' value='{$_REQUEST['action']}'>
-					<input type='hidden' name='module' value='{$_REQUEST['module']}'>
-					<tr><td><input type = 'text' name='addname' value=''>&nbsp;</td><td><input type = 'text' name='addiso' size='3' maxlength='3' value=''>&nbsp;</td><td><input type = 'text' name='addsymbol' value=''></td><td colspan='2'>&nbsp;<input type ='text' name='addrate'></td><td>&nbsp;<input type='submit' name='Add' value='$add' class='button'></td></tr>
-					</form></table></td></tr></table>
+                    <tr><td></td><td></td><td></td><td></td><td></td><td>&nbsp;<input type='submit' name='Update' value='$update' class='button'></TD></form> </td></tr>
+                    <tr><td colspan='3'><br></td></tr>
+                    <form name="AddCurrency" action="index.php" method="post">
+                    <input type='hidden' name='action' value='{$_REQUEST['action']}'>
+                    <input type='hidden' name='module' value='{$_REQUEST['module']}'>
+                    <tr><td><input type = 'text' name='addname' value=''>&nbsp;</td><td><input type = 'text' name='addiso' size='3' maxlength='3' value=''>&nbsp;</td><td><input type = 'text' name='addsymbol' value=''></td><td colspan='2'>&nbsp;<input type ='text' name='addrate'></td><td>&nbsp;<input type='submit' name='Add' value='$add' class='button'></td></tr>
+                    </form></table></td></tr></table>
 EOQ;
          return $form;
      }

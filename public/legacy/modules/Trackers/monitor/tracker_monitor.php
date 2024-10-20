@@ -50,6 +50,8 @@ class tracker_monitor extends Monitor
 
     /**
      * Monitor constructor
+     *
+     * @throws Exception
      */
     public function __construct($name='', $monitorId='', $metadata='', $store='')
     {
@@ -60,7 +62,10 @@ class tracker_monitor extends Monitor
      * save
      * This method retrieves the Store instances associated with monitor and calls
      * the flush method passing with the montior ($this) instance.
+     *
      * @param $flush boolean parameter indicating whether or not to flush the instance data to store or possibly cache
+     *
+     * @throws Exception
      */
     public function save($flush=true)
     {

@@ -72,17 +72,17 @@ function start_flow_bar($name, $delay, $flush=true)
     $delay *= 1000;
     $timer_id = $name . '_id';
     echo "<script>
-		function update_flow_bar(name, count){
-			var last = (count - 1) % 5;
-			var cur = count % 5;
-			var next = cur + 1;
-			eval(\"document.getElementById('\" + name+\"_flow_bar\" + last+\"').style.backgroundColor='#ffffff';\");
-			eval(\"document.getElementById('\" + name+\"_flow_bar\" + cur+\"').style.backgroundColor='#cccccc';\");
-			$timer_id = setTimeout(\"update_flow_bar('$name', \" + next + \")\", $delay);
-		}
-		 var $timer_id = setTimeout(\"update_flow_bar('$name', 1)\", $delay);
+        function update_flow_bar(name, count){
+            var last = (count - 1) % 5;
+            var cur = count % 5;
+            var next = cur + 1;
+            eval(\"document.getElementById('\" + name+\"_flow_bar\" + last+\"').style.backgroundColor='#ffffff';\");
+            eval(\"document.getElementById('\" + name+\"_flow_bar\" + cur+\"').style.backgroundColor='#cccccc';\");
+            $timer_id = setTimeout(\"update_flow_bar('$name', \" + next + \")\", $delay);
+        }
+         var $timer_id = setTimeout(\"update_flow_bar('$name', 1)\", $delay);
 
-	</script>
+    </script>
 ";
     echo str_repeat(' ', 256);
 
@@ -149,9 +149,9 @@ function update_progress_bar($name, $current, $total, $flush=true)
     }
 
     echo "<script>
-		document.getElementById('{$name}_complete_bar').width='{$percent}px';
-		document.getElementById('{$name}_complete_bar').innerHTML = '$status%';
-		document.getElementById('{$name}_remain_bar').width='{$remain}px';
-		</script>";
+        document.getElementById('{$name}_complete_bar').width='{$percent}px';
+        document.getElementById('{$name}_complete_bar').innerHTML = '$status%';
+        document.getElementById('{$name}_remain_bar').width='{$remain}px';
+        </script>";
     progress_bar_flush($flush);
 }

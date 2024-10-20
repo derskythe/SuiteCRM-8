@@ -74,23 +74,23 @@ function get_validate_record_document_revision_js()
 <script type="text/javascript" language="Javascript">
 
 function verify_data(form) {
-	var isError = false;
-	var errorMessage = "";
-	if (trim(form.revision.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_version";
-	}	
-	if (trim(form.uploadfile.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_filename";
-	}
+    var isError = false;
+    var errorMessage = "";
+    if (trim(form.revision.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_version";
+    }
+    if (trim(form.uploadfile.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_filename";
+    }
 
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
 
-	return true;
+    return true;
 }
 </script>
 
@@ -143,14 +143,14 @@ function get_validate_record_js()
 
     if (isset($_REQUEST['record'])) {
         //do not validate upload file
-        $the_upload_script="";
+        $the_upload_script= '';
     } else {
         $the_upload_script  = <<<EOQ
 
-	if (trim(form.uploadfile.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_file_name";
-	}
+    if (trim(form.uploadfile.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_file_name";
+    }
 EOQ;
     }
 
@@ -159,33 +159,33 @@ EOQ;
 <script type="text/javascript" language="Javascript">
 
 function verify_data(form) {
-	var isError = false;
-	var errorMessage = "";
-	if (trim(form.document_name.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_name";
-	}
-	
-	$the_upload_script
-	
-	if (trim(form.active_date.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_start_date";
-	}
-	if (trim(form.revision.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_file_version";
-	}
+    var isError = false;
+    var errorMessage = "";
+    if (trim(form.document_name.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_name";
+    }
 
-	
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
-	
-	//make sure start date is <= end_date
+    $the_upload_script
 
-	return true;
+    if (trim(form.active_date.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_start_date";
+    }
+    if (trim(form.revision.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_file_version";
+    }
+
+
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
+
+    //make sure start date is <= end_date
+
+    return true;
 }
 </script>
 

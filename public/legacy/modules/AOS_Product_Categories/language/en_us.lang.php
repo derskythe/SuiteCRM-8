@@ -70,10 +70,10 @@ $mod_strings = array(
     'LBL_ACTIVITIES_SUBPANEL_TITLE' => 'Activities',
     'LBL_NEW_FORM_TITLE' => 'New Product Categories',
     'LBL_PARENT_CATEGORY' => 'Parent Category',
-    'LBL_IS_PARENT' => "Is parent category",
-    'LBL_SUB_CATEGORIES' => "Sub categories",
-    'LBL_PRODUCT_CATEGORYS_NAME' => "Parent category",
-    'LBL_PARENT_CATEGORY_ID' => "Parent Category ID",
+    'LBL_IS_PARENT' => 'Is parent category',
+    'LBL_SUB_CATEGORIES' => 'Sub categories',
+    'LBL_PRODUCT_CATEGORYS_NAME' => 'Parent category',
+    'LBL_PARENT_CATEGORY_ID' => 'Parent Category ID',
 
     'LBL_AOS_PRODUCT_CATEGORIES_AOS_PRODUCTS_FROM_AOS_PRODUCTS_TITLE' => 'Product Categories: Product from Product Title',
 );

@@ -103,15 +103,24 @@ class MysqliManager extends MysqlManager
     /**
      * @see DBManager::$dbType
      */
-    public $dbType = 'mysql';
-    public $variant = 'mysqli';
-    public $priority = 10;
-    public $label = 'LBL_MYSQLI';
+    public string $dbType = 'mysql';
+    /**
+     * @var string
+     */
+    public string $variant = 'mysqli';
+    /**
+     * @var int
+     */
+    public int $priority = 10;
+    /**
+     * @var string
+     */
+    public string $label = 'LBL_MYSQLI';
 
     /**
      * @see DBManager::$backendFunctions
      */
-    protected $backendFunctions = array(
+    protected array $backendFunctions = array(
         'free_result' => 'mysqli_free_result',
         'close' => 'mysqli_close',
         'row_count' => 'mysqli_num_rows',
@@ -130,13 +139,14 @@ class MysqliManager extends MysqlManager
 
         static $queryMD5 = array();
 
-        parent::countQuery($sql);
+        $this->countQuery($sql);
         $GLOBALS['log']->info('Query:' . $sql);
         $this->checkConnection();
         $this->query_time = microtime(true);
         $this->lastsql = $sql;
         if (!empty($sql)) {
             if ($this->database instanceof mysqli) {
+                $result = false;
                 try {
                     $result = $suppress ? @mysqli_query($this->database, $sql) : mysqli_query($this->database, $sql);
                 } catch (Exception $e) {
@@ -144,12 +154,14 @@ class MysqliManager extends MysqlManager
                 }
                 if ($result === false && !$suppress) {
                     if (inDeveloperMode()) {
-                        LoggerManager::getLogger()->debug('Mysqli_query failed, error was: ' . $this->lastDbError() . ', query was: ');
+                        LoggerManager::getLogger()?->debug(
+                            'Mysqli_query failed, error was: ' . $this->lastDbError() . ', query was: '
+                        );
                     }
-                    LoggerManager::getLogger()->fatal('Mysqli_query failed.');
+                    LoggerManager::getLogger()?->fatal('Mysqli_query failed.');
                 }
             } else {
-                LoggerManager::getLogger()->fatal('Database error: Incorrect link');
+                LoggerManager::getLogger()?->fatal('Database error: Incorrect link');
             }
         } else {
             $GLOBALS['log']->fatal('MysqliManager: Empty query');
@@ -191,7 +203,7 @@ class MysqliManager extends MysqlManager
      *
      * @return int
      */
-    public function getAffectedRowCount($result)
+    public function getAffectedRowCount($result) : int
     {
         return mysqli_affected_rows($this->getDatabase());
     }
@@ -205,18 +217,17 @@ class MysqliManager extends MysqlManager
      * @param  resource $result
      * @return int
      */
-    public function getRowCount($result)
+    public function getRowCount(mixed $result) : int
     {
         return mysqli_num_rows($result);
     }
-
 
     /**
      * Disconnects from the database
      *
      * Also handles any cleanup needed
      */
-    public function disconnect()
+    public function disconnect() : void
     {
         if (isset($GLOBALS['log']) && !is_null($GLOBALS['log'])) {
             $GLOBALS['log']->debug('Calling MySQLi::disconnect()');
@@ -233,7 +244,7 @@ class MysqliManager extends MysqlManager
     /**
      * @see DBManager::freeDbResult()
      */
-    protected function freeDbResult($dbResult)
+    protected function freeDbResult(mixed $dbResult) : void
     {
         if (!empty($dbResult)) {
             mysqli_free_result($dbResult);
@@ -243,22 +254,22 @@ class MysqliManager extends MysqlManager
     /**
      * @see DBManager::getFieldsArray()
      */
-    public function getFieldsArray($result, $make_lower_case = false)
+    public function getFieldsArray(mixed $result, bool $make_lower_case = false) : array
     {
         $field_array = array();
 
-        if (!isset($result) || empty($result)) {
-            return 0;
+        if (empty($result)) {
+            return [];
         }
 
         $i = 0;
         while ($i < mysqli_num_fields($result)) {
             $meta = mysqli_fetch_field_direct($result, $i);
             if (!$meta) {
-                return 0;
+                return [];
             }
 
-            if ($make_lower_case == true) {
+            if ($make_lower_case) {
                 $meta->name = strtolower($meta->name);
             }
 
@@ -273,10 +284,10 @@ class MysqliManager extends MysqlManager
     /**
      * @see DBManager::fetchRow()
      */
-    public function fetchRow($result)
+    public function fetchRow(mixed $result) : array
     {
         if (empty($result)) {
-            return false;
+            return [];
         }
 
         $row = mysqli_fetch_assoc($result);
@@ -290,15 +301,19 @@ class MysqliManager extends MysqlManager
     /**
      * @see DBManager::quote()
      */
-    public function quote($string)
+    public function quote(string $string) : string
     {
         return mysqli_real_escape_string($this->getDatabase(), $this->quoteInternal($string));
     }
 
     /**
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      * @see DBManager::connect()
      */
-    public function connect(array $configOptions = null, $dieOnError = false)
+    public function connect(array $configOptions = null, $dieOnError = false) : bool
     {
         global $sugar_config;
 
@@ -310,7 +325,9 @@ class MysqliManager extends MysqlManager
 
             //mysqli connector has a separate parameter for port.. We need to separate it out from the host name
             $dbhost = $configOptions['db_host_name'];
-            $dbport = isset($configOptions['db_port']) ? ($configOptions['db_port'] == '' ? null : $configOptions['db_port']) : null;
+            $dbport =
+                isset($configOptions['db_port']) ? ($configOptions['db_port'] === '' ? null : $configOptions['db_port'])
+                    : null;
 
             $pos = strpos($configOptions['db_host_name'], ':');
             if ($pos !== false) {
@@ -322,16 +339,24 @@ class MysqliManager extends MysqlManager
                 $dbhost,
                 $configOptions['db_user_name'],
                 $configOptions['db_password'],
-                isset($configOptions['db_name']) ? $configOptions['db_name'] : '',
+                $configOptions['db_name'] ?? '',
                 $dbport
             );
             if (empty($this->database)) {
-                $GLOBALS['log']->fatal("Could not connect to DB server " . $dbhost . " as " . $configOptions['db_user_name'] . ". port " . $dbport . ": " . mysqli_connect_error());
+                $GLOBALS['log']->fatal(
+                    sprintf(
+                        'Could not connect to DB server %s as %s. port %s: %s',
+                        $dbhost,
+                        $configOptions['db_user_name'],
+                        $dbport,
+                        mysqli_connect_error()
+                    )
+                );
                 if ($dieOnError) {
                     if (isset($GLOBALS['app_strings']['ERR_NO_DB'])) {
                         sugar_die($GLOBALS['app_strings']['ERR_NO_DB']);
                     } else {
-                        sugar_die("Could not connect to the database. Please refer to suitecrm.log for details (2).");
+                        sugar_die('Could not connect to the database. Please refer to suitecrm.log for details (2).');
                     }
                 } else {
                     return false;
@@ -345,7 +370,7 @@ class MysqliManager extends MysqlManager
                 if (isset($GLOBALS['app_strings']['ERR_NO_DB'])) {
                     sugar_die($GLOBALS['app_strings']['ERR_NO_DB']);
                 } else {
-                    sugar_die("Could not connect to the database. Please refer to suitecrm.log for details (2).");
+                    sugar_die('Could not connect to the database. Please refer to suitecrm.log for details (2).');
                 }
             } else {
                 return false;
@@ -362,15 +387,18 @@ class MysqliManager extends MysqlManager
 
         if (!empty($charset)) {
             mysqli_set_charset($this->database, $charset);
-	    }
+        }
 
         // https://github.com/salesagility/SuiteCRM/issues/7107
         // MySQL 5.7 is stricter regarding missing values in SQL statements and makes some tests fail.
         // Remove STRICT_TRANS_TABLES from sql_mode so we get the old behaviour again.
-        mysqli_query($this->database, "SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode, 'STRICT_TRANS_TABLES', ''))");
+        mysqli_query(
+            $this->database,
+            'SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode, \'STRICT_TRANS_TABLES\', \'\'))'
+        );
 
         if ($this->checkError('Could Not Connect', $dieOnError)) {
-            $GLOBALS['log']->info("connected to db");
+            $GLOBALS['log']->info('connected to db');
         }
 
         $this->connectOptions = $configOptions;
@@ -382,11 +410,11 @@ class MysqliManager extends MysqlManager
      * (non-PHPdoc)
      * @see MysqlManager::lastDbError()
      */
-    public function lastDbError()
+    public function lastDbError() : bool|string
     {
         if ($this->database) {
             if (mysqli_errno($this->database)) {
-                return "MySQL error " . mysqli_errno($this->database) . ": " . mysqli_error($this->database);
+                return sprintf('MySQL error %s: %s', mysqli_errno($this->database), mysqli_error($this->database));
             }
         } else {
             $err = mysqli_connect_error();
@@ -398,7 +426,7 @@ class MysqliManager extends MysqlManager
         return false;
     }
 
-    public function getDbInfo()
+    public function getDbInfo() : ?array
     {
         $charsets = $this->getCharsetInfo();
         $charset_str = array();
@@ -407,11 +435,11 @@ class MysqliManager extends MysqlManager
         }
 
         return array(
-            "MySQLi Version" => @mysqli_get_client_info(),
-            "MySQLi Host Info" => @mysqli_get_host_info($this->database),
-            "MySQLi Server Info" => @mysqli_get_server_info($this->database),
-            "MySQLi Client Encoding" => @mysqli_character_set_name($this->database),
-            "MySQL Character Set Settings" => implode(", ", $charset_str),
+            'MySQLi Version'               => @mysqli_get_client_info(),
+            'MySQLi Host Info'             => @mysqli_get_host_info($this->database),
+            'MySQLi Server Info'           => @mysqli_get_server_info($this->database),
+            'MySQLi Client Encoding'       => @mysqli_character_set_name($this->database),
+            'MySQL Character Set Settings' => implode(', ', $charset_str),
         );
     }
 
@@ -419,7 +447,7 @@ class MysqliManager extends MysqlManager
      * Select database
      * @param string $dbname
      */
-    protected function selectDb($dbname)
+    protected function selectDb(string $dbname) : bool
     {
         return mysqli_select_db($this->getDatabase(), $dbname);
     }
@@ -428,21 +456,21 @@ class MysqliManager extends MysqlManager
      * Check if this driver can be used
      * @return bool
      */
-    public function valid()
+    public function valid() : bool
     {
-        return function_exists("mysqli_connect") && empty($GLOBALS['sugar_config']['mysqli_disabled']);
+        return function_exists('mysqli_connect') && empty($GLOBALS['sugar_config']['mysqli_disabled']);
     }
 
-    public function compareVarDefs($fielddef1, $fielddef2, $ignoreName = false)
+    public function compareVarDefs(array $fielddef1, array $fielddef2, bool $ignoreName = false) : bool
     {
         /**
          * Int lengths are ignored in MySQL versions >= 8.0.19 so we need to ignore when comparing vardefs.
          */
-        if($fielddef1['type'] == 'int') {
+        if ($fielddef1['type'] === 'int') {
             $db_version = $this->version();
             if (!empty($db_version)
                 && version_compare($db_version, '8.0.19') >= 0
-                && strpos($db_version, "MariaDB") === false
+                && !str_contains($db_version, 'MariaDB')
             ) {
                 unset($fielddef2['len']);
             }

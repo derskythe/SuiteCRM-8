@@ -69,12 +69,12 @@ if (isset($_REQUEST['refreshparent'])) {
             echo '<input type="hidden" name="module" value="LabelEditor">';
             echo SugarThemeRegistry::current()->getCSS();
             echo <<<EOQ
-	<table cellpadding="0" cellspacing="0" border="0" width="100%">
-	<tr>
-	<td><input title="{$app_strings['LBL_SAVE_BUTTON_TITLE']}" accessKey="{$app_strings['LBL_SAVE_BUTTON_KEY']}" class="button" type="submit" name="button" value="  {$app_strings['LBL_SAVE_BUTTON_LABEL']}  " > &nbsp;<input title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" accessKey="{APP.LBL_CANCEL_BUTTON_KEY}" class="button" type="button" name="button" onclick="document.location.reload()" value="  {$app_strings['LBL_CANCEL_BUTTON_LABEL']}  " ></td>
-	</tr>
-	</table>
-	
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+    <td><input title="{$app_strings['LBL_SAVE_BUTTON_TITLE']}" accessKey="{$app_strings['LBL_SAVE_BUTTON_KEY']}" class="button" type="submit" name="button" value="  {$app_strings['LBL_SAVE_BUTTON_LABEL']}  " > &nbsp;<input title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" accessKey="{APP.LBL_CANCEL_BUTTON_KEY}" class="button" type="button" name="button" onclick="document.location.reload()" value="  {$app_strings['LBL_CANCEL_BUTTON_LABEL']}  " ></td>
+    </tr>
+    </table>
+
 EOQ;
             echo '<table width="100%" border="0" cellspacing="0" cellpadding="0" class="edit view">';
             $sugar_body_only = 0;
@@ -86,12 +86,12 @@ EOQ;
             }
             echo '</table>';
             echo <<<EOQ
-	<table cellpadding="0" cellspacing="0" border="0" width="100%">
-	<tr>
-	<td style="padding-top: 2px;"><input title="{$app_strings['LBL_SAVE_BUTTON_TITLE']}"  class="button" type="submit" name="button" value="  {$app_strings['LBL_SAVE_BUTTON_LABEL']}  " > &nbsp;<input title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" class="button" type="button" name="button" onclick="document.location.reload()" value="  {$app_strings['LBL_CANCEL_BUTTON_LABEL']}  " ></td>
-	</tr>
-	</table>
-	
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+    <td style="padding-top: 2px;"><input title="{$app_strings['LBL_SAVE_BUTTON_TITLE']}"  class="button" type="submit" name="button" value="  {$app_strings['LBL_SAVE_BUTTON_LABEL']}  " > &nbsp;<input title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" class="button" type="button" name="button" onclick="document.location.reload()" value="  {$app_strings['LBL_CANCEL_BUTTON_LABEL']}  " ></td>
+    </tr>
+    </table>
+
 EOQ;
             echo '</form>';
         } else {

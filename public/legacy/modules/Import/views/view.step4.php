@@ -71,7 +71,7 @@ class ImportViewStep4 extends SugarView
         global $mod_strings, $sugar_config;
 
         // Check to be sure we are getting an import file that is in the right place
-        $uploadFile = "upload://".basename((string) $_REQUEST['tmp_file']);
+        $uploadFile = 'upload://' .basename((string) $_REQUEST['tmp_file']);
         if (!file_exists($uploadFile)) {
             trigger_error($mod_strings['LBL_CANNOT_OPEN'], E_USER_ERROR);
         }

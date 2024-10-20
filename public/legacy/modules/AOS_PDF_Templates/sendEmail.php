@@ -56,8 +56,11 @@ class sendEmail
      * @param string $printable
      * @param string $file_name
      * @param bool $attach
-     * @see generatePDF (Entrypoint)
+     *
+     * @throws Exception
+     * @throws Exception
      * @deprecated use EmailController::composeViewFrom
+     * @see        generatePDF (Entrypoint)
      */
     public function send_email($module, $module_type, $printable, $file_name, $attach)
     {
@@ -73,8 +76,8 @@ class sendEmail
         // body
         $email->description_html = $printable;
         // type is draft
-        $email->type = "draft";
-        $email->status = "draft";
+        $email->type = 'draft';
+        $email->status = 'draft';
 
         $contact_id = '';
 
@@ -96,9 +99,9 @@ class sendEmail
             $email->parent_id = $contact->id;
 
             if (!empty($contact->email1)) {
-                $email->to_addrs_emails = $contact->email1 . ";";
-                $email->to_addrs = $contact->name . " <" . $contact->email1 . ">";
-                $email->to_addrs_names = $contact->name . " <" . $contact->email1 . ">";
+                $email->to_addrs_emails = $contact->email1 . ';';
+                $email->to_addrs = $contact->name . ' <' . $contact->email1 . '>';
+                $email->to_addrs_names = $contact->name . ' <' . $contact->email1 . '>';
                 $email->parent_name = $contact->name;
             }
         }
@@ -135,7 +138,7 @@ class sendEmail
 
         // redirect
         if (empty($email_id)) {
-            echo "Unable to initiate Email Client";
+            echo 'Unable to initiate Email Client';
             exit;
         } else {
             header('Location: index.php?action=ComposeViewWithPdfTemplate&module=Emails&return_module=' . $module_type . '&return_action=DetailView&return_id=' . $module->id . '&record=' . $email_id);

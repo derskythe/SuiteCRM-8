@@ -18,18 +18,18 @@ class ProjectTaskTest extends SuitePHPUnitFrameworkTestCase
         $projectTask = BeanFactory::newBean('ProjectTask');
 
         //test with empty string params
-        $expected = "SELECT
-				project_task.*,
+        $expected = 'SELECT
+                project_task.*,
                 users.user_name as assigned_user_name  FROM project_task LEFT JOIN project ON project_task.project_id=project.id AND project.deleted=0  LEFT JOIN users
-                   	ON project_task.assigned_user_id=users.id where  project_task.deleted=0 ";
+                       ON project_task.assigned_user_id=users.id where  project_task.deleted=0 ';
         $actual = $projectTask->create_export_query('', '');
         self::assertSame($expected, $actual);
 
         //test with valid string params
         $expected = "SELECT
-				project_task.*,
+                project_task.*,
                 users.user_name as assigned_user_name  FROM project_task LEFT JOIN project ON project_task.project_id=project.id AND project.deleted=0  LEFT JOIN users
-                   	ON project_task.assigned_user_id=users.id where (users.user_name= \"\") AND  project_task.deleted=0  ORDER BY project_task.id";
+                       ON project_task.assigned_user_id=users.id where (users.user_name= \"\") AND  project_task.deleted=0  ORDER BY project_task.id";
         $actual = $projectTask->create_export_query('project_task.id', 'users.user_name= ""');
         self::assertSame($expected, $actual);
     }

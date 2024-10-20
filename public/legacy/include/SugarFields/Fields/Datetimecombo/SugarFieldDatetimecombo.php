@@ -74,7 +74,7 @@ class SugarFieldDatetimecombo extends SugarFieldBase
         $displayParams['showFormats'] = true;
         return $this->getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex);
     }
-    
+
     public function getSearchViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
     {
         if ($this->isRangeSearchView($vardef)) {
@@ -135,7 +135,7 @@ class SugarFieldDatetimecombo extends SugarFieldBase
         }
         return TimeDate::getInstance()->to_display_date_time($inputField, true, true, $user);
     }
-    
+
     public function save(&$bean, $params, $field, $properties, $prefix = '')
     {
         global $timedate;
@@ -186,7 +186,7 @@ class SugarFieldDatetimecombo extends SugarFieldBase
             } else {
                 $timepart = $parts[1];
                 // see if we can get by stripping the seconds
-                if (strpos($settings->timeformat, 's') === false) {
+                if (!str_contains($settings->timeformat, 's')) {
                     $sep = $timedate->timeSeparatorFormat($settings->timeformat);
                     // We are assuming here seconds are the last component, which
                     // is kind of reasonable - no sane time format puts seconds first

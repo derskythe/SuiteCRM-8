@@ -22,7 +22,7 @@
  *
  * @return string|null
  */
-function smarty_function_math($params, &$smarty)
+function smarty_function_math($params, $smarty)
 {
     static $_allowed_funcs =
         array('int' => true, 'abs' => true, 'ceil' => true, 'cos' => true, 'exp' => true, 'floor' => true,
@@ -30,7 +30,7 @@ function smarty_function_math($params, &$smarty)
               'round' => true, 'sin' => true, 'sqrt' => true, 'srand' => true, 'tan' => true);
     // be sure equation parameter is present
     if (empty($params[ 'equation' ])) {
-        trigger_error("math: missing equation parameter", E_USER_WARNING);
+        trigger_error('math: missing equation parameter', E_USER_WARNING);
 
         return;
     }
@@ -38,28 +38,28 @@ function smarty_function_math($params, &$smarty)
     $equation = $params[ 'equation' ];
 
     // make sure parenthesis are balanced
-    if (substr_count($equation, "(") != substr_count($equation, ")")) {
-        trigger_error("math: unbalanced parenthesis", E_USER_WARNING);
+    if (substr_count($equation, '(') != substr_count($equation, ')')) {
+        trigger_error('math: unbalanced parenthesis', E_USER_WARNING);
 
         return;
     }
 
     // disallow backticks
-    if (strpos($equation, '`') !== false) {
-        trigger_error("math: backtick character not allowed in equation", E_USER_WARNING);
+    if (str_contains($equation, '`')) {
+        trigger_error('math: backtick character not allowed in equation', E_USER_WARNING);
 
         return;
     }
 
     // also disallow dollar signs
-    if (strpos($equation, '$') !== false) {
-        trigger_error("math: dollar signs not allowed in equation", E_USER_WARNING);
+    if (str_contains($equation, '$')) {
+        trigger_error('math: dollar signs not allowed in equation', E_USER_WARNING);
 
         return;
     }
 
     foreach ($params as $key => $val) {
-        if ($key != "equation" && $key != "format" && $key != "assign") {
+        if ($key !== 'equation' && $key !== 'format' && $key !== 'assign') {
             // make sure value is not empty
             if (strlen($val) == 0) {
                 trigger_error("math: parameter '{$key}' is empty", E_USER_WARNING);
@@ -86,12 +86,12 @@ function smarty_function_math($params, &$smarty)
     }
 
     foreach ($params as $key => $val) {
-        if ($key != "equation" && $key != "format" && $key != "assign") {
+        if ($key !== 'equation' && $key !== 'format' && $key !== 'assign') {
             $equation = preg_replace("/\b$key\b/", " \$params['$key'] ", $equation);
         }
     }
     $smarty_math_result = null;
-    eval("\$smarty_math_result = " . $equation . ";");
+    eval('$smarty_math_result = ' . $equation . ';');
 
     if (empty($params[ 'format' ])) {
         if (empty($params[ 'assign' ])) {

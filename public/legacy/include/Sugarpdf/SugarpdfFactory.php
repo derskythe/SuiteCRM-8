@@ -96,7 +96,7 @@ class SugarpdfFactory
         }
         return $sugarpdf;
     }
-    
+
     /**
      * Load the Sugarpdf_<Sugarpdf>_config.php file which holds options used by the tcpdf.
      */
@@ -128,7 +128,7 @@ class SugarpdfFactory
 //        }
 //
 //    }
-    
+
     /**
      * This is a private function which just helps the getSugarpdf function generate the
      * proper Tcpdf object
@@ -148,7 +148,7 @@ class SugarpdfFactory
         }
         return SugarpdfFactory::_buildClass($class, $bean, $sugarpdf_object_map);
     }
-    
+
     /**
      * instantiate the correct Tcpdf and call init to pass on any obejcts we need to
      * from the controller.
@@ -160,7 +160,7 @@ class SugarpdfFactory
      *
      * @return Sugarpdf
      */
-    public function _buildClass($class, &$bean, $sugarpdf_object_map)
+    public function _buildClass($class, $bean, $sugarpdf_object_map)
     {
         $sugarpdf = new $class($bean, $sugarpdf_object_map);
         //$sugarpdf->init($bean, $sugarpdf_object_map);

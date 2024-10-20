@@ -9,4 +9,5 @@ if (isset($legacyRoute['script-name'], $legacyRoute['request-uri'])) {
 
 chdir('../');
 require_once __DIR__ . '/Core/app.php';
+global $app;
 $app->run();

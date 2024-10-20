@@ -1,6 +1,6 @@
 <?php
 // created: 2014-06-04 23:46:40
-$dictionary["am_projecttemplates_project_1"] = array(
+$dictionary['am_projecttemplates_project_1'] = array(
   'true_relationship_type' => 'one-to-many',
   'from_studio' => true,
   'relationships' =>

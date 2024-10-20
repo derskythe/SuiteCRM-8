@@ -54,11 +54,11 @@ class DashletsDialog
 
         require_once($GLOBALS['sugar_config']['cache_dir'].'dashlets/dashlets.php');
 
-        $categories = array( 'module' 	=> 'Module Views',
-            'portal' 	=> 'Portal',
-            'charts'	=> 'Charts',
-            'tools'	=> 'Tools',
-            'misc'		=> 'Miscellaneous',
+        $categories = array( 'module'     => 'Module Views',
+            'portal'     => 'Portal',
+            'charts'    => 'Charts',
+            'tools'    => 'Tools',
+            'misc'        => 'Miscellaneous',
             'web'      => 'Web');
 
         $dashletStrings = array();
@@ -115,7 +115,15 @@ class DashletsDialog
                     if (empty($dashletMeta[$files['class']]['module'])) {
                         $icon = get_dashlets_dialog_icon('default');
                     } else {
-                        if ((!in_array($dashletMeta[$files['class']]['module'], $GLOBALS['moduleList']) && !in_array($dashletMeta[$files['class']]['module'], $GLOBALS['modInvisList'])) && (!in_array('Activities', $GLOBALS['moduleList']))) {
+                        if ((!in_array(
+                                    $dashletMeta[$files['class']]['module'],
+                                    $GLOBALS['moduleList'],
+                                    true
+                                ) && !in_array(
+                                    $dashletMeta[$files['class']]['module'],
+                                    $GLOBALS['modInvisList'],
+                                    true
+                                )) && (!in_array('Activities', $GLOBALS['moduleList'], true))) {
                             unset($dashletMeta[$files['class']]);
                             continue;
                         } else {
@@ -129,14 +137,22 @@ class DashletsDialog
                     $displayDashlet = false;
                 }
                 //co: fixes 20398 to respect ACL permissions
-                elseif (!empty($dashletMeta[$files['class']]['module']) && (!in_array($dashletMeta[$files['class']]['module'], $GLOBALS['moduleList']) && !in_array($dashletMeta[$files['class']]['module'], $GLOBALS['modInvisList'])) && (!in_array('Activities', $GLOBALS['moduleList']))) {
+                elseif (!empty($dashletMeta[$files['class']]['module']) && (!in_array(
+                            $dashletMeta[$files['class']]['module'],
+                            $GLOBALS['moduleList'],
+                            true
+                        ) && !in_array(
+                            $dashletMeta[$files['class']]['module'],
+                            $GLOBALS['modInvisList'],
+                            true
+                        )) && (!in_array('Activities', $GLOBALS['moduleList'], true))) {
                     $displayDashlet = false;
                 } else {
                     $displayDashlet = true;
                     //check ACL ACCESS
                     if (!empty($dashletMeta[$files['class']]['module']) && ACLController::moduleSupportsACL($dashletMeta[$files['class']]['module'])) {
                         $type = 'module';
-                        if ($dashletMeta[$files['class']]['module'] == 'Trackers') {
+                        if ($dashletMeta[$files['class']]['module'] === 'Trackers') {
                             $type = 'Tracker';
                         }
                         if (!ACLController::checkAccess($dashletMeta[$files['class']]['module'], 'view', true, $type)) {
@@ -148,7 +164,7 @@ class DashletsDialog
                     }
                 }
 
-                if ($dashletMeta[$files['class']]['category'] == 'Charts') {
+                if ($dashletMeta[$files['class']]['category'] === 'Charts') {
                     $type = 'predefined_chart';
                 } else {
                     $type = 'module';
@@ -170,7 +186,8 @@ class DashletsDialog
                         'onclick' => 'return SUGAR.mySugar.addDashlet(\'' . $className . '\', \'' . $type . '\', \''.(!empty($dashletMeta[$files['class']]['module']) ? $dashletMeta[$files['class']]['module'] : '') .'\');',
                         'icon' => $icon,
                         'id' => $files['class'] . '_select',
-                        'module_name'=> array_key_exists('module', $dashletsFiles[$className]) ? $dashletsFiles[$className]['module']:""
+                                   'module_name' => array_key_exists('module', $dashletsFiles[$className])
+                                       ? $dashletsFiles[$className]['module'] : ''
                     );
 
                     if (!empty($category) && $dashletMeta[$files['class']]['category'] == $categories[$category]) {

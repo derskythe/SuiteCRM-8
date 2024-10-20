@@ -47,7 +47,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * @param $field
  * @param $value
  * @param $view
+ *
  * @return string
+ * @throws SmartyException
  */
 function displayIndicatorField($focus, $field, $value, $view)
 {

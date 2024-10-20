@@ -56,7 +56,7 @@ class SugarWidgetSubPanelTopComposeEmailButton extends SugarWidgetSubPanelTopBut
     public function &_get_form($defines, $additionalFormFields = null, $nonbutton = false)
     {
         if ((ACLController::moduleSupportsACL($defines['module']) && !ACLController::checkAccess($defines['module'], 'edit', true) ||
-                $defines['module'] == "Activities" & !ACLController::checkAccess("Emails", 'edit', true))) {
+            $defines['module'] === 'Activities' & !ACLController::checkAccess('Emails', 'edit', true))) {
             $temp = '';
             return $temp;
         }
@@ -71,7 +71,7 @@ class SugarWidgetSubPanelTopComposeEmailButton extends SugarWidgetSubPanelTopBut
         /** @var Person|Company|Opportunity $bean */
         $bean = $defines['focus'];
 
-        if ($client != 'sugar') {
+        if ($client !== 'sugar') {
             // awu: Not all beans have emailAddress property, we must account for this
             if (isset($bean->emailAddress)) {
                 $to_addrs = $bean->emailAddress->getPrimaryAddress($bean);
@@ -119,7 +119,7 @@ class SugarWidgetSubPanelTopComposeEmailButton extends SugarWidgetSubPanelTopBut
         if (!$focus->ACLAccess('EditView')) {
             return '';
         }
-        
+
         $inputID = $this->getWidgetId();
 
         $button = $this->_get_form($defines, $additionalFormFields);
@@ -127,7 +127,7 @@ class SugarWidgetSubPanelTopComposeEmailButton extends SugarWidgetSubPanelTopBut
         global $current_user;
         $client = $current_user->getEmailClient();
 
-        if ($client == 'sugar') {
+        if ($client === 'sugar') {
             $button .= "<input class='button' onclick='return false;' type='button' id='$inputID' value='$this->form_value'>";
         }
 

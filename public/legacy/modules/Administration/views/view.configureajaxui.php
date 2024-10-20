@@ -49,27 +49,29 @@ class ViewConfigureAjaxUI extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         return array(
-            "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME') . "</a>",
+            "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME') . '</a>',
             translate('LBL_CONFIG_AJAX')
         );
     }
 
     /**
+     * @throws Exception
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $current_user;
 
         if (!is_admin($current_user)) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()
@@ -81,13 +83,13 @@ class ViewConfigureAjaxUI extends SugarView
         $banned = ajaxBannedModules();
 
         foreach ($moduleList as $module) {
-            if (!in_array($module, $banned)) {
-                $enabled[] = array("module" => $module, 'label' => translate($module));
+            if (!in_array($module, $banned, true)) {
+                $enabled[] = array( 'module' => $module, 'label' => translate($module));
             }
         }
         if (!empty($sugar_config['addAjaxBannedModules'])) {
             foreach ($sugar_config['addAjaxBannedModules'] as $module) {
-                $disabled[] = array("module" => $module, 'label' => translate($module));
+                $disabled[] = array( 'module' => $module, 'label' => translate($module));
             }
         }
 

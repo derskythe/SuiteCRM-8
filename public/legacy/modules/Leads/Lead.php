@@ -41,16 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-
 require_once('include/SugarObjects/templates/person/Person.php');
-
-
-
-
-
-
-
 
 require_once('include/SugarObjects/templates/person/Person.php');
 require_once __DIR__ . '/../../include/EmailInterface.php';
@@ -59,31 +50,12 @@ require_once __DIR__ . '/../../include/EmailInterface.php';
 #[\AllowDynamicProperties]
 class Lead extends Person implements EmailInterface
 {
-    public $field_name_map;
-    // Stored fields
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-    public $description;
-    public $salutation;
-    public $first_name;
-    public $last_name;
-    public $title;
     public $department;
     public $reports_to_id;
     public $do_not_call;
     public $phone_home;
     public $phone_mobile;
-    public $phone_work;
-    public $phone_other;
-    public $phone_fax;
     public $refered_by;
-    public $email1;
     public $email2;
     public $primary_address_street;
     public $primary_address_city;
@@ -95,8 +67,6 @@ class Lead extends Person implements EmailInterface
     public $alt_address_state;
     public $alt_address_postalcode;
     public $alt_address_country;
-    public $name;
-    public $full_name;
     public $portal_name;
     public $portal_app;
     public $contact_id;
@@ -134,26 +104,25 @@ class Lead extends Person implements EmailInterface
     public $primary_address_street_3;
 
 
-    public $table_name = "leads";
-    public $object_name = "Lead";
-    public $object_names = "Leads";
-    public $module_dir = "Leads";
-    public $new_schema = true;
-    public $emailAddress;
+    public $object_names = 'Leads';
+    public bool $new_schema = true;
     public $prospect_id;
-
-    public $importable = true;
-
-    // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array('assigned_user_name', 'task_id', 'note_id', 'meeting_id', 'call_id', 'email_id');
-    public $relationship_fields = array('email_id'=>'emails','call_id'=>'calls','meeting_id'=>'meetings','task_id'=>'tasks',);
 
     public function __construct()
     {
         parent::__construct();
+
+        $this->table_name = 'leads';
+        $this->object_name = 'Lead';
+        $this->module_dir = 'Leads';
+        $this->importable = true;
+        $this->emailAddress;
+        $this->additional_column_fields =
+            array( 'assigned_user_name', 'task_id', 'note_id', 'meeting_id', 'call_id', 'email_id' );
+        $this->relationship_fields =
+            array( 'email_id' => 'emails', 'call_id' => 'calls', 'meeting_id' => 'meetings', 'task_id' => 'tasks', );
+
     }
-
-
 
 
     public function get_account()
@@ -163,7 +132,7 @@ class Lead extends Person implements EmailInterface
 
             //requireSingleResult has beeen deprecated.
             //$result = $this->db->requireSingleResult($query);
-            $result = $this->db->limitQuery($query, 0, 1, true, "Want only a single row");
+            $result = $this->db->limitQuery($query, 0, 1, true, 'Want only a single row');
 
             if (!empty($result)) {
                 $row = $this->db->fetchByAssoc($result);
@@ -178,14 +147,16 @@ class Lead extends Person implements EmailInterface
             }
         }
     }
+
     public function get_opportunity()
     {
         if (isset($this->opportunity_id) && !empty($this->opportunity_id)) {
-            $query = "SELECT name, assigned_user_id opportunity_name_owner FROM opportunities WHERE id='{$this->opportunity_id}'";
+            $query =
+                "SELECT name, assigned_user_id opportunity_name_owner FROM opportunities WHERE id='{$this->opportunity_id}'";
 
             //requireSingleResult has beeen deprecated.
             //$result = $this->db->requireSingleResult($query);
-            $result = $this->db->limitQuery($query, 0, 1, true, "Want only a single row");
+            $result = $this->db->limitQuery($query, 0, 1, true, 'Want only a single row');
 
             if (!empty($result)) {
                 $row = $this->db->fetchByAssoc($result);
@@ -202,17 +173,19 @@ class Lead extends Person implements EmailInterface
             }
         }
     }
+
     public function get_contact()
     {
         global $locale;
         if (isset($this->contact_id) && !empty($this->contact_id)) {
-            $query = "SELECT first_name, last_name, assigned_user_id contact_name_owner FROM contacts WHERE id='{$this->contact_id}'";
+            $query =
+                "SELECT first_name, last_name, assigned_user_id contact_name_owner FROM contacts WHERE id='{$this->contact_id}'";
 
             //requireSingleResult has beeen deprecated.
             //$result = $this->db->requireSingleResult($query);
-            $result = $this->db->limitQuery($query, 0, 1, true, "Want only a single row");
+            $result = $this->db->limitQuery($query, 0, 1, true, 'Want only a single row');
             if (!empty($result)) {
-                $row= $this->db->fetchByAssoc($result);
+                $row = $this->db->fetchByAssoc($result);
 
                 if (!is_null($row) && !is_bool($row)) {
                     $this->contact_name = $locale->getLocaleFormattedName($row['first_name'], $row['last_name']);
@@ -226,32 +199,31 @@ class Lead extends Person implements EmailInterface
         }
     }
 
-    public function create_list_query($order_by, $where, $show_deleted=0)
+    public function create_list_query($order_by, $where, $show_deleted = 0)
     {
         $custom_join = $this->getCustomJoin();
-        $query = "SELECT ";
-
+        $query = 'SELECT ';
 
         $query .= "$this->table_name.*, users.user_name assigned_user_name";
         $query .= $custom_join['select'];
-        $query .= " FROM leads ";
+        $query .= ' FROM leads ';
 
-        $query .= "			LEFT JOIN users
-                                ON leads.assigned_user_id=users.id ";
+        $query .= '            LEFT JOIN users
+                                ON leads.assigned_user_id=users.id ';
         $query .= "LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = leads.id AND eabl.bean_module = 'Leads' and eabl.primary_address = 1 and eabl.deleted=0 ";
-        $query .= "LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ";
+        $query .= 'LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ';
         $query .= $custom_join['join'];
         $where_auto = '1=1';
         if ($show_deleted == 0) {
-            $where_auto = " leads.deleted=0 ";
+            $where_auto = ' leads.deleted=0 ';
         } elseif ($show_deleted == 1) {
-            $where_auto = " leads.deleted=1 ";
+            $where_auto = ' leads.deleted=1 ';
         }
 
-        if ($where != "") {
-            $query .= "where ($where) AND ".$where_auto;
+        if ($where != '') {
+            $query .= "where ($where) AND " . $where_auto;
         } else {
-            $query .= "where ".$where_auto;
+            $query .= 'where ' . $where_auto;
         } //."and (leads.converted='0')";
 
         if (!empty($order_by)) {
@@ -261,28 +233,59 @@ class Lead extends Person implements EmailInterface
         return $query;
     }
 
-    public function create_new_list_query($order_by, $where, $filter=array(), $params=array(), $show_deleted = 0, $join_type='', $return_array = false, $parentbean=null, $singleSelect = false, $ifListForExport = false)
+    public function create_new_list_query(
+        $order_by,
+        $where,
+        $filter = array(),
+        $params = array(),
+        $show_deleted = 0,
+        $join_type = '',
+        $return_array = false,
+        $parentbean = null,
+        $singleSelect = false,
+        $ifListForExport = false
+    )
     {
-        $ret_array = parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, true, $parentbean, $singleSelect, $ifListForExport);
-        if (strpos((string) $ret_array['select'], "leads.account_name") == false && strpos((string) $ret_array['select'], "leads.*") == false) {
-            $ret_array['select'] .= " ,leads.account_name";
+        $ret_array =
+            parent::create_new_list_query(
+                $order_by,
+                $where,
+                $filter,
+                $params,
+                $show_deleted,
+                $join_type,
+                true,
+                $parentbean,
+                $singleSelect,
+                $ifListForExport
+            );
+        if (strpos((string) $ret_array['select'], 'leads.account_name') == false && strpos(
+                (string) $ret_array['select'],
+                'leads.*'
+            ) == false) {
+            $ret_array['select'] .= ' ,leads.account_name';
         }
         if (!$return_array) {
-            return  $ret_array['select'] . $ret_array['from'] . $ret_array['where']. $ret_array['order_by'];
+            return $ret_array['select'] . $ret_array['from'] . $ret_array['where'] . $ret_array['order_by'];
         }
+
         return $ret_array;
     }
 
+    /**
+     * @throws Exception
+     */
     public function converted_lead($leadid, $contactid, $accountid, $opportunityid)
     {
-        $query = "UPDATE leads set converted='1', contact_id=$contactid, account_id=$accountid, opportunity_id=$opportunityid where  id=$leadid and deleted=0";
-        $this->db->query($query, true, "Error converting lead: ");
+        $query =
+            "UPDATE leads set converted='1', contact_id=$contactid, account_id=$accountid, opportunity_id=$opportunityid where  id=$leadid and deleted=0";
+        $this->db->query($query, true, 'Error converting lead: ');
 
         //we must move the status out here in order to be able to capture workflow conditions
-        $leadid = str_replace("'", "", (string) $leadid);
+        $leadid = str_replace("'", '', (string) $leadid);
         $lead = BeanFactory::newBean('Leads');
         $lead->retrieve($leadid);
-        $lead->status='Converted';
+        $lead->status = 'Converted';
         $lead->save();
     }
 
@@ -307,7 +310,7 @@ class Lead extends Person implements EmailInterface
         if (!empty($this->campaign_id)) {
             $camp = BeanFactory::newBean('Campaigns');
             $where = "campaigns.id='$this->campaign_id'";
-            $campaign_list = $camp->get_full_list("campaigns.name", $where, true);
+            $campaign_list = $camp->get_full_list('campaigns.name', $where, true);
             if (!empty($campaign_list)) {
                 $this->campaign_name = $campaign_list[0]->name;
             }
@@ -319,13 +322,17 @@ class Lead extends Person implements EmailInterface
         $temp_array = parent::get_list_view_data();
 
         if (!isset($temp_array['ACCOUNT_NAME'])) {
-            LoggerManager::getLogger()->warn('Leads get list view data error: account name is not defined in list view data.');
+            LoggerManager::getLogger()->warn(
+                'Leads get list view data error: account name is not defined in list view data.'
+            );
             $tempArrayAccountName = null;
         } else {
             $tempArrayAccountName = $temp_array['ACCOUNT_NAME'];
         }
 
-        $temp_array['ACC_NAME_FROM_ACCOUNTS'] = empty($temp_array['ACC_NAME_FROM_ACCOUNTS']) ? ($tempArrayAccountName) : ($temp_array['ACC_NAME_FROM_ACCOUNTS']);
+        $temp_array['ACC_NAME_FROM_ACCOUNTS'] =
+            empty($temp_array['ACC_NAME_FROM_ACCOUNTS']) ? ($tempArrayAccountName)
+                : ($temp_array['ACC_NAME_FROM_ACCOUNTS']);
 
         return $temp_array;
     }
@@ -340,26 +347,27 @@ class Lead extends Person implements EmailInterface
     //fix for bug 27339 Shine
     public function get_linked_fields()
     {
-        $linked_fields=array();
+        $linked_fields = array();
         $fieldDefs = $this->getFieldDefinitions();
 
         //find all definitions of type link.
         if (!empty($fieldDefs)) {
-            foreach ($fieldDefs as $name=>$properties) {
-                if ($name == 'oldmeetings' || $name == 'oldcalls') {
+            foreach ($fieldDefs as $name => $properties) {
+                if ($name === 'oldmeetings' || $name === 'oldcalls') {
                     continue;
                 } elseif (array_search('link', $properties, true) === 'type') {
-                    $linked_fields[$name]=$properties;
+                    $linked_fields[$name] = $properties;
                 }
             }
         }
+
         return $linked_fields;
     }
 
     /**
-    	builds a generic search based on the query string using or
-    	do not include any $this-> because this is called on without having the class instantiated
-    */
+     * builds a generic search based on the query string using or
+     * do not include any $this-> because this is called on without having the class instantiated
+     */
     public function build_generic_where_clause($the_query_string)
     {
         $where_clauses = array();
@@ -378,14 +386,13 @@ class Lead extends Person implements EmailInterface
             array_push($where_clauses, "leads.phone_fax like '%$the_query_string%'");
         }
 
-        $the_where = "";
+        $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != "") {
-                $the_where .= " or ";
+            if ($the_where != '') {
+                $the_where .= ' or ';
             }
             $the_where .= $clause;
         }
-
 
         return $the_where;
     }
@@ -395,21 +402,30 @@ class Lead extends Person implements EmailInterface
         global $app_list_strings;
         global $locale;
 
-        $xtpl->assign("LEAD_NAME", $locale->getLocaleFormattedName($lead->first_name, $lead->last_name, $lead->salutation));
-        $xtpl->assign("LEAD_SOURCE", (isset($lead->lead_source) ? $app_list_strings['lead_source_dom'][$lead->lead_source] : ""));
-        $xtpl->assign("LEAD_STATUS", (isset($lead->status)? $app_list_strings['lead_status_dom'][$lead->status]:""));
-        $xtpl->assign("LEAD_DESCRIPTION", nl2br($lead->description));
+        $xtpl->assign(
+            'LEAD_NAME',
+            $locale->getLocaleFormattedName($lead->first_name, $lead->last_name, $lead->salutation)
+        );
+        $xtpl->assign(
+            'LEAD_SOURCE',
+            (isset($lead->lead_source) ? $app_list_strings['lead_source_dom'][$lead->lead_source] : '')
+        );
+        $xtpl->assign('LEAD_STATUS', (isset($lead->status) ? $app_list_strings['lead_status_dom'][$lead->status] : ''));
+        $xtpl->assign('LEAD_DESCRIPTION', nl2br($lead->description));
 
         return $xtpl;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
-            case 'ACL':return true;
+            case 'ACL':
+                return true;
         }
+
         return false;
     }
+
     public function listviewACLHelper()
     {
         $array_assign = parent::listviewACLHelper();
@@ -419,8 +435,7 @@ class Lead extends Person implements EmailInterface
             if (!empty($this->account_name_owner)) {
                 global $current_user;
                 $is_owner = $current_user->id == $this->account_name_owner;
-            }
-            /* BEGIN - SECURITY GROUPS */
+            } /* BEGIN - SECURITY GROUPS */
             else {
                 global $current_user;
                 $parent_bean = BeanFactory::getBean('Accounts', $this->account_id);
@@ -428,14 +443,14 @@ class Lead extends Person implements EmailInterface
                     $is_owner = $current_user->id == $parent_bean->assigned_user_id;
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess('Accounts', $this->account_id, 'view');
             /* END - SECURITY GROUPS */
         }
         /* BEGIN - SECURITY GROUPS */
         /**
-        if( ACLController::checkAccess('Accounts', 'view', $is_owner)){
-        */
+         * if( ACLController::checkAccess('Accounts', 'view', $is_owner)){
+         */
         if (ACLController::checkAccess('Accounts', 'view', $is_owner, 'module', $in_group)) {
             /* END - SECURITY GROUPS */
             $array_assign['ACCOUNT'] = 'a';
@@ -448,8 +463,7 @@ class Lead extends Person implements EmailInterface
             if (!empty($this->opportunity_name_owner)) {
                 global $current_user;
                 $is_owner = $current_user->id == $this->opportunity_name_owner;
-            }
-            /* BEGIN - SECURITY GROUPS */
+            } /* BEGIN - SECURITY GROUPS */
             else {
                 global $current_user;
                 $parent_bean = BeanFactory::getBean('Opportunities', $this->opportunity_id);
@@ -457,21 +471,20 @@ class Lead extends Person implements EmailInterface
                     $is_owner = $current_user->id == $parent_bean->assigned_user_id;
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess('Opportunities', $this->opportunity_id, 'view');
             /* END - SECURITY GROUPS */
         }
         /* BEGIN - SECURITY GROUPS */
         /**
-        if( ACLController::checkAccess('Opportunities', 'view', $is_owner)){
-        */
+         * if( ACLController::checkAccess('Opportunities', 'view', $is_owner)){
+         */
         if (ACLController::checkAccess('Opportunities', 'view', $is_owner, 'module', $in_group)) {
             /* END - SECURITY GROUPS */
             $array_assign['OPPORTUNITY'] = 'a';
         } else {
             $array_assign['OPPORTUNITY'] = 'span';
         }
-
 
         $is_owner = false;
         $in_group = false; //SECURITY GROUPS
@@ -489,14 +502,14 @@ class Lead extends Person implements EmailInterface
                     $is_owner = $current_user->id == $parent_bean->assigned_user_id;
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess('Contacts', $this->contact_id, 'view');
             /* END - SECURITY GROUPS */
         }
         /* BEGIN - SECURITY GROUPS */
         /**
-        if( ACLController::checkAccess('Contacts', 'view', $is_owner)){
-        */
+         * if( ACLController::checkAccess('Contacts', 'view', $is_owner)){
+         */
         if (ACLController::checkAccess('Contacts', 'view', $is_owner, 'module', $in_group)) {
             /* END - SECURITY GROUPS */
             $array_assign['CONTACT'] = 'a';
@@ -513,25 +526,25 @@ class Lead extends Person implements EmailInterface
         global $mod_strings, $app_list_strings, $app_strings, $lbl_required_symbol;
 
         foreach ($this->field_defs as $field => $value) {
-            if (!empty($value['source']) && $value['source'] == 'custom_fields') {
+            if (!empty($value['source']) && $value['source'] === 'custom_fields') {
                 if (!empty($tempBean->field_defs[$field]) && isset($tempBean->field_defs[$field])) {
                     $label = $tempBean->field_defs[$field]['vname'];
-                    if(isset($mod_strings[$label])){
+                    if (isset($mod_strings[$label])) {
                         $label = $mod_strings[$label];
-                    } elseif(isset($app_strings[$label])){
+                    } elseif (isset($app_strings[$label])) {
                         $label = $app_strings[$label];
                     }
-                    $form .= "<tr><td nowrap colspan='4' class='dataLabel'>".$label.":";
+                    $form .= "<tr><td nowrap colspan='4' class='dataLabel'>" . $label . ':';
 
-                    if (!empty($tempBean->custom_fields->avail_fields[$field]['required']) && ($tempBean->custom_fields->avail_fields[$field]['required']== 1 || $tempBean->custom_fields->avail_fields[$field]['required']== '1' || $tempBean->custom_fields->avail_fields[$field]['required']== 'true' || $tempBean->custom_fields->avail_fields[$field]['required']== true)) {
-                        $form .= "&nbsp;<span class='required'>".$lbl_required_symbol."</span>";
+                    if (!empty($tempBean->custom_fields->avail_fields[$field]['required']) && ($tempBean->custom_fields->avail_fields[$field]['required'] == 1 || $tempBean->custom_fields->avail_fields[$field]['required'] == '1' || $tempBean->custom_fields->avail_fields[$field]['required'] === 'true' || $tempBean->custom_fields->avail_fields[$field]['required'] == true)) {
+                        $form .= "&nbsp;<span class='required'>" . $lbl_required_symbol . '</span>';
                     }
-                    $form .= "</td></tr>";
+                    $form .= '</td></tr>';
                     $form .= "<tr><td nowrap colspan='4' class='dataField' nowrap>";
 
                     if (isset($value['isMultiSelect']) && $value['isMultiSelect'] == 1) {
                         $this->$field = unencodeMultienum($this->$field);
-                        $multiple = "multiple";
+                        $multiple = 'multiple';
                         $array = '[]';
                     } else {
                         $multiple = null;
@@ -539,20 +552,20 @@ class Lead extends Person implements EmailInterface
                     }
 
                     if (!empty($value['options']) && isset($value['options'])) {
-                        $form .= "<select " . $multiple . " name='".$prefix.$field.$array."'>";
+                        $form .= '<select ' . $multiple . " name='" . $prefix . $field . $array . "'>";
                         $form .= get_select_options_with_id($app_list_strings[$value['options']], $this->$field);
-                        $form .= "</select";
-                    } elseif ($value['type'] == 'bool') {
+                        $form .= '</select';
+                    } elseif ($value['type'] === 'bool') {
                         if ($this->$field == 1 || $this->$field == '1') {
                             $checked = 'checked';
                         } else {
                             $checked = '';
                         }
-                        $form .= "<input type='checkbox' name='".$prefix.$field."' id='".$prefix.$field."'  value='1' ".$checked."/>";
-                    } elseif ($value['type'] == 'text') {
-                        $form .= "<textarea name='".$prefix.$field."' rows='6' cols='50'>".$this->$field."</textarea>";
-                    } elseif ($value['type'] == 'date') {
-                        $form .= "<input name='".$prefix.$field."' id='jscal_field".$field."' type='text'  size='11' maxlength='10' value='".$this->$field."'>&nbsp;<span id=\"jscal_trigger\" class='suitepicon suitepicon-module-calendar'></span> <span class='dateFormat'>yyyy-mm-dd</span><script type='text/javascript'>Calendar.setup ({inputField : 'jscal_field".$field."', ifFormat : '%Y-%m-%d', showsTime : false, button : 'jscal_trigger".$field."', singleClick : true, step : 1, weekNumbers:false}); addToValidate('ConvertLead', '".$field."', 'date', false,'".$mod_strings[$tempBean->field_defs[$field]['vname']]."' );</script>";
+                        $form .= "<input type='checkbox' name='" . $prefix . $field . "' id='" . $prefix . $field . "'  value='1' " . $checked . '/>';
+                    } elseif ($value['type'] === 'text') {
+                        $form .= "<textarea name='" . $prefix . $field . "' rows='6' cols='50'>" . $this->$field . '</textarea>';
+                    } elseif ($value['type'] === 'date') {
+                        $form .= "<input name='" . $prefix . $field . "' id='jscal_field" . $field . "' type='text'  size='11' maxlength='10' value='" . $this->$field . "'>&nbsp;<span id=\"jscal_trigger\" class='suitepicon suitepicon-module-calendar'></span> <span class='dateFormat'>yyyy-mm-dd</span><script type='text/javascript'>Calendar.setup ({inputField : 'jscal_field" . $field . "', ifFormat : '%Y-%m-%d', showsTime : false, button : 'jscal_trigger" . $field . "', singleClick : true, step : 1, weekNumbers:false}); addToValidate('ConvertLead', '" . $field . "', 'date', false,'" . $mod_strings[$tempBean->field_defs[$field]['vname']] . "' );</script>";
                     } else {
                         if (!isset($this->$field)) {
                             LoggerManager::getLogger()->warn('Field not found: ' . $field);
@@ -561,24 +574,24 @@ class Lead extends Person implements EmailInterface
                             $thisField = $this->$field;
                         }
 
-                        $form .= "<input name='".$prefix.$field."' type='text' value='".$thisField."'>";
+                        $form .= "<input name='" . $prefix . $field . "' type='text' value='" . $thisField . "'>";
 
                         if (!isset($this->custom_fields->avail_fields)) {
                             LoggerManager::getLogger()->warn('Undefined property: $avail_fields');
                         }
 
-                        if (isset($this->custom_fields->avail_fields) && $this->custom_fields->avail_fields[$field]['type'] == 'int') {
-                            $form .= "<script>addToValidate('ConvertLead', '".$prefix.$field."', 'int', false,'".$prefix.":".$mod_strings[$tempBean->field_defs[$field]['vname']]."' );</script>";
-                        } elseif (isset($this->custom_fields->avail_fields) && $this->custom_fields->avail_fields[$field]['type'] == 'float') {
-                            $form .= "<script>addToValidate('ConvertLead', '".$prefix.$field."', 'float', false,'".$prefix.":".$mod_strings[$tempBean->field_defs[$field]['vname']]."' );</script>";
+                        if (isset($this->custom_fields->avail_fields) && $this->custom_fields->avail_fields[$field]['type'] === 'int') {
+                            $form .= "<script>addToValidate('ConvertLead', '" . $prefix . $field . "', 'int', false,'" . $prefix . ':' . $mod_strings[$tempBean->field_defs[$field]['vname']] . "' );</script>";
+                        } elseif (isset($this->custom_fields->avail_fields) && $this->custom_fields->avail_fields[$field]['type'] === 'float') {
+                            $form .= "<script>addToValidate('ConvertLead', '" . $prefix . $field . "', 'float', false,'" . $prefix . ':' . $mod_strings[$tempBean->field_defs[$field]['vname']] . "' );</script>";
                         }
                     }
 
-                    if (!empty($tempBean->custom_fields->avail_fields[$field]['required']) && ($tempBean->custom_fields->avail_fields[$field]['required']== 1 || $tempBean->custom_fields->avail_fields[$field]['required']== '1' || $tempBean->custom_fields->avail_fields[$field]['required']== 'true' || $tempBean->custom_fields->avail_fields[$field]['required']== true)) {
-                        $form .= "<script>addToValidate('ConvertLead', '".$prefix.$field."', 'relate', true,'".$prefix.":".$mod_strings[$tempBean->field_defs[$field]['vname']]."' );</script>";
+                    if (!empty($tempBean->custom_fields->avail_fields[$field]['required']) && ($tempBean->custom_fields->avail_fields[$field]['required'] == 1 || $tempBean->custom_fields->avail_fields[$field]['required'] == '1' || $tempBean->custom_fields->avail_fields[$field]['required'] === 'true' || $tempBean->custom_fields->avail_fields[$field]['required'] == true)) {
+                        $form .= "<script>addToValidate('ConvertLead', '" . $prefix . $field . "', 'relate', true,'" . $prefix . ':' . $mod_strings[$tempBean->field_defs[$field]['vname']] . "' );</script>";
                     }
 
-                    $form .= "</td></tr>";
+                    $form .= '</td></tr>';
                 }
             }
         }
@@ -593,9 +606,11 @@ class Lead extends Person implements EmailInterface
         }
         // call save first so that $this->id will be set
         $value = parent::save($check_notify);
+
         return $value;
     }
-    public function get_unlinked_email_query($type=array())
+
+    public function get_unlinked_email_query($type = array())
     {
         return get_unlinked_email_query($type, $this);
     }
@@ -608,11 +623,11 @@ class Lead extends Person implements EmailInterface
     public function get_old_related_calls()
     {
         $return_array = [];
-        $return_array['select']='SELECT calls.id ';
-        $return_array['from']='FROM calls ';
-        $return_array['where']=" WHERE calls.parent_id = '$this->id'
+        $return_array['select'] = 'SELECT calls.id ';
+        $return_array['from'] = 'FROM calls ';
+        $return_array['where'] = " WHERE calls.parent_id = '$this->id'
             AND calls.parent_type = 'Leads' AND calls.id NOT IN ( SELECT call_id FROM calls_leads ) ";
-        $return_array['join'] = "";
+        $return_array['join'] = '';
         $return_array['join_tables'][0] = '';
 
         return $return_array;
@@ -628,6 +643,7 @@ class Lead extends Person implements EmailInterface
         if (isset($GLOBALS['app_list_strings']['lead_conv_activity_opt'])) {
             return $GLOBALS['app_list_strings']['lead_conv_activity_opt'];
         }
+
         return array();
     }
 
@@ -639,11 +655,11 @@ class Lead extends Person implements EmailInterface
     public function get_old_related_meetings()
     {
         $return_array = [];
-        $return_array['select']='SELECT meetings.id ';
-        $return_array['from']='FROM meetings ';
-        $return_array['where']=" WHERE meetings.parent_id = '$this->id'
+        $return_array['select'] = 'SELECT meetings.id ';
+        $return_array['from'] = 'FROM meetings ';
+        $return_array['where'] = " WHERE meetings.parent_id = '$this->id'
             AND meetings.parent_type = 'Leads' AND meetings.id NOT IN ( SELECT meeting_id FROM meetings_leads ) ";
-        $return_array['join'] = "";
+        $return_array['join'] = '';
         $return_array['join_tables'][0] = '';
 
         return $return_array;

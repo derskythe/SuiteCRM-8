@@ -19,7 +19,7 @@ class Sort
     public function parseOrderBy(\SugarBean $bean, $value)
     {
         $orderBy = self::ORDER_BY_ASC;
-        if (strpos($value, '-') === 0) {
+        if (str_starts_with($value, '-')) {
             $orderBy = self::ORDER_BY_DESC;
             $value = ltrim($value, '-');
         }

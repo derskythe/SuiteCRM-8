@@ -11,10 +11,14 @@ if (!function_exists('smarty_mb_str_replace')) {
      *
      * @param string|string[] $search  the string to be searched
      * @param string|string[] $replace the replacement string
-     * @param string          $subject the source string
+     * @param string $subject          the source string
      * @param int             &$count  number of matches found
      *
      * @return string replaced string
+     * @throws SmartyException
+     * @throws SmartyException
+     * @throws SmartyException
+     * @throws SmartyException
      * @author Rodney Rehm
      */
     function smarty_mb_str_replace($search, $replace, $subject, &$count = 0)
@@ -30,7 +34,7 @@ if (!function_exists('smarty_mb_str_replace')) {
             }
         } elseif (is_array($search)) {
             if (!is_array($replace)) {
-                foreach ($search as &$string) {
+                foreach ($search as $string) {
                     $subject = smarty_mb_str_replace($string, $replace, $subject, $c);
                     $count += $c;
                 }
@@ -46,10 +50,10 @@ if (!function_exists('smarty_mb_str_replace')) {
         } else {
             $mb_reg_charset = mb_regex_encoding();
             // Check if mbstring regex is using UTF-8
-            $reg_is_unicode = !strcasecmp($mb_reg_charset, "UTF-8");
+            $reg_is_unicode = !strcasecmp($mb_reg_charset, 'UTF-8');
             if(!$reg_is_unicode) {
                 // ...and set to UTF-8 if not
-                mb_regex_encoding("UTF-8");
+                mb_regex_encoding('UTF-8');
             }
 
             // See if charset used by Smarty is matching one used by regex...
@@ -62,7 +66,7 @@ if (!function_exists('smarty_mb_str_replace')) {
                 $replace = mb_convert_encoding($replace, $current_charset, Smarty::$_CHARSET);
             }
 
-            $parts = mb_split(preg_quote($search), $subject ?? "") ?: array();
+            $parts = mb_split(preg_quote($search), $subject ?? '') ? : array();
             // If original regex encoding was not unicode...
             if(!$reg_is_unicode) {
                 // ...restore original regex encoding to avoid breaking the system.

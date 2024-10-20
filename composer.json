@@ -12,7 +12,7 @@
   "config": {
     "vendor-dir": "vendor",
     "platform": {
-      "php": "8.2"
+      "php": "8.1"
     },
     "optimize-autoloader": true,
     "sort-packages": true,
@@ -23,13 +23,13 @@
       "wikimedia/composer-merge-plugin": true
     }
   },
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": false,
   "suggest": {
     "ext-imap": "Needed for emails module"
   },
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.1",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-gd": "*",
@@ -38,6 +38,13 @@
     "ext-openssl": "*",
     "ext-pdo": "*",
     "ext-zip": "*",
+    "ext-mysqli": "*",
+    "ext-xml": "*",
+    "ext-zlib": "*",
+    "ext-fileinfo": "*",
+    "ext-exif": "*",
+    "ext-mbstring": "*",
+    "ext-simplexml": "*",
     "api-platform/core": "^3.4",
     "composer/package-versions-deprecated": "1.11.99.3",
     "doctrine/doctrine-bundle": "^2.13",
@@ -112,7 +119,8 @@
     "webonyx/graphql-php": "^15.14",
     "wikimedia/composer-merge-plugin": "^2.1",
     "zbateson/mail-mime-parser": "^2.4",
-    "ext-mysqli": "*"
+    "slim/http": "^1.4.0",
+    "slim/slim": "3.*"
   },
   "require-dev": {
     "api-platform/schema-generator": "^5.2",

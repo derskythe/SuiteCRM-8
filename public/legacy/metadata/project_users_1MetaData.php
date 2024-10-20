@@ -1,6 +1,6 @@
 <?php
 // created: 2014-06-20 12:06:29
-$dictionary["project_users_1"] = array(
+$dictionary['project_users_1'] = array(
   'true_relationship_type' => 'many-to-many',
   'from_studio' => true,
   'relationships' =>

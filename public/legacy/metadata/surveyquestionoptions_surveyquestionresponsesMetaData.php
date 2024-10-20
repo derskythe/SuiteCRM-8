@@ -1,6 +1,6 @@
 <?php
 // created: 2017-03-16 13:41:06
-$dictionary["surveyquestionoptions_surveyquestionresponses"] = array(
+$dictionary['surveyquestionoptions_surveyquestionresponses'] = array(
   'true_relationship_type' => 'many-to-many',
   'relationships' =>
   array(

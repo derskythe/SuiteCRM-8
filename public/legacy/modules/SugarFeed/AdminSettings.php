@@ -55,7 +55,7 @@ if (!empty($_REQUEST['process'])) {
     check_logic_hook_file('Users', 'after_login', array(1, 'SugarFeed old feed entry remover', 'modules/SugarFeed/SugarFeedFlush.php', 'SugarFeedFlush', 'flushStaleEntries'));
 
     // We have data posted
-    if ($_REQUEST['process'] == 'true') {
+    if ($_REQUEST['process'] === 'true') {
         // They want us to process it, the false will just fall outside of this statement
         if ($_REQUEST['feed_enable'] == '1') {
             // The feed is enabled, pay attention to what categories should be enabled or disabled
@@ -68,15 +68,15 @@ if (!empty($_REQUEST['process'])) {
             while ($row = $db->fetchByAssoc($ret)) {
                 $current_modules[$row['name']] = $row['value'];
             }
-            
+
             $active_modules = $_REQUEST['modules'];
             if (! is_array($active_modules)) {
                 $active_modules = array();
             }
-            
+
             foreach ($active_modules as $name => $is_active) {
                 $module = substr($name, 7);
-                
+
                 if ($is_active == '1') {
                     // They are activating something that was disabled before
                     SugarFeed::activateModuleFeed($module);
@@ -85,14 +85,14 @@ if (!empty($_REQUEST['process'])) {
                     SugarFeed::disableModuleFeed($module);
                 }
             }
-            
+
             $admin->saveSetting('sugarfeed', 'enabled', '1');
         } else {
             $admin->saveSetting('sugarfeed', 'enabled', '0');
             // Now we need to remove all of the logic hooks, so they don't continue to run
             // We also need to leave the database alone, so they can enable/disable modules with the system disabled
             $modulesWithFeeds = SugarFeed::getAllFeedModules();
-            
+
             foreach ($modulesWithFeeds as $currFeedModule) {
                 SugarFeed::disableModuleFeed($currFeedModule, false);
             }
@@ -101,7 +101,7 @@ if (!empty($_REQUEST['process'])) {
         $admin->retrieveSettings(false, true);
         SugarFeed::flushBackendCache();
     } else {
-        if ($_REQUEST['process'] == 'deleteRecords') {
+        if ($_REQUEST['process'] === 'deleteRecords') {
             if (! isset($db)) {
                 $db = DBManagerFactory::getInstance();
             }
@@ -112,13 +112,13 @@ if (!empty($_REQUEST['process'])) {
 
 
 
-    if ($_REQUEST['process'] == 'true' || $_REQUEST['process'] == 'false') {
+    if ($_REQUEST['process'] === 'true' || $_REQUEST['process'] === 'false') {
         header('Location: index.php?module=Administration&action=index');
         return;
     }
 }
 
-$sugar_smarty	= new Sugar_Smarty();
+$sugar_smarty    = new Sugar_Smarty();
 $sugar_smarty->assign('mod', $mod_strings);
 $sugar_smarty->assign('app', $app_strings);
 
@@ -138,7 +138,7 @@ foreach ($possible_feeds as $module) {
     }
 
     $currModule['module'] = $module;
-    if ($module == 'UserFeed') {
+    if ($module === 'UserFeed') {
         // Fake module, need to handle specially
         $userFeedEnabled = $currModule['enabled'];
         continue;
@@ -152,9 +152,9 @@ $sugar_smarty->assign('module_list', $module_list);
 $sugar_smarty->assign('user_feed_enabled', $userFeedEnabled);
 
 echo getClassicModuleTitle(
-    "Administration",
+    'Administration',
     array(
-            "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration')."</a>",
+        "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration'). '</a>',
            $mod_strings['LBL_MODULE_NAME'],
            ),
     false

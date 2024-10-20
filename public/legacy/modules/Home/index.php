@@ -178,7 +178,7 @@ if (empty($pages)) {
     $pageIndex = 0;
     $pages[0]['columns'] = $columns;
     $pages[0]['numColumns'] = '3';
-    $pages[0]['pageTitleLabel'] = 'LBL_HOME_PAGE_1_NAME';	// "My Sugar"
+    $pages[0]['pageTitleLabel'] = 'LBL_HOME_PAGE_1_NAME';    // "My Sugar"
     $pageIndex++;
     $current_user->setPreference('pages', $pages, 0, 'Home');
     $activePage = 0;

@@ -48,41 +48,41 @@
 #[\AllowDynamicProperties]
 class OutboundEmailAccounts_sugar extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'OutboundEmailAccounts';
-    public $object_name = 'OutboundEmailAccounts';
-    public $table_name = 'outbound_email';
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'OutboundEmailAccounts';
+    public string $object_name = 'OutboundEmailAccounts';
+    public string $table_name = 'outbound_email';
+    public bool $importable = false;
     public $disable_row_level_security = true ; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    //	var $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    //    var $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
+    public string $assigned_user_id;
     public $assigned_user_name;
     public $assigned_user_link;
-    //	var $username;
-    //	var $password;
-    //	var $smtp_servername;
-    //	var $smtp_auth;
-    //	var $smtp_port;
-    //	var $smtp_protocol;
+    //    var $username;
+    //    var $password;
+    //    var $smtp_servername;
+    //    var $smtp_auth;
+    //    var $smtp_port;
+    //    var $smtp_protocol;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         if ($interface === 'ACL') {
             return true;

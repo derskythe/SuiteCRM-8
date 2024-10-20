@@ -47,12 +47,12 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class Relationship extends SugarBean
 {
-    public $object_name='Relationship';
-    public $module_dir = 'Relationships';
-    public $new_schema = true;
-    public $table_name = 'relationships';
+    public string $object_name='Relationship';
+    public string $module_dir = 'Relationships';
+    public bool $new_schema = true;
+    public string $table_name = 'relationships';
 
-    public $id;
+    public string $id;
     public $relationship_name;
     public $lhs_module;
     public $lhs_table;
@@ -74,9 +74,6 @@ class Relationship extends SugarBean
     {
         parent::__construct();
     }
-
-
-
 
     /*returns true if the relationship is self referencing. equality check is performed for both table and
      * key names.
@@ -101,7 +98,7 @@ class Relationship extends SugarBean
             $query = "SELECT relationship_name FROM relationships WHERE deleted=0 AND relationship_name = '" . $relationship_name . "'";
             $result = $db->query($query, true, 'Error searching relationships table..');
             $row = $db->fetchByAssoc($result);
-            if ($row != null) {
+            if ($row !== null) {
                 return true;
             }
         } else {
@@ -115,7 +112,7 @@ class Relationship extends SugarBean
     {
         if ($db instanceof DBManager) {
             $query = "UPDATE relationships SET deleted=1 WHERE deleted=0 AND relationship_name = '" . $relationship_name . "'";
-            $db->query($query, true, " Error updating relationships table for " . $relationship_name);
+            $db->query($query, true, ' Error updating relationships table for ' . $relationship_name);
         } else {
             $GLOBALS['log']->fatal('Invalid Argument: Argument 2 should be a DBManager');
         }
@@ -128,7 +125,7 @@ class Relationship extends SugarBean
         //it will return the module name on the other side of the relationship
 
         $query = "SELECT relationship_name, rhs_module, lhs_module FROM relationships WHERE deleted=0 AND relationship_name = '".$relationship_name."'";
-        $result = $db->query($query, true, " Error searching relationships table..");
+        $result = $db->query($query, true, ' Error searching relationships table..');
         $row  =  $db->fetchByAssoc($result);
         if ($row != null) {
             if ($row['rhs_module']==$base_module) {
@@ -151,7 +148,7 @@ class Relationship extends SugarBean
         //it will return the module name on the other side of the relationship
 
         $query = "SELECT * FROM relationships WHERE deleted=0 AND lhs_module = '".$lhs_module."' AND rhs_module = '".$rhs_module."'";
-        $result = $db->query($query, true, " Error searching relationships table..");
+        $result = $db->query($query, true, ' Error searching relationships table..');
         $row  =  $db->fetchByAssoc($result);
         if ($row != null) {
             return $row;
@@ -168,18 +165,18 @@ class Relationship extends SugarBean
         //give it the relationship_name and base module
         //it will return the module name on the other side of the relationship
 
-        $query = "	SELECT * FROM relationships
-					WHERE deleted=0
-					AND (
-					(lhs_module = '".$lhs_module."' AND rhs_module = '".$rhs_module."')
-					OR
-					(lhs_module = '".$rhs_module."' AND rhs_module = '".$lhs_module."')
-					)
-					";
+        $query = "    SELECT * FROM relationships
+                    WHERE deleted=0
+                    AND (
+                    (lhs_module = '".$lhs_module."' AND rhs_module = '".$rhs_module."')
+                    OR
+                    (lhs_module = '".$rhs_module."' AND rhs_module = '".$lhs_module."')
+                    )
+                    ";
         if (!empty($type)) {
             $query .= " AND relationship_type='$type'";
         }
-        $result = $db->query($query, true, " Error searching relationships table..");
+        $result = $db->query($query, true, ' Error searching relationships table..');
         $row  =  $db->fetchByAssoc($result);
         if ($row != null) {
             return $row['relationship_name'];
@@ -217,9 +214,12 @@ class Relationship extends SugarBean
         $GLOBALS['relationships']=$relationships;
     }
 
+    /**
+     * @throws Exception
+     */
     public function build_relationship_cache()
     {
-        $query="SELECT * from relationships where deleted=0";
+        $query= 'SELECT * from relationships where deleted=0';
         $result=$this->db->query($query);
 
         $relationships = [];
@@ -229,17 +229,17 @@ class Relationship extends SugarBean
         }
 
         sugar_mkdir(static::cache_file_dir(), null, true);
-        $out = "<?php \n \$relationships = " . var_export($relationships, true) . ";";
+        $out = "<?php \n \$relationships = " . var_export($relationships, true) . ';';
         sugar_file_put_contents_atomic(Relationship::cache_file_dir() . '/' . Relationship::cache_file_name_only(), $out);
 
-        require_once("data/Relationships/RelationshipFactory.php");
+        require_once('data/Relationships/RelationshipFactory.php');
         SugarRelationshipFactory::deleteCache();
     }
 
 
     public static function cache_file_dir()
     {
-        return sugar_cached("modules/Relationships");
+        return sugar_cached('modules/Relationships');
     }
     public static function cache_file_name_only()
     {
@@ -252,12 +252,12 @@ class Relationship extends SugarBean
         if (file_exists($filename)) {
             unlink($filename);
         }
-        require_once("data/Relationships/RelationshipFactory.php");
+        require_once('data/Relationships/RelationshipFactory.php');
         SugarRelationshipFactory::deleteCache();
     }
 
 
-    public function trace_relationship_module($base_module, $rel_module1_name, $rel_module2_name="")
+    public function trace_relationship_module($base_module, $rel_module1_name, $rel_module2_name= '')
     {
         global $beanList;
         global $dictionary;
@@ -268,8 +268,8 @@ class Relationship extends SugarBean
         $rel_module1 = $this->get_other_module($rel_attribute1_name, $base_module, $temp_module->db);
         $rel_module1_bean = get_module_info($rel_module1);
 
-        if ($rel_module2_name!="") {
-            if ($rel_module2_name == 'ProjectTask') {
+        if ($rel_module2_name!= '') {
+            if ($rel_module2_name === 'ProjectTask') {
                 $rel_module2_name = strtolower($rel_module2_name);
             }
             $rel_attribute2_name = $rel_module1_bean->field_defs[strtolower($rel_module2_name)]['relationship'];

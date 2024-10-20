@@ -50,13 +50,13 @@ if (!ACLController::checkAccess('Calendar', 'list', true)) {
 require_once('modules/Calendar/Calendar.php');
 require_once('modules/Calendar/CalendarDisplay.php');
 
-$views = array("agendaDay" => array(),"basicDay" => array(), "basicWeek" => array(), "agendaWeek" => array(),"month" => array(), "sharedMonth" => array(), "sharedWeek" => array());
+$views = array( 'agendaDay' => array(), 'basicDay' => array(), 'basicWeek' => array(), 'agendaWeek' => array(), 'month' => array(), 'sharedMonth' => array(), 'sharedWeek' => array());
 
 global $cal_strings, $current_language;
 $cal_strings = return_module_language($current_language, 'Calendar');
 
 if (empty($_REQUEST['view'])) {
-    if (isset($_SESSION['CALENDAR_VIEW']) && in_array($_SESSION['CALENDAR_VIEW'], $views)) {
+    if (isset($_SESSION['CALENDAR_VIEW']) && in_array($_SESSION['CALENDAR_VIEW'], $views, true)) {
         $_REQUEST['view'] = $_SESSION['CALENDAR_VIEW'];
     } else {
         $_REQUEST['view'] = SugarConfig::getInstance()->get('calendar.default_view', 'agendaWeek');
@@ -68,7 +68,7 @@ if (empty($_REQUEST['view'])) {
 $cal = new Calendar($_REQUEST['view'], array(), $views);
 
 
-if ($cal->view == "sharedMonth" || $cal->view == "sharedWeek") {
+if ($cal->view === 'sharedMonth' || $cal->view === 'sharedWeek') {
     $cal->init_shared();
     global $shared_user;
     $shared_user = BeanFactory::newBean('Users');
@@ -86,14 +86,14 @@ if (array_key_exists($cal->view, $views)) {
     $cal->load_activities();
 }
 
-if (!empty($_REQUEST['print']) && $_REQUEST['print'] == 'true') {
+if (!empty($_REQUEST['print']) && $_REQUEST['print'] === 'true') {
     $cal->setPrint(true);
 }
 
-$display = new CalendarDisplay($cal, "", $views);
+$display = new CalendarDisplay($cal, '', $views);
 
     $display->display_title();
-    if ($cal->view == "sharedMonth" || $cal->view == "sharedWeek") {
+    if ($cal->view === 'sharedMonth' || $cal->view === 'sharedWeek') {
         $display->display_shared_html($cal->view);
     }
     $display->display_calendar_header();

@@ -47,7 +47,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	DYNAMICALLY GENERATE UPGRADEWIZARD MODULE FILE LIST
+////    DYNAMICALLY GENERATE UPGRADEWIZARD MODULE FILE LIST
 $uwFilesCurrent = findAllFiles('modules/UpgradeWizard/', array());
 
 // handle 4.x to 4.5.x+ (no UpgradeWizard module)
@@ -82,10 +82,10 @@ if ((is_countable($uwFilesCurrent) ? count($uwFilesCurrent) : 0) < 5) {
 
     $uwFiles = array();
     foreach ($uwFilesCurrent as $file) {
-        $uwFiles[] = str_replace("./", "", (string) clean_path($file));
+        $uwFiles[] = str_replace('./', '', (string) clean_path($file));
     }
 }
-////	END DYNAMICALLY GENERATE UPGRADEWIZARD MODULE FILE LIST
+////    END DYNAMICALLY GENERATE UPGRADEWIZARD MODULE FILE LIST
 ///////////////////////////////////////////////////////////////////////////////
 
 $uw_files = array(

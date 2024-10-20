@@ -84,6 +84,9 @@ class AOS_QuotesViewDetail extends ViewDetail
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     protected function displayPopupHtml()
     {
         global $app_list_strings, $app_strings, $mod_strings;

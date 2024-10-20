@@ -59,7 +59,7 @@ class ContactsViewDetail extends ViewDetail
 
         $aop_portal_enabled = !empty($sugar_config['aop']['enable_portal']) && !empty($sugar_config['aop']['enable_aop']);
 
-        $this->ss->assign("AOP_PORTAL_ENABLED", $aop_portal_enabled);
+        $this->ss->assign('AOP_PORTAL_ENABLED', $aop_portal_enabled);
 
         require_once('modules/AOS_PDF_Templates/formLetter.php');
         formLetter::DVPopupHtml('Contacts');
@@ -67,7 +67,7 @@ class ContactsViewDetail extends ViewDetail
         $admin = BeanFactory::newBean('Administration');
         $admin->retrieveSettings();
         if (isset($admin->settings['portal_on']) && $admin->settings['portal_on']) {
-            $this->ss->assign("PORTAL_ENABLED", true);
+            $this->ss->assign('PORTAL_ENABLED', true);
         }
         parent::display();
     }

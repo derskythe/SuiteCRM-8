@@ -39,9 +39,9 @@ class CacheManager
             return;
         }
 
-        $query = "INSERT INTO cache_rebuild (cache_key, rebuild)";
+        $query = 'INSERT INTO cache_rebuild (cache_key, rebuild)';
         $query .= " VALUES ('" . $db->quote($key) . "',";
-        $query .= "1)";
+        $query .= '1)';
 
         $db->query($query, true);
     }
@@ -54,7 +54,7 @@ class CacheManager
             return true;
         }
 
-        $query = "CREATE TABLE cache_rebuild (cache_key varchar(255), rebuild boolean)";
+        $query = 'CREATE TABLE cache_rebuild (cache_key varchar(255), rebuild boolean)';
         $result = $db->query($query, true);
 
         if ($result !== null) {

@@ -3,7 +3,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-
 require_once('include/Dashlets/Dashlet.php');
 require_once 'modules/AOR_Reports/aor_utils.php';
 
@@ -32,16 +31,16 @@ class AORReportsDashlet extends Dashlet
         if (!empty($def['parameter_id'])) {
             foreach ($def['parameter_id'] as $key => $parameterId) {
                 $this->params[$parameterId] = array(
-                    'id' => $parameterId,
+                    'id'       => $parameterId,
                     'operator' => $def['parameter_operator'][$key],
-                    'type' => $def['parameter_type'][$key],
-                    'value' => $def['parameter_value'][$key]
+                    'type'     => $def['parameter_type'][$key],
+                    'value'    => $def['parameter_value'][$key]
                 );
             }
         }
         if (!empty($def['aor_report_id'])) {
             $this->report = BeanFactory::getBean('AOR_Reports', $def['aor_report_id']);
-            if($this->report !== false) {
+            if ($this->report !== false) {
                 $this->report->user_parameters = $this->params;
             }
         }
@@ -49,9 +48,12 @@ class AORReportsDashlet extends Dashlet
         $this->charts = !empty($def['charts']) ? $def['charts'] : array();
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : string
     {
-        global $current_language,$mod_strings;
+        global $current_language, $mod_strings;
         $mod_strings = return_module_language($current_language, 'AOR_Reports');
         $dashletSmarty = new Sugar_Smarty();
         $dashletTemplate = get_custom_file_if_exists('modules/AOR_Reports/Dashlets/AORReportsDashlet/dashlet.tpl');
@@ -61,11 +63,15 @@ class AORReportsDashlet extends Dashlet
         $dashletSmarty->assign('chartHTML', $this->getChartHTML());
         $dashletSmarty->assign('onlyCharts', $this->onlyCharts);
         $dashletSmarty->assign('parameters', json_encode(array(
-            'ids' => isset($this->def['parameter_id']) ? $this->def['parameter_id'] : null,
-            'operators' => isset($this->def['parameter_operator']) ? $this->def['parameter_operator'] : null,
-            'types' => isset($this->def['parameter_type']) ? $this->def['parameter_type'] : null,
-            'values' => isset($this->def['parameter_value']) ? $this->def['parameter_value'] : null
-        )));
+                                                             'ids'       => isset($this->def['parameter_id'])
+                                                                 ? $this->def['parameter_id'] : null,
+                                                             'operators' => isset($this->def['parameter_operator'])
+                                                                 ? $this->def['parameter_operator'] : null,
+                                                             'types'     => isset($this->def['parameter_type'])
+                                                                 ? $this->def['parameter_type'] : null,
+                                                             'values'    => isset($this->def['parameter_value'])
+                                                                 ? $this->def['parameter_value'] : null
+                                                         )));
 
         return $dashletSmarty->fetch($dashletTemplate);
     }
@@ -80,14 +86,18 @@ class AORReportsDashlet extends Dashlet
         }
     }
 
-    public function process()
+    public function process($lvsParams = array(), $id = null) : mixed
     {
+        return parent::process($lvsParams, $id);
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function displayOptions()
     {
         ob_start();
-        global $current_language, $app_list_strings, $datetime,$mod_strings;
+        global $current_language, $app_list_strings, $datetime, $mod_strings;
         $mod_strings = return_module_language($current_language, 'AOR_Reports');
         $optionsSmarty = new Sugar_Smarty();
         $optionsSmarty->assign('MOD', $mod_strings);
@@ -111,9 +121,9 @@ class AORReportsDashlet extends Dashlet
         $conditions = getConditionsAsParameters($this->report, $this->params);
         $i = 0;
         foreach ($conditions as $condition) {
-            if ($condition["value_type"] == "Date") {
-                if ($condition["additionalConditions"][0] == "now") {
-                    $conditions[$i]["value"] = date("d/m/Y");
+            if ($condition['value_type'] === 'Date') {
+                if ($condition['additionalConditions'][0] === 'now') {
+                    $conditions[$i]['value'] = date('d/m/Y');
                 }
             }
 
@@ -122,7 +132,8 @@ class AORReportsDashlet extends Dashlet
         $optionsSmarty->assign('parameters', $conditions);
         $chartOptions = get_select_options_with_id($charts, $this->charts);
         $optionsSmarty->assign('chartOptions', $chartOptions);
-        $optionsTemplate = get_custom_file_if_exists('modules/AOR_Reports/Dashlets/AORReportsDashlet/dashletConfigure.tpl');
+        $optionsTemplate =
+            get_custom_file_if_exists('modules/AOR_Reports/Dashlets/AORReportsDashlet/dashletConfigure.tpl');
         ob_clean();
 
         return $optionsSmarty->fetch($optionsTemplate);
@@ -131,15 +142,15 @@ class AORReportsDashlet extends Dashlet
     public function saveOptions($req)
     {
         $allowedKeys = array_flip(array(
-            'aor_report_id',
-            'dashletTitle',
-            'charts',
-            'onlyCharts',
-            'parameter_id',
-            'parameter_value',
-            'parameter_type',
-            'parameter_operator'
-        ));
+                                      'aor_report_id',
+                                      'dashletTitle',
+                                      'charts',
+                                      'onlyCharts',
+                                      'parameter_id',
+                                      'parameter_value',
+                                      'parameter_type',
+                                      'parameter_operator'
+                                  ));
         // Fix for issue #1700 - save value as db type
         $itemsCount = is_countable($req['parameter_value']) ? count($req['parameter_value']) : 0;
 

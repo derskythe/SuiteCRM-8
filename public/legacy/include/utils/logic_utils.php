@@ -89,7 +89,7 @@ function replace_or_add_logic_type($hook_array)
 
 function write_logic_file($module_name, $contents)
 {
-    $file = "modules/".$module_name . '/logic_hooks.php';
+    $file = 'modules/' . $module_name . '/logic_hooks.php';
     $file = create_custom_directory($file);
 
     return sugar_file_put_contents($file, $contents) !== false;
@@ -99,9 +99,9 @@ function write_logic_file($module_name, $contents)
 
 function build_logic_file($hook_array)
 {
-    $hook_contents = "";
+    $hook_contents = '';
 
-    $hook_contents .= "// Do not store anything in this file that is not part of the array or the hook version.  This file will	\n";
+    $hook_contents .= "// Do not store anything in this file that is not part of the array or the hook version.  This file will    \n";
     $hook_contents .= "// be automatically rebuilt in the future. \n ";
     $hook_contents .= "\$hook_version = 1; \n";
     $hook_contents .= "\$hook_array = Array(); \n";
@@ -112,7 +112,7 @@ function build_logic_file($hook_array)
 
         foreach ($event as $second_key => $elements) {
             $hook_contents .= "\$hook_array['".$event_array."'][] = ";
-            $hook_contents .= "Array(".$elements[0].", '".$elements[1]."', '".$elements[2]."','".$elements[3]."', '".$elements[4]."'); \n";
+            $hook_contents .= 'Array(' . $elements[0] . ", '" . $elements[1] . "', '" . $elements[2] . "','" . $elements[3] . "', '" . $elements[4] . "'); \n";
         }
 
         //end foreach hook_array as event => action_array

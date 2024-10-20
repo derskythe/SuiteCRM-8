@@ -64,6 +64,14 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
      *
      * @param SugarBean $seed
      * @param string $current_view
+     *
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function trackView($seed, $current_view)
     {
@@ -110,7 +118,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
      */
     public function get_visible_modules($availModules)
     {
-        require_once("modules/MySettings/TabController.php");
+        require_once('modules/MySettings/TabController.php');
         $controller = new TabController();
         $tabs = $controller->get_tabs_system();
         return $this->getModulesFromList($tabs[0], $availModules);
@@ -158,12 +166,12 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
 
         $fields = array();
         foreach ($dictionary [ $beanName ][ 'fields' ] as $field => $def) {
-            if (strpos((string) $field, 'email') !== false) {
+            if (str_contains((string) $field, 'email')) {
                 $field = 'email' ;
             }
 
             //bug: 38139 - allow phone to be searched through Global Search
-            if (strpos((string) $field, 'phone') !== false) {
+            if (str_contains((string) $field, 'phone')) {
                 $field = 'phone' ;
             }
 
@@ -214,13 +222,13 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
         $link_fields = array();
         if (!empty($value->field_defs)) {
             foreach ($value->field_defs as $var) {
-                if (!empty($fields) && !in_array($var['name'], $fields)) {
+                if (!empty($fields) && !in_array($var['name'], $fields, true)) {
                     continue;
                 }
-                if (isset($var['source']) && ($var['source'] != 'db' && $var['source'] != 'non-db' &&$var['source'] != 'custom_fields') && $var['name'] != 'email1' && $var['name'] != 'email2' && (!isset($var['type'])|| $var['type'] != 'relate')) {
+                if (isset($var['source']) && ($var['source'] !== 'db' && $var['source'] !== 'non-db' && $var['source'] !== 'custom_fields') && $var['name'] !== 'email1' && $var['name'] !== 'email2' && (!isset($var['type'])|| $var['type'] !== 'relate')) {
                     continue;
                 }
-                if ((isset($var['source']) && $var['source'] == 'non_db') && (isset($var['type']) && $var['type'] != 'link')) {
+                if ((isset($var['source']) && $var['source'] === 'non_db') && (isset($var['type']) && $var['type'] !== 'link')) {
                     continue;
                 }
                 $required = 0;
@@ -228,11 +236,11 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
                 $options_ret = array();
                 // Apparently the only purpose of this check is to make sure we only return fields
                 //   when we've read a record.  Otherwise this function is identical to get_module_field_list
-                if (isset($var['required']) && ($var['required'] || $var['required'] == 'true')) {
+                if (isset($var['required']) && ($var['required'] || $var['required'] === 'true')) {
                     $required = 1;
                 }
 
-                if ($var['type'] == 'bool') {
+                if ($var['type'] === 'bool') {
                     $var['options'] = 'checkbox_dom';
                 }
 
@@ -246,7 +254,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
                     }
                 }
 
-                if (!empty($var['dbType']) && $var['type'] == 'bool') {
+                if (!empty($var['dbType']) && $var['type'] === 'bool') {
                     $options_ret['type'] = $this->get_name_value('type', $var['dbType']);
                 }
 
@@ -256,7 +264,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
                 $entry['group'] = isset($var['group']) ? $var['group'] : '';
                 $entry['id_name'] = isset($var['id_name']) ? $var['id_name'] : '';
 
-                if ($var['type'] == 'link') {
+                if ($var['type'] === 'link') {
                     $entry['relationship'] = (isset($var['relationship']) ? $var['relationship'] : '');
                     $entry['module'] = (isset($var['module']) ? $var['module'] : '');
                     $entry['bean_name'] = (isset($var['bean_name']) ? $var['bean_name'] : '');
@@ -274,7 +282,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
                     if (isset($var['default'])) {
                         $entry['default_value'] = $var['default'];
                     }
-                    if ($var['type'] == 'parent' && isset($var['type_name'])) {
+                    if ($var['type'] === 'parent' && isset($var['type_name'])) {
                         $entry['type_name'] = $var['type_name'];
                     }
 
@@ -283,7 +291,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
             } //foreach
         } //if
 
-        if ($value->module_dir == 'Meetings' || $value->module_dir == 'Calls') {
+        if ($value->module_dir === 'Meetings' || $value->module_dir === 'Calls') {
             if (isset($module_fields['duration_minutes']) && isset($GLOBALS['app_list_strings']['duration_intervals'])) {
                 $options_dom = $GLOBALS['app_list_strings']['duration_intervals'];
                 $options_ret = array();
@@ -295,10 +303,10 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
             }
         }
 
-        if ($value->module_dir == 'Bugs') {
+        if ($value->module_dir === 'Bugs') {
             require_once('modules/Releases/Release.php');
             $seedRelease = BeanFactory::newBean('Releases');
-            $options = $seedRelease->get_releases(true, "Active");
+            $options = $seedRelease->get_releases(true, 'Active');
             $options_ret = array();
             foreach ($options as $name=>$value) {
                 $options_ret[] =  array('name'=> $name , 'value'=>$value);
@@ -352,7 +360,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
      */
     public function get_file_contents_base64($filename, $remove = false)
     {
-        $contents = "";
+        $contents = '';
         if (file_exists($filename)) {
             $contents =  base64_encode(file_get_contents($filename));
             if ($remove) {
@@ -374,7 +382,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
         switch (strtolower($type)) {
             case 'default':
             default:
-                if ($view == 'subpanel') {
+                if ($view === 'subpanel') {
                     $results = $this->get_subpanel_defs($module_name, $type);
                 } else {
                     $v = new SugarView(null, array());
@@ -383,7 +391,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
                     $fullView = ucfirst($view) . 'View';
                     $metadataFile = $v->getMetaDataFile();
                     require_once($metadataFile);
-                    if ($view == 'list') {
+                    if ($view === 'list') {
                         $results = $listViewDefs[$module_name];
                     } else {
                         $results = $viewdefs[$module_name][$fullView];
@@ -399,7 +407,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
      * if the list should filter for favorites.  Should eventually update the SugarBean function as well.
      *
      */
-    public function get_data_list($seed, $order_by = "", $where = "", $row_offset = 0, $limit=-1, $max=-1, $show_deleted = 0, $favorites = false, $singleSelect=false)
+    public function get_data_list($seed, $order_by = '', $where = '', $row_offset = 0, $limit=-1, $max=-1, $show_deleted = 0, $favorites = false, $singleSelect=false)
     {
         $GLOBALS['log']->debug("get_list:  order_by = '$order_by' and where = '$where' and limit = '$limit'");
         if (isset($_SESSION['show_deleted'])) {
@@ -427,7 +435,7 @@ class SugarWebServiceUtilv3_1 extends SugarWebServiceUtilv3
      */
     public function addFieldLevelACLs($module_name, $view_type, $view, $metadata)
     {
-        $functionName = "metdataAclParser" . ucfirst($view_type) . ucfirst($view);
+        $functionName = 'metdataAclParser' . ucfirst($view_type) . ucfirst($view);
         if (method_exists($this, $functionName)) {
             return $this->$functionName($module_name, $metadata);
         }

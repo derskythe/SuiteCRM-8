@@ -87,7 +87,6 @@ class ResourceIdentifier implements LoggerAwareInterface, JsonApiResponseInterfa
         $this->containers = $containers;
     }
 
-
     /**
      * @return string
      */

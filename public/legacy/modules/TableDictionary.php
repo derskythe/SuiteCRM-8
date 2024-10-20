@@ -42,65 +42,65 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-include("metadata/accounts_bugsMetaData.php");
-include("metadata/accounts_casesMetaData.php");
-include("metadata/accounts_contactsMetaData.php");
-include("metadata/accounts_opportunitiesMetaData.php");
-include("metadata/calls_contactsMetaData.php");
-include("metadata/calls_usersMetaData.php");
-include("metadata/calls_leadsMetaData.php");
-include("metadata/cases_bugsMetaData.php");
-include("metadata/contacts_bugsMetaData.php");
-include("metadata/contacts_casesMetaData.php");
-include("metadata/configMetaData.php");
-include("metadata/contacts_usersMetaData.php");
-include("metadata/custom_fieldsMetaData.php");
-include("metadata/email_addressesMetaData.php");
-include("metadata/emails_beansMetaData.php");
-include("metadata/foldersMetaData.php");
-include("metadata/import_mapsMetaData.php");
-include("metadata/meetings_contactsMetaData.php");
-include("metadata/meetings_usersMetaData.php");
-include("metadata/meetings_leadsMetaData.php");
-include("metadata/opportunities_contactsMetaData.php");
-include("metadata/user_feedsMetaData.php");
-include("metadata/users_passwordLinkMetaData.php");
-include("metadata/prospect_list_campaignsMetaData.php");
-include("metadata/prospect_lists_prospectsMetaData.php");
-include("metadata/roles_modulesMetaData.php");
-include("metadata/roles_usersMetaData.php");
+include('metadata/accounts_bugsMetaData.php');
+include('metadata/accounts_casesMetaData.php');
+include('metadata/accounts_contactsMetaData.php');
+include('metadata/accounts_opportunitiesMetaData.php');
+include('metadata/calls_contactsMetaData.php');
+include('metadata/calls_usersMetaData.php');
+include('metadata/calls_leadsMetaData.php');
+include('metadata/cases_bugsMetaData.php');
+include('metadata/contacts_bugsMetaData.php');
+include('metadata/contacts_casesMetaData.php');
+include('metadata/configMetaData.php');
+include('metadata/contacts_usersMetaData.php');
+include('metadata/custom_fieldsMetaData.php');
+include('metadata/email_addressesMetaData.php');
+include('metadata/emails_beansMetaData.php');
+include('metadata/foldersMetaData.php');
+include('metadata/import_mapsMetaData.php');
+include('metadata/meetings_contactsMetaData.php');
+include('metadata/meetings_usersMetaData.php');
+include('metadata/meetings_leadsMetaData.php');
+include('metadata/opportunities_contactsMetaData.php');
+include('metadata/user_feedsMetaData.php');
+include('metadata/users_passwordLinkMetaData.php');
+include('metadata/prospect_list_campaignsMetaData.php');
+include('metadata/prospect_lists_prospectsMetaData.php');
+include('metadata/roles_modulesMetaData.php');
+include('metadata/roles_usersMetaData.php');
 //include("metadata/project_relationMetaData.php");
-include("metadata/outboundEmailMetaData.php");
-include("metadata/addressBookMetaData.php");
-include("metadata/project_bugsMetaData.php");
-include("metadata/project_casesMetaData.php");
-include("metadata/project_productsMetaData.php");
-include("metadata/projects_accountsMetaData.php");
-include("metadata/projects_contactsMetaData.php");
-include("metadata/projects_opportunitiesMetaData.php");
+include('metadata/outboundEmailMetaData.php');
+include('metadata/addressBookMetaData.php');
+include('metadata/project_bugsMetaData.php');
+include('metadata/project_casesMetaData.php');
+include('metadata/project_productsMetaData.php');
+include('metadata/projects_accountsMetaData.php');
+include('metadata/projects_contactsMetaData.php');
+include('metadata/projects_opportunitiesMetaData.php');
 
 
 
 //ACL RELATIONSHIPS
-include("metadata/acl_roles_actionsMetaData.php");
-include("metadata/acl_roles_usersMetaData.php");
+include('metadata/acl_roles_actionsMetaData.php');
+include('metadata/acl_roles_usersMetaData.php');
 // INBOUND EMAIL
-include("metadata/inboundEmail_autoreplyMetaData.php");
-include("metadata/inboundEmail_cacheTimestampMetaData.php");
-include("metadata/email_cacheMetaData.php");
-include("metadata/email_marketing_prospect_listsMetaData.php");
-include("metadata/users_signaturesMetaData.php");
+include('metadata/inboundEmail_autoreplyMetaData.php');
+include('metadata/inboundEmail_cacheTimestampMetaData.php');
+include('metadata/email_cacheMetaData.php');
+include('metadata/email_marketing_prospect_listsMetaData.php');
+include('metadata/users_signaturesMetaData.php');
 //linked documents.
-include("metadata/linked_documentsMetaData.php");
+include('metadata/linked_documentsMetaData.php');
 
 // Documents, so we can start replacing Notes as the primary way to attach something to something else.
-include("metadata/documents_accountsMetaData.php");
-include("metadata/documents_contactsMetaData.php");
-include("metadata/documents_opportunitiesMetaData.php");
-include("metadata/documents_casesMetaData.php");
-include("metadata/documents_bugsMetaData.php");
-include("metadata/oauth_nonce.php");
-include("metadata/cron_remove_documentsMetaData.php");
+include('metadata/documents_accountsMetaData.php');
+include('metadata/documents_contactsMetaData.php');
+include('metadata/documents_opportunitiesMetaData.php');
+include('metadata/documents_casesMetaData.php');
+include('metadata/documents_bugsMetaData.php');
+include('metadata/oauth_nonce.php');
+include('metadata/cron_remove_documentsMetaData.php');
 
 //konwledge base
 include('metadata/aok_knowledgebase_categoriesMetaData.php');
@@ -129,7 +129,7 @@ include('metadata/securitygroups_acl_rolesMetaData.php');
 include('metadata/securitygroups_defaultsMetaData.php');
 include('metadata/securitygroups_recordsMetaData.php');
 include('metadata/securitygroups_usersMetaData.php');
-include("metadata/cache_rebuildMetaData.php");
+include('metadata/cache_rebuildMetaData.php');
 
 include 'metadata/surveyquestionoptions_surveyquestionresponsesMetaData.php';
 

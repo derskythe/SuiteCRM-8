@@ -57,7 +57,7 @@ BUGS
 function get_bugs_in_contacts($in, $orderBy = '')
 {
     //bail if the in is empty
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         return;
     }
     // First, get the list of IDs.
@@ -74,7 +74,7 @@ function get_bugs_in_contacts($in, $orderBy = '')
 function get_bugs_in_accounts($in, $orderBy = '')
 {
     //bail if the in is empty
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         return;
     }
     // First, get the list of IDs.
@@ -96,7 +96,7 @@ Cases
 function get_cases_in_contacts($in, $orderBy = '')
 {
     //bail if the in is empty
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         return;
     }
     // First, get the list of IDs.
@@ -116,7 +116,7 @@ function get_cases_in_accounts($in, $orderBy = '')
         return;
     }
     //bail if the in is empty
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         return;
     }
     // First, get the list of IDs.
@@ -139,7 +139,7 @@ NOTES
 function get_notes_in_contacts($in, $orderBy = '')
 {
     //bail if the in is empty
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         return;
     }
     // First, get the list of IDs.
@@ -156,7 +156,7 @@ function get_notes_in_contacts($in, $orderBy = '')
 function get_notes_in_module($in, $module, $orderBy = '')
 {
     //bail if the in is empty
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         return;
     }
     // First, get the list of IDs.
@@ -190,12 +190,12 @@ function get_notes_in_module($in, $module, $orderBy = '')
         }
 
         //bail if the in is empty
-        if (empty($in)  || $in =='()' || $in =="('')") {
+        if (empty($in)  || $in === '()' || $in === "('')") {
             return;
         }
 
         // First, get the list of IDs.
-        if ($module == 'KBDocuments' || $module == 'DocumentRevisions') {
+        if ($module === 'KBDocuments' || $module === 'DocumentRevisions') {
             $query = "SELECT dr.* from document_revisions dr
                       inner join kbdocument_revisions kr on kr.document_revision_id = dr.id AND kr.kbdocument_id IN ($in)
                       AND dr.file_mime_type is not null";
@@ -206,7 +206,7 @@ function get_notes_in_module($in, $module, $orderBy = '')
         if (!empty($orderBy)) {
             require_once 'include/SugarSQLValidate.php';
             $valid = new SugarSQLValidate();
-            $fakeWhere = " 1=1 ";
+            $fakeWhere = ' 1=1 ';
             if ($valid->validateQueryClauses($fakeWhere, $orderBy)) {
                 $query .= ' ORDER BY '. $orderBy;
             } else {
@@ -259,11 +259,11 @@ function get_contacts_from_account($account_id, $orderBy = '')
     set_module_in($sugar->build_related_in($query), 'Contacts');
 }
 
-function get_related_list($in, $template, $where, $order_by, $row_offset = 0, $limit = "")
+function get_related_list($in, $template, $where, $order_by, $row_offset = 0, $limit = '')
 {
     $q = '';
     //if $in is empty then pass in a query to get the list of related list
-    if (empty($in)  || $in =='()' || $in =="('')") {
+    if (empty($in)  || $in === '()' || $in === "('')") {
         $in = '';
         //build the query to pass into the template list function
         $q = 'select id from '.$template->table_name.' where deleted = 0 ';
@@ -295,7 +295,7 @@ function build_relationship_tree($contact)
 
     $accounts = $_SESSION['viewable']['Accounts'];
     foreach ($accounts as $id) {
-        if (!isset($sugar_config['portal_view']) || $sugar_config['portal_view'] != 'single_user') {
+        if (!isset($sugar_config['portal_view']) || $sugar_config['portal_view'] !== 'single_user') {
             get_contacts_from_account($id);
         }
     }
@@ -337,12 +337,12 @@ function set_module_in($arrayList, $module_name)
     foreach ($arrayList['list'] as $id) {
         $_SESSION['viewable'][$module_name][$id] = $id;
     }
-    if ($module_name == 'Accounts' && isset($id)) {
+    if ($module_name === 'Accounts' && isset($id)) {
         $_SESSION['account_id'] = $id;
     }
 
     if (!empty($_SESSION['viewable'][strtolower($module_name).'_in'])) {
-        if ($arrayList['in'] != '()') {
+        if ($arrayList['in'] !== '()') {
             $newList = array();
             if (is_array($_SESSION['viewable'][strtolower($module_name).'_in'])) {
                 foreach ($_SESSION['viewable'][strtolower($module_name).'_in'] as $name) {
@@ -390,7 +390,7 @@ function portal_get_entry_list_limited($session, $module_name, $where, $order_by
         $error->set_error('invalid_session');
         return array('result_count'=>-1, 'entry_list'=>array(), 'error'=>$error->get_soap_array());
     }
-    if ($_SESSION['type'] == 'lead') {
+    if ($_SESSION['type'] === 'lead') {
         $error->set_error('no_access');
         return array('result_count'=>-1, 'entry_list'=>array(), 'error'=>$error->get_soap_array());
     }
@@ -398,7 +398,7 @@ function portal_get_entry_list_limited($session, $module_name, $where, $order_by
         $error->set_error('no_module');
         return array('result_count'=>-1, 'entry_list'=>array(), 'error'=>$error->get_soap_array());
     }
-    if ($module_name == 'Cases') {
+    if ($module_name === 'Cases') {
 
         //if the related cases have not yet been loaded into the session object,
         //then call the methods that will load the cases related to the contact/accounts for this user
@@ -422,13 +422,13 @@ function portal_get_entry_list_limited($session, $module_name, $where, $order_by
         if (!empty($_SESSION['viewable'][$module_name])) {
             $list =  get_related_list(get_module_in($module_name), BeanFactory::newBean('Cases'), $where, $order_by, $row_offset, $limit);
         }
-    } elseif ($module_name == 'Contacts') {
+    } elseif ($module_name === 'Contacts') {
         $sugar = BeanFactory::newBean('Contacts');
         $list =  get_related_list(get_module_in($module_name), BeanFactory::newBean('Contacts'), $where, $order_by);
-    } elseif ($module_name == 'Accounts') {
+    } elseif ($module_name === 'Accounts') {
         $sugar = BeanFactory::newBean('Accounts');
         $list =  get_related_list(get_module_in($module_name), BeanFactory::newBean('Accounts'), $where, $order_by);
-    } elseif ($module_name == 'Bugs') {
+    } elseif ($module_name === 'Bugs') {
 
         //if the related bugs have not yet been loaded into the session object,
         //then call the methods that will load the bugs related to the contact/accounts for this user
@@ -450,8 +450,8 @@ function portal_get_entry_list_limited($session, $module_name, $where, $order_by
         if (!empty($_SESSION['viewable'][$module_name])) {
             $list = get_related_list(get_module_in($module_name), BeanFactory::newBean('Bugs'), $where, $order_by, $row_offset, $limit);
         }
-    } elseif ($module_name == 'KBDocuments') {
-    } elseif ($module_name == 'FAQ') {
+    } elseif ($module_name === 'KBDocuments') {
+    } elseif ($module_name === 'FAQ') {
     } else {
         $error->set_error('no_module_support');
         return array('result_count'=>-1, 'entry_list'=>array(), 'error'=>$error->get_soap_array());

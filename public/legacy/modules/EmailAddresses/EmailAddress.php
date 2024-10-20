@@ -53,7 +53,7 @@ class EmailAddress extends SugarEmailAddress
      * @var bool $disable_row_level_security
      */
     public $disable_row_level_security;
-    
+
     /**
      * EmailAddress constructor.
      */
@@ -74,7 +74,9 @@ class EmailAddress extends SugarEmailAddress
      * @param string $invalid
      * @param string $optOut
      * @param bool $in_workflow
+     *
      * @return null|string
+     * @throws Exception
      */
     public function save(
         $id = '',

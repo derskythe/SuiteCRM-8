@@ -47,7 +47,7 @@ if (is_admin($current_user)) {
     if (count($_POST)) {
         if (!empty($_POST['activate'])) {
             $status = '';
-            if ($_POST['activate'] == 'false') {
+            if ($_POST['activate'] === 'false') {
                 $status = 'Inactive';
             } else {
                 $status = 'Active';
@@ -61,29 +61,29 @@ if (is_admin($current_user)) {
     $row = DBManagerFactory::getInstance()->fetchByAssoc($result);
     if (!empty($row['status'])) {
         $activate = 'false';
-        if ($row['status'] == 'Inactive') {
+        if ($row['status'] === 'Inactive') {
             $activate = 'true';
         } ?>
-				<p>
-				<form name="RepairSeedUsers" method="post" action="index.php">
-				<input type="hidden" name="module" value="Administration">
-				<input type="hidden" name="action" value="RepairSeedUsers">
-				<input type="hidden" name="return_module" value="Administration">
-				<input type="hidden" name="return_action" value="Upgrade">
-				<input type="hidden" name="activate" value="<?php echo $activate; ?>">
-				<table cellspacing="{CELLSPACING}" class="otherview">
-					<tr>
-					    <td scope="row" width="30%"><?php echo $mod_strings['LBL_REPAIR_SEED_USERS_TITLE']; ?></td>
-					    <td><input type="submit" name="button" value="<?php if ($row['status'] == 'Inactive') {
+                <p>
+                <form name="RepairSeedUsers" method="post" action="index.php">
+                <input type="hidden" name="module" value="Administration">
+                <input type="hidden" name="action" value="RepairSeedUsers">
+                <input type="hidden" name="return_module" value="Administration">
+                <input type="hidden" name="return_action" value="Upgrade">
+                <input type="hidden" name="activate" value="<?php echo $activate; ?>">
+                <table cellspacing="{CELLSPACING}" class="otherview">
+                    <tr>
+                        <td scope="row" width="30%"><?php echo $mod_strings['LBL_REPAIR_SEED_USERS_TITLE']; ?></td>
+                        <td><input type="submit" name="button" value="<?php if ($row['status'] === 'Inactive') {
             echo $mod_strings['LBL_REPAIR_SEED_USERS_ACTIVATE'];
         } else {
             echo $mod_strings['LBL_REPAIR_SEED_USERS_DECACTIVATE'];
         } ?>"></td>
-					</tr>
-				</table>
-				</form>
-				</p>
-			<?php
+                    </tr>
+                </table>
+                </form>
+                </p>
+            <?php
     } else {
         echo 'No seed Users';
     }

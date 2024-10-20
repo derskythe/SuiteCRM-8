@@ -54,24 +54,30 @@ class EAPMController extends SugarController
 
     public function process()
     {
-        if (!is_admin($GLOBALS['current_user']) && in_array(strtolower($this->action), $this->admin_actions)) {
+        if (!is_admin($GLOBALS['current_user']) && in_array(strtolower($this->action), $this->admin_actions, true)) {
             $this->hasAccess = false;
         }
         parent::process();
     }
 
+    /**
+     * @throws Exception
+     */
     protected function failed($error)
     {
         SugarApplication::appendErrorMessage($error);
         $GLOBALS['log']->error("Login error: $error");
         $url = 'index.php?module=EAPM&action=EditView&record='.$this->bean->id;
 
-        if ($this->return_module == 'Import') {
+        if ($this->return_module === 'Import') {
             $url .= "&application={$this->bean->application}&return_module={$this->return_module}&return_action={$this->return_action}";
         }
         return $this->set_redirect($url);
     }
 
+    /**
+     * @throws Exception
+     */
     public function pre_save()
     {
         if (!empty($_POST['password']) && $_POST['password'] == EAPM::$passwordPlaceholder) {
@@ -94,13 +100,16 @@ class EAPMController extends SugarController
         $this->api->loadEAPM($this->bean);
     }
 
+    /**
+     * @throws Exception
+     */
     protected function post_save()
     {
         if (!$this->bean->deleted) {
             // do not load bean here since password is already encoded
-            if ($this->api->authMethod != 'oauth') {
+            if ($this->api->authMethod !== 'oauth') {
                 // OAuth beans have to be handled specially.
-                
+
                 $reply = $this->api->checkLogin();
                 if (!$reply['success']) {
                     return $this->failed(translate('LBL_AUTH_ERROR', $this->bean->module_dir));
@@ -109,20 +118,20 @@ class EAPMController extends SugarController
                 }
             }
         }
-        if ($this->return_module == 'Users') {
+        if ($this->return_module === 'Users') {
             $this->return_action = 'EditView';
         }
         parent::post_save();
 
-        if ($this->return_module == 'Import') {
-            $this->set_redirect("index.php?module=Import&action=Step1&import_module=". $this->return_action . "&application=" . $this->bean->application);
+        if ($this->return_module === 'Import') {
+            $this->set_redirect('index.php?module=Import&action=Step1&import_module=' . $this->return_action . '&application=' . $this->bean->application);
         }
-        if ($this->module == 'EAPM') {
+        if ($this->module === 'EAPM') {
             $this->set_redirect('index.php?module=Users&action=EditView&record=' . $_POST['assigned_user_id']);
         }
         // Override the redirect location to add the hash
         $this->redirect_url = $this->redirect_url.'#tab5';
-        if ($this->api->authMethod == 'oauth' && !$this->bean->deleted) {
+        if ($this->api->authMethod === 'oauth' && !$this->bean->deleted) {
             // It's OAuth, we have to handle this specially.
             // We need to create a new window to handle the OAuth, and redirect this window back to the edit view
             // So we will handle that in javascript.
@@ -154,7 +163,7 @@ class EAPMController extends SugarController
                 $this->bean->validated();
             }
         }
-        
+
         // This is a tweak so that we can automatically close windows if requested by the external account system
         if (isset($_REQUEST['closeWhenDone']) && $_REQUEST['closeWhenDone'] == 1) {
             if (!empty($_REQUEST['callbackFunction']) && !empty($_REQUEST['application'])) {
@@ -169,11 +178,14 @@ class EAPMController extends SugarController
             echo($js);
             return;
         }
-        
+
         // redirect to detail view, as in save
         return parent::post_save();
     }
 
+    /**
+     * @throws Exception
+     */
     protected function pre_QuickSave()
     {
         if (!empty($_REQUEST['application'])) {
@@ -186,16 +198,19 @@ class EAPMController extends SugarController
             }
             $this->pre_save();
         } else {
-            sugar_die("Please pass an application name.");
+            sugar_die('Please pass an application name.');
         }
     }
-    
+
+    /**
+     * @throws Exception
+     */
     public function action_QuickSave()
     {
         $this->api = ExternalAPIFactory::loadAPI($this->bean->application, true);
         $this->action_save();
 
-        if ($this->api->authMethod == 'oauth') {
+        if ($this->api->authMethod === 'oauth') {
             $this->action_oauth();
         }
     }
@@ -210,11 +225,14 @@ class EAPMController extends SugarController
         $this->pre_save();
     }
 
+    /**
+     * @throws Exception
+     */
     protected function action_Reauthenticate()
     {
-        if ($this->api->authMethod == 'oauth') {
+        if ($this->api->authMethod === 'oauth') {
             // OAuth beans have to be handled specially.
-            
+
             $reply = $this->api->checkLogin();
             if (!$reply['success']) {
                 return $this->failed(translate('LBL_AUTH_ERROR', $this->bean->module_dir));
@@ -249,11 +267,11 @@ class EAPMController extends SugarController
 
     protected function remapAction()
     {
-        if ($this->do_action == 'DetailView') {
+        if ($this->do_action === 'DetailView') {
             $this->do_action = 'EditView';
             $this->action = 'EditView';
         }
-        
+
         parent::remapAction();
     }
 }

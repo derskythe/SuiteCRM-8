@@ -43,10 +43,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 
 
-    
+
 if (!empty($_REQUEST['saved_search_action'])) {
     $ss = BeanFactory::newBean('SavedSearch');
-    
+
     switch ($_REQUEST['saved_search_action']) {
         case 'update': // save here
             $savedSearchBean = loadBean($_REQUEST['search_module']);
@@ -67,10 +67,10 @@ if (!empty($_REQUEST['saved_search_action'])) {
         $searchFormTab = 'saved_views';
     }
 
-    if ($_REQUEST['saved_search_select'] == '_none') { // none selected
+    if ($_REQUEST['saved_search_select'] === '_none') { // none selected
         $_SESSION['LastSavedView'][$_REQUEST['search_module']] = '';
         $current_user->setPreference('ListViewDisplayColumns', array(), 0, $_REQUEST['search_module']);
-        $ajaxLoad = empty($_REQUEST['ajax_load']) ? "" : "&ajax_load=" . $_REQUEST['ajax_load'];
+        $ajaxLoad = empty($_REQUEST['ajax_load']) ? '' : '&ajax_load=' . $_REQUEST['ajax_load'];
         header("Location: index.php?action=index&module={$_REQUEST['search_module']}&searchFormTab={$searchFormTab}&query=true&clear_query=true$ajaxLoad");
         die();
     }

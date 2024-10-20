@@ -57,7 +57,7 @@ class SugarCacheAPC extends SugarCacheAbstract
             return false;
         }
 
-        if (function_exists("apc_store")
+        if (function_exists('apc_store')
                 && empty($GLOBALS['sugar_config']['external_cache_disabled_apc'])) {
             return true;
         }

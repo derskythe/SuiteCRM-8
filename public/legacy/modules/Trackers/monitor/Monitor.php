@@ -71,6 +71,9 @@ class Monitor implements Trackable
 
     /**
      * Monitor constructor
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public function __construct($name = '', $monitorId = '', $metadata = '', $store = '')
     {
@@ -171,12 +174,15 @@ class Monitor implements Trackable
      * save
      * This method retrieves the Store instances associated with monitor and calls
      * the flush method passing with the montior ($this) instance.
+     *
      * @param $flush boolean parameter indicating whether or not to flush the instance data to store or possibly cache
+     *
+     * @throws Exception
      */
     public function save($flush=true)
     {
         //If the monitor is not enabled, do not save
-        if (!$this->isEnabled()&&$this->name!='tracker_sessions') {
+        if (!$this->isEnabled()&&$this->name !== 'tracker_sessions') {
             return false;
         }
 

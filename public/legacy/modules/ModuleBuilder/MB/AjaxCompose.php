@@ -46,12 +46,12 @@ class AjaxCompose
     public function addSection($name, $title, $content, $action='activate')
     {
         $crumb = '';
-        if ($name == 'center') {
+        if ($name === 'center') {
             $crumb = $this->getBreadCrumb();
         }
         $this->sections[$name] = array('title'=>$title,'crumb'=>$crumb, 'content'=>$content, 'action'=>$action);
     }
-    
+
     public function getJavascript()
     {
         if (!empty($this->sections['center'])) {
@@ -62,26 +62,26 @@ class AjaxCompose
                 $this->addSection('east2', '', '', 'deactivate');
             }
         }
-        
+
         $json = getJSONobj();
         return $json->encode($this->sections);
     }
-    
+
     public function addCrumb($name, $action)
     {
         $this->crumbs[$name] = $action;
     }
-    
+
     public function getBreadCrumb()
     {
         $crumbs = '';
         $actions = array();
         $count = 0;
         foreach ($this->crumbs as $name=>$action) {
-            if ($name == 'Home') {
+            if ($name === 'Home') {
                 $crumbs .= "<a onclick='$action' href='javascript:void(0)'>". getStudioIcon('home', 'home', 16, 16) . '</a>';
             } else {
-                if ($name=='Assistant') {
+                if ($name === 'Assistant') {
                     $crumbs .= "<a id='showassist' onclick='$action' href='javascript:void(0)'>". getStudioIcon('assistant', 'assistant', 16, 16) . '</a>';
                 } else {
                     if ($count > 0) {
@@ -91,7 +91,7 @@ class AjaxCompose
                     }
                     if (empty($action)) {
                         $crumbs .="<span class='crumbLink'>$name</span>";
-                        $actions[] = "";
+                        $actions[] = '';
                     } else {
                         $crumbs .="<a href='javascript:void(0);' onclick='$action' class='crumbLink'>$name</a>";
                         $actions[] = $action;
@@ -100,12 +100,12 @@ class AjaxCompose
                 }
             }
         }
-        if ($count > 1 && $actions[$count-2] != "") {
+        if ($count > 1 && $actions[$count-2] != '') {
             $crumbs = "<a onclick='{$actions[$count-2]}' href='javascript:void(0)'>". getStudioIcon('back', 'back', 16, 16) . '</a>&nbsp;'. $crumbs;
         }
         return $crumbs . '<br><br>';
     }
-    
+
     public function echoErrorStatus($labelName='')
     {
         $sections = array('failure'=>true,'failMsg'=>$labelName);

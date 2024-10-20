@@ -55,9 +55,9 @@ class QuotesParseRule extends BaseRule
 
     public function preParse($panels, $view)
     {
-        if ($view == 'DetailView') {
+        if ($view === 'DetailView') {
             foreach ($panels as $name=>$panel) {
-                if ($name == 'default') {
+                if ($name === 'default') {
                     foreach ($panel as $rowCount=>$row) {
                         foreach ($row as $key=>$column) {
                             if ($this->matches($column, '/billing_address_country/')) {
@@ -85,12 +85,12 @@ class QuotesParseRule extends BaseRule
             } //foreach
         }
 
-        if ($view == 'EditView') {
+        if ($view === 'EditView') {
             $processedBillToPanel = false;
 
             foreach ($panels as $name=>$panel) {
                 // This panel is an exception in that it has nested tables...
-                if ($name == 'lbl_bill_to' && !$processedBillToPanel) {
+                if ($name === 'lbl_bill_to' && !$processedBillToPanel) {
                     $billToPanel = $panel;
                     $newBillPanel = array();
                     foreach ($billToPanel as $subpanel) {

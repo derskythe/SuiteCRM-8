@@ -41,10 +41,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
- 
+
 global $app_strings;
 
-$dashletMeta['SugarNewsDashlet'] = array('module'		=> 'Home',
+$dashletMeta['SugarNewsDashlet'] = array('module'        => 'Home',
                                           'title'       => translate('LBL_DASHLET_SUITE_NEWS', 'Home'),
                                           'description' => 'A customizeable portal page',
                                           'icon'        => 'sugarnews',

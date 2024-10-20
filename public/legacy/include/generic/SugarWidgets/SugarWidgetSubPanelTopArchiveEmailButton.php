@@ -52,11 +52,11 @@ class SugarWidgetSubPanelTopArchiveEmailButton extends SugarWidgetSubPanelTopBut
     public function display($defines, $additionalFormFields = null, $nonbutton = false)
     {
         if ((ACLController::moduleSupportsACL($defines['module'])  && !ACLController::checkAccess($defines['module'], 'edit', true) ||
-            $defines['module'] == "History" & !ACLController::checkAccess("Emails", 'edit', true))) {
+            $defines['module'] === 'History' & !ACLController::checkAccess('Emails', 'edit', true))) {
             $temp = '';
             return $temp;
         }
-        
+
         global $app_strings;
         global $mod_strings;
         global $currentModule;
@@ -81,7 +81,7 @@ class SugarWidgetSubPanelTopArchiveEmailButton extends SugarWidgetSubPanelTopBut
         }
         $button = $this->_get_form($defines, $additionalFormFields);
         $button .= "<input id='".preg_replace('[ ]', '', (string) $value)."_button' title='$title' class='button' type='submit' name='".preg_replace('[ ]', '', mb_strtolower($value, 'UTF-8'))."_button' value='$value'/>\n";
-        $button .= "</form>";
+        $button .= '</form>';
         return $button;
     }
 }

@@ -63,7 +63,7 @@ require_once('modules/DynamicFields/DynamicField.php');
  $simulate = false;
  if (!isset($_REQUEST['run'])) {
      $simulate = true;
-     echo "SIMULATION MODE - NO CHANGES WILL BE MADE EXCEPT CLEARING CACHE";
+     echo 'SIMULATION MODE - NO CHANGES WILL BE MADE EXCEPT CLEARING CACHE';
  }
 
  foreach ($modules as $the_module=>$fields) {
@@ -73,13 +73,13 @@ require_once('modules/DynamicFields/DynamicField.php');
 
          require_once($beanFiles[$class_name]);
          $mod = new $class_name();
-         if (!$db->tableExists($mod->table_name . "_cstm")) {
+         if (!$db->tableExists($mod->table_name . '_cstm')) {
              $mod->custom_fields = BeanFactory::newBean('DynamicFields');
              $mod->custom_fields->setup($mod);
              $mod->custom_fields->createCustomTable();
          }
 
-         $result = $db->query("DESCRIBE $mod->table_name" . "_cstm");
+         $result = $db->query("DESCRIBE $mod->table_name" . '_cstm');
 
          while ($row = $db->fetchByAssoc($result)) {
              $col = $row['Field'];
@@ -88,16 +88,16 @@ require_once('modules/DynamicFields/DynamicField.php');
              $the_field = get_widget($fieldDef['type']);
              $the_field->set($fieldDef);
 
-             if (!isset($fields[$col]) && $col != 'id_c') {
+             if (!isset($fields[$col]) && $col !== 'id_c') {
                  if (!$simulate) {
                      $db->query("ALTER TABLE $mod->table_name" . "_cstm DROP COLUMN $col");
                  }
                  unset($fields[$col]);
                  echo "Dropping Column $col from $mod->table_name" . "_cstm for module $the_module<br>";
              } else {
-                 if ($col != 'id_c') {
+                 if ($col !== 'id_c') {
                      if (trim($the_field->get_db_type()) !== trim($type)) {
-                         echo "Fixing Column Type for $col changing $type to ". $the_field->get_db_type() . "<br>";
+                         echo "Fixing Column Type for $col changing $type to ". $the_field->get_db_type() . '<br>';
                          if (!$simulate) {
                              $db->query($the_field->get_db_modify_alter_table($mod->table_name . '_cstm'));
                          }
@@ -108,9 +108,9 @@ require_once('modules/DynamicFields/DynamicField.php');
              }
          }
 
-         echo count($fields) . " field(s) missing from $mod->table_name" . "_cstm<br>";
+         echo count($fields) . " field(s) missing from $mod->table_name" . '_cstm<br>';
          foreach ($fields as $field) {
-             echo "Adding Column $field to $mod->table_name" . "_cstm<br>";
+             echo "Adding Column $field to $mod->table_name" . '_cstm<br>';
              if (!$simulate) {
                  $the_field = $mod->getFieldDefinition($field);
                  $field = get_widget($the_field['type']);

@@ -47,31 +47,31 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class UpgradeHistory extends SugarBean
 {
-    public $new_schema = true;
-    public $module_dir = 'Administration';
+    public bool $new_schema = true;
+    public string $module_dir = 'Administration';
 
     // Stored fields
-    public $id;
+    public string $id;
     public $filename;
     public $md5sum;
     public $type;
     public $version;
     public $status;
-    public $date_entered;
-    public $name;
-    public $description;
+    public string $date_entered;
+    public string $name;
+    public string $description;
     public $id_name;
     public $manifest;
     public $enabled;
-    public $tracker_visibility = false;
-    public $table_name = "upgrade_history";
-    public $object_name = "UpgradeHistory";
-    public $column_fields = array( "id", "filename", "md5sum", "type", "version", "status", "date_entered" );
-    public $disable_custom_fields = true;
+    public bool $tracker_visibility = false;
+    public string $table_name = 'upgrade_history';
+    public string $object_name = 'UpgradeHistory';
+    public array $column_fields = array( 'id', 'filename', 'md5sum', 'type', 'version', 'status', 'date_entered' );
+    public bool $disable_custom_fields = true;
 
     public function delete()
     {
-        $this->db->query("delete from " . $this->table_name . " where id = " . $this->db->quoted($this->id));
+        $this->db->query('delete from ' . $this->table_name . ' where id = ' . $this->db->quoted($this->id));
     }
 
     public function __construct()
@@ -85,7 +85,7 @@ class UpgradeHistory extends SugarBean
 
     public function getAllOrderBy($orderBy)
     {
-        $query = "SELECT id FROM " . $this->table_name . " ORDER BY ".$orderBy;
+        $query = 'SELECT id FROM ' . $this->table_name . ' ORDER BY ' .$orderBy;
         return $this->getList($query);
     }
     /**
@@ -107,10 +107,10 @@ class UpgradeHistory extends SugarBean
             if (!empty($patch_to_check->id)) {
                 $where .= "  AND id != '$patch_to_check->id'  ";
             } else {
-                $where .= "  AND id is not null  ";
+                $where .= '  AND id is not null  ';
             }
 
-            $query = "SELECT id FROM " . $this->table_name . " ". $where;
+            $query = 'SELECT id FROM ' . $this->table_name . ' ' . $where;
 
             $result = $uh->db->query($query);
             if (empty($result)) {
@@ -132,7 +132,7 @@ class UpgradeHistory extends SugarBean
      */
     public function determineIfUpgrade($id_name, $version)
     {
-        $query = "SELECT id, version FROM " . $this->table_name . " WHERE id_name = '$id_name' ORDER BY date_entered DESC";
+        $query = 'SELECT id, version FROM ' . $this->table_name . " WHERE id_name = '$id_name' ORDER BY date_entered DESC";
         $result = $this->db->query($query);
         if (empty($result)) {
             return null;
@@ -155,7 +155,7 @@ class UpgradeHistory extends SugarBean
 
     public function getAll()
     {
-        $query = "SELECT id FROM " . $this->table_name . " ORDER BY date_entered desc";
+        $query = 'SELECT id FROM ' . $this->table_name . ' ORDER BY date_entered desc';
         return $this->getList($query);
     }
 
@@ -166,7 +166,7 @@ class UpgradeHistory extends SugarBean
 
     public function findByMd5($var_md5)
     {
-        $query = "SELECT id FROM " . $this->table_name . " where md5sum = '$var_md5'";
+        $query = 'SELECT id FROM ' . $this->table_name . " where md5sum = '$var_md5'";
         return(parent::build_related_list($query, $this));
     }
 
@@ -220,7 +220,7 @@ class UpgradeHistory extends SugarBean
 
             $d = dir($check_path);
             while ($f = $d->read()) {
-                if ($f == "." || $f == "..") {
+                if ($f === '.' || $f === '..') {
                     continue;
                 }
 
@@ -273,10 +273,10 @@ class UpgradeHistory extends SugarBean
     /**
      * Given an array of id_names and versions, check if the dependencies are installed
      *
-     * @param dependencies	an array of id_name, version to check if these dependencies are installed
-     * 						on the system
+     * @param dependencies    an array of id_name, version to check if these dependencies are installed
+     *                         on the system
      *
-     * @return not_found	an array of id_names that were not found to be installed on the system
+     * @return not_found    an array of id_names that were not found to be installed on the system
      */
     public function checkDependencies($dependencies = array())
     {

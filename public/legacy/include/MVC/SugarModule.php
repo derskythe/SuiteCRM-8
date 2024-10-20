@@ -2,6 +2,7 @@
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
+
 /**
  *
  * SugarCRM Community Edition is a customer relationship management program developed by
@@ -40,17 +41,14 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-
-
 class SugarModule
 {
-    protected static $_instances = array();
+    protected static array $_instances = array();
 
-    protected $_moduleName;
+    protected string $_moduleName;
 
-    public static function get(
-        $moduleName
-        ) {
+    public static function get($moduleName)
+    {
         if (!isset(self::$_instances[$moduleName])) {
             self::$_instances[$moduleName] = new SugarModule($moduleName);
         }
@@ -58,21 +56,20 @@ class SugarModule
         return self::$_instances[$moduleName];
     }
 
-    public function __construct(
-        $moduleName
-        ) {
+    public function __construct(string $moduleName)
+    {
         $this->_moduleName = $moduleName;
     }
 
     /**
      * Returns true if the given module implements the indicated template
      *
-     * @param  string $template
+     * @param string $template
+     *
      * @return bool
      */
-    public function moduleImplements(
-        $template
-        ) {
+    public function moduleImplements($template)
+    {
         $focus = self::loadBean();
 
         if (!$focus) {
@@ -87,7 +84,7 @@ class SugarModule
      *
      * @return object
      */
-    public function loadBean($beanList = null, $beanFiles = null, $returnObject = true)
+    public function loadBean($beanList = null, $beanFiles = null, bool $returnObject = true)
     {
         // Populate these reference arrays
         if (empty($beanList)) {
@@ -96,8 +93,8 @@ class SugarModule
         if (empty($beanFiles)) {
             global $beanFiles;
         }
-        if (!isset($beanList) || !isset($beanFiles)) {
-            require('include/modules.php');
+        if (!isset($beanList, $beanFiles)) {
+            require(__DIR__ . '/../../include/modules.php');
         }
 
         if (isset($beanList[$this->_moduleName])) {

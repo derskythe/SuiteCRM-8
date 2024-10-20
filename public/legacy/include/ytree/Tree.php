@@ -139,8 +139,8 @@ class Tree
 
         //todo removed site_url setting from here.
         //todo make these variables unique.
-        $tree_data = "var TREE_DATA= " . $this->json->encode($ret) . ";\n";
-        $tree_data .= "var param= " . $this->json->encode($this->_params) . ";\n";
+        $tree_data = 'var TREE_DATA= ' . $this->json->encode($ret) . ";\n";
+        $tree_data .= 'var param= ' . $this->json->encode($this->_params) . ";\n";
 
         $tree_data .= "var mytree;\n";
         $tree_data .= "treeinit(mytree,TREE_DATA,'{$this->_name}',param);\n";
@@ -163,7 +163,7 @@ class Tree
      * @param string customInitFunction Defaults to "onloadTreeInit"
      * @return string
      */
-    public function generateNodesNoInit($insertScriptTags = true, $customInitFunction = "")
+    public function generateNodesNoInit($insertScriptTags = true, $customInitFunction = '')
     {
         $node = null;
         $ret = array();
@@ -174,8 +174,8 @@ class Tree
             $ret['nodes'][] = $node->get_definition();
         }
 
-        $treeData = "var TREE_DATA = " . $this->json->encode($ret) . ";\n";
-        $treeData .= "var param = " . $this->json->encode($this->_params) . ";\n";
+        $treeData = 'var TREE_DATA = ' . $this->json->encode($ret) . ";\n";
+        $treeData .= 'var param = ' . $this->json->encode($this->_params) . ";\n";
         $treeData .= "var mytree;\n";
         $treeData .= "function onloadTreeinit() { {$initFunction}(mytree,TREE_DATA,'{$this->_name}',param); }\n";
 
@@ -205,4 +205,3 @@ class Tree
         return $return;
     }
 }
-

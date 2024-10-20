@@ -112,7 +112,7 @@ if (empty($_REQUEST['time_start'])) {
 }
 
 foreach ($marketing->column_fields as $field) {
-    if ($field == 'all_prospect_lists') {
+    if ($field === 'all_prospect_lists') {
         if (isset($_REQUEST[$field]) && $_REQUEST[$field]='on') {
             $marketing->$field = 1;
         } else {
@@ -166,7 +166,7 @@ if ($marketing->all_prospect_lists==1) {
 $mass[] = $marketing->id;
 //if sending an email was chosen, set all the needed variables for queuing campaign
 
-if ($master !='save') {
+if ($master !== 'save') {
     $_REQUEST['mass']= $mass;
     $_POST['mass']=$mass;
     $_REQUEST['record'] =$marketing->campaign_id;
@@ -208,9 +208,9 @@ if (isset($_REQUEST['show_wizard_summary']) && $_REQUEST['show_wizard_summary'])
         exit;
     }
 
-    $header_URL = "Location: index.php?action=WizardMarketing&module=Campaigns&return_module=Campaigns&return_action=WizardHome&return_id=" . $marketing->campaign_id . "&campaign_id=" . $marketing->campaign_id . "&jump=3&marketing_id=" . $marketing->id;
+    $header_URL = 'Location: index.php?action=WizardMarketing&module=Campaigns&return_module=Campaigns&return_action=WizardHome&return_id=' . $marketing->campaign_id . '&campaign_id=' . $marketing->campaign_id . '&jump=3&marketing_id=' . $marketing->id;
 } else {
-    $header_URL = "Location: index.php?action=WizardHome&module=Campaigns&record=".$marketing->campaign_id;
+    $header_URL = 'Location: index.php?action=WizardHome&module=Campaigns&record=' .$marketing->campaign_id;
 }
 
 $GLOBALS['log']->debug("about to post header URL of: $header_URL");

@@ -43,7 +43,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 $field = $_REQUEST['field'];
 $removeFile = "upload://{$_REQUEST[$field . '_record_id'] }_" . $field;
-$bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST[$field . "_record_id"]);
+$bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST[$field . '_record_id']);
 
 if (!$bean->ACLAccess('save')){
     throw new RuntimeException('Not authorized');
@@ -55,7 +55,7 @@ if (file_exists($removeFile)) {
     } else {
         $bean->$field = '';
         $bean->save();
-        echo "true";
+        echo 'true';
     }
 } else {
     $bean->$field = '';

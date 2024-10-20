@@ -143,7 +143,7 @@ class UserViewHelper
 
         $this->ss->assign('IS_PORTALONLY', '0');
         $this->ss->assign('IS_GROUP', '0');
-        if ((!empty($this->bean->is_group) && $this->bean->is_group) || (isset($_REQUEST['usertype']) && $_REQUEST['usertype'] == 'group')) {
+        if ((!empty($this->bean->is_group) && $this->bean->is_group) || (isset($_REQUEST['usertype']) && $_REQUEST['usertype'] === 'group')) {
             $this->ss->assign('IS_GROUP', '1');
             $this->usertype = 'GROUP';
         }
@@ -196,9 +196,9 @@ class UserViewHelper
             }
 
             //bug 48170
-            $user_preference_url = "module=Users&action=resetPreferences";
+            $user_preference_url = 'module=Users&action=resetPreferences';
             if (isset($_REQUEST['record'])) {
-                $user_preference_url .= "&record=" . $_REQUEST['record'];
+                $user_preference_url .= '&record=' . $_REQUEST['record'];
             }
             $buttons_header[] = "<input type='button' class='button' id='reset_user_preferences_header' onclick='if(confirm(\"{$reset_pref_warning}\"))window.location=\"" . $_SERVER['PHP_SELF'] . '?' . $user_preference_url . "&reset_preferences=true\";' value='" . translate('LBL_RESET_PREFERENCES', 'Users') . "' />";
             $buttons_header[] = "<input type='button' class='button' id='reset_homepage_header' onclick='if(confirm(\"{$reset_home_warning}\"))window.location=\"" . $_SERVER['PHP_SELF'] . '?' . $the_query_string . "&reset_homepage=true\";' value='" . translate('LBL_RESET_HOMEPAGE', 'Users') . "' />";
@@ -207,10 +207,10 @@ class UserViewHelper
             $buttons_footer[] = "<input type='button' class='button' id='reset_homepage_footer' onclick='if(confirm(\"{$reset_home_warning}\"))window.location=\"" . $_SERVER['PHP_SELF'] . '?' . $the_query_string . "&reset_homepage=true\";' value='" . translate('LBL_RESET_HOMEPAGE', 'Users') . "' />";
         }
         if (isset($buttons_header)) {
-            $this->ss->assign("BUTTONS_HEADER", $buttons_header);
+            $this->ss->assign('BUTTONS_HEADER', $buttons_header);
         }
         if (isset($buttons_footer)) {
-            $this->ss->assign("BUTTONS_FOOTER", $buttons_footer);
+            $this->ss->assign('BUTTONS_FOOTER', $buttons_footer);
         }
 
 
@@ -256,7 +256,7 @@ class UserViewHelper
             ),
         );
 
-        if ($userType == 'GROUP' || $userType == 'PORTAL_ONLY') {
+        if ($userType === 'GROUP' || $userType === 'PORTAL_ONLY') {
             $availableUserTypes = array($this->usertype);
         } else {
             if ($this->ss->get_template_vars('USER_ADMIN')) {
@@ -309,31 +309,31 @@ class UserViewHelper
         }
 
         // If new regular user without system generated password or new portal user
-        if (((isset($enable_syst_generate_pwd) && !$enable_syst_generate_pwd && $this->usertype != 'GROUP') || $this->usertype == 'PORTAL_ONLY') && empty($this->bean->id)) {
+        if (((isset($enable_syst_generate_pwd) && !$enable_syst_generate_pwd && $this->usertype !== 'GROUP') || $this->usertype === 'PORTAL_ONLY') && empty($this->bean->id)) {
             $this->ss->assign('REQUIRED_PASSWORD', '1');
         } else {
             $this->ss->assign('REQUIRED_PASSWORD', '0');
         }
 
         // If my account page or portal only user or regular user without system generated password or a duplicate user
-        if ((($current_user->id == $this->bean->id) || $this->usertype == 'PORTAL_ONLY' || (($this->usertype == 'REGULAR' || $this->usertype == 'Administrator' || (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true' && $this->usertype != 'GROUP')) && !$enable_syst_generate_pwd)) && !$this->bean->external_auth_only) {
+        if ((($current_user->id == $this->bean->id) || $this->usertype === 'PORTAL_ONLY' || (($this->usertype === 'REGULAR' || $this->usertype === 'Administrator' || (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true' && $this->usertype !== 'GROUP')) && !$enable_syst_generate_pwd)) && !$this->bean->external_auth_only) {
             $this->ss->assign('CHANGE_PWD', '1');
         } else {
             $this->ss->assign('CHANGE_PWD', '0');
         }
 
         // Make sure group users don't get a password change prompt
-        if ($this->usertype == 'GROUP') {
+        if ($this->usertype === 'GROUP') {
             $this->ss->assign('CHANGE_PWD', '0');
         }
 
         $configurator = new Configurator();
-        if (isset($configurator->config['passwordsetting']) && ($configurator->config['passwordsetting']['SystemGeneratedPasswordON'] || $configurator->config['passwordsetting']['forgotpasswordON']) && $this->usertype != 'GROUP' && $this->usertype != 'PORTAL_ONLY') {
+        if (isset($configurator->config['passwordsetting']) && ($configurator->config['passwordsetting']['SystemGeneratedPasswordON'] || $configurator->config['passwordsetting']['forgotpasswordON']) && $this->usertype !== 'GROUP' && $this->usertype !== 'PORTAL_ONLY') {
             $this->ss->assign('REQUIRED_EMAIL_ADDRESS', '1');
         } else {
             $this->ss->assign('REQUIRED_EMAIL_ADDRESS', '0');
         }
-        if ($this->usertype == 'GROUP' || $this->usertype == 'PORTAL_ONLY') {
+        if ($this->usertype === 'GROUP' || $this->usertype === 'PORTAL_ONLY') {
             $this->ss->assign('HIDE_FOR_GROUP_AND_PORTAL', 'none');
             $this->ss->assign('HIDE_CHANGE_USERTYPE', 'none');
             $this->ss->assign('HIDE_IF_GAUTH_UNCONFIGURED', 'none');
@@ -351,17 +351,17 @@ class UserViewHelper
     {
         $user_theme = $this->bean->getPreference('user_theme');
         if (isset($user_theme)) {
-            $this->ss->assign("THEMES", get_select_options_with_id(SugarThemeRegistry::availableThemes(), $user_theme));
+            $this->ss->assign('THEMES', get_select_options_with_id(SugarThemeRegistry::availableThemes(), $user_theme));
         } else {
-            $this->ss->assign("THEMES", get_select_options_with_id(SugarThemeRegistry::availableThemes(), $GLOBALS['sugar_config']['default_theme']));
+            $this->ss->assign('THEMES', get_select_options_with_id(SugarThemeRegistry::availableThemes(), $GLOBALS['sugar_config']['default_theme']));
         }
-        $this->ss->assign("SHOW_THEMES", (is_countable(SugarThemeRegistry::availableThemes()) ? count(SugarThemeRegistry::availableThemes()) : 0) > 1);
-        $this->ss->assign("USER_THEME_COLOR", $this->bean->getPreference('user_theme_color'));
-        $this->ss->assign("USER_THEME_FONT", $this->bean->getPreference('user_theme_font'));
-        $this->ss->assign("USER_THEME", $user_theme);
+        $this->ss->assign('SHOW_THEMES', (is_countable(SugarThemeRegistry::availableThemes()) ? count(SugarThemeRegistry::availableThemes()) : 0) > 1);
+        $this->ss->assign('USER_THEME_COLOR', $this->bean->getPreference('user_theme_color'));
+        $this->ss->assign('USER_THEME_FONT', $this->bean->getPreference('user_theme_font'));
+        $this->ss->assign('USER_THEME', $user_theme);
 
         // Build a list of themes that support group modules
-        $this->ss->assign("DISPLAY_GROUP_TAB", 'none');
+        $this->ss->assign('DISPLAY_GROUP_TAB', 'none');
 
         $selectedTheme = $user_theme;
         if (!isset($user_theme)) {
@@ -376,13 +376,13 @@ class UserViewHelper
             if (isset($currThemeObj->group_tabs) && $currThemeObj->group_tabs == 1) {
                 $themeGroupList[$themeId] = true;
                 if ($themeId == $selectedTheme) {
-                    $this->ss->assign("DISPLAY_GROUP_TAB", '');
+                    $this->ss->assign('DISPLAY_GROUP_TAB', '');
                 }
             } else {
                 $themeGroupList[$themeId] = false;
             }
         }
-        $this->ss->assign("themeGroupListJSON", json_encode($themeGroupList));
+        $this->ss->assign('themeGroupListJSON', json_encode($themeGroupList));
     }
 
     /**
@@ -408,7 +408,7 @@ class UserViewHelper
         $this->ss->assign('EXPORT_DELIMITER', $this->bean->getPreference('export_delimiter'));
 
         if ($this->bean->receive_notifications || (!isset($this->bean->id) && $admin->settings['notify_send_by_default'])) {
-            $this->ss->assign("RECEIVE_NOTIFICATIONS", "checked");
+            $this->ss->assign('RECEIVE_NOTIFICATIONS', 'checked');
         }
         $currentLanguage = $this->bean->getPreference('language') ?? $current_language;
         $languages = get_languages();
@@ -423,15 +423,15 @@ class UserViewHelper
         $this->ss->assign('EXPORT_CHARSET_DISPLAY', $export_charset);
         //end:12293
 
-        if ($this->bean->getPreference('use_real_names') == 'on' || (empty($this->bean->id) && isset($GLOBALS['sugar_config']['use_real_names']) && $GLOBALS['sugar_config']['use_real_names'] && $this->bean->getPreference('use_real_names') != 'off')) {
+        if ($this->bean->getPreference('use_real_names') === 'on' || (empty($this->bean->id) && isset($GLOBALS['sugar_config']['use_real_names']) && $GLOBALS['sugar_config']['use_real_names'] && $this->bean->getPreference('use_real_names') !== 'off')) {
             $this->ss->assign('USE_REAL_NAMES', 'CHECKED');
         }
 
-        if ($this->bean->getPreference('mailmerge_on') == 'on') {
+        if ($this->bean->getPreference('mailmerge_on') === 'on') {
             $this->ss->assign('MAILMERGE_ON', 'checked');
         }
 
-        if ($this->bean->getPreference('no_opps') == 'on') {
+        if ($this->bean->getPreference('no_opps') === 'on') {
             $this->ss->assign('NO_OPPS', 'CHECKED');
         }
 
@@ -447,21 +447,21 @@ class UserViewHelper
         $snooze = $this->bean->getPreference('snooze_alert_timer') ?? $sugar_config['snooze_alert_timer'] ?? 600;
         $this->ss->assign('SNOOZE_ALERT_TIMER', get_select_options_with_id($app_list_strings['snooze_alert_timer'], (int)$snooze));
 
-        $this->ss->assign("REMINDER_TIME_OPTIONS", $app_list_strings['reminder_time_options']);
-        $this->ss->assign("EMAIL_REMINDER_TIME_OPTIONS", $app_list_strings['reminder_time_options']);
-        $this->ss->assign("REMINDER_TIME", $reminder_time);
-        $this->ss->assign("EMAIL_REMINDER_TIME", $email_reminder_time);
+        $this->ss->assign('REMINDER_TIME_OPTIONS', $app_list_strings['reminder_time_options']);
+        $this->ss->assign('EMAIL_REMINDER_TIME_OPTIONS', $app_list_strings['reminder_time_options']);
+        $this->ss->assign('REMINDER_TIME', $reminder_time);
+        $this->ss->assign('EMAIL_REMINDER_TIME', $email_reminder_time);
 
         $remindersDefaultPreferences = Reminder::loadRemindersDefaultValuesData($this->bean);
-        $this->ss->assign("REMINDER_CHECKED", $remindersDefaultPreferences['popup']);
-        $this->ss->assign("EMAIL_REMINDER_CHECKED", $remindersDefaultPreferences['email']);
+        $this->ss->assign('REMINDER_CHECKED', $remindersDefaultPreferences['popup']);
+        $this->ss->assign('EMAIL_REMINDER_CHECKED', $remindersDefaultPreferences['email']);
 
-        $this->ss->assign("REMINDER_TABINDEX", "12");
+        $this->ss->assign('REMINDER_TABINDEX', '12');
         $publish_key = $this->bean->getPreference('calendar_publish_key');
         $this->ss->assign('CALENDAR_PUBLISH_KEY', $publish_key);
 
         $publish_url = $sugar_config['site_url'] . '/vcal_server.php';
-        $token = "/";
+        $token = '/';
         //determine if the web server is running IIS
         //if so then change the publish url
         if (isset($_SERVER) && !empty($_SERVER['SERVER_SOFTWARE'])) {
@@ -485,11 +485,11 @@ class UserViewHelper
             $ical_url .= '&user_name=' . $this->bean->user_name;
         }
 
-        $this->ss->assign("CALENDAR_PUBLISH_URL", $publish_url);
-        $this->ss->assign("CALENDAR_SEARCH_URL", $sugar_config['site_url'] . "/vcal_server.php/type=vfb&key=<span id=\"search_pub_key_span\">$publish_key</span>&email=%NAME%@%SERVER%");
-        $this->ss->assign("CALENDAR_ICAL_URL", $ical_url);
+        $this->ss->assign('CALENDAR_PUBLISH_URL', $publish_url);
+        $this->ss->assign('CALENDAR_SEARCH_URL', $sugar_config['site_url'] . "/vcal_server.php/type=vfb&key=<span id=\"search_pub_key_span\">$publish_key</span>&email=%NAME%@%SERVER%");
+        $this->ss->assign('CALENDAR_ICAL_URL', $ical_url);
 
-        $this->ss->assign("SETTINGS_URL", $sugar_config['site_url']);
+        $this->ss->assign('SETTINGS_URL', $sugar_config['site_url']);
 
         // Set Google Auth variables
         $this->setGoogleAuthVariables($sugar_config);
@@ -502,22 +502,24 @@ class UserViewHelper
      */
     protected function setGoogleAuthVariables($sugar_config)
     {
-        $this->ss->assign("GOOGLE_API_TOKEN_ENABLE_NEW", "none"); // Hide new token button by default
-        $this->ss->assign("GOOGLE_API_TOKEN_NEW_URL", $sugar_config['site_url'] . "/index.php?entryPoint=saveGoogleApiKey&getnew");
-        $this->ss->assign("GOOGLE_API_TOKEN_BTN", "Disabled");
+        $this->ss->assign('GOOGLE_API_TOKEN_ENABLE_NEW', 'none'); // Hide new token button by default
+        $this->ss->assign(
+            'GOOGLE_API_TOKEN_NEW_URL', $sugar_config['site_url'] . '/index.php?entryPoint=saveGoogleApiKey&getnew'
+        );
+        $this->ss->assign('GOOGLE_API_TOKEN_BTN', 'Disabled');
         if (isset($sugar_config['google_auth_json']) && !empty($sugar_config['google_auth_json'])) {
             $json = base64_decode($sugar_config['google_auth_json']);
             if (!$config = json_decode($json, true)) { // Check if the JSON is valid
-                $this->ss->assign("GOOGLE_API_TOKEN", "INVALID AUTH KEY");
-                $this->ss->assign("GOOGLE_API_TOKEN_COLOR", "red");
-                $this->ss->assign("GOOGLE_API_TOKEN_ENABLE_NEW", "inline");
+                $this->ss->assign('GOOGLE_API_TOKEN', 'INVALID AUTH KEY');
+                $this->ss->assign('GOOGLE_API_TOKEN_COLOR', 'red');
+                $this->ss->assign('GOOGLE_API_TOKEN_ENABLE_NEW', 'inline');
             } else {
                 $this->setGoogleAuthAccessToken();
             }
         } else {
-            $this->ss->assign("GOOGLE_API_TOKEN", "DISABLED");
-            $this->ss->assign("GOOGLE_API_TOKEN_COLOR", "black");
-            $this->ss->assign("HIDE_IF_GAUTH_UNCONFIGURED", "none");
+            $this->ss->assign('GOOGLE_API_TOKEN', 'DISABLED');
+            $this->ss->assign('GOOGLE_API_TOKEN_COLOR', 'black');
+            $this->ss->assign('HIDE_IF_GAUTH_UNCONFIGURED', 'none');
         }
 
         if ($this->bean->getPreference('syncGCal', 'GoogleSync') == '1') {
@@ -532,15 +534,15 @@ class UserViewHelper
     {
         $accessToken = json_decode(base64_decode($this->bean->getPreference('GoogleApiToken', 'GoogleSync')));
         if (!empty($this->bean->getPreference('GoogleApiToken', 'GoogleSync')) && $accessToken = json_decode(base64_decode($this->bean->getPreference('GoogleApiToken', 'GoogleSync')))) { // Check if the user has a token
-            $this->ss->assign("GOOGLE_API_TOKEN", "CONFIGURED");
-            $this->ss->assign("GOOGLE_API_TOKEN_COLOR", "green");
-            $this->ss->assign("GOOGLE_API_TOKEN_BTN", "Reauthorize");
-            $this->ss->assign("GOOGLE_API_TOKEN_ENABLE_NEW", "inline");
+            $this->ss->assign('GOOGLE_API_TOKEN', 'CONFIGURED');
+            $this->ss->assign('GOOGLE_API_TOKEN_COLOR', 'green');
+            $this->ss->assign('GOOGLE_API_TOKEN_BTN', 'Reauthorize');
+            $this->ss->assign('GOOGLE_API_TOKEN_ENABLE_NEW', 'inline');
         } else {
-            $this->ss->assign("GOOGLE_API_TOKEN", "UNCONFIGURED");
-            $this->ss->assign("GOOGLE_API_TOKEN_COLOR", "black");
-            $this->ss->assign("GOOGLE_API_TOKEN_ENABLE_NEW", "inline");
-            $this->ss->assign("GOOGLE_API_TOKEN_BTN", "Authorize");
+            $this->ss->assign('GOOGLE_API_TOKEN', 'UNCONFIGURED');
+            $this->ss->assign('GOOGLE_API_TOKEN_COLOR', 'black');
+            $this->ss->assign('GOOGLE_API_TOKEN_ENABLE_NEW', 'inline');
+            $this->ss->assign('GOOGLE_API_TOKEN_BTN', 'Authorize');
         }
     }
 
@@ -584,7 +586,7 @@ class UserViewHelper
             }
             $useGroupTabs = $GLOBALS['sugar_config']['default_navigation_paradigm'];
         }
-        $this->ss->assign("USE_GROUP_TABS", ($useGroupTabs == 'gm') ? 'checked' : '');
+        $this->ss->assign('USE_GROUP_TABS', ($useGroupTabs === 'gm') ? 'checked' : '');
 
         if ($this->bean->getPreference('sort_modules_by_name')) {
             $this->ss->assign('SORT_MODULES_BY_NAME', ' checked');
@@ -592,9 +594,9 @@ class UserViewHelper
 
         $user_subpanel_tabs = $this->bean->getPreference('subpanel_tabs');
         if (isset($user_subpanel_tabs)) {
-            $this->ss->assign("SUBPANEL_TABS", $user_subpanel_tabs ? 'checked' : '');
+            $this->ss->assign('SUBPANEL_TABS', $user_subpanel_tabs ? 'checked' : '');
         } else {
-            $this->ss->assign("SUBPANEL_TABS", $GLOBALS['sugar_config']['default_subpanel_tabs'] ? 'checked' : '');
+            $this->ss->assign('SUBPANEL_TABS', $GLOBALS['sugar_config']['default_subpanel_tabs'] ? 'checked' : '');
         }
 
         $subpanel_paginationType = $this->bean->getPreference('subpanel_pagination_type');
@@ -622,7 +624,7 @@ class UserViewHelper
         }
 
         if ($this->bean->getPreference('count_collapsed_subpanels')) {
-            $this->ss->assign("COUNT_COLLAPSED_SUBPANELS", 'checked');
+            $this->ss->assign('COUNT_COLLAPSED_SUBPANELS', 'checked');
         }
 
         /* Module Tab Chooser */
@@ -658,7 +660,7 @@ class UserViewHelper
         $chooser->args['left_label'] = translate('LBL_DISPLAY_TABS', 'Users');
         $chooser->args['right_label'] = translate('LBL_HIDE_TABS', 'Users');
         require_once(get_custom_file_if_exists('include/Smarty/plugins/function.sugar_help.php'));
-        $chooser->args['title'] = translate('LBL_EDIT_TABS', 'Users') . smarty_function_sugar_help(array("text" => translate('LBL_CHOOSE_WHICH', 'Users')), $ss);
+        $chooser->args['title'] = translate('LBL_EDIT_TABS', 'Users') . smarty_function_sugar_help(array( 'text' => translate('LBL_CHOOSE_WHICH', 'Users')), $ss);
 
         $this->ss->assign('TAB_CHOOSER', $chooser->display());
         $this->ss->assign('CHOOSER_SCRIPT', 'set_chooser();');
@@ -670,8 +672,8 @@ class UserViewHelper
         global $locale, $sugar_config, $app_list_strings;
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	LOCALE SETTINGS
-        ////	Date/time format
+        ////    LOCALE SETTINGS
+        ////    Date/time format
         $dformat = $locale->getPrecedentPreference($this->bean->id ? 'datef' : 'default_date_format', $this->bean);
         $tformat = $locale->getPrecedentPreference($this->bean->id ? 'timef' : 'default_time_format', $this->bean);
         $nformat = $locale->getPrecedentPreference('default_locale_name_format', $this->bean);
@@ -705,24 +707,24 @@ class UserViewHelper
         }
         $this->ss->assign('TIMEZONE_CURRENT', $userTZ);
         $this->ss->assign('TIMEZONEOPTIONS', TimeDate::getTimezoneList());
-        $this->ss->assign("TIMEZONE", TimeDate::tzName($userTZ));
+        $this->ss->assign('TIMEZONE', TimeDate::tzName($userTZ));
 
 
         // FG - Bug 4236 - Managed First Day of Week
         $fdowDays = array();
         foreach ($app_list_strings['dom_cal_day_long'] as $d) {
-            if ($d != "") {
+            if ($d != '') {
                 $fdowDays[] = $d;
             }
         }
-        $this->ss->assign("FDOWOPTIONS", $fdowDays);
+        $this->ss->assign('FDOWOPTIONS', $fdowDays);
         $currentFDOW = $this->bean->get_first_day_of_week();
 
         if (!isset($currentFDOW)) {
             $currentFDOW = 0;
         }
-        $this->ss->assign("FDOWCURRENT", $currentFDOW);
-        $this->ss->assign("FDOWDISPLAY", $fdowDays[$currentFDOW]);
+        $this->ss->assign('FDOWCURRENT', $currentFDOW);
+        $this->ss->assign('FDOWDISPLAY', $fdowDays[$currentFDOW]);
 
         //// Numbers and Currency display
         require_once(get_custom_file_if_exists('modules/Currencies/ListCurrency.php'));
@@ -736,10 +738,10 @@ class UserViewHelper
         $cur_id = $locale->getPrecedentPreference('currency', $this->bean);
         if ($cur_id) {
             $selectCurrency = $currency->getSelectOptions($cur_id);
-            $this->ss->assign("CURRENCY", $selectCurrency);
+            $this->ss->assign('CURRENCY', $selectCurrency);
         } else {
             $selectCurrency = $currency->getSelectOptions();
-            $this->ss->assign("CURRENCY", $selectCurrency);
+            $this->ss->assign('CURRENCY', $selectCurrency);
         }
 
         $currencyList = array();
@@ -754,7 +756,7 @@ class UserViewHelper
             $currencyDisplay->retrieve($cur_id);
             $this->ss->assign('CURRENCY_DISPLAY', $currencyDisplay->iso4217 . ' ' . $currencyDisplay->symbol);
         } else {
-            $this->ss->assign("CURRENCY_DISPLAY", $currencyDisplay->getDefaultISO4217() . ' ' . $currencyDisplay->getDefaultCurrencySymbol());
+            $this->ss->assign('CURRENCY_DISPLAY', $currencyDisplay->getDefaultISO4217() . ' ' . $currencyDisplay->getDefaultCurrencySymbol());
         }
 
         // fill significant digits dropdown
@@ -773,62 +775,68 @@ class UserViewHelper
 
         $num_grp_sep = $this->bean->getPreference('num_grp_sep');
         $dec_sep = $this->bean->getPreference('dec_sep');
-        $this->ss->assign("NUM_GRP_SEP", (empty($num_grp_sep) ? $GLOBALS['sugar_config']['default_number_grouping_seperator'] : $num_grp_sep));
-        $this->ss->assign("DEC_SEP", (empty($dec_sep) ? $GLOBALS['sugar_config']['default_decimal_seperator'] : $dec_sep));
+        $this->ss->assign(
+            'NUM_GRP_SEP', (empty($num_grp_sep) ? $GLOBALS['sugar_config']['default_number_grouping_seperator'] : $num_grp_sep));
+        $this->ss->assign('DEC_SEP', (empty($dec_sep) ? $GLOBALS['sugar_config']['default_decimal_seperator'] : $dec_sep));
         $this->ss->assign('getNumberJs', $locale->getNumberJs());
 
         //// Name display format
         $this->ss->assign('default_locale_name_format', $locale->getLocaleFormatMacro($this->bean));
         $this->ss->assign('getNameJs', $locale->getNameJs());
         $this->ss->assign('NAME_FORMAT', $this->bean->getLocaleFormatDesc());
-        ////	END LOCALE SETTINGS
+        ////    END LOCALE SETTINGS
     }
 
     protected function setupAdvancedTabPdfSettings()
     {
     }
 
+    /**
+     * @throws Exception
+     */
     protected function setupEmailSettings()
     {
         global $current_user, $app_list_strings;
 
-        $this->ss->assign("MAIL_SENDTYPE", get_select_options_with_id($app_list_strings['notifymail_sendtype'], $this->bean->getPreference('mail_sendtype')));
+        $this->ss->assign('MAIL_SENDTYPE', get_select_options_with_id($app_list_strings['notifymail_sendtype'], $this->bean->getPreference('mail_sendtype')));
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	EMAIL OPTIONS
+        ////    EMAIL OPTIONS
         // We need to turn off the requiredness of emails if it is a group or portal user
-        if ($this->usertype == 'GROUP' || $this->usertype == 'PORTAL_ONLY') {
+        if ($this->usertype === 'GROUP' || $this->usertype === 'PORTAL_ONLY') {
             global $dictionary;
             $dictionary['User']['fields']['email1']['required'] = false;
         }
         // hack to disable email field being required if it shouldn't be required
-        if ($this->ss->get_template_vars("REQUIRED_EMAIL_ADDRESS") == '0') {
+        if ($this->ss->get_template_vars('REQUIRED_EMAIL_ADDRESS') == '0') {
             $GLOBALS['dictionary']['User']['fields']['email1']['required'] = false;
         }
-        $this->ss->assign("NEW_EMAIL", '<span id="email_span">' . getEmailAddressWidget($this->bean, "email1", $this->bean->email1, $this->viewType) . '</span>');
+        $this->ss->assign(
+            'NEW_EMAIL', '<span id="email_span">' . getEmailAddressWidget($this->bean,
+                                                                          'email1', $this->bean->email1, $this->viewType) . '</span>');
         // hack to undo that previous hack
-        if ($this->ss->get_template_vars("REQUIRED_EMAIL_ADDRESS") == '0') {
+        if ($this->ss->get_template_vars('REQUIRED_EMAIL_ADDRESS') == '0') {
             $GLOBALS['dictionary']['User']['fields']['email1']['required'] = true;
         }
         $raw_email_link_type = $this->bean->getPreference('email_link_type');
-        if ($this->viewType == 'EditView') {
+        if ($this->viewType === 'EditView') {
             $this->ss->assign('EMAIL_LINK_TYPE', get_select_options_with_id($app_list_strings['dom_email_link_type'], $raw_email_link_type));
         } else {
             $this->ss->assign('EMAIL_LINK_TYPE', $app_list_strings['dom_email_link_type'][$raw_email_link_type]);
         }
 
         $rawEditorType = $this->bean->getEditorType();
-        if ($this->viewType == 'EditView') {
+        if ($this->viewType === 'EditView') {
             $this->ss->assign('EDITOR_TYPE', get_select_options_with_id($app_list_strings['dom_editor_type'], $rawEditorType));
         } else {
             $this->ss->assign('EDITOR_TYPE', $app_list_strings['dom_editor_type'][$rawEditorType]);
         }
-        /////	END EMAIL OPTIONS
+        /////    END EMAIL OPTIONS
         ///////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////
         /// Handle email account selections for users
         /////////////////////////////////////////////
-        if (!($this->usertype == 'GROUP' || $this->usertype == 'PORTAL_ONLY')) {
+        if (!($this->usertype === 'GROUP' || $this->usertype === 'PORTAL_ONLY')) {
             // email smtp
             $systemOutboundEmail = new OutboundEmail();
             $systemOutboundEmail = $systemOutboundEmail->getSystemMailerSettings();
@@ -836,8 +844,8 @@ class UserViewHelper
             $mail_smtptype = $systemOutboundEmail->mail_smtptype;
             $mail_smtpport = $systemOutboundEmail->mail_smtpport;
             $mail_smtpssl = $systemOutboundEmail->mail_smtpssl;
-            $mail_smtpuser = "";
-            $mail_smtppass = "";
+            $mail_smtpuser = '';
+            $mail_smtppass = '';
             $mail_smtpdisplay = $systemOutboundEmail->mail_smtpdisplay;
             $mail_smtpauth_req = true;
 
@@ -850,12 +858,12 @@ class UserViewHelper
                 }
             }
 
-            $this->ss->assign("mail_smtpdisplay", $mail_smtpdisplay);
-            $this->ss->assign("mail_smtpserver", $mail_smtpserver);
-            $this->ss->assign("mail_smtpuser", $mail_smtpuser);
-            $this->ss->assign("mail_smtppass", "");
-            $this->ss->assign("mail_haspass", empty($systemOutboundEmail->mail_smtppass) ? 0 : 1);
-            $this->ss->assign("mail_smtpauth_req", $mail_smtpauth_req);
+            $this->ss->assign('mail_smtpdisplay', $mail_smtpdisplay);
+            $this->ss->assign('mail_smtpserver', $mail_smtpserver);
+            $this->ss->assign('mail_smtpuser', $mail_smtpuser);
+            $this->ss->assign('mail_smtppass', '');
+            $this->ss->assign('mail_haspass', empty($systemOutboundEmail->mail_smtppass) ? 0 : 1);
+            $this->ss->assign('mail_smtpauth_req', $mail_smtpauth_req);
             $this->ss->assign('MAIL_SMTPPORT', $mail_smtpport);
             $this->ss->assign('MAIL_SMTPSSL', $mail_smtpssl);
         }

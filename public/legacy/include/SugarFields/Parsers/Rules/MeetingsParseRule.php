@@ -56,7 +56,7 @@ class MeetingsParseRule extends ActivitiesParseRule
     public function preParse($panels, $view)
     {
         $panels = parent::preParse($panels, $view);
-        if ($view == 'DetailView') {
+        if ($view === 'DetailView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {

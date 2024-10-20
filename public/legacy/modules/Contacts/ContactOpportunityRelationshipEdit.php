@@ -58,8 +58,8 @@ if (isset($_REQUEST['record'])) {
     $focus->retrieve($_REQUEST['record']);
 }
 
-if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-    $focus->id = "";
+if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
+    $focus->id = '';
 }
 
 // Prepopulate either side of the relationship if passed in.
@@ -70,7 +70,7 @@ safe_map('contact_id', $focus);
 safe_map('contact_role', $focus);
 
 
-$GLOBALS['log']->info("Contact opportunity relationship");
+$GLOBALS['log']->info('Contact opportunity relationship');
 
 $json = getJSONobj();
 require_once('include/QuickSearchDefaults.php');
@@ -81,28 +81,28 @@ $quicksearch_js = '<script type="text/javascript" language="javascript">sqs_obje
 echo $quicksearch_js;
 
 $xtpl=new XTemplate('modules/Contacts/ContactOpportunityRelationshipEdit.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 
-$xtpl->assign("RETURN_URL", "&return_module=$currentModule&return_action=DetailView&return_id=$focus->id");
-$xtpl->assign("RETURN_MODULE", $_REQUEST['return_module']);
-$xtpl->assign("RETURN_ACTION", $_REQUEST['return_action']);
-$xtpl->assign("RETURN_ID", $_REQUEST['return_id']);
-$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("ID", $focus->id);
-$xtpl->assign("CONTACT", $contactName = array("NAME" => $focus->contact_name, "ID" => $focus->contact_id));
-$xtpl->assign("OPPORTUNITY", $oppName = array("NAME" => $focus->opportunity_name, "ID" => $focus->opportunity_id));
+$xtpl->assign('RETURN_URL', "&return_module=$currentModule&return_action=DetailView&return_id=$focus->id");
+$xtpl->assign('RETURN_MODULE', $_REQUEST['return_module']);
+$xtpl->assign('RETURN_ACTION', $_REQUEST['return_action']);
+$xtpl->assign('RETURN_ID', $_REQUEST['return_id']);
+$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('ID', $focus->id);
+$xtpl->assign('CONTACT', $contactName = array( 'NAME' => $focus->contact_name, 'ID' => $focus->contact_id));
+$xtpl->assign('OPPORTUNITY', $oppName = array( 'NAME' => $focus->opportunity_name, 'ID' => $focus->opportunity_id));
 
-echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array($mod_strings['LBL_MODULE_NAME'],$mod_strings['LBL_CONTACT_OPP_FORM_TITLE']." ".$contactName['NAME'] . " - ". $oppName['NAME']), true);
+echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array($mod_strings['LBL_MODULE_NAME'],$mod_strings['LBL_CONTACT_OPP_FORM_TITLE']. ' ' . $contactName['NAME'] . ' - ' . $oppName['NAME']), true);
 
-$xtpl->assign("CONTACT_ROLE_OPTIONS", get_select_options_with_id($app_list_strings['opportunity_relationship_type_dom'], $focus->contact_role));
-
-
+$xtpl->assign('CONTACT_ROLE_OPTIONS', get_select_options_with_id($app_list_strings['opportunity_relationship_type_dom'], $focus->contact_role));
 
 
-$xtpl->parse("main");
 
-$xtpl->out("main");
+
+$xtpl->parse('main');
+
+$xtpl->out('main');
 
 
 $javascript = new javascript();

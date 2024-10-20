@@ -68,7 +68,7 @@ class ListViewPackages extends ListViewSmarty
      * @param mixed $id_field
      * @param null|mixed $id
      */
-    public function setup($data, $file, $where, $params = array(), $offset = 0, $limit = -1, $filter_fields = array(), $id_field = 'id', $id=null)
+    public function setup($data, $file, $where, $params = array(), $offset = 0, $limit = -1, $filter_fields = array(), $id_field = 'id', $id=null) : bool
     {
         $this->data = $data;
         $this->tpl = $file;
@@ -76,10 +76,12 @@ class ListViewPackages extends ListViewSmarty
 
     /**
      * Override the display method
-     * 
+     *
      * @param boolean $end
+     *
+     * @throws SmartyException
      */
-    public function display($end = true)
+    public function display($end = true) : string
     {
         global $odd_bg, $even_bg, $app_strings;
         $this->ss->assign('rowColor', array('oddListRow', 'evenListRow'));

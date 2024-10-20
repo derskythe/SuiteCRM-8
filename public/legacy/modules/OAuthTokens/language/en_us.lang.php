@@ -43,9 +43,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 }
 
 $mod_strings = array(
-    'LBL_OAUTH_REQUEST' => "Request Token",
-    'LBL_OAUTH_AUTHORIZE' => "Authorize Token",
-    'LBL_OAUTH_CONSUMERREQ' => "Authorize token from consumer <b>%s</b>?",
+    'LBL_OAUTH_REQUEST' => 'Request Token',
+    'LBL_OAUTH_AUTHORIZE' => 'Authorize Token',
+    'LBL_OAUTH_CONSUMERREQ' => 'Authorize token from consumer <b>%s</b>?',
     'LBL_ASSIGNED_TO_NAME' => 'User',
     'LBL_ID' => 'ID',
     'LBL_STATUS' => 'Status',

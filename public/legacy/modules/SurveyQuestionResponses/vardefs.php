@@ -59,7 +59,7 @@ $dictionary['SurveyQuestionResponses'] = array(
             'vname' => 'LBL_ANSWER_DATETIME',
             'type'  => 'datetime',
         ),
-        "surveyquestionoptions_surveyquestionresponses" => array(
+        'surveyquestionoptions_surveyquestionresponses' => array(
             'name'         => 'surveyquestionoptions_surveyquestionresponses',
             'type'         => 'link',
             'relationship' => 'surveyquestionoptions_surveyquestionresponses',
@@ -68,7 +68,7 @@ $dictionary['SurveyQuestionResponses'] = array(
             'bean_name'    => 'SurveyQuestionOptions',
             'vname'        => 'LBL_SURVEYQUESTIONOPTIONS_SURVEYQUESTIONRESPONSES_FROM_SURVEYQUESTIONOPTIONS_TITLE',
         ),
-        "surveyquestion"                                => array(
+        'surveyquestion' => array(
             'name'         => 'surveyquestion',
             'type'         => 'link',
             'relationship' => 'surveyquestions_surveyquestionresponses',
@@ -80,7 +80,7 @@ $dictionary['SurveyQuestionResponses'] = array(
             'link_type'    => 'one',
             'side'         => 'left',
         ),
-        "surveyquestion_name"                           => array(
+        'surveyquestion_name' => array(
             'name'    => 'surveyquestion_name',
             'type'    => 'relate',
             'source'  => 'non-db',
@@ -92,13 +92,13 @@ $dictionary['SurveyQuestionResponses'] = array(
             'module'  => 'SurveyQuestions',
             'rname'   => 'name',
         ),
-        "surveyquestion_id"                             => array(
+        'surveyquestion_id' => array(
             'name'       => 'surveyquestion_id',
             'type'       => 'id',
             'reportable' => false,
             'vname'      => 'LBL_SURVEYQUESTIONS_SURVEYQUESTIONRESPONSES_FROM_SURVEYQUESTIONRESPONSES_TITLE',
         ),
-        "surveyresponse"                                => array(
+        'surveyresponse' => array(
             'name'         => 'surveyresponse',
             'type'         => 'link',
             'relationship' => 'surveyresponses_surveyquestionresponses',
@@ -110,7 +110,7 @@ $dictionary['SurveyQuestionResponses'] = array(
             'link_type'    => 'one',
             'side'         => 'left',
         ),
-        "surveyresponse_name"                           => array(
+        'surveyresponse_name' => array(
             'name'    => 'surveyresponse_name',
             'type'    => 'relate',
             'source'  => 'non-db',
@@ -122,7 +122,7 @@ $dictionary['SurveyQuestionResponses'] = array(
             'module'  => 'SurveyResponses',
             'rname'   => 'name',
         ),
-        "surveyresponse_id"                             => array(
+        'surveyresponse_id' => array(
             'name'       => 'surveyresponse_id',
             'type'       => 'id',
             'reportable' => false,

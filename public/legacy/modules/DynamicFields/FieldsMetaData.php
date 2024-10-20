@@ -57,15 +57,15 @@ if (!defined('sugarEntry') || !sugarEntry) {
 class FieldsMetaData extends SugarBean
 {
     // database table columns
-    public $id;
-    public $name;
+    public string $id;
+    public string $name;
     public $vname;
     public $custom_module;
     public $type;
     public $len;
     public $required;
     public $default_value;
-    public $deleted;
+    public int $deleted;
     public $ext1;
     public $ext2;
     public $ext3;
@@ -73,12 +73,12 @@ class FieldsMetaData extends SugarBean
     public $inline_edit;
     public $duplicate_merge;
     public $reportable;
-    public $required_fields =  array("name"=>1, "date_start"=>2, "time_start"=>3,);
+    public $required_fields =  array( 'name' =>1, 'date_start' =>2, 'time_start' =>3,);
 
-    public $table_name = 'fields_meta_data';
-    public $object_name = 'FieldsMetaData';
-    public $module_dir = 'DynamicFields';
-    public $column_fields = array(
+    public string $table_name = 'fields_meta_data';
+    public string $object_name = 'FieldsMetaData';
+    public string $module_dir = 'DynamicFields';
+    public array $column_fields = array(
         'id',
         'name',
         'vname',
@@ -98,7 +98,7 @@ class FieldsMetaData extends SugarBean
         'reportable',
     );
 
-    public $list_fields = array(
+    public array $list_fields = array(
         'id',
         'name',
         'vname',
@@ -113,8 +113,8 @@ class FieldsMetaData extends SugarBean
         'reportable',
     );
 
-    public $field_name_map;
-    public $new_schema = true;
+    public ?array $field_name_map;
+    public bool $new_schema = true;
 
     //////////////////////////////////////////////////////////////////
     // METHODS
@@ -132,7 +132,7 @@ class FieldsMetaData extends SugarBean
     public function mark_deleted($id)
     {
         $query = "DELETE FROM $this->table_name WHERE  id='$id'";
-        $this->db->query($query, true, "Error deleting record: ");
+        $this->db->query($query, true, 'Error deleting record: ');
         $this->mark_relationships_deleted($id);
     }
 

@@ -75,7 +75,7 @@ class ImportFieldSanitize
      * true if we will create related beans during the sanitize process
      */
     public $addRelatedBean = false;
-    
+
     /**
      * Checks the SugarField defintion for an available santization method.
      *
@@ -89,7 +89,7 @@ class ImportFieldSanitize
         $params
         ) {
         static $sfh;
-        
+
         if (!isset($sfh)) {
             require_once('include/SugarFields/SugarFieldHandler.php');
             $sfh = new SugarFieldHandler();
@@ -101,17 +101,17 @@ class ImportFieldSanitize
         } else {
             $focus = null;
         }
-        if ($name == 'relate' && !empty($params[3])) {
+        if ($name === 'relate' && !empty($params[3])) {
             $this->addRelatedBean = true;
         } else {
             $this->addRelatedBean = false;
         }
-        
+
         $field = $sfh::getSugarField(ucfirst($name));
         if ($field instanceof SugarFieldBase) {
             $value = $field->importSanitize($value, $vardef, $focus, $this);
         }
-        
+
         return $value;
     }
 
@@ -163,11 +163,11 @@ class ImportFieldSanitize
         ) {
         // cache $sea instance
         static $sea;
-        
+
         if (!($sea instanceof SugarEmailAddress)) {
             $sea = new SugarEmailAddress;
         }
-        
+
         if (!empty($value) && !preg_match($sea->regex, (string) $value)) {
             return false;
         }
@@ -196,8 +196,8 @@ class ImportFieldSanitize
         }
 
 
-        if (!empty($value) && strtolower($value) != "all") {
-            $theList   = explode(",", $value);
+        if (!empty($value) && strtolower($value) !== 'all') {
+            $theList   = explode(',', $value);
             $isValid   = true;
             $bad_names = array();
             foreach ($theList as $eachItem) {

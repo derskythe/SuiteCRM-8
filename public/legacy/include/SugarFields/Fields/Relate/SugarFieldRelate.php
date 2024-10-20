@@ -57,7 +57,7 @@ class SugarFieldRelate extends SugarFieldBase
     public function getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
     {
         $nolink = array('Users', 'Teams');
-        if (in_array($vardef['module'], $nolink)) {
+        if (in_array($vardef['module'], $nolink, true)) {
             $this->ss->assign('nolink', true);
         } else {
             $this->ss->assign('nolink', false);
@@ -310,7 +310,7 @@ class SugarFieldRelate extends SugarFieldBase
      */
     public function formatField($rawField, $vardef)
     {
-        if ('contact_name' == $vardef['name']) {
+        if ('contact_name' === $vardef['name']) {
             $default_locale_name_format = $GLOBALS['current_user']->getPreference('default_locale_name_format');
             $default_locale_name_format = trim(preg_replace('/s/i', '', $default_locale_name_format));
             $new_field = '';
@@ -358,7 +358,7 @@ class SugarFieldRelate extends SugarFieldBase
         // Bug 38885 - If we are relating to the Users table on user_name, there's a good chance
         // that the related field data is the full_name, rather than the user_name. So to be sure
         // let's try to lookup the field the relationship is expecting to use (user_name).
-        if ($vardef['module'] == 'Users' && isset($vardef['rname']) && $vardef['rname'] == 'user_name') {
+        if ($vardef['module'] === 'Users' && isset($vardef['rname']) && $vardef['rname'] === 'user_name') {
             $userFocus = new User;
             $query = sprintf(
                 "SELECT user_name FROM {$userFocus->table_name} WHERE %s=%s AND deleted=0",
@@ -427,7 +427,7 @@ class SugarFieldRelate extends SugarFieldBase
                             WHERE {$fieldName} = '" . $focus->db->quote($value) . "'
                                 AND deleted != 1";
 
-                $result = $focus->db->limitQuery($query, 0, 1, true, "Want only a single row");
+                $result = $focus->db->limitQuery($query, 0, 1, true, 'Want only a single row');
                 if (!empty($result)) {
                     if ($relaterow = $focus->db->fetchByAssoc($result)) {
                         $focus->$idField = $relaterow['id'];

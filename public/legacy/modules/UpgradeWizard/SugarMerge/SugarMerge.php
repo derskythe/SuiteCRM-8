@@ -115,7 +115,7 @@ class SugarMerge
         if (file_exists($searchDirectory)) {
             $dir = dir($searchDirectory);
             while ($e = $dir->read()) {
-                if (substr($e, 0, 1) != '.') {
+                if (!str_starts_with($e, '.')) {
                     if (is_dir("{$searchDirectory}/{$e}/metadata")) {
 
                         //lets make sure that the directory matches the case of the module before we pass it in
@@ -131,7 +131,7 @@ class SugarMerge
                         }
 
                         if (is_array($merge)) {
-                            if (in_array($e, $merge)) {
+                            if (in_array($e, $merge, true)) {
                                 $this->merged[$e] = $this->mergeModule($e, true, $save, $logHistory, $mergeMode);
                             } else {
                                 $GLOBALS['log']->debug("SugarMerge is skipping $e module as filter array passed in but module not specified for merge.");
@@ -237,7 +237,7 @@ class SugarMerge
         $historyPath = 'custom/' . MB_HISTORYMETADATALOCATION . "/modules/$module/metadata/$file";
         $history = new History($historyPath);
         $timeStamp = $history->append($customFile);
-        $GLOBALS['log']->debug("Created history file after merge with new file: " . $historyPath .'_'.$timeStamp);
+        $GLOBALS['log']->debug('Created history file after merge with new file: ' . $historyPath .'_'.$timeStamp);
     }
 
     /**

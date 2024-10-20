@@ -67,7 +67,7 @@ class ModuleBuilderViewWizard extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -77,6 +77,9 @@ class ModuleBuilderViewWizard extends SugarView
            );
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $this->ajax = new AjaxCompose() ;
@@ -90,10 +93,10 @@ class ModuleBuilderViewWizard extends SugarView
 
         $smarty->assign('buttons', $this->buttons) ;
         $smarty->assign('image_path', $GLOBALS [ 'image_path' ]) ;
-        $smarty->assign("title", $this->title) ;
-        $smarty->assign("question", $this->question) ;
-        $smarty->assign("defaultHelp", $this->help) ;
-        $smarty->assign("actions", $this->actions) ;
+        $smarty->assign('title', $this->title) ;
+        $smarty->assign('question', $this->question) ;
+        $smarty->assign('defaultHelp', $this->help) ;
+        $smarty->assign('actions', $this->actions) ;
 
         $this->ajax->addSection('center', $this->title, $smarty->fetch('modules/ModuleBuilder/tpls/wizard.tpl')) ;
         echo $this->ajax->getJavascript() ;
@@ -122,7 +125,7 @@ class ModuleBuilderViewWizard extends SugarView
                 case 'layouts':
                     //Studio Select Layout page
                     $this->buttons = $module->getLayouts() ;
-                    $this->title = $module->name . " " . translate('LBL_LAYOUTS') ;
+                    $this->title = $module->name . ' ' . translate('LBL_LAYOUTS') ;
                     $this->question = translate('LBL_QUESTION_LAYOUT') ;
                     $this->help = 'layoutsHelp' ;
                     $this->ajax->addCrumb(translate('LBL_LAYOUTS'), '') ;
@@ -132,7 +135,7 @@ class ModuleBuilderViewWizard extends SugarView
                 case 'subpanels':
                     //Studio Select Subpanel page.
                     $this->buttons = $module->getSubpanels() ;
-                    $this->title = $module->name . " " . translate('LBL_SUBPANELS') ;
+                    $this->title = $module->name . ' ' . translate('LBL_SUBPANELS') ;
                     $this->question = translate('LBL_QUESTION_SUBPANEL') ;
                     $this->ajax->addCrumb(translate('LBL_SUBPANELS'), '') ;
                     $this->help = 'subpanelHelp' ;
@@ -141,7 +144,7 @@ class ModuleBuilderViewWizard extends SugarView
                 case 'search':
                     //Studio Select Search Layout page.
                     $this->buttons = $module->getSearch() ;
-                    $this->title = $module->name . " " . translate('LBL_FILTER');
+                    $this->title = $module->name . ' ' . translate('LBL_FILTER');
                     $this->question = translate('LBL_QUESTION_SEARCH') ;
                     $this->ajax->addCrumb(translate('LBL_LAYOUTS'), 'ModuleBuilder.getContent("module=ModuleBuilder&action=wizard&view=layouts&view_module=' . $this->editModule . '")') ;
                     $this->ajax->addCrumb(translate('LBL_FILTER'), '') ;
@@ -150,7 +153,7 @@ class ModuleBuilderViewWizard extends SugarView
 
                 case 'dashlet':
                     $this->generateStudioDashletButtons();
-                    $this->title = $this->editModule ." " .translate('LBL_DASHLET');
+                    $this->title = $this->editModule . ' ' .translate('LBL_DASHLET');
                     $this->question = translate('LBL_QUESTION_DASHLET') ;
                     $this->ajax->addCrumb(translate('LBL_LAYOUTS'), 'ModuleBuilder.getContent("module=ModuleBuilder&action=wizard&view=layouts&view_module=' . $this->editModule . '")') ;
                     $this->ajax->addCrumb(translate('LBL_DASHLET'), '') ;
@@ -159,7 +162,7 @@ class ModuleBuilderViewWizard extends SugarView
 
                 case 'popup':
                     $this->generateStudioPopupButtons();
-                    $this->title = $this->editModule ." " .translate('LBL_POPUP');
+                    $this->title = $this->editModule . ' ' .translate('LBL_POPUP');
                     $this->question = translate('LBL_QUESTION_POPUP') ;
                     $this->ajax->addCrumb(translate('LBL_LAYOUTS'), 'ModuleBuilder.getContent("module=ModuleBuilder&action=wizard&view=layouts&view_module=' . $this->editModule . '")') ;
                     $this->ajax->addCrumb(translate('LBL_POPUP'), '') ;
@@ -169,7 +172,7 @@ class ModuleBuilderViewWizard extends SugarView
                     //Studio Edit Module Page
                     $this->buttons = $module->getModule() ;
                     $this->question = translate('LBL_QUESTION_MODULE') ;
-                    $this->title = translate('LBL_EDIT') . " " . $module->name ;
+                    $this->title = translate('LBL_EDIT') . ' ' . $module->name ;
                     $this->help = 'moduleHelp' ;
                     global $current_user;
                     if (is_admin($current_user)) {
@@ -181,11 +184,14 @@ class ModuleBuilderViewWizard extends SugarView
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function processMB(
         $ajax
         ) {
         if (! isset($_REQUEST [ 'view_package' ])) {
-            sugar_die("no ModuleBuilder package set") ;
+            sugar_die('no ModuleBuilder package set') ;
         }
 
         $this->editModule = $_REQUEST [ 'view_module' ] ;
@@ -199,11 +205,11 @@ class ModuleBuilderViewWizard extends SugarView
             case 'search':
                 //MB Select Search Layout page.
                 $this->generateMBSearchButtons() ;
-                $this->title = $this->editModule . " " . translate('LBL_SEARCH_BUTTON') ;
+                $this->title = $this->editModule . ' ' . translate('LBL_SEARCH_BUTTON') ;
                 $this->question = translate('LBL_QUESTION_SEARCH') ;
                 $ajax->addCrumb(translate('LBL_LAYOUTS'), 'ModuleBuilder.getContent("module=ModuleBuilder&MB=true&action=wizard&view_module=' . $this->editModule . '&view_package=' . $this->package . '")') ;
                 $ajax->addCrumb(translate('LBL_SEARCH_FORMS'), '') ;
-                $this->help = "searchHelp" ;
+                $this->help = 'searchHelp';
                 break;
 
             case 'subpanel':
@@ -216,7 +222,7 @@ class ModuleBuilderViewWizard extends SugarView
 
             case 'dashlet':
                 $this->generateMBDashletButtons();
-                $this->title = $this->editModule ." " .translate('LBL_DASHLET');
+                $this->title = $this->editModule . ' ' .translate('LBL_DASHLET');
                 $this->question = translate('LBL_QUESTION_DASHLET') ;
                 $this->ajax->addCrumb(translate('LBL_LAYOUTS'), 'ModuleBuilder.getContent("module=ModuleBuilder&action=wizard&view=layouts&MB=1&view_package='.$this->package.'&view_module=' . $this->editModule . '")') ;
                 $this->ajax->addCrumb(translate('LBL_DASHLET'), '') ;
@@ -226,7 +232,7 @@ class ModuleBuilderViewWizard extends SugarView
 
             case 'popup':
                 $this->generateMBPopupButtons();
-                $this->title = $this->editModule ." " .translate('LBL_POPUP');
+                $this->title = $this->editModule . ' ' .translate('LBL_POPUP');
                 $this->question = translate('LBL_QUESTION_POPUP') ;
                 $this->ajax->addCrumb(translate('LBL_LAYOUTS'), 'ModuleBuilder.getContent("module=ModuleBuilder&MB=true&action=wizard&view=layouts&MB=1&view_package='.$this->package.'&view_module=' . $this->editModule . '")') ;
                 $this->ajax->addCrumb(translate('LBL_POPUP'), '') ;
@@ -235,9 +241,9 @@ class ModuleBuilderViewWizard extends SugarView
             default:
                 $ajax->addCrumb(translate('LBL_LAYOUTS'), '') ;
                 $this->generateMBViewButtons() ;
-                $this->title = $this->editModule . " " . translate('LBL_LAYOUTS') ;
+                $this->title = $this->editModule . ' ' . translate('LBL_LAYOUTS') ;
                 $this->question = translate('LBL_QUESTION_LAYOUT') ;
-                $this->help = "layoutsHelp" ;
+                $this->help = 'layoutsHelp';
         }
     }
 
@@ -265,25 +271,25 @@ class ModuleBuilderViewWizard extends SugarView
     {
         $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_EDITVIEW' ] ] =
           array(
-              'action' => "module=ModuleBuilder&MB=true&action=editLayout&view=".MB_EDITVIEW."&view_module={$this->editModule}&view_package={$this->package}" ,
+              'action' => 'module=ModuleBuilder&MB=true&action=editLayout&view=' .MB_EDITVIEW."&view_module={$this->editModule}&view_package={$this->package}",
               'imageTitle' => 'EditView',
               'help'=>'viewBtnEditView'
           ) ;
         $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_DETAILVIEW' ] ] =
           array(
-              'action' => "module=ModuleBuilder&MB=true&action=editLayout&view=".MB_DETAILVIEW."&view_module={$this->editModule}&view_package={$this->package}" ,
+              'action' => 'module=ModuleBuilder&MB=true&action=editLayout&view=' .MB_DETAILVIEW."&view_module={$this->editModule}&view_package={$this->package}",
               'imageTitle' => 'DetailView',
               'help'=>'viewBtnListView'
           ) ;
         $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_LISTVIEW' ] ] =
           array(
-              'action' => "module=ModuleBuilder&MB=true&action=editLayout&view=".MB_LISTVIEW."&view_module={$this->editModule}&view_package={$this->package}" ,
+              'action' => 'module=ModuleBuilder&MB=true&action=editLayout&view=' .MB_LISTVIEW."&view_module={$this->editModule}&view_package={$this->package}",
               'imageTitle' => 'ListView',
               'help'=>'viewBtnListView'
           ) ;
         $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_QUICKCREATE' ] ] =
           array(
-              'action' => "module=ModuleBuilder&MB=true&action=editLayout&view=".MB_QUICKCREATE."&view_module={$this->editModule}&view_package={$this->package}" ,
+              'action' => 'module=ModuleBuilder&MB=true&action=editLayout&view=' .MB_QUICKCREATE."&view_module={$this->editModule}&view_package={$this->package}",
               'imageTitle' => 'QuickCreate',
               'help'=>'viewBtnQuickCreate'
           ) ;
@@ -333,7 +339,7 @@ class ModuleBuilderViewWizard extends SugarView
 
     public function generateMBSearchButtons()
     {
-        $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_BASIC' ] ] = array( 'action' => "module=ModuleBuilder&MB=true&action=editLayout&view_module={$this->editModule}&view_package={$this->package}&view=SearchView&searchlayout=basic_search" , 'imageTitle' => $GLOBALS [ 'mod_strings' ] [ 'LBL_BASIC_SEARCH' ] , 'imageName' => 'BasicSearch','help' => "BasicSearchBtn" ) ;
-        $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_ADVANCED' ] ] = array( 'action' => "module=ModuleBuilder&MB=true&action=editLayout&view_module={$this->editModule}&view_package={$this->package}&view=SearchView&searchlayout=advanced_search" , 'imageTitle' => $GLOBALS [ 'mod_strings' ] [ 'LBL_ADVANCED_SEARCH' ] , 'imageName' => 'AdvancedSearch','help' => "AdvancedSearchBtn" ) ;
+        $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_BASIC' ] ] = array( 'action' => "module=ModuleBuilder&MB=true&action=editLayout&view_module={$this->editModule}&view_package={$this->package}&view=SearchView&searchlayout=basic_search" , 'imageTitle' => $GLOBALS [ 'mod_strings' ] [ 'LBL_BASIC_SEARCH' ] , 'imageName' => 'BasicSearch','help' => 'BasicSearchBtn' ) ;
+        $this->buttons [ $GLOBALS [ 'mod_strings' ] [ 'LBL_ADVANCED' ] ] = array( 'action' => "module=ModuleBuilder&MB=true&action=editLayout&view_module={$this->editModule}&view_package={$this->package}&view=SearchView&searchlayout=advanced_search" , 'imageTitle' => $GLOBALS [ 'mod_strings' ] [ 'LBL_ADVANCED_SEARCH' ] , 'imageName' => 'AdvancedSearch','help' => 'AdvancedSearchBtn' ) ;
     }
 }

@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  *
  *
  * @package
@@ -20,10 +20,11 @@
  * or write to the Free Software Foundation,Inc., 51 Franklin Street,
  * Fifth Floor, Boston, MA 02110-1301  USA
  *
- * @author SalesAgility Ltd <support@salesagility.com>
+ * @author    SalesAgility Ltd <support@salesagility.com>
  */
 require_once 'modules/AOW_WorkFlow/aow_utils.php';
 require_once 'modules/AOR_Reports/aor_utils.php';
+
 #[\AllowDynamicProperties]
 class AOR_ReportsViewDetail extends ViewDetail
 {
@@ -38,8 +39,8 @@ class AOR_ReportsViewDetail extends ViewDetail
             if (!$condition->parameter) {
                 continue;
             }
-            $condition->module_path = implode(":", unserialize(base64_decode($condition->module_path)));
-            if ($condition->value_type == 'Date') {
+            $condition->module_path = implode(':', unserialize(base64_decode($condition->module_path)));
+            if ($condition->value_type === 'Date') {
                 $condition->value = unserialize(base64_decode($condition->value));
             }
             $condition_item = $condition->toArray();
@@ -58,10 +59,11 @@ class AOR_ReportsViewDetail extends ViewDetail
                 $parameters[$condition_item['condition_order']] = $condition_item;
             }
         }
+
         return $parameters;
     }
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $app_list_strings;
         parent::preDisplay();
@@ -70,8 +72,6 @@ class AOR_ReportsViewDetail extends ViewDetail
         $this->ss->assign('can_export', $canExport);
 
         $this->ss->assign('report_module', $this->bean->report_module);
-
-
 
         $this->bean->user_parameters = requestToUserParameters($this->bean);
 
@@ -91,67 +91,63 @@ class AOR_ReportsViewDetail extends ViewDetail
             require_once('include/language/jsLanguage.php');
             jsLanguage::createModuleStringsCache('AOR_Conditions', $GLOBALS['current_language']);
         }
-        echo '<script src="cache/jsLanguage/AOR_Conditions/'. $GLOBALS['current_language'] . '.js"></script>';
+        echo '<script src="cache/jsLanguage/AOR_Conditions/' . $GLOBALS['current_language'] . '.js"></script>';
 
         $params = $this->getReportParameters();
-        echo "<script>var reportParameters = ".json_encode($params).";</script>";
+        echo '<script>var reportParameters = ' . json_encode($params) . ';</script>';
 
         $resizeGraphsPerRow = <<<EOD
+            <script>
+             function resizeGraphsPerRow()
+             {
+                     var maxWidth = 900;
+                     var maxHeight = 500;
+                     var maxTextSize = 10;
+                     var divWidth = $("#detailpanel_report").width();
 
-       <script>
-        function resizeGraphsPerRow()
-        {
-                var maxWidth = 900;
-                var maxHeight = 500;
-                var maxTextSize = 10;
-                var divWidth = $("#detailpanel_report").width();
+                     var graphWidth = Math.floor(divWidth / $chartsPerRow);
 
-                var graphWidth = Math.floor(divWidth / $chartsPerRow);
-
-                var graphs = document.getElementsByClassName('resizableCanvas');
-                for(var i = 0; i < graphs.length; i++)
-                {
-                    if(graphWidth * 0.9 > maxWidth)
-                    graphs[i].width  = maxWidth;
-                else
-                    graphs[i].width = graphWidth * 0.9;
-                if(graphWidth * 0.9 > maxHeight)
-                    graphs[i].height = maxHeight;
-                else
-                    graphs[i].height = graphWidth * 0.9;
-
-
-                /*
-                var text_size = Math.min(12, (graphWidth / 1000) * 12 );
-                if(text_size < 6)text_size=6;
-                if(text_size > maxTextSize) text_size = maxTextSize;
-
-                if(     graphs[i] !== undefined
-                    &&  graphs[i].__object__ !== undefined
-                    &&  graphs[i].__object__["properties"] !== undefined
-                    &&  graphs[i].__object__["properties"]["chart.text.size"] !== undefined
-                    &&  graphs[i].__object__["properties"]["chart.key.text.size"] !== undefined)
-                 {
-                    graphs[i].__object__["properties"]["chart.text.size"] = text_size;
-                    graphs[i].__object__["properties"]["chart.key.text.size"] = text_size;
-                 }
-                //http://www.rgraph.net/docs/issues.html
-                //As per Google Chrome not initially drawing charts
-                RGraph.redrawCanvas(graphs[i]);
-                */
-                }
-                if (typeof RGraph !== 'undefined') {
-                    RGraph.redraw();
-                }
-        }
-        </script>
-
-EOD;
+                     var graphs = document.getElementsByClassName('resizableCanvas');
+                     for(var i = 0; i < graphs.length; i++)
+                     {
+                         if(graphWidth * 0.9 > maxWidth)
+                         graphs[i].width  = maxWidth;
+                     else
+                         graphs[i].width = graphWidth * 0.9;
+                     if(graphWidth * 0.9 > maxHeight)
+                         graphs[i].height = maxHeight;
+                     else
+                         graphs[i].height = graphWidth * 0.9;
 
 
+                     /*
+                     var text_size = Math.min(12, (graphWidth / 1000) * 12 );
+                     if(text_size < 6)text_size=6;
+                     if(text_size > maxTextSize) text_size = maxTextSize;
+
+                     if(     graphs[i] !== undefined
+                         &&  graphs[i].__object__ !== undefined
+                         &&  graphs[i].__object__["properties"] !== undefined
+                         &&  graphs[i].__object__["properties"]["chart.text.size"] !== undefined
+                         &&  graphs[i].__object__["properties"]["chart.key.text.size"] !== undefined)
+                      {
+                         graphs[i].__object__["properties"]["chart.text.size"] = text_size;
+                         graphs[i].__object__["properties"]["chart.key.text.size"] = text_size;
+                      }
+                     //http://www.rgraph.net/docs/issues.html
+                     //As per Google Chrome not initially drawing charts
+                     RGraph.redrawCanvas(graphs[i]);
+                     */
+                     }
+                     if (typeof RGraph !== 'undefined') {
+                         RGraph.redraw();
+                     }
+             }
+             </script>
+            EOD;
 
         echo $resizeGraphsPerRow;
-        echo "<script> $(document).ready(function(){resizeGraphsPerRow();}); </script>";
-        echo "<script> $(window).resize(function(){resizeGraphsPerRow();}); </script>";
+        echo '<script> $(document).ready(function(){resizeGraphsPerRow();}); </script>';
+        echo '<script> $(window).resize(function(){resizeGraphsPerRow();}); </script>';
     }
 }

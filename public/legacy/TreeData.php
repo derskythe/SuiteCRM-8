@@ -42,15 +42,15 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
  //Request object must have these property values:
- //		Module: module name, this module should have a file called TreeData.php
- //		Function: name of the function to be called in TreeData.php, the function will be called statically.
- //		PARAM prefixed properties: array of these property/values will be passed to the function as parameter.
+ //        Module: module name, this module should have a file called TreeData.php
+ //        Function: name of the function to be called in TreeData.php, the function will be called statically.
+ //        PARAM prefixed properties: array of these property/values will be passed to the function as parameter.
 
 $ret=array();
 $params1=array();
 $nodes=array();
 
-$GLOBALS['log']->debug("TreeData:session started");
+$GLOBALS['log']->debug('TreeData:session started');
 $current_language = $GLOBALS['current_language'];
 
 //process request parameters. consider following parameters.
@@ -61,27 +61,27 @@ $current_language = $GLOBALS['current_language'];
 //by this file..
 foreach ($_REQUEST as $key=>$value) {
     switch ($key) {
-    
-        case "function":
-        case "call_back_function":
+
+        case 'function':
+        case 'call_back_function':
             $func_name=$value;
             $params1['TREE']['function']=$value;
             break;
-            
+
         default:
             $pssplit=explode('_', $key);
-            if ($pssplit[0] =='PARAMT') {
+            if ($pssplit[0] === 'PARAMT') {
                 unset($pssplit[0]);
                 $params1['TREE'][implode('_', $pssplit)]=$value;
             } else {
-                if ($pssplit[0] =='PARAMN') {
+                if ($pssplit[0] === 'PARAMN') {
                     $depth=$pssplit[count($pssplit)-1];
                     //parmeter is surrounded  by PARAMN_ and depth info.
                     unset($pssplit[count($pssplit)-1]);
                     unset($pssplit[0]);
                     $params1['NODES'][$depth][implode('_', $pssplit)]=$value;
                 } else {
-                    if ($key=='module') {
+                    if ($key === 'module') {
                         if (!isset($params1['TREE']['module'])) {
                             $params1['TREE'][$key]=$value;
                         }
@@ -139,7 +139,7 @@ if (!empty($modulename) && !empty($func_name) && isset($beanList[$modulename])) 
             'get_documents'=>'',
             ),
         );
-        
+
     if (isset($TreeDataFunctions[$modulename][$func_name])) {
         $ret=call_user_func($func_name, $params1);
     }

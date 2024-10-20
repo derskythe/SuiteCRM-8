@@ -147,13 +147,15 @@ class TemplateHandler
      * Builds a template
      * This is a private function that should be called only from checkTemplate method
      *
-     * @param string $module module name
-     * @param string $view need (eg DetailView, EditView, etc)
-     * @param string $tpl generic tpl to use
-     * @param boolean $ajaxSave parameter indicating whether or not this is coming from an Ajax call
+     * @param string $module      module name
+     * @param string $view        need (eg DetailView, EditView, etc)
+     * @param string $tpl         generic tpl to use
+     * @param boolean $ajaxSave   parameter indicating whether or not this is coming from an Ajax call
      * @param array $metaDataDefs metadata definition as Array
+     *
      * @return void
-     **/
+     **@throws SmartyException
+     */
     public function buildTemplate($module, $view, $tpl, $ajaxSave, $metaDataDefs)
     {
         global $theme;
@@ -235,7 +237,7 @@ class TemplateHandler
             $javascript->setFormName($view);
 
             $javascript->setSugarBean($sugarBean);
-            if ($view !== "ConvertLead") {
+            if ($view !== 'ConvertLead') {
                 $javascript->addAllFields('', null, true);
             }
 
@@ -260,7 +262,7 @@ class TemplateHandler
                     isset($defs2[$name]) &&
                     (!isset($defs2[$name]['validateDependency']) || $defs2[$name]['validateDependency'] === true) &&
                     isset($def['id_name']) &&
-                    !in_array($name, $validatedFields)
+                    !in_array($name, $validatedFields, true)
                 ) {
                     if (isset($mod_strings[$def['vname']])
                         || isset($app_strings[$def['vname']])
@@ -268,7 +270,7 @@ class TemplateHandler
                     ) {
                         $vname = $def['vname'];
                     } else {
-                        $vname = "undefined";
+                        $vname = 'undefined';
                     }
                     $javascript->addToValidateBinaryDependency(
                         $name,
@@ -343,12 +345,14 @@ class TemplateHandler
     /**
      * Retrieves and displays a template
      *
-     * @param string $module module name
-     * @param string $view need (eg DetailView, EditView, etc)
-     * @param string $tpl generic tpl to use
-     * @param boolean $ajaxSave parameter indicating whether or not this is from an Ajax operation
+     * @param string $module           module name
+     * @param string $view             need (eg DetailView, EditView, etc)
+     * @param string $tpl              generic tpl to use
+     * @param boolean $ajaxSave        parameter indicating whether or not this is from an Ajax operation
      * @param array|null $metaDataDefs Optional metadata definition Array
+     *
      * @return string
+     * @throws SmartyException
      */
     public function displayTemplate($module, $view, $tpl, $ajaxSave = false, $metaDataDefs = null)
     {
@@ -507,7 +511,7 @@ class TemplateHandler
                         }
                     }
                 } else {
-                    if ($field['type'] == 'parent') {
+                    if ($field['type'] === 'parent') {
                         $sqs_objects[$name . '_' . $parsedView] = $qsd->getQSParent();
                     }
                 } //if-else
@@ -530,7 +534,7 @@ class TemplateHandler
                     $field['name'] = $module . $field['name'];
                     if (isset($field['module']) &&
                         isset($field['id_name']) &&
-                        substr($field['id_name'], -4) === '_ida'
+                        str_ends_with($field['id_name'], '_ida')
                     ) {
                         $lc_module = strtolower($field['module']);
                         $ida_suffix = '_' . $lc_module . $lc_module . '_ida';

@@ -73,7 +73,7 @@ class CampaignsViewClassic extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         $params = array();
         $params[] = $this->_getModuleTitleListParam($browserTitle);
@@ -81,7 +81,7 @@ class CampaignsViewClassic extends SugarView
             switch ($_REQUEST['action']) {
                     case 'WizardHome':
                         if (!empty($this->bean->id)) {
-                            $params[] = "<a href='index.php?module={$this->module}&action=DetailView&record={$this->bean->id}'>".$this->bean->name."</a>";
+                            $params[] = "<a href='index.php?module={$this->module}&action=DetailView&record={$this->bean->id}'>".$this->bean->name. '</a>';
                         }
                         $params[] = $GLOBALS['mod_strings']['LBL_CAMPAIGN_WIZARD'];
                         break;
@@ -90,7 +90,7 @@ class CampaignsViewClassic extends SugarView
                         break;
                     case 'WizardNewsletter':
                         if (!empty($this->bean->id)) {
-                            $params[] = "<a href='index.php?module={$this->module}&action=DetailView&record={$this->bean->id}'>".$GLOBALS['mod_strings']['LBL_NEWSLETTER_TITLE']."</a>";
+                            $params[] = "<a href='index.php?module={$this->module}&action=DetailView&record={$this->bean->id}'>".$GLOBALS['mod_strings']['LBL_NEWSLETTER_TITLE']. '</a>';
                         }
                         $params[] = $GLOBALS['mod_strings']['LBL_CREATE_NEWSLETTER'];
                         break;
@@ -102,7 +102,7 @@ class CampaignsViewClassic extends SugarView
                         break;
                     case 'TrackDetailView':
                         if (!empty($this->bean->id)) {
-                            $params[] = "<a href='index.php?module={$this->module}&action=DetailView&record={$this->bean->id}'>".$this->bean->name."</a>";
+                            $params[] = "<a href='index.php?module={$this->module}&action=DetailView&record={$this->bean->id}'>".$this->bean->name. '</a>';
                         }
                         $params[] = $GLOBALS['mod_strings']['LBL_LIST_TO_ACTIVITY'];
                         break;

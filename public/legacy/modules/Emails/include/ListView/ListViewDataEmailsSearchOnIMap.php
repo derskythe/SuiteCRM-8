@@ -103,7 +103,7 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
 
         // TODO: figure out why was it for?
         $orderby = $order['orderBy'];
-        if (strpos((string) $order['orderBy'], '.') && ($order['orderBy'] != "report_cache.date_modified")) {
+        if (strpos((string) $order['orderBy'], '.') && ($order['orderBy'] !== 'report_cache.date_modified')) {
             $orderby = substr((string) $order['orderBy'], strpos((string) $order['orderBy'], '.') + 1);
         }
 
@@ -111,7 +111,7 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
         $page = 0;
         $offset = 0;
         if (isset($request['Emails2_EMAIL_offset'])) {
-            if ($request['Emails2_EMAIL_offset'] !== "end") {
+            if ($request['Emails2_EMAIL_offset'] !== 'end') {
                 $offset = $request['Emails2_EMAIL_offset'];
                 $page = $offset / $limitPerPage;
             }
@@ -122,7 +122,7 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
         $emailServerEmails = $inboundEmail->checkWithPagination($offset, $limitPerPage, $order, $filter, $filter_fields);
 
         $total = $emailServerEmails['mailbox_info']['Nmsgs'] ?? 0; // + count($importedEmails['data']);
-        if (isset($request['Emails2_EMAIL_offset']) && $request['Emails2_EMAIL_offset'] === "end") {
+        if (isset($request['Emails2_EMAIL_offset']) && $request['Emails2_EMAIL_offset'] === 'end') {
             $offset = $total - $limitPerPage;
         }
 
@@ -166,7 +166,7 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
             $inboundEmailIdQuoted = '';
             LoggerManager::getLogger()->warn('Unable to quote Inbound Email ID, Inbound Email is not set.');
         }
-        $crmWhere = $where . " AND mailbox_id LIKE " . "'" . $inboundEmailIdQuoted . "'";
+        $crmWhere = $where . ' AND mailbox_id LIKE ' . "'" . $inboundEmailIdQuoted . "'";
 
         $ret_array = [];
         $ret_array['inner_join'] = '';
@@ -251,13 +251,13 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
                     unset($pageData['queries'][$query]);
                 }
             } else {
-                $pageData['queries'][$query]['module'] = "Emails";
-                $pageData['queries'][$query]['action'] = "index";
-                $pageData['queries'][$query]['parentTab'] = "Activities";
-                $pageData['queries'][$query]['ajax_load'] = "0";
-                $pageData['queries'][$query]['loadLanguageJS'] = "1";
-                $pageData['queries'][$query]['searchFormTab'] = "advanced_search";
-                $pageData['queries'][$query]['lvso'] = "DESC";
+                $pageData['queries'][$query]['module'] = 'Emails';
+                $pageData['queries'][$query]['action'] = 'index';
+                $pageData['queries'][$query]['parentTab'] = 'Activities';
+                $pageData['queries'][$query]['ajax_load'] = '0';
+                $pageData['queries'][$query]['loadLanguageJS'] = '1';
+                $pageData['queries'][$query]['searchFormTab'] = 'advanced_search';
+                $pageData['queries'][$query]['lvso'] = 'DESC';
 
                 $pageData['urls'][$query] = 'index.php?module=Emails&action=index&parentTab=Activities&searchFormTab=advanced_search&query=true&current_user_only_basic=0&button=Search&lvso=DESC';
             }
@@ -348,7 +348,7 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
 
 
         if ($this->lvde->isRequestedSearchAdvanced($request)) {
-            $queryString = "-advanced_search";
+            $queryString = '-advanced_search';
         } else {
             if ($this->lvde->isRequestedSearchBasic($request)) {
 
@@ -367,14 +367,14 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
                 foreach ($basicSearchFields as $basicSearchField) {
                     $field_name = (is_array($basicSearchField) && isset($basicSearchField['name']))
                         ? $basicSearchField['name'] : $basicSearchField;
-                    $field_name .= "_basic";
+                    $field_name .= '_basic';
                     if (
                         isset($request[$field_name]) &&
                         (
                             !is_array($basicSearchField) ||
                             !isset($basicSearchField['type']) ||
-                            $basicSearchField['type'] == 'text' ||
-                            $basicSearchField['type'] == 'name'
+                            $basicSearchField['type'] === 'text' ||
+                            $basicSearchField['type'] === 'name'
                         )
                     ) {
                         // Ensure the encoding is UTF-8
@@ -383,7 +383,7 @@ class ListViewDataEmailsSearchOnIMap extends ListViewDataEmailsSearchAbstract
                     }
                 }
             } else {
-                $GLOBALS['log']->warn("Unknown requested search type");
+                $GLOBALS['log']->warn('Unknown requested search type');
             }
         }
 

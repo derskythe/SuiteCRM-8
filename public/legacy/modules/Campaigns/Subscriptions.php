@@ -49,19 +49,19 @@ global $import_file_name, $theme;
 
 $focus = 0;
 if (isset($_REQUEST['return_module'])) {
-    if ($_REQUEST['return_module'] == 'Contacts') {
+    if ($_REQUEST['return_module'] === 'Contacts') {
         $focus = BeanFactory::newBean('Contacts');
     }
-    if ($_REQUEST['return_module'] == 'Leads') {
+    if ($_REQUEST['return_module'] === 'Leads') {
         $focus = BeanFactory::newBean('Leads');
     }
-    if ($_REQUEST['return_module'] == 'Prospects') {
+    if ($_REQUEST['return_module'] === 'Prospects') {
         $focus = BeanFactory::newBean('Prospects');
     }
 }
 
 if (isset($_REQUEST['record'])) {
-    $GLOBALS['log']->debug("In Subscriptions, about to retrieve record: ".$_REQUEST['record']);
+    $GLOBALS['log']->debug('In Subscriptions, about to retrieve record: ' . $_REQUEST['record']);
     $result = $focus->retrieve($_REQUEST['record']);
     if ($result == null) {
         sugar_die($app_strings['ERROR_NO_RECORD']);
@@ -69,34 +69,35 @@ if (isset($_REQUEST['record'])) {
 }
 
 
-$this->ss->assign("MOD", $mod_strings);
-$this->ss->assign("APP", $app_strings);
+$this->ss->assign('MOD', $mod_strings);
+$this->ss->assign('APP', $app_strings);
 
 if (isset($_REQUEST['return_module'])) {
-    $this->ss->assign("RETURN_MODULE", $_REQUEST['return_module']);
+    $this->ss->assign('RETURN_MODULE', $_REQUEST['return_module']);
 } else {
-    $this->ss->assign("RETURN_MODULE", '');
+    $this->ss->assign('RETURN_MODULE', '');
 }
 if (isset($_REQUEST['return_id'])) {
-    $this->ss->assign("RETURN_ID", $_REQUEST['return_id']);
+    $this->ss->assign('RETURN_ID', $_REQUEST['return_id']);
 } else {
-    $this->ss->assign("RETURN_ID", '');
+    $this->ss->assign('RETURN_ID', '');
 }
 if (isset($_REQUEST['return_action'])) {
-    $this->ss->assign("RETURN_ACTION", $_REQUEST['return_action']);
+    $this->ss->assign('RETURN_ACTION', $_REQUEST['return_action']);
 } else {
-    $this->ss->assign("RETURN_ACTION", '');
+    $this->ss->assign('RETURN_ACTION', '');
 }
 if (isset($_REQUEST['record'])) {
-    $this->ss->assign("RECORD", $_REQUEST['record']);
+    $this->ss->assign('RECORD', $_REQUEST['record']);
 } else {
-    $this->ss->assign("RECORD", '');
+    $this->ss->assign('RECORD', '');
 }
 
 //if subsaction has been set, then process subscriptions
 if (isset($_REQUEST['subs_action'])) {
     manageSubscriptions($focus);
-    SugarApplication::redirect("index.php?module=" . $_REQUEST['return_module'] . "&action=" . $_REQUEST['return_action'] . "&record=" . $_REQUEST['record']);
+    SugarApplication::redirect(
+        'index.php?module=' . $_REQUEST['return_module'] . '&action=' . $_REQUEST['return_action'] . '&record=' . $_REQUEST['record']);
 }
 
 //$title = $GLOBALS['app_strings']['LBL_MANAGE_SUBSCRIPTIONS_FOR'].$focus->name;
@@ -129,7 +130,7 @@ $this->ss->display('modules/Campaigns/Subscriptions.tpl');
 */
 function constructDDSubscriptionList($focus, $classname='')
 {
-    require_once("include/templates/TemplateDragDropChooser.php");
+    require_once('include/templates/TemplateDragDropChooser.php');
     global $mod_strings;
     $unsubs_arr = '';
     $subs_arr =  '';
@@ -201,13 +202,13 @@ function manageSubscriptions($focus)
     $curr_subscription_arr = array();
     //build array of original subscriptions
     if (isset($_REQUEST['orig_enabled_values'])  && ! empty($_REQUEST['orig_enabled_values'])) {
-        $orig_subscription_arr = explode(",", $_REQUEST['orig_enabled_values']);
+        $orig_subscription_arr = explode(',', $_REQUEST['orig_enabled_values']);
         $orig_subscription_arr = process_subscriptions($orig_subscription_arr);
     }
 
     //build array of current subscriptions
     if (isset($_REQUEST['enabled_subs'])  && ! empty($_REQUEST['enabled_subs'])) {
-        $curr_subscription_arr = explode(",", $_REQUEST['enabled_subs']);
+        $curr_subscription_arr = explode(',', $_REQUEST['enabled_subs']);
         $curr_subscription_arr = process_subscriptions($curr_subscription_arr);
     }
 
@@ -215,7 +216,7 @@ function manageSubscriptions($focus)
     $i=0;
     while ($i<((is_countable($curr_subscription_arr) ? count($curr_subscription_arr) : 0)/2)) {
         //if current subscription existed in original subscription list, do nothing
-        if (in_array($curr_subscription_arr['campaign'.$i], $orig_subscription_arr)) {
+        if (in_array($curr_subscription_arr['campaign' . $i], $orig_subscription_arr, true)) {
             //nothing to process
         } else {
             //current subscription is new, so subscribe
@@ -231,20 +232,20 @@ function manageSubscriptions($focus)
 
     //build array of original subscriptions
     if (isset($_REQUEST['orig_disabled_values'])  && ! empty($_REQUEST['orig_disabled_values'])) {
-        $orig_unsubscription_arr = explode(",", $_REQUEST['orig_disabled_values']);
+        $orig_unsubscription_arr = explode(',', $_REQUEST['orig_disabled_values']);
         $orig_unsubscription_arr = process_subscriptions($orig_unsubscription_arr);
     }
 
     //build array of current subscriptions
     if (isset($_REQUEST['disabled_subs'])  && ! empty($_REQUEST['disabled_subs'])) {
-        $curr_unsubscription_arr = explode(",", $_REQUEST['disabled_subs']);
+        $curr_unsubscription_arr = explode(',', $_REQUEST['disabled_subs']);
         $curr_unsubscription_arr = process_subscriptions($curr_unsubscription_arr);
     }
     //compare both arrays and find differences
     $i=0;
     while ($i<((is_countable($curr_unsubscription_arr) ? count($curr_unsubscription_arr) : 0)/2)) {
         //if current subscription existed in original subscription list, do nothing
-        if (in_array($curr_unsubscription_arr['campaign'.$i], $orig_unsubscription_arr)) {
+        if (in_array($curr_unsubscription_arr['campaign' . $i], $orig_unsubscription_arr, true)) {
             //nothing to process
         } else {
             //current subscription is new, so subscribe

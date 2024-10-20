@@ -62,6 +62,9 @@ class SuiteMozaik
 
     private static $devMode = false;
 
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
         $this->vendorPath = './../../vendor/';
@@ -124,6 +127,9 @@ HTML;
         return $html;
     }
 
+    /**
+     * @throws JsonException
+     */
     private function tinyMCESetupArgumentFixer($tinyMCESetup = '{}')
     {
         if (!$tinyMCESetup) {
@@ -140,6 +146,9 @@ HTML;
         return $tinyMCESetup;
     }
 
+    /**
+     * @throws JsonException
+     */
     public function getElementHTML($contents = '', $textareaId = null, $elementId = 'mozaik', $width = '600', $thumbs = array(), $tinyMCESetup = '{}')
     {
         if (is_numeric($width)) {
@@ -206,6 +215,9 @@ HTML;
         return $html;
     }
 
+    /**
+     * @throws JsonException
+     */
     public function getAllHTML($contents = '', $textareaId = null, $elementId = 'mozaik', $width = '600', $group = '', $tinyMCESetup = '{}')
     {
         if (is_numeric($width)) {

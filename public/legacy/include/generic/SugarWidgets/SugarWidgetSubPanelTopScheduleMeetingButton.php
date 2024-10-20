@@ -54,8 +54,8 @@ class SugarWidgetSubPanelTopScheduleMeetingButton extends SugarWidgetSubPanelTop
         global $app_strings;
         global $currentModule;
 
-        $this->module="Meetings";
-        $this->subpanelDiv = "activities";
+        $this->module = 'Meetings';
+        $this->subpanelDiv = 'activities';
 
         // Create the additional form fields with real values if they were not passed in
         if (empty($additionalFormFields) && $this->additional_form_fields) {
@@ -100,14 +100,14 @@ class SugarWidgetSubPanelTopScheduleMeetingButton extends SugarWidgetSubPanelTop
 
         // TODO: move this out and get $additionalFormFields working properly
         if (empty($additionalFormFields['parent_type'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_type'] = 'Accounts';
             } else {
                 $additionalFormFields['parent_type'] = $defines['focus']->module_dir;
             }
         }
         if (empty($additionalFormFields['parent_name'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_name'] = $defines['focus']->account_name;
                 $additionalFormFields['account_name'] = $defines['focus']->account_name;
             } else {
@@ -115,7 +115,7 @@ class SugarWidgetSubPanelTopScheduleMeetingButton extends SugarWidgetSubPanelTop
             }
         }
         if (empty($additionalFormFields['parent_id'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_id'] = $defines['focus']->account_id;
                 $additionalFormFields['account_id'] = $defines['focus']->account_id;
             } else {
@@ -129,7 +129,7 @@ class SugarWidgetSubPanelTopScheduleMeetingButton extends SugarWidgetSubPanelTop
 
         // fill in additional form fields for all but action
         foreach ($additionalFormFields as $key => $value) {
-            if ($key != 'action') {
+            if ($key !== 'action') {
                 $button .= '<input type="hidden" name="' . $key . '" value="' . $value . '" />' . "\n";
             }
         }

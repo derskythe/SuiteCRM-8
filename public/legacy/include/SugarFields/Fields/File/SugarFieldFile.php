@@ -113,7 +113,7 @@ class SugarFieldFile extends SugarFieldBase
         //remove file
         if (isset($_REQUEST['remove_file_' . $field]) && $params['remove_file_' . $field] == 1) {
             $upload_file->unlink_file($bean->$field);
-            $bean->$field="";
+            $bean->$field = '';
         }
 
         $move=false;
@@ -124,7 +124,7 @@ class SugarFieldFile extends SugarFieldBase
             $move=true;
         }
 
-        if (!empty($params['isDuplicate']) && $params['isDuplicate'] == 'true') {
+        if (!empty($params['isDuplicate']) && $params['isDuplicate'] === 'true') {
             // This way of detecting duplicates is used in Notes
             $old_id = $params['relate_id'];
         }

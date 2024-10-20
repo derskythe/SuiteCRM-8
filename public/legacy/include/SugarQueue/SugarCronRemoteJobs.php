@@ -60,7 +60,7 @@ class SugarCronRemoteJobs extends SugarCronJobs
      * Just in case we'd ever need to override...
      * @var string
      */
-    protected $submitURL = "submitJob";
+    protected $submitURL = 'submitJob';
 
     /**
      * REST client
@@ -102,7 +102,14 @@ class SugarCronRemoteJobs extends SugarCronJobs
      */
     public function executeJob($job)
     {
-        $data = http_build_query(array("data" => json_encode(array("job" => $job->id, "client" => $this->getMyId(), "instance" => $GLOBALS['sugar_config']['site_url']))));
+        $data =
+            http_build_query(
+                array( 'data' => json_encode(
+                    array( 'job'      => $job->id,
+                           'client'   => $this->getMyId(),
+                           'instance' => $GLOBALS['sugar_config']['site_url'] )
+                ) )
+            );
         $response = $this->client->callRest($this->jobserver.$this->submitURL, $data);
         if (!empty($response)) {
             $result = json_decode($response, true);
@@ -114,7 +121,7 @@ class SugarCronRemoteJobs extends SugarCronJobs
         } else {
             $GLOBALS['log']->debug("CRON Remote: REST request failed for job {$job->id}");
             $this->jobFailed($job);
-            $job->failJob("Could not connect to job server");
+            $job->failJob('Could not connect to job server');
         }
     }
 }

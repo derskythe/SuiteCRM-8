@@ -41,50 +41,32 @@
 #[\AllowDynamicProperties]
 class Alert extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'Alerts';
-    public $object_name = 'Alert';
-    public $table_name = 'alerts';
-    public $importable = false;
+    public string $module_dir = 'Alerts';
+    public string $object_name = 'Alert';
+    public string $table_name = 'alerts';
     public $disable_row_level_security = true ; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
     public $assigned_user_name;
     public $assigned_user_link;
     public $is_read;
     public $snooze;
-
     /**
      * @var string
      */
     public $url_redirect;
-
     /**
      * @var string
      */
     public $type;
-
     /**
      * @var string
      */
     public $target_module;
-
     /**
      * @var string
      */
     public $reminder_id;
-
     /**
      * @var string
      */
@@ -112,11 +94,11 @@ class Alert extends Basic
             $snoozeTimer = 600;
         }
 
-        return date("Y-m-d H:i:s", strtotime("+ $snoozeTimer sec"));
+        return date('Y-m-d H:i:s', strtotime("+ $snoozeTimer sec"));
     }
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL': return true;

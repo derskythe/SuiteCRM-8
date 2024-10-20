@@ -55,7 +55,7 @@ class MultiEnumFilterMapper implements FilterMapperInterface
         foreach ($filterValues as $legacyValueKey => $legacyValueValue) {
 
             switch ($legacyValueValue) {
-                case "__SuiteCRMEmptyString__":
+                case '__SuiteCRMEmptyString__':
                     $mapEmptyString = true;
                     $filterValues[$legacyValueKey] = '';
                     break;
@@ -72,7 +72,7 @@ class MultiEnumFilterMapper implements FilterMapperInterface
     public function toApi(string $mappedValue, array $criteriaItem): string
     {
         if ($mappedValue === '') {
-            $mappedValue = "__SuiteCRMEmptyString__";
+            $mappedValue = '__SuiteCRMEmptyString__';
         }
 
         return $mappedValue;

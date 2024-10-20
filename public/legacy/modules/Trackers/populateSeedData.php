@@ -99,10 +99,10 @@ class populateSeedData
             $monitor->setValue('user_id', $this->user);
             $monitor->setValue('module_name', $this->module);
             $monitor->setValue('action', $this->action);
-            $monitor->setValue('visible', (($monitor->action == 'detailview') || ($monitor->action == 'editview')) ? 1 : 0);
+            $monitor->setValue('visible', (($monitor->action === 'detailview') || ($monitor->action === 'editview')) ? 1 : 0);
             $monitor->setValue('date_modified', $this->randomTimestamp());
             $monitor->setValue('session_id', $this->getSessionId());
-            if ($this->action != 'settimezone' && isset($this->beanIdMap[$this->module][array_rand($this->beanIdMap[$this->module])])) {
+            if ($this->action !== 'settimezone' && isset($this->beanIdMap[$this->module][array_rand($this->beanIdMap[$this->module])])) {
                 $monitor->setValue('item_id', $this->beanIdMap[$this->module][array_rand($this->beanIdMap[$this->module])]);
                 $monitor->setValue('item_summary', 'random stuff'); //don't really need this
             }

@@ -55,13 +55,14 @@ class Company extends Basic
     }
 
 
-
     /**
-     * @see parent::save()
-     *
      * @param bool $check_notify
      *
      * @return string
+     * @throws Exception
+     * @throws Exception
+     * @see parent::save()
+     *
      */
     public function save($check_notify = false)
     {
@@ -71,12 +72,12 @@ class Company extends Basic
         $this->add_address_streets('billing_address_street');
         $this->add_address_streets('shipping_address_street');
         $ori_in_workflow = empty($this->in_workflow) ? false : true;
-	$this->emailAddress->handleLegacySave($this);
+        $this->emailAddress->handleLegacySave($this);
 
         if (empty($this->id)) {
-	    $this->id = create_guid();
+            $this->id = create_guid();
             $this->new_with_id = true;
-	}
+        }
 
         $override_email = array();
         if (!empty($this->email1_set_in_workflow)) {
@@ -102,7 +103,8 @@ class Company extends Basic
             );
         }
 
-	$record_id = parent::save($check_notify);
+        $record_id = parent::save($check_notify);
+
         return $record_id;
     }
 
@@ -139,15 +141,14 @@ class Company extends Basic
      * Default export query for Company based modules
      * used to pick all mails (primary and non-primary)
      *
-     * @see SugarBean::create_export_query()
-     *
      * @param string $order_by
      * @param string $where
-     * @param string $relate_link_join
      *
      * @return string
+     * @see SugarBean::create_export_query()
+     *
      */
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->custom_fields->getJOIN(true, true, $where);
 
@@ -158,11 +159,11 @@ class Company extends Basic
             $custom_join['join'] .= $relate_link_join;
         }
         $query = "SELECT
-					$table.*,
-					email_addresses.email_address email_address,
-					'' email_addresses_non_primary, " .
-                 // email_addresses_non_primary needed for get_field_order_mapping()
-                 'users.user_name as assigned_user_name ';
+                    $table.*,
+                    email_addresses.email_address email_address,
+                    '' email_addresses_non_primary, " .
+            // email_addresses_non_primary needed for get_field_order_mapping()
+            'users.user_name as assigned_user_name ';
         if ($custom_join) {
             $query .= $custom_join['select'];
         }
@@ -170,12 +171,12 @@ class Company extends Basic
         $query .= " FROM $table ";
 
         $query .= "LEFT JOIN users
-					ON $table.assigned_user_id=users.id ";
+                    ON $table.assigned_user_id=users.id ";
 
         //Join email address table too.
         $query .= " LEFT JOIN email_addr_bean_rel on $table.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module = '" .
-                  $this->module_dir .
-                  "' and email_addr_bean_rel.deleted = 0 and email_addr_bean_rel.primary_address = 1";
+            $this->module_dir .
+            "' and email_addr_bean_rel.deleted = 0 and email_addr_bean_rel.primary_address = 1";
         $query .= ' LEFT JOIN email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id ';
 
         if ($custom_join) {

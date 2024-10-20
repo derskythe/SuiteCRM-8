@@ -67,28 +67,28 @@ global $theme;
 
 
 
-$GLOBALS['log']->info("EmailMarketing Edit View");
+$GLOBALS['log']->info('EmailMarketing Edit View');
 
 $xtpl=new XTemplate('modules/EmailMarketing/DetailView.html');
 
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 
 if (isset($_REQUEST['return_module'])) {
-    $xtpl->assign("RETURN_MODULE", $_REQUEST['return_module']);
+    $xtpl->assign('RETURN_MODULE', $_REQUEST['return_module']);
 } else {
-    $xtpl->assign("RETURN_MODULE", 'Campaigns');
+    $xtpl->assign('RETURN_MODULE', 'Campaigns');
 }
 if (isset($_REQUEST['return_action'])) {
-    $xtpl->assign("RETURN_ACTION", $_REQUEST['return_action']);
+    $xtpl->assign('RETURN_ACTION', $_REQUEST['return_action']);
 } else {
-    $xtpl->assign("RETURN_ACTION", 'DetailView');
+    $xtpl->assign('RETURN_ACTION', 'DetailView');
 }
 if (isset($_REQUEST['return_id'])) {
-    $xtpl->assign("RETURN_ID", $_REQUEST['return_id']);
+    $xtpl->assign('RETURN_ID', $_REQUEST['return_id']);
 } else {
     if (!empty($focus->campaign_id)) {
-        $xtpl->assign("RETURN_ID", $focus->campaign_id);
+        $xtpl->assign('RETURN_ID', $focus->campaign_id);
     }
 }
 
@@ -98,26 +98,26 @@ if ($focus->campaign_id) {
 } else {
     $campaign_id=$_REQUEST['campaign_id'];
 }
-$xtpl->assign("CAMPAIGN_ID", $campaign_id);
+$xtpl->assign('CAMPAIGN_ID', $campaign_id);
 
 
-$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("JAVASCRIPT", get_set_focus_js());
-$xtpl->assign("DATE_ENTERED", $focus->date_entered);
-$xtpl->assign("DATE_MODIFIED", $focus->date_modified);
-$xtpl->assign("ID", $focus->id);
-$xtpl->assign("NAME", $focus->name);
-$xtpl->assign("FROM_NAME", $focus->from_name);
-$xtpl->assign("FROM_ADDR", $focus->from_addr);
+$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('JAVASCRIPT', get_set_focus_js());
+$xtpl->assign('DATE_ENTERED', $focus->date_entered);
+$xtpl->assign('DATE_MODIFIED', $focus->date_modified);
+$xtpl->assign('ID', $focus->id);
+$xtpl->assign('NAME', $focus->name);
+$xtpl->assign('FROM_NAME', $focus->from_name);
+$xtpl->assign('FROM_ADDR', $focus->from_addr);
 isValidEmailAddress($focus->from_addr);
-$xtpl->assign("REPLY_TO_NAME", $focus->reply_to_name);
-$xtpl->assign("REPLY_TO_ADDR", $focus->reply_to_addr);
-$xtpl->assign("DATE_START", $focus->date_start);
-$xtpl->assign("TIME_START", $focus->time_start);
+$xtpl->assign('REPLY_TO_NAME', $focus->reply_to_name);
+$xtpl->assign('REPLY_TO_ADDR', $focus->reply_to_addr);
+$xtpl->assign('DATE_START', $focus->date_start);
+$xtpl->assign('TIME_START', $focus->time_start);
 
 $email_templates_arr = get_bean_select_array(true, 'EmailTemplate', 'name');
 if ($focus->template_id) {
-    $xtpl->assign("EMAIL_TEMPLATE", $email_templates_arr[$focus->template_id]);
+    $xtpl->assign('EMAIL_TEMPLATE', $email_templates_arr[$focus->template_id]);
 }
 
 //include campaign utils..
@@ -138,23 +138,23 @@ $params[] = $focus->name;
 echo getClassicModuleTitle($focus->module_dir, $params, true);
 
 if (!empty($focus->all_prospect_lists)) {
-    $xtpl->assign("MESSAGE_FOR", $mod_strings['LBL_ALL_PROSPECT_LISTS']);
+    $xtpl->assign('MESSAGE_FOR', $mod_strings['LBL_ALL_PROSPECT_LISTS']);
 } else {
-    $xtpl->assign("MESSAGE_FOR", $mod_strings['LBL_RELATED_PROSPECT_LISTS']);
+    $xtpl->assign('MESSAGE_FOR', $mod_strings['LBL_RELATED_PROSPECT_LISTS']);
 }
 
 if (!empty($focus->status)) {
-    $xtpl->assign("STATUS", $app_list_strings['email_marketing_status_dom'][$focus->status]);
+    $xtpl->assign('STATUS', $app_list_strings['email_marketing_status_dom'][$focus->status]);
 }
 $emails=array();
 $mailboxes=get_campaign_mailboxes($emails);
 
 if (!empty($focus->inbound_email_id) && isset($mailboxes[$focus->inbound_email_id])) {
-    $xtpl->assign("FROM_MAILBOX_NAME", $mailboxes[$focus->inbound_email_id]."&nbsp;&lt;{$emails[$focus->inbound_email_id]}&gt;");
+    $xtpl->assign('FROM_MAILBOX_NAME', $mailboxes[$focus->inbound_email_id]."&nbsp;&lt;{$emails[$focus->inbound_email_id]}&gt;");
 }
 
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->parse('main');
+$xtpl->out('main');
 
 
 $javascript = new javascript();

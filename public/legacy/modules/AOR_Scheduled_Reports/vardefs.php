@@ -101,7 +101,7 @@ $dictionary['AOR_Scheduled_Reports'] = array(
                         'include' => 'modules/AOR_Scheduled_Reports/emailRecipients.php'
                     ),
             ),
-        "aor_report" => array(
+        'aor_report' => array(
             'name' => 'aor_report',
             'type' => 'link',
             'relationship' => 'aor_scheduled_reports_aor_reports',
@@ -113,7 +113,7 @@ $dictionary['AOR_Scheduled_Reports'] = array(
             'side' => 'left',
             'id_name' => 'aor_report_id',
         ),
-        "aor_report_name" => array(
+        'aor_report_name' => array(
             'name' => 'aor_report_name',
             'type' => 'relate',
             'source' => 'non-db',
@@ -126,7 +126,7 @@ $dictionary['AOR_Scheduled_Reports'] = array(
             'module' => 'AOR_Reports',
             'rname' => 'name',
         ),
-        "aor_report_id" => array(
+        'aor_report_id' => array(
             'name' => 'aor_report_id',
             'type' => 'id',
             'reportable' => false,

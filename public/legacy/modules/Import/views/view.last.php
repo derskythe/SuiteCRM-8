@@ -56,6 +56,8 @@ class ImportViewLast extends ImportView
     public $lvf;
 
     /**
+     * @throws SmartyException
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()
@@ -64,14 +66,14 @@ class ImportViewLast extends ImportView
 
 
 
-        $this->ss->assign("IMPORT_MODULE", $_REQUEST['import_module']);
-        $this->ss->assign("TYPE", $_REQUEST['type']);
-        $this->ss->assign("HEADER", $app_strings['LBL_IMPORT']." ". $mod_strings['LBL_MODULE_NAME']);
-        $this->ss->assign("MODULE_TITLE", $this->getModuleTitle(false));
+        $this->ss->assign('IMPORT_MODULE', $_REQUEST['import_module']);
+        $this->ss->assign('TYPE', $_REQUEST['type']);
+        $this->ss->assign('HEADER', $app_strings['LBL_IMPORT']. ' ' . $mod_strings['LBL_MODULE_NAME']);
+        $this->ss->assign('MODULE_TITLE', $this->getModuleTitle(false));
         // lookup this module's $mod_strings to get the correct module name
         $module_mod_strings =
             return_module_language($current_language, $_REQUEST['import_module']);
-        $this->ss->assign("MODULENAME", $module_mod_strings['LBL_MODULE_NAME']);
+        $this->ss->assign('MODULENAME', $module_mod_strings['LBL_MODULE_NAME']);
 
         // read status file to get totals for records imported, errors, and duplicates
         $count        = 0;
@@ -80,7 +82,7 @@ class ImportViewLast extends ImportView
         $createdCount = 0;
         $updatedCount = 0;
         $fp = sugar_fopen(ImportCacheFiles::getStatusFileName(), 'r');
-        
+
         // Read the data if we successfully opened file
         if ($fp !== false) {
             // Read rows 1 by 1 and add the info
@@ -93,10 +95,10 @@ class ImportViewLast extends ImportView
             }
             fclose($fp);
         }
-        
-        $this->ss->assign("showUndoButton", false);
+
+        $this->ss->assign('showUndoButton', false);
         if ($createdCount > 0) {
-            $this->ss->assign("showUndoButton", true);
+            $this->ss->assign('showUndoButton', true);
         }
 
         if ($errorCount > 0 &&  ($createdCount <= 0 && $updatedCount <= 0)) {
@@ -109,23 +111,23 @@ class ImportViewLast extends ImportView
             }
         }
 
-        $this->ss->assign("JAVASCRIPT", $this->_getJS($activeTab));
+        $this->ss->assign('JAVASCRIPT', $this->_getJS($activeTab));
 
-        $this->ss->assign("errorCount", $errorCount);
-        $this->ss->assign("dupeCount", $dupeCount);
-        $this->ss->assign("createdCount", $createdCount);
-        $this->ss->assign("updatedCount", $updatedCount);
-        $this->ss->assign("errorFile", ImportCacheFiles::convertFileNameToUrl(ImportCacheFiles::getErrorFileName()));
-        $this->ss->assign("errorrecordsFile", ImportCacheFiles::convertFileNameToUrl(ImportCacheFiles::getErrorRecordsWithoutErrorFileName()));
-        $this->ss->assign("dupeFile", ImportCacheFiles::convertFileNameToUrl(ImportCacheFiles::getDuplicateFileName()));
+        $this->ss->assign('errorCount', $errorCount);
+        $this->ss->assign('dupeCount', $dupeCount);
+        $this->ss->assign('createdCount', $createdCount);
+        $this->ss->assign('updatedCount', $updatedCount);
+        $this->ss->assign('errorFile', ImportCacheFiles::convertFileNameToUrl(ImportCacheFiles::getErrorFileName()));
+        $this->ss->assign('errorrecordsFile', ImportCacheFiles::convertFileNameToUrl(ImportCacheFiles::getErrorRecordsWithoutErrorFileName()));
+        $this->ss->assign('dupeFile', ImportCacheFiles::convertFileNameToUrl(ImportCacheFiles::getDuplicateFileName()));
 
-        if ($this->bean->object_name == "Prospect") {
-            $this->ss->assign("PROSPECTLISTBUTTON", $this->_addToProspectListButton());
+        if ($this->bean->object_name === 'Prospect') {
+            $this->ss->assign('PROSPECTLISTBUTTON', $this->_addToProspectListButton());
         } else {
-            $this->ss->assign("PROSPECTLISTBUTTON", "");
+            $this->ss->assign('PROSPECTLISTBUTTON', '');
         }
 
-        $resultsTable = "";
+        $resultsTable = '';
         foreach (UsersLastImport::getBeansByImport($_REQUEST['import_module']) as $beanname) {
             // load bean
             if (!($this->bean instanceof $beanname)) {
@@ -137,11 +139,11 @@ class ImportViewLast extends ImportView
             $resultsTable = $this->getListViewResults();
         }
 
-        $this->ss->assign("RESULTS_TABLE", $resultsTable);
-        $this->ss->assign("ERROR_TABLE", $this->getListViewTableFromFile(ImportCacheFiles::getErrorRecordsFileName(), 'errors'));
-        $this->ss->assign("DUP_TABLE", $this->getListViewTableFromFile(ImportCacheFiles::getDuplicateFileDisplayName(), 'dup'));
+        $this->ss->assign('RESULTS_TABLE', $resultsTable);
+        $this->ss->assign('ERROR_TABLE', $this->getListViewTableFromFile(ImportCacheFiles::getErrorRecordsFileName(), 'errors'));
+        $this->ss->assign('DUP_TABLE', $this->getListViewTableFromFile(ImportCacheFiles::getDuplicateFileDisplayName(), 'dup'));
         $content = $this->ss->fetch('modules/Import/tpls/last.tpl');
-        $this->ss->assign("CONTENT", $content);
+        $this->ss->assign('CONTENT', $content);
         $this->ss->display('modules/Import/tpls/wizardWrapper.tpl');
     }
 
@@ -159,7 +161,7 @@ class ImportViewLast extends ImportView
                 $params['sortOrder'] = $_REQUEST['sortOrder'];
             }
         }
-        $beanname = ($this->bean->object_name == 'Case' ? 'aCase' : $this->bean->object_name);
+        $beanname = ($this->bean->object_name === 'Case' ? 'aCase' : $this->bean->object_name);
         // add users_last_import joins so we only show records done in this import
         $params['custom_from']  = ', users_last_import';
         $params['custom_where'] = " AND users_last_import.assigned_user_id = '{$GLOBALS['current_user']->id}'
@@ -180,10 +182,13 @@ class ImportViewLast extends ImportView
         return $lvf->display($app_list_strings['moduleList'][$this->bean->module_dir], 'main', true);
     }
 
+    /**
+     * @throws SmartyException
+     */
     protected function getListViewTableFromFile($fileName, $tableName)
     {
-        $has_header = $_REQUEST['has_header'] == 'on' ? true : false;
-        $if = new ImportFile($fileName, ",", '"', false, false);
+        $has_header = $_REQUEST['has_header'] === 'on' ? true : false;
+        $if = new ImportFile($fileName, ',', '"', false, false);
         $if->setHeaderRow($has_header);
         $lv = new ImportListView($if, array('offset'=> 0), $tableName);
         return $lv->display(true);
@@ -206,7 +211,7 @@ document.getElementById('finished').onclick = function(){
     document.getElementById('importlast').action.value = 'index';
     window.location.href='index.php?module=' + importModule + '&action=index';
 
-	return true;
+    return true;
 }
 
 if ( typeof(SUGAR) == 'undefined' )
@@ -284,13 +289,13 @@ EOJAVASCRIPT;
         global $app_strings, $sugar_version, $sugar_config, $current_user;
 
         $query = "SELECT distinct prospects.id, prospects.assigned_user_id, prospects.first_name, prospects.last_name, prospects.phone_work, prospects.title,
-				email_addresses.email_address email1, users.user_name as assigned_user_name
-				FROM users_last_import,prospects
+                email_addresses.email_address email1, users.user_name as assigned_user_name
+                FROM users_last_import,prospects
                 LEFT JOIN users ON prospects.assigned_user_id=users.id
-				LEFT JOIN email_addr_bean_rel on prospects.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module='Prospect' and email_addr_bean_rel.primary_address=1 and email_addr_bean_rel.deleted=0
-				LEFT JOIN email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id
-				WHERE users_last_import.assigned_user_id = '{$current_user->id}' AND users_last_import.bean_type='Prospect' AND users_last_import.bean_id=prospects.id
-				AND users_last_import.deleted=0 AND prospects.deleted=0";
+                LEFT JOIN email_addr_bean_rel on prospects.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module='Prospect' and email_addr_bean_rel.primary_address=1 and email_addr_bean_rel.deleted=0
+                LEFT JOIN email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id
+                WHERE users_last_import.assigned_user_id = '{$current_user->id}' AND users_last_import.bean_type='Prospect' AND users_last_import.bean_id=prospects.id
+                AND users_last_import.deleted=0 AND prospects.deleted=0";
 
         $prospect_id = array();
         if (!empty($query)) {
@@ -316,7 +321,7 @@ EOJAVASCRIPT;
                 'parent_type'=>'ProspectList',
                 'child_id'=>'id',
                 'link_attribute'=>'prospects',
-                'link_type'=>'default',	 //polymorphic or default
+                'link_type'=>'default',     //polymorphic or default
                 'prospect_ids'=>$prospect_id,
             )
         );

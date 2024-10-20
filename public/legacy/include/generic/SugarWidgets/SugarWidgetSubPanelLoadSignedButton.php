@@ -84,7 +84,7 @@ class SugarWidgetSubPanelLoadSignedButton extends SugarWidgetField
                 $layout_def['fields']['IS_TEMPLATE'] == 0
             )
         ) {
-            return "";
+            return '';
         }
         return '<a href="' . $href . '"' . "title ='". $app_strings['LNK_LOAD_SIGNED_TOOLTIP']."'"
             . 'class="listViewTdToolsS1">' . $edit_icon_html . '&nbsp;' . $app_strings['LNK_LOAD_SIGNED'] .'</a>&nbsp;';

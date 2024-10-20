@@ -184,7 +184,7 @@ class PostUpgrade
             return $response;
         }
 
-        $this->log("Upgrade completed successfully.");
+        $this->log('Upgrade completed successfully.');
 
         $response = [
             'success' => true,
@@ -215,7 +215,7 @@ class PostUpgrade
             ];
             ksort($sugar_config);
             if (is_writable('config.php')) {
-                write_array_to_file("sugar_config", $sugar_config, 'config.php');
+                write_array_to_file('sugar_config', $sugar_config, 'config.php');
             }
         }
         $this->log('end check default permissions .');
@@ -255,7 +255,7 @@ class PostUpgrade
             ksort($sugar_config);
 
             if (is_writable('config.php')) {
-                write_array_to_file("sugar_config", $sugar_config, 'config.php');
+                write_array_to_file('sugar_config', $sugar_config, 'config.php');
             }
         }
         $this->log('begin check logger settings .');
@@ -656,7 +656,7 @@ class PostUpgrade
 
             $upgradeHistoryInsert = "INSERT INTO upgrade_history (id, filename, md5sum, type, status, version, name, description, id_name, manifest, date_entered, enabled)
                                                      VALUES ($customIDQuoted, $fileNameQuoted, $md5Quoted, $typeQuoted, $statusQuoted, $versionQuoted, $nameQuoted, $descriptionQuoted, NULL, $manifestQuoted, $dateQuoted, '1')";
-            $result = $db->query($upgradeHistoryInsert, true, "Error writing upgrade history");
+            $result = $db->query($upgradeHistoryInsert, true, 'Error writing upgrade history');
 
             set_upgrade_progress('commit', 'in_progress', 'upgradeHistory', 'done');
             set_upgrade_progress('commit', 'done', 'commit', 'done');
@@ -691,7 +691,7 @@ class PostUpgrade
             $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
             if (!isset($a['id']) && empty($a['id'])) {
                 $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_assigned_user','Users','users','id','{$relModName}','{$relObjName}','assigned_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_assigned_user','Users','users','id','{$relModName}','{$relObjName}','assigned_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
                 DBManagerFactory::getInstance()->query($qRel);
             }
             //modified_user
@@ -702,7 +702,7 @@ class PostUpgrade
             $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
             if (!isset($a['id']) && empty($a['id'])) {
                 $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_modified_user','Users','users','id','{$relModName}','{$relObjName}','modified_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_modified_user','Users','users','id','{$relModName}','{$relObjName}','modified_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
                 DBManagerFactory::getInstance()->query($qRel);
             }
             //created_by
@@ -713,7 +713,7 @@ class PostUpgrade
             $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
             if (!isset($a['id']) && empty($a['id'])) {
                 $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_created_by','Users','users','id','{$relModName}','{$relObjName}','created_by',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_created_by','Users','users','id','{$relModName}','{$relObjName}','created_by',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
                 DBManagerFactory::getInstance()->query($qRel);
             }
             $guid = create_guid();
@@ -723,7 +723,7 @@ class PostUpgrade
             $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
             if (!isset($a['id']) && empty($a['id'])) {
                 $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-							VALUES ('{$guid}', '{$relObjName}_team','Teams','teams','id','{$relModName}','{$relObjName}','team_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                            VALUES ('{$guid}', '{$relObjName}_team','Teams','teams','id','{$relModName}','{$relObjName}','team_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
                 DBManagerFactory::getInstance()->query($qRel);
             }
         }
@@ -735,7 +735,7 @@ class PostUpgrade
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-					VALUES ('{$guid}', 'tracker_monitor_id','TrackerPerfs','tracker_perf','monitor_id','Trackers','tracker','monitor_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                    VALUES ('{$guid}', 'tracker_monitor_id','TrackerPerfs','tracker_perf','monitor_id','Trackers','tracker','monitor_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
     }

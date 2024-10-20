@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-require_once("include/SugarTheme/cssmin.php");
+require_once('include/SugarTheme/cssmin.php');
 
 #[\AllowDynamicProperties]
 class SugarSpriteBuilder
@@ -138,7 +138,7 @@ class SugarSpriteBuilder
                 $this->loadSpritesConfig($dir);
 
                 while (($file = readdir($dh)) !== false) {
-                    if ($file != "." && $file != ".." && $file != "sprites_config.php") {
+                    if ($file !== '.' && $file !== '..' && $file !== 'sprites_config.php') {
 
                         // file info & check supported image format
                         if ($info = $this->getFileInfo($dir, $file)) {
@@ -254,6 +254,7 @@ class SugarSpriteBuilder
      * This is the public function to allow the sprites to be built.
      *
      * @return $result boolean value indicating whether or not sprites were created
+     * @throws Exception
      */
     public function createSprites()
     {
@@ -281,9 +282,9 @@ class SugarSpriteBuilder
             }
 
             // setup config for sprite placement algorithm
-            if (substr((string) $name, 0, 6) == 'repeat') {
+            if (str_starts_with((string) $name, 'repeat')) {
                 $isRepeat = true;
-                $type = substr((string) $name, 7, 10) == 'horizontal' ? 'horizontal' : 'vertical';
+                $type = substr((string) $name, 7, 10) === 'horizontal' ? 'horizontal' : 'vertical';
                 $config = array(
                     'type' => $type,
                 );
@@ -302,7 +303,7 @@ class SugarSpriteBuilder
             $sp->processSprites();
 
             //if(! $this->silentRun)
-            //	echo " (size {$sp->width()}x{$sp->height()})<br />";
+            //    echo " (size {$sp->width()}x{$sp->height()})<br />";
 
             // we need a target image size
             if ($sp->width() && $sp->height()) {
@@ -337,11 +338,11 @@ class SugarSpriteBuilder
 
                 // dir & filenames
                 if ($isRepeat) {
-                    $outputDir = sugar_cached("sprites/Repeatable");
+                    $outputDir = sugar_cached('sprites/Repeatable');
                     $spriteFileName = "{$name}.png";
                     $cssFileName = "{$this->fileName}.css";
                     $metaFileName = "{$this->fileName}.meta.php";
-                    $nameSpace = "Repeatable";
+                    $nameSpace = 'Repeatable';
                 } else {
                     $outputDir = sugar_cached("sprites/$name");
                     $spriteFileName = "{$this->fileName}.png";
@@ -407,7 +408,7 @@ background-position: -{$offset_x}px -{$offset_y}px;
                 sugar_file_put_contents(
                     "$outputDir/$cssFileName",
                     $css_content,
-                    $fileMode == 'a' ? FILE_APPEND : 0
+                    $fileMode === 'a' ? FILE_APPEND : 0
                 );
 
                 /* save metadata */
@@ -519,14 +520,14 @@ class SpritePlacement
 
     // placement config array
     /*
-    	type = 	boxed
-    			horizontal
-    			vertical
+        type =     boxed
+                horizontal
+                vertical
 
-    	required params for
-    	type 1 	-> width
-    			-> height
-    			-> rowcnt
+        required params for
+        type 1     -> width
+                -> height
+                -> rowcnt
 
     */
     public $config = array();

@@ -62,23 +62,24 @@ class SugarWidgetFieldDate extends SugarWidgetFieldDateTime
 
     public function queryFilterBefore($layout_def)
     {
-        return $this->queryDateOp($this->_get_column_select($layout_def), $layout_def['input_name0'], "<", "date");
+        return $this->queryDateOp($this->_get_column_select($layout_def), $layout_def['input_name0'], '<', 'date');
     }
 
     public function queryFilterAfter($layout_def)
     {
-        return $this->queryDateOp($this->_get_column_select($layout_def), $layout_def['input_name0'], ">", "date");
+        return $this->queryDateOp($this->_get_column_select($layout_def), $layout_def['input_name0'], '>', 'date');
     }
 
     public function queryFilterNot_Equals_str($layout_def)
     {
         $column = $this->_get_column_select($layout_def);
-        return "($column IS NULL OR ".$this->queryDateOp($column, $layout_def['input_name0'], '!=', "date").")\n";
+
+        return "($column IS NULL OR " . $this->queryDateOp($column, $layout_def['input_name0'], '!=', 'date') . ")\n";
     }
 
     public function queryFilterOn($layout_def)
     {
-        return $this->queryDateOp($this->_get_column_select($layout_def), $layout_def['input_name0'], "=", "date");
+        return $this->queryDateOp($this->_get_column_select($layout_def), $layout_def['input_name0'], '=', 'date');
     }
 
     public function queryFilterBetween_Dates($layout_def)
@@ -87,14 +88,14 @@ class SugarWidgetFieldDate extends SugarWidgetFieldDateTime
         $end = $layout_def['input_name1'];
         $column = $this->_get_column_select($layout_def);
 
-        return "(".$this->queryDateOp($column, $begin, ">=", "date")." AND ".
-            $this->queryDateOp($column, $end, "<=", "date").")\n";
+        return '(' . $this->queryDateOp($column, $begin, '>=', 'date') . ' AND ' .
+            $this->queryDateOp($column, $end, '<=', 'date') . ")\n";
     }
 
     public function queryFilterTP_yesterday($layout_def)
     {
         global $timedate;
-        $layout_def['input_name0'] = $timedate->asDbDate($timedate->getNow(true)->get("-1 day"));
+        $layout_def['input_name0'] = $timedate->asDbDate($timedate->getNow(true)->get('-1 day'));
         return $this->queryFilterOn($layout_def);
     }
 
@@ -108,7 +109,7 @@ class SugarWidgetFieldDate extends SugarWidgetFieldDateTime
     public function queryFilterTP_tomorrow(& $layout_def)
     {
         global $timedate;
-        $layout_def['input_name0'] = $timedate->asDbDate($timedate->getNow(true)->get("+1 day"));
+        $layout_def['input_name0'] = $timedate->asDbDate($timedate->getNow(true)->get('+1 day'));
         return $this->queryFilterOn($layout_def);
     }
 

@@ -110,6 +110,9 @@ class ErrorMessage
         $errorMessage->handle();
     }
 
+    /**
+     * @throws ErrorMessageException
+     */
     public static function log(string $message, int|string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL): void
     {
         self::handler($message, $level, false);

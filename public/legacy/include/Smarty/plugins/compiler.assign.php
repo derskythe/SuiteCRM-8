@@ -18,7 +18,7 @@
  * @param string containing var-attribute and value-attribute
  * @param Smarty_Compiler
  */
-function smarty_compiler_assign($tag_attrs, &$compiler)
+function smarty_compiler_assign($tag_attrs, $compiler)
 {
     $_params = $compiler->_parse_attrs($tag_attrs);
 

@@ -53,11 +53,11 @@ class SchedulersViewDetail extends ViewDetail
     /**
      * @see SugarView::_getModuleTitleListParam()
      */
-    protected function _getModuleTitleListParam($browserTitle = false)
+    protected function _getModuleTitleListParam(bool $browserTitle = false) : string
     {
         global $mod_strings;
 
-        return "<a href='index.php?module=Schedulers&action=index'>".$mod_strings['LBL_MODULE_TITLE']."</a>";
+        return "<a href='index.php?module=Schedulers&action=index'>".$mod_strings['LBL_MODULE_TITLE']. '</a>';
     }
 
     /**

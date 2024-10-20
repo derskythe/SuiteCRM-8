@@ -47,14 +47,14 @@ class Reminder extends Basic
 {
     public const UPGRADE_VERSION = '7.4.3';
 
-    public $name;
+    public string $name;
 
-    public $new_schema = true;
-    public $module_dir = 'Reminders';
-    public $object_name = 'Reminder';
-    public $table_name = 'reminders';
-    public $tracker_visibility = false;
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'Reminders';
+    public string $object_name = 'Reminder';
+    public string $table_name = 'reminders';
+    public bool $tracker_visibility = false;
+    public bool $importable = false;
     public $disable_row_level_security = true;
 
     /**
@@ -102,6 +102,9 @@ class Reminder extends Basic
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private static function saveRemindersData($eventModule, $eventModuleId, $remindersData)
     {
         $db = DBManagerFactory::getInstance();
@@ -138,10 +141,10 @@ class Reminder extends Basic
             $reminderId = $reminderBean->id;
             Reminder_Invitee::saveRemindersInviteesData($reminderId, $reminderData->invitees);
         }
-        $reminders = BeanFactory::getBean('Reminders')->get_full_list("", "reminders.related_event_module = '$eventModule' AND reminders.related_event_module_id = '$eventModuleId'");
+        $reminders = BeanFactory::getBean('Reminders')->get_full_list('', "reminders.related_event_module = '$eventModule' AND reminders.related_event_module_id = '$eventModuleId'");
         if ($reminders) {
             foreach ($reminders as $reminder) {
-                if (!in_array($reminder->id, $savedReminderIds)) {
+                if (!in_array($reminder->id, $savedReminderIds, true)) {
                     Reminder_Invitee::deleteRemindersInviteesMultiple($reminder->id);
                     $reminder->mark_deleted($reminder->id);
                     $reminder->save();
@@ -183,7 +186,7 @@ class Reminder extends Basic
     {
         if (!isset(self::$remindersData[$eventModule][$eventModuleId]) || !$eventModuleId || $isDuplicate) {
             $ret = array();
-            $reminders = BeanFactory::getBean('Reminders')->get_full_list("reminders.date_entered", "reminders.related_event_module = '$eventModule' AND reminders.related_event_module_id = '$eventModuleId'");
+            $reminders = BeanFactory::getBean('Reminders')->get_full_list('reminders.date_entered', "reminders.related_event_module = '$eventModule' AND reminders.related_event_module_id = '$eventModuleId'");
             if ($reminders) {
                 foreach ($reminders as $reminder) {
                     $ret[] = array(
@@ -232,7 +235,7 @@ class Reminder extends Basic
         $eventModule = $reminder->related_event_module;
         $eventModuleId = $reminder->related_event_module_id;
         $event = BeanFactory::getBean($eventModule, $eventModuleId);
-        if ($event && (!isset($event->status) || $event->status != 'Held')) {
+        if ($event && (!isset($event->status) || $event->status !== 'Held')) {
             $invitees = BeanFactory::getBean('Reminders_Invitees')->get_full_list('', "reminders_invitees.reminder_id = '$reminderId'");
             foreach ($invitees as $invitee) {
                 $inviteeModule = $invitee->related_invitee_module;
@@ -254,11 +257,16 @@ class Reminder extends Basic
         return $emails;
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     private static function getUnsentEmailReminders()
     {
         global $timedate;
         $reminders = array();
-        $reminderBeans = BeanFactory::getBean('Reminders')->get_full_list('', "reminders.email = 1 AND reminders.email_sent = 0");
+        $reminderBeans = BeanFactory::getBean('Reminders')->get_full_list('',
+                                                                          'reminders.email = 1 AND reminders.email_sent = 0'
+        );
         if (!empty($reminderBeans)) {
             foreach ($reminderBeans as $reminderBean) {
                 $eventBean = BeanFactory::getBean($reminderBean->related_event_module, $reminderBean->related_event_module_id);
@@ -282,15 +290,18 @@ class Reminder extends Basic
      * Show a popup and/or desktop notification alert for related users with related Event information.
      * Call in jsAlerts class and use original jsAlerts for show notifications.
      *
+     * @param jsAlerts $alert       caller jsAlerts object
+     * @param boolean $checkDecline (optional) Send email if user accept status is not decline. Default is TRUE.
+     *
+     * @return ???
+     * @throws Exception
+     * @throws DateMalformedStringException
      * @global ??? $current_user
      * @global ??? $timedate
      * @global ??? $app_list_strings
      * @global ??? $db
      * @global ??? $sugar_config
      * @global ??? $app_strings
-     * @param jsAlerts $alert caller jsAlerts object
-     * @param boolean $checkDecline (optional) Send email if user accept status is not decline. Default is TRUE.
-     * @return ???
      */
     public static function addNotifications(jsAlerts $alert, $checkDecline = true)
     {
@@ -314,7 +325,7 @@ class Reminder extends Basic
         // Original jsAlert used to a meeting integration.
 
         ///////////////////////////////////////////////////////////////////////
-        ////	MEETING INTEGRATION
+        ////    MEETING INTEGRATION
         $meetingIntegration = null;
         if (isset($sugar_config['meeting_integration']) && !empty($sugar_config['meeting_integration'])) {
             if (!class_exists($sugar_config['meeting_integration'])) {
@@ -322,7 +333,7 @@ class Reminder extends Basic
             }
             $meetingIntegration = new $sugar_config['meeting_integration']();
         }
-        ////	END MEETING INTEGRATION
+        ////    END MEETING INTEGRATION
         ///////////////////////////////////////////////////////////////////////
 
         $dateTimeNowStamp = strtotime(self::unQuoteTime($dateTimeNow));
@@ -330,8 +341,8 @@ class Reminder extends Basic
 
         $popupReminders = BeanFactory::getBean('Reminders')->get_full_list(
             '',
-            "reminders.popup = 1 AND (reminders.date_willexecute = -1 OR reminders.date_willexecute BETWEEN "
-                . $dateTimeNowStamp . " AND " . $dateTimeMaxStamp . ")"
+            'reminders.popup = 1 AND (reminders.date_willexecute = -1 OR reminders.date_willexecute BETWEEN '
+                . $dateTimeNowStamp . ' AND ' . $dateTimeMaxStamp . ')'
         );
 
         if ($popupReminders) {
@@ -396,14 +407,14 @@ class Reminder extends Basic
                 );
                 $instructions = $app_strings['MSG_JS_ALERT_MTG_REMINDER_MEETING_MSG'];
 
-                if ($popupReminder->related_event_module == 'Meetings') {
+                if ($popupReminder->related_event_module === 'Meetings') {
                     ///////////////////////////////////////////////////////////////////
-                    ////	MEETING INTEGRATION
+                    ////    MEETING INTEGRATION
                     if (!empty($meetingIntegration) && $meetingIntegration->isIntegratedMeeting($popupReminder->related_event_module_id)) {
                         $url = $meetingIntegration->miUrlGetJsAlert((array)$popupReminder);
                         $instructions = $meetingIntegration->miGetJsAlertInstructions();
                     }
-                    ////	END MEETING INTEGRATION
+                    ////    END MEETING INTEGRATION
                     ///////////////////////////////////////////////////////////////////
                 }
 
@@ -460,7 +471,7 @@ class Reminder extends Basic
     {
         $ret = '';
         for ($i = 0; $i < strlen((string) $timestr); $i++) {
-            if ($timestr[$i] != "'") {
+            if ($timestr[$i] !== "'") {
                 $ret .= $timestr[$i];
             }
         }
@@ -511,11 +522,11 @@ class Reminder extends Basic
     {
         $eventIdField = strtolower($event->object_name) . '_id';
         $query = "
-			SELECT * FROM {$event->table_name}_{$person_table}
-			WHERE
-				{$eventIdField} = '{$event->id}' AND
-				deleted = 0
-		";
+            SELECT * FROM {$event->table_name}_{$person_table}
+            WHERE
+                {$eventIdField} = '{$event->id}' AND
+                deleted = 0
+        ";
         return $query;
     }
 
@@ -527,12 +538,12 @@ class Reminder extends Basic
         }
         $personIdField = strtolower($person->object_name) . '_id';
         $query = "
-			SELECT * FROM {$event->table_name}_{$person->table_name}
-			WHERE
-				{$eventIdField} = '{$event->id}' AND
-				{$personIdField} = '{$person->id}' AND
-				deleted = 0
-		";
+            SELECT * FROM {$event->table_name}_{$person->table_name}
+            WHERE
+                {$eventIdField} = '{$event->id}' AND
+                {$personIdField} = '{$person->id}' AND
+                deleted = 0
+        ";
         return $query;
     }
 
@@ -592,6 +603,9 @@ class Reminder extends Basic
         self::upgradeRestoreReminders();
     }
 
+    /**
+     * @throws Exception
+     */
     private static function upgradeRestoreReminders()
     {
         if ($reminders = BeanFactory::getBean('Reminders')->get_full_list('', 'reminders.deleted = 1')) {
@@ -607,9 +621,9 @@ class Reminder extends Basic
             }
         }
         $db = DBManagerFactory::getInstance();
-        $q = "UPDATE reminders SET deleted = 0";
+        $q = 'UPDATE reminders SET deleted = 0';
         $db->query($q);
-        $q = "UPDATE reminders_invitees SET deleted = 0";
+        $q = 'UPDATE reminders_invitees SET deleted = 0';
         $db->query($q);
     }
 
@@ -697,6 +711,8 @@ class Reminder extends Basic
      * @param bool $oldReminderEmailChecked
      * @param int $oldReminderEmailTimer
      * @param array $oldInvitees
+     *
+     * @throws Exception
      */
     private static function migrateReminder($eventModule, $eventModuleId, $oldReminderPopupChecked, $oldReminderPopupTimer, $oldReminderEmailChecked, $oldReminderEmailTimer, $oldReminderEmailSent, $oldInvitees)
     {
@@ -715,6 +731,9 @@ class Reminder extends Basic
         self::removeOldReminder($eventModule, $eventModuleId);
     }
 
+    /**
+     * @throws Exception
+     */
     private static function migrateReminderInvitees($reminderId, $invitees)
     {
         $ret = array();
@@ -728,6 +747,9 @@ class Reminder extends Basic
         return $ret;
     }
 
+    /**
+     * @throws Exception
+     */
     private static function getRelatedInviteeModuleFromInviteeArray($invitee)
     {
         if (array_key_exists('user_id', $invitee)) {
@@ -744,6 +766,9 @@ class Reminder extends Basic
         //return null;
     }
 
+    /**
+     * @throws Exception
+     */
     private static function getRelatedInviteeModuleIdFromInviteeArray($invitee)
     {
         if (array_key_exists('user_id', $invitee)) {
@@ -763,6 +788,8 @@ class Reminder extends Basic
     /**
      * @param string $eventModule 'Calls' or 'Meetings'
      * @param string $eventModuleId
+     *
+     * @throws Exception
      */
     private static function removeOldReminder($eventModule, $eventModuleId)
     {
@@ -797,11 +824,14 @@ class Reminder extends Basic
     /*
      * @todo implenent it
      */
+    /**
+     * @throws Exception
+     */
     public static function getRemindersListInlineEditView(SugarBean $event)
     {
         // TODO: getEditFieldHTML() function in InlineEditing.php:218 doesn't pass the Bean ID to this custom inline edit view function but we have to know which Bean are in the focus to editing.
         if (!$event->id) {
-            throw new Exception("No GUID for edit.");
+            throw new Exception('No GUID for edit.');
         }
     }
 }

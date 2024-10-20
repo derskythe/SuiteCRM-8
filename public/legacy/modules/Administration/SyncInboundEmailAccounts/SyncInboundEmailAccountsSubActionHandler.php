@@ -57,7 +57,7 @@ class SyncInboundEmailAccountsSubActionHandler
     /**
      * @const string
      */
-    public const PROCESS_OUTPUT_FILE = "modules/Administration/SyncInboundEmailAccounts/sync_output.html";
+    public const PROCESS_OUTPUT_FILE = 'modules/Administration/SyncInboundEmailAccounts/sync_output.html';
 
     /**
      * @var SyncInboundEmailAccountsPage
@@ -75,8 +75,10 @@ class SyncInboundEmailAccountsSubActionHandler
      * Handle sub-action for Sync Inbound Email Accounts
      *
      * @param SyncInboundEmailAccountsPage $sync
+     *
      * @throws SyncInboundEmailAccountsException
-     * @throws SyncInboundEmailAccountsNoMethodException
+     * @throws SyncInboundEmailAccountsNoMethodException*@throws SyncInboundEmailAccountsInvalidSubActionArgumentsException
+     * @throws SyncInboundEmailAccountsInvalidMethodTypeException
      */
     public function __construct(SyncInboundEmailAccountsPage $sync)
     {
@@ -101,7 +103,7 @@ class SyncInboundEmailAccountsSubActionHandler
 
                 default:
                     throw new SyncInboundEmailAccountsNoMethodException(
-                        "trying to call an unsupported method: " . $subAction
+                        'trying to call an unsupported method: ' . $subAction
                     );
 
             }
@@ -119,7 +121,7 @@ class SyncInboundEmailAccountsSubActionHandler
 
                 default:
                     throw new SyncInboundEmailAccountsException(
-                        "Unknown error in sync process, see previous exception",
+                        'Unknown error in sync process, see previous exception',
                         SyncInboundEmailAccountsException::UNKNOWN_ERROR,
                         $e
                     );
@@ -137,7 +139,7 @@ class SyncInboundEmailAccountsSubActionHandler
      */
     protected function getRequestedSubAction()
     {
-        $ret = "index";
+        $ret = 'index';
 
         // handle requested sub-action in method parameter
 
@@ -147,7 +149,7 @@ class SyncInboundEmailAccountsSubActionHandler
             // validate for correct method
             if (!is_string($ret)) {
                 throw new SyncInboundEmailAccountsInvalidMethodTypeException(
-                    "Method name should be a string but received type is: " . gettype($ret)
+                    'Method name should be a string but received type is: ' . gettype($ret)
                 );
             }
         }
@@ -158,6 +160,7 @@ class SyncInboundEmailAccountsSubActionHandler
     /**
      * Default 'index' action, shows the main form
      *
+     * @throws SyncInboundEmailAccountsEmptyException
      */
     protected function action_Index()
     {
@@ -207,6 +210,7 @@ class SyncInboundEmailAccountsSubActionHandler
      * @throws SyncInboundEmailAccountsException
      * @throws SyncInboundEmailAccountsInvalidSubActionArgumentsException
      * @throws SyncInboundEmailException
+     * @throws Exception
      */
     protected function action_Sync()
     {
@@ -259,7 +263,8 @@ class SyncInboundEmailAccountsSubActionHandler
                 $this->handleIMAPErrors($ie);
             } else {
                 $this->output($mod_strings['LBL_IE_NOT_FOUND']);
-                $GLOBALS['log']->debug("Inbound Email Account record not found, please check the record still exists and non-deleted: " . $ieId);
+                $GLOBALS['log']->debug(
+                    'Inbound Email Account record not found, please check the record still exists and non-deleted: ' . $ieId);
             }
         }
         $this->output($mod_strings['LBL_SYNC_DONE']);
@@ -274,6 +279,8 @@ class SyncInboundEmailAccountsSubActionHandler
 
     /**
      * @throws SyncInboundEmailAccountsException
+     * @throws ImapHandlerException
+     * @throws ImapHandlerException
      */
     protected function handleIMAPErrors(InboundEmail $ie)
     {
@@ -281,7 +288,7 @@ class SyncInboundEmailAccountsSubActionHandler
         $errs = $ie->getImap()->getErrors();
         if ($errs) {
             foreach ($errs as $err) {
-                $GLOBALS['log']->error("IMAP error detected: " . $err);
+                $GLOBALS['log']->error('IMAP error detected: ' . $err);
             }
             $this->output($mod_strings['LBL_SYNC_ERROR_FOUND']);
         }
@@ -289,7 +296,7 @@ class SyncInboundEmailAccountsSubActionHandler
         $warns = $ie->getImap()->getAlerts();
         if ($warns) {
             foreach ($warns as $warn) {
-                $GLOBALS['log']->warn("IMAP error detected: " . $warn);
+                $GLOBALS['log']->warn('IMAP error detected: ' . $warn);
             }
             $this->output($mod_strings['LBL_SYNC_ALERT_FOUND']);
         }
@@ -303,7 +310,7 @@ class SyncInboundEmailAccountsSubActionHandler
         if (file_exists(self::PROCESS_OUTPUT_FILE)) {
             if (!unlink(self::PROCESS_OUTPUT_FILE)) {
                 throw new SyncInboundEmailAccountsException(
-                    "Unable to cleanup output file. Please check permission..",
+                    'Unable to cleanup output file. Please check permission..',
                     SyncInboundEmailAccountsException::PROCESS_OUTPUT_CLEANUP_ERROR
                 );
             }
@@ -319,7 +326,7 @@ class SyncInboundEmailAccountsSubActionHandler
         $msg = "{$msg}<br>";
         if (false === file_put_contents(self::PROCESS_OUTPUT_FILE, $msg, FILE_APPEND)) {
             throw new SyncInboundEmailAccountsException(
-                "Unable to write output file. Please check permission..",
+                'Unable to write output file. Please check permission..',
                 SyncInboundEmailAccountsException::PROCESS_OUTPUT_WRITE_ERROR
             );
         }
@@ -350,7 +357,7 @@ class SyncInboundEmailAccountsSubActionHandler
     {
         $isValidator = new SuiteValidator();
         if (!$isValidator->isValidId($ieId)) {
-            throw new SyncInboundEmailException("Invalid Inbound Email ID");
+            throw new SyncInboundEmailException('Invalid Inbound Email ID');
         }
         $query = "SELECT id FROM emails WHERE mailbox_id = '{$ieId}' AND deleted = 0;";
         $emailIds = $this->select($query);
@@ -373,7 +380,7 @@ class SyncInboundEmailAccountsSubActionHandler
             $ret[$e['id']] = $e;
         }
         if (empty($ret)) {
-            throw new SyncInboundEmailAccountsEmptyException("No imported related Email to Inbound Email Account");
+            throw new SyncInboundEmailAccountsEmptyException('No imported related Email to Inbound Email Account');
         }
 
         return $ret;
@@ -384,8 +391,12 @@ class SyncInboundEmailAccountsSubActionHandler
      * @param bool $test
      * @param bool $force
      * @param null $useSsl
+     *
      * @return mixed
-     * @throws SyncInboundEmailAccountsIMapConnectionException
+     * @throws SyncInboundEmailAccountsIMapConnectionException*@throws ImapHandlerException
+     * @throws ImapHandlerException
+     * @throws ImapHandlerException
+     * @throws ImapHandlerException
      */
     protected function getEmailHeadersOfIMAPServer(InboundEmail $ie, $test = false, $force = false, $useSsl = null)
     {
@@ -408,7 +419,7 @@ class SyncInboundEmailAccountsSubActionHandler
 
         // handle the error..
 
-        if ($results !== "true") {
+        if ($results !== 'true') {
             throw new SyncInboundEmailAccountsIMapConnectionException("Connection failed to IMap ({$ie->name}): " . $results);
         }
 
@@ -442,7 +453,11 @@ class SyncInboundEmailAccountsSubActionHandler
      * @param InboundEmail $ie
      * @param $uid
      * @param null $msgNo
+     *
      * @return string
+     * @throws ImapHandlerException
+     * @throws ImapHandlerException
+     * @throws ImapHandlerException
      */
     protected function getCompoundMessageIdMD5(InboundEmail $ie, $uid, $msgNo = null)
     {
@@ -479,7 +494,7 @@ class SyncInboundEmailAccountsSubActionHandler
 
         if (is_array($potentials) && !empty($potentials)) {
             foreach ($potentials as $bad) {
-                $compoundMessageId = str_replace($bad, "", $compoundMessageId);
+                $compoundMessageId = str_replace($bad, '', $compoundMessageId);
             }
         }
 
@@ -508,6 +523,7 @@ class SyncInboundEmailAccountsSubActionHandler
      *
      * @return mixed
      * @throws SyncInboundEmailAccountsInvalidSubActionArgumentsException
+     * @throws SyncInboundEmailAccountsEmptyException
      */
     protected function getRequestedInboundEmailAccounts()
     {
@@ -516,7 +532,7 @@ class SyncInboundEmailAccountsSubActionHandler
 
         if (!isset($_REQUEST['ie-sel'])) {
             // it's should be in the request
-            throw new SyncInboundEmailAccountsInvalidSubActionArgumentsException("Invalid action parameter");
+            throw new SyncInboundEmailAccountsInvalidSubActionArgumentsException('Invalid action parameter');
         }
 
         $ieSel = $_REQUEST['ie-sel'];

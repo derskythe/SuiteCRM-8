@@ -74,7 +74,7 @@ $dictionary['InboundEmail_autoreply'] = array('table' => 'inbound_email_autorepl
             'name' => 'autoreplied_to',
             'vname' => 'LBL_AUTOREPLIED_TO',
             'type' => 'varchar',
-            'len'		=> 100,
+            'len'        => 100,
             'required' => true,
             'reportable'=>false,
         ),

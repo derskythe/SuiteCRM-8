@@ -63,7 +63,7 @@ class SugarWebServiceImpl
     * @param Array $link_name_to_fields_array -- A list of link_names and for each link_name, what fields value to be returned. For ex.'link_name_to_fields_array' => array(array('name' =>  'email_addresses', 'value' => array('id', 'email_address', 'opt_out', 'primary_address')))
     * @return Array
     *        'entry_list' -- Array - The records name value pair for the simple data types excluding link field data.
-    *	     'relationship_list' -- Array - The records link field data. The example is if asked about accounts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
+    *         'relationship_list' -- Array - The records link field data. The example is if asked about accounts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
     * @exception 'SoapFault' -- The SOAP error, if any
     */
     public function get_entry($session, $module_name, $id, $select_fields, $link_name_to_fields_array)
@@ -83,7 +83,7 @@ class SugarWebServiceImpl
     * @param Array $link_name_to_fields_array -- A list of link_names and for each link_name, what fields value to be returned. For ex.'link_name_to_fields_array' => array(array('name' =>  'email_addresses', 'value' => array('id', 'email_address', 'opt_out', 'primary_address')))
     * @return Array
     *        'entry_list' -- Array - The records name value pair for the simple data types excluding link field data.
-    *	     'relationship_list' -- Array - The records link field data. The example is if asked about accounts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
+    *         'relationship_list' -- Array - The records link field data. The example is if asked about accounts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
     * @exception 'SoapFault' -- The SOAP error, if any
     */
     public function get_entries($session, $module_name, $ids, $select_fields, $link_name_to_fields_array)
@@ -95,7 +95,7 @@ class SugarWebServiceImpl
         $linkoutput_list = array();
         $output_list = array();
         $using_cp = false;
-        if ($module_name == 'CampaignProspects') {
+        if ($module_name === 'CampaignProspects') {
             $module_name = 'Prospects';
             $using_cp = true;
         }
@@ -104,7 +104,7 @@ class SugarWebServiceImpl
             return;
         } // if
 
-        if ($module_name == 'Reports') {
+        if ($module_name === 'Reports') {
             $error->set_error('invalid_call_error');
             self::$helperObject->setFaultObject($error);
             $GLOBALS['log']->info('End: SugarWebServiceImpl->get_entries');
@@ -181,7 +181,7 @@ class SugarWebServiceImpl
         global  $beanList, $beanFiles;
         $error = new SoapError();
         $using_cp = false;
-        if ($module_name == 'CampaignProspects') {
+        if ($module_name === 'CampaignProspects') {
             $module_name = 'Prospects';
             $using_cp = true;
         }
@@ -264,7 +264,7 @@ class SugarWebServiceImpl
      * @param integer $delete -- Optional, if the value 0 or nothing is passed then it will add the relationship for related_ids and if 1 is passed, it will delete this relationship for related_ids
      * @return Array - created - integer - How many relationships has been created
      *               - failed - integer - How many relationsip creation failed
-     * 				 - deleted - integer - How many relationships were deleted
+     *                  - deleted - integer - How many relationships were deleted
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function set_relationship($session, $module_name, $module_id, $link_field_name, $related_ids, $name_value_list=array(), $delete=false)
@@ -313,7 +313,7 @@ class SugarWebServiceImpl
      * @param array int $delete_array -- Optional, array of 0 or 1. If the value 0 or nothing is passed then it will add the relationship for related_ids and if 1 is passed, it will delete this relationship for related_ids
      * @return Array - created - integer - How many relationships has been created
      *               - failed - integer - How many relationsip creation failed
-     * 				 - deleted - integer - How many relationships were deleted
+     *                  - deleted - integer - How many relationships were deleted
     *
      * @exception 'SoapFault' -- The SOAP error, if any
     */
@@ -375,7 +375,7 @@ class SugarWebServiceImpl
      * @param Array $related_module_link_name_to_fields_array - For every related bean returrned, specify link fields name to fields info for that bean to be returned. For ex.'link_name_to_fields_array' => array(array('name' =>  'email_addresses', 'value' => array('id', 'email_address', 'opt_out', 'primary_address'))).
      * @param Number $deleted -- false if deleted records should not be include, true if deleted records should be included.
      * @return Array 'entry_list' -- Array - The records that were retrieved
-     *	     		 'relationship_list' -- Array - The records link field data. The example is if asked about accounts contacts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
+     *                  'relationship_list' -- Array - The records link field data. The example is if asked about accounts contacts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
     * @exception 'SoapFault' -- The SOAP error, if any
     */
     public function get_relationships($session, $module_name, $module_id, $link_field_name, $related_module_query, $related_fields, $related_module_link_name_to_fields_array, $deleted)
@@ -469,7 +469,7 @@ class SugarWebServiceImpl
         require_once($beanFiles[$class_name]);
         $seed = new $class_name();
         foreach ($name_value_list as $name=>$value) {
-            if (is_array($value) &&  $value['name'] == 'id') {
+            if (is_array($value) &&  $value['name'] === 'id') {
                 $seed->retrieve($value['value']);
                 break;
             } elseif ($name === 'id') {
@@ -478,7 +478,7 @@ class SugarWebServiceImpl
         }
 
         foreach ($name_value_list as $name=>$value) {
-            if ($module_name == 'Users' && !empty($seed->id) && ($seed->id != $current_user->id) && $name == 'user_hash') {
+            if ($module_name === 'Users' && !empty($seed->id) && ($seed->id != $current_user->id) && $name === 'user_hash') {
                 continue;
             }
             if (!empty($seed->field_name_map[$name]['sensitive'])) {
@@ -537,8 +537,8 @@ class SugarWebServiceImpl
      * @param String $application -- The name of the application you are logging in from.  (Currently unused).
      * @param array $name_value_list -- Array of name value pair of extra parameters. As of today only 'language' and 'notifyonsave' is supported
      * @return Array - id - String id is the session_id of the session that was created.
-     * 				 - module_name - String - module name of user
-     * 				 - name_value_list - Array - The name value pair of user_id, user_name, user_language, user_currency_id, user_currency_name
+     *                  - module_name - String - module name of user
+     *                  - name_value_list - Array - The name value pair of user_id, user_name, user_language, user_currency_id, user_currency_name
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function login($user_auth, $application, $name_value_list)
@@ -653,8 +653,8 @@ class SugarWebServiceImpl
     /**
      * Gets server info. This will return information like version, flavor and gmt_time.
      * @return Array - flavor - String - Retrieve the specific flavor of sugar.
-     * 				 - version - String - Retrieve the version number of Sugar that the server is running.
-     * 				 - gmt_time - String - Return the current time on the server in the format 'Y-m-d H:i:s'. This time is in GMT.
+     *                  - version - String - Retrieve the version number of Sugar that the server is running.
+     *                  - gmt_time - String - Return the current time on the server in the format 'Y-m-d H:i:s'. This time is in GMT.
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function get_server_info()
@@ -721,7 +721,7 @@ class SugarWebServiceImpl
         $class_name = $beanList[$module_name];
         require_once($beanFiles[$class_name]);
         $seed = new $class_name();
-        if ($seed->ACLAccess('ListView', true) || $seed->ACLAccess('DetailView', true) || 	$seed->ACLAccess('EditView', true)) {
+        if ($seed->ACLAccess('ListView', true) || $seed->ACLAccess('DetailView', true) ||     $seed->ACLAccess('EditView', true)) {
             $return = self::$helperObject->get_return_module_fields($seed, $module_name, $fields);
             $GLOBALS['log']->info('End: SugarWebServiceImpl->get_module_fields SUCCESS for ' . $module_name);
             return $return;
@@ -757,8 +757,8 @@ class SugarWebServiceImpl
      * @param Array 'note' -- Array String 'id' -- The ID of the Note containing the attachment
      *                              String 'filename' -- The file name of the attachment
      *                              Binary 'file' -- The binary contents of the file.
-     * 								String 'related_module_id' -- module id to which this note to related to
-     * 								String 'related_module_name' - module name to which this note to related to
+     *                                 String 'related_module_id' -- module id to which this note to related to
+     *                                 String 'related_module_name' - module name to which this note to related to
      *
      * @return Array 'id' -- String - The ID of the Note
      * @exception 'SoapFault' -- The SOAP error, if any
@@ -793,8 +793,8 @@ class SugarWebServiceImpl
      * @return Array 'note_attachment' -- Array String 'id' -- The ID of the Note containing the attachment
      *                                          String 'filename' -- The file name of the attachment
      *                                          Binary 'file' -- The binary contents of the file.
-     * 											String 'related_module_id' -- module id to which this note is related
-     * 											String 'related_module_name' - module name to which this note is related
+     *                                             String 'related_module_id' -- module id to which this note is related
+     *                                             String 'related_module_name' - module name to which this note is related
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function get_note_attachment($session, $id)
@@ -832,10 +832,10 @@ class SugarWebServiceImpl
      * sets a new revision for this document
      *
      * @param String $session -- Session ID returned by a previous call to login.
-     * @param Array $document_revision -- Array String 'id' -- 	The ID of the document object
-     * 											String 'document_name' - The name of the document
-     * 											String 'revision' - The revision value for this revision
-     *                                         	String 'filename' -- The file name of the attachment
+     * @param Array $document_revision -- Array String 'id' --     The ID of the document object
+     *                                             String 'document_name' - The name of the document
+     *                                             String 'revision' - The revision value for this revision
+     *                                             String 'filename' -- The file name of the attachment
      *                                          String 'file' -- The binary contents of the file.
      * @return Array - 'id' - String - document revision id
      * @exception 'SoapFault' -- The SOAP error, if any
@@ -862,10 +862,10 @@ class SugarWebServiceImpl
      * @param String $session -- Session ID returned by a previous call to login.
      * @param String $id      -- ID of the document revision to obtain
      * @return new_return_document_revision - Array String 'id' -- The ID of the document revision containing the attachment
-     * 												String document_name - The name of the document
-     * 												String revision - The revision value for this revision
-     *                                         		String 'filename' -- The file name of the attachment
-     *                                          	Binary 'file' -- The binary contents of the file.
+     *                                                 String document_name - The name of the document
+     *                                                 String revision - The revision value for this revision
+     *                                                 String 'filename' -- The file name of the attachment
+     *                                              Binary 'file' -- The binary contents of the file.
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function get_document_revision($session, $id)
@@ -902,11 +902,11 @@ class SugarWebServiceImpl
      * Given a list of modules to search and a search string, return the id, module_name, along with the fields
      * We will support Accounts, Bugs, Cases, Contacts, Leads, Opportunities, Project, ProjectTask, Quotes
      *
-     * @param string $session			- Session ID returned by a previous call to login.
-     * @param string $search_string 	- string to search
-     * @param string[] $modules			- array of modules to query
-     * @param int $offset				- a specified offset in the query
-     * @param int $max_results			- max number of records to return
+     * @param string $session            - Session ID returned by a previous call to login.
+     * @param string $search_string     - string to search
+     * @param string[] $modules            - array of modules to query
+     * @param int $offset                - a specified offset in the query
+     * @param int $max_results            - max number of records to return
      * @return Array 'entry_list' -- Array('Accounts' => array(array('name' => 'first_name', 'value' => 'John', 'name' => 'last_name', 'value' => 'Do')))
      * @exception 'SoapFault' -- The SOAP error, if any
      */
@@ -963,8 +963,8 @@ class SugarWebServiceImpl
                 require_once $beanFiles[$beanName] ;
                 $seed = new $beanName();
                 require_once 'include/SearchForm/SearchForm2.php' ;
-                if ($beanName == "User"
-                || $beanName == "ProjectTask"
+                if ($beanName === 'User'
+                    || $beanName === 'ProjectTask'
                 ) {
                     if (!self::$helperObject->check_modules_access($current_user, $seed->module_dir, 'read')) {
                         continue;
@@ -974,8 +974,8 @@ class SugarWebServiceImpl
                     } // if
                 }
 
-                if ($beanName != "User"
-                && $beanName != "ProjectTask"
+                if ($beanName !== 'User'
+                    && $beanName !== 'ProjectTask'
                 ) {
                     $searchForm = new SearchForm($seed, $name) ;
 
@@ -1006,7 +1006,7 @@ class SugarWebServiceImpl
                         } // if
                     } // foreach
 
-                if (!in_array('id', $filterFields)) {
+                    if (!in_array('id', $filterFields, true)) {
                     $filterFields[] = 'id';
                 } // if
                     $ret_array = $seed->create_new_list_query('', $where, $filterFields, array(), 0, '', true, $seed, true);
@@ -1027,15 +1027,16 @@ class SugarWebServiceImpl
                     }
                     $main_query = $ret_array['select'] . $params['custom_select'] . $ret_array['from'] . $params['custom_from'] . $ret_array['where'] . $params['custom_where'] . $ret_array['order_by'] . $params['custom_order_by'];
                 } else {
-                    if ($beanName == "User") {
+                    if ($beanName === 'User') {
                         // $search_string gets cleaned above, so we can use it here
                         $filterFields = array('id', 'user_name', 'first_name', 'last_name', 'email_address');
-                        $main_query = "select users.id, ea.email_address, users.user_name, first_name, last_name from users ";
+                        $main_query =
+                            'select users.id, ea.email_address, users.user_name, first_name, last_name from users ';
                         $main_query = $main_query . " LEFT JOIN email_addr_bean_rel eabl ON eabl.bean_module = '{$seed->module_dir}'
 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ";
                         $main_query = $main_query . "where ((users.first_name like '{$search_string}') or (users.last_name like '{$search_string}') or (users.user_name like '{$search_string}') or (ea.email_address like '{$search_string}')) and users.deleted = 0 and users.is_group = 0 and users.employee_status = 'Active'";
                     } // if
-                    if ($beanName == "ProjectTask") {
+                    if ($beanName === 'ProjectTask') {
                         // $search_string gets cleaned above, so we can use it here
                         $filterFields = array('id', 'name', 'project_id', 'project_name');
                         $main_query = "select {$seed->table_name}.project_task_id id,{$seed->table_name}.project_id, {$seed->table_name}.name, project.name project_name from {$seed->table_name} ";

@@ -77,7 +77,7 @@ $mod_strings = array(
     'LBL_ADDITIVE' => 'Additive Rights',
     'LBL_ADDITIVE_DESC' => "User gets greatest rights of all roles assigned to the user or the user's group(s)",
     'LBL_STRICT_RIGHTS' => 'Strict Rights',
-    'LBL_STRICT_RIGHTS_DESC' => "If a user is a member of several groups only the respective rights from the group assigned to the current record are used.",
+    'LBL_STRICT_RIGHTS_DESC' => 'If a user is a member of several groups only the respective rights from the group assigned to the current record are used.',
     'LBL_USER_ROLE_PRECEDENCE' => 'User Role Precedence',
     'LBL_USER_ROLE_PRECEDENCE_DESC' => 'If any role is assigned directly to a user that role should take precedence over any group roles.',
     'LBL_INHERIT_TITLE' => 'Group Inheritance Rules',
@@ -92,7 +92,7 @@ $mod_strings = array(
     'LBL_POPUP_SELECT' => 'Use Creator Group Select',
     'LBL_POPUP_SELECT_DESC' => 'When a record is created by a user in more than one group show a group selection panel on the create screen. Otherwise inherit that one group.',
     'LBL_FILTER_USER_LIST' => 'Filter User List',
-    'LBL_FILTER_USER_LIST_DESC' => "Non-admin users can only assign to users in the same group(s)",
+    'LBL_FILTER_USER_LIST_DESC' => 'Non-admin users can only assign to users in the same group(s)',
 
     'LBL_DEFAULT_GROUP_TITLE' => 'Default Groups for New Records',
     'LBL_ADD_BUTTON_LABEL' => 'Add',

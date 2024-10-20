@@ -56,7 +56,7 @@ if ($suicide) {
 
 
 if (!isset($_POST['confirm']) || !$_POST['confirm']) {
-    include("sugar_version.php"); // provide $sugar_flavor
+    include('sugar_version.php'); // provide $sugar_flavor
     global $sugar_config;
     $ik = '';
     if (isset($sugar_config['unique_key']) && !empty($sugar_config['unique_key'])) {
@@ -68,7 +68,7 @@ if (!isset($_POST['confirm']) || !$_POST['confirm']) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	START OUTPUT
+////    START OUTPUT
 $langHeader = get_language_header();
 $out =<<<EOQ
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -87,30 +87,30 @@ $out =<<<EOQ
       <tr><td colspan="2" id="help">&nbsp;</td></tr>
     <tr>
       <th width="500">
-		<p>
-		<img src="{$sugar_md}" alt="SugarCRM" border="0">
-		</p>
-		{$mod_strings['LBL_REG_TITLE']} <span style="font-size: 9px;"> (Optional)</span></th>
-	<th width="200" style="text-align: right;"><a href="http://www.sugarcrm.com" target="_blank"><IMG src="$loginImage" alt="SugarCRM" border="0"></a></th>
+        <p>
+        <img src="{$sugar_md}" alt="SugarCRM" border="0">
+        </p>
+        {$mod_strings['LBL_REG_TITLE']} <span style="font-size: 9px;"> (Optional)</span></th>
+    <th width="200" style="text-align: right;"><a href="http://www.sugarcrm.com" target="_blank"><IMG src="$loginImage" alt="SugarCRM" border="0"></a></th>
 </tr>
 <tr>
     <td colspan="2">{$notConfirmed}</td>
 </tr>
 <tr>
-	<td align="right" colspan="2">
-	<hr>
-	<table cellspacing="0" cellpadding="0" border="0" class="stdTable">
-		<tr>
-		<td>&nbsp;</td>
-		    <td>
+    <td align="right" colspan="2">
+    <hr>
+    <table cellspacing="0" cellpadding="0" border="0" class="stdTable">
+        <tr>
+        <td>&nbsp;</td>
+            <td>
                 <form action="index.php" method="post" name="appform" id="appform">
                     <input type="hidden" name="default_user_name" value="admin">
                     <input class="button" type="submit" name="next" value="{$mod_strings['LBL_NEXT']}" id="button_next2"/>
-		    	</form>
-			</td>
-		</tr>
-	</table>
-	</td>
+                </form>
+            </td>
+        </tr>
+    </table>
+    </td>
 </tr>
 </table>
 <br>

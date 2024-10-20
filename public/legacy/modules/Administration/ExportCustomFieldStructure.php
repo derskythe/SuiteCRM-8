@@ -54,10 +54,10 @@ while ($row = $db->fetchByAssoc($result)) {
 }
 ob_get_clean();
 
-header("Content-Disposition: attachment; filename=CustomFieldStruct.sugar");
+header('Content-Disposition: attachment; filename=CustomFieldStruct.sugar');
 header("Content-Type: text/txt; charset={$app_strings['LBL_CHARSET']}");
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: " . TimeDate::httpTime());
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Content-Length: ".strlen($str));
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . TimeDate::httpTime());
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Content-Length: ' .strlen($str));
 echo $str;

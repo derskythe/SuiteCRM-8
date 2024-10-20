@@ -85,7 +85,10 @@ class actionCreateRecord extends actionBase
                  '</label>:';
         $html .= "<input type='hidden' name='aow_actions_param[".$line."][relate_to_workflow]' value='0' >";
         $html .= "<input type='checkbox' id='aow_actions_param[".$line."][relate_to_workflow]' name='aow_actions_param[".$line."][relate_to_workflow]' value='1' $checked></td>";
-        $html .= '<td id="copy_email_addresses_label" scope="row" valign="top">'.translate("LBL_COPY_EMAIL_ADDRESSES_WORKFLOW", "AOW_Actions").':&nbsp;&nbsp;';
+        $html .= '<td id="copy_email_addresses_label" scope="row" valign="top">'.translate(
+                'LBL_COPY_EMAIL_ADDRESSES_WORKFLOW',
+                'AOW_Actions'
+            ).':&nbsp;&nbsp;';
         $html .= "<input type='hidden' name='aow_actions_param[".$line."][copy_email_addresses]' value='0' >";
         $html .= "<input type='checkbox' id='aow_actions_param[".$line."][copy_email_addresses]' name='aow_actions_param[".$line."][copy_email_addresses]' value='1' $copy_email_addresses_checked></td>";
         $html .= '</tr>';
@@ -183,7 +186,7 @@ class actionCreateRecord extends actionBase
                     $key = Relationship::retrieve_by_modules($bean->module_dir, $record->module_dir, $dbManager);
                     if (!empty($key)) {
                         foreach ($bean->field_defs as $field=>$def) {
-                            if ($def['type'] == 'link' && !empty($def['relationship']) && $def['relationship'] == $key) {
+                            if ($def['type'] === 'link' && !empty($def['relationship']) && $def['relationship'] == $key) {
                                 $bean->load_relationship($field);
                                 $bean->$field->add($record->id);
                                 break;
@@ -202,6 +205,9 @@ class actionCreateRecord extends actionBase
      * @param SugarBean $bean
      * @param array $params
      * @param bool $in_save
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public function set_record(SugarBean $record, SugarBean $bean, $params = array(), $in_save = false)
     {
@@ -439,7 +445,7 @@ class actionCreateRecord extends actionBase
 
                         $data = $bean->field_defs[$relField];
 
-                        if ($data['type'] == 'relate' && isset($data['id_name'])) {
+                        if ($data['type'] === 'relate' && isset($data['id_name'])) {
                             $relField = $data['id_name'];
                         }
                         $rel_id = $bean->$relField;
@@ -450,7 +456,7 @@ class actionCreateRecord extends actionBase
                 }
 
                 $def = $record_vardefs[$field];
-                if ($def['type'] == 'link' && !empty($def['relationship'])) {
+                if ($def['type'] === 'link' && !empty($def['relationship'])) {
                     $record->load_relationship($field);
                     $record->$field->add($rel_id);
                 }

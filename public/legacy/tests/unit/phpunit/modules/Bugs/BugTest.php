@@ -47,12 +47,12 @@ class BugTest extends SuitePHPUnitFrameworkTestCase
         $bug = BeanFactory::newBean('Bugs');
 
         //test with empty string params
-        $expected = "SELECT \n                               bugs.*\n\n                                ,users.user_name as assigned_user_name, releases.id release_id, releases.name release_name FROM bugs 				LEFT JOIN releases ON bugs.found_in_release=releases.id\n								LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id  where  bugs.deleted=0  ORDER BY bugs.name";
+        $expected = "SELECT \n                               bugs.*\n\n                                ,users.user_name as assigned_user_name, releases.id release_id, releases.name release_name FROM bugs                 LEFT JOIN releases ON bugs.found_in_release=releases.id\n                                LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id  where  bugs.deleted=0  ORDER BY bugs.name";
         $actual = $bug->create_list_query('', '');
         self::assertSame($expected, $actual);
 
         //test with valid string params
-        $expected = "SELECT \n                               bugs.*\n\n                                ,users.user_name as assigned_user_name, releases.id release_id, releases.name release_name FROM bugs 				LEFT JOIN releases ON bugs.found_in_release=releases.id\n								LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id  where bugs.name=\"\" AND  bugs.deleted=0  ORDER BY releases.id";
+        $expected = "SELECT \n                               bugs.*\n\n                                ,users.user_name as assigned_user_name, releases.id release_id, releases.name release_name FROM bugs                 LEFT JOIN releases ON bugs.found_in_release=releases.id\n                                LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id  where bugs.name=\"\" AND  bugs.deleted=0  ORDER BY releases.id";
         $actual = $bug->create_list_query('releases.id', 'bugs.name=""');
         self::assertSame($expected, $actual);
     }
@@ -63,12 +63,12 @@ class BugTest extends SuitePHPUnitFrameworkTestCase
         $bug = BeanFactory::newBean('Bugs');
 
         //test with empty string params
-        $expected = "SELECT\n                                bugs.*,\n                                r1.name found_in_release_name,\n                                r2.name fixed_in_release_name,\n                                users.user_name assigned_user_name FROM bugs 				LEFT JOIN releases r1 ON bugs.found_in_release = r1.id\n								LEFT JOIN releases r2 ON bugs.fixed_in_release = r2.id\n								LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id where   bugs.deleted=0\n                 ORDER BY bugs.bug_number";
+        $expected = "SELECT\n                                bugs.*,\n                                r1.name found_in_release_name,\n                                r2.name fixed_in_release_name,\n                                users.user_name assigned_user_name FROM bugs                 LEFT JOIN releases r1 ON bugs.found_in_release = r1.id\n                                LEFT JOIN releases r2 ON bugs.fixed_in_release = r2.id\n                                LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id where   bugs.deleted=0\n                 ORDER BY bugs.bug_number";
         $actual = $bug->create_export_query('', '');
         self::assertSame($expected, $actual);
 
         //test with valid string params
-        $expected = "SELECT\n                                bugs.*,\n                                r1.name found_in_release_name,\n                                r2.name fixed_in_release_name,\n                                users.user_name assigned_user_name FROM bugs 				LEFT JOIN releases r1 ON bugs.found_in_release = r1.id\n								LEFT JOIN releases r2 ON bugs.fixed_in_release = r2.id\n								LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id where bugs.name=\"\" AND   bugs.deleted=0\n                 ORDER BY releases.id";
+        $expected = "SELECT\n                                bugs.*,\n                                r1.name found_in_release_name,\n                                r2.name fixed_in_release_name,\n                                users.user_name assigned_user_name FROM bugs                 LEFT JOIN releases r1 ON bugs.found_in_release = r1.id\n                                LEFT JOIN releases r2 ON bugs.fixed_in_release = r2.id\n                                LEFT JOIN users\n                                ON bugs.assigned_user_id=users.id where bugs.name=\"\" AND   bugs.deleted=0\n                 ORDER BY releases.id";
         $actual = $bug->create_export_query('releases.id', 'bugs.name=""');
         self::assertSame($expected, $actual);
     }

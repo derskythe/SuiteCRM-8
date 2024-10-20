@@ -65,9 +65,9 @@ class SuiteValidator
     public function isPercentageField(string $fieldname): bool
     {
         if ($fieldname === 'aos_products_quotes_vat' ||
-            strpos(strtolower($fieldname), 'pct') !== false ||
-            strpos(strtolower($fieldname), 'percent') !== false ||
-            strpos(strtolower($fieldname), 'percentage') !== false) {
+            str_contains(strtolower($fieldname), 'pct') ||
+            str_contains(strtolower($fieldname), 'percent') ||
+            str_contains(strtolower($fieldname), 'percentage')) {
             return true;
         }
 

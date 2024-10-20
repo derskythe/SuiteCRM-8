@@ -42,22 +42,22 @@ require_once 'modules/AOR_Scheduled_Reports/lib/Cron/includeCron.php';
 #[\AllowDynamicProperties]
 class AOR_Scheduled_Reports extends basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOR_Scheduled_Reports';
-    public $object_name = 'AOR_Scheduled_Reports';
-    public $table_name = 'aor_scheduled_reports';
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOR_Scheduled_Reports';
+    public string $object_name = 'AOR_Scheduled_Reports';
+    public string $table_name = 'aor_scheduled_reports';
+    public bool $importable = false;
     public $disable_row_level_security = true;
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
     public $schedule;
@@ -74,7 +74,7 @@ class AOR_Scheduled_Reports extends basic
 
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL': return true;
@@ -188,6 +188,9 @@ class AOR_Scheduled_Reports extends basic
 
     /**
      * @param DateTime $date
+     *
+     * @throws DateMalformedStringException
+     * @throws DateInvalidTimeZoneException
      */
     protected function handleTimeZone(DateTime $date)
     {

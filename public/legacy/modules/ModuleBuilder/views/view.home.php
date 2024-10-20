@@ -45,16 +45,19 @@ class ViewHome extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
            );
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         global $current_user;
@@ -70,7 +73,7 @@ class ViewHome extends SugarView
         //initialize Assistant's display property.
         $userPref = $current_user->getPreference('mb_assist', 'Assistant');
         if (!$userPref) {
-            $userPref="na";
+            $userPref= 'na';
         }
         $smarty->assign('userPref', $userPref);
         $ajax = new AjaxCompose();

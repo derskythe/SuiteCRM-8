@@ -32,6 +32,9 @@ require_once('modules/AOS_Contracts/AOS_Contracts_sugar.php');
 #[\AllowDynamicProperties]
 class AOS_Contracts extends AOS_Contracts_sugar
 {
+    /**
+     * @throws DateMalformedStringException
+     */
     public function __construct()
     {
         parent::__construct();
@@ -40,7 +43,7 @@ class AOS_Contracts extends AOS_Contracts_sugar
         if ($this->id == null && $this->renewal_reminder_date == null) {
             global $sugar_config, $timedate;
 
-            $default_time = "12:00:00";
+            $default_time = '12:00:00';
 
             $period = empty($sugar_config['aos'])?false:(int)$sugar_config['aos']['contracts']['renewalReminderPeriod'];
 
@@ -63,7 +66,7 @@ class AOS_Contracts extends AOS_Contracts_sugar
 
     public function save($check_notify = false)
     {
-        if (empty($this->id) || (isset($_POST['duplicateSave']) && $_POST['duplicateSave'] == 'true')) {
+        if (empty($this->id) || (isset($_POST['duplicateSave']) && $_POST['duplicateSave'] === 'true')) {
             unset($_POST['group_id']);
             unset($_POST['product_id']);
             unset($_POST['service_id']);
@@ -97,6 +100,9 @@ class AOS_Contracts extends AOS_Contracts_sugar
         parent::mark_deleted($id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function createReminder()
     {
         global $mod_strings;
@@ -126,6 +132,9 @@ class AOS_Contracts extends AOS_Contracts_sugar
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function createLink()
     {
         require_once('modules/Calls/Call.php');
@@ -147,6 +156,9 @@ class AOS_Contracts extends AOS_Contracts_sugar
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function deleteCall()
     {
         require_once('modules/Calls/Call.php');

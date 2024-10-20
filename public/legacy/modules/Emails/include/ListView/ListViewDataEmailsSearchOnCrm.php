@@ -87,7 +87,7 @@ class ListViewDataEmailsSearchOnCrm extends ListViewDataEmailsSearchAbstract
             $inboundEmailIdQuoted = '';
             LoggerManager::getLogger()->warn('Unable to quote Inbound Email ID, Inbound Email is not set.');
         }
-        $crmWhere = $where . "mailbox_id LIKE " ."'" . $inboundEmailIdQuoted . "'";
+        $crmWhere = $where . 'mailbox_id LIKE ' ."'" . $inboundEmailIdQuoted . "'";
 
 
         // Populates CRM fields
@@ -108,7 +108,7 @@ class ListViewDataEmailsSearchOnCrm extends ListViewDataEmailsSearchAbstract
         $this->lvde->seed =& $seed;
         $totalCounted = empty($GLOBALS['sugar_config']['disable_count_query']);
         $_SESSION['MAILMERGE_MODULE_FROM_LISTVIEW'] = $seed->module_dir;
-        if (empty($request['action']) || $request['action'] != 'Popup') {
+        if (empty($request['action']) || $request['action'] !== 'Popup') {
             $_SESSION['MAILMERGE_MODULE'] = $seed->module_dir;
         }
 
@@ -288,14 +288,14 @@ class ListViewDataEmailsSearchOnCrm extends ListViewDataEmailsSearchAbstract
 
         $queryString = '';
 
-        if ((isset($request["searchFormTab"]) && $request["searchFormTab"] == "advanced_search") ||
-            (isset($request["type_basic"]) && ((is_countable($request["type_basic"]) ? count($request["type_basic"]) : 0) > 1 || $request["type_basic"][0] != "")) ||
-            (isset($request["module"]) && $request["module"] == "MergeRecords")) {
-            $queryString = "-advanced_search";
+        if ((isset($request['searchFormTab']) && $request['searchFormTab'] === 'advanced_search') ||
+            (isset($request['type_basic']) && ((is_countable($request['type_basic']) ? count($request['type_basic']) : 0) > 1 || $request['type_basic'][0] != '')) ||
+            (isset($request['module']) && $request['module'] === 'MergeRecords')) {
+            $queryString = '-advanced_search';
         } else {
-            if (isset($request["searchFormTab"]) && $request["searchFormTab"] == "basic_search") {
+            if (isset($request['searchFormTab']) && $request['searchFormTab'] === 'basic_search') {
                 // TODO: figure out what was the SearchFormReports???
-                if ($seed->module_dir == "Reports") {
+                if ($seed->module_dir === 'Reports') {
                     $searchMetaData = SearchFormReports::retrieveReportsSearchDefs();
                 } else {
                     $searchMetaData = SearchForm::retrieveSearchDefs($seed->module_dir);
@@ -309,8 +309,8 @@ class ListViewDataEmailsSearchOnCrm extends ListViewDataEmailsSearchAbstract
 
                 foreach ($basicSearchFields as $basicSearchField) {
                     $field_name = (is_array($basicSearchField) && isset($basicSearchField['name'])) ? $basicSearchField['name'] : $basicSearchField;
-                    $field_name .= "_basic";
-                    if (isset($request[$field_name])  && (!is_array($basicSearchField) || !isset($basicSearchField['type']) || $basicSearchField['type'] == 'text' || $basicSearchField['type'] == 'name')) {
+                    $field_name .= '_basic';
+                    if (isset($request[$field_name])  && (!is_array($basicSearchField) || !isset($basicSearchField['type']) || $basicSearchField['type'] === 'text' || $basicSearchField['type'] === 'name')) {
                         // Ensure the encoding is UTF-8
                         $queryString = htmlentities((string) $request[$field_name], null, 'UTF-8');
                         break;

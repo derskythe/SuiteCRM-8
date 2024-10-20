@@ -70,14 +70,14 @@ function get_validate_record_js()
 <script type="text/javascript" language="Javascript">
 
 function verify_data(form) {
-	var isError = false;
-	var errorMessage = "";
+    var isError = false;
+    var errorMessage = "";
 
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
-	return true;
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
+    return true;
 }
 </script>
 
@@ -100,7 +100,7 @@ function get_new_record_form()
     global $currentModule;
     global $current_user;
     global $timedate;
-    
+
     $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
     $form = new XTemplate('modules/Campaigns/Forms.html');
 
@@ -109,24 +109,24 @@ function get_new_record_form()
     $form->assign('MOD', $mod_strings);
     $form->assign('APP', $app_strings);
     $form->assign('THEME', (string)SugarThemeRegistry::current());
-    $form->assign("JAVASCRIPT", get_set_focus_js().get_validate_record_js());
-    $form->assign("STATUS_OPTIONS", get_select_options_with_id($app_list_strings['campaign_status_dom'], "Planning"));
-    $form->assign("TYPE_OPTIONS", get_select_options_with_id($app_list_strings['campaign_type_dom'], ""));
+    $form->assign('JAVASCRIPT', get_set_focus_js().get_validate_record_js());
+    $form->assign('STATUS_OPTIONS', get_select_options_with_id($app_list_strings['campaign_status_dom'], 'Planning'));
+    $form->assign('TYPE_OPTIONS', get_select_options_with_id($app_list_strings['campaign_type_dom'], ''));
 
-    $form->assign("USER_ID", $current_user->id);
+    $form->assign('USER_ID', $current_user->id);
 
 
-    $form->assign("CALENDAR_LANG", "en");
-    $form->assign("USER_DATEFORMAT", '('. $timedate->get_user_date_format().')');
-    $form->assign("CALENDAR_DATEFORMAT", $timedate->get_cal_date_format());
+    $form->assign('CALENDAR_LANG', 'en');
+    $form->assign('USER_DATEFORMAT', '('. $timedate->get_user_date_format().')');
+    $form->assign('CALENDAR_DATEFORMAT', $timedate->get_cal_date_format());
 
     $form->parse('main');
     $the_form .= $form->text('main');
 
-    
+
     $focus = BeanFactory::newBean('Campaigns');
-    
-    
+
+
     $javascript = new javascript();
     $javascript->setFormName('quick_save');
     $javascript->setSugarBean($focus);

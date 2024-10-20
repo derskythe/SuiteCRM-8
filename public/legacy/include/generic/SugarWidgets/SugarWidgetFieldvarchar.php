@@ -60,21 +60,21 @@ class SugarWidgetFieldVarchar extends SugarWidgetReportField
         return $this->_get_column_select($layout_def)."!='".DBManagerFactory::getInstance()->quote($layout_def['input_name0'])."'\n";
     }
 
-    public function queryFilterContains(&$layout_def)
+    public function queryFilterContains($layout_def)
     {
         return $this->_get_column_select($layout_def)." LIKE '%".DBManagerFactory::getInstance()->quote($layout_def['input_name0'])."%'\n";
     }
-    public function queryFilterdoes_not_contain(&$layout_def)
+    public function queryFilterdoes_not_contain($layout_def)
     {
         return $this->_get_column_select($layout_def)." NOT LIKE '%".DBManagerFactory::getInstance()->quote($layout_def['input_name0'])."%'\n";
     }
 
-    public function queryFilterStarts_With(&$layout_def)
+    public function queryFilterStarts_With($layout_def)
     {
         return $this->_get_column_select($layout_def)." LIKE '".DBManagerFactory::getInstance()->quote($layout_def['input_name0'])."%'\n";
     }
 
-    public function queryFilterEnds_With(&$layout_def)
+    public function queryFilterEnds_With($layout_def)
     {
         return $this->_get_column_select($layout_def)." LIKE '%".DBManagerFactory::getInstance()->quote($layout_def['input_name0'])."'\n";
     }

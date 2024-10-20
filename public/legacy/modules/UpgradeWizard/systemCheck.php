@@ -133,12 +133,12 @@ foreach ($files as $file) {
         $groupData = posix_getgrgid($group);
         $group = !empty($groupData) ? $groupData['name'] : $group;
     }
-    $filesOut .= "<tr>" .
+    $filesOut .= '<tr>' .
         "<td><span class='error'>{$file->getFilename()}</span></td>" .
         "<td>{$perms}</td>" .
         "<td>{$owner}</td>" .
         "<td>{$group}</td>" .
-        "</tr>";
+        '</tr>';
 
     $i++;
 }
@@ -155,15 +155,15 @@ logThis('Finished file permission check.');
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	DATABASE CHECKS
+////    DATABASE CHECKS
 logThis('Starting database permissions check...');
 $dbOut = "
-	<a href='javascript:void(0); toggleNwFiles(\"dbPerms\");'>{$mod_strings['LBL_UW_SHOW_DB_PERMS']}</a>
-	<div id='dbPerms' style='display:none;'>
-	<table cellpadding='3' cellspacing='0' border='0'>
-	<tr>
-		<th align='left'>{$mod_strings['LBL_UW_DB_PERMS']}</th>
-	</tr>";
+    <a href='javascript:void(0); toggleNwFiles(\"dbPerms\");'>{$mod_strings['LBL_UW_SHOW_DB_PERMS']}</a>
+    <div id='dbPerms' style='display:none;'>
+    <table cellpadding='3' cellspacing='0' border='0'>
+    <tr>
+        <th align='left'>{$mod_strings['LBL_UW_DB_PERMS']}</th>
+    </tr>";
 
 $db = DBManagerFactory::getInstance();
 $outs = array();
@@ -184,43 +184,43 @@ $outs['dbOut'] .= '</table>';
 
 if ((is_countable($outs['db']) ? count($outs['db']) : 0) < 1) {
     logThis('No permissions errors found!');
-    $outs['dbOut'] = "<b>".$mod_strings['LBL_UW_DB_NO_ERRORS']."</b>";
+    $outs['dbOut'] = '<b>' . $mod_strings['LBL_UW_DB_NO_ERRORS']. '</b>';
 }
 logThis('Finished database permissions check.');
 $dbOut = $outs['dbOut'];
-////	END DATABASE CHECKS
+////    END DATABASE CHECKS
 ///////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	INSTALLER TYPE CHECKS
+////    INSTALLER TYPE CHECKS
 $result = checkSystemCompliance();
 $checks = array(
-    'phpVersion'				=> $mod_strings['LBL_UW_COMPLIANCE_PHP_VERSION'],
+    'phpVersion'                => $mod_strings['LBL_UW_COMPLIANCE_PHP_VERSION'],
     'dbVersion'                 => $mod_strings['LBL_UW_COMPLIANCE_DB'],
-    'xmlStatus'					=> $mod_strings['LBL_UW_COMPLIANCE_XML'],
-    'curlStatus'				=> $mod_strings['LBL_UW_COMPLIANCE_CURL'],
-    'imapStatus'				=> $mod_strings['LBL_UW_COMPLIANCE_IMAP'],
-    'mbstringStatus'			=> $mod_strings['LBL_UW_COMPLIANCE_MBSTRING'],
-    'callTimeStatus'			=> $mod_strings['LBL_UW_COMPLIANCE_CALLTIME'],
-    'memory_msg'				=> $mod_strings['LBL_UW_COMPLIANCE_MEMORY'],
+    'xmlStatus'                    => $mod_strings['LBL_UW_COMPLIANCE_XML'],
+    'curlStatus'                => $mod_strings['LBL_UW_COMPLIANCE_CURL'],
+    'imapStatus'                => $mod_strings['LBL_UW_COMPLIANCE_IMAP'],
+    'mbstringStatus'            => $mod_strings['LBL_UW_COMPLIANCE_MBSTRING'],
+    'callTimeStatus'            => $mod_strings['LBL_UW_COMPLIANCE_CALLTIME'],
+    'memory_msg'                => $mod_strings['LBL_UW_COMPLIANCE_MEMORY'],
     'stream_msg'                => $mod_strings['LBL_UW_COMPLIANCE_STREAM'],
-    'ZipStatus'			        => $mod_strings['LBL_UW_COMPLIANCE_ZIPARCHIVE'],
-    'pcreVersion'			    => $mod_strings['LBL_UW_COMPLIANCE_PCRE_VERSION'],
+    'ZipStatus'                    => $mod_strings['LBL_UW_COMPLIANCE_ZIPARCHIVE'],
+    'pcreVersion'                => $mod_strings['LBL_UW_COMPLIANCE_PCRE_VERSION'],
     //commenting mbstring overload.
-    //'mbstring.func_overload'	=> $mod_strings['LBL_UW_COMPLIANCE_MBSTRING_FUNC_OVERLOAD'],
+    //'mbstring.func_overload'    => $mod_strings['LBL_UW_COMPLIANCE_MBSTRING_FUNC_OVERLOAD'],
 );
 if ($result['error_found'] == true || !empty($result['warn_found'])) {
     if ($result['error_found']) {
         $stop = true;
     }
-    $phpIniLocation = get_cfg_var("cfg_file_path");
+    $phpIniLocation = get_cfg_var('cfg_file_path');
 
     $sysCompliance  = "<a href='javascript:void(0); toggleNwFiles(\"sysComp\");'>{$mod_strings['LBL_UW_SHOW_COMPLIANCE']}</a>";
     $sysCompliance .= "<div id='sysComp' >";
     $sysCompliance .= "<table cellpadding='0' cellspacing='0' border='0'>";
     foreach ($result as $k => $v) {
-        if ($k == 'error_found') {
+        if ($k === 'error_found') {
             continue;
         }
         $sysCompliance .= "<tr><td valign='top'>{$checks[$k]}</td>";
@@ -228,15 +228,15 @@ if ($result['error_found'] == true || !empty($result['warn_found'])) {
     }
     $sysCompliance .= "<tr><td valign='top'>{$mod_strings['LBL_UW_COMPLIANCE_PHP_INI']}</td>";
     $sysCompliance .= "<td valign='top'><b>{$phpIniLocation}</b></td></tr>";
-    $sysCompliance .= "</table></div>";
+    $sysCompliance .= '</table></div>';
 } else {
     $sysCompliance = "<b>{$mod_strings['LBL_UW_COMPLIANCE_ALL_OK']}</b>";
 }
 
-////	END INSTALLER CHECKS
+////    END INSTALLER CHECKS
 ///////////////////////////////////////////////////////////////////////////////
 
-////	stop on all errors
+////    stop on all errors
 foreach ($errors as $k => $type) {
     if (is_array($type) && count($type) > 0) {
         foreach ($type as $k => $subtype) {
@@ -253,67 +253,67 @@ foreach ($errors as $k => $type) {
 }
 
 $GLOBALS['top_message'] = (string)($mod_strings['LBL_UW_NEXT_TO_UPLOAD']);
-$showBack		= true;
-$showCancel		= true;
-$showRecheck	= true;
-$showNext		= ($stop) ? false : true;
+$showBack        = true;
+$showCancel        = true;
+$showRecheck    = true;
+$showNext        = ($stop) ? false : true;
 
-$stepBack		= $_REQUEST['step'] - 1;
-$stepNext		= $_REQUEST['step'] + 1;
-$stepCancel		= -1;
-$stepRecheck	= $_REQUEST['step'];
+$stepBack        = $_REQUEST['step'] - 1;
+$stepNext        = $_REQUEST['step'] + 1;
+$stepCancel        = -1;
+$stepRecheck    = $_REQUEST['step'];
 
 $_SESSION['step'][$steps['files'][$_REQUEST['step']]] = ($stop) ? 'failed' : 'success';
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	OUTPUT
+////    OUTPUT
 
 $uwMain =<<<eoq
 <style>
 .stop {
-	color: #cc0000;
-	}
+    color: #cc0000;
+    }
 .go {
-	color: #00cc00;
-	}
+    color: #00cc00;
+    }
 
 </style>
 <table cellpadding="3" cellspacing="4" border="0">
-	<tr>
-		<td align="left" valign="top">
-			{$mod_strings['LBL_UW_FILE_ISSUES_PERMS']}:
-		</td>
-		<td>
-			{$filesOut}
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<p>&nbsp;</p>
-		</td>
-	</tr>
-	<tr>
-		<td align="left" valign="top">
-			{$mod_strings['LBL_UW_DB_ISSUES_PERMS']}:
-		</td>
-		<td>
-			{$dbOut}
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<p>&nbsp;</p>
-		</td>
-	</tr>
-	<tr>
-		<td align="left" valign="top">
-			{$mod_strings['LBL_UW_COMPLIANCE_TITLE2']}:
-		</td>
-		<td>
-			{$sysCompliance}
-		</td>
-	</tr>
+    <tr>
+        <td align="left" valign="top">
+            {$mod_strings['LBL_UW_FILE_ISSUES_PERMS']}:
+        </td>
+        <td>
+            {$filesOut}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>&nbsp;</p>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" valign="top">
+            {$mod_strings['LBL_UW_DB_ISSUES_PERMS']}:
+        </td>
+        <td>
+            {$dbOut}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <p>&nbsp;</p>
+        </td>
+    </tr>
+    <tr>
+        <td align="left" valign="top">
+            {$mod_strings['LBL_UW_COMPLIANCE_TITLE2']}:
+        </td>
+        <td>
+            {$sysCompliance}
+        </td>
+    </tr>
 </table>
 <div id="upgradeDiv" style="display:none">
     <table border="0" cellspacing="0" cellpadding="0">

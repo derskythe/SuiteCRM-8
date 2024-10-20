@@ -67,7 +67,7 @@ $preformat_end_date = $focus->end_date;
 $focus->save($check_notify);
 $return_id = $focus->id;
 
-$GLOBALS['log']->debug("Saved record with id of ".$return_id);
+$GLOBALS['log']->debug('Saved record with id of ' .$return_id);
 
 //copy compaign targets on duplicate
 if (!empty($_REQUEST['duplicateSave']) &&  !empty($_REQUEST['duplicateId'])) {
@@ -88,7 +88,7 @@ if (!empty($_REQUEST['duplicateSave']) &&  !empty($_REQUEST['duplicateId'])) {
 
 
 //if type is set to newsletter then make sure there are prospect lists attached
-if ($focus->campaign_type =='NewsLetter') {
+if ($focus->campaign_type === 'NewsLetter') {
     //if this is a duplicate, and the "relate_to" and "relate_id" elements are not cleared out,
     //then prospect lists will get related to the original campaign on save of the prospect list, and then
     //will get related to the new newsletter campaign, meaning the same (un)subscription list will belong to
@@ -114,7 +114,7 @@ if ($focus->campaign_type =='NewsLetter') {
         $subs = BeanFactory::newBean('ProspectLists');
         $subs->name = $focus->name.' '.$mod_strings['LBL_SUBSCRIPTION_LIST'];
         $subs->assigned_user_id= $current_user->id;
-        $subs->list_type = "default";
+        $subs->list_type = 'default';
         $subs->save();
         $focus->prospectlists->add($subs->id);
 
@@ -122,7 +122,7 @@ if ($focus->campaign_type =='NewsLetter') {
         $unsubs = BeanFactory::newBean('ProspectLists');
         $unsubs->name = $focus->name.' '.$mod_strings['LBL_UNSUBSCRIPTION_LIST'];
         $unsubs->assigned_user_id= $current_user->id;
-        $unsubs->list_type = "exempt";
+        $unsubs->list_type = 'exempt';
         $unsubs->save();
         $focus->prospectlists->add($unsubs->id);
 
@@ -130,7 +130,7 @@ if ($focus->campaign_type =='NewsLetter') {
         $test_subs = BeanFactory::newBean('ProspectLists');
         $test_subs->name = $focus->name.' '.$mod_strings['LBL_TEST_LIST'];
         $test_subs->assigned_user_id= $current_user->id;
-        $test_subs->list_type = "test";
+        $test_subs->list_type = 'test';
         $test_subs->save();
         $focus->prospectlists->add($test_subs->id);
     }

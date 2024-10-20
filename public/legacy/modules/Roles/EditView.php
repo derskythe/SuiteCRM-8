@@ -59,40 +59,40 @@ if (isset($_REQUEST['record'])) {
     $focus->retrieve($_REQUEST['record']);
 }
 if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == '1') {
-    $focus->id = "";
+    $focus->id = '';
     unset($_REQUEST['record']);
 }
 global $theme;
 
 
 
-$GLOBALS['log']->info("Role Edit View");
+$GLOBALS['log']->info('Role Edit View');
 echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array($mod_strings['LBL_MODULE_NAME'],$focus->name), true);
 $xtpl=new XTemplate('modules/Roles/EditView.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 
 if (isset($_REQUEST['return_module'])) {
-    $xtpl->assign("RETURN_MODULE", $_REQUEST['return_module']);
+    $xtpl->assign('RETURN_MODULE', $_REQUEST['return_module']);
 }
 if (isset($_REQUEST['return_action'])) {
-    $xtpl->assign("RETURN_ACTION", $_REQUEST['return_action']);
+    $xtpl->assign('RETURN_ACTION', $_REQUEST['return_action']);
 }
 if (isset($_REQUEST['return_id'])) {
-    $xtpl->assign("RETURN_ID", $_REQUEST['return_id']);
+    $xtpl->assign('RETURN_ID', $_REQUEST['return_id']);
 }
 // handle Create $module then Cancel
 if (empty($_REQUEST['return_id'])) {
-    $xtpl->assign("RETURN_ACTION", 'index');
+    $xtpl->assign('RETURN_ACTION', 'index');
 }
-$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("JAVASCRIPT", get_set_focus_js() . get_chooser_js() . get_validate_record_js());
-$xtpl->assign("ID", $focus->id);
-$xtpl->assign("NAME", $focus->name);
-$xtpl->assign("DESCRIPTION", $focus->description);
+$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('JAVASCRIPT', get_set_focus_js() . get_chooser_js() . get_validate_record_js());
+$xtpl->assign('ID', $focus->id);
+$xtpl->assign('NAME', $focus->name);
+$xtpl->assign('DESCRIPTION', $focus->description);
 
-require_once("include/templates/TemplateGroupChooser.php");
-require_once("modules/MySettings/TabController.php");
+require_once('include/templates/TemplateGroupChooser.php');
+require_once('modules/MySettings/TabController.php');
 
 $chooser = new TemplateGroupChooser();
 $controller = new TabController();
@@ -120,17 +120,17 @@ if (isset($_REQUEST['record'])) {
         $chooser->args['values_array'][1][$key] = $app_list_strings['moduleList'][$key];
     }
 }
-    
+
 $chooser->args['left_name'] = 'display_tabs';
 $chooser->args['right_name'] = 'hide_tabs';
 $chooser->args['left_label'] =  $mod_strings['LBL_ALLOWED_MODULES'];
 $chooser->args['right_label'] =  $mod_strings['LBL_DISALLOWED_MODULES'];
 $chooser->args['title'] =  $mod_strings['LBL_ASSIGN_MODULES'];
 
-$xtpl->assign("TAB_CHOOSER", $chooser->display());
+$xtpl->assign('TAB_CHOOSER', $chooser->display());
 
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->parse('main');
+$xtpl->out('main');
 
 $javascript = new javascript();
 $javascript->setFormName('EditView');

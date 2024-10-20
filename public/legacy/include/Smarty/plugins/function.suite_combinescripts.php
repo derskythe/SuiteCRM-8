@@ -55,16 +55,16 @@
  * @param array
  * @param Smarty
  */
-function smarty_function_suite_combinescripts($params, &$smarty)
+function smarty_function_suite_combinescripts($params, $smarty)
 {
     if (! isset($params['files'])) {
         $smarty->trigger_error($GLOBALS['app_strings']['ERR_MISSING_REQUIRED_FIELDS'] . 'file');
     }
 
     $replacedFiles = str_replace("\n", '', $params['files']);
-    $trimmedFiles = str_replace(" ", '', $replacedFiles);
+    $trimmedFiles = str_replace(' ', '', $replacedFiles);
 
-    if (strpos($trimmedFiles, ',') !== false) {
+    if (str_contains($trimmedFiles, ',')) {
         $files = explode(',', $trimmedFiles);
     } else {
         $files = [$trimmedFiles];

@@ -122,7 +122,7 @@ class SugarAuthenticate
                 $usr->savePreferencesToDB();
             }
         }
-        if (strtolower(get_class($this)) != 'sugarauthenticate') {
+        if (strtolower(get_class($this)) !== 'sugarauthenticate') {
             $sa = new SugarAuthenticate();
             $error = (!empty($_SESSION['login_error']))?$_SESSION['login_error']:'';
             if ($sa->loginAuthenticate($username, $password, true, $PARAMS)) {
@@ -224,7 +224,7 @@ class SugarAuthenticate
 
         // Clear all uploaded import files for this user if it exists
         require_once('modules/Import/ImportCacheFiles.php');
-        $tmp_file_name = ImportCacheFiles::getImportDir()."/IMPORT_" . $GLOBALS['current_user']->id;
+        $tmp_file_name = ImportCacheFiles::getImportDir(). '/IMPORT_' . $GLOBALS['current_user']->id;
 
         if (file_exists($tmp_file_name)) {
             unlink($tmp_file_name);
@@ -241,31 +241,31 @@ class SugarAuthenticate
     {
         global $module, $action, $allowed_actions;
         $authenticated = false;
-        $allowed_actions = array("Authenticate", "Login"); // these are actions where the user/server keys aren't compared
+        $allowed_actions = array( 'Authenticate', 'Login' ); // these are actions where the user/server keys aren't compared
         if (isset($_SESSION['authenticated_user_id'])) {
-            $GLOBALS['log']->debug("We have an authenticated user id: ".$_SESSION["authenticated_user_id"]);
+            $GLOBALS['log']->debug('We have an authenticated user id: ' . $_SESSION['authenticated_user_id']);
 
             $authenticated = $this->postSessionAuthenticate();
         } else {
-            if (isset($action) && isset($module) && $action == "Authenticate" && $module == "Users") {
-                $GLOBALS['log']->debug("We are authenticating user now");
+            if (isset($action) && isset($module) && $action === 'Authenticate' && $module === 'Users') {
+                $GLOBALS['log']->debug('We are authenticating user now');
             } else {
-                $GLOBALS['log']->debug("The current user does not have a session.  Going to the login page");
-                $action = "Login";
-                $module = "Users";
+                $GLOBALS['log']->debug('The current user does not have a session.  Going to the login page');
+                $action = 'Login';
+                $module = 'Users';
                 $_REQUEST['action'] = $action;
                 $_REQUEST['module'] = $module;
             }
         }
         if (empty($GLOBALS['current_user']->id) && !in_array($action, $allowed_actions)) {
-            $GLOBALS['log']->debug("The current user is not logged in going to login page");
-            $action = "Login";
-            $module = "Users";
+            $GLOBALS['log']->debug('The current user is not logged in going to login page');
+            $action = 'Login';
+            $module = 'Users';
             $_REQUEST['action'] = $action;
             $_REQUEST['module'] = $module;
         }
 
-        if ($authenticated && ((empty($_REQUEST['module']) || empty($_REQUEST['action'])) || ($_REQUEST['module'] != 'Users' || $_REQUEST['action'] != 'Logout'))) {
+        if ($authenticated && ((empty($_REQUEST['module']) || empty($_REQUEST['action'])) || ($_REQUEST['module'] !== 'Users' || $_REQUEST['action'] !== 'Logout'))) {
             $this->validateIP();
         }
         return $authenticated;
@@ -284,15 +284,19 @@ class SugarAuthenticate
         $server_unique_key = (isset($sugar_config['unique_key'])) ? $sugar_config['unique_key'] : '';
 
         //CHECK IF USER IS CROSSING SITES
-        if (($user_unique_key != $server_unique_key) && (!in_array($action, $allowed_actions)) && (!isset($_SESSION['login_error']))) {
+        if (($user_unique_key != $server_unique_key) && (!in_array(
+                $action,
+                $allowed_actions,
+                true
+            )) && (!isset($_SESSION['login_error']))) {
             $GLOBALS['log']->debug('Destroying Session User has crossed Sites');
             session_destroy();
-            header("Location: index.php?action=Login&module=Users" . $GLOBALS['app']->getLoginRedirect());
+            header('Location: index.php?action=Login&module=Users' . $GLOBALS['app']->getLoginRedirect());
             sugar_cleanup(true);
         }
         if (!$this->userAuthenticate->loadUserOnSession($_SESSION['authenticated_user_id'])) {
             session_destroy();
-            header("Location: index.php?action=Login&module=Users&loginErrorMessage=LBL_SESSION_EXPIRED");
+            header('Location: index.php?action=Login&module=Users&loginErrorMessage=LBL_SESSION_EXPIRED');
             $GLOBALS['log']->debug('Current user session does not exist redirecting to login');
             sugar_cleanup(true);
         }
@@ -379,7 +383,7 @@ class SugarAuthenticate
         $authenticated = false;
 
         if (isset($_SESSION['authenticated_user_id'])) {
-            $GLOBALS['log']->debug("We have an authenticated user id: ".$_SESSION["authenticated_user_id"]);
+            $GLOBALS['log']->debug('We have an authenticated user id: ' . $_SESSION['authenticated_user_id']);
 
             $authenticated = $this->postCheckSession();
         }
@@ -434,9 +438,9 @@ class SugarAuthenticate
         if (!isset($sugar_config['verify_client_ip']) || $sugar_config['verify_client_ip'] == true) {
             // check to see if we've got a current ip address in $_SESSION
             // and check to see if the session has been hijacked by a foreign ip
-            if (isset($_SESSION["ipaddress"])) {
-                $session_parts = explode(".", $_SESSION["ipaddress"]);
-                $client_parts = explode(".", $clientIP);
+            if (isset($_SESSION['ipaddress'])) {
+                $session_parts = explode('.', $_SESSION['ipaddress']);
+                $client_parts = explode('.', $clientIP);
                 if (count($session_parts) < 4) {
                     $classCheck = 0;
                 } else {
@@ -452,13 +456,13 @@ class SugarAuthenticate
                     }
                 }
                 // we have a different IP address
-                if ($_SESSION["ipaddress"] !== $clientIP && empty($classCheck)) {
+                if ($_SESSION['ipaddress'] !== $clientIP && empty($classCheck)) {
                     $GLOBALS['log']->fatal("IP Address mismatch: SESSION IP: {$_SESSION['ipaddress']} CLIENT IP: {$clientIP}");
                     session_destroy();
                     return false;
                 }
             } else {
-                $_SESSION["ipaddress"] = $clientIP;
+                $_SESSION['ipaddress'] = $clientIP;
             }
         }
         return true;
@@ -473,7 +477,7 @@ class SugarAuthenticate
         if (!isset($_SESSION['factor_message'])) {
             $_SESSION['factor_message'] = array();
         }
-        if (!in_array($msg, $_SESSION['factor_message'])) {
+        if (!in_array($msg, $_SESSION['factor_message'], true)) {
             $_SESSION['factor_message'][] = $msg;
         }
     }
@@ -515,9 +519,9 @@ class SugarAuthenticate
         if (!isset($sugar_config['verify_client_ip']) || $sugar_config['verify_client_ip'] == true) {
             // check to see if we've got a current ip address in $_SESSION
             // and check to see if the session has been hijacked by a foreign ip
-            if (isset($_SESSION["ipaddress"])) {
-                $session_parts = explode(".", $_SESSION["ipaddress"]);
-                $client_parts = explode(".", $clientIP);
+            if (isset($_SESSION['ipaddress'])) {
+                $session_parts = explode('.', $_SESSION['ipaddress']);
+                $client_parts = explode('.', $clientIP);
                 if (count($session_parts) < 4) {
                     $classCheck = 0;
                 } else {
@@ -533,13 +537,13 @@ class SugarAuthenticate
                     }
                 }
                 // we have a different IP address
-                if ($_SESSION["ipaddress"] != $clientIP && empty($classCheck)) {
+                if ($_SESSION['ipaddress'] != $clientIP && empty($classCheck)) {
                     $GLOBALS['log']->fatal("IP Address mismatch: SESSION IP: {$_SESSION['ipaddress']} CLIENT IP: {$clientIP}");
                     session_destroy();
-                    die($mod_strings['ERR_IP_CHANGE'] . "<a href=\"{$sugar_config['site_url']}\">" . $mod_strings['ERR_RETURN'] . "</a>");
+                    die($mod_strings['ERR_IP_CHANGE'] . "<a href=\"{$sugar_config['site_url']}\">" . $mod_strings['ERR_RETURN'] . '</a>');
                 }
             } else {
-                $_SESSION["ipaddress"] = $clientIP;
+                $_SESSION['ipaddress'] = $clientIP;
             }
         }
     }
@@ -610,7 +614,7 @@ class SugarAuthenticate
             ob_clean();
             // fixing bug #46837: Previosly links/URLs to records in Sugar from MSO Excel/Word were referred to the home screen and not the record
             // It used to appear when default browser was not MS IE
-            header("Location: ".$GLOBALS['app']->getLoginRedirect());
+            header('Location: ' . $GLOBALS['app']->getLoginRedirect());
             sugar_cleanup(true);
         }
     }

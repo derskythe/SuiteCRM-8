@@ -46,7 +46,7 @@ require_once('include/ListView/ListViewSmarty.php');
 
 require_once('include/TemplateHandler/TemplateHandler.php');
 require_once('include/SearchForm/SearchForm2.php');
-define("NUM_COLS", 2);
+const NUM_COLS = 2;
 #[\AllowDynamicProperties]
 class PopupSmarty extends ListViewSmarty
 {
@@ -114,8 +114,9 @@ class PopupSmarty extends ListViewSmarty
      * @param data array from ListViewData
      * @param html_var string the corresponding html var in xtpl per row
      *
+     * @throws SmartyException
      */
-    public function process($file, $data, $htmlVar)
+    public function process($file, $data, $htmlVar) : bool
     {
         global $odd_bg, $even_bg, $hilite_bg, $click_bg, $app_strings;
         parent::process($file, $data, $htmlVar);
@@ -168,7 +169,7 @@ class PopupSmarty extends ListViewSmarty
         }
 
 
-        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) == 'MULTISELECT') {
+        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) === 'MULTISELECT') {
             $this->multiSelect = true;
         }
         // handle save checks and stuff
@@ -211,7 +212,7 @@ class PopupSmarty extends ListViewSmarty
     /*
      * Display the Smarty template.  Here we are using the TemplateHandler for caching per the module.
      */
-    public function display($end = true)
+    public function display($end = true) : string
     {
         global $app_strings;
 
@@ -287,7 +288,7 @@ class PopupSmarty extends ListViewSmarty
         );
 
         $themeObject = SugarThemeRegistry::current();
-        $this->th->ss->assign("STYLE_JS", ob_get_contents() . $themeObject->getJS());
+        $this->th->ss->assign('STYLE_JS', ob_get_contents() . $themeObject->getJS());
 
         $str = $this->th->displayTemplate($this->seed->module_dir, $this->view, $this->tpl);
         return $str;
@@ -308,7 +309,8 @@ class PopupSmarty extends ListViewSmarty
         $filter_fields = array(),
         $id_field = 'id',
         $id = null
-    ) {
+    ) : bool
+    {
         $args = func_get_args();
         return call_user_func_array(array($this, '_setup'), $args);
     }
@@ -323,7 +325,7 @@ class PopupSmarty extends ListViewSmarty
         }
         if (!empty($this->_popupMeta['create'])) {
             $formBase = new $this->_popupMeta['create']['formBaseClass']();
-            if (isset($_REQUEST['doAction']) && $_REQUEST['doAction'] == 'save') {
+            if (isset($_REQUEST['doAction']) && $_REQUEST['doAction'] === 'save') {
                 //If it's a new record, set useRequired to false
                 $useRequired = empty($_REQUEST['id']) ? false : true;
                 $formBase->handleSave('', false, $useRequired);
@@ -412,7 +414,7 @@ class PopupSmarty extends ListViewSmarty
                     foreach ($def['related_fields'] as $field) {
                         //id column is added by query construction function. This addition creates duplicates
                         //and causes issues in oracle. #10165
-                        if ($field != 'id') {
+                        if ($field !== 'id') {
                             $this->filter_fields[$field] = true;
                         }
                     }
@@ -444,14 +446,14 @@ class PopupSmarty extends ListViewSmarty
             $_REQUEST['field_to_name'] = is_array($_REQUEST['field_to_name']) ? $_REQUEST['field_to_name'] : array($_REQUEST['field_to_name']);
             foreach ($_REQUEST['field_to_name'] as $add_field) {
                 $add_field = strtolower($add_field);
-                if ($add_field != 'id' && !isset($this->filter_fields[$add_field]) && isset($this->seed->field_defs[$add_field])) {
+                if ($add_field !== 'id' && !isset($this->filter_fields[$add_field]) && isset($this->seed->field_defs[$add_field])) {
                     $this->filter_fields[$add_field] = true;
                 }
             }
         }
 
 
-        if (!empty($_REQUEST['query']) || (!empty($GLOBALS['sugar_config']['save_query']) && $GLOBALS['sugar_config']['save_query'] != 'populate_only')) {
+        if (!empty($_REQUEST['query']) || (!empty($GLOBALS['sugar_config']['save_query']) && $GLOBALS['sugar_config']['save_query'] !== 'populate_only')) {
             $data = $this->lvd->getListViewData($this->seed, $searchWhere, 0, -1, $this->filter_fields, $params, 'id');
         } else {
             $this->should_process = false;
@@ -524,7 +526,7 @@ class PopupSmarty extends ListViewSmarty
                 //if we have a relate type then reset to name so that we end up with a textbox
                 //rather than a select button
                 $this->fieldDefs[$name]['name'] = $this->fieldDefs[$name]['name'];
-                if ($this->fieldDefs[$name]['type'] == 'relate') {
+                if ($this->fieldDefs[$name]['type'] === 'relate') {
                     $this->fieldDefs[$name]['type'] = 'name';
                 }
                 if (isset($this->fieldDefs[$name]['options']) && isset($GLOBALS['app_list_strings'][$this->fieldDefs[$name]['options']])) {
@@ -542,7 +544,7 @@ class PopupSmarty extends ListViewSmarty
     {
         $addform = '';
         if (!$this->seed->ACLAccess('save')) {
-            return;
+            return '';
         }
         if (!empty($this->_popupMeta['create'])) {
             $formBase = new $this->_popupMeta['create']['formBaseClass']();
@@ -573,11 +575,11 @@ class PopupSmarty extends ListViewSmarty
         $lbl_save_button_label = $GLOBALS['app_strings']['LBL_SAVE_BUTTON_LABEL'];
         $module_dir = $this->seed->module_dir;
         $formSave = <<<EOQ
-			<input type="hidden" name="create" value="true">
-			<input type="hidden" name="popup" value="true">
-			<input type="hidden" name="to_pdf" value="true">
-			<input type="hidden" name="return_module" value="$module_dir">
-			<input type="hidden" name="return_action" value="Popup">
+            <input type="hidden" name="create" value="true">
+            <input type="hidden" name="popup" value="true">
+            <input type="hidden" name="to_pdf" value="true">
+            <input type="hidden" name="return_module" value="$module_dir">
+            <input type="hidden" name="return_action" value="Popup">
 EOQ;
         // if metadata contains custom inputs for the quickcreate
         if (!empty($this->_popupMeta['customInput']) && is_array($this->_popupMeta['customInput'])) {
@@ -593,7 +595,7 @@ EOQ;
 
     public function getQuickCreate()
     {
-        require_once("include/EditView/PopupQuickCreate.php");
+        require_once('include/EditView/PopupQuickCreate.php');
         $qc = new PopupQuickCreate($this->module);
         return $qc->process($this->module);
     }

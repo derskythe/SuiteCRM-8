@@ -42,13 +42,14 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-
 /**
  * @param $focus
  * @param $field
  * @param $value
  * @param $view
+ *
  * @return string
+ * @throws SmartyException
  */
 function displayAttachmentField($focus, $field, $value, $view)
 {

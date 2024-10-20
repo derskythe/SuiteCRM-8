@@ -49,19 +49,19 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class Campaign extends SugarBean
 {
-    public $field_name_map;
+    public ?array $field_name_map;
 
     // Stored fields
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
-    public $created_by;
-    public $created_by_name;
+    public string $id;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $assigned_user_id;
+    public string $created_by;
+    public string $created_by_name;
     public $currency_id;
-    public $modified_by_name;
-    public $name;
+    public string $modified_by_name;
+    public string $name;
     public $start_date;
     public $end_date;
     public $status;
@@ -83,22 +83,22 @@ class Campaign extends SugarBean
     public $note_id;
 
     // module name definitions and table relations
-    public $table_name = "campaigns";
-    public $rel_prospect_list_table = "prospect_list_campaigns";
-    public $object_name = "Campaign";
-    public $module_dir = 'Campaigns';
-    public $importable = true;
+    public string $table_name = 'campaigns';
+    public $rel_prospect_list_table = 'prospect_list_campaigns';
+    public string $object_name = 'Campaign';
+    public string $module_dir = 'Campaigns';
+    public bool $importable = true;
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = [
+    public array $additional_column_fields = [
         'assigned_user_name',
         'assigned_user_id',
         'note_id',
     ];
 
-    public $relationship_fields = array('prospect_list_id' => 'prospect_lists', 'note_id' => 'notes',);
+    public array $relationship_fields = array( 'prospect_list_id' => 'prospect_lists', 'note_id' => 'notes',);
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     /**
      *
@@ -139,31 +139,31 @@ class Campaign extends SugarBean
         return $this->name;
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join='')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $query = "SELECT
+        $query = 'SELECT
             campaigns.*,
-            users.user_name as assigned_user_name ";
+            users.user_name as assigned_user_name ';
         $query .=  $custom_join['select'];
-        $query .= " FROM campaigns ";
-        $query .= "LEFT JOIN users
-                      ON campaigns.assigned_user_id=users.id";
+        $query .= ' FROM campaigns ';
+        $query .= 'LEFT JOIN users
+                      ON campaigns.assigned_user_id=users.id';
         $query .=  $custom_join['join'];
 
-        $where_auto = " campaigns.deleted=0";
+        $where_auto = ' campaigns.deleted=0';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= " where $where AND ".$where_auto;
         } else {
-            $query .= " where ".$where_auto;
+            $query .= ' where ' .$where_auto;
         }
 
-        if ($order_by != "") {
+        if ($order_by != '') {
             $query .= " ORDER BY $order_by";
         } else {
-            $query .= " ORDER BY campaigns.name";
+            $query .= ' ORDER BY campaigns.name';
         }
         return $query;
     }
@@ -179,7 +179,7 @@ class Campaign extends SugarBean
         }
 
         $query = "DELETE FROM $this->rel_prospect_list_table WHERE campaign_id='$campaign_id' AND deleted = '0' " . $prospect_clause;
-        $this->db->query($query, true, "Error clearing campaign to prospect_list relationship: ");
+        $this->db->query($query, true, 'Error clearing campaign to prospect_list relationship: ');
     }
 
 
@@ -215,21 +215,21 @@ class Campaign extends SugarBean
     public function get_list_view_data()
     {
         $temp_array = $this->get_list_view_array();
-        if ($this->campaign_type != 'Email') {
-            $temp_array['OPTIONAL_LINK']="display:none";
+        if ($this->campaign_type !== 'Email') {
+            $temp_array['OPTIONAL_LINK']= 'display:none';
         }
-        $temp_array['TRACK_CAMPAIGN_TITLE'] = translate("LBL_TRACK_BUTTON_TITLE", 'Campaigns');
+        $temp_array['TRACK_CAMPAIGN_TITLE'] = translate('LBL_TRACK_BUTTON_TITLE', 'Campaigns');
         $temp_array['TRACK_CAMPAIGN_IMAGE'] = SugarThemeRegistry::current()->getImageURL('view_status.gif');
-        $temp_array['LAUNCH_WIZARD_TITLE'] = translate("LBL_TO_WIZARD_TITLE", 'Campaigns');
+        $temp_array['LAUNCH_WIZARD_TITLE'] = translate('LBL_TO_WIZARD_TITLE', 'Campaigns');
         $temp_array['LAUNCH_WIZARD_IMAGE'] = SugarThemeRegistry::current()->getImageURL('edit_wizard.gif');
-        $temp_array['TRACK_VIEW_ALT_TEXT'] = translate("LBL_TRACK_BUTTON_TITLE", 'Campaigns');
-        $temp_array['LAUNCH_WIZ_ALT_TEXT'] = translate("LBL_TO_WIZARD_TITLE", 'Campaigns');
+        $temp_array['TRACK_VIEW_ALT_TEXT'] = translate('LBL_TRACK_BUTTON_TITLE', 'Campaigns');
+        $temp_array['LAUNCH_WIZ_ALT_TEXT'] = translate('LBL_TO_WIZARD_TITLE', 'Campaigns');
 
         return $temp_array;
     }
     /**
-    	builds a generic search based on the query string using or
-    	do not include any $this-> because this is called on without having the class instantiated
+        builds a generic search based on the query string using or
+        do not include any $this-> because this is called on without having the class instantiated
     */
     public function build_generic_where_clause($the_query_string)
     {
@@ -237,10 +237,10 @@ class Campaign extends SugarBean
         $the_query_string = $this->db->quote($the_query_string);
         array_push($where_clauses, "campaigns.name like '$the_query_string%'");
 
-        $the_where = "";
+        $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != "") {
-                $the_where .= " or ";
+            if ($the_where != '') {
+                $the_where .= ' or ';
             }
             $the_where .= $clause;
         }
@@ -261,13 +261,13 @@ class Campaign extends SugarBean
 
 
         // Bug53301
-        if ($this->campaign_type != 'NewsLetter') {
+        if ($this->campaign_type !== 'NewsLetter') {
             $this->frequency = '';
         }
 
-		return parent::save($check_notify);
+        return parent::save($check_notify);
 
-	}
+    }
 
 
     public function mark_deleted($id)
@@ -284,11 +284,11 @@ class Campaign extends SugarBean
 
     public function set_notification_body($xtpl, $camp)
     {
-        $xtpl->assign("CAMPAIGN_NAME", $camp->name);
-        $xtpl->assign("CAMPAIGN_AMOUNT", $camp->budget);
-        $xtpl->assign("CAMPAIGN_CLOSEDATE", $camp->end_date);
-        $xtpl->assign("CAMPAIGN_STATUS", $camp->status);
-        $xtpl->assign("CAMPAIGN_DESCRIPTION", nl2br($camp->content));
+        $xtpl->assign('CAMPAIGN_NAME', $camp->name);
+        $xtpl->assign('CAMPAIGN_AMOUNT', $camp->budget);
+        $xtpl->assign('CAMPAIGN_CLOSEDATE', $camp->end_date);
+        $xtpl->assign('CAMPAIGN_STATUS', $camp->status);
+        $xtpl->assign('CAMPAIGN_DESCRIPTION', nl2br($camp->content));
 
         return $xtpl;
     }
@@ -330,7 +330,7 @@ class Campaign extends SugarBean
             $type[0]='targeted';
         }
 
-        $query_array['select'] ="SELECT campaign_log.* ";
+        $query_array['select'] = 'SELECT campaign_log.* ';
         $query_array['where'] = $query_array['where']. " AND activity_type='{$type[0]}' AND archived=0";
         //add filtering by marketing id, if it exists
         if (!empty($mkt_id)) {
@@ -342,10 +342,10 @@ class Campaign extends SugarBean
             //perform the inner join with the group by if a marketing id is defined, which means we need to filter out duplicates.
             //if no marketing id is specified then we are displaying results from multiple marketing emails and it is understood there might be duplicate target entries
             if (!empty($mkt_id)) {
-                $group_by = str_replace("campaign_log", "cl", (string) $query_array['group_by']);
-                $join_where = str_replace("campaign_log", "cl", $query_array['where']);
+                $group_by = str_replace('campaign_log', 'cl', (string) $query_array['group_by']);
+                $join_where = str_replace('campaign_log', 'cl', $query_array['where']);
                 $query_array['from'] .= " INNER JOIN (select min(id) as id from campaign_log cl $join_where GROUP BY $group_by  ) secondary
-					on campaign_log.id = secondary.id	";
+                    on campaign_log.id = secondary.id    ";
             }
             unset($query_array['group_by']);
         } else {
@@ -355,7 +355,7 @@ class Campaign extends SugarBean
             }
         }
 
-        $query = (implode(" ", $query_array));
+        $query = (implode(' ', $query_array));
         return $query;
     }
 
@@ -385,36 +385,37 @@ class Campaign extends SugarBean
 
         //get select query from email man
         $man = BeanFactory::newBean('EmailMan');
-        $listquery= $man->create_queue_items_query('', str_replace(array("WHERE","where"), "", (string) $query_array['where']), null, $query_array);
+        $listquery= $man->create_queue_items_query('', str_replace(array( 'WHERE', 'where' ),
+                                                                   '', (string) $query_array['where']), null, $query_array);
         return $listquery;
     }
-    //	function get_prospect_list_entries() {
-    //		$this->load_relationship('prospectlists');
-    //		$query_array = $this->prospectlists->getQuery(true);
+    //    function get_prospect_list_entries() {
+    //        $this->load_relationship('prospectlists');
+    //        $query_array = $this->prospectlists->getQuery(true);
 //
-    //		$query=<<<EOQ
-    //			SELECT distinct prospect_lists.*,
-    //			(case  when (email_marketing.id is null) then default_message.id else email_marketing.id end) marketing_id,
-    //			(case  when  (email_marketing.id is null) then default_message.name else email_marketing.name end) marketing_name
+    //        $query=<<<EOQ
+    //            SELECT distinct prospect_lists.*,
+    //            (case  when (email_marketing.id is null) then default_message.id else email_marketing.id end) marketing_id,
+    //            (case  when  (email_marketing.id is null) then default_message.name else email_marketing.name end) marketing_name
 //
-    //			FROM prospect_lists
+    //            FROM prospect_lists
 //
-    //			INNER JOIN prospect_list_campaigns ON (prospect_lists.id=prospect_list_campaigns.prospect_list_id AND prospect_list_campaigns.campaign_id='{$this->id}')
+    //            INNER JOIN prospect_list_campaigns ON (prospect_lists.id=prospect_list_campaigns.prospect_list_id AND prospect_list_campaigns.campaign_id='{$this->id}')
 //
-    //			LEFT JOIN email_marketing on email_marketing.message_for = prospect_lists.id and email_marketing.campaign_id = '{$this->id}'
-    //			and email_marketing.deleted =0 and email_marketing.status='active'
+    //            LEFT JOIN email_marketing on email_marketing.message_for = prospect_lists.id and email_marketing.campaign_id = '{$this->id}'
+    //            and email_marketing.deleted =0 and email_marketing.status='active'
 //
-    //			LEFT JOIN email_marketing default_message on default_message.message_for = prospect_list_campaigns.campaign_id and
-    //			default_message.campaign_id = '{$this->id}' and default_message.deleted =0
-    //			and default_message.status='active'
+    //            LEFT JOIN email_marketing default_message on default_message.message_for = prospect_list_campaigns.campaign_id and
+    //            default_message.campaign_id = '{$this->id}' and default_message.deleted =0
+    //            and default_message.status='active'
 //
-    //			WHERE prospect_list_campaigns.deleted=0 AND prospect_lists.deleted=0
+    //            WHERE prospect_list_campaigns.deleted=0 AND prospect_lists.deleted=0
 //
     //EOQ;
-    //		return $query;
-    //	}
+    //        return $query;
+    //    }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':return true;
@@ -439,7 +440,7 @@ class Campaign extends SugarBean
     {
         //include the distinct filter if a marketing id is defined, which means we need to filter out duplicates by the passed in group by.
         //if no marketing id is specified, it is understood there might be duplicate target entries so no need to filter out
-        if ((strpos($query, 'marketing_id') !== false)&& isset($params['distinct'])) {
+        if ((str_contains($query, 'marketing_id'))&& isset($params['distinct'])) {
             $pattern = '/SELECT(.*?)(\s){1}FROM(\s){1}/is';  // ignores the case
             $replacement = 'SELECT COUNT(DISTINCT ' . $params['distinct'] . ') c FROM ';
             $query = preg_replace($pattern, $replacement, $query, 1);

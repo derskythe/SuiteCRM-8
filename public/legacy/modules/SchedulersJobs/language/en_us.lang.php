@@ -56,14 +56,14 @@ $mod_strings = array(
     'LBL_INTERVAL' => 'Minimum interval between tries',
     'LBL_CLIENT' => 'Owning client',
     'LBL_PERCENT' => 'Percent complete',
-// Errors
-    'ERR_CALL' => "Cannot call function: %s",
-    'ERR_CURL' => "No CURL - cannot run URL jobs",
-    'ERR_FAILED' => "Unexpected failure, please check PHP logs and suitecrm.log",
-    'ERR_PHP' => "%s [%d]: %s in %s on line %d",
-    'ERR_NOUSER' => "No User ID specified for the job",
-    'ERR_NOSUCHUSER' => "User ID %s not found",
-    'ERR_JOBTYPE' => "Unknown job type: %s",
-    'ERR_TIMEOUT' => "Forced failure on timeout",
+    // Errors
+    'ERR_CALL' => 'Cannot call function: %s',
+    'ERR_CURL' => 'No CURL - cannot run URL jobs',
+    'ERR_FAILED' => 'Unexpected failure, please check PHP logs and suitecrm.log',
+    'ERR_PHP' => '%s [%d]: %s in %s on line %d',
+    'ERR_NOUSER' => 'No User ID specified for the job',
+    'ERR_NOSUCHUSER' => 'User ID %s not found',
+    'ERR_JOBTYPE' => 'Unknown job type: %s',
+    'ERR_TIMEOUT' => 'Forced failure on timeout',
     'ERR_JOB_FAILED_VERBOSE' => 'Job %1$s (%2$s) failed in CRON run',
 );

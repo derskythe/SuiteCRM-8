@@ -7,6 +7,6 @@ use SuiteCRM\Utility\CurrentLanguage;
  * @return CurrentLanguage
  */
 $container['CurrentLanguage'] = function ($container) {
-    $currentLanguage = new CurrentLanguage($container);
+    $currentLanguage = new CurrentLanguage();
     return $currentLanguage;
 };
