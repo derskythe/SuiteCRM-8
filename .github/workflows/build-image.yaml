@@ -15,7 +15,7 @@ concurrency:
 jobs:
   suitecrm-8:
     name: suitecrm-8
-    uses: ./.github/workflows/docker-build-n-push.yml@try-legacy
+    uses: ./.github/workflows/docker-build-n-push.yml
     permissions:
       contents: write
       packages: write
