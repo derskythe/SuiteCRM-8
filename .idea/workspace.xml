@@ -26,11 +26,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="refactor: InstallHandler rewrote">
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="feat: Add compose-dev.yaml and update dependencies&#10;&#10;Introduce a new development environment configuration.&#10;&#10;* Added compose-dev.yaml for Docker development setup.&#10;* Updated Twig dependency in composer.lock to the latest version.&#10;* Refined .dockerignore to clean up ignored paths and include relevant cache directories and node modules.&#10;* Simplified workspace.xml in .idea by removing unnecessary changes and outdated entries.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +50,19 @@
     <option name="myFormatOnlyChangedLines" value="true" />
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="fix-legacy" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="PREVIEW_PUSH_ON_COMMIT_AND_PUSH" value="false" />
     <option name="PUSH_AUTO_UPDATE" value="true" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -63,6 +73,31 @@
     &quot;assignee&quot;: &quot;derskythe&quot;
   }
 }</component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="fix-legacy" />
+                    <option name="lastUsedInstant" value="1729422109" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="try-to-remove" />
+                    <option name="lastUsedInstant" value="1729422108" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/derskythe/SuiteCRM-8.git&quot;,
@@ -354,7 +389,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "try-to-remove",
+    "git-widget-placeholder": "fix-legacy",
     "javascript.nodejs.core.library.configured.version": "20.16.0",
     "javascript.nodejs.core.library.typings.version": "20.16.13",
     "last.edited.regexp": "    10 KBytes              ",
@@ -543,7 +578,7 @@
       <workItem from="1729332443435" duration="993000" />
       <workItem from="1729333469593" duration="74000" />
       <workItem from="1729342928020" duration="12663000" />
-      <workItem from="1729368813716" duration="42374000" />
+      <workItem from="1729368813716" duration="45506000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Add IntelliJ IDEA project configuration files&#10;&#10;Included various configuration files to set up IntelliJ IDEA project environment.&#10;* Implement .gitignore for IDEA-specific files.&#10;* Define project encodings, Git blame settings, and JavaScript library mappings.&#10;* Configure PHP tools, PHPUnit settings, and SQL dialect mappings.&#10;* Add module definitions and source folder configurations.">
       <option name="closed" value="true" />
@@ -569,7 +604,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729413840427</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: Add compose-dev.yaml and update dependencies&#10;&#10;Introduce a new development environment configuration.&#10;&#10;* Added compose-dev.yaml for Docker development setup.&#10;* Updated Twig dependency in composer.lock to the latest version.&#10;* Refined .dockerignore to clean up ignored paths and include relevant cache directories and node modules.&#10;* Simplified workspace.xml in .idea by removing unnecessary changes and outdated entries.">
+      <option name="closed" value="true" />
+      <created>1729422088379</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1729422088379</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -632,7 +675,8 @@
     <MESSAGE value="chore: remove obsolete data source files&#10;&#10;Deleted two unnecessary data source files from the project.&#10;* Removed .idea/dataSources/194d6ef2-6c15-4a2b-b4a5-70f03a353cbb/storage_v2/_src_/schema/app.IXoBAA.meta.&#10;* Deleted .idea/dataSources/84a42712-1bee-47b5-a29a-56c5c93c1ae6.xml." />
     <MESSAGE value="refactor: InstallHandler rewrited" />
     <MESSAGE value="refactor: InstallHandler rewrote" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: InstallHandler rewrote" />
+    <MESSAGE value="feat: Add compose-dev.yaml and update dependencies&#10;&#10;Introduce a new development environment configuration.&#10;&#10;* Added compose-dev.yaml for Docker development setup.&#10;* Updated Twig dependency in composer.lock to the latest version.&#10;* Refined .dockerignore to clean up ignored paths and include relevant cache directories and node modules.&#10;* Simplified workspace.xml in .idea by removing unnecessary changes and outdated entries." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Add compose-dev.yaml and update dependencies&#10;&#10;Introduce a new development environment configuration.&#10;&#10;* Added compose-dev.yaml for Docker development setup.&#10;* Updated Twig dependency in composer.lock to the latest version.&#10;* Refined .dockerignore to clean up ignored paths and include relevant cache directories and node modules.&#10;* Simplified workspace.xml in .idea by removing unnecessary changes and outdated entries." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
