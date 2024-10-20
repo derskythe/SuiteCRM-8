@@ -50,7 +50,8 @@ ENV WORK_DIR="${WORK_DIR}" \
     APACHE_RUN_DIR="${APACHE_RUN_DIR}" \
     APACHE_PID_FILE="${APACHE_PID_FILE}" \
     APACHE_RUN_USER="${APACHE_RUN_USER}" \
-    APACHE_RUN_GROUP="${APACHE_RUN_GROUP}"
+    APACHE_RUN_GROUP="${APACHE_RUN_GROUP}" \
+    DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -80,13 +81,30 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
     libldap-dev \
     libldap-common \
     libzip-dev \
-    libmcrypt-dev \
     libc-client-dev \
     libkrb5-dev \
     libyaml-dev \
     strace \
     ltrace \
     vim \
+    libghc-postgresql-simple-dev \
+    libghc-postgresql-libpq-dev \
+    libghc-persistent-postgresql-dev \
+    unixodbc-dev \
+    libbz2-dev \
+    zlib1g-dev \
+    libxml2-dev \
+    libedit-dev \
+    libxpm-dev \
+    libwebp-dev \
+    libfreetype6  \
+    libaspell15 \
+    aspell-en   \
+    spellutils \
+    libgmp10 \
+    libmpfr-dev \
+    libgmpxx4ldbl \
+    libonig-dev   \
     && \
     printf "PS1='\[\\\\033[32m\][\\\\u@\h\\\\[\\\\033[32m\\\\]]\\\\[\\\\033[00m\\\\] \\\\[\\\\033[36m\\\\]\\\\w\\\\[\\\\033[0m\\\\] \\\\[\\\\033[33m\\\\]\\\\$\\\\[\\\\033[00m\\\\] '\nalias ll='ls -lha --color=auto'\nalias ls='ls -ah --color=auto'\n" >> ~/.bashrc && \
     rm -Rf                                 \
@@ -103,7 +121,52 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
 
 FROM base AS install
 
-RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/log_debug.load && \
+ARG EXT_LIST="intl           \
+              ctype          \
+              standard       \
+              opcache        \
+              ldap           \
+              gd             \
+              zip            \
+              gettext        \
+              imap           \
+              pdo            \
+              pdo_mysql      \
+              pdo_pgsql      \
+              pdo_odbc       \
+              openssl        \
+              mysqli         \
+              soap           \
+              sodium         \
+              fileinfo       \
+              xml            \
+              xmlreader      \
+              xmlwriter      \
+              xsl            \
+              reflection     \
+              simplexml      \
+              zlib           \
+              readline       \
+              filter         \
+              json           \
+              spl            \
+              calendar       \
+              phar           \
+              iconv          \
+              hash           \
+              dom            \
+              bz2            \
+              random         \
+              pspell         \
+              tokenizer      \
+              pcntl          \
+              posix          \
+              enchant        \
+              gmp            \
+              shmop          \
+              exif"
+
+RUN     ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/log_debug.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/info.load         ${APACHE_MOD_ENABLED_DIR}/info.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/rewrite.load      ${APACHE_MOD_ENABLED_DIR}/rewrite.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/vhost_alias.load  ${APACHE_MOD_ENABLED_DIR}/vhost_alias.load && \
@@ -120,51 +183,21 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
         sed -ri -e 's/upload_max_filesize *= *[[:digit:]]*M/upload_max_filesize = 128M/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/\;error_log = syslog/error_log = \/var\/www\/html\/app\/logs\/php\.log/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/user_ini\.filename = *$/user_ini\.filename = \"\.user\.ini\"/' "${PHP_INI_DIR}/php.ini" && \
+        sed -ri -e 's/\;date.timezone =\s*/date.timezone = "${TZ}"/' "${PHP_INI_DIR}/php.ini" && \
         sed -ri -e 's/Listen *[[:digit:]]*/Listen 8080/' "${APACHE_CONFDIR}/ports.conf" && \
         sed -ri -e 's/^#AddDefaultCharset/AddDefaultCharset/' "${APACHE_CONF_AVAILABLE_DIR}/charset.conf" && \
         printf 'ServerName localhost\nCustomLog /dev/stdout combined\nCustomLog /dev/stdout vhost_combined\nErrorLog /dev/stderr\nLogLevel info\n' > ${APACHE_CONF_AVAILABLE_DIR}/other-vhosts-access-log.conf && \
         tmpfile=`mktemp` && head -n1 ${APACHE_CONFDIR}/envvars > $tmpfile && echo "export APACHE_LOG_DIR=${APACHE_LOG_DIR}" >> $tmpfile &&  tail -n +2 ${APACHE_CONFDIR}/envvars >> $tmpfile && mv -f $tmpfile ${APACHE_CONFDIR}/envvars && \
         php -i && \
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-        docker-php-ext-configure gd --with-freetype --with-jpeg && \
+        docker-php-source extract && \
+        docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype && \
         docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
-        docker-php-ext-install \
-                intl           \
-                opcache        \
-                ldap           \
-                gd             \
-                zip            \
-                gettext        \
-                imap           \
-                pdo_mysql      \
-                pdo_pgsql      \
-                pdo_odbc       \
-                openssl        \
-                mysqli         \
-                soap           \
-                sodium         \
-                fileinfo       \
-                exif        && \
-        pecl install xdebug && \
-        docker-php-ext-enable  \
-                intl           \
-                opcache        \
-                ldap           \
-                gd             \
-                zip            \
-                gettext        \
-                openssl        \
-                imap           \
-                pdo_mysql      \
-                pdo_pgsql      \
-                pdo_odbc       \
-                mysqli         \
-                soap           \
-                xdebug         \
-                exif           \
-                fileinfo       \
-                sodium         \
-                            && \
+        docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr && \
+        docker-php-ext-install -j$(nproc) ${EXT_LIST}                   && \
+        pecl install mcrypt xdebug && \
+        docker-php-ext-enable ${EXT_LIST} && \
+        docker-php-source delete            && \
     rm -Rf                                 \
       /var/log/*.log                       \
       /var/log/apt/*                       \

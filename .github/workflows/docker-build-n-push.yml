@@ -1,0 +1,124 @@
+name: 'Reusable build and push'
+on:
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string
+      dir_name:
+        required: true
+        type: string
+      build_type:
+        required: true
+        type: string
+      release_version:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+      docker-user:
+        required: true
+      docker-token:
+        required: true
+
+env:
+  GH_REGISTRY: ghcr.io
+  RELEASE_VERSION: ""
+  GIT_COMMIT: ""
+  GIT_AUTHOR: ""
+
+jobs:
+  build-n-push:
+    runs-on: ubuntu-latest
+    name: Build Docker
+    defaults:
+      run:
+        shell: bash
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      -
+        name: Format matrix
+        run: |
+          for i in "${{ inputs.env_vars }}"
+          do
+            printf "%s\n" $i >> $GITHUB_ENV
+          done
+      -
+        name: Error if version not obtained
+        if: ${{ format('{0}',  inputs.RELEASE_VERSION) == '' || inputs.RELEASE_VERSION == '' }}
+        run: |
+          echo "::error::Release version is empty!"
+          exit 1
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Create vars
+        run: |
+          echo "GIT_COMMIT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "GIT_AUTHOR=$(git log -1 --pretty=format:'%an (%ae) %cd')" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=${{ inputs.RELEASE_VERSION }}.$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        env:
+          DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+        with:
+          labels: |
+            org.opencontainers.image.name=${{ inputs.image_name }}
+            org.opencontainers.image.description=${{ inputs.dir_name }}
+            org.opencontainers.image.version=${{ env.RELEASE_VERSION }}
+            org.opencontainers.image.revision=${{ env.GIT_COMMIT }}
+            org.opencontainers.image.ref.name=${{ github.REF_NAME }}
+          images: |
+            ${{ env.GH_REGISTRY }}/${{ secrets.docker-user }}/${{ inputs.image_name }}
+          flavor: |
+            latest=true
+            prefix=
+            suffix=
+          tags: |
+            type=schedule
+            type=raw,value=${{ github.REF_NAME }}-${{ env.RELEASE_VERSION }},enable=true
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/amd64
+      -
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GH_REGISTRY }}
+          username: ${{ secrets.docker-user }}
+          password: ${{ secrets.token }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          build-args: |
+            BUILD_TYPE="${{ inputs.build_type }}"
+            DIR_NAME=${{ inputs.dir_name }}
+            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            DOCKER_BUILD_CONFIGURATION=${{ inputs.BUILD_TYPE }}
+            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+            GIT_COMMIT=${{ env.GIT_COMMIT }}
+            GIT_AUTHOR=${{ env.GIT_AUTHOR }}
+          file: ${{ inputs.dir_name }}/Dockerfile
+          provenance: mode=max
+          sbom: true
+          pull: true
+          push: ${{ (github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) || github.event_name == 'workflow_dispatch'  }}
+          platforms: linux/amd64
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          github-token: ${{ secrets.token }}
