@@ -137,8 +137,14 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
                 gettext        \
                 imap           \
                 pdo_mysql      \
+                pdo_pgsql      \
+                pdo_odbc       \
+                openssl        \
                 mysqli         \
-                soap        && \
+                soap           \
+                sodium         \
+                fileinfo       \
+                exif        && \
         pecl install xdebug && \
         docker-php-ext-enable  \
                 intl           \
@@ -147,11 +153,17 @@ RUN ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/lo
                 gd             \
                 zip            \
                 gettext        \
+                openssl        \
                 imap           \
                 pdo_mysql      \
+                pdo_pgsql      \
+                pdo_odbc       \
                 mysqli         \
                 soap           \
                 xdebug         \
+                exif           \
+                fileinfo       \
+                sodium         \
                             && \
     rm -Rf                                 \
       /var/log/*.log                       \
@@ -181,9 +193,10 @@ ENV APP_ENV=${APP_ENV} \
 
 WORKDIR "${WORK_DIR}"
 
-COPY composer.json composer.lock symfony.lock ./
+COPY composer.json symfony.lock ./
 
-RUN composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress --ansi
+RUN composer update --optimize-autoloader --no-progress  \
+    && composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress --ansi
 
 # Copy sources from context and from build_angular layer
 COPY . .
