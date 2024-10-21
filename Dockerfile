@@ -93,25 +93,13 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
     strace \
     ltrace \
     vim \
-    libghc-postgresql-simple-dev \
-    libghc-postgresql-libpq-dev \
-    libghc-persistent-postgresql-dev \
-    unixodbc-dev \
-    libbz2-dev \
     libedit-dev \
     libxpm-dev \
     libwebp-dev \
     libfreetype6  \
-    libaspell15 \
-    libarchive13 \
-    aspell-en   \
-    spellutils \
     libgmp10 \
     libgmp-dev \
-    libmpfr-dev \
-    libgmpxx4ldbl \
     libicu-dev \
-    libjansson-dev \
     rsync \
     && \
     printf "PS1='\[\\\\033[32m\][\\\\u@\h\\\\[\\\\033[32m\\\\]]\\\\[\\\\033[00m\\\\] \\\\[\\\\033[36m\\\\]\\\\w\\\\[\\\\033[0m\\\\] \\\\[\\\\033[33m\\\\]\\\\$\\\\[\\\\033[00m\\\\] '\nalias ll='ls -lha --color=auto'\nalias ls='ls -ah --color=auto'\n" >> ~/.bashrc && \
