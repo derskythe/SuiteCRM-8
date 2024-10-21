@@ -26,7 +26,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="chore: clean up workspace and add libargon2 in Dockerfile&#10;&#10;Removed verbose comments from workspace.xml and added libargon2 to Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Included libargon2 in Dockerfile for enhanced cryptographic support.">
+    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -114,6 +115,9 @@
     &quot;accountId&quot;: &quot;5dfec84c-8160-4820-a2fe-63da828c0f97&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://D:/_repos/SuiteCRM-8/Dockerfile.Apache" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="PHPCSFixerProjectConfiguration">
     <option name="selectedConfigurationId" value="7e335bca-3d4b-4f21-97ac-8bc759f11e71" />
   </component>
@@ -122,267 +126,257 @@
       <path value="$PROJECT_DIR$/../../php/php-8.2.24-nts-Win32-vs16-x64/extras/ssl" />
       <path value="$PROJECT_DIR$/../../php/php-8.2.24-nts-Win32-vs16-x64/lib/enchant" />
       <path value="$PROJECT_DIR$/../../php/php-8.2.24-nts-Win32-vs16-x64/ext" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
-      <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-http" />
-      <path value="$PROJECT_DIR$/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/form" />
+      <path value="$PROJECT_DIR$/vendor/symfony/flex" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/messenger" />
       <path value="$PROJECT_DIR$/vendor/symfony/maker-bundle" />
-      <path value="$PROJECT_DIR$/vendor/dflydev/dot-access-data" />
-      <path value="$PROJECT_DIR$/vendor/symfony/web-profiler-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/lock" />
+      <path value="$PROJECT_DIR$/vendor/symfony/ldap" />
+      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/password-hasher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/vendor/symfony/notifier" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
+      <path value="$PROJECT_DIR$/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-http" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-core" />
+      <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/runtime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
+      <path value="$PROJECT_DIR$/vendor/symfony/rate-limiter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/proxy-manager-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
       <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
+      <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
+      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/web-profiler-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/web-link" />
       <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
-      <path value="$PROJECT_DIR$/vendor/nette/utils" />
       <path value="$PROJECT_DIR$/vendor/symfony/var-dumper" />
-      <path value="$PROJECT_DIR$/vendor/nette/php-generator" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-idn" />
-      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/proxy-manager-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/routing" />
-      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
-      <path value="$PROJECT_DIR$/vendor/symfony/serializer" />
-      <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
-      <path value="$PROJECT_DIR$/vendor/google/auth" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-icu" />
-      <path value="$PROJECT_DIR$/vendor/google/apiclient-services" />
-      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
-      <path value="$PROJECT_DIR$/vendor/google/recaptcha" />
-      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
-      <path value="$PROJECT_DIR$/vendor/google/apiclient" />
-      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
-      <path value="$PROJECT_DIR$/vendor/symfony/options-resolver" />
-      <path value="$PROJECT_DIR$/vendor/symfony/twig-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/rate-limiter" />
-      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/clock" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-kernel" />
-      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-messenger" />
-      <path value="$PROJECT_DIR$/vendor/symfony/runtime" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-csrf" />
-      <path value="$PROJECT_DIR$/vendor/zozlak/rdf-constants" />
-      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
-      <path value="$PROJECT_DIR$/vendor/symfony/mailer" />
-      <path value="$PROJECT_DIR$/vendor/symfony/phpunit-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
-      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/messenger" />
-      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
-      <path value="$PROJECT_DIR$/vendor/dama/doctrine-test-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/config" />
-      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/asset" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-foundation" />
-      <path value="$PROJECT_DIR$/vendor/symfony/stopwatch" />
-      <path value="$PROJECT_DIR$/vendor/defuse/php-encryption" />
-      <path value="$PROJECT_DIR$/vendor/symfony/notifier" />
-      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
-      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
-      <path value="$PROJECT_DIR$/vendor/symfony/flex" />
-      <path value="$PROJECT_DIR$/vendor/symfony/framework-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/process" />
-      <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
-      <path value="$PROJECT_DIR$/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/vendor/symfony/intl" />
-      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
-      <path value="$PROJECT_DIR$/vendor/clue/ndjson-react" />
-      <path value="$PROJECT_DIR$/vendor/symfony/password-hasher" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
-      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
-      <path value="$PROJECT_DIR$/vendor/symfony/form" />
-      <path value="$PROJECT_DIR$/vendor/symfony/twig-bridge" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
-      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
-      <path value="$PROJECT_DIR$/vendor/filp/whoops" />
-      <path value="$PROJECT_DIR$/vendor/browserstack/browserstack-local" />
-      <path value="$PROJECT_DIR$/vendor/jeroendesloovere/vcard" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
-      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
-      <path value="$PROJECT_DIR$/vendor/friendsofphp/php-cs-fixer" />
-      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
-      <path value="$PROJECT_DIR$/vendor/wikimedia/composer-merge-plugin" />
-      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/vendor/javanile/php-imap2" />
-      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
-      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
-      <path value="$PROJECT_DIR$/vendor/zbateson/stream-decorators" />
-      <path value="$PROJECT_DIR$/vendor/ezimuel/guzzlestreams" />
-      <path value="$PROJECT_DIR$/vendor/ezimuel/ringphp" />
-      <path value="$PROJECT_DIR$/vendor/zbateson/mail-mime-parser" />
-      <path value="$PROJECT_DIR$/vendor/zbateson/mb-wrapper" />
-      <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
+      <path value="$PROJECT_DIR$/vendor/beberlei/assert" />
+      <path value="$PROJECT_DIR$/vendor/webonyx/graphql-php" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-migrations-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/common" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/migrations" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
+      <path value="$PROJECT_DIR$/vendor/mikey179/vfsstream" />
       <path value="$PROJECT_DIR$/vendor/lcobucci/jwt" />
       <path value="$PROJECT_DIR$/vendor/lcobucci/clock" />
-      <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/behat/transliterator" />
-      <path value="$PROJECT_DIR$/vendor/behat/gherkin" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
-      <path value="$PROJECT_DIR$/vendor/psr/container" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
-      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
-      <path value="$PROJECT_DIR$/vendor/psr/cache" />
-      <path value="$PROJECT_DIR$/vendor/psr/link" />
-      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
-      <path value="$PROJECT_DIR$/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/vendor/league/html-to-markdown" />
-      <path value="$PROJECT_DIR$/vendor/laminas/laminas-code" />
-      <path value="$PROJECT_DIR$/vendor/league/container" />
-      <path value="$PROJECT_DIR$/vendor/psr/clock" />
-      <path value="$PROJECT_DIR$/vendor/league/oauth2-client" />
-      <path value="$PROJECT_DIR$/vendor/tinymce/tinymce" />
-      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
-      <path value="$PROJECT_DIR$/vendor/twig/twig" />
-      <path value="$PROJECT_DIR$/vendor/beberlei/assert" />
-      <path value="$PROJECT_DIR$/vendor/justinrainbow/json-schema" />
-      <path value="$PROJECT_DIR$/vendor/masterminds/html5" />
-      <path value="$PROJECT_DIR$/vendor/league/uri" />
-      <path value="$PROJECT_DIR$/vendor/league/oauth2-server" />
-      <path value="$PROJECT_DIR$/vendor/league/event" />
-      <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
-      <path value="$PROJECT_DIR$/vendor/gymadarasz/ace" />
+      <path value="$PROJECT_DIR$/vendor/javanile/php-imap2" />
+      <path value="$PROJECT_DIR$/vendor/hamcrest/hamcrest-php" />
+      <path value="$PROJECT_DIR$/vendor/grasmash/expander" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
+      <path value="$PROJECT_DIR$/vendor/zbateson/stream-decorators" />
+      <path value="$PROJECT_DIR$/vendor/zbateson/mb-wrapper" />
+      <path value="$PROJECT_DIR$/vendor/zbateson/mail-mime-parser" />
+      <path value="$PROJECT_DIR$/vendor/sweetrdf/rdf-interface" />
+      <path value="$PROJECT_DIR$/vendor/sweetrdf/rdf-helpers" />
+      <path value="$PROJECT_DIR$/vendor/sweetrdf/easyrdf" />
+      <path value="$PROJECT_DIR$/vendor/onelogin/php-saml" />
+      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/vendor/phpoption/phpoption" />
+      <path value="$PROJECT_DIR$/vendor/phpmailer/phpmailer" />
+      <path value="$PROJECT_DIR$/vendor/phootwork/lang" />
+      <path value="$PROJECT_DIR$/vendor/phootwork/collection" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/vendor/nikolaposa/version" />
       <path value="$PROJECT_DIR$/vendor/gymadarasz/imagesloaded" />
-      <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
-      <path value="$PROJECT_DIR$/vendor/phpowermove/docblock" />
-      <path value="$PROJECT_DIR$/vendor/mikey179/vfsstream" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-webdriver" />
-      <path value="$PROJECT_DIR$/vendor/codeception/lib-asserts" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-rest" />
+      <path value="$PROJECT_DIR$/vendor/gymadarasz/ace" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/vendor/wikimedia/composer-merge-plugin" />
+      <path value="$PROJECT_DIR$/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/vendor/codeception/lib-xml" />
       <path value="$PROJECT_DIR$/vendor/codeception/lib-web" />
       <path value="$PROJECT_DIR$/vendor/codeception/lib-innerbrowser" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-filesystem" />
-      <path value="$PROJECT_DIR$/vendor/codeception/lib-xml" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-phpbrowser" />
-      <path value="$PROJECT_DIR$/vendor/nikolaposa/version" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-bundle" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/common" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/sql-formatter" />
-      <path value="$PROJECT_DIR$/vendor/evenement/evenement" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/data-fixtures" />
-      <path value="$PROJECT_DIR$/vendor/php-webdriver/webdriver" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/instantiator" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-fixtures-bundle" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/migrations" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/inflector" />
-      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/persistence" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/doctrine-migrations-bundle" />
-      <path value="$PROJECT_DIR$/vendor/paragonie/random_compat" />
-      <path value="$PROJECT_DIR$/vendor/psy/psysh" />
-      <path value="$PROJECT_DIR$/vendor/carbonphp/carbon-doctrine-types" />
+      <path value="$PROJECT_DIR$/vendor/codeception/lib-asserts" />
       <path value="$PROJECT_DIR$/vendor/codeception/codeception" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-asserts" />
-      <path value="$PROJECT_DIR$/vendor/codeception/stub" />
-      <path value="$PROJECT_DIR$/vendor/codeception/module-symfony" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/dbal" />
-      <path value="$PROJECT_DIR$/vendor/softcreatr/jsonpath" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/lexer" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/event-manager" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/orm" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
-      <path value="$PROJECT_DIR$/vendor/phootwork/collection" />
-      <path value="$PROJECT_DIR$/vendor/phootwork/lang" />
-      <path value="$PROJECT_DIR$/vendor/robrichards/xmlseclibs" />
-      <path value="$PROJECT_DIR$/vendor/mockery/mockery" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
-      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/recursion-context" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/object-enumerator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/global-state" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/complexity" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/lines-of-code" />
-      <path value="$PROJECT_DIR$/vendor/onelogin/php-saml" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/object-reflector" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/cli-parser" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/comparator" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/environment" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/type" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/version" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/resource-operations" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit-reverse-lookup" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/exporter" />
-      <path value="$PROJECT_DIR$/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/vendor/willdurand/negotiation" />
       <path value="$PROJECT_DIR$/vendor/tecnickcom/tcpdf" />
-      <path value="$PROJECT_DIR$/vendor/ralouphie/getallheaders" />
-      <path value="$PROJECT_DIR$/vendor/fakerphp/faker" />
+      <path value="$PROJECT_DIR$/vendor/softcreatr/jsonpath" />
+      <path value="$PROJECT_DIR$/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/vendor/codeception/stub" />
+      <path value="$PROJECT_DIR$/vendor/codeception/module-webdriver" />
+      <path value="$PROJECT_DIR$/vendor/codeception/module-symfony" />
+      <path value="$PROJECT_DIR$/vendor/codeception/module-rest" />
+      <path value="$PROJECT_DIR$/vendor/codeception/module-phpbrowser" />
+      <path value="$PROJECT_DIR$/vendor/codeception/module-filesystem" />
+      <path value="$PROJECT_DIR$/vendor/codeception/module-asserts" />
+      <path value="$PROJECT_DIR$/vendor/php-cs-fixer/shim" />
+      <path value="$PROJECT_DIR$/vendor/friendsofphp/proxy-manager-lts" />
+      <path value="$PROJECT_DIR$/vendor/browserstack/browserstack-local" />
+      <path value="$PROJECT_DIR$/vendor/api-platform/schema-generator" />
+      <path value="$PROJECT_DIR$/vendor/api-platform/core" />
       <path value="$PROJECT_DIR$/vendor/soundasleep/html2text" />
-      <path value="$PROJECT_DIR$/vendor/cebe/php-openapi" />
-      <path value="$PROJECT_DIR$/vendor/phpmailer/phpmailer" />
-      <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
-      <path value="$PROJECT_DIR$/vendor/react/cache" />
-      <path value="$PROJECT_DIR$/vendor/react/stream" />
-      <path value="$PROJECT_DIR$/vendor/react/child-process" />
-      <path value="$PROJECT_DIR$/vendor/react/promise" />
-      <path value="$PROJECT_DIR$/vendor/react/dns" />
-      <path value="$PROJECT_DIR$/vendor/react/event-loop" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/output-formatters" />
-      <path value="$PROJECT_DIR$/vendor/react/socket" />
-      <path value="$PROJECT_DIR$/vendor/consolidation/log" />
-      <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
+      <path value="$PROJECT_DIR$/vendor/robrichards/xmlseclibs" />
+      <path value="$PROJECT_DIR$/vendor/phpowermove/docblock" />
+      <path value="$PROJECT_DIR$/vendor/justinrainbow/json-schema" />
       <path value="$PROJECT_DIR$/vendor/elasticsearch/elasticsearch" />
       <path value="$PROJECT_DIR$/vendor/consolidation/self-update" />
       <path value="$PROJECT_DIR$/vendor/consolidation/robo" />
+      <path value="$PROJECT_DIR$/vendor/consolidation/output-formatters" />
+      <path value="$PROJECT_DIR$/vendor/consolidation/log" />
       <path value="$PROJECT_DIR$/vendor/consolidation/config" />
       <path value="$PROJECT_DIR$/vendor/consolidation/annotated-command" />
-      <path value="$PROJECT_DIR$/vendor/sweetrdf/easyrdf" />
-      <path value="$PROJECT_DIR$/vendor/api-platform/core" />
-      <path value="$PROJECT_DIR$/vendor/sweetrdf/rdf-interface" />
-      <path value="$PROJECT_DIR$/vendor/api-platform/schema-generator" />
-      <path value="$PROJECT_DIR$/vendor/sweetrdf/rdf-helpers" />
-      <path value="$PROJECT_DIR$/vendor/scssphp/scssphp" />
-      <path value="$PROJECT_DIR$/vendor/grasmash/expander" />
-      <path value="$PROJECT_DIR$/vendor/nbgrp/onelogin-saml-bundle" />
-      <path value="$PROJECT_DIR$/vendor/phpoption/phpoption" />
-      <path value="$PROJECT_DIR$/vendor/shivas/versioning-bundle" />
-      <path value="$PROJECT_DIR$/vendor/voku/portable-utf8" />
-      <path value="$PROJECT_DIR$/vendor/voku/anti-xss" />
-      <path value="$PROJECT_DIR$/vendor/webonyx/graphql-php" />
-      <path value="$PROJECT_DIR$/vendor/voku/portable-ascii" />
-      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
-      <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
-      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
-      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
-      <path value="$PROJECT_DIR$/vendor/symfony/mime" />
-      <path value="$PROJECT_DIR$/vendor/symfony/validator" />
-      <path value="$PROJECT_DIR$/vendor/nelmio/cors-bundle" />
-      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
-      <path value="$PROJECT_DIR$/vendor/symfony/ldap" />
-      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
-      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
-      <path value="$PROJECT_DIR$/vendor/symfony/monolog-bundle" />
-      <path value="$PROJECT_DIR$/vendor/smarty/smarty" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
-      <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
-      <path value="$PROJECT_DIR$/vendor/symfony/lock" />
-      <path value="$PROJECT_DIR$/vendor/tedivm/jshrink" />
-      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
-      <path value="$PROJECT_DIR$/vendor/hamcrest/hamcrest-php" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
-      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
-      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
-      <path value="$PROJECT_DIR$/vendor/vlucas/phpdotenv" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/imagesloaded" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/ace" />
-      <path value="$PROJECT_DIR$/public/legacy/vendor/tinymce/tinymce" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
-      <path value="$PROJECT_DIR$/vendor/php-cs-fixer/shim" />
-      <path value="$PROJECT_DIR$/vendor/slim/http" />
       <path value="$PROJECT_DIR$/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/vendor/jeroendesloovere/vcard" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/vendor/php-webdriver/webdriver" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/vendor/slim/http" />
+      <path value="$PROJECT_DIR$/vendor/filp/whoops" />
+      <path value="$PROJECT_DIR$/vendor/dama/doctrine-test-bundle" />
+      <path value="$PROJECT_DIR$/vendor/cebe/php-openapi" />
+      <path value="$PROJECT_DIR$/vendor/psy/psysh" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/vendor/behat/transliterator" />
+      <path value="$PROJECT_DIR$/vendor/behat/gherkin" />
+      <path value="$PROJECT_DIR$/vendor/voku/portable-utf8" />
+      <path value="$PROJECT_DIR$/vendor/voku/portable-ascii" />
+      <path value="$PROJECT_DIR$/vendor/voku/anti-xss" />
+      <path value="$PROJECT_DIR$/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/vendor/twig/extra-bundle" />
       <path value="$PROJECT_DIR$/vendor/slim/slim" />
+      <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
+      <path value="$PROJECT_DIR$/vendor/defuse/php-encryption" />
+      <path value="$PROJECT_DIR$/vendor/react/promise" />
+      <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/vendor/nette/utils" />
+      <path value="$PROJECT_DIR$/vendor/nette/php-generator" />
+      <path value="$PROJECT_DIR$/vendor/nbgrp/onelogin-saml-bundle" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-client" />
+      <path value="$PROJECT_DIR$/vendor/league/html-to-markdown" />
+      <path value="$PROJECT_DIR$/vendor/league/event" />
+      <path value="$PROJECT_DIR$/vendor/league/container" />
+      <path value="$PROJECT_DIR$/vendor/google/recaptcha" />
+      <path value="$PROJECT_DIR$/vendor/google/auth" />
+      <path value="$PROJECT_DIR$/vendor/google/apiclient-services" />
+      <path value="$PROJECT_DIR$/vendor/google/apiclient" />
+      <path value="$PROJECT_DIR$/vendor/smarty/smarty" />
+      <path value="$PROJECT_DIR$/vendor/shivas/versioning-bundle" />
+      <path value="$PROJECT_DIR$/vendor/pimple/pimple" />
+      <path value="$PROJECT_DIR$/vendor/nesbot/carbon" />
+      <path value="$PROJECT_DIR$/vendor/nelmio/cors-bundle" />
+      <path value="$PROJECT_DIR$/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/vendor/league/oauth2-server" />
+      <path value="$PROJECT_DIR$/vendor/laminas/laminas-code" />
+      <path value="$PROJECT_DIR$/vendor/ezimuel/ringphp" />
+      <path value="$PROJECT_DIR$/vendor/ezimuel/guzzlestreams" />
+      <path value="$PROJECT_DIR$/vendor/egulias/email-validator" />
+      <path value="$PROJECT_DIR$/vendor/dflydev/dot-access-data" />
+      <path value="$PROJECT_DIR$/vendor/zozlak/rdf-constants" />
+      <path value="$PROJECT_DIR$/vendor/vlucas/phpdotenv" />
+      <path value="$PROJECT_DIR$/vendor/tedivm/jshrink" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/vendor/mockery/mockery" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache" />
+      <path value="$PROJECT_DIR$/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/vendor/symfony/asset" />
+      <path value="$PROJECT_DIR$/vendor/scssphp/scssphp" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/symfony/clock" />
+      <path value="$PROJECT_DIR$/vendor/symfony/cache-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dotenv" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-messenger" />
+      <path value="$PROJECT_DIR$/vendor/symfony/doctrine-bridge" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/imagesloaded" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/tinymce/tinymce" />
+      <path value="$PROJECT_DIR$/public/legacy/vendor/gymadarasz/ace" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
@@ -396,34 +390,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;fix-legacy&quot;,
-    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.16.0&quot;,
-    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.16.13&quot;,
-    &quot;last.edited.regexp&quot;: &quot;    10 KBytes              &quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/_repos/SuiteCRM-8&quot;,
-    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;npm.build-dev.executor&quot;: &quot;Run&quot;,
-    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;DEFAULT&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;D:\\_repos\\SuiteCRM-8\\node_modules\\typescript\\lib&quot;,
-    &quot;two.files.diff.last.used.file&quot;: &quot;D:/_repos/SuiteCRM-8/public/legacy/include/database/SqlsrvManager.php&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "#5 on fix-legacy",
+    "javascript.nodejs.core.library.configured.version": "20.16.0",
+    "javascript.nodejs.core.library.typings.version": "20.16.13",
+    "last.edited.regexp": "    10 KBytes              ",
+    "last_opened_file_path": "D:/_repos/SuiteCRM-8",
+    "node.js.detected.package.standard": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.standard": "",
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "yarn",
+    "npm.build-dev.executor": "Run",
+    "php.override.implement.member.chooser.php.doc": "DEFAULT",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "D:\\_repos\\SuiteCRM-8\\node_modules\\typescript\\lib",
+    "two.files.diff.last.used.file": "D:/_repos/SuiteCRM-8/public/legacy/include/database/SqlsrvManager.php",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected="npm.Angular CLI Server">
+}]]></component>
+  <component name="RunManager" selected="npm.build-dev">
     <configuration name="Tests (common)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/common/karma.conf.js" />
+      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/common" />
       <node-interpreter value="project" />
       <envs />
@@ -431,6 +426,7 @@
     </configuration>
     <configuration name="Tests (core)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/core/karma.conf.js" />
+      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/core" />
       <node-interpreter value="project" />
       <envs />
@@ -438,6 +434,7 @@
     </configuration>
     <configuration name="Tests (defaultExt)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/extensions/defaultExt/app/karma.conf.js" />
+      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/extensions/defaultExt" />
       <node-interpreter value="project" />
       <envs />
@@ -445,6 +442,7 @@
     </configuration>
     <configuration name="Tests (shell)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/shell/karma.conf.js" />
+      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/shell" />
       <node-interpreter value="project" />
       <envs />
@@ -589,6 +587,7 @@
       <workItem from="1729333469593" duration="74000" />
       <workItem from="1729342928020" duration="12663000" />
       <workItem from="1729368813716" duration="52458000" />
+      <workItem from="1729529467433" duration="3808000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Add IntelliJ IDEA project configuration files&#10;&#10;Included various configuration files to set up IntelliJ IDEA project environment.&#10;* Implement .gitignore for IDEA-specific files.&#10;* Define project encodings, Git blame settings, and JavaScript library mappings.&#10;* Configure PHP tools, PHPUnit settings, and SQL dialect mappings.&#10;* Add module definitions and source folder configurations.">
       <option name="closed" value="true" />
@@ -806,7 +805,111 @@
       <option name="project" value="LOCAL" />
       <updated>1729432799290</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="chore: clean up workspace and add libargon2 in Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by adding libargon2-0 for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729433226672</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1729433226672</updated>
+    </task>
+    <task id="LOCAL-00029" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729483986794</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1729483986794</updated>
+    </task>
+    <task id="LOCAL-00030" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729486363653</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1729486363653</updated>
+    </task>
+    <task id="LOCAL-00031" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729487091589</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1729487091589</updated>
+    </task>
+    <task id="LOCAL-00032" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729488533948</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1729488533948</updated>
+    </task>
+    <task id="LOCAL-00033" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729488993262</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1729488993262</updated>
+    </task>
+    <task id="LOCAL-00034" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729490036180</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1729490036180</updated>
+    </task>
+    <task id="LOCAL-00035" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729494282493</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1729494282493</updated>
+    </task>
+    <task id="LOCAL-00036" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729495836277</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1729495836277</updated>
+    </task>
+    <task id="LOCAL-00037" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729495865295</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1729495865295</updated>
+    </task>
+    <task id="LOCAL-00038" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729528256932</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1729528256932</updated>
+    </task>
+    <task id="LOCAL-00039" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729532601035</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1729532601035</updated>
+    </task>
+    <task id="LOCAL-00040" summary="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
+      <option name="closed" value="true" />
+      <created>1729532623667</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1729532623667</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -814,7 +917,6 @@
     <option name="additionalRoots">
       <list>
         <option value="$PROJECT_DIR$/dist/common" />
-        <option value="$PROJECT_DIR$/dist/core" />
       </list>
     </option>
   </component>
@@ -865,8 +967,6 @@
     <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="refactor: InstallHandler rewrote" />
-    <MESSAGE value="feat: Add compose-dev.yaml and update dependencies&#10;&#10;Introduce a new development environment configuration.&#10;&#10;* Added compose-dev.yaml for Docker development setup.&#10;* Updated Twig dependency in composer.lock to the latest version.&#10;* Refined .dockerignore to clean up ignored paths and include relevant cache directories and node modules.&#10;* Simplified workspace.xml in .idea by removing unnecessary changes and outdated entries." />
     <MESSAGE value="feat: Add GitHub Actions workflows for building Docker images&#10;&#10;Introduce new GitHub Actions workflows and update configurations.&#10;&#10;* Added build-image.yaml for managing Docker image builds on push, release, or workflow dispatch.&#10;* Introduced reusable docker-build-n-push.yml for Docker image building and pushing.&#10;* Updated .idea configuration to reflect new tasks and change lists." />
     <MESSAGE value="feat: Add GitHub Actions workflows for Docker builds&#10;&#10;Introduce new GitHub Actions workflows and update configurations.&#10;  &#10;* Added build-image.yaml for managing Docker image builds on push, release, or workflow dispatch.&#10;* Introduced reusable docker-build-n-push.yml for Docker image building and pushing.&#10;* Updated .idea configuration to reflect new tasks and change lists.&#10;* Added PostgreSQL development library to Dockerfile.&#10;* Included pdo extension in Dockerfile." />
     <MESSAGE value="fix: correct path in build-image workflow&#10;&#10;Fixed the relative path for the docker-build-n-push workflow in the build-image.yaml.&#10;* Changed the `uses` path to use the correct relative path format.&#10;* Ensured the build procedure points to the correct workflow file." />
@@ -890,7 +990,9 @@
     <MESSAGE value="feat(Dockerfile): streamline PHP extension installation&#10;&#10;Simplified the installation of PHP extensions by using a single ARG for the extension list.&#10;* Consolidated extensions into a single ARG EXT_LIST for better manageability.&#10;* Updated Dockerfile to use the ARG EXT_LIST in the docker-php-ext-install and docker-php-ext-enable commands.&#10;* Adjusted `.idea/workspace.xml` to improve task management." />
     <MESSAGE value="feat(Dockerfile): add shmop to PHP extensions&#10;&#10;Added shmop to the list of installed PHP extensions. This enhances shared memory operations and improves PHP project capabilities.&#10;* Updated Dockerfile to include shmop in PHP extensions.&#10;* Corrected minor duration value in .idea/workspace.xml.&#10;* Incremented local task counter to reflect changes in task management." />
     <MESSAGE value="chore: clean up workspace and add libargon2 in Dockerfile&#10;&#10;Removed verbose comments from workspace.xml and added libargon2 to Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Included libargon2 in Dockerfile for enhanced cryptographic support." />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: clean up workspace and add libargon2 in Dockerfile&#10;&#10;Removed verbose comments from workspace.xml and added libargon2 to Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Included libargon2 in Dockerfile for enhanced cryptographic support." />
+    <MESSAGE value="chore: clean up workspace and add libargon2 in Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by adding libargon2-0 for enhanced cryptographic support." />
+    <MESSAGE value="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support." />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

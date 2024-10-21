@@ -24,7 +24,7 @@ RUN yarn global add @angular/cli; \
     npm run build-dev:defaultExt  \
     ;
 
-FROM php:8.2-apache AS base
+FROM php:8.2.24-apache-bookworm AS base
 # Prepare PHP and Apache
 
 ARG APT_FLAGS_COMMON="-qq -y"
@@ -32,6 +32,7 @@ ARG APT_FLAGS_PERSISTENT="${APT_FLAGS_COMMON} --no-install-recommends"
 ARG WORK_DIR="/var/www/html/app"
 ARG APACHE_LOG_DIR="${WORK_DIR}/logs/apache"
 ARG TZ="Asia/Baku"
+ARG PHP_INI_DIR="/usr/local/etc/php"
 ARG APACHE_RUN_USER="www-data"
 ARG APACHE_RUN_GROUP="www-data"
 ARG APACHE_CONFDIR="/etc/apache2"
@@ -51,6 +52,7 @@ ENV WORK_DIR="${WORK_DIR}" \
     APACHE_PID_FILE="${APACHE_PID_FILE}" \
     APACHE_RUN_USER="${APACHE_RUN_USER}" \
     APACHE_RUN_GROUP="${APACHE_RUN_GROUP}" \
+    PHP_INI_DIR="${PHP_INI_DIR}" \
     DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -70,9 +72,12 @@ WORKDIR "${WORK_DIR}"
 # Enable all extensions
 # Set shell and some other things
 # Clean-up
+# apache2-dev libargon2-dev libcurl4-openssl-dev libonig-dev libreadline-dev libsodium-dev libsqlite3-dev
+# libssl-dev libxml2-dev zlib1g-dev
 RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT} \
     wget \
     7zip \
+    autotools-dev \
     libfreetype-dev \
     libjpeg62-turbo-dev \
     libpng-dev  \
@@ -84,6 +89,7 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
     libc-client-dev \
     libkrb5-dev \
     libyaml-dev \
+    libkf5imap-dev \
     strace \
     ltrace \
     vim \
@@ -92,20 +98,21 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
     libghc-persistent-postgresql-dev \
     unixodbc-dev \
     libbz2-dev \
-    zlib1g-dev \
-    libxml2-dev \
     libedit-dev \
     libxpm-dev \
     libwebp-dev \
     libfreetype6  \
     libaspell15 \
+    libarchive13 \
     aspell-en   \
     spellutils \
     libgmp10 \
+    libgmp-dev \
     libmpfr-dev \
     libgmpxx4ldbl \
-    libonig-dev   \
-    libargon2-0 \
+    libicu-dev \
+    libjansson-dev \
+    rsync \
     && \
     printf "PS1='\[\\\\033[32m\][\\\\u@\h\\\\[\\\\033[32m\\\\]]\\\\[\\\\033[00m\\\\] \\\\[\\\\033[36m\\\\]\\\\w\\\\[\\\\033[0m\\\\] \\\\[\\\\033[33m\\\\]\\\\$\\\\[\\\\033[00m\\\\] '\nalias ll='ls -lha --color=auto'\nalias ls='ls -ah --color=auto'\n" >> ~/.bashrc && \
     rm -Rf                                 \
@@ -122,50 +129,17 @@ RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT
 
 FROM base AS install
 
-ARG EXT_LIST="intl           \
-              ctype          \
-              standard       \
-              opcache        \
-              ldap           \
-              gd             \
-              zip            \
-              gettext        \
-              imap           \
-              pdo            \
-              pdo_mysql      \
-              pdo_pgsql      \
-              pdo_odbc       \
-              openssl        \
-              mysqli         \
-              soap           \
-              sodium         \
-              fileinfo       \
-              xml            \
-              xmlreader      \
-              xmlwriter      \
-              xsl            \
-              reflection     \
-              simplexml      \
-              zlib           \
-              readline       \
-              filter         \
-              json           \
-              spl            \
-              calendar       \
-              phar           \
-              iconv          \
-              hash           \
-              dom            \
-              bz2            \
-              random         \
-              pspell         \
-              tokenizer      \
-              pcntl          \
-              posix          \
-              enchant        \
-              gmp            \
-              shmop          \
-              exif"
+ARG EXT_LIST=" intl           \
+               opcache        \
+               ldap           \
+               gd             \
+               zip            \
+               gettext        \
+               imap           \
+               pdo_mysql      \
+               mysqli         \
+               exif           \
+               soap"
 
 RUN     ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR}/log_debug.load && \
         ln -s ${APACHE_MOD_AVAIL_DIR}/info.load         ${APACHE_MOD_ENABLED_DIR}/info.load && \
@@ -188,15 +162,14 @@ RUN     ln -s ${APACHE_MOD_AVAIL_DIR}/log_debug.load    ${APACHE_MOD_ENABLED_DIR
         sed -ri -e 's/Listen *[[:digit:]]*/Listen 8080/' "${APACHE_CONFDIR}/ports.conf" && \
         sed -ri -e 's/^#AddDefaultCharset/AddDefaultCharset/' "${APACHE_CONF_AVAILABLE_DIR}/charset.conf" && \
         printf 'ServerName localhost\nCustomLog /dev/stdout combined\nCustomLog /dev/stdout vhost_combined\nErrorLog /dev/stderr\nLogLevel info\n' > ${APACHE_CONF_AVAILABLE_DIR}/other-vhosts-access-log.conf && \
-        tmpfile=`mktemp` && head -n1 ${APACHE_CONFDIR}/envvars > $tmpfile && echo "export APACHE_LOG_DIR=${APACHE_LOG_DIR}" >> $tmpfile &&  tail -n +2 ${APACHE_CONFDIR}/envvars >> $tmpfile && mv -f $tmpfile ${APACHE_CONFDIR}/envvars && \
+        TMP_FILE=`mktemp` && head -n1 ${APACHE_CONFDIR}/envvars > $TMP_FILE && echo "export APACHE_LOG_DIR=${APACHE_LOG_DIR}" >> $TMP_FILE &&  tail -n +2 ${APACHE_CONFDIR}/envvars >> $TMP_FILE && mv -f $TMP_FILE ${APACHE_CONFDIR}/envvars && \
         php -i && \
         curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
         docker-php-source extract && \
         docker-php-ext-configure gd --enable-gd --with-webp --with-jpeg --with-xpm --with-freetype && \
         docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
-        docker-php-ext-configure pdo_odbc --with-pdo-odbc=unixODBC,/usr && \
         docker-php-ext-install -j$(nproc) ${EXT_LIST}                   && \
-        pecl install mcrypt xdebug && \
+        pecl install xdebug && \
         docker-php-ext-enable ${EXT_LIST} && \
         docker-php-source delete            && \
     rm -Rf                                 \
@@ -227,13 +200,12 @@ ENV APP_ENV=${APP_ENV} \
 
 WORKDIR "${WORK_DIR}"
 
-COPY composer.json symfony.lock ./
+COPY . .
 
-RUN composer update --optimize-autoloader --no-progress  \
+RUN composer update --no-progress  \
     && composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress --ansi
 
 # Copy sources from context and from build_angular layer
-COPY . .
 COPY --from=build_angular /src/app/public/dist ./public/dist
 COPY --from=build_angular /src/app/public/extensions ./public/extensions
 COPY --from=build_angular /src/app/dist ./dist
@@ -245,12 +217,9 @@ RUN set -eux; \
     composer run-script post-install-cmd; \
     true && \
     chmod +x ./bin/console; \
-    chown -R ${APACHE_RUN_USER}:${APACHE_RUN_USER} ${WORK_DIR} && \
-    chown -R ${APACHE_RUN_USER}:${APACHE_RUN_USER} ${APACHE_LOG_DIR} && \
-    chown -R 777 ${WORK_DIR}/cache ${WORK_DIR}/logs && \
-    find . -type d -not -perm 2755 -exec chmod 2755 {} \; && \
-    find . -type f -not -perm 0644 -exec chmod 0644 {} \; && \
-    find . ! -user ${APACHE_RUN_USER} -exec chown ${APACHE_RUN_USER}:${APACHE_RUN_USER} {} \; && \
+    find ${WORK_DIR} -type d -not -perm 2755 -exec chmod 2755 {} \; && \
+    find ${WORK_DIR} -type f -not -perm 0644 -exec chmod 0644 {} \; && \
+    find ${WORK_DIR} ! -user ${APACHE_RUN_USER} -exec chown --no-dereference ${APACHE_RUN_USER}:${APACHE_RUN_USER} {} \; && \
     true && \
     rm -Rf \
       /var/log/*.log \

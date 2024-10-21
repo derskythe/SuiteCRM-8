@@ -30,6 +30,6 @@ jobs:
       BUILD_TYPE: RELEASE
       DIR_NAME: "./"
     secrets:
-      token: ${{ secrets.GH_RELEASE_TOKEN }}
+      token: ${{ secrets.GITHUB_TOKEN }}
       docker-user: ${{ github.REPOSITORY_OWNER }}
       docker-token: ""

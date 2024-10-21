@@ -2442,16 +2442,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.377.0",
+            "version": "v0.378.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "912727289dd617a97da7d2700debbe81a59cea19"
+                "reference": "2290dcd117b77aaa0ff6a13a19334322beb76a64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/912727289dd617a97da7d2700debbe81a59cea19",
-                "reference": "912727289dd617a97da7d2700debbe81a59cea19",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/2290dcd117b77aaa0ff6a13a19334322beb76a64",
+                "reference": "2290dcd117b77aaa0ff6a13a19334322beb76a64",
                 "shasum": ""
             },
             "require": {
@@ -2480,9 +2480,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.377.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.378.0"
             },
-            "time": "2024-10-14T00:56:24+00:00"
+            "time": "2024-10-21T01:08:24+00:00"
         },
         {
             "name": "google/auth",
@@ -11460,16 +11460,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "7.2.0",
+            "version": "7.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "ca4b8ce34f4d4f4c1485da90a4247886c4e45335"
+                "reference": "e4d46be06c8d0d99f542e7199d1283850fb9192c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/ca4b8ce34f4d4f4c1485da90a4247886c4e45335",
-                "reference": "ca4b8ce34f4d4f4c1485da90a4247886c4e45335",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/e4d46be06c8d0d99f542e7199d1283850fb9192c",
+                "reference": "e4d46be06c8d0d99f542e7199d1283850fb9192c",
                 "shasum": ""
             },
             "type": "component",
@@ -11513,9 +11513,9 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.2.0"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/7.4.1"
             },
-            "time": "2024-06-19T06:08:58+00:00"
+            "time": "2024-10-10T05:50:45+00:00"
         },
         {
             "name": "twig/extra-bundle",
@@ -11598,12 +11598,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "bde4efac5a3f1d0ad3aa19bf579e7f8f12df21ec"
+                "reference": "bcceaa3468e2108dcd237dfed82dc5c8a820aa3b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/bde4efac5a3f1d0ad3aa19bf579e7f8f12df21ec",
-                "reference": "bde4efac5a3f1d0ad3aa19bf579e7f8f12df21ec",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/bcceaa3468e2108dcd237dfed82dc5c8a820aa3b",
+                "reference": "bcceaa3468e2108dcd237dfed82dc5c8a820aa3b",
                 "shasum": ""
             },
             "require": {
@@ -11670,7 +11670,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-20T09:39:45+00:00"
+            "time": "2024-10-20T19:48:23+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -17929,7 +17929,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -17950,7 +17950,7 @@
         "ext-mbstring": "*",
         "ext-simplexml": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1"
     },
