@@ -27,7 +27,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="chore: clean up workspace and update Dockerfile&#10;&#10;Remove verbose comments from workspace.xml and update Dockerfile.&#10;* Cleared unnecessary commit message comments in .idea/workspace.xml.&#10;* Updated Dockerfile by changing libargon2-0 to libargon2-dev for enhanced cryptographic support.">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/docker-build-n-push.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/docker-build-n-push.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -390,31 +390,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "#5 on fix-legacy",
-    "javascript.nodejs.core.library.configured.version": "20.16.0",
-    "javascript.nodejs.core.library.typings.version": "20.16.13",
-    "last.edited.regexp": "    10 KBytes              ",
-    "last_opened_file_path": "D:/_repos/SuiteCRM-8",
-    "node.js.detected.package.standard": "true",
-    "node.js.detected.package.stylelint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "node.js.selected.package.stylelint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "npm.build-dev.executor": "Run",
-    "php.override.implement.member.chooser.php.doc": "DEFAULT",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "D:\\_repos\\SuiteCRM-8\\node_modules\\typescript\\lib",
-    "two.files.diff.last.used.file": "D:/_repos/SuiteCRM-8/public/legacy/include/database/SqlsrvManager.php",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;#5 on fix-legacy&quot;,
+    &quot;javascript.nodejs.core.library.configured.version&quot;: &quot;20.16.0&quot;,
+    &quot;javascript.nodejs.core.library.typings.version&quot;: &quot;20.16.13&quot;,
+    &quot;last.edited.regexp&quot;: &quot;    10 KBytes              &quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/_repos/SuiteCRM-8&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;npm.build-dev.executor&quot;: &quot;Run&quot;,
+    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;DEFAULT&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\_repos\\SuiteCRM-8\\node_modules\\typescript\\lib&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;D:/_repos/SuiteCRM-8/public/legacy/include/database/SqlsrvManager.php&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="npm.build-dev">
     <configuration name="Tests (common)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/common/karma.conf.js" />
