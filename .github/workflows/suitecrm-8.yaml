@@ -1,4 +1,4 @@
-name: 'suitecrm-8'
+name: 'SuiteCRM-8'
 run-name: 'Docker SuiteCRM-8'
 on:
   push:
@@ -15,11 +15,11 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: suitecrm-8
+  group: SuiteCRM-8
 
 jobs:
-  suitecrm-8:
-    name: suitecrm-8
+  SuiteCRM-8:
+    name: SuiteCRM-8
     uses: ./.github/workflows/docker-build-n-push.yml
     permissions:
       contents: write
