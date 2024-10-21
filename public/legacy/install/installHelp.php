@@ -54,14 +54,14 @@ class HelpItem
 function &help_menu_html()
 {
     $str =<<<HEREDOC_END
-		<div>SugarCRM Install Help</div>
-		<ul>
-		<li><a href="$_SERVER[PHP_SELF]?step=1">Step 1: Prerequisite checks</a></li>
-		<li><a href="$_SERVER[PHP_SELF]?step=2">Step 2: Database configuration</a></li>
-		<li><a href="$_SERVER[PHP_SELF]?step=3">Step 3: Site configuration</a></li>
-		<li><a href="$_SERVER[PHP_SELF]?step=4">Step 4: Saving config file and setting up the database</a></li>
-		<li><a href="$_SERVER[PHP_SELF]?step=5">Step 5: Registration</a></li>
-		</ul>
+        <div>SugarCRM Install Help</div>
+        <ul>
+        <li><a href="$_SERVER[PHP_SELF]?step=1">Step 1: Prerequisite checks</a></li>
+        <li><a href="$_SERVER[PHP_SELF]?step=2">Step 2: Database configuration</a></li>
+        <li><a href="$_SERVER[PHP_SELF]?step=3">Step 3: Site configuration</a></li>
+        <li><a href="$_SERVER[PHP_SELF]?step=4">Step 4: Saving config file and setting up the database</a></li>
+        <li><a href="$_SERVER[PHP_SELF]?step=5">Step 5: Registration</a></li>
+        </ul>
 HEREDOC_END;
     return $str;
 }

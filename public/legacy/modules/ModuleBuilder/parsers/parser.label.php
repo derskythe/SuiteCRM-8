@@ -294,7 +294,7 @@ class ParserLabel
 
                 foreach ($labels as $key => $value) {
                     foreach ($mod_strings as $key_mod_string => $value_mod_string) {
-                        if (strpos($key_mod_string, strtoupper($_POST[relationship_name])) !== false) {
+                        if (str_contains($key_mod_string, strtoupper($_POST[relationship_name]))) {
                             $mod_strings[$key_mod_string] = to_html(strip_tags(from_html($_POST[rhs_label]))); // must match encoding used in view.labels.php
                         }
                     }
@@ -339,7 +339,7 @@ class ParserLabel
                 $changed_mod_strings = false;
                 foreach ($labels as $key => $value) {
                     foreach ($mod_strings as $key_mod_string => $value_mod_string) {
-                        if (strpos($key_mod_string, strtoupper($_POST[relationship_name])) !== false) {
+                        if (str_contains($key_mod_string, strtoupper($_POST[relationship_name]))) {
                             $mod_strings[$key_mod_string] = to_html(strip_tags(from_html($_POST[rhs_label]))); // must match encoding used in view.labels.php
                             $changed_mod_strings = true;
                         }

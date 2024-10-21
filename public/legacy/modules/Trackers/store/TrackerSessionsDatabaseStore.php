@@ -74,7 +74,7 @@ class TrackerSessionsDatabaseStore implements Store
             return;
         }
 
-        if ($db->supports("auto_increment_sequence")) {
+        if ($db->supports('auto_increment_sequence')) {
             $values[] = $db->getAutoIncrementSQL($monitor->table_name, 'id');
             $columns[] = 'id';
         }
@@ -90,7 +90,7 @@ class TrackerSessionsDatabaseStore implements Store
         }
 
         if ($monitor->round_trips == 1) {
-            $query = "INSERT INTO $monitor->table_name (" .implode(",", $columns). " ) VALUES ( ". implode(",", $values). ')';
+            $query = "INSERT INTO $monitor->table_name (" .implode(',', $columns). ' ) VALUES ( ' . implode(',', $values). ')';
             $db->query($query);
         } else {
             if (!empty($monitor->date_end)) {

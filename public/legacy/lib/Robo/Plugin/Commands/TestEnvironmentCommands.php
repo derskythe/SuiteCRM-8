@@ -228,7 +228,7 @@ class TestEnvironmentCommands extends \Robo\Tasks
     {
         $environment_string_unix = $this->toUnixEnvironmentVariables($opts);
 
-        $homePath = getenv("HOME");
+        $homePath = getenv('HOME');
         $bashAliasesPath = $homePath
             . DIRECTORY_SEPARATOR
             . '.bash_aliases';
@@ -296,7 +296,7 @@ class TestEnvironmentCommands extends \Robo\Tasks
     {
         $windows_environment_variables = $this->toWindowsEnvironmentVariables($opts);
 
-        $this->writeln("Generate Script");
+        $this->writeln('Generate Script');
         $this->writeln($windows_environment_variables);
         if ($this->confirm('May I overwrite the environment variables?')) {
             $this->say('Overwriting environment variables');

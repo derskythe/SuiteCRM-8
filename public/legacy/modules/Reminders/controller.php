@@ -51,7 +51,11 @@ class RemindersController extends SugarController
         $ret = array();
         $invitees = $_REQUEST['invitees'];
         foreach ($invitees as $invitee) {
-            if (!empty($invitee['personModule']) && !empty($invitee['personModuleId']) && in_array($invitee['personModule'], $personModules)) {
+            if (!empty($invitee['personModule']) && !empty($invitee['personModuleId']) && in_array(
+                    $invitee['personModule'],
+                    $personModules,
+                    true
+                )) {
                 if (empty($invitee['personName'])) {
                     $person = BeanFactory::getBean($invitee['personModule'], $invitee['personModuleId']);
                     if (empty($person->name)) {
@@ -68,6 +72,9 @@ class RemindersController extends SugarController
         die();
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_getUserPreferencesForReminders()
     {
         echo Reminder::loadRemindersDefaultValuesDataJson();

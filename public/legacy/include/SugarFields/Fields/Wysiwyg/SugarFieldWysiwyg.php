@@ -65,15 +65,15 @@ class SugarFieldWysiwyg extends SugarFieldBase {
         $config['menubar'] = false;
         $config['plugins']  = 'code, table, link, image, wordcount';
         if ($form_name !== '') {
-            $config['selector'] = "#{$form_name} " . "#" . $vardef['name'];
+            $config['selector'] = "#{$form_name} " . '#' . $vardef['name'];
         } else {
-            $config['selector'] = "#" . $vardef['name'];
+            $config['selector'] = '#' . $vardef['name'];
         }
         $config['toolbar1'] = 'fontselect | fontsizeselect | bold italic underline | forecolor backcolor | styleselect | outdent indent | link image | code table';
 
         $jsConfig = json_encode($config);
         $initiate = '<script type="text/javascript"> tinyMCE.init('.$jsConfig.')</script>';
-        $this->ss->assign("tiny", $initiate);
+        $this->ss->assign('tiny', $initiate);
 
         return parent::getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex);
     }

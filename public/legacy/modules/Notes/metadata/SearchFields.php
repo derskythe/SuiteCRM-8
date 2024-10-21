@@ -49,11 +49,11 @@ $searchFields['Notes'] =
             'operator' => 'subquery',
             'checked_only' => true,
             'subquery' => "SELECT favorites.parent_id FROM favorites
-			                    WHERE favorites.deleted = 0
-			                        and favorites.parent_type = 'Notes'
-			                        and favorites.assigned_user_id = '{1}'",
+                                WHERE favorites.deleted = 0
+                                    and favorites.parent_type = 'Notes'
+                                    and favorites.assigned_user_id = '{1}'",
             'db_field'=>array('id')),
-        
+
        //Range Search Support
        'range_date_entered' => array('query_type' => 'default', 'enable_range_search' => true, 'is_date_field' => true),
        'start_range_date_entered' => array('query_type' => 'default', 'enable_range_search' => true, 'is_date_field' => true),

@@ -54,7 +54,7 @@ if (isset($_POST['preview']) && !isset($_POST['prompt_users'])) {
 }
 
 
-$result = $db->query("SELECT id, user_preferences, user_name FROM users");
+$result = $db->query('SELECT id, user_preferences, user_name FROM users');
 $execute = false;
 // loop through user preferences and check for "bad" elements; rebuild preferences array and update database
 if (isset($_POST['execute'])) {
@@ -68,9 +68,9 @@ while ($row = $db->fetchByAssoc($result)) {
         $adjustment = $_POST[$row['id'].'adjust'];
     }
 
-    $string = "Preview";
+    $string = 'Preview';
     if ($execute) {
-        $string = "Updating";
+        $string = 'Updating';
     }
     echo "<tr><td> $string timezone preferences for user <b>{$row['user_name']}</b>...</td><td>";
 
@@ -83,10 +83,10 @@ while ($row = $db->fetchByAssoc($result)) {
     $alreadySet = '';
     if (!empty($prefs)) {
         foreach ($prefs as $key => $val) {
-            if ($key == 'timez') {
+            if ($key === 'timez') {
                 if (empty($prefs['timezone']) && $val != '') {
                     $hourAdjust = $adjustment;
-                    if ($hourAdjust == 'none') {
+                    if ($hourAdjust === 'none') {
                         $hourAdjust = 0;
                     }
                     $selectedZone = lookupTimezone($prefs['timez'] + $hourAdjust);
@@ -135,9 +135,9 @@ while ($row = $db->fetchByAssoc($result)) {
             $prefs['timezone'] = $serverTimeZone;
         }
     }
-    echo "</td><td>";
+    echo '</td><td>';
     if (!empty($setTo)) {
-        echo "Adjust: ";
+        echo 'Adjust: ';
         if ($execute) {
             if (isset($_POST[$row['id'].'adjust'])) {
                 echo  $adjustment;
@@ -151,7 +151,7 @@ while ($row = $db->fetchByAssoc($result)) {
         echo ' hour';
     }
     echo ' </td><td>';
-    echo "</tr>";
+    echo '</tr>';
 
     $the_old_prefs[] = $prefs;
     $the_new_prefs[] = $newprefs;
@@ -161,10 +161,10 @@ while ($row = $db->fetchByAssoc($result)) {
     unset($newStr);
 }
 
-echo "</table>";
+echo '</table>';
 
 if ($execute) {
-    echo "<br>All timezone preferences updated!<br><br>";
+    echo '<br>All timezone preferences updated!<br><br>';
 } else {
     echo "Prompt users on login to confirm:<input type='checkbox' name='prompt_users' value='1' $prompt_users><br>";
     echo "<input class='button' type='submit' name='execute' value='Execute'>&nbsp; <input class='button' type='submit' name='preview' value='Preview'>";

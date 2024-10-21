@@ -94,7 +94,7 @@ class ViewSugarFieldCollection
         if (!empty($this->vardef['relationship'])) {
             $rel->retrieve_by_name($this->vardef['relationship']);
         }
-        if ($rel->relationship_type == 'many-to-many') {
+        if ($rel->relationship_type === 'many-to-many') {
             if ($rel->lhs_module == $this->module_dir) {
                 $this->related_module = $rel->rhs_module;
                 $module_dir = $rel->lhs_module;
@@ -103,7 +103,7 @@ class ViewSugarFieldCollection
                     $this->related_module = $rel->lhs_module;
                     $module_dir = $rel->rhs_module;
                 } else {
-                    die("this field has no relationships mapped with this module");
+                    die('this field has no relationships mapped with this module');
                 }
             }
             if ($module_dir != $this->module_dir) {
@@ -126,7 +126,7 @@ class ViewSugarFieldCollection
                 die($this->module_dir . ' is not in the beanList.');
             }
         } else {
-            die("the relationship is not a many-to-many");
+            die('the relationship is not a many-to-many');
         }
     }
     /*
@@ -146,7 +146,7 @@ class ViewSugarFieldCollection
                         $role=$vv;
                     }
                 }
-                if ($role == 'primary') {
+                if ($role === 'primary') {
                     $primary_id = $v['id'];
                 } else {
                     $secondary_ids[] = array('id'=>$v['id'], 'role'=>$role);
@@ -195,10 +195,10 @@ class ViewSugarFieldCollection
      */
     public function process()
     {
-        if ($this->action_type == 'editview') {
+        if ($this->action_type === 'editview') {
             $this->process_editview();
         } else {
-            if ($this->action_type == 'detailview') {
+            if ($this->action_type === 'detailview') {
                 $this->process_detailview();
             }
         }
@@ -229,27 +229,31 @@ class ViewSugarFieldCollection
 
                 // For each extra field the params which are not displayParams will be consider as params to override the vardefs values.
                 foreach ($v as $k_override=>$v_override) {
-                    if ($k_override != 'displayParams') {
+                    if ($k_override !== 'displayParams') {
                         $collection_field_vardef[$k_override] = $v_override;
                     }
                 }
 
                 // If relate field : enable quick search by creating the sqs_object array.
-                if ($collection_field_vardef['type'] == 'relate') {
+                if ($collection_field_vardef['type'] === 'relate') {
                     require_once('include/TemplateHandler/TemplateHandler.php');
                     $tph = new TemplateHandler();
                     $javascript = $tph->createQuickSearchCode(array($collection_field_vardef['name']=>$collection_field_vardef), array($v), $this->form_name);
-                    $javascript = str_replace('<script language="javascript">'."if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}sqs_objects['{$collection_field_vardef['name']}']=", "", $javascript);
+                    $javascript = str_replace(
+                        '<script language="javascript">' . "if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}sqs_objects['{$collection_field_vardef['name']}']=",
+                        '',
+                        $javascript
+                    );
                     $javascript = substr($javascript, 0, -10);//remove ";</script>"
                     $javascriptPHP = $this->json->decode($javascript);
                     foreach ($javascriptPHP['populate_list'] as $kk=>$vv) {
-                        $javascriptPHP['populate_list'][$kk] .= "_" . $this->vardef['name'] . "_collection_extra_0";
+                        $javascriptPHP['populate_list'][$kk] .= '_' . $this->vardef['name'] . '_collection_extra_0';
                     }
                     foreach ($javascriptPHP['required_list'] as $kk=>$vv) {
-                        $javascriptPHP['required_list'][$kk] .= "_" . $this->vardef['name'] . "_collection_extra_0";
+                        $javascriptPHP['required_list'][$kk] .= '_' . $this->vardef['name'] . '_collection_extra_0';
                     }
                     foreach ($javascriptPHP['field_list'] as $kk=>$vv) {
-                        if ($vv == 'id') {
+                        if ($vv === 'id') {
                             $javascriptPHP['populate_list'][$kk];
                         }
                     }
@@ -257,9 +261,9 @@ class ViewSugarFieldCollection
                     $javascript = "<script language='javascript'>if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}sqs_objects['{$collection_field_vardef['name']}_" . $this->vardef['name'] . "_collection_extra_0']=".$javascript.';</script>';
                 }
 
-                $collection_field_vardef['name'] .= "_" . $this->vardef['name'] . "_collection_extra_0";
+                $collection_field_vardef['name'] .= '_' . $this->vardef['name'] . '_collection_extra_0';
                 if (isset($collection_field_vardef['id_name'])) {
-                    $collection_field_vardef['id_name'] .= "_" . $this->vardef['name'] . "_collection_extra_0";
+                    $collection_field_vardef['id_name'] .= '_' . $this->vardef['name'] . '_collection_extra_0';
                 }
                 if (isset($this->displayParams['allow_update']) && ($this->displayParams['allow_update'] === false || $this->displayParams['allow_update'] === 'false')) {
                     $this->displayParams['allow_update']='false';
@@ -275,7 +279,7 @@ class ViewSugarFieldCollection
                 // Rearranging the array with name as key instaead of number. This is required for displaySmarty() to assign the good variable.
                 $this->displayParams['collection_field_list'][$name]['vardefName'] = $this->displayParams['collection_field_list'][$k]['name'];
                 $this->displayParams['collection_field_list'][$name]['name'] = $name;
-                if ($collection_field_vardef['type'] == 'relate') {
+                if ($collection_field_vardef['type'] === 'relate') {
                     $this->displayParams['collection_field_list'][$name]['id_name'] = $collection_field_vardef['id_name'];
                     $this->displayParams['collection_field_list'][$name]['module'] = $collection_field_vardef['module'];
                 }
@@ -292,7 +296,7 @@ class ViewSugarFieldCollection
                     }
 FRA;
                 $this->displayParams['collection_field_list'][$name]['field'] .= "eval(\"document.getElementById('{$collection_field_vardef['name']}').onchange = function onchange(event){collection['{$this->vardef['name']}'].update_fields.{$collection_field_vardef['name']}=true;";
-                if ($collection_field_vardef['type'] == 'relate') {
+                if ($collection_field_vardef['type'] === 'relate') {
                     // If relate add the ID field to the array
                     $this->displayParams['collection_field_list'][$name]['field'] .= "collection['{$this->vardef['name']}'].update_fields.{$collection_field_vardef['id_name']}=true;";
                 }
@@ -326,12 +330,12 @@ FRA;
         foreach ($this->extra_var as $k=>$v) {
             $this->ss->assign($k, $v);
         }
-        if ($this->action_type == 'editview') {
+        if ($this->action_type === 'editview') {
             $this->ss->assign('quickSearchCode', $this->createQuickSearchCode());
             $this->createPopupCode();// this code populate $this->displayParams with popupdata.
             $this->tpl_path = $this->edit_tpl_path;
         } else {
-            if ($this->action_type == 'detailview') {
+            if ($this->action_type === 'detailview') {
                 $this->tpl_path = $this->detail_tpl_path;
             }
         }
@@ -346,6 +350,9 @@ FRA;
     }
     /*
      * Display the collection field after retrieving the cached row.
+     */
+    /**
+     * @throws SmartyException
      */
     public function display()
     {
@@ -387,16 +394,16 @@ FRA;
         for ($i=0; $i<$this->numFields; $i++) {
             $name1 = "{$this->form_name}_{$this->name}_collection_{$i}";
             if (!$this->skipModuleQuickSearch && preg_match('/(Campaigns|Teams|Users|Accounts)/si', $this->related_module, $matches)) {
-                if ($matches[0] == 'Users') {
+                if ($matches[0] === 'Users') {
                     $sqs_objects[$name1] = $qsd->getQSUser();
                 } else {
-                    if ($matches[0] == 'Campaigns') {
+                    if ($matches[0] === 'Campaigns') {
                         $sqs_objects[$name1] = $qsd->getQSCampaigns();
                     } else {
-                        if ($matches[0] == 'Users') {
+                        if ($matches[0] === 'Users') {
                             $sqs_objects[$name1] = $qsd->getQSUser();
                         } else {
-                            if ($matches[0] == 'Accounts') {
+                            if ($matches[0] === 'Accounts') {
                                 $nameKey = "{$this->name}_collection_{$i}";
                                 $idKey = "id_{$this->name}_collection_{$i}";
 
@@ -410,8 +417,8 @@ FRA;
                                 $additionalFields = isset($this->displayParams['additionalFields']) ? $this->displayParams['additionalFields'] : null;
                                 $sqs_objects[$name1] = $qsd->getQSAccount($nameKey, $idKey, $billingKey, $shippingKey, $additionalFields);
                             } else {
-                                if ($matches[0] == 'Contacts') {
-                                    $sqs_objects[$name1] = $qsd->getQSContact($name1, "id_".$name1);
+                                if ($matches[0] === 'Contacts') {
+                                    $sqs_objects[$name1] = $qsd->getQSContact($name1, 'id_' . $name1);
                                 }
                             }
                         }
@@ -433,7 +440,8 @@ FRA;
                 $sqs_objects[$name1]['populate_list'] = $temp_array['populate_list'];
                 if (isset($this->displayParams['collection_field_list'])) {
                     foreach ($this->displayParams['collection_field_list'] as $v) {
-                        $sqs_objects[$name1]['populate_list'][]=  $v['vardefName']."_".$this->name."_collection_extra_".$i;
+                        $sqs_objects[$name1]['populate_list'][] =
+                            $v['vardefName'] . '_' . $this->name . '_collection_extra_' . $i;
                         $sqs_objects[$name1]['field_list'][] = $v['vardefName'];
                     }
                 }
@@ -443,7 +451,8 @@ FRA;
                 $sqs_objects[$name1]['field_list'] = array('name', 'id');
                 if (isset($this->displayParams['collection_field_list'])) {
                     foreach ($this->displayParams['collection_field_list'] as $v) {
-                        $sqs_objects[$name1]['populate_list'][] = $v['vardefName']."_".$this->name."_collection_extra_".$i;
+                        $sqs_objects[$name1]['populate_list'][] =
+                            $v['vardefName'] . '_' . $this->name . '_collection_extra_' . $i;
                         $sqs_objects[$name1]['field_list'][] = $v['vardefName'];
                     }
                 }
@@ -505,10 +514,10 @@ FRA;
             if (isset($this->displayParams['formName'])) {
                 $form = $this->displayParams['formName'];
             } else {
-                if ($this->action_type == 'editview') {
+                if ($this->action_type === 'editview') {
                     $form = 'EditView';
                 } else {
-                    if ($this->action_type == 'quickcreate') {
+                    if ($this->action_type === 'quickcreate') {
                         $form = "QuickCreate_{$this->module_dir}";
                     }
                 }

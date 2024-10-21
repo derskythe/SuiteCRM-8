@@ -105,10 +105,13 @@ class LinkService
 
     /**
      * Link record for relationship link
+     *
      * @param SugarBean|null $bean
      * @param string $linkField
      * @param array $linkedIds
+     *
      * @return bool
+     * @throws Exception
      */
     protected function link(SugarBean $bean, string $linkField, array $linkedIds): bool
     {

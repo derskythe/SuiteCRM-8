@@ -3,6 +3,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+/**
+ * @throws Exception
+ */
 function handleAttachmentForRemove()
 {
     if (!empty($_REQUEST['attachmentsRemove'])) {
@@ -37,7 +40,7 @@ if (preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
         case 'update':
             $bean = BeanFactory::getBean('EmailTemplates', $emailTemplateId);
             foreach ($bean as $key => $value) {
-                if (in_array($key, $fields)) {
+                if (in_array($key, $fields, true)) {
                     $bean->$key = $_POST[$key];
                 }
             }
@@ -60,7 +63,7 @@ if (preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
                 $campaign->load_relationship('emailmarketing');
                 $marketings = $campaign->emailmarketing->get();
                 // just a double check for campaign->marketing relation correct is for e.g the user deleted the marketing record or something may could happened..
-                if (in_array($marketingId, $marketings)) {
+                if (in_array($marketingId, $marketings, true)) {
                     $marketing = BeanFactory::getBean('EmailMarketing', $marketingId);
                     $marketing->template_id = $emailTemplateId;
                     $marketing->save();
@@ -76,10 +79,10 @@ if (preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
             $newBean = BeanFactory::newBean('EmailTemplates');
             $fieldsForCopy = array('type', 'description');
             foreach ($bean as $key => $value) {
-                if (in_array($key, $fields)) {
+                if (in_array($key, $fields, true)) {
                     $newBean->$key = $_POST[$key];
                 } else {
-                    if (in_array($key, $fieldsForCopy)) {
+                    if (in_array($key, $fieldsForCopy, true)) {
                         $newBean->$key = $bean->$key;
                     }
                 }
@@ -99,7 +102,7 @@ if (preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
             $focus = BeanFactory::getBean('EmailTemplates', $_REQUEST['attach_to_template_id']);
             //$data = $formBase->handleAttachments($focus, false, null);
             $data = $formBase->handleAttachmentsProcessImages($focus, false, true, 'download', true);
-            $redirectUrl = 'index.php?module=Campaigns&action=WizardMarketing&campaign_id=' . $_REQUEST['campaign_id'] . "&jump=2&template_id=" . $_REQUEST['attach_to_template_id']; // . '&marketing_id=' . $_REQUEST['attach_to_marketing_id'] . '&record=' . $_REQUEST['attach_to_marketing_id'];
+            $redirectUrl = 'index.php?module=Campaigns&action=WizardMarketing&campaign_id=' . $_REQUEST['campaign_id'] . '&jump=2&template_id=' . $_REQUEST['attach_to_template_id']; // . '&marketing_id=' . $_REQUEST['attach_to_marketing_id'] . '&record=' . $_REQUEST['attach_to_marketing_id'];
             header('Location: ' . $redirectUrl);
             die();
             break;
@@ -108,7 +111,7 @@ if (preg_match('/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/
             if ($bean = BeanFactory::getBean('EmailTemplates', $emailTemplateId)) {
                 $fields = array('id', 'name', 'body', 'body_html', 'subject');
                 foreach ($bean as $key => $value) {
-                    if (in_array($key, $fields)) {
+                    if (in_array($key, $fields, true)) {
                         $data[$key] = $bean->$key;
                     }
                 }

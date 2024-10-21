@@ -52,7 +52,7 @@ r21720 - 2007-04-11 14:07:59 -0700 (Wed, 11 Apr 2007) - wayne - sugar field plug
  */
 require_once('include/SugarFields/SugarFieldHandler.php');
 
-function smarty_function_sugar_field($params, &$smarty)
+function smarty_function_sugar_field($params, $smarty)
 {
     if (!isset($params['vardef']) || !isset($params['displayType']) || !isset($params['parentFieldArray'])) {
         if(!isset($params['vardef']))

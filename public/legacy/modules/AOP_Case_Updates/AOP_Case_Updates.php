@@ -47,26 +47,26 @@ require_once 'include/clean.php';
 #[\AllowDynamicProperties]
 class AOP_Case_Updates extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOP_Case_Updates';
-    public $object_name = 'AOP_Case_Updates';
-    public $table_name = 'aop_case_updates';
-    public $tracker_visibility = false;
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOP_Case_Updates';
+    public string $object_name = 'AOP_Case_Updates';
+    public string $table_name = 'aop_case_updates';
+    public bool $tracker_visibility = false;
+    public bool $importable = false;
     public $disable_row_level_security = true;
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
+    public string $assigned_user_id;
     public $assigned_user_name;
     public $assigned_user_link;
     public $case;
@@ -90,7 +90,7 @@ class AOP_Case_Updates extends Basic
      *
      * @return bool
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -102,7 +102,9 @@ class AOP_Case_Updates extends Basic
 
     /**
      * @param bool $check_notify
+     *
      * @return string
+     * @throws Exception
      */
     public function save($check_notify = false)
     {
@@ -255,6 +257,8 @@ class AOP_Case_Updates extends Basic
      * @param null $contactId
      *
      * @return bool
+     * @throws Exception
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function sendEmail(
         $emails,

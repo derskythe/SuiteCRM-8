@@ -67,11 +67,11 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
          * @access private
          * @var    string
          */
-        public $base = "";
+        public $base = '';
         public $vcal_focus;
-        public $vcal_type = "";
-        public $source = "";
-        public $publish_key = "";
+        public $vcal_type = '';
+        public $source = '';
+        public $publish_key = '';
 
         public function __construct()
         {
@@ -119,15 +119,15 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
 
             $query_arr =  array();
             // set path
-            if (empty($_SERVER["PATH_INFO"])) {
-                $this->path = "/";
-                if (strtolower($_SERVER["REQUEST_METHOD"]) == 'get') {
+            if (empty($_SERVER['PATH_INFO'])) {
+                $this->path = '/';
+                if (strtolower($_SERVER['REQUEST_METHOD']) === 'get') {
                     $query_arr = $_REQUEST;
                 } else {
                     parse_str($_REQUEST['parms'], $query_arr);
                 }
             } else {
-                $this->path = $this->_urldecode($_SERVER["PATH_INFO"]);
+                $this->path = $this->_urldecode($_SERVER['PATH_INFO']);
 
                 $query_str = preg_replace('/^\//', '', (string) $this->path);
                 $query_arr =  array();
@@ -248,8 +248,8 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
         {
             global $log;
 
-            if ($this->vcal_type == 'vfb') {
-                $this->http_status("200 OK");
+            if ($this->vcal_type === 'vfb') {
+                $this->http_status('200 OK');
                 echo $this->vcal_focus->get_vcal_freebusy($this->user_focus);
             } else {
                 $errorMessage = 'vCal Server - Invalid request.';
@@ -263,30 +263,32 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
         // {{{ http_PUT()
 
         /**
-        * PUT method handler
-        *
-        * @param  void
-        * @return void
-        */
+         * PUT method handler
+         *
+         * @param void
+         *
+         * @return void
+         * @throws Exception
+         */
         public function http_PUT()
         {
             $focus = null;
             $options = array();
-            $options["path"] = $this->path;
-            $options["content_length"] = $_SERVER["CONTENT_LENGTH"];
+            $options['path'] = $this->path;
+            $options['content_length'] = $_SERVER['CONTENT_LENGTH'];
 
             // get the Content-type
-            if (isset($_SERVER["CONTENT_TYPE"])) {
+            if (isset($_SERVER['CONTENT_TYPE'])) {
                 // for now we do not support any sort of multipart requests
-                if (!strncmp($_SERVER["CONTENT_TYPE"], "multipart/", 10)) {
-                    $this->http_status("501 not implemented");
-                    echo "The service does not support mulipart PUT requests";
+                if (!strncmp($_SERVER['CONTENT_TYPE'], 'multipart/', 10)) {
+                    $this->http_status('501 not implemented');
+                    echo 'The service does not support mulipart PUT requests';
                     return;
                 }
-                $options["content_type"] = $_SERVER["CONTENT_TYPE"];
+                $options['content_type'] = $_SERVER['CONTENT_TYPE'];
             } else {
                 // default content type if none given
-                $options["content_type"] = "application/octet-stream";
+                $options['content_type'] = 'application/octet-stream';
             }
 
             /* RFC 2616 2.6 says: "The recipient of the entity MUST NOT
@@ -295,20 +297,20 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
                (Not Implemented) response in such cases."
             */
             foreach ($_SERVER as $key => $val) {
-                if (strncmp($key, "HTTP_CONTENT", 11)) {
+                if (strncmp($key, 'HTTP_CONTENT', 11)) {
                     continue;
                 }
                 switch ($key) {
                 case 'HTTP_CONTENT_ENCODING': // RFC 2616 14.11
                     // TODO support this if ext/zlib filters are available
-                    $this->http_status("501 not implemented");
+                    $this->http_status('501 not implemented');
                     echo "The service does not support '$val' content encoding";
                     return;
 
                 case 'HTTP_CONTENT_LANGUAGE': // RFC 2616 14.12
                     // we assume it is not critical if this one is ignored
                     // in the actual PUT implementation ...
-                    $options["content_language"] = $val;
+                    $options['content_language'] = $val;
                     break;
 
                 case 'HTTP_CONTENT_LOCATION': // RFC 2616 14.14
@@ -321,14 +323,14 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
                     // single byte range requests are NOT supported
                     // the header format is also specified in RFC 2616 14.16
                     // TODO we have to ensure that implementations support this or send 501 instead
-                        $this->http_status("400 bad request");
-                        echo "The service does only support single byte ranges";
+                        $this->http_status('400 bad request');
+                        echo 'The service does only support single byte ranges';
                         return;
 
                 case 'HTTP_CONTENT_MD5':      // RFC 2616 14.15
                     // TODO: maybe we can just pretend here?
-                    $this->http_status("501 not implemented");
-                    echo "The service does not support content MD5 checksum verification";
+                    $this->http_status('501 not implemented');
+                    echo 'The service does not support content MD5 checksum verification';
                     return;
 
                 case 'HTTP_CONTENT_LENGTH': // RFC 2616 14.14
@@ -339,7 +341,7 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
 
                 default:
                     // any other unknown Content-* headers
-                    $this->http_status("501 not implemented");
+                    $this->http_status('501 not implemented');
                     echo "The service does not support '$key'";
                     return;
                 }
@@ -348,7 +350,7 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
             // DO AUTHORIZATION for publishing Free/busy to Sugar:
             if (empty($this->publish_key) ||
                 $this->publish_key != $this->user_focus->getPreference('calendar_publish_key')) {
-                $this->http_status("401 not authorized");
+                $this->http_status('401 not authorized');
                 return;
             }
 
@@ -364,12 +366,12 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
             }
 
             // open input stream
-            $options["stream"] = fopen("php://input", 'rb');
+            $options['stream'] = fopen('php://input', 'rb');
             $content = '';
 
             // read in input stream
-            while (!feof($options["stream"])) {
-                $content .= fread($options["stream"], 4096);
+            while (!feof($options['stream'])) {
+                $content .= fread($options['stream'], 4096);
             }
 
             // set freebusy members and save
@@ -381,9 +383,9 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
             $this->vcal_focus->save();
 
             if ($isUpdate) {
-                $this->http_status("204 No Content");
+                $this->http_status('204 No Content');
             } else {
-                $this->http_status("201 Created");
+                $this->http_status('201 Created');
             }
         }
 
@@ -405,7 +407,7 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
          */
         public function lock(&$options)
         {
-            $options["timeout"] = time()+300; // 5min. hardcoded
+            $options['timeout'] = time()+300; // 5min. hardcoded
             return true;
         }
 
@@ -417,7 +419,7 @@ require_once 'include/HTTP_WebDAV_Server/Server.php';
          */
         public function unlock(&$options)
         {
-            return "200 OK";
+            return '200 OK';
         }
 
 

@@ -84,7 +84,6 @@ class EditView
     public function process()
     {
         global $current_language, $app_strings, $sugar_version, $sugar_config, $timedate, $theme;
-        ;
         $module_strings = return_module_language($current_language, $this->module);
 
         $this->ss->assign('SUGAR_VERSION', $sugar_version);
@@ -100,6 +99,7 @@ class EditView
      * Displays the template
      *
      * @return string HTML of parsed template
+     * @throws SmartyException
      */
     public function display()
     {

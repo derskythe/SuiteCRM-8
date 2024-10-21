@@ -94,8 +94,16 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
             // now convert the relationships array into an array of AbstractRelationship objects
             foreach ($relationships as $name => $definition) {
                 if (($definition [ 'lhs_module' ] == $this->moduleName) || ($definition [ 'rhs_module' ] == $this->moduleName)) {
-                    if (in_array($definition [ 'lhs_module' ], $validModules) && in_array($definition [ 'rhs_module' ], $validModules)
-                        && ! in_array($definition [ 'lhs_module' ], $invalidModules) && ! in_array($definition [ 'rhs_module' ], $invalidModules)) {
+                    if (in_array($definition ['lhs_module'], $validModules, true) && in_array(
+                            $definition ['rhs_module'],
+                            $validModules,
+                            true
+                        )
+                        && !in_array($definition ['lhs_module'], $invalidModules, true) && !in_array(
+                            $definition ['rhs_module'],
+                            $invalidModules,
+                            true
+                        )) {
                         // identify the subpanels for this relationship - TODO: optimize this - currently does m x n scans through the subpanel list...
                         $definition [ 'rhs_subpanel' ] = self::identifySubpanel($definition [ 'lhs_module' ], $definition [ 'rhs_module' ]) ;
                         $definition [ 'lhs_subpanel' ] = self::identifySubpanel($definition [ 'rhs_module' ], $definition [ 'lhs_module' ]) ;
@@ -158,7 +166,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
         if (!empty($rel)) {
             $this->removeFieldsFromDeployedLayout($rel);
         }
-        require_once("ModuleInstall/ModuleInstaller.php");
+        require_once('ModuleInstall/ModuleInstaller.php');
         require_once('modules/Administration/QuickRepairAndRebuild.php') ;
         $mi = new ModuleInstaller();
         $mi->silent = true;
@@ -208,7 +216,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
         $subpanelNames = $spd->get_available_tabs() ; // actually these are the displayed subpanels
 
         foreach ($subpanelNames as $key => $name) {
-            $GLOBALS [ 'log' ]->debug($thisModuleName . " " . $name) ;
+            $GLOBALS [ 'log' ]->debug($thisModuleName . ' ' . $name) ;
 
             $subPanel = $spd->load_subpanel($name) ;
             if ($subPanel && ! isset($subPanel->_instance_properties [ 'collection_list' ])) {
@@ -234,7 +242,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
         $module = get_module_info($thisModuleName) ;
 
         foreach ($module->field_defs as $field) {
-            if ($field [ 'type' ] == 'relate' && isset($field [ 'module' ]) && $field [ 'module' ] == $sourceModuleName) {
+            if ($field [ 'type' ] === 'relate' && isset($field ['module' ]) && $field ['module' ] == $sourceModuleName) {
                 return $field [ 'name' ] ;
             }
         }
@@ -273,7 +281,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
      */
     public function build($basepath = null, $installDefPrefix = null, $relationships = null)
     {
-        $basepath = "custom/Extension/modules" ;
+        $basepath = 'custom/Extension/modules';
 
         $this->activitiesToAdd = false ;
 
@@ -281,7 +289,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
         foreach ($this->relationships as $name => $relationship) {
             $definition = $relationship->getDefinition() ;
             // activities will always appear on the rhs only - lhs will be always be this module in MB
-            if (strtolower($definition [ 'rhs_module' ]) == 'activities') {
+            if (strtolower($definition [ 'rhs_module' ]) === 'activities') {
                 $this->activitiesToAdd = true ;
                 $relationshipName = $definition [ 'relationship_name' ] ;
                 foreach (self::$activities as $activitiesSubModuleLower => $activitiesSubModuleName) {
@@ -294,7 +302,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
             }
         }
 
-        $GLOBALS [ 'log' ]->info(get_class($this) . "->build(): installing relationships") ;
+        $GLOBALS [ 'log' ]->info(get_class($this) . '->build(): installing relationships') ;
 
         $MBModStrings = $GLOBALS [ 'mod_strings' ] ;
         $adminModStrings = return_module_language('', 'Administration') ; // required by ModuleInstaller
@@ -302,7 +310,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
         foreach ($this->relationships as $name => $relationship) {
             $relationship->setFromStudio();
             $GLOBALS [ 'mod_strings' ] = $MBModStrings ;
-            $installDefs = parent::build($basepath, "<basepath>", array($name => $relationship )) ;
+            $installDefs = parent::build($basepath, '<basepath>', array( $name => $relationship )) ;
 
             // and mark as built so that the next time we come through we'll know and won't build again
             $relationship->setReadonly() ;
@@ -355,7 +363,7 @@ class DeployedRelationships extends AbstractRelationships implements Relationshi
         // save out the updated definitions so that we keep track of the change in built status
         $this->save() ;
 
-        $GLOBALS [ 'log' ]->info(get_class($this) . "->build(): finished relationship installation") ;
+        $GLOBALS [ 'log' ]->info(get_class($this) . '->build(): finished relationship installation') ;
     }
 
     /*

@@ -45,14 +45,14 @@
 #[\AllowDynamicProperties]
 class Reminder_Invitee extends Basic
 {
-    public $name;
+    public string $name;
 
-    public $new_schema = true;
-    public $module_dir = 'Reminders_Invitees';
-    public $object_name = 'Reminder_Invitee';
-    public $table_name = 'reminders_invitees';
-    public $tracker_visibility = false;
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'Reminders_Invitees';
+    public string $object_name = 'Reminder_Invitee';
+    public string $table_name = 'reminders_invitees';
+    public bool $tracker_visibility = false;
+    public bool $importable = false;
     public $disable_row_level_security = true;
 
     public $reminder_id;
@@ -62,8 +62,11 @@ class Reminder_Invitee extends Basic
     /**
      * Save multiple reminders invitees data.
      *
-     * @param string $reminderId Related Reminder GUID
+     * @param string $reminderId  Related Reminder GUID
      * @param array $inviteesData Invitees Data
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public static function saveRemindersInviteesData($reminderId, $inviteesData)
     {
@@ -80,7 +83,7 @@ class Reminder_Invitee extends Basic
                 $reminderInviteeBean->save();
                 $savedInviteeIds[] = $reminderInviteeBean->id;
             } else {
-                $addedInvitees = BeanFactory::getBean('Reminders_Invitees')->get_full_list("", "reminders_invitees.id != '{$inviteeData->id}' AND reminders_invitees.reminder_id = '{$reminderInviteeBean->reminder_id}' AND reminders_invitees.related_invitee_module = '{$reminderInviteeBean->related_invitee_module}' AND reminders_invitees.related_invitee_module_id = '{$reminderInviteeBean->related_invitee_module_id}'");
+                $addedInvitees = BeanFactory::getBean('Reminders_Invitees')->get_full_list('', "reminders_invitees.id != '{$inviteeData->id}' AND reminders_invitees.reminder_id = '{$reminderInviteeBean->reminder_id}' AND reminders_invitees.related_invitee_module = '{$reminderInviteeBean->related_invitee_module}' AND reminders_invitees.related_invitee_module_id = '{$reminderInviteeBean->related_invitee_module_id}'");
                 if (!$addedInvitees) {
                     $reminderInviteeBean->save();
                     $savedInviteeIds[] = $reminderInviteeBean->id;
@@ -102,7 +105,7 @@ class Reminder_Invitee extends Basic
     {
         $ret = array();
         $reminderInviteeBeen = BeanFactory::newBean('Reminders_Invitees');
-        $reminderInvitees = $reminderInviteeBeen->get_full_list("reminders_invitees.date_entered", "reminders_invitees.reminder_id = '$reminderId'");
+        $reminderInvitees = $reminderInviteeBeen->get_full_list('reminders_invitees.date_entered', "reminders_invitees.reminder_id = '$reminderId'");
         if ($reminderInvitees) {
             foreach ($reminderInvitees as $reminderInvitee) {
                 $ret[] = array(
@@ -118,7 +121,7 @@ class Reminder_Invitee extends Basic
 
     private static function getInviteeName($module, $moduleId)
     {
-        $retValue = "unknown";
+        $retValue = 'unknown';
 
         $bean = BeanFactory::getBean($module, $moduleId);
         switch ($module) {
@@ -149,14 +152,18 @@ class Reminder_Invitee extends Basic
      * Delete reminders invitees multiple.
      *
      * @param string $reminderId Related Reminder GUID
-     * @param array $inviteeIds (optional) Exluded Invitees GUIDs, the invitee will not deleted if this argument contains that. Default is empty array.
+     * @param array $inviteeIds  (optional) Exluded Invitees GUIDs, the invitee will not deleted if this argument
+     *                           contains that. Default is empty array.
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public static function deleteRemindersInviteesMultiple($reminderId, $inviteeIds = array())
     {
-        $invitees = BeanFactory::getBean('Reminders_Invitees')->get_full_list("", "reminders_invitees.reminder_id = '$reminderId'");
+        $invitees = BeanFactory::getBean('Reminders_Invitees')->get_full_list('', "reminders_invitees.reminder_id = '$reminderId'");
         if ($invitees) {
             foreach ($invitees as $invitee) {
-                if (!in_array($invitee->id, $inviteeIds)) {
+                if (!in_array($invitee->id, $inviteeIds, true)) {
                     $invitee->mark_deleted($invitee->id);
                     $invitee->save();
                 }

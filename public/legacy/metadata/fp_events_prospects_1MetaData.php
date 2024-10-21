@@ -1,6 +1,6 @@
 <?php
 // created: 2013-04-30 14:55:07
-$dictionary["fp_events_prospects_1"] = array(
+$dictionary['fp_events_prospects_1'] = array(
   'true_relationship_type' => 'many-to-many',
   'from_studio' => true,
   'relationships' =>

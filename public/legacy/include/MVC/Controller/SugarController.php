@@ -42,10 +42,11 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-require_once('include/MVC/View/SugarView.php');
+require_once(__DIR__ . '/../../../include/MVC/View/SugarView.php');
 
 /**
  * Main SugarCRM controller
+ *
  * @api
  */
 class SugarController
@@ -56,7 +57,7 @@ class SugarController
      * e.g. make all detail views go to edit views
      * $action_remap = array('detailview'=>'editview');
      */
-    protected $action_remap = array('index' => 'listview');
+    protected $action_remap = array( 'index' => 'listview' );
 
     /**
      * @var string $module
@@ -96,7 +97,7 @@ class SugarController
 
     /**
      * @var string|null $return_id uuid
-     * The id of the return record.
+     *                             The id of the return record.
      */
     public $return_id = null;
 
@@ -177,9 +178,10 @@ class SugarController
     /**
      * This can be set from the application to tell us whether we have authorization to
      * process the action. If this is set we will default to the noaccess view.
-     *@var bool
+     *
+     * @var bool
      */
-    public $hasAccess ;
+    public $hasAccess;
 
     /**
      * Map case sensitive filenames to action.  This is used for linux/unix systems
@@ -201,8 +203,6 @@ class SugarController
     }
 
 
-
-
     /**
      * Called from SugarApplication and is meant to perform the setup operations
      * on the controller.
@@ -218,7 +218,7 @@ class SugarController
             $this->setModule($module);
         }
 
-        if (!empty($_REQUEST['target_module']) && $_REQUEST['target_module'] != 'undefined') {
+        if (!empty($_REQUEST['target_module']) && $_REQUEST['target_module'] !== 'undefined') {
             $this->target_module = $_REQUEST['target_module'];
         }
         //set properties on the controller from the $_REQUEST
@@ -317,7 +317,7 @@ class SugarController
      */
     private function loadMapping($var, $merge = false)
     {
-        $$var = sugar_cache_retrieve("CONTROLLER_" . $var . "_" . $this->module);
+        $$var = sugar_cache_retrieve('CONTROLLER_' . $var . '_' . $this->module);
         if (!$$var) {
             if ($merge && !empty($this->$var)) {
                 $$var = $this->$var;
@@ -339,7 +339,7 @@ class SugarController
 
             // entry_point_registry -> EntryPointRegistry
 
-            $varname = str_replace(" ", "", ucwords(str_replace("_", " ", $var)));
+            $varname = str_replace(' ', '', ucwords(str_replace('_', ' ', $var)));
             if (file_exists("custom/application/Ext/$varname/$var.ext.php")) {
                 require("custom/application/Ext/$varname/$var.ext.php");
             }
@@ -347,7 +347,7 @@ class SugarController
                 require("custom/modules/{$this->module}/Ext/$varname/$var.ext.php");
             }
 
-            sugar_cache_put("CONTROLLER_" . $var . "_" . $this->module, $$var);
+            sugar_cache_put('CONTROLLER_' . $var . '_' . $this->module, $$var);
         }
         $this->$var = $$var;
     }
@@ -390,19 +390,20 @@ class SugarController
 
     /**
      * Handle exception
+     *
      * @param Exception $e
      */
     protected function handleException(Exception $e)
     {
-        $GLOBALS['log']->fatal("Exception handling in " . __FILE__ . ':' . __LINE__);
+        $GLOBALS['log']->fatal('Exception handling in ' . __FILE__ . ':' . __LINE__);
         $this->showException($e);
         $logicHook = new LogicHook();
 
         if (isset($this->bean)) {
             $logicHook->setBean($this->bean);
-            $logicHook->call_custom_logic($this->bean->module_dir, "handle_exception", $e);
+            $logicHook->call_custom_logic($this->bean->module_dir, 'handle_exception', $e);
         } else {
-            $logicHook->call_custom_logic('', "handle_exception", $e);
+            $logicHook->call_custom_logic('', 'handle_exception', $e);
         }
     }
 
@@ -411,7 +412,11 @@ class SugarController
      */
     private function processView()
     {
-        if (!isset($this->view_object_map['remap_action']) && isset($this->action_view_map[strtolower($this->action)])) {
+        if (!isset($this->view_object_map['remap_action']) && isset(
+                $this->action_view_map[strtolower(
+                    $this->action
+                )]
+            )) {
             $this->view_object_map['remap_action'] = $this->action_view_map[strtolower($this->action)];
         }
         $view = ViewFactory::loadView(
@@ -422,7 +427,7 @@ class SugarController
             $this->target_module
         );
         $GLOBALS['current_view'] = $view;
-        if (!empty($this->bean) && !$this->bean->ACLAccess($view->type) && $view->type != 'list') {
+        if (!empty($this->bean) && !$this->bean->ACLAccess($view->type) && $view->type !== 'list') {
             ACLController::displayNoAccess(true);
             sugar_cleanup(true);
         }
@@ -491,6 +496,8 @@ class SugarController
             $processed = ($this->$task() || $processed);
         }
         $this->_processed = $processed;
+
+        return $processed;
     }
 
     /**
@@ -546,6 +553,8 @@ class SugarController
 
     /**
      * If there is no action found then display an error to the user.
+     *
+     * @throws Exception
      */
     protected function no_action()
     {
@@ -566,7 +575,9 @@ class SugarController
 
     /**
      * Determine if a given function exists on the objects
+     *
      * @param function - the function to check
+     *
      * @return true if the method exists on the object, false otherwise
      */
     protected function hasFunction($function)
@@ -576,6 +587,7 @@ class SugarController
 
     /**
      * @param $action
+     *
      * @return string
      */
     protected function getPreActionMethodName()
@@ -585,6 +597,7 @@ class SugarController
 
     /**
      * @param $action
+     *
      * @return string
      */
     protected function getActionMethodName()
@@ -594,6 +607,7 @@ class SugarController
 
     /**
      * @param $action
+     *
      * @return string
      */
     protected function getPostActionMethodName()
@@ -638,7 +652,7 @@ class SugarController
         if (!empty($_POST['assigned_user_id']) && $_POST['assigned_user_id'] != $this->bean->assigned_user_id && $_POST['assigned_user_id'] != $GLOBALS['current_user']->id && empty($GLOBALS['sugar_config']['exclude_notifications'][$this->bean->module_dir])) {
             $this->bean->notify_on_save = true;
         }
-        $GLOBALS['log']->debug("SugarController:: performing pre_save.");
+        $GLOBALS['log']->debug('SugarController:: performing pre_save.');
         require_once('include/SugarFields/SugarFieldHandler.php');
         $sfh = new SugarFieldHandler();
         foreach ($this->bean->field_defs as $field => $properties) {
@@ -675,6 +689,8 @@ class SugarController
 
     /**
      * Perform the actual save
+     *
+     * @throws Exception
      */
     public function action_save()
     {
@@ -690,7 +706,7 @@ class SugarController
         $action = (!empty($this->return_action) ? $this->return_action : 'DetailView');
         $id = (!empty($this->return_id) ? $this->return_id : $this->bean->id);
 
-        $url = "index.php?module=" . $module . "&action=" . $action . "&record=" . $id;
+        $url = 'index.php?module=' . $module . '&action=' . $action . '&record=' . $id;
         $this->set_redirect($url);
     }
 
@@ -700,6 +716,9 @@ class SugarController
 
     /**
      * Perform the actual deletion.
+     *
+     * @throws Exception
+     * @throws Exception
      */
     protected function action_delete()
     {
@@ -712,7 +731,7 @@ class SugarController
             }
             $this->bean->mark_deleted($_REQUEST['record']);
         } else {
-            sugar_die("A record number must be specified to delete");
+            sugar_die('A record number must be specified to delete');
         }
     }
 
@@ -722,23 +741,29 @@ class SugarController
     protected function post_delete()
     {
         if (empty($_REQUEST['return_url'])) {
-            $return_module = isset($_REQUEST['return_module']) ?
-                $_REQUEST['return_module'] :
+            $return_module = isset($_REQUEST['return_module'])
+                ?
+                $_REQUEST['return_module']
+                :
                 $GLOBALS['sugar_config']['default_module'];
-            $return_action = isset($_REQUEST['return_action']) ?
-                $_REQUEST['return_action'] :
+            $return_action = isset($_REQUEST['return_action'])
+                ?
+                $_REQUEST['return_action']
+                :
                 $GLOBALS['sugar_config']['default_action'];
-            $return_id = isset($_REQUEST['return_id']) ?
-                $_REQUEST['return_id'] :
+            $return_id = isset($_REQUEST['return_id'])
+                ?
+                $_REQUEST['return_id']
+                :
                 '';
-            $url = "index.php?module=" . $return_module . "&action=" . $return_action . "&record=" . $return_id;
+            $url = 'index.php?module=' . $return_module . '&action=' . $return_action . '&record=' . $return_id;
         } else {
             $url = $_REQUEST['return_url'];
         }
 
         //eggsurplus Bug 23816: maintain VCR after an edit/save. If it is a duplicate then don't worry about it. The offset is now worthless.
         if (isset($_REQUEST['offset']) && empty($_REQUEST['duplicateSave'])) {
-            $url .= "&offset=" . $_REQUEST['offset'];
+            $url .= '&offset=' . $_REQUEST['offset'];
         }
 
         $this->set_redirect($url);
@@ -746,12 +771,15 @@ class SugarController
 
     /**
      * Perform the actual massupdate.
+     *
+     * @throws Exception
+     * @throws JsonException
      */
     protected function action_massupdate()
     {
-        if (!empty($_REQUEST['massupdate']) && $_REQUEST['massupdate'] == 'true' && (!empty($_REQUEST['uid']) || !empty($_REQUEST['entire']))) {
-            if (!empty($_REQUEST['Delete']) && $_REQUEST['Delete'] == 'true' && !$this->bean->ACLAccess('delete')
-                || (empty($_REQUEST['Delete']) || $_REQUEST['Delete'] != 'true') && !$this->bean->ACLAccess('save')
+        if (!empty($_REQUEST['massupdate']) && $_REQUEST['massupdate'] === 'true' && (!empty($_REQUEST['uid']) || !empty($_REQUEST['entire']))) {
+            if ((!empty($_REQUEST['Delete']) && $_REQUEST['Delete'] === 'true' && !$this->bean->ACLAccess('delete'))
+                || ((empty($_REQUEST['Delete']) || $_REQUEST['Delete'] !== 'true') && !$this->bean->ACLAccess('save'))
             ) {
                 ACLController::displayNoAccess(true);
                 sugar_cleanup(true);
@@ -759,9 +787,9 @@ class SugarController
 
             set_time_limit(0);//I'm wondering if we will set it never goes timeout here.
             // until we have more efficient way of handling MU, we have to disable the limit
-            DBManagerFactory::getInstance()->setQueryLimit(0);
-            require_once("include/MassUpdate.php");
-            require_once('modules/MySettings/StoreQuery.php');
+            DBManagerFactory::getInstance()?->setQueryLimit(0);
+            require_once(__DIR__ . '/../../../include/MassUpdate.php');
+            require_once(__DIR__ . '/../../../modules/MySettings/StoreQuery.php');
             $seed = loadBean($_REQUEST['module']);
             $mass = new MassUpdate();
             $mass->setSugarBean($seed);
@@ -775,7 +803,7 @@ class SugarController
                 'return_module' => $_REQUEST['return_module'],
                 'return_action' => $_REQUEST['return_action']
             );
-            if ($_REQUEST['return_module'] == 'Emails') {
+            if ($_REQUEST['return_module'] === 'Emails') {
                 if (!empty($_REQUEST['type']) && !empty($_REQUEST['ie_assigned_user_id'])) {
                     $this->req_for_email = array(
                         'type' => $_REQUEST['type'],
@@ -784,15 +812,20 @@ class SugarController
                 }
             }
             $_REQUEST = array();
-            $_REQUEST = json_decode(html_entity_decode($temp_req['current_query_by_page']), true);
-            unset($_REQUEST[$seed->module_dir . '2_' . strtoupper($seed->object_name) . '_offset']);//after massupdate, the page should redirect to no offset page
+            $_REQUEST =
+                json_decode(html_entity_decode($temp_req['current_query_by_page']), true, 512, JSON_THROW_ON_ERROR);
+            unset(
+                $_REQUEST[$seed->module_dir . '2_' . strtoupper(
+                    $seed->object_name
+                ) . '_offset']
+            );//after massupdate, the page should redirect to no offset page
             $storeQuery->saveFromRequest($_REQUEST['module']);
             $_REQUEST = array(
                 'return_module' => $temp_req['return_module'],
                 'return_action' => $temp_req['return_action']
             );//for post_massupdate, to go back to original page.
         } else {
-            sugar_die("You must massupdate at least one record");
+            sugar_die('You must massupdate at least one record');
         }
     }
 
@@ -801,17 +834,18 @@ class SugarController
      */
     protected function post_massupdate()
     {
-        $return_module = isset($_REQUEST['return_module']) ?
-            $_REQUEST['return_module'] :
-            $GLOBALS['sugar_config']['default_module'];
-        $return_action = isset($_REQUEST['return_action']) ?
-            $_REQUEST['return_action'] :
-            $GLOBALS['sugar_config']['default_action'];
-        $url = "index.php?module=" . $return_module . "&action=" . $return_action;
-        if ($return_module == 'Emails') {//specificly for My Achieves
-            if (!empty($this->req_for_email['type']) && !empty($this->req_for_email['ie_assigned_user_id'])) {
-                $url = $url . "&type=" . $this->req_for_email['type'] . "&assigned_user_id=" . $this->req_for_email['ie_assigned_user_id'];
-            }
+        $return_module = $_REQUEST['return_module'] ?? $GLOBALS['sugar_config']['default_module'];
+        $return_action = $_REQUEST['return_action'] ?? $GLOBALS['sugar_config']['default_action'];
+        $url = 'index.php?module=' . $return_module . '&action=' . $return_action;
+        //specificly for My Achieves
+        if (($return_module === 'Emails') && !empty($this->req_for_email['type'])
+            && !empty($this->req_for_email['ie_assigned_user_id'])) {
+            $url = sprintf(
+                '%s&type=%s&assigned_user_id=%s',
+                $url,
+                $this->req_for_email['type'],
+                $this->req_for_email['ie_assigned_user_id']
+            );
         }
         $this->set_redirect($url);
     }
@@ -854,7 +888,7 @@ class SugarController
 
                 $dashlet = new $dashletDefs[$id]['className'](
                     $id,
-                    (isset($dashletDefs[$id]['options']) ? $dashletDefs[$id]['options'] : array())
+                    ($dashletDefs[$id]['options'] ?? array())
                 );
 
                 if (method_exists($dashlet, $requestedMethod) || method_exists($dashlet, '__call')) {
@@ -880,22 +914,26 @@ class SugarController
 
             $dashlet = new $dashletDefs[$id]['className'](
                 $id,
-                (isset($dashletDefs[$id]['options']) ? $dashletDefs[$id]['options'] : array())
+                ($dashletDefs[$id]['options'] ?? array())
             );
-            if (!empty($_REQUEST['configure']) && $_REQUEST['configure']) { // save settings
+            if (!empty($_REQUEST['configure']) && $_REQUEST['configure'] !== '') { // save settings
                 $dashletDefs[$id]['options'] = $dashlet->saveOptions($_REQUEST);
                 $current_user->setPreference('dashlets', $dashletDefs, 0, $_REQUEST['module']);
             } else { // display options
                 $json = getJSONobj();
 
-                return 'result = ' . $json->encode((array(
-                        'header' => $dashlet->title . ' : ' . $mod_strings['LBL_OPTIONS'],
-                        'body' => $dashlet->displayOptions()
-                    )));
+                return 'result = ' . $json->encode(
+                        (array(
+                            'header' => $dashlet->title . ' : ' . $mod_strings['LBL_OPTIONS'],
+                            'body'   => $dashlet->displayOptions()
+                        ))
+                    );
             }
         } else {
             return '0';
         }
+
+        return '0';
     }
 
     /**
@@ -913,12 +951,12 @@ class SugarController
         $retval = false;
 
         if (method_exists($this->bean, 'deleteAttachment')) {
-            $duplicate = "false";
-            if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == "true") {
-                $duplicate = "true";
+            $duplicate = 'false';
+            if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
+                $duplicate = 'true';
             }
-            if (isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] == "true") {
-                $duplicate = "true";
+            if (isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === 'true') {
+                $duplicate = 'true';
             }
             $retval = $this->bean->deleteAttachment($duplicate);
         }
@@ -939,7 +977,7 @@ class SugarController
     }
 
     /********************************************************************/
-    // 				PROCESS TASKS
+    //                 PROCESS TASKS
     /********************************************************************/
 
     /**
@@ -962,9 +1000,10 @@ class SugarController
             }
 
             if (!empty($this->file_access_control_map['modules'][$module]['actions']) && (in_array(
-                $action,
-                $this->file_access_control_map['modules'][$module]['actions']
-            ) || !empty($this->file_access_control_map['modules'][$module]['actions'][$action]))
+                        $action,
+                        $this->file_access_control_map['modules'][$module]['actions'],
+                        true
+                    ) || !empty($this->file_access_control_map['modules'][$module]['actions'][$action]))
             ) {
                 //check params
                 if (!empty($this->file_access_control_map['modules'][$module]['actions'][$action]['params'])) {
@@ -972,7 +1011,7 @@ class SugarController
                     $params = $this->file_access_control_map['modules'][$module]['actions'][$action]['params'];
                     foreach ($params as $param => $paramVals) {
                         if (!empty($_REQUEST[$param])) {
-                            if (!in_array($_REQUEST[$param], $paramVals)) {
+                            if (!in_array($_REQUEST[$param], $paramVals, true)) {
                                 $block = false;
                                 break;
                             }
@@ -990,6 +1029,8 @@ class SugarController
         } else {
             $this->_processed = false;
         }
+
+        return true;
     }
 
     /**
@@ -1018,6 +1059,7 @@ class SugarController
      * Checks to see if the requested entry point requires auth
      *
      * @param  $entrypoint string name of the entrypoint
+     *
      * @return bool true if auth is required, false if not
      */
     public function checkEntryPointRequiresAuth($entryPoint)
@@ -1046,7 +1088,7 @@ class SugarController
             $action = $this->do_action;
         }
         // index actions actually maps to the view.list.php view
-        if ($action == 'index') {
+        if ($action === 'index') {
             $action = 'list';
         }
 
@@ -1101,6 +1143,7 @@ class SugarController
     /**
      * action: Send Confirm Opt In Email to Contact/Lead/Account/Prospect
      *
+     * @throws Exception
      * @global array $app_strings using for user messages about error/success status of action
      */
     public function action_sendConfirmOptInEmail()
@@ -1121,8 +1164,8 @@ class SugarController
                 if ($emailAddressStringCaps) {
                     $emailAddress = BeanFactory::newBean('EmailAddresses');
                     $emailAddress->retrieve_by_string_fields(array(
-                        'email_address_caps' => $emailAddressStringCaps,
-                    ));
+                                                                 'email_address_caps' => $emailAddressStringCaps,
+                                                             ));
 
                     $emailMan = BeanFactory::newBean('EmailMan');
 

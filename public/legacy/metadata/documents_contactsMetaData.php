@@ -39,7 +39,7 @@
  */
 
 
-$dictionary["documents_contacts"] = array(
+$dictionary['documents_contacts'] = array(
   'true_relationship_type' => 'many-to-many',
   'relationships' =>
   array(

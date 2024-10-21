@@ -318,7 +318,7 @@
                                                                     {% if extraErrors|length > 1 %}
                                                                         <div id="error-brief_{{ counter }}"
                                                                              class="first-warning">
-                                                                            {{ extraErrors|first }}
+                                                                            {{ extraErrors|first|nl2br }}
                                                                         </div>
                                                                         <div id="view-full_{{ counter }}"
                                                                              class="view-full pb-1 pr-3"
@@ -329,14 +329,14 @@
                                                                              class="error-full pl-2">
                                                                             <ul>
                                                                                 {% for error in extraErrors %}
-                                                                                    <li>{{ error }}</li>
+                                                                                    <li>{{ error|nl2br }}</li>
                                                                                 {% endfor %}
                                                                             </ul>
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="error-brief_{{ counter }}"
                                                                              class="error-details">
-                                                                            {{ extraErrors|first }}
+                                                                            {{ extraErrors|first|nl2br }}
                                                                         </div>
                                                                         <div id="view-full_{{ counter }}"
                                                                              class="view-full"
@@ -346,7 +346,7 @@
                                                                         </div>
                                                                         <div id="error-full_{{ counter }}"
                                                                              class="error-full pl-2">
-                                                                            {{ extraErrors|first }}
+                                                                            {{ extraErrors|first|nl2br }}
                                                                         </div>
                                                                     {% endif %}
                                                                     {% endif %}
@@ -397,14 +397,14 @@
                                                                     {% if extraWarnings is empty %}
                                                                         {% for warning in check.warnings %}
                                                                         <div class="field-group-field pl-2 pb-2 d-inline-block check-result">
-                                                                            {{ warning }}
+                                                                            {{ warning|nl2br }}
                                                                         </div>
                                                                         {% endfor %}
                                                                     {% else %}
                                                                     {% if extraWarnings|length > 1 %}
                                                                         <div id="error-brief_{{ counter }}"
                                                                              class="first-warning pl-2">
-                                                                            {{ extraWarnings|first }}
+                                                                            {{ extraWarnings|first|nl2br }}
                                                                         </div>
                                                                         <div id="view-full_{{ counter }}"
                                                                              class="view-full"
@@ -415,14 +415,14 @@
                                                                              class="error-full ml-2">
                                                                             <ul>
                                                                                 {% for warning in extraWarnings %}
-                                                                                    <li>{{ warning }}</li>
+                                                                                    <li>{{ warning|nl2br }}</li>
                                                                                 {% endfor %}
                                                                             </ul>
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="error-brief_{{ counter }}"
                                                                              class="error-details col-md-5">
-                                                                            {{ extraWarnings|first }}
+                                                                            {{ extraWarnings|first|nl2br }}
                                                                         </div>
                                                                         <div id="view-full_{{ counter }}"
                                                                              class="view-full"
@@ -431,7 +431,7 @@
                                                                         </div>
                                                                         <div id="error-full_{{ counter }}"
                                                                              class="error-full col-md-7">
-                                                                            {{ extraWarnings|first }}
+                                                                            {{ extraWarnings|first|nl2br }}
                                                                         </div>
                                                                     {% endif %}
                                                                     {% endif %}
@@ -459,10 +459,8 @@
                                                                 if ((document.getElementById('warning-symbol-{{ system_check.label }}')?.style?.display || 'none') !== 'none') {
                                                                     return;
                                                                 }
-
                                                                 document.getElementById('check-mark-{{ system_check.label }}').style.display = "flex";
                                                             }
-
                                                             sectionChecksPassed();
                                                         </script>
                                                     {% endfor %}
@@ -474,10 +472,8 @@
                                                             if ((document.getElementById('system-warning-symbol')?.style?.display || 'none') !== 'none') {
                                                                 return;
                                                             }
-
                                                             document.getElementById('check-mark-{{ mod_strings.LBL_SYSTEM_CHECKS }}').style.display = "flex";
                                                         }
-
                                                         allPassed();
                                                     </script>
                                                 </div>

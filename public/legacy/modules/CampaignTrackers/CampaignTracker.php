@@ -58,12 +58,12 @@ class CampaignTracker extends SugarBean
     * So define a variable for each one of them, the variable name should be same as the field name
     * Use this module's vardef file as a reference to create these variables.
     */
-    public $id;
-    public $date_entered;
-    public $created_by;
-    public $date_modified;
+    public string $id;
+    public string $date_entered;
+    public string $created_by;
+    public string $date_modified;
     public $modified_by;
-    public $deleted;
+    public int $deleted;
     public $tracker_key;
     public $tracker_url;
     public $tracker_name;
@@ -77,21 +77,21 @@ class CampaignTracker extends SugarBean
     /* variable $table_name is used by SugarBean and methods in this file to constructs queries
     * set this variables value to the table associated with this bean.
     */
-    public $table_name = 'campaign_trkrs';
+    public string $table_name = 'campaign_trkrs';
 
     /*This  variable overrides the object_name variable in SugarBean, wher it has a value of null.*/
-    public $object_name = 'CampaignTracker';
+    public string $object_name = 'CampaignTracker';
 
     /**/
-    public $module_dir = 'CampaignTrackers';
+    public string $module_dir = 'CampaignTrackers';
 
     /* This is a legacy variable, set its value to true for new modules*/
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     /* $column_fields holds a list of columns that exist in this bean's table. This list is referenced
     * when fetching or saving data for the bean. As you modify a table you need to keep this up to date.
     */
-    public $column_fields = array(
+    public array $column_fields = array(
             'id'
             ,'tracker_key'
             ,'tracker_url'
@@ -100,8 +100,8 @@ class CampaignTracker extends SugarBean
     );
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array('campaign_id');
-    public $relationship_fields = array('campaing_id'=>'campaign');
+    public array $additional_column_fields = array( 'campaign_id');
+    public array $relationship_fields = array( 'campaing_id' =>'campaign');
 
     public $required_fields =  array('tracker_name'=>1,'tracker_url'=>1);
 
@@ -146,7 +146,7 @@ class CampaignTracker extends SugarBean
 
         //setup campaign name.
         $query = "SELECT name from campaigns where id = '$this->campaign_id'";
-        $result =$this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result =$this->db->query($query, true, ' Error filling in additional detail fields: ');
 
         // Get the id and the name.
         $row = $this->db->fetchByAssoc($result);

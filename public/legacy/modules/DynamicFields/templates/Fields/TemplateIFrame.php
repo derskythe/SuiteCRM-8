@@ -46,25 +46,25 @@ class TemplateIFrame extends TemplateURL
 {
     public $height;
     public $type='iframe';
-    
+
     public function get_html_edit()
     {
         $this->prepare();
         return "<input type='text' name='". $this->name. "' id='".$this->name."' size='".$this->size."' title='{" . strtoupper($this->name) ."_HELP}' value='{". strtoupper($this->name). "}'>";
     }
-    
+
     public function get_html_label()
     {
-        return "LALALALA";
+        return 'LALALALA';
     }
-    
+
     public function get_xtpl_detail()
     {
         $value = parent::get_xtpl_detail();
-        $value .= "BLAH BLAH";
+        $value .= 'BLAH BLAH';
         return $value;
     }
-    
+
     public function get_field_def()
     {
         $def = parent::get_field_def();

@@ -39,7 +39,7 @@ class AOS_Quotes extends AOS_Quotes_sugar
         global $sugar_config;
 
         if (empty($this->id) || $this->new_with_id
-            || (isset($_POST['duplicateSave']) && $_POST['duplicateSave'] == 'true')) {
+            || (isset($_POST['duplicateSave']) && $_POST['duplicateSave'] === 'true')) {
             if (isset($_POST['group_id'])) {
                 unset($_POST['group_id']);
             }
@@ -50,10 +50,10 @@ class AOS_Quotes extends AOS_Quotes_sugar
                 unset($_POST['service_id']);
             }
 
-            if ($sugar_config['dbconfig']['db_type'] == 'mssql') {
-                $this->number = $this->db->getOne("SELECT MAX(CAST(number as INT))+1 FROM aos_quotes");
+            if ($sugar_config['dbconfig']['db_type'] === 'mssql') {
+                $this->number = $this->db->getOne('SELECT MAX(CAST(number as INT))+1 FROM aos_quotes');
             } else {
-                $this->number = $this->db->getOne("SELECT MAX(CAST(number as UNSIGNED))+1 FROM aos_quotes");
+                $this->number = $this->db->getOne('SELECT MAX(CAST(number as UNSIGNED))+1 FROM aos_quotes');
             }
 
             if ($this->number < $sugar_config['aos']['quotes']['initialNumber']) {

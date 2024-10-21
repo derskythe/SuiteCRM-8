@@ -60,9 +60,10 @@ class EmailAddressRule extends BaseRule
     {
     }
 
-    public function parsePanels(& $panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
-        if ($view == 'DetailView') {
+        parent::parsePanels($panels, $view);
+        if ($view === 'DetailView') {
             foreach ($panels as $name=>$panel) {
                 if (preg_match('/lbl_email_addresses/si', $name)) {
                     continue;
@@ -98,7 +99,7 @@ class EmailAddressRule extends BaseRule
                 } //foreach
             } //foreach
         } else {
-            if ($view == 'EditView') {
+            if ($view === 'EditView') {
                 foreach ($panels as $name=>$panel) {
                     if (preg_match('/lbl_email_addresses/si', $name)) {
                         continue;

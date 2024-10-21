@@ -50,7 +50,7 @@ global $sugar_flavor;
 
 
 if (!is_admin($current_user) && !is_admin_for_any_module($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 
 echo getClassicModuleTitle(
@@ -115,7 +115,11 @@ foreach ($admin_group_header as $key=>$values) {
             }
 
             foreach ($mod as $link_idx =>$admin_option) {
-                if (!empty($GLOBALS['admin_access_control_links']) && in_array($link_idx, $GLOBALS['admin_access_control_links'])) {
+                if (!empty($GLOBALS['admin_access_control_links']) && in_array(
+                        $link_idx,
+                        $GLOBALS['admin_access_control_links'],
+                        true
+                    )) {
                     unset($values_3_tab[$j][$link_idx]);
                     continue;
                 }
@@ -155,14 +159,14 @@ foreach ($admin_group_header as $key=>$values) {
     }
 }
 
-$sugar_smarty->assign("VALUES_3_TAB", $values_3_tab);
-$sugar_smarty->assign("ADMIN_GROUP_HEADER", $admin_group_header_tab);
-$sugar_smarty->assign("GROUP_HEADER", $group);
-$sugar_smarty->assign("ICONS", $icons);
-$sugar_smarty->assign("ITEM_URL", $url);
-$sugar_smarty->assign("ITEM_HEADER_LABEL", $label_tab);
-$sugar_smarty->assign("ITEM_DESCRIPTION", $description);
-$sugar_smarty->assign("COLNUM", $tab);
+$sugar_smarty->assign('VALUES_3_TAB', $values_3_tab);
+$sugar_smarty->assign('ADMIN_GROUP_HEADER', $admin_group_header_tab);
+$sugar_smarty->assign('GROUP_HEADER', $group);
+$sugar_smarty->assign('ICONS', $icons);
+$sugar_smarty->assign('ITEM_URL', $url);
+$sugar_smarty->assign('ITEM_HEADER_LABEL', $label_tab);
+$sugar_smarty->assign('ITEM_DESCRIPTION', $description);
+$sugar_smarty->assign('COLNUM', $tab);
 $sugar_smarty->assign('ID_TAB', $id_tab);
 
 echo $sugar_smarty->fetch('modules/Administration/index.tpl');

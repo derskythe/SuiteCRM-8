@@ -61,8 +61,8 @@ class ViewAjaxUI extends SugarView
 
     public function display()
     {
-        $user = $GLOBALS["current_user"];
-        $etag = $user->id . $user->getETagSeed("mainMenuETag");
+        $user = $GLOBALS['current_user'];
+        $etag = $user->id . $user->getETagSeed('mainMenuETag');
         generateEtagHeader($etag);
         //Prevent double footers
         $GLOBALS['app']->headerDisplayed = false;

@@ -65,9 +65,9 @@ function clearPasswordSettings()
 
 require_once('modules/Administration/Forms.php');
 echo getClassicModuleTitle(
-    "Administration",
+    'Administration',
     array(
-    "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . "</a>",
+        "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . '</a>',
     $mod_strings['LBL_MANAGE_PASSWORD_TITLE'],
         ),
     false
@@ -80,7 +80,8 @@ $configurator->parseLoggerSettings();
 $valid_public_key = true;
 if (!empty($_POST['saveConfig'])) {
     if ($_POST['captcha_on'] == '1') {
-        $handle = @fopen("http://www.google.com/recaptcha/api/challenge?k=" . $_POST['captcha_public_key'] . "&cachestop=35235354",
+        $handle = @fopen(
+            'http://www.google.com/recaptcha/api/challenge?k=' . $_POST['captcha_public_key'] . '&cachestop=35235354',
             'rb');
         $buffer = '';
         if ($handle) {
@@ -89,10 +90,10 @@ if (!empty($_POST['saveConfig'])) {
             }
             fclose($handle);
         }
-        $valid_public_key = substr($buffer, 1, 4) == 'var ' ? true : false;
+        $valid_public_key = substr($buffer, 1, 4) === 'var ' ? true : false;
     }
     if ($valid_public_key) {
-        if (isset($_REQUEST['system_ldap_enabled']) && $_REQUEST['system_ldap_enabled'] == 'on') {
+        if (isset($_REQUEST['system_ldap_enabled']) && $_REQUEST['system_ldap_enabled'] === 'on') {
             $_POST['system_ldap_enabled'] = 1;
             clearPasswordSettings();
         } else {
@@ -107,19 +108,19 @@ if (!empty($_POST['saveConfig'])) {
             $_POST['authenticationClass'] = '';
         }
 
-        if (isset($_REQUEST['ldap_group_attr_req_dn']) && $_REQUEST['ldap_group_attr_req_dn'] == 'on') {
+        if (isset($_REQUEST['ldap_group_attr_req_dn']) && $_REQUEST['ldap_group_attr_req_dn'] === 'on') {
             $_POST['ldap_group_attr_req_dn'] = 1;
         } else {
             $_POST['ldap_group_attr_req_dn'] = 0;
         }
 
-        if (isset($_REQUEST['ldap_group_checkbox']) && $_REQUEST['ldap_group_checkbox'] == 'on') {
+        if (isset($_REQUEST['ldap_group_checkbox']) && $_REQUEST['ldap_group_checkbox'] === 'on') {
             $_POST['ldap_group'] = 1;
         } else {
             $_POST['ldap_group'] = 0;
         }
 
-        if (isset($_REQUEST['ldap_authentication_checkbox']) && $_REQUEST['ldap_authentication_checkbox'] == 'on') {
+        if (isset($_REQUEST['ldap_authentication_checkbox']) && $_REQUEST['ldap_authentication_checkbox'] === 'on') {
             $_POST['ldap_authentication'] = 1;
         } else {
             $_POST['ldap_authentication'] = 0;
@@ -133,13 +134,13 @@ if (!empty($_POST['saveConfig'])) {
         $configurator->config['passwordsetting']['onelower'] = $_POST['passwordsetting_onelower'];
         $configurator->config['passwordsetting']['onenumber'] = $_POST['passwordsetting_onenumber'];
         $configurator->config['passwordsetting']['onespecial'] = $_POST['passwordsetting_onespecial'];
-		$configurator->config['passwordsetting']['minpwdlength'] = $_POST['passwordsetting_minpwdlength'];
+        $configurator->config['passwordsetting']['minpwdlength'] = $_POST['passwordsetting_minpwdlength'];
 
         $configurator->saveConfig();
 
         $focus->saveConfig();
 
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('app-metadata-system-configs');
 
         header('Location: index.php?module=Administration&action=index');
@@ -166,29 +167,29 @@ $sugar_smarty->assign('APP_LIST', $app_list_strings);
 $sugar_smarty->assign('config', $configurator->config);
 $sugar_smarty->assign('error', $configurator->errors);
 $sugar_smarty->assign('LANGUAGES', get_languages());
-$sugar_smarty->assign("settings", $focus->settings);
+$sugar_smarty->assign('settings', $focus->settings);
 
 $sugar_smarty->assign('saml_enabled_checked', false);
 
 if (!function_exists('openssl_encrypt')) {
-    $sugar_smarty->assign("LDAP_ENC_KEY_READONLY", 'readonly');
-    $sugar_smarty->assign("LDAP_ENC_KEY_DESC", $config_strings['LDAP_ENC_KEY_NO_FUNC_OPENSSL_DESC']);
+    $sugar_smarty->assign('LDAP_ENC_KEY_READONLY', 'readonly');
+    $sugar_smarty->assign('LDAP_ENC_KEY_DESC', $config_strings['LDAP_ENC_KEY_NO_FUNC_OPENSSL_DESC']);
 } else {
-    $sugar_smarty->assign("LDAP_ENC_KEY_DESC", $config_strings['LBL_LDAP_ENC_KEY_DESC']);
+    $sugar_smarty->assign('LDAP_ENC_KEY_DESC', $config_strings['LBL_LDAP_ENC_KEY_DESC']);
 }
-$sugar_smarty->assign("settings", $focus->settings);
+$sugar_smarty->assign('settings', $focus->settings);
 
 if ($valid_public_key) {
     if (!empty($focus->settings['captcha_on'])) {
-        $sugar_smarty->assign("CAPTCHA_CONFIG_DISPLAY", 'inline');
+        $sugar_smarty->assign('CAPTCHA_CONFIG_DISPLAY', 'inline');
     } else {
-        $sugar_smarty->assign("CAPTCHA_CONFIG_DISPLAY", 'none');
+        $sugar_smarty->assign('CAPTCHA_CONFIG_DISPLAY', 'none');
     }
 } else {
-    $sugar_smarty->assign("CAPTCHA_CONFIG_DISPLAY", 'inline');
+    $sugar_smarty->assign('CAPTCHA_CONFIG_DISPLAY', 'inline');
 }
 
-$sugar_smarty->assign("VALID_PUBLIC_KEY", $valid_public_key);
+$sugar_smarty->assign('VALID_PUBLIC_KEY', $valid_public_key);
 
 
 
@@ -198,23 +199,23 @@ $res = $GLOBALS['sugar_config']['passwordsetting'];
 require_once('include/SugarPHPMailer.php');
 $mail = new SugarPHPMailer();
 $mail->setMailerForSystem();
-if ($mail->Mailer == 'smtp' && $mail->Host == '') {
-    $sugar_smarty->assign("SMTP_SERVER_NOT_SET", '1');
+if ($mail->Mailer === 'smtp' && $mail->Host == '') {
+    $sugar_smarty->assign('SMTP_SERVER_NOT_SET', '1');
 } else {
-    $sugar_smarty->assign("SMTP_SERVER_NOT_SET", '0');
+    $sugar_smarty->assign('SMTP_SERVER_NOT_SET', '0');
 }
 
 $focus = BeanFactory::newBean('InboundEmail');
 $focus->checkImap();
 $storedOptions = unserialize(base64_decode($focus->stored_options));
 $email_templates_arr = get_bean_select_array(true, 'EmailTemplate', 'name', '', 'name', true);
-$create_case_email_template = (isset($storedOptions['create_case_email_template'])) ? $storedOptions['create_case_email_template'] : "";
+$create_case_email_template = (isset($storedOptions['create_case_email_template'])) ? $storedOptions['create_case_email_template'] : '';
 $TMPL_DRPDWN_LOST = get_select_options_with_id($email_templates_arr, $res['lostpasswordtmpl']);
 $TMPL_DRPDWN_GENERATE = get_select_options_with_id($email_templates_arr, $res['generatepasswordtmpl']);
 $TMPL_DRPDWN_FACTOR = get_select_options_with_id($email_templates_arr, isset($res['factoremailtmpl']) ? $res['factoremailtmpl'] : null);
 
-$sugar_smarty->assign("TMPL_DRPDWN_LOST", $TMPL_DRPDWN_LOST);
-$sugar_smarty->assign("TMPL_DRPDWN_GENERATE", $TMPL_DRPDWN_GENERATE);
-$sugar_smarty->assign("TMPL_DRPDWN_FACTOR", $TMPL_DRPDWN_FACTOR);
+$sugar_smarty->assign('TMPL_DRPDWN_LOST', $TMPL_DRPDWN_LOST);
+$sugar_smarty->assign('TMPL_DRPDWN_GENERATE', $TMPL_DRPDWN_GENERATE);
+$sugar_smarty->assign('TMPL_DRPDWN_FACTOR', $TMPL_DRPDWN_FACTOR);
 
 $sugar_smarty->display('modules/Administration/PasswordManager.tpl');

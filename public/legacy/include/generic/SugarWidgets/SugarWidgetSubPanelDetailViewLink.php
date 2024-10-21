@@ -63,7 +63,7 @@ class SugarWidgetSubPanelDetailViewLink extends SugarWidgetField
             $key = strtoupper($key);
         }
         if (empty($layout_def['fields'][$key])) {
-            return "";
+            return '';
         } else {
             $value = $layout_def['fields'][$key];
         }
@@ -96,26 +96,26 @@ class SugarWidgetSubPanelDetailViewLink extends SugarWidgetField
         $parent='';
         if (!empty($layout_def['parent_info'])) {
             if (!empty($focus)) {
-                $parent="&parent_id=".$focus->id;
-                $parent.="&parent_module=".$focus->module_dir;
+                $parent = '&parent_id=' . $focus->id;
+                $parent .= '&parent_module=' . $focus->module_dir;
             }
         } else {
             if (!empty($layout_def['parent_id'])) {
                 if (isset($layout_def['fields'][strtoupper($layout_def['parent_id'])])) {
-                    $parent.="&parent_id=".$layout_def['fields'][strtoupper($layout_def['parent_id'])];
+                    $parent .= '&parent_id=' . $layout_def['fields'][strtoupper($layout_def['parent_id'])];
                 }
             }
             if (!empty($layout_def['parent_module'])) {
                 if (isset($layout_def['fields'][strtoupper($layout_def['parent_module'])])) {
-                    $parent.="&parent_module=".$layout_def['fields'][strtoupper($layout_def['parent_module'])];
+                    $parent .= '&parent_module=' . $layout_def['fields'][strtoupper($layout_def['parent_module'])];
                 }
             }
         }
 
         $action = 'DetailView';
-        if($module === "Emails"){
+        if ($module === 'Emails') {
             $email = BeanFactory::getBean($module, $record);
-            if($email->status === "draft"){
+            if ($email->status === 'draft') {
                 $action = 'DetailDraftView';
             }
         }
@@ -130,7 +130,7 @@ class SugarWidgetSubPanelDetailViewLink extends SugarWidgetField
             ||  $detailView && !ACLController::moduleSupportsACL($layout_def['owner_module'])
             || ACLController::checkAccess($ownerModule, 'view', $ownerId == $current_user->id))) {
             $link = ajaxLink("index.php?module=$module&action=$action&record={$record}{$parent}");
-            if ($module == 'EAPM') {
+            if ($module === 'EAPM') {
                 $link = "index.php?module=$module&action=$action&record={$record}{$parent}";
             }
             return '<a href="' . $link . '" >'."$value</a>";

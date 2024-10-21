@@ -64,8 +64,8 @@ $subpanel_layout = array(
             'width' => '30%',
         ),
         'reply_to_status' => array(
-             'usage'				=> 'query_only',
-             'force_exists'			=> true,
+             'usage'                => 'query_only',
+             'force_exists'            => true,
         ),
         'assigned_user_name'=>array(
             'vname' => 'LBL_LIST_ASSIGNED',

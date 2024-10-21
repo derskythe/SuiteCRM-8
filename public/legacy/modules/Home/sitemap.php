@@ -41,7 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-require_once("include/utils.php");
+require_once('include/utils.php');
 
 $sm = sm_build_array();
 $sm_smarty = new Sugar_Smarty();
@@ -56,7 +56,7 @@ $app_list_strings = return_app_list_strings_language($current_language);
 
 foreach ($sm as $mod_dir_name => $links) {
     $module_friendly_name = $app_list_strings['moduleList'][$mod_dir_name];
-    $temphtml = "";
+    $temphtml = '';
     $temphtml .= '<h4><a href="javascript:window.location=\'index.php?module='.$mod_dir_name.'&action=index\'">' . $module_friendly_name .'</a></h4><ul class=\'noBullet\'>';
 
     foreach ($links as $name => $href) {
@@ -83,7 +83,7 @@ function sm_build_array()
     }
 
 
-    include("include/modules.php");
+    include('include/modules.php');
     global $mod_strings;
 
 
@@ -95,7 +95,7 @@ function sm_build_array()
 
     $current_language = get_current_language();
 
-    $exclude= array();		// in case you want to exclude any.
+    $exclude= array();        // in case you want to exclude any.
     $mstr_array = array();
 
     global $modListHeader;
@@ -107,7 +107,7 @@ function sm_build_array()
     }
 
     foreach ($modListHeader as $key=>$val) {
-        if (!empty($exclusion_array) && in_array($val, $exclude)) {
+        if (!empty($exclusion_array) && in_array($val, $exclude, true)) {
             continue;
         } else {
             if (file_exists('modules/'.$val.'/Menu.php')) {
@@ -117,7 +117,7 @@ function sm_build_array()
 
                 $tmp_menu_items = array();
                 foreach ($module_menu as $menu) {
-                    if (isset($menu[0]) && !empty($menu[0]) && isset($menu[1]) && !empty($menu[1]) && trim($menu[0]) !='#') {
+                    if (isset($menu[0]) && !empty($menu[0]) && isset($menu[1]) && !empty($menu[1]) && trim($menu[0]) !== '#') {
                         $tmp_menu_items[$menu[1]] =$menu[0];
                     }
                 }

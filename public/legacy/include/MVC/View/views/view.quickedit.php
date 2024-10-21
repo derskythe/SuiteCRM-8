@@ -77,12 +77,12 @@ class ViewQuickedit extends ViewAjax
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
-        if (!empty($_REQUEST['source_module']) && $_REQUEST['source_module'] != 'undefined' && !empty($_REQUEST['record'])) {
+        if (!empty($_REQUEST['source_module']) && $_REQUEST['source_module'] !== 'undefined' && !empty($_REQUEST['record'])) {
             $this->bean = loadBean($_REQUEST['source_module']);
             if ($this->bean instanceof SugarBean
-                    && !in_array($this->bean->object_name, array('EmailMan'))) {
+                    && $this->bean->object_name !== 'EmailMan') {
                 $this->bean->retrieve($_REQUEST['record']);
                 if (!empty($this->bean->id)) {
                     $_REQUEST['parent_id'] = $this->bean->id;
@@ -104,7 +104,7 @@ class ViewQuickedit extends ViewAjax
                 if (isset($_REQUEST['module'])) {
                     $target_bean = loadBean($_REQUEST['module']);
                     foreach ($target_bean->field_defs as $fields) {
-                        if ($fields['type'] == 'relate' && isset($fields['module']) && $fields['module'] == $_REQUEST['source_module'] && isset($fields['rname'])) {
+                        if ($fields['type'] === 'relate' && isset($fields['module']) && $fields['module'] == $_REQUEST['source_module'] && isset($fields['rname'])) {
                             $rel_name = $fields['rname'];
                             if (isset($this->bean->$rel_name)) {
                                 $_REQUEST[$fields['name']] = $this->bean->$rel_name;
@@ -157,7 +157,7 @@ class ViewQuickedit extends ViewAjax
             $no_defs_js = '<script>SUGAR.ajaxUI.loadContent("index.php?return_module='.$this->bean->module_dir.'&module=' . $this->bean->module_dir . '&action=EditView&record=' . $this->bean->id.'")</script>';
 
             //reports is a special case as it does not have an edit view so navigate to wizard view
-            if (strtolower($module) == 'reports') {
+            if (strtolower($module) === 'reports') {
                 $no_defs_js = '<script>SUGAR.ajaxUI.loadContent("index.php?return_module='.$this->bean->module_dir.'&module=' . $this->bean->module_dir . '&action=ReportsWizard&record=' . $this->bean->id.'")</script>';
             }
             //if this is not reports and there are no edit view files then go to detail view

@@ -288,7 +288,7 @@ class ListViewDataPort extends ListViewData
         // Bug 22740 - Tweak this check to strip off the table name off the order by parameter.
         // Samir Gandhi : Do not remove the report_cache.date_modified condition as the report list view is broken
         $orderby = $order['orderBy'];
-        if (($order['orderBy'] !== "report_cache.date_modified") && strpos($order['orderBy'], '.')) {
+        if (($order['orderBy'] !== 'report_cache.date_modified') && strpos($order['orderBy'], '.')) {
             $orderby = substr($order['orderBy'], strpos($order['orderBy'], '.') + 1);
         }
 

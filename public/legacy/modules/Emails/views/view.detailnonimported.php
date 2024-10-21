@@ -43,7 +43,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-
 require_once('modules/Emails/include/DetailView/EmailsNonImportedDetailView.php');
 
 #[\AllowDynamicProperties]
@@ -53,8 +52,10 @@ class EmailsViewDetailNonImported extends ViewDetail
      * @var Email $bean
      */
     public $bean;
+
     /**
      * EmailsViewDetailnonimported constructor.
+     *
      * @inheritdoc
      */
     public function __construct()
@@ -66,7 +67,7 @@ class EmailsViewDetailNonImported extends ViewDetail
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $request = $_REQUEST;
         $metadataFile = $this->getMetaDataFile();

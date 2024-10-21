@@ -63,25 +63,29 @@ if (!defined('sugarEntry') || !sugarEntry) {
          if (empty($emailTemp->body) && empty($emailTemp->body_html)) {
              return $app_strings['LBL_EMAIL_TEMPLATE_EDIT_PLAIN_TEXT'];
          }
-         if ($mail->Mailer == 'smtp' && $mail->Host =='') {
+         if ($mail->Mailer === 'smtp' && $mail->Host =='') {
              return $mod_strings['ERR_SERVER_SMTP_EMPTY'];
          }
 
          $email_errors=$mod_strings['ERR_EMAIL_NOT_SENT_ADMIN'];
-         if ($mail->Mailer == 'smtp') {
-             $email_errors.="<br>-".$mod_strings['ERR_SMTP_URL_SMTP_PORT'];
+         if ($mail->Mailer === 'smtp') {
+             $email_errors.= '<br>-' . $mod_strings['ERR_SMTP_URL_SMTP_PORT'];
          }
          if ($mail->SMTPAuth) {
-             $email_errors.="<br>-".$mod_strings['ERR_SMTP_USERNAME_SMTP_PASSWORD'];
+             $email_errors.= '<br>-' . $mod_strings['ERR_SMTP_USERNAME_SMTP_PASSWORD'];
          }
-         $email_errors.="<br>-".$mod_strings['ERR_RECIPIENT_EMAIL'];
-         $email_errors.="<br>-".$mod_strings['ERR_SERVER_STATUS'];
+         $email_errors.= '<br>-' . $mod_strings['ERR_RECIPIENT_EMAIL'];
+         $email_errors.= '<br>-' . $mod_strings['ERR_SERVER_STATUS'];
          return $email_errors;
      } else {
          return $mod_strings['LBL_EMAIL_NOT_SENT'];
      }
  }
 
+/**
+ * @throws SuiteException
+ * @throws DateMalformedStringException
+ */
 function hasPasswordExpired($username)
 {
     $current_user= new user();

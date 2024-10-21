@@ -34,10 +34,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
- 
+
 global $app_strings;
 
-$dashletMeta['AOS_PDF_TemplatesDashlet'] = array('module'		=> 'AOS_PDF_Templates',
+$dashletMeta['AOS_PDF_TemplatesDashlet'] = array('module'        => 'AOS_PDF_Templates',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'AOS_PDF_Templates'),
                                           'description' => 'A customizable view into AOS_PDF_Templates',
                                           'icon'        => 'themes/default/images/icon_AOS_PDF_Templates_32.gif',

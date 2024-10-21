@@ -57,6 +57,7 @@ class MyPipelineBySalesStageDashlet extends DashletGenericChart
     protected $_seedName = 'Opportunities';
 
     /**
+     * @throws DateMalformedStringException
      * @see DashletGenericChart::__construct()
      */
     public function __construct(
@@ -69,7 +70,7 @@ class MyPipelineBySalesStageDashlet extends DashletGenericChart
             $options['mypbss_date_start'] = $timedate->nowDbDate();
         }
         if (empty($options['mypbss_date_end'])) {
-            $options['mypbss_date_end'] = $timedate->asDbDate($timedate->getNow()->modify("+6 months"));
+            $options['mypbss_date_end'] = $timedate->asDbDate($timedate->getNow()->modify('+6 months'));
         }
         if (empty($options['title'])) {
             $options['title'] = translate('LBL_MY_PIPELINE_FORM_TITLE', 'Home');
@@ -101,9 +102,10 @@ class MyPipelineBySalesStageDashlet extends DashletGenericChart
     }
 
     /**
+     * @throws SmartyException
      * @see DashletGenericChart::display()
      */
-    public function display()
+    public function display() : string
     {
         global $sugar_config, $current_user, $timedate;
 
@@ -125,7 +127,7 @@ class MyPipelineBySalesStageDashlet extends DashletGenericChart
 
         $thousands_symbol = translate('LBL_OPP_THOUSANDS', 'Charts');
 
-        $subtitle = translate('LBL_OPP_SIZE', 'Charts') . " " . $currency_symbol . "1" . translate('LBL_OPP_THOUSANDS', 'Charts');
+        $subtitle = translate('LBL_OPP_SIZE', 'Charts') . ' ' . $currency_symbol . '1' . translate('LBL_OPP_THOUSANDS', 'Charts');
 
         $query = $this->constructQuery();
         $data = $this->getChartData($query);
@@ -370,20 +372,20 @@ EOD;
      */
     protected function constructQuery()
     {
-        $query = "SELECT opportunities.sales_stage,
+        $query = 'SELECT opportunities.sales_stage,
                         users.user_name,
                         opportunities.assigned_user_id,
                         count(*) AS opp_count,
                         sum(amount_usdollar/1000) AS total
-                    FROM users,opportunities  ";
+                    FROM users,opportunities  ';
         $query .= " WHERE opportunities.assigned_user_id IN ('{$GLOBALS['current_user']->id}') " .
-            " AND opportunities.date_closed >= ". DBManagerFactory::getInstance()->convert("'".$this->mypbss_date_start."'", 'date').
-            " AND opportunities.date_closed <= ". DBManagerFactory::getInstance()->convert("'".$this->mypbss_date_end."'", 'date') .
-            " AND opportunities.assigned_user_id = users.id  AND opportunities.deleted=0 ";
+            ' AND opportunities.date_closed >= ' . DBManagerFactory::getInstance()->convert("'".$this->mypbss_date_start."'", 'date').
+            ' AND opportunities.date_closed <= ' . DBManagerFactory::getInstance()->convert("'".$this->mypbss_date_end."'", 'date') .
+            ' AND opportunities.assigned_user_id = users.id  AND opportunities.deleted=0 ';
         if (isset($this->mypbss_sales_stages) && count($this->mypbss_sales_stages) > 0) {
             $query .= " AND opportunities.sales_stage IN ('" . implode("','", $this->mypbss_sales_stages) . "') ";
         }
-        $query .= " GROUP BY opportunities.sales_stage ,users.user_name,opportunities.assigned_user_id";
+        $query .= ' GROUP BY opportunities.sales_stage ,users.user_name,opportunities.assigned_user_id';
 
         return $query;
     }

@@ -64,16 +64,17 @@ class ParserModifyLayoutView extends ModuleBuilderParser
     /**
      * Constructor
      */
-    public function init($module, $view, $submittedLayout = false)
+    public function init(mixed $bean, array $view_object_map, bool $submittedLayout = false) : void
     {
-        $this->_view = ucfirst($view);
-        $this->_module = $module;
-        $this->language_module = $module;
+        parent::init($bean, $view_object_map);
+        $this->_view = ucfirst($view_object_map);
+        $this->_module = $bean;
+        $this->language_module = $bean;
 
-        $this->_baseDirectory = "modules/{$module}/metadata/";
-        $file =  $this->_baseDirectory . strtolower($view) . "defs.php";
-        $this->_customFile = "custom/" . $file;
-        $this->_workingFile = "custom/working/" . $file;
+        $this->_baseDirectory = "modules/{$bean}/metadata/";
+        $file =  $this->_baseDirectory . strtolower($view_object_map) . 'defs.php';
+        $this->_customFile = 'custom/' . $file;
+        $this->_workingFile = 'custom/working/' . $file;
 
         $this->_sourceView = $this->_view;
         $this->_originalFile = $file ;
@@ -87,11 +88,11 @@ class ParserModifyLayoutView extends ModuleBuilderParser
             } else {
                 if (! is_file($this->_sourceFile)) {
                     // if we don't have ANY defined metadata then improvise as best we can
-                    if (strtolower($this->_view) == 'quickcreate') {
+                    if (strtolower($this->_view) === 'quickcreate') {
                         // special handling for quickcreates - base the quickcreate on the editview if no quickcreatedef exists
-                        $this->_sourceFile = $this->_baseDirectory."editviewdefs.php";
-                        if (is_file("custom/" . $this->_sourceFile)) {
-                            $this->_sourceFile = "custom/" . $this->_sourceFile;
+                        $this->_sourceFile = $this->_baseDirectory. 'editviewdefs.php';
+                        if (is_file('custom/' . $this->_sourceFile)) {
+                            $this->_sourceFile = 'custom/' . $this->_sourceFile;
                         }
                         $this->_sourceView = 'EditView';
                     } else {
@@ -102,7 +103,7 @@ class ParserModifyLayoutView extends ModuleBuilderParser
         }
 
         // get the fieldDefs from the bean
-        $class = $GLOBALS ['beanList'] [$module];
+        $class = $GLOBALS ['beanList'] [$bean];
         require_once($GLOBALS ['beanFiles'] [$class]);
         $bean = new $class();
         $this->_fieldDefs = & $bean->field_defs;
@@ -125,14 +126,14 @@ class ParserModifyLayoutView extends ModuleBuilderParser
         // Available fields are those that are in the Model and the original layout definition, but not already shown in the View
         // So, because the formats of the two are different we brute force loop through View and unset the fields we find in a copy of Model
         $availableFields = $this->_getModelFields();
-        $GLOBALS['log']->debug(get_class($this)."->getAvailableFields(): _getModelFields returns: ".implode(",", array_keys($availableFields)));
+        $GLOBALS['log']->debug(get_class($this). '->getAvailableFields(): _getModelFields returns: ' .implode(',', array_keys($availableFields)));
         if (! empty($this->_viewdefs)) {
             foreach ($this->_viewdefs ['panels'] as $panel) {
                 foreach ($panel as $row) {
                     foreach ($row as $fieldArray) { // fieldArray is an array('name'=>name,'label'=>label)
                         if (isset($fieldArray ['name'])) {
                             unset($availableFields [$fieldArray ['name']]);
-                            $GLOBALS['log']->debug(get_class($this)."->getAvailableFields(): removing ".$fieldArray ['name']);
+                            $GLOBALS['log']->debug(get_class($this). '->getAvailableFields(): removing ' . $fieldArray ['name']);
                         }
                     }
                 }
@@ -151,12 +152,13 @@ class ParserModifyLayoutView extends ModuleBuilderParser
         $this->_writeToFile($this->_workingFile, $this->_view, $this->_module, $this->_viewdefs, $this->_variables);
     }
 
-    public function handleSave()
+    public function handleSave(string $file, string $view, string $moduleName, array $defs) : void
     {
+        parent::handleSave($file, $view, $moduleName, $defs);
         $this->_writeToFile($this->_customFile, $this->_view, $this->_module, $this->_viewdefs, $this->_variables);
         // now clear the cache so that the results are immediately visible
         include_once('include/TemplateHandler/TemplateHandler.php');
-        if (strtolower($this->_view) == 'quickcreate') {
+        if (strtolower($this->_view) === 'quickcreate') {
             TemplateHandler::clearCache($this->_module, "form_SubPanelQuickCreate_{$this->_module}.tpl");
             TemplateHandler::clearCache($this->_module, "form_DCQuickCreate_{$this->_module}.tpl");
         } else {
@@ -188,7 +190,7 @@ class ParserModifyLayoutView extends ModuleBuilderParser
         // replace any old values with new panel labels from the request
         foreach ($_REQUEST as $key => $value) {
             $components = explode('-', $key);
-            if ($components [0] == 'panel') {
+            if ($components [0] === 'panel') {
                 $panelMap [$components ['1']] = $value;
             }
         }
@@ -200,22 +202,22 @@ class ParserModifyLayoutView extends ModuleBuilderParser
         $this->_viewdefs ['panels'] = null; // because the new field properties should replace the old fields, not be merged
 
         if ($this->maxColumns < 1) {
-            $this->_fatalError("EditDetailViewParser:invalid maxColumns=" . $this->maxColumns);
+            $this->_fatalError('EditDetailViewParser:invalid maxColumns=' . $this->maxColumns);
         }
 
         foreach ($_REQUEST as $slot => $value) {
             $slotComponents = explode('-', $slot); // [0] = 'slot', [1] = panel #, [2] = slot #, [3] = property name
-            if ($slotComponents [0] == 'slot') {
+            if ($slotComponents [0] === 'slot') {
                 $slotNumber = $slotComponents ['2'];
                 $panelID = $panelMap [$slotComponents ['1']];
                 $rowID = floor($slotNumber / $this->maxColumns);
                 $colID = $slotNumber - ($rowID * $this->maxColumns);
                 //If the original editview defined this field, copy that over.
-                if ($slotComponents ['3'] == 'name' && isset($origFieldDefs [$value]) && is_array($origFieldDefs [$value])) {
+                if ($slotComponents ['3'] === 'name' && isset($origFieldDefs [$value]) && is_array($origFieldDefs [$value])) {
                     $this->_viewdefs ['panels'] [$panelID] [$rowID] [$colID] = $origFieldDefs [$value];
                 } else {
                     $property = $slotComponents ['3'];
-                    if ($value == '(filler)') {
+                    if ($value === '(filler)') {
                         $this->_viewdefs ['panels'] [$panelID] [$rowID] [$colID] = null;
                     } else {
                         $this->_viewdefs ['panels'] [$panelID] [$rowID] [$colID] [$property] = $value;
@@ -232,7 +234,7 @@ class ParserModifyLayoutView extends ModuleBuilderParser
                 $startOfRow = true;
                 $offset = 0;
                 foreach ($row as $colID => $col) {
-                    if ($col ['name'] == '(empty)') {
+                    if ($col ['name'] === '(empty)') {
                         // if a leading (empty) then remove (by noting that remaining fields need to be shuffled along)
                         if ($startOfRow) {
                             $offset ++;
@@ -296,9 +298,9 @@ class ParserModifyLayoutView extends ModuleBuilderParser
             foreach ($this->_viewdefs['panels'] as $loop_panelID => $panel_contents) {
                 foreach ($panel_contents as $row_id => $row) {
                     foreach ($row as $col_id => $col) {
-                        if ($col['name'] == '(filler)') {
+                        if ($col['name'] === '(filler)') {
                             $this->_viewdefs['panels'][$loop_panelID][$row_id][$col_id] = null;
-                        } elseif ($col['name'] == '(empty)') {
+                        } elseif ($col['name'] === '(empty)') {
                             unset($this->_viewdefs['panels'][$loop_panelID][$row_id][$col_id]);
                         }
                     }
@@ -345,15 +347,16 @@ class ParserModifyLayoutView extends ModuleBuilderParser
         }
         $GLOBALS['log']->debug(print_r($modelFields, true));
         foreach ($this->_fieldDefs as $field => $def) {
-            if ((!empty($def['studio']) && $def['studio'] == 'visible')
-            || (empty($def['studio']) &&  (empty($def ['source']) || $def ['source'] == 'db' || $def ['source'] == 'custom_fields') && $def ['type'] != 'id' && strcmp($field, 'deleted') != 0 && (empty($def ['dbType']) || $def ['dbType'] != 'id') && (empty($def ['dbtype']) || $def ['dbtype'] != 'id'))) {
+            if ((!empty($def['studio']) && $def['studio'] === 'visible')
+            || (empty($def['studio']) &&  (empty($def ['source']) || $def ['source'] === 'db' || $def ['source'] === 'custom_fields') && $def ['type'] !== 'id' && strcmp($field, 'deleted') != 0 && (empty($def ['dbType']) || $def ['dbType'] !== 'id') && (empty($def ['dbtype']) || $def ['dbtype'] !== 'id'))) {
                 $label = isset($def['vname']) ? $def['vname'] : $def['name'];
                 $modelFields [$field] = array('name' => $field, 'label' => $label);
             } else {
                 $GLOBALS['log']->debug(get_class($this)."->_getModelFields(): skipping $field from modelFields as it fails the test for inclusion");
             }
         }
-        $GLOBALS['log']->debug(get_class($this)."->_getModelFields(): remaining entries in modelFields are: ".implode(",", array_keys($modelFields)));
+        $GLOBALS['log']->debug(get_class($this). '->_getModelFields(): remaining entries in modelFields are: ' .implode(
+                                   ',', array_keys($modelFields)));
         return $modelFields;
     }
 
@@ -416,7 +419,7 @@ class ParserModifyLayoutView extends ModuleBuilderParser
     {
         $viewdefs = [];
         $origFieldDefs = array();
-        $GLOBALS['log']->debug("Original File = ".$this->_originalFile);
+        $GLOBALS['log']->debug('Original File = ' .$this->_originalFile);
         if (file_exists($this->_originalFile)) {
             include($this->_originalFile);
             $origdefs = $viewdefs [$this->_module] [$this->_sourceView] ['panels'];

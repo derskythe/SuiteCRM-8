@@ -142,11 +142,14 @@ class MailMerge
         return $template[1].'.doc';
     }
 
+    /**
+     * @throws Exception
+     */
     public function Initialize()
     {
         $this->rowcnt = is_countable($this->list) ? count($this->list) : 0;
         $this->fieldcnt = is_countable($this->fieldList) ? count($this->fieldList) : 0;
-        ($this->obj = new COM("word.application")) || die("Unable to instanciate Word");
+        ($this->obj = new COM('word.application')) || die('Unable to instanciate Word');
         $this->obj->Visible = $this->visible;
 
         //try to make the temp dir

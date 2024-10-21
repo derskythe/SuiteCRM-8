@@ -64,13 +64,13 @@ while (substr_count($_REQUEST['imageName'], '..') > 0) {
 if (isset($_REQUEST['spriteNamespace'])) {
     $filename = "cache/sprites/{$_REQUEST['spriteNamespace']}/{$_REQUEST['imageName']}";
     if (! file_exists($filename)) {
-        header($_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+        header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
         die;
     }
 } else {
     $filename = SugarThemeRegistry::current()->getImageURL($_REQUEST['imageName']);
     if (empty($filename)) {
-        header($_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+        header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
         die;
     }
 }
@@ -81,7 +81,7 @@ $file_ext = substr($filename, -3);
 
 $mime_type = SugarThemeRegistry::current()->getMimeType($file_ext);
 if (is_null($mime_type)) {
-    header($_SERVER["SERVER_PROTOCOL"].' 404 Not Found');
+    header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
     die;
 }
 
@@ -95,8 +95,8 @@ if (defined('TEMPLATE_URL')) {
 
 $etag = '"'.md5_file($filename).'"';
 
-header("Cache-Control: private");
-header("Pragma: dummy=bogus");
+header('Cache-Control: private');
+header('Pragma: dummy=bogus');
 header("Etag: $etag");
 header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 2592000));
 
@@ -105,11 +105,11 @@ $ifmod = isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])
 $iftag = isset($_SERVER['HTTP_IF_NONE_MATCH'])
     ? $_SERVER['HTTP_IF_NONE_MATCH'] == $etag : null;
 if (($ifmod || $iftag) && ($ifmod !== false && $iftag !== false)) {
-    header($_SERVER["SERVER_PROTOCOL"].' 304 Not Modified');
+    header($_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified');
     die;
 }
 
-header("Last-Modified: ".gmdate('D, d M Y H:i:s \G\M\T', $last_modified_time));
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', $last_modified_time));
 header('Content-Type: ' . $mime_type);
 
 if (!defined('TEMPLATE_URL')) {

@@ -122,7 +122,7 @@ class PredefinedChart
             $GLOBALS['log']->debug("USER PREFERENCES['pbss_date_end'] is:");
             $GLOBALS['log']->debug($current_user->getPreference('pbss_date_end'));
         } else {
-            $date_end = $timedate->asUserDate($timedate->fromString("2010-01-01"));
+            $date_end = $timedate->asUserDate($timedate->fromString('2010-01-01'));
             $GLOBALS['log']->debug("USER PREFERENCES['pbss_date_end'] not found. Using: ".$date_end);
         }
 
@@ -154,7 +154,7 @@ class PredefinedChart
             $datax = $app_list_strings['sales_stage_dom'];
             $datax_selected = array_keys($app_list_strings['sales_stage_dom']);
         }
-        $GLOBALS['log']->debug("datax is:");
+        $GLOBALS['log']->debug('datax is:');
         $GLOBALS['log']->debug($datax);
 
         $ids = array();
@@ -180,7 +180,7 @@ class PredefinedChart
 
         $user_id = $ids;
         $opp = new Opportunity;
-        $where="";
+        $where= '';
         //build the where clause for the query that matches $user
         $count = is_countable($user_id) ? count($user_id) : 0;
         $id = array();
@@ -192,7 +192,7 @@ class PredefinedChart
             foreach ($new_ids as $the_id=>$the_name) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
         //build the where clause for the query that matches $datax
@@ -202,27 +202,27 @@ class PredefinedChart
             foreach ($datax as $key=>$value) {
                 $dataxArr[] = "'".$key."'";
             }
-            $dataxArr = implode(",", $dataxArr);
-            $where .= "AND opportunities.sales_stage IN	($dataxArr) ";
+            $dataxArr = implode(',', $dataxArr);
+            $where .= "AND opportunities.sales_stage IN    ($dataxArr) ";
         }
 
         $date_start = $timedate->swap_formats($date_start, $timedate->get_date_format(), $timedate->dbDayFormat);
         $date_end = $timedate->swap_formats($date_end, $timedate->get_date_format(), $timedate->dbDayFormat);
         //build the where clause for the query that matches $date_start and $date_end
-        $where .= "	AND opportunities.date_closed >= ". DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date'). "
-					AND opportunities.date_closed <= ".DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date') ;
-        $where .= "	AND opportunities.assigned_user_id = users.id  AND opportunities.deleted=0 ";
+        $where .= '    AND opportunities.date_closed >= ' . DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date'). '
+                    AND opportunities.date_closed <= ' .DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date') ;
+        $where .= '    AND opportunities.assigned_user_id = users.id  AND opportunities.deleted=0 ';
 
         //Now do the db queries
         //query for opportunity data that matches $datax and $user
-        $query = "	SELECT opportunities.sales_stage,
-						users.user_name,
-						opportunities.assigned_user_id,
-						count( * ) AS opp_count,
-						sum(amount_usdollar/1000) AS total
-					FROM users,opportunities  ";
-        $query .= "WHERE " .$where;
-        $query .= " GROUP BY opportunities.sales_stage";
+        $query = '    SELECT opportunities.sales_stage,
+                        users.user_name,
+                        opportunities.assigned_user_id,
+                        count( * ) AS opp_count,
+                        sum(amount_usdollar/1000) AS total
+                    FROM users,opportunities  ';
+        $query .= 'WHERE ' .$where;
+        $query .= ' GROUP BY opportunities.sales_stage';
 
         $additional_params = array( 'date_start' => $date_start, 'date_closed' => $date_end, );
 
@@ -286,7 +286,7 @@ class PredefinedChart
         $user_id = $ids;
 
         $opp = BeanFactory::newBean('Opportunities');
-        $where="";
+        $where= '';
         //build the where clause for the query that matches $user
         $count = is_countable($user_id) ? count($user_id) : 0;
         $id = array();
@@ -294,7 +294,7 @@ class PredefinedChart
             foreach ($user_id as $the_id) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
 
@@ -305,12 +305,13 @@ class PredefinedChart
             foreach ($datay as $key=>$value) {
                 $datayArr[] = "'".$key."'";
             }
-            $datayArr = implode(",", $datayArr);
-            $where .= "AND opportunities.lead_source IN	($datayArr) ";
+            $datayArr = implode(',', $datayArr);
+            $where .= "AND opportunities.lead_source IN    ($datayArr) ";
         }
-        $query = "SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ";
-        $query .= "WHERE " .$where." AND opportunities.deleted=0 ";
-        $query .= " GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage";
+        $query =
+            'SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ';
+        $query .= 'WHERE ' .$where. ' AND opportunities.deleted=0 ';
+        $query .= ' GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage';
 
         return $query;
     }
@@ -372,7 +373,7 @@ class PredefinedChart
 
         $user_id = $ids;
 
-        $where = "";
+        $where = '';
         //build the where clause for the query that matches $user
         $count = is_countable($user_id) ? count($user_id) : 0;
         $id = array();
@@ -380,7 +381,7 @@ class PredefinedChart
             foreach ($user_id as $the_id) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
 
@@ -390,10 +391,10 @@ class PredefinedChart
 
         $opp = BeanFactory::newBean('Opportunities');
         //build the where clause for the query that matches $date_start and $date_end
-        $where .= "AND opportunities.date_closed >= ".DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date')." AND opportunities.date_closed <= ".DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date')." AND opportunities.deleted=0";
-        $query = "SELECT sales_stage,".DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))." as m, sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ";
-        $query .= "WHERE ".$where;
-        $query .= " GROUP BY sales_stage,".DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))."ORDER BY m";
+        $where .= 'AND opportunities.date_closed >= ' .DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date'). ' AND opportunities.date_closed <= ' .DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date'). ' AND opportunities.deleted=0';
+        $query = 'SELECT sales_stage,' .DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array( "'%Y-%m'"), array( "'YYYY-MM'")). ' as m, sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ';
+        $query .= 'WHERE ' .$where;
+        $query .= ' GROUP BY sales_stage,' .DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array( "'%Y-%m'"), array( "'YYYY-MM'")). 'ORDER BY m';
         return $query;
     }
 
@@ -448,7 +449,7 @@ class PredefinedChart
         $opp = new Opportunity;
         //Now do the db queries
         //query for opportunity data that matches $legends and $user
-        $where="";
+        $where= '';
         //build the where clause for the query that matches $user
 
         $count = is_countable($user_id) ? count($user_id) : 0;
@@ -457,7 +458,7 @@ class PredefinedChart
             foreach ($user_id as $the_id) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
         if (!empty($where)) {
@@ -470,25 +471,30 @@ class PredefinedChart
             foreach ($legends as $key=>$value) {
                 $legendItem[] = "'".$key."'";
             }
-            $legendItems = implode(",", $legendItem);
-            $where .= " opportunities.lead_source IN	($legendItems) ";
+            $legendItems = implode(',', $legendItem);
+            $where .= " opportunities.lead_source IN    ($legendItems) ";
         }
-        $query = "SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ";
-        $query .= "WHERE ".$where." AND opportunities.deleted=0 ";
-        $query .= "GROUP BY lead_source ORDER BY total DESC";
+        $query = 'SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ';
+        $query .= 'WHERE ' .$where. ' AND opportunities.deleted=0 ';
+        $query .= 'GROUP BY lead_source ORDER BY total DESC';
 
         return $query;
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     public function myModuleUsageLast30Days()
     {
         global $current_user, $timedate;
-        $dateValue = DBManagerFactory::getInstance()->convert("'".$timedate->getNow()->modify("-30 days")->asDb()."'", "datetime");
+        $dateValue = DBManagerFactory::getInstance()->convert("'".$timedate->getNow()->modify('-30 days')->asDb()."'",
+                                                              'datetime'
+        );
 
-        $query  = "SELECT tracker.module_name as module_name ";
-        $query .= ",COUNT(*) count FROM tracker ";
+        $query  = 'SELECT tracker.module_name as module_name ';
+        $query .= ',COUNT(*) count FROM tracker ';
         $query .= "WHERE tracker.user_id = '$current_user->id' AND tracker.module_name != 'UserPreferences' AND tracker.date_modified > $dateValue ";
-        $query .= "GROUP BY tracker.module_name ORDER BY count DESC";
+        $query .= 'GROUP BY tracker.module_name ORDER BY count DESC';
 
         return $query;
     }

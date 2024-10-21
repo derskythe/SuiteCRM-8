@@ -54,16 +54,19 @@ function clean_path($path)
 {
     // clean directory/file path with a functional equivalent
     $appendpath = '';
-    if (is_windows() && strlen($path) >= 2 && $path[0].$path[1] == "\\\\") {
+    if (is_windows() && strlen($path) >= 2 && $path[0].$path[1] === "\\\\") {
         $path = substr($path, 2);
         $appendpath = "\\\\";
     }
-    $path = str_replace("\\", "/", $path);
-    $path = str_replace("//", "/", $path);
-    $path = str_replace("/./", "/", $path);
+    $path = str_replace("\\", '/', $path);
+    $path = str_replace('//', '/', $path);
+    $path = str_replace('/./', '/', $path);
     return($appendpath.$path);
 }
 
+/**
+ * @throws Exception
+ */
 function create_cache_directory($file)
 {
     $paths = explode('/', $file);
@@ -87,7 +90,7 @@ function get_module_dir_list()
     $path = 'modules';
     $d = dir($path);
     while ($entry = $d->read()) {
-        if ($entry != '..' && $entry != '.') {
+        if ($entry !== '..' && $entry !== '.') {
             if (is_dir($path. '/'. $entry)) {
                 $modules[$entry] = $entry;
             }
@@ -96,7 +99,10 @@ function get_module_dir_list()
     return $modules;
 }
 
-function mk_temp_dir($base_dir, $prefix="")
+/**
+ * @throws Exception
+ */
+function mk_temp_dir($base_dir, $prefix = '')
 {
     $temp_dir = tempnam($base_dir, $prefix);
     if (!$temp_dir || !unlink($temp_dir)) {
@@ -112,10 +118,10 @@ function mk_temp_dir($base_dir, $prefix="")
 
 function remove_file_extension($filename)
 {
-    return(substr((string) $filename, 0, strrpos((string) $filename, ".")));
+    return (substr((string) $filename, 0, strrpos((string) $filename, '.')));
 }
 
-function write_array_to_file($the_name, $the_array, $the_file, $mode="w", $header='')
+function write_array_to_file($the_name, $the_array, $the_file, $mode = 'w', $header = '')
 {
     if (!empty($header) && ($mode !== 'a' || $mode !== 'ab' || !file_exists($the_file))) {
         $the_string = $header;
@@ -125,7 +131,7 @@ function write_array_to_file($the_name, $the_array, $the_file, $mode="w", $heade
     }
     $the_string .=  "\$$the_name = " .
                     var_export_helper($the_array) .
-                    ";";
+        ';';
 
     return sugar_file_put_contents($the_file, $the_string, LOCK_EX) !== false;
 }
@@ -146,25 +152,23 @@ function write_override_label_to_file($the_name, $the_array, $the_file, $mode = 
     return sugar_file_put_contents($the_file, $the_string, LOCK_EX) !== false;
 }
 
-function write_encoded_file($soap_result, $write_to_dir, $write_to_file="")
+function write_encoded_file($soap_result, $write_to_dir, $write_to_file = '')
 {
     // this function dies when encountering an error -- use with caution!
     // the path/file is returned upon success
 
-
-
-    if ($write_to_file == "") {
-        $write_to_file = $write_to_dir . "/" . $soap_result['filename'];
+    if ($write_to_file == '') {
+        $write_to_file = $write_to_dir . '/' . $soap_result['filename'];
     }
 
     $file = $soap_result['data'];
-    $write_to_file = str_replace("\\", "/", (string) $write_to_file);
+    $write_to_file = str_replace("\\", '/', (string) $write_to_file);
 
     $dir_to_make = dirname($write_to_file);
     if (!is_dir($dir_to_make)) {
         mkdir_recursive($dir_to_make);
     }
-    $fh = sugar_fopen($write_to_file, "wb");
+    $fh = sugar_fopen($write_to_file, 'wb');
     fwrite($fh, base64_decode($file));
     fclose($fh);
 
@@ -174,6 +178,9 @@ function write_encoded_file($soap_result, $write_to_dir, $write_to_file="")
     return($write_to_file);
 }
 
+/**
+ * @throws Exception
+ */
 function create_custom_directory($file)
 {
     $paths = explode('/', $file);
@@ -239,10 +246,10 @@ function generateMD5array($path, $ignore_dirs = ['cache', 'upload', '.git', 'ven
 /**
  * Function to compare two directory structures and return the items in path_a that didn't match in path_b
  *
- * @param	$path_a The path of the first root directory to scan - must end with '/'
- * @param	$path_b The path of the second root directory to scan - must end with '/'
- * @param	$ignore_dirs array of filenames/directory names to ignore running md5 on - default 'cache' and 'upload'
- * @result	array containing all the md5s of everything in $path_a that didn't have a match in $path_b
+ * @param    $path_a The path of the first root directory to scan - must end with '/'
+ * @param    $path_b The path of the second root directory to scan - must end with '/'
+ * @param    $ignore_dirs array of filenames/directory names to ignore running md5 on - default 'cache' and 'upload'
+ * @result    array containing all the md5s of everything in $path_a that didn't have a match in $path_b
  */
 function md5DirCompare($path_a, $path_b, $ignore_dirs = array('cache', 'upload'))
 {
@@ -268,7 +275,7 @@ function getFiles(&$arr, $dir, $pattern = null)
     }
     $d = dir($dir);
     while ($e =$d->read()) {
-        if (substr($e, 0, 1) == '.') {
+        if (str_starts_with($e, '.')) {
             continue;
         }
         $file = $dir . '/' . $e;
@@ -367,7 +374,7 @@ function get_file_extension($filename, $string_to_lower=true)
 {
     $ret = '';
 
-    if (strpos((string) $filename, '.') !== false) {
+    if (str_contains((string) $filename, '.')) {
         if ($string_to_lower) {
             $exp = explode('.', $filename);
             $pop = array_pop($exp);
@@ -394,7 +401,7 @@ function get_file_extension($filename, $string_to_lower=true)
  */
 function get_mime_content_type_from_filename($filename)
 {
-    if (strpos((string) $filename, '.') !== false) {
+    if (str_contains((string) $filename, '.')) {
         $mime_types = array(
             'txt' => 'text/plain',
             'htm' => 'text/html',
@@ -495,7 +502,7 @@ function cleanFileName($name)
  */
 function cleanDirName($name)
 {
-    return str_replace(array("\\", "/", "."), "", $name);
+    return str_replace(array( "\\", '/', '.' ), '', $name);
 }
 
 /**

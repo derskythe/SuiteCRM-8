@@ -42,11 +42,11 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
 
         $project_template = BeanFactory::newBean('AM_ProjectTemplates');
 
-        if (!isset($_REQUEST["record"]) || trim($_REQUEST["record"]) == "") {
-            $_REQUEST["record"] = $_REQUEST["project_id"];
+        if (!isset($_REQUEST['record']) || trim($_REQUEST['record']) == '') {
+            $_REQUEST['record'] = $_REQUEST['project_id'];
         }
 
-        $project_template->retrieve($_REQUEST["record"]);
+        $project_template->retrieve($_REQUEST['record']);
         //Get project_template resources (users & contacts)
         $resources1 = $project_template->get_linked_beans('am_projecttemplates_users_1', 'User');
         $resources2 = $project_template->get_linked_beans('am_projecttemplates_contacts_1', 'Contact');
@@ -70,7 +70,7 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
 
         //Get the start and end date of the project in database format
         $start_date =  Date('Y-m-d');
-        $end_date = Date('Y-m-d', strtotime("+30 days"));
+        $end_date = Date('Y-m-d', strtotime('+30 days'));
 
         parent::display(); ?>
         <!--Create task pop-up-->
@@ -81,25 +81,25 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
                 </p>
                 <form id="popup_form">
                     <fieldset>
-						<table width="100%">
-							<tr><td width="50%">
-						
-							<input type="hidden" name="project_template_id" id="project_template_id" value="<?php echo $project_template->id; ?>">
-							<input type="hidden" name="override_business_hours" id="override_business_hours" value="<?php echo $project_template->override_business_hours; ?>">
-							<input type="hidden" name="Start" id="Start" value="">
-							<input type="hidden" name="Actual_duration" id="Actual_duration" value="0">
-							
-							<input type="text" style="display: none;" name="task_id" id="task_id" value="">
-							<input type="radio" name="Milestone" value="Subtask" checked="checked" id="Subtask" />
-							<label id="Subtask_label" for="Subtask"><?php echo $mod_strings['LBL_SUBTASK']; ?></label>
-							<input type="radio" name="Milestone" value="Milestone" id="Milestone" />
-							<label id="Milestone_label" for="Milestone"><?php echo $mod_strings['LBL_MILESTONE_FLAG']; ?></label>&nbsp;<br /><br />
-							<label id="parent_task_id" for="parent_task" style="display: none;"><?php echo isset($mod_strings['LBL_PARENT_TASK_ID']) ? $mod_strings['LBL_PARENT_TASK_ID'] : ''; ?></label>
-							<input id="parent_task" class="text ui-widget-content ui-corner-all" style="display: none;" type="text" name="parent_task" value="" />
-							<label for="task_name"><?php echo $mod_strings['LBL_TASK_NAME']; ?></label>
-							<input type="text" name="task_name" id="task_name" class="text ui-widget-content ui-corner-all" />
-							<label for="Predecessor"><?php echo $mod_strings['LBL_PREDECESSORS']; ?></label>
-							<?php
+                        <table width="100%">
+                            <tr><td width="50%">
+
+                            <input type="hidden" name="project_template_id" id="project_template_id" value="<?php echo $project_template->id; ?>">
+                            <input type="hidden" name="override_business_hours" id="override_business_hours" value="<?php echo $project_template->override_business_hours; ?>">
+                            <input type="hidden" name="Start" id="Start" value="">
+                            <input type="hidden" name="Actual_duration" id="Actual_duration" value="0">
+
+                            <input type="text" style="display: none;" name="task_id" id="task_id" value="">
+                            <input type="radio" name="Milestone" value="Subtask" checked="checked" id="Subtask" />
+                            <label id="Subtask_label" for="Subtask"><?php echo $mod_strings['LBL_SUBTASK']; ?></label>
+                            <input type="radio" name="Milestone" value="Milestone" id="Milestone" />
+                            <label id="Milestone_label" for="Milestone"><?php echo $mod_strings['LBL_MILESTONE_FLAG']; ?></label>&nbsp;<br /><br />
+                            <label id="parent_task_id" for="parent_task" style="display: none;"><?php echo isset($mod_strings['LBL_PARENT_TASK_ID']) ? $mod_strings['LBL_PARENT_TASK_ID'] : ''; ?></label>
+                            <input id="parent_task" class="text ui-widget-content ui-corner-all" style="display: none;" type="text" name="parent_task" value="" />
+                            <label for="task_name"><?php echo $mod_strings['LBL_TASK_NAME']; ?></label>
+                            <input type="text" name="task_name" id="task_name" class="text ui-widget-content ui-corner-all" />
+                            <label for="Predecessor"><?php echo $mod_strings['LBL_PREDECESSORS']; ?></label>
+                            <?php
                             echo '<select id="Predecessor" name="Predecessor" class="text ui-widget-content ui-corner-all" />';
         if (!isset($tasks)) {
             $tasks = [];
@@ -108,38 +108,38 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
             echo '<option rel="'.$task->id.'" value="'.$task->order_number.'">'.$task->name.'</opion>';
         }
         echo '</select>'; ?>
-							<label for="relation_type"><?php echo $mod_strings['LBL_RELATIONSHIP_TYPE']; ?></label>
-							<?php
+                            <label for="relation_type"><?php echo $mod_strings['LBL_RELATIONSHIP_TYPE']; ?></label>
+                            <?php
                             echo '<select id="relation_type" name="relation_type" class="text ui-widget-content ui-corner-all">
-									'.get_select_options_with_id($app_list_strings['relationship_type_list'], '').'
-							</select>'; ?>
+                                    '.get_select_options_with_id($app_list_strings['relationship_type_list'], '').'
+                            </select>'; ?>
 
-					
-						</td><td width="50%"> 
 
-							<label for="Duration"><?php echo $mod_strings['LBL_DURATION_TITLE']; ?></label>
-							<input type="text" name="Duration" id="Duration" class="text ui-widget-content ui-corner-all" />
-							<select id="Duration_unit" name="Duration_unit" class="text ui-widget-content ui-corner-all" />
-								<option value="Days">Days</option>
-							</select>
+                        </td><td width="50%">
 
-							<label for="Resources"><?php echo $mod_strings['LBL_ASSIGNED_USER_ID']; ?></label>
-							<?php
+                            <label for="Duration"><?php echo $mod_strings['LBL_DURATION_TITLE']; ?></label>
+                            <input type="text" name="Duration" id="Duration" class="text ui-widget-content ui-corner-all" />
+                            <select id="Duration_unit" name="Duration_unit" class="text ui-widget-content ui-corner-all" />
+                                <option value="Days">Days</option>
+                            </select>
+
+                            <label for="Resources"><?php echo $mod_strings['LBL_ASSIGNED_USER_ID']; ?></label>
+                            <?php
                             echo '<select id="Resources" name="Resources" class="text ui-widget-content ui-corner-all" />';
         echo '<option value="0">'.$mod_strings['LBL_UNASSIGNED'].'</option>';
         foreach ($resource_array as $resource) {
             echo '<option rel="'.$resource->type.'" value="'.$resource->id.'">'.$resource->name.'</opion>';
         }
         echo '</select>'; ?>
-							<label for="%Complete"><?php echo $mod_strings['LBL_PERCENT_COMPLETE']; ?></label>
-							<input type="text" name="Complete" id="Complete" value="0" class="text ui-widget-content ui-corner-all" />
-							<input type="hidden" name="Notes" id="Notes" />
-							<!--label for="Notes"><?php echo $mod_strings['LBL_DESCRIPTION']; ?></label>
-							<textarea id="Notes" cols="34" name="Notes" class="text ui-widget-content ui-corner-all"></textarea-->
-						</td>
-						</tr>
-						</table>
-					</fieldset>
+                            <label for="%Complete"><?php echo $mod_strings['LBL_PERCENT_COMPLETE']; ?></label>
+                            <input type="text" name="Complete" id="Complete" value="0" class="text ui-widget-content ui-corner-all" />
+                            <input type="hidden" name="Notes" id="Notes" />
+                            <!--label for="Notes"><?php echo $mod_strings['LBL_DESCRIPTION']; ?></label>
+                            <textarea id="Notes" cols="34" name="Notes" class="text ui-widget-content ui-corner-all"></textarea-->
+                        </td>
+                        </tr>
+                        </table>
+                    </fieldset>
                 </form>
             </div>
             <!--Delete task pop-up-->
@@ -191,57 +191,57 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
                                 addToValidate("project_form", "p_name", "name", true,"'.$mod_strings['LBL_PROJECT_NAME'].'" );
                                 addToValidate("project_form", "start_date", "date", false,"'.$mod_strings['LBL_START_DATE'].'" );
                             </script>
-							 <label for="copy_all_tasks">'.$mod_strings['LBL_COPY_ALL_TASKS'].':</label>&nbsp;
+                             <label for="copy_all_tasks">'.$mod_strings['LBL_COPY_ALL_TASKS'].':</label>&nbsp;
                              <input type="checkbox" style="position: relative; vertical-align:middle" id="copy_all_tasks" name="copy_all_tasks" value="1" title="" />&nbsp;
-							 <span style="position: relative;"  id="copy_all_tasks_help"><span class="suitepicon suitepicon-action-info"></span>
-							 </span>
-							<script type="text/javascript">
+                             <span style="position: relative;"  id="copy_all_tasks_help"><span class="suitepicon suitepicon-action-info"></span>
+                             </span>
+                            <script type="text/javascript">
 
-									var help = $("#copy_all_tasks_help");
-									//set tooltip title
-									var title = "' . $mod_strings['LBL_TOOLTIP_TITLE'] . '" ;
-									var text = "' . $mod_strings['LBL_TOOLTIP_TEXT'] . '" ;
-									//console.log(title);
+                                    var help = $("#copy_all_tasks_help");
+                                    //set tooltip title
+                                    var title = "' . $mod_strings['LBL_TOOLTIP_TITLE'] . '" ;
+                                    var text = "' . $mod_strings['LBL_TOOLTIP_TEXT'] . '" ;
+                                    //console.log(title);
 
-									help.qtip({
-										content: {
-											text: text,
-											title: {
-												//button: true,
-												text: title
-											}
-										},
-										position: {
-											my: "bottom center",
-											at: "top center",
-											target: "mouse",
-											adjust: {
-												mouse: false,
-												scroll: false,
-												y: -10
-											}
-										},
-										show: {
-											event: "mouseover"
-										},
-										hide: {
-											event: "mouseout"
-										},
-										style: {
-											classes : "qtip-green qtip-shadow qtip_box", //qtip-rounded"
-											tip: {
-												offset: 10
+                                    help.qtip({
+                                        content: {
+                                            text: text,
+                                            title: {
+                                                //button: true,
+                                                text: title
+                                            }
+                                        },
+                                        position: {
+                                            my: "bottom center",
+                                            at: "top center",
+                                            target: "mouse",
+                                            adjust: {
+                                                mouse: false,
+                                                scroll: false,
+                                                y: -10
+                                            }
+                                        },
+                                        show: {
+                                            event: "mouseover"
+                                        },
+                                        hide: {
+                                            event: "mouseout"
+                                        },
+                                        style: {
+                                            classes : "qtip-green qtip-shadow qtip_box", //qtip-rounded"
+                                            tip: {
+                                                offset: 10
 
-											}
-										}
-									});
+                                            }
+                                        }
+                                    });
 
-									//help.qtip("disable");
+                                    //help.qtip("disable");
 
-							</script>
+                            </script>
                              <label for="tasks" id="tasks_label">'.$mod_strings['LBL_COPY_SEL_TASKS'].':</label>
                              <select id="tasks" name="tasks[]" multiple style="margin-bottom:12px; width:95%; padding: .4em;" >';
-                                
+
         $this->bean->load_relationship('am_tasktemplates_am_projecttemplates');
         $task_list = $this->bean->get_linked_beans('am_tasktemplates_am_projecttemplates', 'AM_TaskTemplates');
 
@@ -252,7 +252,7 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
 
         echo '</select><br />
 
-							 <input type="hidden" name="template_id" value="'.$this->bean->id .'" />
+                             <input type="hidden" name="template_id" value="'.$this->bean->id .'" />
 
                         </fieldset>
                      </form>
@@ -260,15 +260,15 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
               </div>'; ?>
 
         <!--Mark-up for the main body of the view-->
-        
+
         <div id="wrapper" >
 
-			<?php
+            <?php
                 if (ACLController::checkAccess('AM_ProjectTemplates', 'edit', true)) {
                     echo '<div style="clear:both;padding:10px;"><button id="add_button" class="gantt_button">' . $mod_strings['LBL_ADD_NEW_TASK'] . '</button></div>';
                     echo '<input id="is_editable" name="is_editable" type="hidden" value="1" >';
                 } ?>
-            <input id="record" type="hidden" name="record" value="<?php echo $_REQUEST["record"]; ?>" />
+            <input id="record" type="hidden" name="record" value="<?php echo $_REQUEST['record']; ?>" />
             <div id="project_wrapper">
 
             </div>
@@ -278,6 +278,10 @@ class AM_ProjectTemplatesViewGanttChart extends ViewDetail
     }
 
     //Returns the time span between two dates in years  months and days
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function time_range($start_date, $end_date)
     {
         global $mod_strings;

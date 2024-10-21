@@ -43,8 +43,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
 }
 
 /* BEGIN - SECURITY GROUPS */
-if (file_exists("modules/ACLActions/actiondefs.override.php")) {
-    require_once("modules/ACLActions/actiondefs.override.php");
+if (file_exists('modules/ACLActions/actiondefs.override.php')) {
+    require_once('modules/ACLActions/actiondefs.override.php');
 } else {
     require_once('modules/ACLActions/actiondefs.php');
 }

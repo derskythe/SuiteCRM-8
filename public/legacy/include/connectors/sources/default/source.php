@@ -347,7 +347,11 @@ abstract class source
     {
         if (!empty($this->_config) && isset($this->_config['properties'][$name])) {
             // check if we're asking for encrypted property and we didn't decrypt yet
-            if (!$this->config_decrypted && !empty($this->_config['encrypt_properties']) && in_array($name, $this->_config['encrypt_properties']) && !empty($this->_config['properties'][$name])) {
+            if (!$this->config_decrypted && !empty($this->_config['encrypt_properties']) && in_array(
+                    $name,
+                    $this->_config['encrypt_properties'],
+                    true
+                ) && !empty($this->_config['properties'][$name])) {
                 $this->initConfig();
             }
             return $this->_config['properties'][$name];

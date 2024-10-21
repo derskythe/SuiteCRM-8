@@ -206,6 +206,11 @@ class Gantt
 
 
     //Returns an array containing the years, months and days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateMalformedPeriodStringException
+     */
     public function year_month($start_date, $end_date)
     {
         $begin = new DateTime($start_date);
@@ -216,13 +221,17 @@ class Gantt
         $aResult = array();
 
         foreach ($period as $dt) {
-            $aResult[$dt->format('Y')][strftime("%B", $dt->getTimestamp())][$dt->format('j')] = strftime("%a", $dt->getTimestamp());
+            $aResult[$dt->format('Y')][strftime('%B', $dt->getTimestamp())][$dt->format('j')] = strftime('%a', $dt->getTimestamp());
         }
 
         return $aResult;
     }
 
     //Returns the total number of days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function count_days($start_date, $end_date)
     {
         $d1 = new DateTime($start_date);
@@ -238,6 +247,10 @@ class Gantt
         return $difference->days;
     }
     //Returns the time span between two dates in years  months and days
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function time_range($start_date, $end_date)
     {
         $datetime1 = new DateTime($start_date);
@@ -249,8 +262,9 @@ class Gantt
 
     public function substr_unicode($str, $s, $l = null)
     {
-        return implode("", array_slice(
-            preg_split("//u", (string) $str, -1, PREG_SPLIT_NO_EMPTY),
+        return implode(
+            '', array_slice(
+            preg_split('//u', (string) $str, -1, PREG_SPLIT_NO_EMPTY),
             $s,
             $l
         ));

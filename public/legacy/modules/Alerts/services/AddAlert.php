@@ -30,6 +30,7 @@ class AddAlert
 
     /**
      * Add an alert
+     *
      * @param string $target_module
      * @param string $name
      * @param string $description
@@ -38,7 +39,9 @@ class AddAlert
      * @param string $reminder_id
      * @param string $type
      * @param bool $is_read
+     *
      * @return void
+     * @throws Exception
      */
     public function run(
         string $target_module,
@@ -64,7 +67,7 @@ class AddAlert
         if (!empty($reminder_id)) {
             $alert = BeanFactory::getBean('Alerts');
             $result = $alert->get_full_list(
-                "",
+                '',
                 "alerts.assigned_user_id = '" . $current_user->id . "' AND reminder_id = '" . $reminder_id . "'"
             );
         }

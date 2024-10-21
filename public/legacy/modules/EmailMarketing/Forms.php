@@ -52,25 +52,25 @@ function get_validate_record_js()
 
 <script type="text/javascript" language="Javascript">
 function verify_data(form,formname) {
-	if (!check_form(formname))
-		return false;
+    if (!check_form(formname))
+        return false;
 
-	var isError = false;
-	var errorMessage = "";
+    var isError = false;
+    var errorMessage = "";
 
-	var thecheckbox=document.getElementById('all_prospect_lists');
-	var theselectbox=document.getElementById('message_for');		
+    var thecheckbox=document.getElementById('all_prospect_lists');
+    var theselectbox=document.getElementById('message_for');
 
-	if (!thecheckbox.checked && theselectbox.selectedIndex < 0)  {
-		isError=true;
-		errorMessage="$err_lbl_send_message";
-	}
+    if (!thecheckbox.checked && theselectbox.selectedIndex < 0)  {
+        isError=true;
+        errorMessage="$err_lbl_send_message";
+    }
 
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
-	return true;
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
+    return true;
 }
 </script>
 

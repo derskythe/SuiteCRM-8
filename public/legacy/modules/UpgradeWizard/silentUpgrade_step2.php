@@ -47,7 +47,7 @@
  * See below the Usage for more details.
  */
 
-//	UTILITIES THAT MUST BE LOCAL :(
+//    UTILITIES THAT MUST BE LOCAL :(
 ini_set('memory_limit', -1);
 
 //Bug 24890, 24892. default_permissions not written to config.php. Following function checks and if
@@ -67,7 +67,7 @@ function checkConfigForPermissions()
         ];
         ksort($sugar_config);
         if (is_writable('config.php')) {
-            write_array_to_file("sugar_config", $sugar_config, 'config.php');
+            write_array_to_file('sugar_config', $sugar_config, 'config.php');
         }
     }
 }
@@ -190,7 +190,7 @@ function rebuildRelations($pre_path = '')
 
 //Bug 52872. Dies if the request does not come from CLI.
 $sapi_type = PHP_SAPI;
-if (strpos($sapi_type, 'cli') !== 0) {
+if (!str_starts_with($sapi_type, 'cli')) {
     die('This is command-line only script');
 }
 //End of #52872
@@ -325,7 +325,7 @@ if (!is_dir($unzip_dir)) {
 unzip($argv[1], $unzip_dir);
 // mimic standard UW by copy patch zip to appropriate dir
 copy($argv[1], $install_file);
-//	END UPGRADE PREP
+//    END UPGRADE PREP
 
 
 if (function_exists('set_upgrade_vars')) {
@@ -496,7 +496,7 @@ require_once __DIR__ . '/../../install/install_utils.php';
 handleHtaccess();
 
 ///////////////////////////////////////////////////////////////////////////////
-////	RECORD ERRORS
+////    RECORD ERRORS
 
 $phpErrors = ob_get_clean();
 logThis("**** Potential PHP generated error messages: {$phpErrors}", $path);
@@ -507,7 +507,7 @@ if (count($errors) > 0) {
     }
     echo "FAILED\n";
 } else {
-    logThis("***** SilentUpgrade completed successfully.", $path);
+    logThis('***** SilentUpgrade completed successfully.', $path);
     echo "********************************************************************\n";
     echo "*************************** SUCCESS*********************************\n";
     echo "********************************************************************\n";

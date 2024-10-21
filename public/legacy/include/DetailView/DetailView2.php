@@ -63,12 +63,14 @@ class DetailView2 extends EditView
      * This is the DetailView constructor responsible for processing the new
      * Meta-Data framework
      *
-     * @param string $module String value of module this detail view is for
-     * @param SugarBean|null $focus An empty sugarbean object of module
+     * @param string $module            String value of module this detail view is for
+     * @param SugarBean|null $focus     An empty sugarbean object of module
      * @param string|null $metadataFile String value of file location to use in overriding default metadata file
-     * @param string $tpl tpl String value of file location to use in overriding default Smarty template
+     * @param string $tpl               tpl String value of file location to use in overriding default Smarty template
      * @param bool $createFocus
-     * @param string $metadataFileName specifies the name of the metadata file eg 'detailviewdefs'
+     * @param string $metadataFileName  specifies the name of the metadata file eg 'detailviewdefs'
+     *
+     * @throws Exception
      */
     public function setup(
         $module,
@@ -109,7 +111,7 @@ class DetailView2 extends EditView
             if (!file_exists("modules/$this->module/metadata/$metadataFileName.php") &&
                 file_exists("modules/$this->module/DetailView.html")) {
                 global $dictionary;
-                $htmlFile = "modules/" . $this->module . "/DetailView.html";
+                $htmlFile = 'modules/' . $this->module . '/DetailView.html';
                 $parser = new DetailViewMetaParser();
                 if (!file_exists('modules/'.$this->module.'/metadata')) {
                     sugar_mkdir('modules/'.$this->module.'/metadata');
@@ -123,7 +125,12 @@ class DetailView2 extends EditView
             //Flag an error... we couldn't create the best guess meta-data file
             if (!file_exists("modules/$this->module/metadata/$metadataFileName.php")) {
                 global $app_strings;
-                $error = str_replace("[file]", "modules/$this->module/metadata/$metadataFileName.php", (string) $app_strings['ERR_CANNOT_CREATE_METADATA_FILE']);
+                $error =
+                    str_replace(
+                        '[file]',
+                        "modules/$this->module/metadata/$metadataFileName.php",
+                        (string) $app_strings['ERR_CANNOT_CREATE_METADATA_FILE']
+                    );
                 $GLOBALS['log']->fatal($error);
                 throw new UnexpectedValueException($error);
             }

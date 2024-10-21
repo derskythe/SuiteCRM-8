@@ -33,8 +33,8 @@ $searchFields['Documents'] = array(
     'query_type' => 'format',
     'operator' => 'subquery',
     'subquery' => 'SELECT document_revisions.id FROM document_revisions
-			           WHERE document_revisions.deleted=0
-				   AND document_revisions.filename LIKE \'{0}\'',
+                       WHERE document_revisions.deleted=0
+                   AND document_revisions.filename LIKE \'{0}\'',
     'db_field' =>
     array(
       0 => 'document_revision_id',
@@ -81,8 +81,8 @@ $searchFields['Documents'] = array(
         'operator' => 'subquery',
         'checked_only' => true,
         'subquery' => "SELECT favorites.parent_id FROM favorites
-			                    WHERE favorites.deleted = 0
-			                        and favorites.parent_type = 'Documents'
-			                        and favorites.assigned_user_id = '{1}'",
+                                WHERE favorites.deleted = 0
+                                    and favorites.parent_type = 'Documents'
+                                    and favorites.assigned_user_id = '{1}'",
         'db_field'=>array('id')),
 );

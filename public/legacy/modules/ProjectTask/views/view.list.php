@@ -61,8 +61,10 @@ class ProjectTaskViewList extends ViewList
     }
 
 
-
-
+    /**
+     * @throws SmartyException
+     * @throws JsonException
+     */
     public function display()
     {
         $metafiles = [];
@@ -110,7 +112,11 @@ class ProjectTaskViewList extends ViewList
 
                 $current_query_by_page = json_decode(html_entity_decode((string) $_REQUEST['current_query_by_page']), true, 512, JSON_THROW_ON_ERROR);
                 foreach ($current_query_by_page as $search_key=>$search_value) {
-                    if ($search_key != $module.'2_'.strtoupper($this->bean->object_name).'_offset' && !in_array($search_key, $blockVariables)) {
+                    if ($search_key != $module . '2_' . strtoupper($this->bean->object_name) . '_offset' && !in_array(
+                            $search_key,
+                            $blockVariables,
+                            true
+                        )) {
                         if (!is_array($search_value)) {
                             $_REQUEST[$search_key] = DBManagerFactory::getInstance()->quote($search_value);
                         } else {
@@ -124,8 +130,8 @@ class ProjectTaskViewList extends ViewList
             }
         }
 
-        if (!empty($_REQUEST['saved_search_select']) && $_REQUEST['saved_search_select']!='_none') {
-            if (empty($_REQUEST['button']) && (empty($_REQUEST['clear_query']) || $_REQUEST['clear_query']!='true')) {
+        if (!empty($_REQUEST['saved_search_select']) && $_REQUEST['saved_search_select'] !== '_none') {
+            if (empty($_REQUEST['button']) && (empty($_REQUEST['clear_query']) || $_REQUEST['clear_query'] !== 'true')) {
                 $this->saved_search = loadBean('SavedSearch');
                 $this->saved_search->retrieveSavedSearch($_REQUEST['saved_search_select']);
                 $this->saved_search->populateRequest();
@@ -183,8 +189,8 @@ class ProjectTaskViewList extends ViewList
         $headers = true;
         if (!empty($_REQUEST['search_form_only']) && $_REQUEST['search_form_only']) {
             $headers = false;
-        } elseif (!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] != 'false') {
-            if (isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] == 'advanced_search') {
+        } elseif (!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] !== 'false') {
+            if (isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] === 'advanced_search') {
                 $view = 'advanced_search';
             } else {
                 $view = 'basic_search';

@@ -73,7 +73,7 @@ class SearchViewMetaDataParser extends ListLayoutMetaDataParser
      * SearchViewMetaDataParser constructor.
      * Must set:
      * $this->columns   Array of 'Column LBL'=>function_to_retrieve_fields_for_this_column() - expected by the view
-     * @param string $searchLayout	The type of search layout, e.g., MB_BASICSEARCH or MB_ADVANCEDSEARCH
+     * @param string $searchLayout    The type of search layout, e.g., MB_BASICSEARCH or MB_ADVANCEDSEARCH
      * @param string $moduleName     The name of the module to which this listview belongs
      * @param string $packageName    If not empty, the name of the package to which this listview belongs
      * @throws Exception
@@ -133,7 +133,7 @@ class SearchViewMetaDataParser extends ListLayoutMetaDataParser
      */
     public function isValidField($key, $def)
     {
-        if (isset($def['type']) && $def['type'] == "assigned_user_name") {
+        if (isset($def['type']) && $def['type'] === 'assigned_user_name') {
             $origDefs = $this->getOriginalViewDefs();
             if (isset($def['group']) && isset($origDefs[$def['group']])) {
                 return false;
@@ -142,32 +142,32 @@ class SearchViewMetaDataParser extends ListLayoutMetaDataParser
                 return true;
             }
         }
-        
+
         if (isset($def [ 'studio' ]) && is_array($def [ 'studio' ]) && isset($def [ 'studio' ]['searchview'])) {
             return $def [ 'studio' ]['searchview'] !== false &&
-                  ($def [ 'studio' ]['searchview'] === true || $def [ 'studio' ]['searchview'] != 'false');
+                  ($def [ 'studio' ]['searchview'] === true || $def [ 'studio' ]['searchview'] !== 'false');
         }
-        
+
         if (!parent::isValidField($key, $def)) {
             return false;
         }
-        
+
         //Special case to prevent multiple copies of assigned, modified, or created by user on the search view
-        if (empty($def[ 'studio' ]) && $key == "assigned_user_name") {
+        if (empty($def[ 'studio' ]) && $key === 'assigned_user_name') {
             $origDefs = $this->getOriginalViewDefs();
-            if ($key == "assigned_user_name" && isset($origDefs['assigned_user_id'])) {
+            if ($key === 'assigned_user_name' && isset($origDefs['assigned_user_id'])) {
                 return false;
             }
         }
-        if (substr($key, -8) == "_by_name" &&  isset($def['rname']) && $def['rname'] == "user_name") {
+        if (str_ends_with($key, '_by_name') &&  isset($def['rname']) && $def['rname'] === 'user_name') {
             return false;
         }
 
         //Remove image fields (unless studio was set)
-        if (!empty($def [ 'studio' ]) && isset($def['type']) && $def['type'] == "image") {
+        if (!empty($def [ 'studio' ]) && isset($def['type']) && $def['type'] === 'image') {
             return false;
         }
-        
+
         return true;
     }
 
@@ -181,8 +181,8 @@ class SearchViewMetaDataParser extends ListLayoutMetaDataParser
         if ($populate) {
             $this->_populateFromRequest() ;
         }
-            
-            
+
+
         $this->_saved [ 'layout' ] [ self::$variableMap [ $this->_searchLayout ] ] = $this->convertSearchViewToListView($this->_viewdefs);
         ;
         $this->implementation->deploy($this->_saved) ;
@@ -235,8 +235,8 @@ class SearchViewMetaDataParser extends ListLayoutMetaDataParser
         $defs = $this->implementation->getOriginalViewdefs();
         $out = array();
         if (!empty($defs) && !empty($defs['layout']) && !empty($defs['layout'][$this->_searchLayout])) {
-            if ($this->_searchLayout == "basic_search" &&  !empty($defs['layout']["advanced_search"])) {
-                $out = $this->normalizeDefs($defs['layout']["advanced_search"]);
+            if ($this->_searchLayout === 'basic_search' &&  !empty($defs['layout']['advanced_search'])) {
+                $out = $this->normalizeDefs($defs['layout']['advanced_search']);
             }
             $out = array_merge($out, $this->normalizeDefs($defs['layout'][$this->_searchLayout]));
         }

@@ -63,15 +63,15 @@ class ModuleBuilderController extends SugarController
         global $mod_strings;
 
         if (!empty($_REQUEST['type'])) {
-            if ($_REQUEST['type'] == 'studio') {
+            if ($_REQUEST['type'] === 'studio') {
                 return $mod_strings['LBL_STUDIO'];
-            } elseif ($_REQUEST['type'] == 'sugarportal') {
+            } elseif ($_REQUEST['type'] === 'sugarportal') {
                 return $mod_strings['LBL_SUITEPORTAL'];
-            } elseif ($_REQUEST['type'] == 'mb') {
+            } elseif ($_REQUEST['type'] === 'mb') {
                 return $mod_strings['LBL_MODULEBUILDER'];
-            } elseif ($_REQUEST['type'] == 'dropdowns') {
+            } elseif ($_REQUEST['type'] === 'dropdowns') {
                 return $mod_strings['LBL_DROPDOWNEDITOR'];
-            } elseif ($_REQUEST['type'] == 'home') {
+            } elseif ($_REQUEST['type'] === 'home') {
                 return $mod_strings['LBL_HOME'];
             } else {
                 return $mod_strings['LBL_DEVELOPER_TOOLS'];
@@ -88,19 +88,23 @@ class ModuleBuilderController extends SugarController
 
     public function process()
     {
-        $GLOBALS [ 'log' ]->info(get_class($this).":") ;
+        $GLOBALS [ 'log' ]->info(get_class($this). ':') ;
         global $current_user;
         $access = $current_user->getDeveloperModules();
-        if ($current_user->isAdmin() || ($current_user->isDeveloperForAnyModule() && !isset($_REQUEST['view_module']) && (isset($_REQUEST['action']) && $_REQUEST['action'] != 'package'))||
-          (isset($_REQUEST['view_module']) && (in_array($_REQUEST['view_module'], $access)|| empty($_REQUEST['view_module']))) ||
-               (isset($_REQUEST['type']) && (($_REQUEST['type']=='dropdowns' && $current_user->isDeveloperForAnyModule())||
-          ($_REQUEST['type']=='studio' && displayStudioForCurrentUser() == true)))) {
+        if ($current_user->isAdmin() || ($current_user->isDeveloperForAnyModule() && !isset($_REQUEST['view_module']) && (isset($_REQUEST['action']) && $_REQUEST['action'] !== 'package'))||
+            (isset($_REQUEST['view_module']) && (in_array(
+                        $_REQUEST['view_module'],
+                        $access,
+                        true
+                    ) || empty($_REQUEST['view_module']))) ||
+               (isset($_REQUEST['type']) && (($_REQUEST['type'] === 'dropdowns' && $current_user->isDeveloperForAnyModule())||
+          ($_REQUEST['type'] === 'studio' && displayStudioForCurrentUser() == true)))) {
             $this->hasAccess = true;
         } else {
             $this->hasAccess = false;
         }
         // It's hard to predict everywhere that can invalidate cache, so it's being called here to cover that.
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('rebuild_all');
         parent::process();
     }
@@ -111,7 +115,7 @@ class ModuleBuilderController extends SugarController
         $view = strtolower($_REQUEST [ 'view' ]);
         $found = false;
         //Check the StudioModule first for mapping overrides
-        if (empty($_REQUEST [ 'view_package' ])|| $_REQUEST [ 'view_package' ] == "studio") {
+        if (empty($_REQUEST [ 'view_package' ])|| $_REQUEST [ 'view_package' ] === 'studio') {
             $sm = StudioModuleFactory::getStudioModule($_REQUEST [ 'view_module' ]);
             foreach ($sm->sources as $file => $def) {
                 if (!empty($def['type']) && !empty($def['view']) && $def['view'] == $view) {
@@ -214,7 +218,7 @@ class ModuleBuilderController extends SugarController
         }
 
         //increment etag for menu so the new module shows up when the AJAX UI reloads
-        $current_user->incrementETag("mainMenuETag");
+        $current_user->incrementETag('mainMenuETag');
 
         $mb = new ModuleBuilder() ;
         $load = $_REQUEST [ 'package' ] ;
@@ -237,7 +241,7 @@ class ModuleBuilderController extends SugarController
             $cache_key = 'app_list_strings.'.$GLOBALS['current_language'];
             sugar_cache_clear($cache_key);
             sugar_cache_reset();
-            require_once "include/portability/Services/Cache/CacheManager.php";
+            require_once 'include/portability/Services/Cache/CacheManager.php';
             (new CacheManager())->markAsNeedsUpdate('app-metadata-language-strings-'.$current_language);
             //clear end
             $pm->performInstall($_REQUEST [ 'install_file' ], true);
@@ -343,7 +347,7 @@ class ModuleBuilderController extends SugarController
     public function action_SaveLabel()
     {
         if (! empty($_REQUEST [ 'view_module' ]) && !empty($_REQUEST [ 'labelValue' ])) {
-            $_REQUEST [ "label_" . $_REQUEST [ 'label' ] ] = $_REQUEST [ 'labelValue' ] ;
+            $_REQUEST ['label_' . $_REQUEST ['label' ] ] = $_REQUEST ['labelValue' ] ;
             require_once 'modules/ModuleBuilder/parsers/parser.label.php' ;
 
             $req = $_REQUEST;
@@ -372,6 +376,9 @@ class ModuleBuilderController extends SugarController
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_SaveField()
     {
         require_once('modules/DynamicFields/FieldCases.php') ;
@@ -384,7 +391,7 @@ class ModuleBuilderController extends SugarController
             require_once('modules/DynamicFields/DynamicField.php') ;
             if (! empty($_REQUEST [ 'view_module' ])) {
                 $module = $_REQUEST [ 'view_module' ] ;
-                if ($module == 'Employees') {
+                if ($module === 'Employees') {
                     $module = 'Users';
                 }
 
@@ -415,7 +422,7 @@ class ModuleBuilderController extends SugarController
                 $repair = new RepairAndClear();
 
                 $repair->repairAndClearAll(array('rebuildExtensions', 'clearVardefs', 'clearTpls'), array($class_name), true, false);
-                if ($module == 'Users') {
+                if ($module === 'Users') {
                     $repair->repairAndClearAll(array('rebuildExtensions', 'clearVardefs', 'clearTpls'), array('Employee'), true, false);
                 }
 
@@ -451,7 +458,7 @@ class ModuleBuilderController extends SugarController
         $module = $_REQUEST [ 'view_module' ] ;
 
         // Need to map Employees -> Users
-        if ($module=='Employees') {
+        if ($module === 'Employees') {
             $module = 'Users';
         }
 
@@ -485,7 +492,7 @@ class ModuleBuilderController extends SugarController
         // now clear the cache so that the results are immediately visible
         include_once('include/TemplateHandler/TemplateHandler.php') ;
         TemplateHandler::clearCache($module) ;
-        if ($module == 'Users') {
+        if ($module === 'Users') {
             TemplateHandler::clearCache('Employees');
         }
 
@@ -502,7 +509,7 @@ class ModuleBuilderController extends SugarController
 
     public function action_saveVisibility()
     {
-        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
+        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) !== 'studio')) ? $_REQUEST ['view_package' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser(MB_VISIBILITY, $_REQUEST [ 'view_module' ], $packageName) ;
 
@@ -510,7 +517,7 @@ class ModuleBuilderController extends SugarController
         $visibility_grid = $json->decode(html_entity_decode(rawurldecode($_REQUEST [ 'visibility_grid' ]), ENT_QUOTES));
         $parser->saveVisibility($_REQUEST [ 'fieldname' ], $_REQUEST [ 'trigger' ], $visibility_grid) ;
 
-        echo $json->encode(array( "visibility_editor_{$_REQUEST['fieldname']}" => array("action" => "deactivate")));
+        echo $json->encode(array( "visibility_editor_{$_REQUEST['fieldname']}" => array( 'action' => 'deactivate' )));
     }
 
     public function action_SaveRelationshipLabel()
@@ -578,7 +585,7 @@ class ModuleBuilderController extends SugarController
             $relationships->delete($_REQUEST [ 'relationship_name' ]) ;
 
             $relationships->save() ;
-            require_once("data/Relationships/RelationshipFactory.php");
+            require_once('data/Relationships/RelationshipFactory.php');
             SugarRelationshipFactory::deleteCache();
         }
         $this->view = 'relationships' ;
@@ -592,6 +599,9 @@ class ModuleBuilderController extends SugarController
         $this->view = 'dropdowns' ;
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_DeleteField()
     {
         $module = null;
@@ -604,7 +614,7 @@ class ModuleBuilderController extends SugarController
                 $moduleName = $_REQUEST [ 'view_module' ] ;
 
                 // bug 51325 make sure we make this switch or delete will not work
-                if ($moduleName == 'Employees') {
+                if ($moduleName === 'Employees') {
                     $moduleName = 'Users';
                 }
 
@@ -659,7 +669,7 @@ class ModuleBuilderController extends SugarController
     {
         global $current_user ;
         if (isset($_REQUEST [ 'pref_value' ])) {
-            if ($_REQUEST [ 'pref_value' ] == 'ignore') {
+            if ($_REQUEST [ 'pref_value' ] === 'ignore') {
                 $current_user->setPreference('mb_assist', 'DISABLED', 0, 'Assistant') ;
             } else {
                 $current_user->setPreference('mb_assist', 'ENABLED', 0, 'Assistant') ;
@@ -690,7 +700,7 @@ class ModuleBuilderController extends SugarController
         $language = (isset($_REQUEST [ 'selected_lang' ])) ? $_REQUEST [ 'selected_lang' ] : $GLOBALS['current_language'] ;
         $parser->handleSave($_REQUEST, $language) ;
         $json = getJSONobj();
-        echo $json->encode(array("east" => array("action" => "deactivate")));
+        echo $json->encode(array( 'east' => array( 'action' => 'deactivate' )));
     }
 
     public function action_editModule()
@@ -714,7 +724,7 @@ class ModuleBuilderController extends SugarController
         $this->view = 'layoutview' ;
         $parser->writeWorkingFile() ;
 
-        if (!empty($_REQUEST [ 'sync_detail_and_edit' ]) && $_REQUEST['sync_detail_and_edit'] != false && $_REQUEST['sync_detail_and_edit'] != "false") {
+        if (!empty($_REQUEST [ 'sync_detail_and_edit' ]) && $_REQUEST['sync_detail_and_edit'] != false && $_REQUEST['sync_detail_and_edit'] !== 'false') {
             if (strtolower($parser->_view) == MB_EDITVIEW) {
                 $parser2 = ParserFactory::getParser(MB_DETAILVIEW, $_REQUEST [ 'view_module' ], isset($_REQUEST [ 'view_package' ]) ? $_REQUEST [ 'view_package' ] : null) ;
                 $parser2->setUseTabs($parser->getUseTabs());
@@ -728,7 +738,7 @@ class ModuleBuilderController extends SugarController
         $parser = ParserFactory::getParser($_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], isset($_REQUEST [ 'view_package' ]) ? $_REQUEST [ 'view_package' ] : null) ;
         $parser->handleSave() ;
 
-        if (!empty($_REQUEST [ 'sync_detail_and_edit' ]) && $_REQUEST['sync_detail_and_edit'] != false && $_REQUEST['sync_detail_and_edit'] != "false") {
+        if (!empty($_REQUEST [ 'sync_detail_and_edit' ]) && $_REQUEST['sync_detail_and_edit'] != false && $_REQUEST['sync_detail_and_edit'] !== 'false') {
             if (strtolower($parser->_view) == MB_EDITVIEW) {
                 $parser2 = ParserFactory::getParser(MB_DETAILVIEW, $_REQUEST [ 'view_module' ], isset($_REQUEST [ 'view_package' ]) ? $_REQUEST [ 'view_package' ] : null) ;
                 $parser2->setUseTabs($parser->getUseTabs());
@@ -749,9 +759,9 @@ class ModuleBuilderController extends SugarController
      */
     public function action_listViewSave()
     {
-        $GLOBALS [ 'log' ]->info("action_listViewSave") ;
+        $GLOBALS [ 'log' ]->info('action_listViewSave') ;
 
-        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
+        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) !== 'studio')) ? $_REQUEST ['view_package' ] : null ;
         $subpanelName = (! empty($_REQUEST [ 'subpanel' ])) ? $_REQUEST [ 'subpanel' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser($_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName, $subpanelName) ;
@@ -762,7 +772,7 @@ class ModuleBuilderController extends SugarController
     public function action_dashletSave()
     {
         $this->view = 'dashlet' ;
-        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
+        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) !== 'studio')) ? $_REQUEST ['view_package' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser($_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName) ;
         $parser->handleSave() ;
@@ -770,7 +780,7 @@ class ModuleBuilderController extends SugarController
 
     public function action_popupSave()
     {
-        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) != 'studio')) ? $_REQUEST [ 'view_package' ] : null ;
+        $packageName = (isset($_REQUEST [ 'view_package' ]) && (strtolower($_REQUEST['view_package']) !== 'studio')) ? $_REQUEST ['view_package' ] : null ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser($_REQUEST [ 'view' ], $_REQUEST [ 'view_module' ], $packageName) ;
         $parser->handleSave() ;
@@ -789,6 +799,9 @@ class ModuleBuilderController extends SugarController
         $this->view = 'popupview';
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_searchViewSave()
     {
         $packageName = (isset($_REQUEST [ 'view_package' ])) ? $_REQUEST [ 'view_package' ] : null ;
@@ -800,7 +813,7 @@ class ModuleBuilderController extends SugarController
         //Repair or create a custom SearchFields.php file as needed
         $module_name = $_REQUEST [ 'view_module' ] ;
         global $beanList;
-        if (isset($beanList[$module_name]) && $beanList[$module_name]!="") {
+        if (isset($beanList[$module_name]) && $beanList[$module_name]!= '') {
             $objectName = BeanFactory::getObjectName($module_name);
 
             //Load the vardefs for the module to pass to TemplateRange
@@ -833,7 +846,7 @@ class ModuleBuilderController extends SugarController
                 $value = $GLOBALS [ 'app_list_strings' ] [ $key ] ;
             } else {
                 $package_strings = array( ) ;
-                if (! empty($_REQUEST [ 'view_package' ]) && $_REQUEST [ 'view_package' ] != 'studio' && ! empty($_REQUEST [ 'view_module' ])) {
+                if (! empty($_REQUEST [ 'view_package' ]) && $_REQUEST [ 'view_package' ] !== 'studio' && ! empty($_REQUEST ['view_module' ])) {
                     require_once('modules/ModuleBuilder/MB/ModuleBuilder.php') ;
                     $mb = new ModuleBuilder() ;
                     $module = & $mb->getPackageModule($_REQUEST [ 'view_package' ], $_REQUEST [ 'view_module' ]) ;
@@ -872,9 +885,9 @@ class ModuleBuilderController extends SugarController
         global $current_user;
 
         if (!empty($current_user) && isset($_REQUEST['column']) && isset($_REQUEST['direction'])) {
-            $direction = ($_REQUEST['direction'] == 'yui-dt-asc') ? 'ASC' : 'DESC';
+            $direction = ($_REQUEST['direction'] === 'yui-dt-asc') ? 'ASC' : 'DESC';
             $valid_columns = array('name', 'label', 'type', 'required', 'unified_search', 'custom');
-            $key = in_array($_REQUEST['column'], $valid_columns) ? $_REQUEST['column'] : 'name';
+            $key = in_array($_REQUEST['column'], $valid_columns, true) ? $_REQUEST['column'] : 'name';
             $val = array('key'=>$key, 'direction'=>$direction);
             $current_user->setPreference('fieldsTableColumn', getJSONobj()->encode($val), 0, 'ModuleBuilder');
         }

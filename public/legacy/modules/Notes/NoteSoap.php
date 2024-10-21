@@ -59,12 +59,12 @@ class NoteSoap
     }
 
 
-
-
     /**
      * @param array $note
      * @param bool $portal
+     *
      * @return string
+     * @throws Exception
      */
     public function saveFile($note, $portal = false)
     {
@@ -93,11 +93,11 @@ class NoteSoap
             $decodedFile = base64_decode($note['file']);
             $this->upload_file->set_for_soap($note['filename'], $decodedFile);
 
-            $ext_pos = strrpos((string) $this->upload_file->stored_file_name, ".");
+            $ext_pos = strrpos((string) $this->upload_file->stored_file_name, '.');
             $this->upload_file->file_ext = substr((string) $this->upload_file->stored_file_name, $ext_pos + 1);
-            if (in_array($this->upload_file->file_ext, $sugar_config['upload_badext'])) {
-                $this->upload_file->stored_file_name .= ".txt";
-                $this->upload_file->file_ext = "txt";
+            if (in_array($this->upload_file->file_ext, $sugar_config['upload_badext'], true)) {
+                $this->upload_file->stored_file_name .= '.txt';
+                $this->upload_file->file_ext = 'txt';
             }
 
             $focus->filename = $this->upload_file->get_stored_file_name();
@@ -112,6 +112,9 @@ class NoteSoap
         return $return_id;
     }
 
+    /**
+     * @throws Exception
+     */
     public function newSaveFile($note, $portal = false)
     {
         global $sugar_config;
@@ -132,11 +135,11 @@ class NoteSoap
             $decodedFile = base64_decode($note['file']);
             $this->upload_file->set_for_soap($note['filename'], $decodedFile);
 
-            $ext_pos = strrpos((string) $this->upload_file->stored_file_name, ".");
+            $ext_pos = strrpos((string) $this->upload_file->stored_file_name, '.');
             $this->upload_file->file_ext = substr((string) $this->upload_file->stored_file_name, $ext_pos + 1);
-            if (in_array($this->upload_file->file_ext, $sugar_config['upload_badext'])) {
-                $this->upload_file->stored_file_name .= ".txt";
-                $this->upload_file->file_ext = "txt";
+            if (in_array($this->upload_file->file_ext, $sugar_config['upload_badext'], true)) {
+                $this->upload_file->stored_file_name .= '.txt';
+                $this->upload_file->file_ext = 'txt';
             }
 
             $focus->filename = $this->upload_file->get_stored_file_name();
@@ -154,7 +157,7 @@ class NoteSoap
             $focus->process_save_dates=false;
             $module_name = $note['related_module_name'];
             $module_id = $note['related_module_id'];
-            if ($module_name != 'Contacts') {
+            if ($module_name !== 'Contacts') {
                 $focus->parent_type=$module_name;
                 $focus->parent_id = $module_id;
             } else {

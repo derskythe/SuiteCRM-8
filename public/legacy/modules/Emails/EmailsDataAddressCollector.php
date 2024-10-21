@@ -148,7 +148,7 @@ class EmailsDataAddressCollector
         foreach ($ieAccounts as $inboundEmail) {
             $this->validateInboundEmail($inboundEmail);
 
-            if (in_array($inboundEmail->id, $showFolders)) {
+            if (in_array($inboundEmail->id, $showFolders, true)) {
                 $storedOptions = sugar_unserialize(base64_decode($inboundEmail->stored_options));
                 $isGroupEmailAccount = $inboundEmail->isGroupEmailAccount();
                 $isPersonalEmailAccount = $inboundEmail->isPersonalEmailAccount();
@@ -661,7 +661,10 @@ class EmailsDataAddressCollector
      *
      * @param array $dataAddresses
      * @param array $defaultEmailSignature
+     *
      * @return array
+     * @throws Exception
+     * @throws Exception
      */
     protected function fillDataAddressWithSystemMailerSettings($dataAddresses, $defaultEmailSignature)
     {
@@ -683,7 +686,11 @@ class EmailsDataAddressCollector
 
     /**
      * Add system email address
+     *
      * @param array $dataAddresses
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public function addSystemEmailAddress(array &$dataAddresses): void
     {
@@ -777,7 +784,9 @@ class EmailsDataAddressCollector
     /**
      *
      * @param array $storedOptions
+     *
      * @return OutboundEmail
+     * @throws Exception
      */
     protected function getOutboundEmailOrErrorByStoredOptions($storedOptions)
     {

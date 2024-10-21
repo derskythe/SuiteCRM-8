@@ -72,7 +72,7 @@ foreach ($item_ids as $key => $value) {
 $maxExecutionTime = ini_get('max_execution_time');
 
 set_time_limit(600);
-$dataDir = create_cache_directory("MergedDocuments/");
+$dataDir = create_cache_directory('MergedDocuments/');
 $fileName = UploadFile::realpath("upload://$document->document_revision_id");
 $outfile = pathinfo((string) $document->filename, PATHINFO_FILENAME);
 
@@ -85,4 +85,4 @@ $mm->CleanUp();
 
 set_time_limit($maxExecutionTime);
 
-header("Location: index.php?module=MailMerge&action=Step4&file=" . urlencode($file));
+header('Location: index.php?module=MailMerge&action=Step4&file=' . urlencode($file));

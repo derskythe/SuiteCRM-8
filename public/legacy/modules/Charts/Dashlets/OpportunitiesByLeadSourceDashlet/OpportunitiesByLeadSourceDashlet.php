@@ -85,9 +85,10 @@ class OpportunitiesByLeadSourceDashlet extends DashletGenericChart
     }
 
     /**
+     * @throws SmartyException
      * @see DashletGenericChart::display()
      */
-    public function display()
+    public function display() : string
     {
         global $current_user, $sugar_config;
 
@@ -250,9 +251,9 @@ EOD;
      */
     protected function constructQuery()
     {
-        $query = "SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count ".
-            "FROM opportunities ";
-        $query .= "WHERE opportunities.deleted=0 ";
+        $query = 'SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count ' .
+            'FROM opportunities ';
+        $query .= 'WHERE opportunities.deleted=0 ';
         if (isset($this->pbls_ids) && count($this->pbls_ids) > 0) {
             $query .= "AND opportunities.assigned_user_id IN ('".implode("','", $this->pbls_ids)."') ";
         }
@@ -261,7 +262,7 @@ EOD;
         } else {
             $query .= "AND opportunities.lead_source IN ('".implode("','", array_keys($GLOBALS['app_list_strings']['lead_source_dom']))."') ";
         }
-        $query .= "GROUP BY lead_source ORDER BY total DESC";
+        $query .= 'GROUP BY lead_source ORDER BY total DESC';
 
         return $query;
     }

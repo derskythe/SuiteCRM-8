@@ -47,7 +47,7 @@ require_once('service/v2/registry.php'); //Extend off of v2 registry
 #[\AllowDynamicProperties]
 class registry_v2_1 extends registry
 {
-    
+
     /**
      * This method registers all the functions on the service class
      *
@@ -61,7 +61,7 @@ class registry_v2_1 extends registry
 
         // END OF REGISTER FUNCTIONS
     }
-    
+
     /**
      * This method registers all the complex types
      *
@@ -69,7 +69,7 @@ class registry_v2_1 extends registry
     protected function registerTypes()
     {
         parent::registerTypes();
-        
+
         $this->serviceClass->registerType(
             'link_list2',
             'complexType',
@@ -80,7 +80,7 @@ class registry_v2_1 extends registry
             'link_list'=>array('name'=>'link_list', 'type'=>'tns:link_list'),
             )
         );
-        
+
         $this->serviceClass->registerType(
             'link_lists',
             'complexType',
@@ -93,7 +93,7 @@ class registry_v2_1 extends registry
             ),
             'tns:link_list2'
         );
-        
+
         $this->serviceClass->registerType(
             'link_array_list',
             'complexType',
@@ -106,7 +106,7 @@ class registry_v2_1 extends registry
             ),
             'tns:link_value2'
         );
-        
+
         $this->serviceClass->registerType(
             'link_value2',
             'complexType',
@@ -124,7 +124,7 @@ class registry_v2_1 extends registry
             'all',
             '',
             array(
-            "field_list"=>array('name'=>'field_list', 'type'=>'tns:field_list'),
+                'field_list' =>array( 'name' =>'field_list', 'type' =>'tns:field_list'),
             )
         );
         $this->serviceClass->registerType(
@@ -134,7 +134,7 @@ class registry_v2_1 extends registry
             'all',
             '',
             array(
-            "entry_list"=>array('name'=>'entry_list', 'type'=>'tns:entry_list'),
+                'entry_list' =>array( 'name' =>'entry_list', 'type' =>'tns:entry_list'),
             )
         );
     }

@@ -262,13 +262,13 @@ class BeanManager
         $rowCount = $this->db->fetchRow(
             $this->db->query(
                 sprintf(
-                    "SELECT COUNT(*) AS cnt FROM %s %s %s",
+                    'SELECT COUNT(*) AS cnt FROM %s %s %s',
                     $table_name,
                     $join,
                     $where === '' ? '' : 'WHERE ' .  $where
                 )
             )
-        )["cnt"];
+        )['cnt'];
 
         return (int)$rowCount;
     }

@@ -42,6 +42,9 @@ include_once 'modules/Favorites/Favorites.php';
 #[\AllowDynamicProperties]
 class FavoritesController extends SugarController
 {
+    /**
+     * @throws Exception
+     */
     public function action_create_record()
     {
         global $current_user;

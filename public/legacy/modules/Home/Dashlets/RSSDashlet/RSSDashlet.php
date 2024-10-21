@@ -92,8 +92,9 @@ class RSSDashlet extends Dashlet
      * Displays the dashlet
      *
      * @return string html to display dashlet
+     * @throws SmartyException
      */
-    public function display()
+    public function display() : string
     {
         $ss = new Sugar_Smarty();
         $ss->assign('saving', $this->dashletStrings['LBL_SAVING']);
@@ -111,6 +112,7 @@ class RSSDashlet extends Dashlet
      * Displays the configuration form for the dashlet
      *
      * @return string html to display form
+     * @throws SmartyException
      */
     public function displayOptions()
     {
@@ -162,7 +164,7 @@ class RSSDashlet extends Dashlet
         if (empty($urlparse['scheme']) || empty($urlparse['host'])) {
             return $this->dashletStrings['ERR_LOADING_FEED'];
         }
-        if ($urlparse['scheme'] != 'http' && $urlparse['scheme'] != 'https') {
+        if ($urlparse['scheme'] !== 'http' && $urlparse['scheme'] !== 'https') {
             return $this->dashletStrings['ERR_LOADING_FEED'];
         }
         if (!$data) {
@@ -213,7 +215,7 @@ EOHTML;
 EOHTML;
             }
         }
-        $output .= "</table>";
+        $output .= '</table>';
 
         return $output;
     }

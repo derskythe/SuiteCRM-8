@@ -46,7 +46,7 @@
  * See below the Usage for more details.
  */
 
-//	UTILITIES THAT MUST BE LOCAL :(
+//    UTILITIES THAT MUST BE LOCAL :(
 ini_set('memory_limit', -1);
 
 function prepSystemForUpgradeSilent()
@@ -98,7 +98,7 @@ function checkConfigForPermissions()
         ];
         ksort($sugar_config);
         if (is_writable('config.php')) {
-            write_array_to_file("sugar_config", $sugar_config, 'config.php');
+            write_array_to_file('sugar_config', $sugar_config, 'config.php');
         }
     }
 }
@@ -124,7 +124,7 @@ function checkLoggerSettings()
         ];
         ksort($sugar_config);
         if (is_writable('config.php')) {
-            write_array_to_file("sugar_config", $sugar_config, 'config.php');
+            write_array_to_file('sugar_config', $sugar_config, 'config.php');
         }
     }
 }
@@ -184,7 +184,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_assigned_user','Users','users','id','{$relModName}','{$relObjName}','assigned_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_assigned_user','Users','users','id','{$relModName}','{$relObjName}','assigned_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
         //modified_user
@@ -195,7 +195,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_modified_user','Users','users','id','{$relModName}','{$relObjName}','modified_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_modified_user','Users','users','id','{$relModName}','{$relObjName}','modified_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
         //created_by
@@ -206,7 +206,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_created_by','Users','users','id','{$relModName}','{$relObjName}','created_by',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_created_by','Users','users','id','{$relModName}','{$relObjName}','created_by',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
         $guid = create_guid();
@@ -216,7 +216,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-							VALUES ('{$guid}', '{$relObjName}_team','Teams','teams','id','{$relModName}','{$relObjName}','team_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                            VALUES ('{$guid}', '{$relObjName}_team','Teams','teams','id','{$relModName}','{$relObjName}','team_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
     }
@@ -228,7 +228,7 @@ function createMissingRels()
     $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
     if (!isset($a['id']) && empty($a['id'])) {
         $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-					VALUES ('{$guid}', 'tracker_monitor_id','TrackerPerfs','tracker_perf','monitor_id','Trackers','tracker','monitor_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                    VALUES ('{$guid}', 'tracker_monitor_id','TrackerPerfs','tracker_perf','monitor_id','Trackers','tracker','monitor_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
         DBManagerFactory::getInstance()->query($qRel);
     }
 }
@@ -373,7 +373,7 @@ function threeWayMerge()
 
 //Bug 52872. Dies if the request does not come from CLI.
 $sapi_type = PHP_SAPI;
-if (strpos($sapi_type, 'cli') !== 0) {
+if (!str_starts_with($sapi_type, 'cli')) {
     die('This is command-line only script');
 }
 //End of #52872
@@ -500,7 +500,7 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
     $subdirs = ['full', 'langpack', 'module', 'patch', 'theme', 'temp'];
     global $unzip_dir;
     $license_accepted = false;
-    if (isset($argv[5]) && (strtolower($argv[5]) == 'yes' || strtolower($argv[5]) == 'y')) {
+    if (isset($argv[5]) && (strtolower($argv[5]) === 'yes' || strtolower($argv[5]) === 'y')) {
         $license_accepted = true;
     }
 
@@ -544,7 +544,7 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
     $install_file = $sugar_config['upload_dir'] . '/upgrades/patch/' . basename($argv[1]);
     sugar_mkdir($sugar_config['upload_dir'] . '/upgrades/patch', 0775, true);
 
-    if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] !== "") {
+    if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] !== '') {
         $zip_from_dir = $manifest['copy_files']['from_dir'];
     }
 
@@ -579,7 +579,7 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
     $destFiles = [];
 
     foreach ($uwFiles as $uwFile) {
-        $destFile = str_replace($zipBasePath . "/", '', (string) $uwFile);
+        $destFile = str_replace($zipBasePath . '/', '', (string) $uwFile);
         copy($uwFile, $destFile);
     }
     require_once 'modules/UpgradeWizard/uw_utils.php'; // must upgrade UW first
@@ -676,11 +676,11 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
 
         //Need to make sure we have the matching copy of SetValueAction for static/instance method matching
         if (file_exists('include/Expressions/Actions/SetValueAction.php')) {
-            require_once "include/Expressions/Actions/SetValueAction.php";
+            require_once 'include/Expressions/Actions/SetValueAction.php';
         }
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	HANDLE PREINSTALL SCRIPTS
+        ////    HANDLE PREINSTALL SCRIPTS
         if (empty($errors)) {
             $file = "{$unzip_dir}/" . constant('SUGARCRM_PRE_INSTALL_FILE');
 
@@ -794,7 +794,7 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
             logThis('begin check resource settings .', $path);
 
 
-            require "sugar_version.php";
+            require 'sugar_version.php';
             require 'config.php';
             global $sugar_config;
 
@@ -824,7 +824,7 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
         }
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	REGISTER UPGRADE
+        ////    REGISTER UPGRADE
         if (empty($errors)) {
             logThis('Registering upgrade with UpgradeHistory', $path);
             if (!didThisStepRunBefore('commit', 'upgradeHistory')) {
@@ -862,9 +862,9 @@ if ($upgradeType !== constant('DCE_INSTANCE')) {
                 $manifestQuoted = $db->quoted($new_upgrade->manifest);
                 $dateQuoted = $db->quoted($new_upgrade->date_entered);
 
-                $upgradeHistoryInsert = "INSERT INTO upgrade_history (id, filename, md5sum, type, status, version, name, description, id_name, manifest, date_entered, enabled) 
+                $upgradeHistoryInsert = "INSERT INTO upgrade_history (id, filename, md5sum, type, status, version, name, description, id_name, manifest, date_entered, enabled)
                                                      VALUES ($customIDQuoted, $fileNameQuoted, $md5Quoted, $typeQuoted, $statusQuoted, $versionQuoted, $nameQuoted, $descriptionQuoted, NULL, $manifestQuoted, $dateQuoted, '1')";
-                $result = $db->query($upgradeHistoryInsert, true, "Error writing upgrade history");
+                $result = $db->query($upgradeHistoryInsert, true, 'Error writing upgrade history');
 
                 set_upgrade_progress('commit', 'in_progress', 'upgradeHistory', 'done');
                 set_upgrade_progress('commit', 'done', 'commit', 'done');

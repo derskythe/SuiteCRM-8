@@ -39,7 +39,7 @@
  */
 
 // created: 2015-03-04 12:01:39
-$layout_defs["AOK_KnowledgeBase"]["subpanel_setup"]['aok_knowledgebase_categories'] = array(
+$layout_defs['AOK_KnowledgeBase']['subpanel_setup']['aok_knowledgebase_categories'] = array(
     'order' => 100,
     'module' => 'AOK_Knowledge_Base_Categories',
     'subpanel_name' => 'default',

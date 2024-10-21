@@ -157,7 +157,7 @@ class quicksearchQuery
 
         $table = $focus->getTableName();
         if (!empty($table)) {
-            $table_prefix = $db->getValidDBName($table).".";
+            $table_prefix = $db->getValidDBName($table). '.';
         } else {
             $table_prefix = '';
         }
@@ -246,7 +246,7 @@ class quicksearchQuery
             $whereClauseArray[] = "({$this->extra_where})";
         }
 
-        if ($table == 'users') {
+        if ($table === 'users') {
             $whereClauseArray[] = "users.status='Active'";
         }
 
@@ -281,12 +281,12 @@ class quicksearchQuery
             $listData = $results[$i]->get_list_view_data();
 
             foreach ($args['field_list'] as $field) {
-                if ($field == "user_hash") {
+                if ($field === 'user_hash') {
                     continue;
                 }
                 // handle enums
-                if ((isset($results[$i]->field_name_map[$field]['type']) && $results[$i]->field_name_map[$field]['type'] == 'enum')
-                    || (isset($results[$i]->field_name_map[$field]['custom_type']) && $results[$i]->field_name_map[$field]['custom_type'] == 'enum')) {
+                if ((isset($results[$i]->field_name_map[$field]['type']) && $results[$i]->field_name_map[$field]['type'] === 'enum')
+                    || (isset($results[$i]->field_name_map[$field]['custom_type']) && $results[$i]->field_name_map[$field]['custom_type'] === 'enum')) {
 
                     // get fields to match enum vals
                     if (empty($app_list_strings)) {
@@ -336,7 +336,7 @@ class quicksearchQuery
      * Filter duplicate results from the list
      *
      * @param array $list
-     * @return	array
+     * @return    array
      */
     protected function filterResults($list)
     {
@@ -377,7 +377,7 @@ class quicksearchQuery
         foreach ($args['modules'] as $module) {
             $focus = SugarModule::get($module)->loadBean();
 
-            $orderBy = $focus->db->getValidDBName(($args['order_by_name'] && $focus instanceof Person && $args['order'] == 'name') ? 'last_name' : $orderBy);
+            $orderBy = $focus->db->getValidDBName(($args['order_by_name'] && $focus instanceof Person && $args['order'] === 'name') ? 'last_name' : $orderBy);
 
             if ($focus->ACLAccess('ListView', true)) {
                 $where = $this->constructWhere($focus, $args);

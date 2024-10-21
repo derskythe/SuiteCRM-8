@@ -105,7 +105,7 @@ class FacebookApiException extends Exception
      *
      * @return string The string representation of the error
      */
-    public function __toString()
+    public function __toString() : string
     {
         $str = $this->getType() . ': ';
         if ($this->code != 0) {
@@ -704,6 +704,7 @@ abstract class BaseFacebook
      * Make an API call.
      *
      * @return mixed The decoded response
+     * @throws FacebookApiException
      */
     public function api(/* polymorphic */)
     {
@@ -908,7 +909,7 @@ abstract class BaseFacebook
      */
     protected function isVideoPost($path, $method = 'GET')
     {
-        if ($method == 'POST' && preg_match("/^(\/)(.+)(\/)(videos)$/", $path)) {
+        if ($method === 'POST' && preg_match('/^(\/)(.+)(\/)(videos)$/', $path)) {
             return true;
         }
         return false;
@@ -1001,11 +1002,12 @@ abstract class BaseFacebook
      * developers want to do fancier things or use something other than curl to
      * make the request.
      *
-     * @param string $url The URL to make the request to
-     * @param array $params The parameters to use for the POST body
+     * @param string $url     The URL to make the request to
+     * @param array $params   The parameters to use for the POST body
      * @param CurlHandler $ch Initialized curl handle
      *
      * @return string The response text
+     * @throws FacebookApiException
      */
     protected function makeRequest($url, $params, $ch=null)
     {
@@ -1090,7 +1092,7 @@ abstract class BaseFacebook
      */
     protected function parseSignedRequest($signed_request)
     {
-        if (!$signed_request || strpos($signed_request, '.') === false) {
+        if (!$signed_request || !str_contains($signed_request, '.')) {
             self::errorLog('Signed request was invalid!');
             return null;
         }
@@ -1231,7 +1233,7 @@ abstract class BaseFacebook
         $name = 'api';
         if (isset($READ_ONLY_CALLS[strtolower($method)])) {
             $name = 'api_read';
-        } elseif (strtolower($method) == 'video.upload') {
+        } elseif (strtolower($method) === 'video.upload') {
             $name = 'api_video';
         }
         return self::getUrl($name, 'restserver.php');
@@ -1376,7 +1378,7 @@ abstract class BaseFacebook
     {
         foreach (self::$DROP_QUERY_PARAMS as $drop_query_param) {
             if ($param === $drop_query_param ||
-          strpos($param, $drop_query_param.'=') === 0) {
+                str_starts_with($param, $drop_query_param . '=')) {
                 return false;
             }
         }
@@ -1391,6 +1393,8 @@ abstract class BaseFacebook
      *
      * @param array $result A record storing the error message returned
      *                      by a failed API call.
+     *
+     * @throws FacebookApiException
      */
     protected function throwAPIException($result)
     {
@@ -1403,9 +1407,9 @@ abstract class BaseFacebook
         // REST server errors are just Exceptions
       case 'Exception':
         $message = $e->getMessage();
-        if ((strpos($message, 'Error validating access token') !== false) ||
-            (strpos($message, 'Invalid OAuth access token') !== false) ||
-            (strpos($message, 'An active access token must be used') !== false)
+        if ((str_contains($message, 'Error validating access token')) ||
+            (str_contains($message, 'Invalid OAuth access token')) ||
+            (str_contains($message, 'An active access token must be used'))
         ) {
             $this->destroySession();
         }
@@ -1425,7 +1429,7 @@ abstract class BaseFacebook
     {
         // disable error log if we are running in a CLI environment
         // @codeCoverageIgnoreStart
-        if (php_sapi_name() != 'cli') {
+        if (php_sapi_name() !== 'cli') {
             error_log($msg);
         }
         // uncomment this if you want to see the errors on the page

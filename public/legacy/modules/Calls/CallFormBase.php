@@ -80,7 +80,7 @@ class CallFormBase extends FormBase
         // $cal_lang = (empty($cal_codes[$current_language])) ? $cal_codes[$default_language] : $cal_codes[$current_language];
 
         global $timedate;
-        $cal_lang = "en";
+        $cal_lang = 'en';
         $cal_dateformat = $timedate->get_cal_date_format();
 
         $lbl_required_symbol = $app_strings['LBL_REQUIRED_SYMBOL'];
@@ -99,20 +99,20 @@ class CallFormBase extends FormBase
         $lbl_save_button_title = $app_strings['LBL_SAVE_BUTTON_TITLE'];
         $lbl_save_button_key = $app_strings['LBL_SAVE_BUTTON_KEY'];
         $lbl_save_button_label = $app_strings['LBL_SAVE_BUTTON_LABEL'];
-        $form =	<<<EOQ
-			<form name="{$formname}" onSubmit="return check_form('{$formname}') "method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="Calls">
-			<input type="hidden" name="{$prefix}action" value="Save">
-				<input type="hidden" name="{$prefix}record" value="">
-			<input type="hidden"  name="{$prefix}direction" value="Outbound">
-			<input type="hidden" name="{$prefix}status" value="{$default_status}">
-			<input type="hidden" name="{$prefix}parent_type" value="{$default_parent_type}">
-			<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-			<input type="hidden" name="{$prefix}duration_hours" value="1">
-			<input type="hidden" name="{$prefix}duration_minutes" value="0">
-			<input type="hidden" name="{$prefix}user_id" value="{$user_id}">
+        $form =    <<<EOQ
+            <form name="{$formname}" onSubmit="return check_form('{$formname}') "method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="Calls">
+            <input type="hidden" name="{$prefix}action" value="Save">
+                <input type="hidden" name="{$prefix}record" value="">
+            <input type="hidden"  name="{$prefix}direction" value="Outbound">
+            <input type="hidden" name="{$prefix}status" value="{$default_status}">
+            <input type="hidden" name="{$prefix}parent_type" value="{$default_parent_type}">
+            <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+            <input type="hidden" name="{$prefix}duration_hours" value="1">
+            <input type="hidden" name="{$prefix}duration_minutes" value="0">
+            <input type="hidden" name="{$prefix}user_id" value="{$user_id}">
 
-		<table cellspacing="1" cellpadding="0" border="0">
+        <table cellspacing="1" cellpadding="0" border="0">
 <tr>
     <td colspan="2"><input type='radio' name='appointment' value='Call' class='radio' onchange='document.{$formname}.module.value="Calls";' style='vertical-align: middle;' checked> <span scope="row">{$mod_strings['LNK_NEW_CALL']}</span>
 &nbsp;
@@ -126,11 +126,11 @@ class CallFormBase extends FormBase
     <td><input name='{$prefix}date_start' id='{$formname}jscal_field' maxlength='10' type="hidden" value="{$cal_date}"></td>
     <td><input name='{$prefix}time_start' type="hidden" maxlength='10' value="{$cal_time}"></td>
 
-			<script type="text/javascript">
-//		Calendar.setup ({
-//			inputField : "{$formname}jscal_field", daFormat : "$cal_dateformat" ifFormat : "$cal_dateformat", showsTime : false, button : "{$formname}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
-//		});
-		</script>
+            <script type="text/javascript">
+//        Calendar.setup ({
+//            inputField : "{$formname}jscal_field", daFormat : "$cal_dateformat" ifFormat : "$cal_dateformat", showsTime : false, button : "{$formname}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
+//        });
+        </script>
 
 
 
@@ -170,9 +170,9 @@ EOQ;
             $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
         }
         $the_form .= <<<EOQ
-		<form name="{$prefix}CallSave" onSubmit="return check_form('{$prefix}CallSave') "method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="Calls">
-			<input type="hidden" name="{$prefix}action" value="Save">
+        <form name="{$prefix}CallSave" onSubmit="return check_form('{$prefix}CallSave') "method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="Calls">
+            <input type="hidden" name="{$prefix}action" value="Save">
 
 EOQ;
         return $the_form;
@@ -186,7 +186,7 @@ EOQ;
         global $app_list_strings;
         $lbl_save_button_title = $app_strings['LBL_SAVE_BUTTON_TITLE'];
         $lbl_save_button_label = $app_strings['LBL_SAVE_BUTTON_LABEL'];
-        $the_form = "	<p><input title='$lbl_save_button_title' class='button' type='submit' name='button' value=' $lbl_save_button_label ' ></p></form>";
+        $the_form = "    <p><input title='$lbl_save_button_title' class='button' type='submit' name='button' value=' $lbl_save_button_label ' ></p></form>";
         $the_form .= get_left_form_footer();
         $the_form .= get_validate_record_js();
         return $the_form;
@@ -205,6 +205,9 @@ EOQ;
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function handleSave($prefix, $redirect=true, $useRequired=false)
     {
         require_once('include/formbase.php');
@@ -244,7 +247,7 @@ EOQ;
         unset($_POST['recurring_source']);
 
         $time_format = $timedate->get_user_time_format();
-        $time_separator = ":";
+        $time_separator = ':';
         if (preg_match('/\d+([^\d])\d+([^\d]*)/s', (string) $time_format, $match)) {
             $time_separator = $match[1];
         }
@@ -276,7 +279,7 @@ EOQ;
         $return_id = '';
         $assignedUserId = $_POST['assigned_user_id'] ?? '';
         //add assigned user and current user if this is the first time bean is saved
-        if (empty($focus->id) && !empty($_REQUEST['return_module']) && $_REQUEST['return_module'] =='Calls' && !empty($_REQUEST['return_action']) && $_REQUEST['return_action'] =='DetailView') {
+        if (empty($focus->id) && !empty($_REQUEST['return_module']) && $_REQUEST['return_module'] === 'Calls' && !empty($_REQUEST['return_action']) && $_REQUEST['return_action'] === 'DetailView') {
             //if return action is set to detail view and return module to call, then this is from the long form, do not add the assigned user (only the current user)
             //The current user is already added to UI and we want to give the current user the option of opting out of meeting.
             if ($current_user->id != $assignedUserId) {
@@ -289,7 +292,7 @@ EOQ;
             $_POST['user_invitees'] .= ','.$assignedUserId.', ';
 
             //add current user if the assigned to user is different than current user.
-            if ($current_user->id != $assignedUserId && $_REQUEST['module'] != "Calendar") {
+            if ($current_user->id != $assignedUserId && $_REQUEST['module'] !== 'Calendar') {
                 $_POST['user_invitees'] .= ','.$current_user->id.', ';
             }
 
@@ -297,21 +300,21 @@ EOQ;
             $_POST['user_invitees'] = str_replace(',,', ',', $_POST['user_invitees']);
         }
 
-        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] == 'true') ||
+        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] === 'true') ||
         (isset($_POST['is_ajax_call']) && !empty($_POST['is_ajax_call']) && !empty($focus->id) ||
-        (isset($_POST['return_action']) && $_POST['return_action'] == 'SubPanelViewer') && !empty($focus->id))
+        (isset($_POST['return_action']) && $_POST['return_action'] === 'SubPanelViewer') && !empty($focus->id))
     ) {
             $focus->save(true);
             $return_id = $focus->id;
         } else {
-            if ($focus->status == 'Held' && $this->isEmptyReturnModuleAndAction() && !$this->isSaveFromDCMenu()) {
+            if ($focus->status === 'Held' && $this->isEmptyReturnModuleAndAction() && !$this->isSaveFromDCMenu()) {
                 //if we are closing the meeting, and the request does not have a return module AND return action set and it is not a save
                 //being triggered by the DCMenu (shortcut bar) then the request is coming from a dashlet or subpanel close icon and there is no
                 //need to process user invitees, just save the current values.
                 $focus->save(true);
             } else {
                 ///////////////////////////////////////////////////////////////////////////
-                ////	REMOVE INVITEE RELATIONSHIPS
+                ////    REMOVE INVITEE RELATIONSHIPS
                 if (!empty($_POST['user_invitees'])) {
                     $userInvitees = explode(',', trim($_POST['user_invitees'], ','));
                 } else {
@@ -326,7 +329,7 @@ EOQ;
                 $r = $focus->db->query($q);
                 $acceptStatusUsers = array();
                 while ($a = $focus->db->fetchByAssoc($r)) {
-                    if (!in_array($a['user_id'], $userInvitees)) {
+                    if (!in_array($a['user_id'], $userInvitees, true)) {
                         $deleteUsers[$a['user_id']] = $a['user_id'];
                     } else {
                         $acceptStatusUsers[$a['user_id']] = $a['accept_status'];
@@ -358,7 +361,7 @@ EOQ;
                 $r = $focus->db->query($q);
                 $acceptStatusContacts = array();
                 while ($a = $focus->db->fetchByAssoc($r)) {
-                    if (!in_array($a['contact_id'], $contactInvitees)) {
+                    if (!in_array($a['contact_id'], $contactInvitees, true)) {
                         $deleteContacts[$a['contact_id']] = $a['contact_id'];
                     } else {
                         $acceptStatusContacts[$a['contact_id']] = $a['accept_status'];
@@ -389,7 +392,7 @@ EOQ;
                 $r = $focus->db->query($q);
                 $acceptStatusLeads = array();
                 while ($a = $focus->db->fetchByAssoc($r)) {
-                    if (!in_array($a['lead_id'], $leadInvitees)) {
+                    if (!in_array($a['lead_id'], $leadInvitees, true)) {
                         $deleteLeads[$a['lead_id']] = $a['lead_id'];
                     } else {
                         $acceptStatusLeads[$a['user_id']] = $a['accept_status'];
@@ -409,22 +412,22 @@ EOQ;
                     $sql = "UPDATE calls_leads set deleted = 1 where lead_id in ($sql) AND call_id = '". $focus->id . "'";
                     $focus->db->query($sql);
                 }
-                ////	END REMOVE
+                ////    END REMOVE
                 ///////////////////////////////////////////////////////////////////////////
 
 
                 ///////////////////////////////////////////////////////////////////////////
-                ////	REBUILD INVITEE RELATIONSHIPS
+                ////    REBUILD INVITEE RELATIONSHIPS
                 $focus->users_arr = array();
                 $focus->users_arr = $userInvitees;
                 $focus->contacts_arr = array();
                 $focus->contacts_arr = $contactInvitees;
                 $focus->leads_arr = array();
                 $focus->leads_arr = $leadInvitees;
-                if (!empty($_POST['parent_id']) && $_POST['parent_type'] == 'Contacts') {
+                if (!empty($_POST['parent_id']) && $_POST['parent_type'] === 'Contacts') {
                     $focus->contacts_arr[] = $_POST['parent_id'];
                 }
-                if (!empty($_POST['parent_id']) && $_POST['parent_type'] == 'Leads') {
+                if (!empty($_POST['parent_id']) && $_POST['parent_type'] === 'Leads') {
                     $focus->leads_arr[] = $_POST['parent_id'];
                 }
                 // Call the Call module's save function to handle saving other fields besides
@@ -436,7 +439,7 @@ EOQ;
                 // Process users
                 $existing_users = array();
                 if (!empty($_POST['existing_invitees'])) {
-                    $existing_users =  explode(",", trim($_POST['existing_invitees'], ','));
+                    $existing_users =  explode(',', trim($_POST['existing_invitees'], ','));
                 }
 
                 foreach ($focus->users_arr as $user_id) {
@@ -459,7 +462,7 @@ EOQ;
                 // Process contacts
                 $existing_contacts =  array();
                 if (!empty($_POST['existing_contact_invitees'])) {
-                    $existing_contacts =  explode(",", trim($_POST['existing_contact_invitees'], ','));
+                    $existing_contacts =  explode(',', trim($_POST['existing_contact_invitees'], ','));
                 }
 
                 foreach ($focus->contacts_arr as $contact_id) {
@@ -481,7 +484,7 @@ EOQ;
                 // Process leads
                 $existing_leads =  array();
                 if (!empty($_POST['existing_lead_invitees'])) {
-                    $existing_leads =  explode(",", trim($_POST['existing_lead_invitees'], ','));
+                    $existing_leads =  explode(',', trim($_POST['existing_lead_invitees'], ','));
                 }
 
                 foreach ($focus->leads_arr as $lead_id) {
@@ -510,7 +513,7 @@ EOQ;
                     $focus->set_accept_status($current_user, 'accept');
                 }
 
-                ////	END REBUILD INVITEE RELATIONSHIPS
+                ////    END REBUILD INVITEE RELATIONSHIPS
             ///////////////////////////////////////////////////////////////////////////
             }
         }
@@ -521,7 +524,7 @@ EOQ;
             exit;
         }
 
-        if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] == 'Home') {
+        if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] === 'Home') {
             $_REQUEST['return_action'] = 'index';
             handleRedirect('', 'Home');
         } else {
@@ -556,7 +559,7 @@ EOQ;
         // global $cal_codes;
         // Unimplemented until jscalendar language files are fixed
         // $cal_lang = (empty($cal_codes[$current_language])) ? $cal_codes[$default_language] : $cal_codes[$current_language];
-        $cal_lang = "en";
+        $cal_lang = 'en';
 
 
         $lbl_required_symbol = $app_strings['LBL_REQUIRED_SYMBOL'];
@@ -574,17 +577,17 @@ EOQ;
         $default_date_start = $timedate->to_display_date($date);
         $default_time_start = $timedate->to_display_time($date, true);
         $time_ampm = $timedate->AMPMMenu($prefix, $default_time_start);
-        $form =	<<<EOQ
-			<input type="hidden"  name="{$prefix}direction" value="Outbound">
-			<input type="hidden" name="{$prefix}record" value="">
-			<input type="hidden" name="{$prefix}status" value="{$default_status}">
-			<input type="hidden" name="{$prefix}parent_type" value="{$default_parent_type}">
-			<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-			<input type="hidden" name="{$prefix}duration_hours" value="1">
-			<input type="hidden" name="{$prefix}duration_minutes" value="0">
-			<input type="hidden" name="{$prefix}user_id" value="{$user_id}">
+        $form =    <<<EOQ
+            <input type="hidden"  name="{$prefix}direction" value="Outbound">
+            <input type="hidden" name="{$prefix}record" value="">
+            <input type="hidden" name="{$prefix}status" value="{$default_status}">
+            <input type="hidden" name="{$prefix}parent_type" value="{$default_parent_type}">
+            <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+            <input type="hidden" name="{$prefix}duration_hours" value="1">
+            <input type="hidden" name="{$prefix}duration_minutes" value="0">
+            <input type="hidden" name="{$prefix}user_id" value="{$user_id}">
 
-		<table cellspacing='0' cellpadding='0' border='0' width="100%">
+        <table cellspacing='0' cellpadding='0' border='0' width="100%">
 <tr>
 EOQ;
 
@@ -610,7 +613,7 @@ EOQ;
 </tr>
 EOQ;
         }
-        $form .=	<<<EOQ
+        $form .=    <<<EOQ
 
 
 <tr>
@@ -639,11 +642,11 @@ EOQ;
 
 </table>
 
-		<script type="text/javascript">
-		Calendar.setup ({
-			inputField : "{$prefix}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "{$prefix}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
-		});
-		</script>
+        <script type="text/javascript">
+        Calendar.setup ({
+            inputField : "{$prefix}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "{$prefix}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
+        });
+        </script>
 EOQ;
 
 

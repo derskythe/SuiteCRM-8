@@ -116,7 +116,7 @@ class Acceptance extends Module
         ];
 
         $files = [
-            "custom/application/Ext/Include/modules.ext.php",
+            'custom/application/Ext/Include/modules.ext.php',
             "custom/Extension/application/Ext/Include/{$module}.php"
         ];
 

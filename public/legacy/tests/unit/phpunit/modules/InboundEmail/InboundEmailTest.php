@@ -146,7 +146,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
         $fake->add('setTimeout', [1, 15], [true]);
         $fake->add('setTimeout', [2, 15], [true]);
         $fake->add('setTimeout', [3, 15], [true]);
-        $fake->add('open', ["{:143/service=imap/ssl/tls/validate-cert/secure}", null, null, 0, 0, []], [function () {
+        $fake->add('open', [ '{:143/service=imap/ssl/tls/validate-cert/secure}', null, null, 0, 0, []], [ function () {
             return tempFileWithMode('wb+');
         }]);
         $fake->add('getLastError', null, ['Too many login failures']);
@@ -206,10 +206,10 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
         $fake->add('setTimeout', [2, 60], [true]);
         $fake->add('setTimeout', [3, 60], [true]);
         $fake->add('getErrors', null, [false]);
-        $fake->add('open', ["{:143/service=imap/notls/novalidate-cert/secure}", null, null, 0, 0, []], [function () {
+        $fake->add('open', [ '{:143/service=imap/notls/novalidate-cert/secure}', null, null, 0, 0, []], [ function () {
             return tempFileWithMode('wb+');
         }]);
-        $fake->add('getLastError', null, ["SECURITY PROBLEM: insecure server advertised AUTH=PLAIN"]);
+        $fake->add('getLastError', null, [ 'SECURITY PROBLEM: insecure server advertised AUTH=PLAIN' ]);
         $fake->add('getAlerts', null, [false]);
         $fake->add('getConnection', null, [function () {
             return tempFileWithMode('wb+');
@@ -230,7 +230,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
 
         // other errors also cause same results..
 
-        $fake->add('getLastError', null, ["Mailbox is empty"]);
+        $fake->add('getLastError', null, [ 'Mailbox is empty' ]);
         $ret = $inboundEmail->findOptimumSettings();
         self::assertEquals($exp, $ret);
     }
@@ -243,7 +243,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
         $fake->add('setTimeout', [2, 60], [true]);
         $fake->add('setTimeout', [3, 60], [true]);
         $fake->add('getErrors', null, [false]);
-        $fake->add('open', ["{:143/service=imap/notls/novalidate-cert/secure}", null, null, 0, 0, []], [function () {
+        $fake->add('open', [ '{:143/service=imap/notls/novalidate-cert/secure}', null, null, 0, 0, []], [ function () {
             return tempFileWithMode('wb+');
         }]);
         $fake->add('getLastError', null, ['Too many login failures']);
@@ -289,7 +289,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
         $fake->add('setTimeout', [2, 60], [true]);
         $fake->add('setTimeout', [3, 60], [true]);
         $fake->add('getErrors', null, [false]);
-        $fake->add('open', ["{:143/service=imap/notls/novalidate-cert/secure}", null, null, 0, 0, []], [function () {
+        $fake->add('open', [ '{:143/service=imap/notls/novalidate-cert/secure}', null, null, 0, 0, []], [ function () {
             return tempFileWithMode('wb+');
         }]);
         $fake->add('getLastError', null, [false]);
@@ -331,7 +331,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
         $fake->add('setTimeout', [2, 60], [true]);
         $fake->add('setTimeout', [3, 60], [true]);
         $fake->add('getErrors', null, [false]);
-        $fake->add('open', ["{:143/service=imap/ssl/tls/validate-cert/secure}", null, null, 0, 0, []], [function () {
+        $fake->add('open', [ '{:143/service=imap/ssl/tls/validate-cert/secure}', null, null, 0, 0, []], [ function () {
             return tempFileWithMode('wb+');
         }]);
         $fake->add('getLastError', null, [false]);
@@ -527,7 +527,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
         $fake->add('setTimeout', [2, 60], [true]);
         $fake->add('setTimeout', [3, 60], [true]);
         $fake->add('getErrors', null, [false]);
-        $fake->add('open', ["{:143/service=imap/notls/novalidate-cert/secure}", null, null, 0, 0, []], [function () {
+        $fake->add('open', [ '{:143/service=imap/notls/novalidate-cert/secure}', null, null, 0, 0, []], [ function () {
             return tempFileWithMode('wb+');
         }]);
         $fake->add('getLastError', null, [false]);
@@ -556,7 +556,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $success = $inboundEmail->renameFolder('mailbox1', 'new_mailbox');
             self::assertFalse((bool)$success);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1090,7 +1090,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->deletePop3Cache();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1116,7 +1116,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->pop3_cleanUp();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1179,7 +1179,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
 
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1197,7 +1197,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
 
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1213,7 +1213,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $result = $inboundEmail->getMessagesInEmailCache(0, 1);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
 
         //test for pop3
@@ -1223,7 +1223,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $result = $inboundEmail->getMessagesInEmailCache(1, 0);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1289,7 +1289,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->checkEmail('INBOX');
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
 
         //test for pop3
@@ -1300,7 +1300,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->checkEmail('INBOX');
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1316,7 +1316,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->syncEmail();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1331,7 +1331,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->deleteCachedMessages('1,2', 'test');
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1390,7 +1390,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
 
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1688,7 +1688,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $result = $inboundEmail->handleAutoresponse($email, $contactAddr);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1728,7 +1728,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->handleMailboxType($email, $header);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1770,7 +1770,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->handleCreateCase($email, 1);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1881,7 +1881,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $result = $inboundEmail->buildBreadCrumbs(array(), 'ALTERNATIVE', '1');
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1899,7 +1899,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->buildBreadCrumbsHTML(array());
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -1958,7 +1958,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->saveAttachments('1', array(), '1', '0', true);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2009,7 +2009,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->saveAttachmentBinaries(BeanFactory::newBean('Notes'), '1', '1.1', $part, 1);
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2071,7 +2071,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $result = $inboundEmail->getDuplicateEmailId('1', '1');
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2087,7 +2087,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $result = $inboundEmail->importOneEmail('1', '1');
             self::assertEquals(false, $result);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2242,7 +2242,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->disconnectMailserver();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2268,7 +2268,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->checkImap();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2386,7 +2386,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->cleanOutCache();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2399,7 +2399,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->deleteMessageOnMailServerForPop3('1');
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2583,7 +2583,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->insertMailBoxFolders(array('INBOX', 'OUTBOX'));
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2660,7 +2660,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
             $inboundEmail->getNewEmailsForSyncedMailbox();
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 
@@ -2675,7 +2675,7 @@ class InboundEmailTest extends SuitePHPUnitFrameworkTestCase
 
             self::assertTrue(true);
         } catch (Exception $e) {
-            self::fail("\nException: " . get_class($e) . ": " . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
+            self::fail("\nException: " . get_class($e) . ': ' . $e->getMessage() . "\nin " . $e->getFile() . ':' . $e->getLine() . "\nTrace:\n" . $e->getTraceAsString() . "\n");
         }
     }
 

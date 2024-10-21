@@ -39,6 +39,7 @@
  */
 namespace SuiteCRM\API\JsonApi\v1\Resource;
 
+use Psr\Container\ContainerInterface;
 use SuiteCRM\API\JsonApi\v1\Enumerator\RelationshipType;
 use SuiteCRM\API\v8\Exception\ApiException;
 use SuiteCRM\API\v8\Exception\ForbiddenException;
@@ -50,18 +51,18 @@ use SuiteCRM\API\v8\Exception\ForbiddenException;
 class Relationship extends ResourceIdentifier
 {
     /** @var string $link */
-    protected $name;
+    protected string $name;
 
-    /** @var RelationshipType $relationshipType */
-    protected $relationshipType = RelationshipType::TO_ONE;
+    /** @var string $relationshipType */
+    protected string $relationshipType = RelationshipType::TO_ONE;
 
-    /** @var ResourceIdentifier[] $link */
-    protected $link;
+    /** @var ResourceIdentifier $link */
+    protected ResourceIdentifier $link;
 
     /**
      * @param string $name
      */
-    public function setRelationshipName($name)
+    public function setRelationshipName(string $name) : void
     {
         $this->name = $name;
     }
@@ -69,20 +70,23 @@ class Relationship extends ResourceIdentifier
     /**
      * @return string
      */
-    public function getRelationshipName()
+    public function getRelationshipName() : string
     {
         return $this->name;
     }
 
     /**
-     * @return RelationshipType
+     * @return string
      */
-    public function getRelationshipType()
+    public function getRelationshipType() : string
     {
         return $this->relationshipType;
     }
 
-    public function setRelationshipType($type = RelationshipType::TO_ONE)
+    /**
+     * @throws ApiException
+     */
+    public function setRelationshipType(string $type = RelationshipType::TO_ONE) : void
     {
         if ($type !== RelationshipType::TO_ONE && $type !== RelationshipType::TO_MANY) {
             throw new ApiException('[Relationship] [Unsupported Relationship Type] '. $type);
@@ -96,7 +100,7 @@ class Relationship extends ResourceIdentifier
      * @throws ForbiddenException
      * @throws \SuiteCRM\API\v8\Exception\ApiException
      */
-    public function withResourceIdentifier(ResourceIdentifier $related)
+    public function withResourceIdentifier(ResourceIdentifier $related) : Relationship
     {
         $this->withResourceObject($related);
         return clone $this;
@@ -105,18 +109,16 @@ class Relationship extends ResourceIdentifier
     /**
      * @return array
      */
-    public function toJsonApiResponse()
+    public function toJsonApiResponse() : array
     {
         $payload = array();
         if ($this->getRelationshipType() === RelationshipType::TO_ONE) {
             $payload = $this->link->toJsonApiResponse();
-        } else {
-            if ($this->getRelationshipType() === RelationshipType::TO_MANY) {
-                foreach ($this->link as $link) {
-                    $response =  $link->toJsonApiResponse();
-                    if (empty($response) === false) {
-                        $payload[] = $response;
-                    }
+        } else if ($this->getRelationshipType() === RelationshipType::TO_MANY) {
+            foreach ($this->link as $link) {
+                $response =  $link->toJsonApiResponse();
+                if (empty($response) === false) {
+                    $payload[] = $response;
                 }
             }
         }
@@ -125,10 +127,16 @@ class Relationship extends ResourceIdentifier
 
     /**
      * Sets the link property up
+     *
      * @parm Resource|ResourceIdentiifer
-     * @throws \SuiteCRM\API\v8\Exception\ApiException
+     *
+     * @param ResourceIdentifier $related
+     *
+     * @return ResourceIdentifier|null
+     * @throws ApiException
+     * @throws ForbiddenException
      */
-    private function withResourceObject($related)
+    private function withResourceObject(ResourceIdentifier $related) : ResourceIdentifier|null
     {
         if ($this->getType() === null) {
             $this->type = $related->getType();

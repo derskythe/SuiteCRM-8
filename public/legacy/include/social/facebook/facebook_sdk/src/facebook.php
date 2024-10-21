@@ -15,7 +15,7 @@
  * under the License.
  */
 
-require_once "base_facebook.php";
+require_once 'base_facebook.php';
 
 /**
  * Extends the BaseFacebook class with the intent of using
@@ -136,7 +136,7 @@ class Facebook extends BaseFacebook
      */
     protected function setPersistentData($key, $value)
     {
-        if (!in_array($key, self::$kSupportedKeys)) {
+        if (!in_array($key, self::$kSupportedKeys, true)) {
             self::errorLog('Unsupported key passed to setPersistentData.');
             return;
         }
@@ -152,7 +152,7 @@ class Facebook extends BaseFacebook
      */
     protected function getPersistentData($key, $default = false)
     {
-        if (!in_array($key, self::$kSupportedKeys)) {
+        if (!in_array($key, self::$kSupportedKeys, true)) {
             self::errorLog('Unsupported key passed to getPersistentData.');
             return $default;
         }
@@ -169,7 +169,7 @@ class Facebook extends BaseFacebook
      */
     protected function clearPersistentData($key)
     {
-        if (!in_array($key, self::$kSupportedKeys)) {
+        if (!in_array($key, self::$kSupportedKeys, true)) {
             self::errorLog('Unsupported key passed to clearPersistentData.');
             return;
         }

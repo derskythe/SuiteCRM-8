@@ -48,7 +48,7 @@ require_once('include/Sugarpdf/FontManager.php');
 #[\AllowDynamicProperties]
 class ConfiguratorViewFontManager extends SugarView
 {
-   
+
     /**
      * Constructor
      */
@@ -56,23 +56,27 @@ class ConfiguratorViewFontManager extends SugarView
     {
         parent::__construct();
     }
+
     /**
      * display the form
+     *
+     * @throws SmartyException
+     * @throws Exception
      */
     public function display()
     {
         global $mod_strings, $app_list_strings, $app_strings, $current_user;
-        $error="";
+        $error= '';
         if (!is_admin($current_user)) {
             sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']);
         }
         $fontManager = new FontManager();
         if (!$fontManager->listFontFiles()) {
-            $error = implode("<br>", $fontManager->errors);
+            $error = implode('<br>', $fontManager->errors);
         }
 
         $this->ss->assign(
-            "MODULE_TITLE",
+            'MODULE_TITLE',
             getClassicModuleTitle(
                 $mod_strings['LBL_MODULE_ID'],
                 array($mod_strings['LBL_FONTMANAGER_TITLE']),
@@ -80,27 +84,27 @@ class ConfiguratorViewFontManager extends SugarView
                 )
             );
         if (!empty($_REQUEST['error'])) {
-            $error .= "<br>".$_REQUEST['error'];
+            $error .= '<br>' . $_REQUEST['error'];
         }
-        $this->ss->assign("error", $error);
-        $this->ss->assign("MOD", $mod_strings);
-        $this->ss->assign("APP", $app_strings);
-        $this->ss->assign("JAVASCRIPT", $this->_getJS());
+        $this->ss->assign('error', $error);
+        $this->ss->assign('MOD', $mod_strings);
+        $this->ss->assign('APP', $app_strings);
+        $this->ss->assign('JAVASCRIPT', $this->_getJS());
         if (isset($_REQUEST['return_action'])) {
-            $this->ss->assign("RETURN_ACTION", $_REQUEST['return_action']);
+            $this->ss->assign('RETURN_ACTION', $_REQUEST['return_action']);
         } else {
-            $this->ss->assign("RETURN_ACTION", 'SugarpdfSettings');
+            $this->ss->assign('RETURN_ACTION', 'SugarpdfSettings');
         }
-        $this->ss->assign("K_PATH_FONTS", K_PATH_FONTS);
+        $this->ss->assign('K_PATH_FONTS', K_PATH_FONTS);
         // YUI List
-        $this->ss->assign("COLUMNDEFS", $this->getYuiColumnDefs($fontManager->fontList));
-        $this->ss->assign("DATASOURCE", $this->getYuiDataSource($fontManager->fontList));
-        $this->ss->assign("RESPONSESCHEMA", $this->getYuiResponseSchema());
-        
+        $this->ss->assign('COLUMNDEFS', $this->getYuiColumnDefs($fontManager->fontList));
+        $this->ss->assign('DATASOURCE', $this->getYuiDataSource($fontManager->fontList));
+        $this->ss->assign('RESPONSESCHEMA', $this->getYuiResponseSchema());
+
         //display
         $this->ss->display('modules/Configurator/tpls/fontmanager.tpl');
     }
-    
+
     /**
      * Returns JS used in this view
      */
@@ -111,7 +115,7 @@ class ConfiguratorViewFontManager extends SugarView
 
 EOJAVASCRIPT;
     }
-    
+
     /**
      * Return the columnDefs for the YUI datatable
      * @return String
@@ -124,9 +128,9 @@ EOJAVASCRIPT;
         if ($this->isAllOOBFont($fontList)) {
             $removeColumn = '';
         }
-            
+
         $return = <<<BSOFR
-[ 
+[
     {key:"name", minWidth:140, label:"{$mod_strings['LBL_FONT_LIST_NAME']}", sortable:true},
     {key:"filename", minWidth:120, label:"{$mod_strings['LBL_FONT_LIST_FILENAME']}", sortable:true},
     {key:"type", minWidth:100, label:"{$mod_strings['LBL_FONT_LIST_TYPE']}", sortable:true},
@@ -139,7 +143,7 @@ EOJAVASCRIPT;
 BSOFR;
         return $return;
     }
-    
+
     /**
     * Return the dataSource for the YUI Data Table
     * @param $fontList
@@ -147,7 +151,7 @@ BSOFR;
     */
     private function getYuiDataSource($fontList)
     {
-        $return = "[";
+        $return = '[';
         $first=true;
         foreach ($fontList as $k=>$v) {
             if ($first) {
@@ -177,10 +181,10 @@ BSOFR;
                 $return .= ', embedded:"<input type=\'checkbox\' disabled/>"}';
             }
         }
-        $return .= "]";
+        $return .= ']';
         return $return;
     }
-    
+
     /**
     * Return the Response Schema for the YUI data table
     * @return String
@@ -188,7 +192,7 @@ BSOFR;
     private function getYuiResponseSchema()
     {
         return <<<BSOFR
-        { 
+        {
             fields: [{key:"name", parser:"string"},
                      {key:"filename", parser:"string"},
                      {key:"fontpath", parser:"string"},
@@ -196,11 +200,11 @@ BSOFR;
                      {key:"style", parser:"string"},
                      {key:"filesize", parser:"number"},
                      {key:"enc", parser:"string"},
-                     {key:"embedded", parser:"string"}] 
+                     {key:"embedded", parser:"string"}]
         }
 BSOFR;
     }
-    
+
     /**
     * Return the label of the passed style
     * @param $style
@@ -209,16 +213,16 @@ BSOFR;
     private function formatStyle($style)
     {
         global $mod_strings;
-        $return = "";
+        $return = '';
         if ((is_countable($style) ? count($style) : 0) == 2) {
-            $return .= "<b><i>".$mod_strings['LBL_FONT_BOLDITALIC']."</b></i>";
+            $return .= '<b><i>' . $mod_strings['LBL_FONT_BOLDITALIC']. '</b></i>';
         } else {
             switch ($style[0]) {
-                case "bold":
-                    $return .= "<b>".$mod_strings['LBL_FONT_BOLD']."</b>";
+                case 'bold':
+                    $return .= '<b>' . $mod_strings['LBL_FONT_BOLD']. '</b>';
                     break;
-                case "italic":
-                    $return .= "<i>".$mod_strings['LBL_FONT_ITALIC']."</i>";
+                case 'italic':
+                    $return .= '<i>' . $mod_strings['LBL_FONT_ITALIC']. '</i>';
                     break;
                 default:
                     $return .= $mod_strings['LBL_FONT_REGULAR'];
@@ -226,27 +230,27 @@ BSOFR;
         }
         return $return;
     }
-    
+
     private function formatType($type)
     {
         global $mod_strings;
         switch ($type) {
-            case "cidfont0":
+            case 'cidfont0':
                 $return = $mod_strings['LBL_FONT_TYPE_CID0'];break;
-            case "core":
+            case 'core':
                 $return = $mod_strings['LBL_FONT_TYPE_CORE'];break;
-            case "TrueType":
+            case 'TrueType':
                 $return = $mod_strings['LBL_FONT_TYPE_TRUETYPE'];break;
-            case "Type1":
+            case 'Type1':
                 $return = $mod_strings['LBL_FONT_TYPE_TYPE1'];break;
-            case "TrueTypeUnicode":
+            case 'TrueTypeUnicode':
                 $return = $mod_strings['LBL_FONT_TYPE_TRUETYPEU'];break;
             default:
-                $return = "";
+                $return = '';
         }
         return $return;
     }
-    
+
     /**
      * Determine if all the fonts are core fonts
      * @param $fontList
@@ -255,7 +259,7 @@ BSOFR;
     private function isAllOOBFont($fontList)
     {
         foreach ($fontList as $v) {
-            if ($v['type'] != "core" && $v['fontpath'] != K_PATH_FONTS) {
+            if ($v['type'] !== 'core' && $v['fontpath'] != K_PATH_FONTS) {
                 return false;
             }
         }

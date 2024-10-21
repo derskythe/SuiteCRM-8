@@ -12,6 +12,9 @@ class YearField extends AbstractField
         return $this->isSatisfied($date->format('Y'), $value);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function increment(\DateTime $date, $invert = false)
     {
         if ($invert) {

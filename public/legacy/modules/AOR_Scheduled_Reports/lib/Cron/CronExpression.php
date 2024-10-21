@@ -228,6 +228,8 @@ class CronExpression
      * @param string|\DateTime $currentTime Relative calculation date
      *
      * @return bool Returns TRUE if the cron is due to run or FALSE if not
+     * @throws \DateMalformedStringException
+     * @throws \DateInvalidTimeZoneException
      */
     public function isDue($currentTime = 'now')
     {
@@ -258,13 +260,15 @@ class CronExpression
      * Get the next or previous run date of the expression relative to a date
      *
      * @param string|\DateTime $currentTime      Relative calculation date
-     * @param int              $nth              Number of matches to skip before returning
-     * @param bool             $invert           Set to TRUE to go backwards in time
-     * @param bool             $allowCurrentDate Set to TRUE to return the
+     * @param int $nth                           Number of matches to skip before returning
+     * @param bool $invert                       Set to TRUE to go backwards in time
+     * @param bool $allowCurrentDate             Set to TRUE to return the
      *                                           current date if it matches the cron expression
      *
      * @return \DateTime
      * @throws \RuntimeException on too many iterations
+     * @throws \DateInvalidTimeZoneException
+     * @throws \DateMalformedStringException
      */
     protected function getRunDate($currentTime = null, $nth = 0, $invert = false, $allowCurrentDate = false)
     {
@@ -298,7 +302,7 @@ class CronExpression
                 // Get the field object used to validate this part
                 $field = $fields[$position];
                 // Check if this is singular or a list
-                if (strpos($part, ',') === false) {
+                if (!str_contains($part, ',')) {
                     $satisfied = $field->isSatisfiedBy($nextRun, $part);
                 } else {
                     foreach (array_map('trim', explode(',', $part)) as $listPart) {

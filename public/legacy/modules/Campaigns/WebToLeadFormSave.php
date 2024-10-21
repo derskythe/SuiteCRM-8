@@ -55,11 +55,11 @@ global $app_strings;
 //get array of text areas strings to process
 $bodyHTML = html_entity_decode((string) $_REQUEST['body_html'], ENT_QUOTES);
 
-while (strpos($bodyHTML, "ta_replace") !== false) {
+while (str_contains($bodyHTML, 'ta_replace')) {
 
     //define the marker edges of the sub string to process (opening and closing tag brackets)
-    $marker = strpos($bodyHTML, "ta_replace");
-    $start_border = strpos($bodyHTML, "input", $marker) - 1;// to account for opening '<' char;
+    $marker = strpos($bodyHTML, 'ta_replace');
+    $start_border = strpos($bodyHTML, 'input', $marker) - 1;// to account for opening '<' char;
     $end_border = strpos($bodyHTML, '>', $start_border); //get the closing tag after marker ">";
 
     //extract the input tag string
@@ -88,9 +88,9 @@ $SugarTiny =  new SugarTinyMCE();
 $html = $SugarTiny->cleanEncodedMCEHtml($bodyHTML);
 
 //Check to ensure we have <html> tags in the form. Without them, IE8 will attempt to display the page as XML.
-if (stripos((string) $html, "<html") === false) {
+if (stripos((string) $html, '<html') === false) {
     $langHeader = get_language_header();
-    $html = "<html {$langHeader}><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . "</body></html>";
+    $html = "<html {$langHeader}><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"></head><body>" . $html . '</body></html>';
 }
 
 if (!mb_detect_encoding($html, 'UTF-8')) {
@@ -101,12 +101,12 @@ file_put_contents($form_file, $html);
 $html = htmlspecialchars($html, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 
 $xtpl=new XTemplate('modules/Campaigns/WebToLeadDownloadForm.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 $webformlink = "<b>$mod_strings[LBL_DOWNLOAD_TEXT_WEB_TO_LEAD_FORM]</b><br/>";
 $webformlink .= "<a href=\"index.php?entryPoint=download&id={$guid}&isTempFile=1&tempName=WebToLeadForm.html&type=temp\">$mod_strings[LBL_DOWNLOAD_WEB_TO_LEAD_FORM]</a>";
-$xtpl->assign("LINK_TO_WEB_FORM", $webformlink);
-$xtpl->assign("RAW_SOURCE", $html);
-$xtpl->parse("main.copy_source");
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->assign('LINK_TO_WEB_FORM', $webformlink);
+$xtpl->assign('RAW_SOURCE', $html);
+$xtpl->parse('main.copy_source');
+$xtpl->parse('main');
+$xtpl->out('main');

@@ -54,7 +54,7 @@ class GetModulesParams extends BaseParam
      */
     public function getDeleted()
     {
-        return strpos($this->getFilter(), ".deleted = '1'") !== false;
+        return str_contains($this->getFilter(), ".deleted = '1'");
     }
 
     /**

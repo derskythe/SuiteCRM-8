@@ -65,9 +65,8 @@ class ViewSugarpdf extends SugarView
     {
         parent::__construct();
 
-
-        if (isset($_REQUEST["sugarpdf"])) {
-            $this->sugarpdf = $_REQUEST["sugarpdf"];
+        if (isset($_REQUEST['sugarpdf'])) {
+            $this->sugarpdf = $_REQUEST['sugarpdf'];
         } else {
             if (!isset($_REQUEST['module'])) {
                 LoggerManager::getLogger()->warn('Undefined index: module');
@@ -84,7 +83,7 @@ class ViewSugarpdf extends SugarView
 
 
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->sugarpdfBean = SugarpdfFactory::loadSugarpdf($this->sugarpdf, $this->module, $this->bean, $this->view_object_map);
 

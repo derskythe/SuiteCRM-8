@@ -41,14 +41,14 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
- 
+
 
 
 $layout_defs['ACL'] = array(
     // sets up which panels to show, in which order, and with what linked_fields
     'subpanel_setup' => array(
         'users' => array(
-            'top_buttons' => array(	array('widget_class' => 'SubPanelTopSubModuleSelectButton', 'popup_module' => 'Users'),),
+            'top_buttons' => array(    array('widget_class' => 'SubPanelTopSubModuleSelectButton', 'popup_module' => 'Users'),),
             'order' => 20,
             'module' => 'Users',
             'subpanel_name' => 'ForSubModules',
@@ -72,5 +72,5 @@ $layout_defs['UserRoles'] = array(
             'title_key' => 'LBL_ROLES_SUBPANEL_TITLE',
         ),
     ),
-    
+
 );

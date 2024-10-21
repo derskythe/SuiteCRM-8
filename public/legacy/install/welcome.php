@@ -61,8 +61,8 @@ if (!isset($_SESSION['license_submitted']) || !$_SESSION['license_submitted']) {
 
 $checked = (isset($_SESSION['setup_license_accept']) && !empty($_SESSION['setup_license_accept'])) ? 'checked="on"' : '';
 
-require_once("install/install_utils.php");
-$license_file = getLicenseContents("LICENSE.txt");
+require_once('install/install_utils.php');
+$license_file = getLicenseContents('LICENSE.txt');
 $langHeader = get_language_header();
 
 
@@ -74,7 +74,7 @@ foreach ($sugar_grp1_yui as $jsFile => $grp) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	START OUTPUT
+////    START OUTPUT
 
 $langHeader = get_language_header();
 $out = <<<EOQ
@@ -134,7 +134,7 @@ $out = <<<EOQ
             <!--
             <div id='licenseDivToggler' style="text-align: center;"><a href="javascript:void(0);" onclick="javascript:$('#licenseDiv').toggle();">Show Software License</a></div>
             -->
-		<div id="content">
+        <div id="content">
             <div id='licenseDiv' style="/* display: none; */">
                 <textarea class="licensetext" cols="80" rows="20" readonly>{$license_file}</textarea>
             </div>
@@ -144,7 +144,7 @@ $out = <<<EOQ
                 <input type="button" class="button" name="print_license" id="button_print_license" value="{$mod_strings['LBL_LICENSE_PRINTABLE']}"
                 onClick='window.open("install.php?page=licensePrint&language={$current_language}");' />
             </div>
-		</div>
+        </div>
             <hr>
             <div id="installcontrols">
 
@@ -156,17 +156,17 @@ $out = <<<EOQ
 
 
 
-	    </form>
-	    <div style="clear:both;"></div>
-	    <div id='sysCheckMsg'></div>
-	    <div style="clear:both;"></div>
-	</div>
-	<div id="checkingDiv" style="display:none">
-	    <!-- <table cellspacing='0' cellpadding='0' border='0' align='center'><tr><td> -->
+        </form>
+        <div style="clear:both;"></div>
+        <div id='sysCheckMsg'></div>
+        <div style="clear:both;"></div>
+    </div>
+    <div id="checkingDiv" style="display:none">
+        <!-- <table cellspacing='0' cellpadding='0' border='0' align='center'><tr><td> -->
             <p><img src='install/processing.gif' alt="{$mod_strings['LBL_LICENSE_CHECKING']}"> <br>{$mod_strings['LBL_LICENSE_CHECKING']}</p>
         <!-- </td></tr></table> -->
     </div>
-	<footer id="install_footer">
+    <footer id="install_footer">
         <p id="footer_links"><a href="https://suitecrm.com" target="_blank">Visit suitecrm.com</a> | <a href="https://suitecrm.com/suitecrm/forum" target="_blank">Support Forums</a> | <a href="https://docs.suitecrm.com/admin/installation-guide/" target="_blank">Installation Guide</a> | <a href="LICENSE.txt" target="_blank">License</a>
     </footer>
     </div>
@@ -256,7 +256,7 @@ function callSysCheck(){
                         if ( YAHOO.util.Selector.query('button', 'p_msg', true) != null )
                             YAHOO.util.Selector.query('button', 'p_msg', true).style.display = 'none';
                         //scsbody =  "<table cellspacing='0' cellpadding='0' border='0' align='center'><tr><td>";
-						scsbody = '<h1>{$mod_strings['LBL_LICENSE_CHKENV_HEADER']}</h1>';
+                        scsbody = '<h1>{$mod_strings['LBL_LICENSE_CHKENV_HEADER']}</h1>';
                         scsbody += "<p><img src='install/processing.gif' alt=\"{$mod_strings['LBL_CREATE_CACHE']}\"></p>";
                         scsbody += "<p>{$mod_strings['LBL_LICENSE_CHECK_PASSED']}<br>{$mod_strings['LBL_CREATE_CACHE']}</p>";
                         //scsbody += "<div id='cntDown'>{$mod_strings['LBL_THREE']}</div>";
@@ -264,7 +264,7 @@ function callSysCheck(){
                         //scsbody += "<script>countdown(3);<\/script>";
                         //msgPanel.setBody(scsbody);
                         //msgPanel.render();
-						$('#content').html(scsbody);
+                        $('#content').html(scsbody);
                         //countdown(3);
                         //window.setTimeout('passed("install.php?goto=next")', 2500);
                         passed("install.php?goto=next");
@@ -291,10 +291,10 @@ function callSysCheck(){
 
                 //getPanel();
                 //msgPanel.show;
-				
-				$('#content').addClass('preloading');
-				$('#content').html('<h1>{$mod_strings['LBL_LICENSE_CHKENV_HEADER']}</h1>' + document.getElementById("checkingDiv").innerHTML);
-						
+
+                $('#content').addClass('preloading');
+                $('#content').html('<h1>{$mod_strings['LBL_LICENSE_CHKENV_HEADER']}</h1>' + document.getElementById("checkingDiv").innerHTML);
+
                 var ajxProgress = YAHOO.util.Connect.asyncRequest('POST','install.php', {success: success, failure: success}, postData);
 
 
@@ -305,13 +305,13 @@ function callSysCheck(){
 
     function countdown(num){
         //scsbody =  "<table cellspacing='0' cellpadding='0' border='0' align='center'><tr><td>";
-		scsbody = '<h1>{$mod_strings['LBL_LICENSE_CHKENV_HEADER']}</h1>';
+        scsbody = '<h1>{$mod_strings['LBL_LICENSE_CHKENV_HEADER']}</h1>';
         scsbody += "<p>{$mod_strings['LBL_LICENSE_CHECK_PASSED']}</p>";
         scsbody += "<div id='cntDown'>{$mod_strings['LBL_LICENSE_REDIRECT']}"+num+"</div>";
         //scsbody += "</td></tr></table>";
         //msgPanel.setBody(scsbody);
         //msgPanel.render();
-		$('#content').html(scsbody);
+        $('#content').html(scsbody);
         if(num >0){
              num = num-1;
              setTimeout("countdown("+num+")",1000);
@@ -337,17 +337,17 @@ if (check_php_version() === -1) {
     }
 
     $php_verison_warning =<<<eoq
-	    <table width="100%" cellpadding="0" cellpadding="0" border="0" class="Welcome">
-			<tr>
-		      <td colspan="2"  align="center" id="ready_image"><IMG src="include/images/install_themes.jpg" width="698" height="190" alt="Sugar Themes" border="0"></td>
-		    </tr>
-			<th colspan="2" align="center">
-				<h1><span class='error'><b>{$mod_strings['LBL_MINIMUM_PHP_VERSION']}</b></span></h1>
-			</th>
-			<tr>
-		      <td colspan="2" align="center" id="ready_image"><IMG src="include/images/install_themes.jpg" width="698" height="190" alt="Sugar Themes" border="0"></td>
-		    </tr>
-	</table>
+        <table width="100%" cellpadding="0" cellpadding="0" border="0" class="Welcome">
+            <tr>
+              <td colspan="2"  align="center" id="ready_image"><IMG src="include/images/install_themes.jpg" width="698" height="190" alt="Sugar Themes" border="0"></td>
+            </tr>
+            <th colspan="2" align="center">
+                <h1><span class='error'><b>{$mod_strings['LBL_MINIMUM_PHP_VERSION']}</b></span></h1>
+            </th>
+            <tr>
+              <td colspan="2" align="center" id="ready_image"><IMG src="include/images/install_themes.jpg" width="698" height="190" alt="Sugar Themes" border="0"></td>
+            </tr>
+    </table>
 eoq;
     $out = $php_verison_warning;
 }

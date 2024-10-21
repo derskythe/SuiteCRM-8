@@ -71,7 +71,7 @@ class UsersCest
 
         $I->see('User Profile', '.panel-heading');
 
-        $I->click("Layout Options");
+        $I->click('Layout Options');
         $I->waitForElementVisible('input[name="user_count_collapsed_subpanels"]');
         $I->seeElement('input', ['name' => 'user_count_collapsed_subpanels']);
         $I->checkOption(['name' => 'user_count_collapsed_subpanels']);
@@ -130,7 +130,7 @@ class UsersCest
         // Reset the collapsed subpanels
         $Users->gotoProfile();
         $I->see('User Profile', '.panel-heading');
-        $I->click("Layout Options");
+        $I->click('Layout Options');
         $I->seeElement('input', ['name' => 'user_count_collapsed_subpanels']);
         $I->uncheckOption(['name' => 'user_count_collapsed_subpanels']);
         $EditView->clickSaveButton();

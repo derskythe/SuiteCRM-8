@@ -74,6 +74,6 @@ class TemplateFloat extends TemplateRange
         if (empty($this->len)) {
             return parent::get_db_type();
         }
-        return " ".sprintf(DBManagerFactory::getInstance()->getColumnType("decimal_tpl"), $this->len, $precision);
+        return ' ' .sprintf(DBManagerFactory::getInstance()->getColumnType('decimal_tpl'), $this->len, $precision);
     }
 }

@@ -193,9 +193,12 @@ class ApiCommands extends Tasks
 
     /**
      * Creates a SuiteCRM user for the V8 API
+     *
      * @param string $name
      * @param string $password
+     *
      * @return void
+     * @throws \Exception
      */
     public function apiCreateUser($name, $password)
     {

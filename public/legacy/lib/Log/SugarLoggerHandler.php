@@ -59,12 +59,12 @@ class SugarLoggerHandler extends AbstractProcessingHandler
      * @param  array $record
      * @return void
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         $logger = LoggerManager::getLogger();
 
         $message = $record['message'];
-        $level = $record['level'];
+        $level   = $record['level'];
         $channel = $record['channel'];
 
         $level = $this->psrToSugarLevel($level);
@@ -78,26 +78,17 @@ class SugarLoggerHandler extends AbstractProcessingHandler
      * @param int $level
      * @return string
      */
-    protected function psrToSugarLevel($level)
+    protected function psrToSugarLevel(mixed $level): string
     {
         $level = (int) $level;
 
-        switch ($level) {
-            case 100:
-                return 'debug';
-            case 200:
-                return 'info';
-            case 300:
-                return 'warn';
-            case 400:
-                return 'error';
-            case 500:
-                return 'fatal';
-            case 600:
-            case 550:
-                return 'security';
-            default:
-                return 'debug';
-        }
+        return match ($level) {
+            200 => 'info',
+            300 => 'warn',
+            400 => 'error',
+            500 => 'fatal',
+            600, 550 => 'security',
+            default => 'debug',
+        };
     }
 }

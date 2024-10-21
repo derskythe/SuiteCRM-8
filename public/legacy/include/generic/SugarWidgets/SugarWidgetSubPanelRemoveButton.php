@@ -55,7 +55,7 @@ class SugarWidgetSubPanelRemoveButton extends SugarWidgetField
         global $app_strings;
         global $subpanel_item_count;
 
-        $unique_id = $layout_def['subpanel_id'] . "_remove_" . $subpanel_item_count; //bug 51512
+        $unique_id = $layout_def['subpanel_id'] . '_remove_' . $subpanel_item_count; //bug 51512
 
         $parent_record_id = $_REQUEST['record'];
         $parent_module = $_REQUEST['module'];
@@ -89,7 +89,7 @@ class SugarWidgetSubPanelRemoveButton extends SugarWidgetField
         } elseif ($current_module === 'ACLRoles' && (!ACLController::checkAccess($current_module, 'edit', true))) {
             $hideremove = true;
         }
-        
+
         $return_module = $_REQUEST['module'];
         $return_action = 'SubPanelViewer';
         $subpanel = $layout_def['subpanel_id'];
@@ -121,7 +121,7 @@ class SugarWidgetSubPanelRemoveButton extends SugarWidgetField
                 . ", '$record', $refresh_page);\""
                 . ' class="listViewTdToolsS1"'
                 . "id=$unique_id"
-                . " onclick=\"return sp_rem_conf();\""
+                . ' onclick="return sp_rem_conf();"'
                 . ">$icon_remove_text</a>";
 
             return $retStr;

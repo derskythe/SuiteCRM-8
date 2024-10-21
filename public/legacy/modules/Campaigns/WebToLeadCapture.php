@@ -74,7 +74,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
         throw new RuntimeException('Invalid ID requested in Lead Capture');
     }
     $camp_query  = "select name,id from campaigns where id='$campaign_id'";
-    $camp_query .= " and deleted=0";
+    $camp_query .= ' and deleted=0';
     $camp_result=$campaign->db->query($camp_query);
     $camp_data = $campaign->db->fetchByAssoc($camp_result);
     // Bug 41292 - have to select marketing_id for new lead
@@ -111,7 +111,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
         if (isset($lead->required_fields['email1'])) {
             $lead->required_fields['webtolead_email1'] = $lead->required_fields['email1'];
         }
-            
+
         //bug: 42398 - have to unset the id from the required_fields since it is not populated in the $_POST
         unset($lead->required_fields['id']);
         unset($lead->required_fields['team_name']);
@@ -123,15 +123,15 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
 
         // checkRequired needs a major overhaul before it works for web to lead forms.
         $lead = $leadForm->handleSave($prefix, false, false, false, $lead);
-            
+
         if (!empty($lead)) {
-                
+
                 //create campaign log
             $camplog = BeanFactory::newBean('CampaignLog');
             $camplog->campaign_id  = $campaign_id;
             $camplog->related_id   = $lead->id;
             $camplog->related_type = $lead->module_dir;
-            $camplog->activity_type = "lead";
+            $camplog->activity_type = 'lead';
             $camplog->target_type = $lead->module_dir;
             $campaign_log->activity_date=$timedate->now();
             $camplog->target_id    = $lead->id;
@@ -149,7 +149,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
             elseif (isset($_POST['webtolead_email1']) && $_POST['webtolead_email1'] != null) {
                 $lead->email1 = $_POST['webtolead_email1'];
             }
-                
+
             if (isset($_POST['email2']) && $_POST['email2'] != null) {
                 $lead->email2 = $_POST['email2'];
             }
@@ -157,7 +157,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
             elseif (isset($_POST['webtolead_email2']) && $_POST['webtolead_email2'] != null) {
                 $lead->email2 = $_POST['webtolead_email2'];
             }
-                
+
             $lead->load_relationship('campaigns');
             $lead->campaigns->add($camplog->id);
             if (!empty($GLOBALS['check_notify'])) {
@@ -183,21 +183,21 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
             $redirect_url = $_POST['redirect_url'];
             $query_string = '';
             $first_char = '&';
-            if (strpos((string) $redirect_url, '?') === false) {
+            if (!str_contains((string) $redirect_url, '?')) {
                 $first_char = '?';
             }
             $first_iteration = true;
             $get_and_post = array_merge($_GET, $_POST);
             foreach ($get_and_post as $param => $value) {
-                if ($param == 'redirect_url' && $param == 'submit') {
+                if ($param === 'redirect_url' && $param === 'submit') {
                     continue;
                 }
-                    
+
                 if ($first_iteration) {
                     $first_iteration = false;
                     $query_string .= $first_char;
                 } else {
-                    $query_string .= "&";
+                    $query_string .= '&';
                 }
                 $query_string .= "{$param}=".urlencode($value);
             }
@@ -205,11 +205,11 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
                 if ($first_iteration) {
                     $query_string .= $first_char;
                 } else {
-                    $query_string .= "&";
+                    $query_string .= '&';
                 }
-                $query_string .= "error=1";
+                $query_string .= 'error=1';
             }
-                
+
             $redirect_url = $redirect_url.$query_string;
 
 
@@ -218,9 +218,9 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
             if (headers_sent() || strlen($redirect_url) > 2083) {
                 echo '<html ' . get_language_header() . '><head><title>SugarCRM</title></head><body>';
                 echo '<form name="redirect" action="' .$_POST['redirect_url']. '" method="GET">';
-    
+
                 foreach ($_POST as $param => $value) {
-                    if ($param != 'redirect_url' ||$param != 'submit') {
+                    if ($param !== 'redirect_url' ||$param !== 'submit') {
                         echo '<input type="hidden" name="'.$param.'" value="'.$value.'">';
                     }
                 }

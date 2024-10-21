@@ -51,35 +51,35 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 class RelationshipHandler extends Relationship
 {
-    public $db;							//Database link by reference
+    public ?DBManager $db;                            //Database link by reference
 
-    public $base_module;					//name of module
-    public $base_bean;						//actual object
-    public $base_vardef_field;				//base's vardef field name of relationship with rel1
+    public $base_module;                    //name of module
+    public $base_bean;                        //actual object
+    public $base_vardef_field;                //base's vardef field name of relationship with rel1
 
-    public $rel1_module;					//name of related module
-    public $rel1_bean;						//actual related object
-    public $rel1_relationship_name;		//Relationship name between base and rel1
-    public $rel1_vardef_field;				//rel1's vardef field name of relationship with rel2
-    public $rel1_vardef_field_base;		//rel1's vardef field name of relationship with base
+    public $rel1_module;                    //name of related module
+    public $rel1_bean;                        //actual related object
+    public $rel1_relationship_name;        //Relationship name between base and rel1
+    public $rel1_vardef_field;                //rel1's vardef field name of relationship with rel2
+    public $rel1_vardef_field_base;        //rel1's vardef field name of relationship with base
 
-    public $rel2_module;					//name of related related module
-    public $rel2_bean;						//actual related related object
-    public $rel2_relationship_name;		//Relationship name between rel1 and rel2
-    public $rel2_vardef_field;				//rel2's vardef field name of relationship with rel1
+    public $rel2_module;                    //name of related related module
+    public $rel2_bean;                        //actual related related object
+    public $rel2_relationship_name;        //Relationship name between rel1 and rel2
+    public $rel2_vardef_field;                //rel2's vardef field name of relationship with rel1
 
 
-    public $base_array;					//Info array
-    public $rel1_array;					//Info array
-    public $rel2_array;					//Info array
+    public $base_array;                    //Info array
+    public $rel1_array;                    //Info array
+    public $rel2_array;                    //Info array
 
 
     /*
 
     info arrays contain:
 
-        'slabel' ->		singular module name in correct language
-        'plabel' ->  	plural module name in correct language
+        'slabel' ->        singular module name in correct language
+        'plabel' ->      plural module name in correct language
 
 
 
@@ -88,7 +88,7 @@ class RelationshipHandler extends Relationship
 
     ///////////////////////////Setup and populate functions//////////////////////////////
 
-    public function __construct(& $db, $base_module="")
+    public function __construct(& $db, $base_module= '')
     {
         $this->db = $db;
         $this->base_module = $base_module;
@@ -96,7 +96,7 @@ class RelationshipHandler extends Relationship
         //end function RelationshipHandler
     }
 
-    public function set_rel_vardef_fields($base_vardef_field, $rel1_vardef_field="")
+    public function set_rel_vardef_fields($base_vardef_field, $rel1_vardef_field= '')
     {
         $this->base_vardef_field = $base_vardef_field;
         $this->rel1_vardef_field = $rel1_vardef_field;
@@ -138,7 +138,7 @@ class RelationshipHandler extends Relationship
             $this->rel1_module = $this->rel1_bean->module_dir;
         }
 
-        if ($build_rel2==true && $this->rel2_bean=="") {
+        if ($build_rel2==true && $this->rel2_bean== '') {
             $this->build_rel2_info();
             $this->rel2_module = $this->rel2_bean->module_dir;
         }
@@ -225,9 +225,9 @@ class RelationshipHandler extends Relationship
         $type = $query;
         //type can be base, rel1
 
-        $target_list = "";
+        $target_list = '';
 
-        if ($type=="base") {
+        if ($type === 'base') {
             $target_list = $this->base_bean->get_linked_beans($this->base_vardef_field, $this->rel1_bean->object_name);
             //Possibility exists that this is a new relationship, so capture via relationship fields
             if (empty($target_list)) {
@@ -236,7 +236,7 @@ class RelationshipHandler extends Relationship
             }
         }
 
-        if ($type=="rel1") {
+        if ($type === 'rel1') {
             $target_list = $this->rel1_bean->get_linked_beans($this->rel1_vardef_field, $this->rel2_bean->object_name);
 
             //Possibility exists that this is a new relationship, so capture via relationship fields
@@ -267,20 +267,20 @@ class RelationshipHandler extends Relationship
 
         //Does a downstream relationship exist
         if ($rel_array!=null) {
-            if ($rel_array['relationship_type']=="many-to-many") {
+            if ($rel_array['relationship_type'] === 'many-to-many') {
                 $joinKeyLHS = $rel_array['join_key_lhs'];
                 $target_bean->$joinKeyLHS = $this->base_bean->id;
-                if ($rel_array['relationship_role_column']!="") {
+                if ($rel_array['relationship_role_column']!= '') {
                     $relRole = $rel_array['relationship_role_column'];
                     $target_bean->$relRole = $rel_array['relationship_role_column_value'];
                 }
                 //end if many-to-many
             }
 
-            if ($rel_array['relationship_type']=="one-to-many") {
+            if ($rel_array['relationship_type'] === 'one-to-many') {
                 $RHSKey = $rel_array['rhs_key'];
                 $target_bean->$RHSKey = $this->base_bean->id;
-                if ($rel_array['relationship_role_column']!="") {
+                if ($rel_array['relationship_role_column']!= '') {
                     $relRole = $rel_array['relationship_role_column'];
                     $target_bean->$relRole = $rel_array['relationship_role_column_value'];
                 }
@@ -298,20 +298,20 @@ class RelationshipHandler extends Relationship
 
         //Does an upstream relationship exist
         if ($rel_array!=null) {
-            if ($rel_array['relationship_type']=="many-to-many") {
+            if ($rel_array['relationship_type'] === 'many-to-many') {
                 $joinKeyRHS = $rel_array['join_key_rhs'];
                 $target_bean->$joinKeyRHS = $this->base_bean->id;
-                if ($rel_array['relationship_role_column']!="") {
+                if ($rel_array['relationship_role_column']!= '') {
                     $relRole = $rel_array['relationship_role_column'];
                     $target_bean->$relRole = $rel_array['relationship_role_column_value'];
                 }
                 //end if many-to-many
             }
 
-            if ($rel_array['relationship_type']=="one-to-many") {
+            if ($rel_array['relationship_type'] === 'one-to-many') {
                 $RHSKey = $rel_array['rhs_key'];
                 $target_bean->$RHSKey = $this->base_bean->id;
-                if ($rel_array['relationship_role_column']!="") {
+                if ($rel_array['relationship_role_column']!= '') {
                     $relRole = $rel_array['relationship_role_column'];
                     $target_bean->$relRole = $rel_array['relationship_role_column_value'];
                 }
@@ -404,7 +404,7 @@ class RelationshipHandler extends Relationship
 
     public function get_farthest_reach()
     {
-        if ($this->rel1_vardef_field!="") {
+        if ($this->rel1_vardef_field!= '') {
             //the farthest reach is rel2
             $this->build_info(true);
             return $this->rel2_bean;

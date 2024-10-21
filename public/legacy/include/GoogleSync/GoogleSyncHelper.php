@@ -72,11 +72,12 @@ class GoogleSyncHelper
             return false;
         }
         if (empty($meeting) && $event->status !== 'cancelled' && $event->getStart()->getDateTime() !== null) { // We only pull if the Google Event is not deleted/cancelled and not an all day event.
-            return "pull";
+            return 'pull';
         } elseif (empty($event) && $meeting->deleted == '0') {
-            return "push";
+            return 'push';
         }
-        return "skip";
+
+        return 'skip';
     }
 
     /**
@@ -123,16 +124,18 @@ class GoogleSyncHelper
     public function getNewestMeetingResponse(Meeting $meeting, Google\Service\Calendar\Event $event, array $timeArray)
     {
         if ($timeArray['gModified'] > $timeArray['sModified']) {
-            if ($event->status == 'cancelled') {
+            if ($event->status === 'cancelled') {
                 // if the remote event is deleted, delete it here
-                return "pull_delete";
+                return 'pull_delete';
             }
-            return "pull";
+
+            return 'pull';
         }
         if ($meeting->deleted == '1') {
-            return "push_delete";
+            return 'push_delete';
         }
-        return "push";
+
+        return 'push';
     }
 
     /**
@@ -157,7 +160,7 @@ class GoogleSyncHelper
         }
 
         // Check if event is deleted on both ends
-        if ($meeting->deleted == '1' && $event->status == 'cancelled') {
+        if ($meeting->deleted == '1' && $event->status === 'cancelled') {
             $ret = true;
         }
 
@@ -175,9 +178,11 @@ class GoogleSyncHelper
      * Creates reminders for event from google event reminders
      *
      * @param array $overrides Google Calendar Event Reminders (See Class Google\Service\Calendar\EventReminders)
-     * @param string $meeting Meeting Bean
+     * @param string $meeting  Meeting Bean
      *
      * @return array|bool Nested array of unsaved reminders and reminder_invitees, false on Failure
+     * @throws Exception
+     * @throws Exception
      */
     public function createSuitecrmReminders(array $overrides, Meeting $meeting)
     {
@@ -185,7 +190,7 @@ class GoogleSyncHelper
         $invitees = array();
 
         foreach ($overrides as $override) {
-            if ($override->getMethod() == 'popup') {
+            if ($override->getMethod() === 'popup') {
                 $sReminder = BeanFactory::getBean('Reminders');
                 if (!$sReminder) {
                     throw new Exception('Unable to get Reminder bean.');

@@ -95,7 +95,7 @@ if (!empty($_REQUEST['newDropdown'])) {
     $keys = array_keys($dropdowns);
     $first_string = $dropdowns[$keys[0]];
     $smarty->assign('dropdowns', $dropdowns);
-    if (empty($_REQUEST['dropdown_name']) || !in_array($_REQUEST['dropdown_name'], $dropdowns)) {
+    if (empty($_REQUEST['dropdown_name']) || !in_array($_REQUEST['dropdown_name'], $dropdowns, true)) {
         $_REQUEST['dropdown_name'] = $first_string;
     }
     $selected_dropdown = $my_list_strings[$_REQUEST['dropdown_name']];
@@ -138,4 +138,4 @@ $editImage = SugarThemeRegistry::current()->getImage('edit_inline', '', null, nu
 $smarty->assign('editImage', $editImage);
 $deleteImage = SugarThemeRegistry::current()->getImage('delete_inline', '', null, null, '.gif', $mod_strings['LBL_DELETE']);
 $smarty->assign('deleteImage', $deleteImage);
-$smarty->display("modules/Studio/DropDowns/EditView.tpl");
+$smarty->display('modules/Studio/DropDowns/EditView.tpl');

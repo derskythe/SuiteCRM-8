@@ -179,7 +179,7 @@ $dictionary['AOR_Report'] = array(
         'rhs_key' => 'aor_report_id',
         'relationship_type'=>'one-to-many',
     ),
-    "aor_scheduled_reports_aor_reports" => array(
+    'aor_scheduled_reports_aor_reports' => array(
         'lhs_module'=> 'AOR_Reports',
         'lhs_table'=> 'aor_reports',
         'lhs_key' => 'id',

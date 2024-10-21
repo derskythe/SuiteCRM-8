@@ -41,6 +41,5 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-define('EXTERNAL_CACHE_NULL_VALUE', "SUGAR_CACHE_NULL_ZZ");
+const EXTERNAL_CACHE_NULL_VALUE = 'SUGAR_CACHE_NULL_ZZ';
 require_once 'include/SugarCache/SugarCache.php';

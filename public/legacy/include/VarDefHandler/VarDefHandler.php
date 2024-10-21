@@ -53,7 +53,7 @@ class VarDefHandler
     public $meta_array_name;
     public $target_meta_array = false;
     public $start_none = false;
-    public $extra_array = array();					//used to add custom items
+    public $extra_array = array();                    //used to add custom items
     public $options_array = array();
     public $module_object;
     public $start_none_lbl = null;
@@ -65,7 +65,7 @@ class VarDefHandler
         $this->module_object = $module;
         if ($meta_array_name!=null) {
             global $vardef_meta_array;
-            include("include/VarDefHandler/vardef_meta_arrays.php");
+            include('include/VarDefHandler/vardef_meta_arrays.php');
             $this->target_meta_array = $vardef_meta_array[$meta_array_name];
         }
 
@@ -93,7 +93,7 @@ class VarDefHandler
             }
         }
 
-        ///used for special one off items added to filter array	 ex. would be href link for alert templates
+        ///used for special one off items added to filter array     ex. would be href link for alert templates
         if (!empty($this->extra_array)) {
             foreach ($this->extra_array as $key => $value) {
                 $this->options_array[$key] = $value;
@@ -106,7 +106,7 @@ class VarDefHandler
             $compare_results = $this->compare_type($value_array);
 
             if ($compare_results == true) {
-                if ($value_array['type'] == 'link' && !$use_field_label) {
+                if ($value_array['type'] === 'link' && !$use_field_label) {
                     $relName = $value_array['name'];
                     $this->module_object->load_relationship($relName);
                     if (!empty($app_list_strings['moduleList'][$this->module_object->$relName->getRelatedModuleName()])) {
@@ -133,7 +133,7 @@ class VarDefHandler
                     $column_table = $this->module_object->table_name;
                 }
 
-                if ($value_array['type'] == 'link') {
+                if ($value_array['type'] === 'link') {
                     if ($use_field_name) {
                         $index = $value_array['name'];
                     } else {
@@ -145,7 +145,7 @@ class VarDefHandler
 
                 $value = trim($label_name, ':');
                 if ($remove_dups) {
-                    if (!in_array($value, $this->options_array)) {
+                    if (!in_array($value, $this->options_array, true)) {
                         $this->options_array[$index] = $value;
                     }
                 } else {
@@ -206,7 +206,7 @@ class VarDefHandler
 
         if (isset($this->target_meta_array['inclusion'])) {
             foreach ($this->target_meta_array['inclusion'] as $attribute => $value) {
-                if ($attribute=="type") {
+                if ($attribute === 'type') {
                     foreach ($value as $actual_value) {
                         if (isset($value_array[$attribute]) && $value_array[$attribute] != $actual_value) {
                             return false;

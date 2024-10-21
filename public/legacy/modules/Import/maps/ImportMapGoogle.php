@@ -52,7 +52,7 @@ class ImportMapGoogle extends ImportMapOther
      * String identifier for this import
      */
     public $name = 'google';
-    
+
     /**
      * Gets the default mapping for a module
      *
@@ -93,7 +93,7 @@ class ImportMapGoogle extends ImportMapOther
              'team_name' => array('sugar_key' => 'team_name', 'sugar_help_key' => 'LBL_EXTERNAL_TEAM_TOOLTIP','sugar_label' => 'LBL_TEAMS', 'default_label' => 'Teams'),
             );
 
-        if ($module == 'Users') {
+        if ($module === 'Users') {
             $return_array['status'] =  array('sugar_key' => 'status', 'sugar_label' => '', 'default_label' => 'Status');
             $return_array['full_name'] =  array('sugar_key' => 'user_name', 'sugar_label' => '', 'default_label' => 'Full Name');
         }

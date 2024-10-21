@@ -52,7 +52,7 @@ class StudioWizard
     public $wizard = 'StudioWizard';
     public $status = '';
     public $assign = array();
-    
+
     public function welcome()
     {
         return $GLOBALS['mod_strings']['LBL_SW_WELCOME'];
@@ -69,7 +69,7 @@ class StudioWizard
                          'RepairCustomFields'=>$GLOBALS['mod_strings']['LBL_SW_REPAIR_CUSTOMFIELDS'],
                          'MigrateCustomFields'=>$GLOBALS['mod_strings']['LBL_SW_MIGRATE_CUSTOMFIELDS'],
 
-        
+
         );
         return $options;
     }
@@ -129,7 +129,10 @@ class StudioWizard
     {
         echo $this->fetch($error);
     }
-    
+
+    /**
+     * @throws SmartyException
+     */
     public function fetch($error = '')
     {
         global $mod_strings;

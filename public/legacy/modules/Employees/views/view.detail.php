@@ -58,22 +58,23 @@ class EmployeesViewDetail extends ViewDetail
     /**
      * Return the "breadcrumbs" to display at the top of the page
      *
-     * @param  bool $show_help optional, true if we show the help links
+     * @param bool $show_help optional, true if we show the help links
+     *
      * @return HTML string containing breadcrumb title
      */
-    public function getModuleTitle($show_help = true)
+    public function getModuleTitle(bool $show_help = true) : string
     {
         global $sugar_version, $sugar_flavor, $server_unique_key, $current_language, $action, $current_user;
 
         $theTitle = "<div class='moduleTitle'>\n";
 
-        $module = preg_replace("/ /", "", (string) $this->module);
+        $module = preg_replace('/ /', '', (string) $this->module);
 
         $params = $this->_getModuleTitleParams();
         $count = is_countable($params) ? count($params) : 0;
         $index = 0;
 
-        if (SugarThemeRegistry::current()->directionality == "rtl") {
+        if (SugarThemeRegistry::current()->directionality === 'rtl') {
             $params = array_reverse($params);
         }
 

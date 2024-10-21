@@ -46,9 +46,9 @@ include_once __DIR__ . '/../../include/utils.php';
 
 global $app_strings;
 
-echo "<br><br>";
+echo '<br><br>';
 
-if (isset($_REQUEST['ie_error']) && $_REQUEST['ie_error'] == 'true') {
+if (isset($_REQUEST['ie_error']) && $_REQUEST['ie_error'] === 'true') {
     echo '<a href="index.php?module=Users&action=EditView&record='.$_REQUEST['id'].'">'.$mod_strings['ERR_IE_FAILURE1'].'</a><br>';
     echo $mod_strings['ERR_IE_FAILURE2'];
 } else {

@@ -46,7 +46,7 @@ $data = $_REQUEST;
 
 if (!empty($data['listViewExternalClient'])) {
     $email = BeanFactory::newBean('Emails');
-    echo $email->getNamePlusEmailAddressesForCompose($_REQUEST['action_module'], (explode(",", $_REQUEST['uid'])));
+    echo $email->getNamePlusEmailAddressesForCompose($_REQUEST['action_module'], (explode(',', $_REQUEST['uid'])));
 }
 //For the full compose/email screen, the compose package is generated and script execution
 //continues to the Emails/index.php page.
@@ -111,39 +111,39 @@ function generateComposeDataPackage($data, $forFullCompose = true)
         $namePlusEmail = '';
         if (isset($data['to_email_addrs'])) {
             $namePlusEmail = $data['to_email_addrs'];
-            $namePlusEmail = from_html(str_replace("&nbsp;", " ", (string) $namePlusEmail));
+            $namePlusEmail = from_html(str_replace('&nbsp;', ' ', (string) $namePlusEmail));
         } else {
             if (isset($bean->full_name)) {
-                $namePlusEmail = from_html($bean->full_name) . " <" . from_html($bean->emailAddress->getPrimaryAddress($bean)) . ">";
+                $namePlusEmail = from_html($bean->full_name) . ' <' . from_html($bean->emailAddress->getPrimaryAddress($bean)) . '>';
             } elseif (isset($bean->emailAddress)) {
-                $namePlusEmail = "<" . from_html($bean->emailAddress->getPrimaryAddress($bean)) . ">";
+                $namePlusEmail = '<' . from_html($bean->emailAddress->getPrimaryAddress($bean)) . '>';
             }
         }
 
-        $subject = "";
-        $body = "";
-        $email_id = "";
+        $subject = '';
+        $body = '';
+        $email_id = '';
         $attachments = array();
-        if ($bean->module_dir == 'Cases') {
-            $subject = str_replace('%1', $bean->case_number, $bean->getEmailSubjectMacro() . " " . from_html($bean->name));//bug 41928
-            $bean->load_relationship("contacts");
+        if ($bean->module_dir === 'Cases') {
+            $subject = str_replace('%1', $bean->case_number, $bean->getEmailSubjectMacro() . ' ' . from_html($bean->name));//bug 41928
+            $bean->load_relationship('contacts');
             $contact_ids = $bean->contacts->get();
             $contact = BeanFactory::newBean('Contacts');
             foreach ($contact_ids as $cid) {
                 $contact->retrieve($cid);
-                $namePlusEmail .= empty($namePlusEmail) ? "" : ", ";
-                $namePlusEmail .= from_html($contact->full_name) . " <" . from_html($contact->emailAddress->getPrimaryAddress($contact)) . ">";
+                $namePlusEmail .= empty($namePlusEmail) ? '' : ', ';
+                $namePlusEmail .= from_html($contact->full_name) . ' <' . from_html($contact->emailAddress->getPrimaryAddress($contact)) . '>';
             }
         }
-        if ($bean->module_dir == 'KBDocuments') {
-            require_once("modules/Emails/EmailUI.php");
+        if ($bean->module_dir === 'KBDocuments') {
+            require_once('modules/Emails/EmailUI.php');
             $subject = $bean->kbdocument_name;
             $article_body = str_replace('/' . $GLOBALS['sugar_config']['cache_dir'] . 'images/', $GLOBALS['sugar_config']['site_url'] . '/' . $GLOBALS['sugar_config']['cache_dir'] . 'images/', (string) KBDocument::get_kbdoc_body_without_incrementing_count($bean->id));
             $body = from_html($article_body);
             $attachments = KBDocument::get_kbdoc_attachments_for_newemail($bean->id);
             $attachments = $attachments['attachments'];
         } // if
-        if ($bean->module_dir == 'Quotes' && isset($data['recordId'])) {
+        if ($bean->module_dir === 'Quotes' && isset($data['recordId'])) {
             $quotesData = getQuotesRelatedData($data);
             global $current_language;
             $namePlusEmail = $quotesData['toAddress'];
@@ -183,12 +183,12 @@ function generateComposeDataPackage($data, $forFullCompose = true)
         );
     } elseif (isset($_REQUEST['ListView'])) {
         $email = BeanFactory::newBean('Emails');
-        $namePlusEmail = $email->getNamePlusEmailAddressesForCompose($_REQUEST['action_module'], (explode(",", $_REQUEST['uid'])));
+        $namePlusEmail = $email->getNamePlusEmailAddressesForCompose($_REQUEST['action_module'], (explode(',', $_REQUEST['uid'])));
         $ret = array(
             'to_email_addrs' => $namePlusEmail,
         );
     } elseif (isset($data['replyForward'])) {
-        require_once("modules/Emails/EmailUI.php");
+        require_once('modules/Emails/EmailUI.php');
 
         $ret = array();
         $ie = BeanFactory::newBean('InboundEmail');
@@ -197,8 +197,8 @@ function generateComposeDataPackage($data, $forFullCompose = true)
         $replyType = $data['reply'];
         $email_id = $data['record'];
         $ie->email->retrieve($email_id);
-        $emailType = "";
-        if ($ie->email->type == 'draft') {
+        $emailType = '';
+        if ($ie->email->type === 'draft') {
             $emailType = $ie->email->type;
         }
         $ie->email->from_addr = $ie->email->from_addr_name;
@@ -207,29 +207,29 @@ function generateComposeDataPackage($data, $forFullCompose = true)
         $ie->email->cc_addrs = to_html($ie->email->cc_addrs_names);
         $ie->email->bcc_addrs = $ie->email->bcc_addrs_names;
         $ie->email->from_name = $ie->email->from_addr;
-        $preBodyHTML = "&nbsp;<div><hr></div>";
-        if ($ie->email->type != 'draft') {
+        $preBodyHTML = '&nbsp;<div><hr></div>';
+        if ($ie->email->type !== 'draft') {
             $email = $ie->email->et->handleReplyType($ie->email, $replyType);
         } else {
             $email = $ie->email;
-            $preBodyHTML = "";
+            $preBodyHTML = '';
         } // else
-        if ($ie->email->type != 'draft') {
+        if ($ie->email->type !== 'draft') {
             $emailHeader = $email->description;
         }
         $ret = $ie->email->et->displayComposeEmail($email);
-        if ($ie->email->type != 'draft') {
+        if ($ie->email->type !== 'draft') {
             $ret['description'] = $emailHeader;
         }
-        if ($replyType == 'forward' || $emailType == 'draft') {
+        if ($replyType === 'forward' || $emailType === 'draft') {
             $ret = $ie->email->et->getDraftAttachments($ret);
         }
         $return = $ie->email->et->getFromAllAccountsArray($ie, $ret);
 
-        if ($replyType == "forward") {
+        if ($replyType === 'forward') {
             $return['to'] = '';
         } else {
-            if ($email->type != 'draft') {
+            if ($email->type !== 'draft') {
                 $return['to'] = from_html($ie->email->from_addr);
                 isValidEmailAddress($return['to']);
             }
@@ -247,13 +247,13 @@ function generateComposeDataPackage($data, $forFullCompose = true)
         );
 
         // If it's a 'Reply All' action, append the CC addresses
-        if ($data['reply'] == 'replyAll') {
+        if ($data['reply'] === 'replyAll') {
             global $current_user;
 
             $ccEmails = $ie->email->to_addrs;
 
             if (!empty($ie->email->cc_addrs)) {
-                $ccEmails .= ", " . $ie->email->cc_addrs;
+                $ccEmails .= ', ' . $ie->email->cc_addrs;
             }
 
             $myEmailAddresses = array();
@@ -262,7 +262,7 @@ function generateComposeDataPackage($data, $forFullCompose = true)
             }
 
             //remove current user's email address (if contained in To/CC)
-            $ccEmailsArr = explode(", ", $ccEmails);
+            $ccEmailsArr = explode(', ', $ccEmails);
 
             foreach ($ccEmailsArr as $p => $q) {
                 preg_match('/<(.*?)>/', $q, $email);
@@ -271,12 +271,12 @@ function generateComposeDataPackage($data, $forFullCompose = true)
                 } else {
                     $checkemail = $q;
                 }
-                if (in_array($checkemail, $myEmailAddresses)) {
+                if (in_array($checkemail, $myEmailAddresses, true)) {
                     unset($ccEmailsArr[$p]);
                 }
             }
 
-            $ccEmails = implode(", ", $ccEmailsArr);
+            $ccEmails = implode(', ', $ccEmailsArr);
 
             $ret['cc_addrs'] = from_html($ccEmails);
         }
@@ -298,7 +298,7 @@ function getQuotesRelatedData($data)
     $return = array();
     $emailId = $data['recordId'];
 
-    require_once("modules/Emails/EmailUI.php");
+    require_once('modules/Emails/EmailUI.php');
     $email = BeanFactory::newBean('Emails');
     $email->retrieve($emailId);
     $return['subject'] = $email->name;
@@ -332,7 +332,7 @@ function getQuotesRelatedData($data)
         $parentName = from_html($parentName);
 
         $return['parent_name'] = $parentName;
-        $return['toAddress'] = from_html($bean->full_name) . " <" . from_html($bean->emailAddress->getPrimaryAddress($bean)) . ">";
+        $return['toAddress'] = from_html($bean->full_name) . ' <' . from_html($bean->emailAddress->getPrimaryAddress($bean)) . '>';
     }
 
 

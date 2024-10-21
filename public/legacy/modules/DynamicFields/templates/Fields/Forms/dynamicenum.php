@@ -46,11 +46,11 @@ function get_body(&$ss, $vardef)
 {
     $multi = false;
     $radio = false;
-    if (isset($vardef['type']) && $vardef['type'] == 'multienum') {
+    if (isset($vardef['type']) && $vardef['type'] === 'multienum') {
         $multi = true;
     }
 
-    $selected_options = "";
+    $selected_options = '';
     if ($multi && !empty($vardef['default'])) {
         $selected_options = unencodeMultienum($vardef['default']);
     } else {
@@ -61,14 +61,14 @@ function get_body(&$ss, $vardef)
 
     $edit_mod_strings = return_module_language($GLOBALS['current_language'], 'EditCustomFields');
 
-    if (!empty($_REQUEST['type']) && $_REQUEST['type'] == 'radioenum') {
+    if (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'radioenum') {
         $edit_mod_strings['LBL_DROP_DOWN_LIST'] = $edit_mod_strings['LBL_RADIO_FIELDS'];
         $radio = true;
     }
     $package_strings = array();
     if (!empty($_REQUEST['view_package'])) {
         $view_package = $_REQUEST['view_package'];
-        if ($view_package != 'studio') {
+        if ($view_package !== 'studio') {
             require_once('modules/ModuleBuilder/MB/ModuleBuilder.php');
             $mb = new ModuleBuilder();
             $module =& $mb->getPackageModule($view_package, $_REQUEST['view_module']);

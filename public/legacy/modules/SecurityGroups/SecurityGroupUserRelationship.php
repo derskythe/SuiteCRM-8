@@ -11,7 +11,7 @@ require_once('data/SugarBean.php');
 class SecurityGroupUserRelationship extends SugarBean
 {
     // Stored fields
-    public $id;
+    public string $id;
     public $securitygroup_id;
     public $securitygroup_noninheritable;
     public $user_id;
@@ -22,20 +22,24 @@ class SecurityGroupUserRelationship extends SugarBean
     public $securitygroup_name;
     public $user_name;
 
-    public $table_name = "securitygroups_users";
-    public $object_name = "SecurityGroupUserRelationship";
-    public $column_fields = array("id"
-        ,"securitygroup_id"
-        ,"user_id"
-        ,"noninheritable"
-        ,"primary_group"
-        ,'date_modified'
+    public string $table_name = 'securitygroups_users';
+    public string $object_name = 'SecurityGroupUserRelationship';
+    public array $column_fields = array( 'id'
+                                         ,
+                                         'securitygroup_id'
+                                         ,
+                                         'user_id'
+                                         ,
+                                         'noninheritable'
+                                         ,
+                                         'primary_group'
+                                         , 'date_modified'
         );
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
-    public $additional_column_fields = array();
-    public $field_defs = array(
+    public array $additional_column_fields = array();
+    public ?array $field_defs = array(
        'id'=>array('name' =>'id', 'type' =>'char', 'len'=>'36', 'default'=>'')
       , 'securitygroup_id'=>array('name' =>'securitygroup_id', 'type' =>'char', 'len'=>'36', )
       , 'user_id'=>array('name' =>'user_id', 'type' =>'char', 'len'=>'36',)
@@ -57,9 +61,9 @@ class SecurityGroupUserRelationship extends SugarBean
 
     public function fill_in_additional_detail_fields()
     {
-        if (isset($this->securitygroup_id) && $this->securitygroup_id != "") {
+        if (isset($this->securitygroup_id) && $this->securitygroup_id != '') {
             $query = "SELECT name from securitygroups where id='$this->securitygroup_id' AND deleted=0";
-            $result =$this->db->query($query, true, " Error filling in additional detail fields: ");
+            $result =$this->db->query($query, true, ' Error filling in additional detail fields: ');
             // Get the id and the name.
             $row = $this->db->fetchByAssoc($result);
 
@@ -68,9 +72,9 @@ class SecurityGroupUserRelationship extends SugarBean
             }
         }
 
-        if (isset($this->user_id) && $this->user_id != "") {
+        if (isset($this->user_id) && $this->user_id != '') {
             $query = "SELECT user_name from users where id='$this->user_id' AND deleted=0";
-            $result =$this->db->query($query, true, " Error filling in additional detail fields: ");
+            $result =$this->db->query($query, true, ' Error filling in additional detail fields: ');
             // Get the id and the name.
             $row = $this->db->fetchByAssoc($result);
 
@@ -82,16 +86,16 @@ class SecurityGroupUserRelationship extends SugarBean
 
     public function create_list_query(&$order_by, &$where)
     {
-        $query = "SELECT id, first_name, last_name, user_name FROM users ";
-        $where_auto = "deleted=0";
+        $query = 'SELECT id, first_name, last_name, user_name FROM users ';
+        $where_auto = 'deleted=0';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where $where AND ".$where_auto;
         } else {
-            $query .= "where ".$where_auto;
+            $query .= 'where ' .$where_auto;
         }
 
-        $query .= " ORDER BY last_name, first_name";
+        $query .= ' ORDER BY last_name, first_name';
 
         return $query;
     }

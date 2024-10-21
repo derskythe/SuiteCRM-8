@@ -65,7 +65,7 @@ $return= array('module'=>'ACLRoles', 'action'=>'index', 'record'=>'');
 if (!empty($_REQUEST['record'])) {
     $role->retrieve($_REQUEST['record']);
     $categories = $role->getRoleActions($_REQUEST['record']);
-    
+
     $role_name =  $role->name;
     if (!empty($_REQUEST['isDuplicate'])) {
         //role id is stripped here in duplicate so anything using role id after this will not have it
@@ -103,7 +103,7 @@ $actions = !empty($categories[$_REQUEST['category_name']]['module']) ? $categori
 $sugar_smarty->assign('ACTIONS', $actions);
 ob_clean();
 
-if ($_REQUEST['category_name'] == 'All') {
+if ($_REQUEST['category_name'] === 'All') {
     echo $sugar_smarty->fetch('modules/ACLRoles/EditAllBody.tpl');
 } else {
     //WDong Bug 23195: Strings not localized in Role Management.

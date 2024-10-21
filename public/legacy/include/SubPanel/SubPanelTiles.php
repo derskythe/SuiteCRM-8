@@ -82,7 +82,7 @@ class SubPanelTiles
 
     /*
      * Return the current selected or requested subpanel tab
-     * @return	string	The identifier for the selected subpanel tab (e.g., 'Other')
+     * @return    string    The identifier for the selected subpanel tab (e.g., 'Other')
      */
     public function getSelectedGroup()
     {
@@ -105,12 +105,16 @@ class SubPanelTiles
                 $selected_group = $_REQUEST['subpanel'];
             } elseif (!empty($_COOKIE[$this->module.'_sp_tab'])) {
                 $selected_group = $_COOKIE[$this->module.'_sp_tab'];
-            } elseif (!empty($_SESSION['parentTab']) && !empty($GLOBALS['tabStructure'][$_SESSION['parentTab']]) && in_array($this->module, $GLOBALS['tabStructure'][$_SESSION['parentTab']]['modules'])) {
+            } elseif (!empty($_SESSION['parentTab']) && !empty($GLOBALS['tabStructure'][$_SESSION['parentTab']]) && in_array(
+                    $this->module,
+                    $GLOBALS['tabStructure'][$_SESSION['parentTab']]['modules'],
+                    true
+                )) {
                 $selected_group = $_SESSION['parentTab'];
             } else {
                 $selected_group = '';
                 foreach ($GLOBALS['tabStructure'] as $mainTab => $group) {
-                    if (in_array($this->module, $group['modules'])) {
+                    if (in_array($this->module, $group['modules'], true)) {
                         $selected_group = $mainTab;
                         break;
                     }
@@ -127,8 +131,8 @@ class SubPanelTiles
 
     /*
      * Determine which subpanels should be shown within the selected tab group (e.g., 'Other');
-     * @param boolean $showTabs		True if we should call the code to render each visible tab
-     * @param string $selectedGroup	The requested tab group
+     * @param boolean $showTabs        True if we should call the code to render each visible tab
+     * @param string $selectedGroup    The requested tab group
      * @return array Visible tabs
      */
     public function getTabs($showTabs = true, $selectedGroup='')
@@ -174,18 +178,22 @@ class SubPanelTiles
         }
         return $tabs;
     }
+
+    /**
+     * @throws SmartyException
+     */
     public function display($showContainer = true, $forceTabless = false)
     {
         global $layout_edit_mode, $sugar_version, $sugar_config, $current_user, $app_strings, $modListHeader;
 
         if (isset($layout_edit_mode) && $layout_edit_mode) {
-            return;
+            return '';
         }
 
         $template = new Sugar_Smarty();
-        $template_header = "";
-        $template_body = "";
-        $template_footer = "";
+        $template_header = '';
+        $template_body = '';
+        $template_footer = '';
 
         $tabs = array();
         $tabs_properties = array();
@@ -259,7 +267,9 @@ class SubPanelTiles
 
                 if (!isset($this->focus->field_defs[$thisPanel->_instance_properties['get_subpanel_data']])) {
                     if (stripos($thisPanel->_instance_properties['get_subpanel_data'], 'function:') === false) {
-                        $GLOBALS['log']->fatal("Bad subpanel definition, it has incorrect value for get_subpanel_data property " .$tab);
+                        $GLOBALS['log']->fatal(
+                            'Bad subpanel definition, it has incorrect value for get_subpanel_data property ' . $tab
+                        );
                         continue;
                     }
                 } else {
@@ -269,7 +279,9 @@ class SubPanelTiles
                     }
 
                     if (empty($rel_name) or !isset($GLOBALS['relationships'][$rel_name])) {
-                        $GLOBALS['log']->fatal("Missing relationship definition " .$rel_name. ". skipping " .$tab ." subpanel");
+                        $GLOBALS['log']->fatal(
+                            'Missing relationship definition ' . $rel_name . '. skipping ' . $tab . ' subpanel'
+                        );
                         continue;
                     }
                 }
@@ -308,7 +320,7 @@ class SubPanelTiles
                 $div_display = $div_cookies[$cookie_name] === 'false' ? 'none' : '';
             }
 
-            if ($div_display == 'none') {
+            if ($div_display === 'none') {
                 $opp_display = 'inline';
                 $tabs_properties[$t]['expanded_subpanels'] = false;
             } else {
@@ -332,9 +344,9 @@ class SubPanelTiles
                 $tabs_properties[$t]['hide_icon_html'] = $hide_icon_html;
 
                 $max_min = "<a name=\"$tab\"> </a><span id=\"show_link_".$tab."\" style=\"display: $opp_display\"><a href='#' class='utilsLink' onclick=\"current_child_field = '".$tab."';showSubPanel('".$tab."',null,true,'".$layout_def_key."');document.getElementById('show_link_".$tab."').style.display='none';document.getElementById('hide_link_".$tab."').style.display='';return false;\">"
-                    . "" . $show_icon_html . "</a></span>";
-                $max_min .= "<span id=\"hide_link_".$tab."\" style=\"display: $div_display\"><a href='#' class='utilsLink' onclick=\"hideSubPanel('".$tab."');document.getElementById('hide_link_".$tab."').style.display='none';document.getElementById('show_link_".$tab."').style.display='';return false;\">"
-                    . "" . $hide_icon_html . "</a></span>";
+                    . '' . $show_icon_html . '</a></span>';
+                $max_min .= '<span id="hide_link_' . $tab . "\" style=\"display: $div_display\"><a href='#' class='utilsLink' onclick=\"hideSubPanel('" . $tab . "');document.getElementById('hide_link_" . $tab . "').style.display='none';document.getElementById('show_link_" . $tab . "').style.display='';return false;\">"
+                    . '' . $hide_icon_html . '</a></span>';
                 $tabs_properties[$t]['title'] = $thisPanel->get_title();
                 $tabs_properties[$t]['module_name'] = $thisPanel->get_module_name();
                 $tabs_properties[$t]['get_form_header']  = get_form_header($thisPanel->get_title(), $max_min, false, false);
@@ -442,7 +454,7 @@ class SubPanelTiles
             $widget_contents .= '<td class="buttons">' . "\n";
 
             if (empty($widget_data['widget_class'])) {
-                $buttons[] = "widget_class not defined for top subpanel buttons";
+                $buttons[] = 'widget_class not defined for top subpanel buttons';
             } else {
                 $button = $layout_manager->widgetDisplay($widget_data);
                 if ($button) {
@@ -465,7 +477,9 @@ class SubPanelTiles
     /**
      * @param string $html_text
      * @param aSubPanel $thisPanel
+     *
      * @return string
+     * @throws SmartyException
      */
     public function getCheckbox($html_text, $thisPanel)
     {

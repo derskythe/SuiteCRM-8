@@ -154,7 +154,7 @@ class SugarControllerTest extends SuitePHPUnitFrameworkTestCase
 
         $SugarController = new SugarController();
         $SugarController->setModule('Users');
-        $SugarController->record = "1";
+        $SugarController->record = '1';
         $SugarController->loadBean();
 
         //execute the method and check if it either works or throws an mysql exception.
@@ -191,7 +191,7 @@ class SugarControllerTest extends SuitePHPUnitFrameworkTestCase
 
         $SugarController = new SugarController();
         $SugarController->setModule('Users');
-        $SugarController->record = "1";
+        $SugarController->record = '1';
         $SugarController->loadBean();
 
         //execute the method and check if it either works or throws an mysql exception.

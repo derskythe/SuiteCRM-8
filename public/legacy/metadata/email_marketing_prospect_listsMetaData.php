@@ -81,12 +81,12 @@ $dictionary['email_marketing_prospect_lists'] = array(
         array(
             'name' => 'email_mp_prospects',
             'type' => 'alternate_key',
-            'fields' => array(	'email_marketing_id',
+            'fields' => array(    'email_marketing_id',
                                 'prospect_list_id'
                         )
         ),
     ),
-    
+
     'relationships' => array(
         'email_marketing_prospect_lists' => array(
                                             'lhs_module'=> 'EmailMarketing',

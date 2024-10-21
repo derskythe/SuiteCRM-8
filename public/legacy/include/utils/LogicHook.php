@@ -115,7 +115,9 @@ class LogicHook
         if (is_dir($extpath)) {
             $dir = dir($extpath);
             while ($entry = $dir->read()) {
-                if ($entry != '.' && $entry != '..' && strtolower(substr($entry, -4)) == ".php" && is_file($extpath.'/'.$entry)) {
+                if ($entry !== '.' && $entry !== '..' && strtolower(substr($entry, -4)) === '.php' && is_file(
+                        $extpath . '/' . $entry
+                    )) {
                     unset($hook_array);
                     include($extpath.'/'.$entry);
                     if (!empty($hook_array)) {
@@ -123,7 +125,8 @@ class LogicHook
                             foreach ($hookg as $index => $hook) {
                                 $this->hookscan[$type][] = $hook;
                                 $idx = (is_countable($this->hookscan[$type]) ? count($this->hookscan[$type]) : 0)-1;
-                                $this->hook_map[$type][$idx] = array("file" => $extpath.'/'.$entry, "index" => $index);
+                                $this->hook_map[$type][$idx] =
+                                    array( 'file' => $extpath . '/' . $entry, 'index' => $index );
                             }
                         }
                     }
@@ -145,7 +148,7 @@ class LogicHook
         if (!empty($module_dir)) {
             $custom = "custom/modules/$module_dir";
         } else {
-            $custom = "custom/modules";
+            $custom = 'custom/modules';
         }
         if (file_exists("$custom/logic_hooks.php")) {
             if (isset($GLOBALS['log'])) {
@@ -154,7 +157,7 @@ class LogicHook
             include("$custom/logic_hooks.php");
         }
         if (empty($module_dir)) {
-            $custom = "custom/application";
+            $custom = 'custom/application';
         }
         if (file_exists("$custom/Ext/LogicHooks/logichooks.ext.php")) {
             if (isset($GLOBALS['log'])) {

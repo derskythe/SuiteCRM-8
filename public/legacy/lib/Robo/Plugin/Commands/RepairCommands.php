@@ -116,7 +116,7 @@ class RepairCommands extends RoboTasks
      */
     public function repairRebuildExtensions(array $opts = ['show-output' => false])
     {
-        $this->say("Rebuilding Extensions...");
+        $this->say('Rebuilding Extensions...');
         require_once __DIR__ . '/../../../../modules/Administration/QuickRepairAndRebuild.php';
         global $current_user;
         $current_user->is_admin = '1';
@@ -157,11 +157,14 @@ class RepairCommands extends RoboTasks
 
     /**
      * Repairs record normalization
+     *
      * @param array $opts optional command line arguments
+     *
      * @option bool $sync-run - Set if you want to do a synchronous execution. All records will be normalized in one go
-     * @option string $repair-from - define minimum create/modified date of records to be repaired. Format yyyy-mm-dd. Default: 2021-04-27
+     * @option string $repair-from - define minimum create/modified date of records to be repaired. Format yyyy-mm-dd.
+     *         Default: 2021-04-27
      * @option bool $keep-tracking - Skip deleting tracking table
-     * @throws \RuntimeException
+     * @throws \RuntimeException*@throws \JsonException
      */
     public function repairNormalizeRecordEncoding(array $opts = ['sync-run' => false])
     {
@@ -186,17 +189,19 @@ class RepairCommands extends RoboTasks
         $this->say("You're about to run record encoding normalization.");
 
         if ($syncRun === false) {
-            $this->say("By default this action will add a job to the job queue. It will normalize records in batches. This requires cron to be configured.");
-            $this->say("If you want to normalize all records synchronously re-run this command with --sync-run");
+            $this->say(
+                'By default this action will add a job to the job queue. It will normalize records in batches. This requires cron to be configured.'
+            );
+            $this->say('If you want to normalize all records synchronously re-run this command with --sync-run');
         } else {
-            $this->say("Running in synchronous mode. All records going to be repaired in one go.");
+            $this->say('Running in synchronous mode. All records going to be repaired in one go.');
         }
 
-        $this->say("The data on your tables is going to be updated.");
-        $this->say("Please make sure to backup your database before you run this action.");
+        $this->say('The data on your tables is going to be updated.');
+        $this->say('Please make sure to backup your database before you run this action.');
 
         $proceed = $this->askDefault(
-            "Are you sure you want to proceed? [y/N]", 'N'
+            'Are you sure you want to proceed? [y/N]', 'N'
         );
 
         if (strtolower($proceed) !== 'y') {
@@ -213,7 +218,7 @@ class RepairCommands extends RoboTasks
             $repairFrom .= ' 00:00:01';
         } elseif (!NormalizeRecords::isValidRepairFrom($repairFrom)) {
             $this->say("Provided --repair-from value '$repairFrom' not valid");
-            $this->say("Aborting.");
+            $this->say('Aborting.');
 
             return;
         }
@@ -221,15 +226,15 @@ class RepairCommands extends RoboTasks
         $data['repair_from'] = $repairFrom;
 
         if ($syncRun === true) {
-            $this->say("Running in synchronous mode.");
-            $this->say("This action will take a while. Please check SuiteCRM logs for progress information.");
+            $this->say('Running in synchronous mode.');
+            $this->say('This action will take a while. Please check SuiteCRM logs for progress information.');
             $normalize = new NormalizeRecords();
             $result = $normalize->runAll($data);
 
             if ($result['success'] === true) {
-                $this->say("Normalize records successfully executed");
+                $this->say('Normalize records successfully executed');
             } else {
-                $this->say("Error while running normalize records");
+                $this->say('Error while running normalize records');
             }
 
             if (empty($result['messages'])) {
@@ -243,8 +248,8 @@ class RepairCommands extends RoboTasks
             return;
         }
 
-        $this->say("Running in asynchronous mode.");
-        $this->say("Adding job to job queue.");
+        $this->say('Running in asynchronous mode.');
+        $this->say('Adding job to job queue.');
 
         if (!empty($opts['keep-tracking'])){
             $data['keepTracking'] = true;

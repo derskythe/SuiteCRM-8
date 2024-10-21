@@ -42,9 +42,9 @@ function smarty_function_config_load($params, &$smarty)
     }
 
     if (isset($_scope)) {
-        if ($_scope != 'local' &&
-                $_scope != 'parent' &&
-                $_scope != 'global') {
+        if ($_scope !== 'local' &&
+                $_scope !== 'parent' &&
+                $_scope !== 'global') {
             $smarty->trigger_error("invalid 'scope' attribute value", E_USER_ERROR, __FILE__, __LINE__);
         }
     } else {
@@ -119,10 +119,10 @@ function smarty_function_config_load($params, &$smarty)
     $smarty->_config[0]['vars'] = @array_merge($smarty->_config[0]['vars'], $_config_vars);
     $smarty->_config[0]['files'][$_file] = true;
 
-    if ($_scope == 'parent') {
+    if ($_scope === 'parent') {
         $smarty->_config[1]['vars'] = @array_merge($smarty->_config[1]['vars'], $_config_vars);
         $smarty->_config[1]['files'][$_file] = true;
-    } elseif ($_scope == 'global') {
+    } elseif ($_scope === 'global') {
         for ($i = 1, $for_max = count($smarty->_config); $i < $for_max; $i++) {
             $smarty->_config[$i]['vars'] = @array_merge($smarty->_config[$i]['vars'], $_config_vars);
             $smarty->_config[$i]['files'][$_file] = true;

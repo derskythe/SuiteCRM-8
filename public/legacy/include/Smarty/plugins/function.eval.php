@@ -18,7 +18,7 @@
  * @param array
  * @param Smarty
  */
-function smarty_function_eval($params, &$smarty)
+function smarty_function_eval($params, $smarty)
 {
 
     if (!isset($params['var'])) {

@@ -43,15 +43,15 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	TABLE DEFINITION FOR EMAIL STUFF
+////    TABLE DEFINITION FOR EMAIL STUFF
 $dictionary['UserSignature'] = array(
     'table' => 'users_signatures',
     'fields' => array(
         'id' => array(
-            'name'		=> 'id',
-            'vname'		=> 'LBL_ID',
-            'type'		=> 'id',
-            'required'	=> true,
+            'name'        => 'id',
+            'vname'        => 'LBL_ID',
+            'type'        => 'id',
+            'required'    => true,
         ),
         'date_entered' => array(
             'name' => 'date_entered',

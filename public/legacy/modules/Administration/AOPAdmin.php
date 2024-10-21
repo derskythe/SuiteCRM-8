@@ -51,7 +51,7 @@ global $app_strings;
 global $theme;
 
 if (!is_admin($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 
 require_once('modules/Configurator/Configurator.php');
@@ -59,11 +59,11 @@ require_once('modules/Configurator/Configurator.php');
 echo '<div class="aop-settings">';
 
 echo getClassicModuleTitle(
-    "Administration",
+    'Administration',
     array(
         "<a href='index.php?module=Administration&action=index'>" .
         translate('LBL_MODULE_NAME', 'Administration') .
-        "</a>",
+        '</a>',
         $mod_strings['LBL_AOP_ADMIN_MANAGE_AOP'],
     ),
     false
@@ -95,11 +95,11 @@ if (!array_key_exists('aop', $cfg->config)) {
 if (!array_key_exists('enable_aop', $cfg->config['aop'])) {
     $cfg->config['aop']['enable_aop'] = 1;
 }
-if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'save') {
+if (isset($_REQUEST['do']) && $_REQUEST['do'] === 'save') {
     $joomlaUrl = strtolower(trim($_REQUEST['joomla_url']));
     if (!empty($joomlaUrl)) {
         $cfg->config['aop']['joomla_url'] =
-            preg_match("@^https?://@", $joomlaUrl) ? $joomlaUrl : 'http://' . $joomlaUrl;
+            preg_match('@^https?://@', $joomlaUrl) ? $joomlaUrl : 'http://' . $joomlaUrl;
     } else {
         $cfg->config['aop']['joomla_url'] = '';
     }
@@ -138,7 +138,7 @@ $distributionOptionsValue = $cfg->config['aop']['distribution_options'] ?? '';
 $distributionOptions = getAOPAssignField('distribution_options', $distributionOptionsValue);
 
 if (!empty($cfg->config['aop']['distribution_user_id'])) {
-    $distributionUserName = BeanFactory::getBean("Users", $cfg->config['aop']['distribution_user_id'])->name;
+    $distributionUserName = BeanFactory::getBean('Users', $cfg->config['aop']['distribution_user_id'])->name;
 } else {
     $distributionUserName = '';
 }
@@ -174,7 +174,7 @@ $sugar_smarty->assign('MOD', $mod_strings);
 $sugar_smarty->assign('APP', $app_strings);
 $sugar_smarty->assign('APP_LIST', $app_list_strings);
 $sugar_smarty->assign('LANGUAGES', get_languages());
-$sugar_smarty->assign("JAVASCRIPT", get_set_focus_js());
+$sugar_smarty->assign('JAVASCRIPT', get_set_focus_js());
 $sugar_smarty->assign('config', $cfg->config['aop']);
 $sugar_smarty->assign('error', $errors);
 
@@ -204,7 +204,7 @@ $buttons = <<<EOQ
                 &nbsp;<input title="{$mod_strings['LBL_CANCEL_BUTTON_TITLE']}"  onclick="document.location.href='index.php?module=Administration&action=index'" class="button"  type="button" name="cancel" value="  {$app_strings['LBL_CANCEL_BUTTON_LABEL']}  " >
 EOQ;
 
-$sugar_smarty->assign("BUTTONS", $buttons);
+$sugar_smarty->assign('BUTTONS', $buttons);
 
 $sugar_smarty->display('modules/Administration/AOPAdmin.tpl');
 

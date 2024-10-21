@@ -1167,7 +1167,7 @@ class Imap2Handler implements ImapHandlerInterface
             $lastSequenceNumber = $mailboxInfo['Nmsgs'] = is_countable($emailSortedHeaders) ? count($emailSortedHeaders) : 0;
 
             // paginate
-            if ($offset === "end") {
+            if ($offset === 'end') {
                 $offset = $lastSequenceNumber - $pageSize;
             } elseif ($offset <= 0) {
                 $offset = 0;

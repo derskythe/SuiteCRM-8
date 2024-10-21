@@ -62,7 +62,7 @@ if (!is_admin($focus)) {
         global $modInvisList;
         if (!empty($tabs)) {
             foreach ($categories as $key => $value) {
-                if (!in_array($key, $tabs) && !in_array($key, $modInvisList)) {
+                if (!in_array($key, $tabs, true) && !in_array($key, $modInvisList, true)) {
                     unset($categories[$key]);
                 }
             }

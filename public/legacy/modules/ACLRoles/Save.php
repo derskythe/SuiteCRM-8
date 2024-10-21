@@ -48,7 +48,7 @@ $role = BeanFactory::newBean('ACLRoles');
 if (isset($_REQUEST['record'])) {
     $role->id = $_POST['record'];
 }
-require_once "include/portability/Services/Cache/CacheManager.php";
+require_once 'include/portability/Services/Cache/CacheManager.php';
 (new CacheManager())->markAsNeedsUpdate('rebuild_all');
 if (!empty($_REQUEST['name'])) {
     $role->name = $_POST['name'];
@@ -80,4 +80,4 @@ if (!empty($_REQUEST['name'])) {
     sugar_cleanup(true);
 }
 
-header("Location: index.php?module=ACLRoles&action=DetailView&record=". $role->id);
+header('Location: index.php?module=ACLRoles&action=DetailView&record=' . $role->id);

@@ -358,7 +358,7 @@ class SearchQuery implements JsonSerializable
     public function convertEncoding(): void
     {
         $string = $this->query;
-        preg_match_all("/&#?\w+;/", $string, $entities, PREG_SET_ORDER);
+        preg_match_all('/&#?\w+;/', $string, $entities, PREG_SET_ORDER);
         $entities = array_unique(array_column($entities, 0));
         foreach ($entities as $entity) {
             $decoded = mb_convert_encoding($entity, 'UTF-8', 'HTML-ENTITIES');
@@ -368,7 +368,7 @@ class SearchQuery implements JsonSerializable
     }
 
     /** @inheritdoc */
-    public function jsonSerialize()
+    public function jsonSerialize() : mixed
     {
         return [
             'query' => $this->query,

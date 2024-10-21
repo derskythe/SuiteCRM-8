@@ -41,7 +41,7 @@ import {debounceTime} from 'rxjs/operators';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html'
-})
+    })
 export class AppComponent {
     @ViewChild('mainOutlet', {read: ViewContainerRef, static: true})
     mainOutlet: ViewContainerRef | undefined;
@@ -63,13 +63,13 @@ export class AppComponent {
             this.appStateStore.updateLoading('router-navigation', true);
             this.conditionalCacheReset();
             this.notificationStore.conditionalNotificationRefresh();
-            this.recentlyViewed.conditionalGlobalRefresh()
+            this.recentlyViewed.conditionalGlobalRefresh();
         }
 
         if (routerEvent instanceof NavigationEnd) {
             // reset scroll on navigation
             window.scrollTo(0, 0);
-            this.appStateStore.setRouteUrl(routerEvent.url)
+            this.appStateStore.setRouteUrl(routerEvent.url);
         }
 
 

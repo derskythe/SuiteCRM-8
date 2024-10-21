@@ -43,13 +43,13 @@ if (!defined('sugarEntry') || !sugarEntry) {
 }
 
 if (!isset($_SESSION['SHOW_DUPLICATES'])) {
-    sugar_die("Unauthorized access to this area.");
+    sugar_die('Unauthorized access to this area.');
 }
 
 // retrieve $_POST values out of the $_SESSION variable - placed in there by AccountFormBase to avoid the length limitations on URLs implicit with GETS
 //$GLOBALS['log']->debug('ShowDuplicates.php: _POST = '.print_r($_SESSION['SHOW_DUPLICATES'],true));
 parse_str($_SESSION['SHOW_DUPLICATES'], $_POST);
-$post = array_map("securexss", $_POST);
+$post = array_map('securexss', $_POST);
 foreach ($post as $k => $v) {
     $_POST[$k] = $v;
 }
@@ -66,16 +66,16 @@ $mod_strings = return_module_language($current_language, 'Accounts');
 $moduleName = $GLOBALS['app_list_strings']['moduleList']['Accounts'];
 echo getClassicModuleTitle('Accounts', array($moduleName, $mod_strings['LBL_SAVE_ACCOUNT']), true);
 $xtpl=new XTemplate('modules/Accounts/ShowDuplicates.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
-$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("MODULE", $_REQUEST['module']);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
+$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('MODULE', $_REQUEST['module']);
 if ($error_msg !== '') {
-    $xtpl->assign("ERROR", $error_msg);
-    $xtpl->parse("main.error");
+    $xtpl->assign('ERROR', $error_msg);
+    $xtpl->parse('main.error');
 }
 
-if ((isset($_REQUEST['popup']) && $_REQUEST['popup'] == 'true') ||(isset($_POST['popup']) && $_POST['popup']==true)) {
+if ((isset($_REQUEST['popup']) && $_REQUEST['popup'] === 'true') ||(isset($_POST['popup']) && $_POST['popup']==true)) {
     insert_popup_header($theme);
 }
 
@@ -90,7 +90,7 @@ $duplicates = $_POST['duplicate'];
 $count = is_countable($duplicates) ? count($duplicates) : 0;
 $db = DBManagerFactory::getInstance();
 if ($count > 0) {
-    $query .= "and (";
+    $query .= 'and (';
     $first = true;
     foreach ($duplicates as $duplicate_id) {
         if (!$first) {
@@ -144,13 +144,13 @@ $get = '';
 if (!empty($_POST['return_module'])) {
     $xtpl->assign('RETURN_MODULE', $_POST['return_module']);
 } else {
-    $get .= "Accounts";
+    $get .= 'Accounts';
 }
-$get .= "&return_action=";
+$get .= '&return_action=';
 if (!empty($_POST['return_action'])) {
     $xtpl->assign('RETURN_ACTION', $_POST['return_action']);
 } else {
-    $get .= "DetailView";
+    $get .= 'DetailView';
 }
 if (!empty($_POST['return_id'])) {
     $xtpl->assign('RETURN_ID', $_POST['return_id']);

@@ -11,12 +11,14 @@
  * Name:     unescape
  * Purpose:  unescape html entities
  *
- * @author Rodney Rehm
- *
  * @param array $params parameters
  * @param Smarty_Internal_TemplateCompilerBase $compiler
  *
  * @return string with compiled code
+ * @throws SmartyException
+ * @throws SmartyException
+ * @author Rodney Rehm
+ *
  */
 function smarty_modifiercompiler_unescape($params, Smarty_Internal_TemplateCompilerBase $compiler)
 {

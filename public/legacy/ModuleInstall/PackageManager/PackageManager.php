@@ -39,9 +39,9 @@
  */
 
 
-define("CREDENTIAL_CATEGORY", "ml");
-define("CREDENTIAL_USERNAME", "username");
-define("CREDENTIAL_PASSWORD", "password");
+define('CREDENTIAL_CATEGORY', 'ml');
+define('CREDENTIAL_USERNAME', 'username');
+define('CREDENTIAL_PASSWORD', 'password');
 
 require_once('include/nusoap/nusoap.php'); // TODO: is it needed?
 require_once('include/utils/php_zip_utils.php');
@@ -63,8 +63,6 @@ class PackageManager
         $this->db = DBManagerFactory::getInstance();
         $this->upload_dir = empty($GLOBALS['sugar_config']['upload_dir']) ? 'upload' : rtrim($GLOBALS['sugar_config']['upload_dir'], '/\\');
     }
-
-
 
 
     public function initializeComm()
@@ -138,7 +136,7 @@ class PackageManager
                 //array_push($nodes[$mypack['category_id']]['packages'], $package_arr);
             }
         }
-        LoggerManager::getLogger()->debug("NODES". var_export($nodes, true));
+        LoggerManager::getLogger()->debug('NODES' . var_export($nodes, true));
         return $nodes;
     }
 
@@ -178,7 +176,7 @@ class PackageManager
                 $arr_releases = array();
                 foreach ($releases['packages'] as $release) {
                     $myrelease = self::fromNameValueList($release);
-                    $arr_releases[$myrelease['id']]  = array('release_id' => $myrelease['id'], 'version' => $myrelease['version'], 'description' => $myrelease['description'], 'category_id' => $mypack['category_id'], 'package_id' => $mypack['id']);
+                    $arr_releases[$myrelease['id']] = array('release_id' => $myrelease['id'], 'version' => $myrelease['version'], 'description' => $myrelease['description'], 'category_id' => $mypack['category_id'], 'package_id' => $mypack['id']);
                 }
                 $packages[$mypack['id']]['releases'] = $arr_releases;
             }
@@ -203,11 +201,11 @@ class PackageManager
      */
     public function download($category_id, $package_id, $release_id)
     {
-        LoggerManager::getLogger()->debug('RELEASE _ID: '.$release_id);
+        LoggerManager::getLogger()->debug('RELEASE _ID: ' . $release_id);
         if (!empty($release_id)) {
             $filename = PackageManagerComm::addDownload($category_id, $package_id, $release_id);
             if ($filename) {
-                LoggerManager::getLogger()->debug('RESULT: '.$filename);
+                LoggerManager::getLogger()->debug('RESULT: ' . $filename);
                 PackageManagerComm::errorCheck();
                 $filepath = PackageManagerComm::performDownload($filename);
                 return $filepath;
@@ -226,7 +224,7 @@ class PackageManager
      * @param systemname   the user's download key
      * @return              true if successful, false otherwise
      */
-    public static function authenticate($username, $password, $systemname='', $terms_checked = true)
+    public static function authenticate($username, $password, $systemname = '', $terms_checked = true)
     {
         self::setCredentials($username, $password, $systemname);
         PackageManagerComm::clearSession();
@@ -257,11 +255,11 @@ class PackageManager
         $credentials['username'] = '';
         $credentials['password'] = '';
         $credentials['system_name'] = '';
-        if (!empty($admin->settings[CREDENTIAL_CATEGORY.'_'.CREDENTIAL_USERNAME])) {
-            $credentials['username'] = $admin->settings[CREDENTIAL_CATEGORY.'_'.CREDENTIAL_USERNAME];
+        if (!empty($admin->settings[CREDENTIAL_CATEGORY . '_' . CREDENTIAL_USERNAME])) {
+            $credentials['username'] = $admin->settings[CREDENTIAL_CATEGORY . '_' . CREDENTIAL_USERNAME];
         }
-        if (!empty($admin->settings[CREDENTIAL_CATEGORY.'_'.CREDENTIAL_USERNAME])) {
-            $credentials['password'] = $admin->settings[CREDENTIAL_CATEGORY.'_'.CREDENTIAL_PASSWORD];
+        if (!empty($admin->settings[CREDENTIAL_CATEGORY . '_' . CREDENTIAL_USERNAME])) {
+            $credentials['password'] = $admin->settings[CREDENTIAL_CATEGORY . '_' . CREDENTIAL_PASSWORD];
         }
         if (!empty($admin->settings['system_name'])) {
             $credentials['system_name'] = $admin->settings['system_name'];
@@ -277,8 +275,8 @@ class PackageManager
     /**
      * Retrieve documentation for the given release or package
      *
-     * @param package_id	the specified package to retrieve documentation
-     * @param release_id	the specified release to retrieve documentation
+     * @param package_id    the specified package to retrieve documentation
+     * @param release_id    the specified release to retrieve documentation
      *
      * @return documents
      */
@@ -311,8 +309,8 @@ class PackageManager
     public static function toNameValueList($array)
     {
         $list = array();
-        foreach ($array as $name=>$value) {
-            $list[] = array('name'=>$name, 'value'=>$value);
+        foreach ($array as $name => $value) {
+            $list[] = array('name' => $name, 'value' => $value);
         }
         return $list;
     }
@@ -355,19 +353,19 @@ class PackageManager
     public function buildPackageXML($package, $releases = array())
     {
         $xml = '<package>';
-        $xml .= '<package_id>'.$package['id'].'</package_id>';
-        $xml .= '<name>'.$package['name'].'</name>';
-        $xml .= '<description>'.$package['description'].'</description>';
+        $xml .= '<package_id>' . $package['id'] . '</package_id>';
+        $xml .= '<name>' . $package['name'] . '</name>';
+        $xml .= '<description>' . $package['description'] . '</description>';
         if (!empty($releases)) {
             $xml .= '<releases>';
             foreach ($releases['packages'] as $release) {
                 $myrelease = self::fromNameValueList($release);
                 $xml .= '<release>';
-                $xml .= '<release_id>'.$myrelease['id'].'</release_id>';
-                $xml .= '<version>'.$myrelease['version'].'</version>';
-                $xml .= '<description>'.$myrelease['description'].'</description>';
-                $xml .= '<package_id>'.$package['id'].'</package_id>';
-                $xml .= '<category_id>'.$package['category_id'].'</category_id>';
+                $xml .= '<release_id>' . $myrelease['id'] . '</release_id>';
+                $xml .= '<version>' . $myrelease['version'] . '</version>';
+                $xml .= '<description>' . $myrelease['description'] . '</description>';
+                $xml .= '<package_id>' . $package['id'] . '</package_id>';
+                $xml .= '<category_id>' . $package['category_id'] . '</category_id>';
                 $xml .= '</release>';
             }
             $xml .= '</releases>';
@@ -381,7 +379,7 @@ class PackageManager
     private function addToCleanup($dir)
     {
         if (empty($this->cleanUpDirs)) {
-            register_shutdown_function(array($this, "cleanUpTempDir"));
+            register_shutdown_function(array( $this, 'cleanUpTempDir' ));
         }
         $this->cleanUpDirs[] = $dir;
     }
@@ -400,15 +398,15 @@ class PackageManager
         $my_zip_dir = mk_temp_dir($base_tmp_upgrade_dir);
         $this->addToCleanup($my_zip_dir);
         unzip_file($zip_file, $file_in_zip, $my_zip_dir);
-        return("$my_zip_dir/$file_in_zip");
+        return ("$my_zip_dir/$file_in_zip");
     }
 
     public function extractManifest($zip_file, $base_tmp_upgrade_dir)
     {
         global $sugar_config;
-        $base_upgrade_dir       = $this->upload_dir."/upgrades";
-        $base_tmp_upgrade_dir   = "$base_upgrade_dir/temp";
-        return $this->extractFile($zip_file, "manifest.php", $base_tmp_upgrade_dir);
+        $base_upgrade_dir = $this->upload_dir . '/upgrades';
+        $base_tmp_upgrade_dir = "$base_upgrade_dir/temp";
+        return $this->extractFile($zip_file, 'manifest.php', $base_tmp_upgrade_dir);
     }
 
     /**
@@ -466,7 +464,7 @@ class PackageManager
             if (isset($versions['regex_matches'])) {
                 $matchesEmpty = false;
                 foreach ($versions['regex_matches'] as $match) {
-                    if (preg_match("/$match/", (string) $checkedVersion)) {
+                    if (preg_match("/$match/", (string)$checkedVersion)) {
                         LoggerManager::getLogger()->debug("Passed $key");
 
                         return true;
@@ -510,43 +508,43 @@ class PackageManager
 
 
         foreach ($subdirs as $subdir) {
-            if (preg_match("#/$subdir/#", (string) $type_string)) {
-                return($subdir);
+            if (preg_match("#/$subdir/#", (string)$type_string)) {
+                return ($subdir);
             }
         }
         // return empty if no match
-        return("");
+        return ('');
     }
 
     public function performSetup($tempFile, $view = 'module', $display_messages = true)
     {
-        global $sugar_config,$mod_strings;
+        global $sugar_config, $mod_strings;
         $base_filename = urldecode($tempFile);
-        LoggerManager::getLogger()->debug("BaseFileName: ".$base_filename);
-        $base_upgrade_dir       = $this->upload_dir.'/upgrades';
-        $base_tmp_upgrade_dir   = "$base_upgrade_dir/temp";
+        LoggerManager::getLogger()->debug('BaseFileName: ' . $base_filename);
+        $base_upgrade_dir = $this->upload_dir . '/upgrades';
+        $base_tmp_upgrade_dir = "$base_upgrade_dir/temp";
         $manifest_file = $this->extractManifest($base_filename, $base_tmp_upgrade_dir);
-        LoggerManager::getLogger()->debug("Manifest: ".$manifest_file);
-        if ($view == 'module') {
+        LoggerManager::getLogger()->debug('Manifest: ' . $manifest_file);
+        if ($view === 'module') {
             $license_file = $this->extractFile($base_filename, 'LICENSE.txt', $base_tmp_upgrade_dir);
         }
         $manifest = [];
         if (is_file($manifest_file)) {
-            LoggerManager::getLogger()->debug("VALIDATING MANIFEST". $manifest_file);
+            LoggerManager::getLogger()->debug('VALIDATING MANIFEST' . $manifest_file);
             require_once($manifest_file);
             $this->validate_manifest($manifest);
             $upgrade_zip_type = $manifest['type'];
-            LoggerManager::getLogger()->debug("VALIDATED MANIFEST");
+            LoggerManager::getLogger()->debug('VALIDATED MANIFEST');
             // exclude the bad permutations
-            if ($view == "module") {
-                if ($upgrade_zip_type != "module" && $upgrade_zip_type != "theme" && $upgrade_zip_type != "langpack") {
+            if ($view === 'module') {
+                if ($upgrade_zip_type !== 'module' && $upgrade_zip_type !== 'theme' && $upgrade_zip_type !== 'langpack') {
                     $this->unlinkTempFiles();
                     if ($display_messages) {
                         die($mod_strings['ERR_UW_NOT_ACCEPTIBLE_TYPE']);
                     }
                 }
-            } elseif ($view == "default") {
-                if ($upgrade_zip_type != "patch") {
+            } elseif ($view === 'default') {
+                if ($upgrade_zip_type !== 'patch') {
                     $this->unlinkTempFiles();
                     if ($display_messages) {
                         die($mod_strings['ERR_UW_ONLY_PATCHES']);
@@ -554,26 +552,26 @@ class PackageManager
                 }
             }
 
-            $base_filename = preg_replace("#\\\\#", "/", $base_filename);
+            $base_filename = preg_replace("#\\\\#", '/', $base_filename);
             $base_filename = basename($base_filename);
             mkdir_recursive("$base_upgrade_dir/$upgrade_zip_type");
             $target_path = "$base_upgrade_dir/$upgrade_zip_type/$base_filename";
-            $target_manifest = remove_file_extension($target_path) . "-manifest.php";
+            $target_manifest = remove_file_extension($target_path) . '-manifest.php';
 
-            if (isset($manifest['icon']) && $manifest['icon'] != "") {
+            if (isset($manifest['icon']) && $manifest['icon'] != '') {
                 $icon_location = $this->extractFile($tempFile, $manifest['icon'], $base_tmp_upgrade_dir);
-                $path_parts = pathinfo((string) $icon_location);
-                copy($icon_location, remove_file_extension($target_path) . "-icon." . $path_parts['extension']);
+                $path_parts = pathinfo((string)$icon_location);
+                copy($icon_location, remove_file_extension($target_path) . '-icon.' . $path_parts['extension']);
             }
 
             if (copy($tempFile, $target_path)) {
                 copy($manifest_file, $target_manifest);
                 if ($display_messages) {
-                    $messages = '<script>ajaxStatus.flashStatus("' .$base_filename.$mod_strings['LBL_UW_UPLOAD_SUCCESS'] . ', 5000");</script>';
+                    $messages = '<script>ajaxStatus.flashStatus("' . $base_filename . $mod_strings['LBL_UW_UPLOAD_SUCCESS'] . ', 5000");</script>';
                 }
             } else {
                 if ($display_messages) {
-                    $messages = '<script>ajaxStatus.flashStatus("' .$mod_strings['ERR_UW_UPLOAD_ERROR'] . ', 5000");</script>';
+                    $messages = '<script>ajaxStatus.flashStatus("' . $mod_strings['ERR_UW_UPLOAD_ERROR'] . ', 5000");</script>';
                 }
             }
         }//fi
@@ -592,37 +590,40 @@ class PackageManager
     {
         global $sugar_config;
         @unlink($_FILES['upgrade_zip']['tmp_name']);
-        @unlink("upload://".$_FILES['upgrade_zip']['name']);
+        @unlink('upload://' . $_FILES['upgrade_zip']['name']);
     }
 
-    public function performInstall($file, $silent=true)
+    /**
+     * @throws Exception
+     */
+    public function performInstall($file, $silent = true)
     {
         global $sugar_config;
         global $mod_strings;
         global $current_language;
-        $base_upgrade_dir       = $this->upload_dir.'/upgrades';
-        $base_tmp_upgrade_dir   = "$base_upgrade_dir/temp";
+        $base_upgrade_dir = $this->upload_dir . '/upgrades';
+        $base_tmp_upgrade_dir = "$base_upgrade_dir/temp";
         if (!file_exists($base_tmp_upgrade_dir)) {
             mkdir_recursive($base_tmp_upgrade_dir, true);
         }
 
-        LoggerManager::getLogger()->debug("INSTALLING: ".$file);
+        LoggerManager::getLogger()->debug('INSTALLING: ' . $file);
         $mi = new ModuleInstaller();
         $mi->silent = $silent;
-        $mod_strings = return_module_language($current_language, "Administration");
-        LoggerManager::getLogger()->debug("ABOUT TO INSTALL: ".$file);
-        if (preg_match("#.*\.zip\$#", (string) $file)) {
-            LoggerManager::getLogger()->debug("1: ".$file);
+        $mod_strings = return_module_language($current_language, 'Administration');
+        LoggerManager::getLogger()->debug('ABOUT TO INSTALL: ' . $file);
+        if (preg_match("#.*\.zip\$#", (string)$file)) {
+            LoggerManager::getLogger()->debug('1: ' . $file);
             // handle manifest.php
             $target_manifest = remove_file_extension($file) . '-manifest.php';
             $manifest = [];
             $installdefs = [];
             include($target_manifest);
-            LoggerManager::getLogger()->debug("2: ".$file);
+            LoggerManager::getLogger()->debug('2: ' . $file);
             $unzip_dir = mk_temp_dir($base_tmp_upgrade_dir);
             $this->addToCleanup($unzip_dir);
             unzip($file, $unzip_dir);
-            LoggerManager::getLogger()->debug("3: ".$unzip_dir);
+            LoggerManager::getLogger()->debug('3: ' . $unzip_dir);
             $id_name = $installdefs['id'];
             $version = $manifest['version'];
             $uh = new UpgradeHistory();
@@ -638,22 +639,22 @@ class PackageManager
             } else {
                 $mi->install($unzip_dir);
             }
-            LoggerManager::getLogger()->debug("INSTALLED: ".$file);
+            LoggerManager::getLogger()->debug('INSTALLED: ' . $file);
             $new_upgrade = new UpgradeHistory();
-            $new_upgrade->filename      = $file;
-            $new_upgrade->md5sum        = md5_file($file);
-            $new_upgrade->type          = $manifest['type'];
-            $new_upgrade->version       = $manifest['version'];
-            $new_upgrade->status        = "installed";
+            $new_upgrade->filename = $file;
+            $new_upgrade->md5sum = md5_file($file);
+            $new_upgrade->type = $manifest['type'];
+            $new_upgrade->version = $manifest['version'];
+            $new_upgrade->status = 'installed';
             //$new_upgrade->author        = $manifest['author'];
-            $new_upgrade->name          = $manifest['name'];
-            $new_upgrade->description   = $manifest['description'];
-            $new_upgrade->id_name		= $id_name;
+            $new_upgrade->name = $manifest['name'];
+            $new_upgrade->description = $manifest['description'];
+            $new_upgrade->id_name = $id_name;
             $serial_manifest = array();
             $serial_manifest['manifest'] = (isset($manifest) ? $manifest : '');
             $serial_manifest['installdefs'] = (isset($installdefs) ? $installdefs : '');
             $serial_manifest['upgrade_manifest'] = (isset($upgrade_manifest) ? $upgrade_manifest : '');
-            $new_upgrade->manifest		= base64_encode(serialize($serial_manifest));
+            $new_upgrade->manifest = base64_encode(serialize($serial_manifest));
             //$new_upgrade->unique_key    = (isset($manifest['unique_key'])) ? $manifest['unique_key'] : '';
             $new_upgrade->save();
             //unlink($file);
@@ -670,8 +671,8 @@ class PackageManager
             global $sugar_config;
             global $mod_strings;
             global $current_language;
-            $base_upgrade_dir       = $this->upload_dir.'/upgrades';
-            $base_tmp_upgrade_dir   = "$base_upgrade_dir/temp";
+            $base_upgrade_dir = $this->upload_dir . '/upgrades';
+            $base_tmp_upgrade_dir = "$base_upgrade_dir/temp";
             if (is_file($found->filename)) {
                 if (!isset($GLOBALS['mi_remove_tables'])) {
                     $GLOBALS['mi_remove_tables'] = true;
@@ -693,51 +694,59 @@ class PackageManager
 
     public function getUITextForType($type)
     {
-        if ($type == "full") {
-            return("Full Upgrade");
+        if ($type === 'full') {
+            return ('Full Upgrade');
         }
-        if ($type == "langpack") {
-            return("Language Pack");
+        if ($type === 'langpack') {
+            return ('Language Pack');
         }
-        if ($type == "module") {
-            return("Module");
+        if ($type === 'module') {
+            return ('Module');
         }
-        if ($type == "patch") {
-            return("Patch");
+        if ($type === 'patch') {
+            return ('Patch');
         }
-        if ($type == "theme") {
-            return("Theme");
+        if ($type === 'theme') {
+            return ('Theme');
         }
     }
 
     public function getImageForType($type)
     {
-        $icon = "";
+        $icon = '';
         switch ($type) {
-            case "full":
-                $icon = SugarThemeRegistry::current()->getImage("Upgrade", "", null, null, '.gif', "Upgrade");
+            case 'full':
+                $icon = SugarThemeRegistry::current()->getImage('Upgrade', '', null, null, '.gif', 'Upgrade');
 
                 break;
-            case "langpack":
-                $icon = SugarThemeRegistry::current()->getImage("LanguagePacks", "", null, null, '.gif', "Language Packs");
+            case 'langpack':
+                $icon = SugarThemeRegistry::current()->getImage(
+                    'LanguagePacks',
+                    '', null, null, '.gif',
+                    'Language Packs'
+                );
 
                 break;
-            case "module":
-                $icon = SugarThemeRegistry::current()->getImage("ModuleLoader", "", null, null, '.gif', "Module Loader");
+            case 'module':
+                $icon = SugarThemeRegistry::current()->getImage('ModuleLoader', '', null, null, '.gif', 'Module Loader');
 
                 break;
-            case "patch":
-                $icon = SugarThemeRegistry::current()->getImage("PatchUpgrades", "", null, null, '.gif', "Patch Upgrades");
+            case 'patch':
+                $icon = SugarThemeRegistry::current()->getImage(
+                    'PatchUpgrades',
+                    '', null, null, '.gif',
+                    'Patch Upgrades'
+                );
 
                 break;
-            case "theme":
-                $icon = SugarThemeRegistry::current()->getImage("Themes", "", null, null, '.gif', "Themes");
+            case 'theme':
+                $icon = SugarThemeRegistry::current()->getImage('Themes', '', null, null, '.gif', 'Themes');
 
                 break;
             default:
                 break;
         }
-        return($icon);
+        return ($icon);
     }
 
     public function getPackagesInStaging($view = 'module')
@@ -745,7 +754,7 @@ class PackageManager
         global $sugar_config;
         global $current_language;
         $uh = new UpgradeHistory();
-        $base_upgrade_dir       = "upload://upgrades";
+        $base_upgrade_dir = 'upload://upgrades';
         $uContent = findAllFiles($base_upgrade_dir, array(), false, 'zip');
         $upgrade_contents = array();
         $content_values = array_values($uContent);
@@ -759,13 +768,13 @@ class PackageManager
 
         $upgrades_available = 0;
         $packages = array();
-        $mod_strings = return_module_language($current_language, "Administration");
+        $mod_strings = return_module_language($current_language, 'Administration');
         foreach ($upgrade_contents as $upgrade_content) {
-            if (!preg_match('#.*\.zip$#', strtolower($upgrade_content)) || preg_match("#.*./zips/.*#", strtolower($upgrade_content))) {
+            if (!preg_match('#.*\.zip$#', strtolower($upgrade_content)) || preg_match('#.*./zips/.*#', strtolower($upgrade_content))) {
                 continue;
             }
 
-            $the_base = basename((string) $upgrade_content);
+            $the_base = basename((string)$upgrade_content);
             $the_md5 = md5_file($upgrade_content);
             $md5_matches = $uh->findByMd5($the_md5);
             $file_install = $upgrade_content;
@@ -784,7 +793,7 @@ class PackageManager
                     $manifest_type = $manifest['type'];
                     $dependencies = array();
                     if (isset($manifest['dependencies'])) {
-                        $dependencies    = $manifest['dependencies'];
+                        $dependencies = $manifest['dependencies'];
                     }
                 }
 
@@ -793,30 +802,30 @@ class PackageManager
                     $uh = new UpgradeHistory();
                     $not_found = $uh->checkDependencies($dependencies);
                     if (!empty($not_found) && (is_countable($not_found) ? count($not_found) : 0) > 0) {
-                        $file_install = 'errors_'.$mod_strings['ERR_UW_NO_DEPENDENCY']."[".implode(',', $not_found)."]";
+                        $file_install = 'errors_' . $mod_strings['ERR_UW_NO_DEPENDENCY'] . '[' . implode(',', $not_found) . ']';
                     }
                 }
 
-                if ($view == 'default' && $manifest_type != 'patch') {
+                if ($view === 'default' && $manifest_type !== 'patch') {
                     continue;
                 }
 
-                if ($view == 'module'
-                    && $manifest_type != 'module' && $manifest_type != 'theme' && $manifest_type != 'langpack') {
+                if ($view === 'module'
+                    && $manifest_type !== 'module' && $manifest_type !== 'theme' && $manifest_type !== 'langpack') {
                     continue;
                 }
 
                 if (empty($manifest['icon'])) {
                     $icon = $this->getImageForType($manifest['type']);
                 } else {
-                    $path_parts = pathinfo((string) $manifest['icon']);
-                    $icon = "<img src=\"" . remove_file_extension($upgrade_content) . "-icon." . $path_parts['extension'] . "\">";
+                    $path_parts = pathinfo((string)$manifest['icon']);
+                    $icon = "<img src=\"" . remove_file_extension($upgrade_content) . '-icon.' . $path_parts['extension'] . "\">";
                 }
 
                 $upgrades_available++;
 
                 $packages[] = array('name' => $name, 'version' => $version, 'published_date' => $published_date,
-                    'description' => $description, 'uninstallable' =>$uninstallable, 'type' => $type,
+                    'description' => $description, 'uninstallable' => $uninstallable, 'type' => $type,
                     'file' => fileToHash($upgrade_content), 'file_install' => fileToHash($upgrade_content), 'unFile' => fileToHash($upgrade_content));
             }//fi
         }//rof
@@ -826,8 +835,8 @@ class PackageManager
     public function getLicenseFromFile($file)
     {
         global $sugar_config;
-        $base_upgrade_dir       = $this->upload_dir.'/upgrades';
-        $base_tmp_upgrade_dir   = "$base_upgrade_dir/temp";
+        $base_upgrade_dir = $this->upload_dir . '/upgrades';
+        $base_tmp_upgrade_dir = "$base_upgrade_dir/temp";
         $license_file = $this->extractFile($file, 'LICENSE.txt', $base_tmp_upgrade_dir);
         if (is_file($license_file)) {
             $contents = file_get_contents($license_file);
@@ -840,23 +849,23 @@ class PackageManager
     /**
      * Run the query to obtain the list of installed types as specified by the type param
      *
-     * @param type	an array of types you would like to search for
-     * 				type options include (theme, langpack, module, patch)
+     * @param type    an array of types you would like to search for
+     *                type options include (theme, langpack, module, patch)
      *
      * @return an array of installed upgrade_history objects
      */
     public function getInstalled($types = array('module'))
     {
         $uh = new UpgradeHistory();
-        $in = "";
+        $in = '';
         $typesCount = count($types);
         for ($i = 0; $i < $typesCount; $i++) {
-            $in .= "'".$types[$i]."'";
-            if (($i+1) < (is_countable($types) ? count($types) : 0)) {
-                $in .= ",";
+            $in .= "'" . $types[$i] . "'";
+            if (($i + 1) < (is_countable($types) ? count($types) : 0)) {
+                $in .= ',';
             }
         }
-        $query = "SELECT * FROM ".$uh->table_name."	 WHERE type IN (".$in.")";
+        $query = 'SELECT * FROM ' . $uh->table_name . '     WHERE type IN (' . $in . ')';
         return $uh->getList($query);
     }
 
@@ -867,8 +876,8 @@ class PackageManager
         $packages = array();
         $upgrades_installed = 0;
         $uh = new UpgradeHistory();
-        $base_upgrade_dir       = $this->upload_dir.'/upgrades';
-        $base_tmp_upgrade_dir   = "$base_upgrade_dir/temp";
+        $base_upgrade_dir = $this->upload_dir . '/upgrades';
+        $base_tmp_upgrade_dir = "$base_upgrade_dir/temp";
         foreach ($installeds as $installed) {
             $populate = false;
             $filename = from_html($installed->filename);
@@ -876,7 +885,7 @@ class PackageManager
             $type = $installed->type;
             $version = $installed->version;
             $uninstallable = false;
-            $link = "";
+            $link = '';
             $description = $installed->description;
             $name = $installed->name;
             $enabled = true;
@@ -887,14 +896,14 @@ class PackageManager
             }
             $upgrades_installed++;
             switch ($type) {
-                case "theme":
-                case "langpack":
-                case "module":
-                case "patch":
+                case 'theme':
+                case 'langpack':
+                case 'module':
+                case 'patch':
                     if ($populate) {
                         $manifest_file = $this->extractManifest($filename, $base_tmp_upgrade_dir);
                         require_once($manifest_file);
-                        LoggerManager::getLogger()->info("Filling in upgrade_history table");
+                        LoggerManager::getLogger()->info('Filling in upgrade_history table');
                         $populate = false;
                         if (isset($manifest['name'])) {
                             $name = $manifest['name'];
@@ -905,7 +914,7 @@ class PackageManager
                             $installed->description = $description;
                         }
                         if (isset($installdefs) && isset($installdefs['id'])) {
-                            $id_name  = $installdefs['id'];
+                            $id_name = $installdefs['id'];
                             $installed->id_name = $id_name;
                         }
 
@@ -919,7 +928,7 @@ class PackageManager
                         $serial_manifest = unserialize(base64_decode($installed->manifest));
                         $manifest = $serial_manifest['manifest'];
                     }
-                    if (($upgrades_installed==0 || $uh->UninstallAvailable($installeds, $installed))
+                    if (($upgrades_installed == 0 || $uh->UninstallAvailable($installeds, $installed))
                         && is_file($filename) && !empty($manifest['is_uninstallable'])) {
                         $uninstallable = true;
                     }
@@ -935,20 +944,20 @@ class PackageManager
                         $file_uninstall = fileToHash($file_uninstall);
                     }
 
-                $packages[] = array(
-                    'name' => $name,
-                    'version' => $version,
-                    'type' => $type,
-                    'published_date' => $date_entered,
-                    'description' => $description,
-                    'uninstallable' =>$uninstallable,
-                    'file_install' =>  $file_uninstall ,
-                    'file' =>  fileToHash($filename),
-                    'enabled' => $enabled_string
-                );
-                break;
+                    $packages[] = array(
+                        'name' => $name,
+                        'version' => $version,
+                        'type' => $type,
+                        'published_date' => $date_entered,
+                        'description' => $description,
+                        'uninstallable' => $uninstallable,
+                        'file_install' => $file_uninstall,
+                        'file' => fileToHash($filename),
+                        'enabled' => $enabled_string
+                    );
+                    break;
                 default:
-                break;
+                    break;
             }
         }//rof
         return $packages;

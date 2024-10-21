@@ -129,17 +129,17 @@ class SubpanelDataPort
 
         $lisData = [
             'data' => [],
-            "offsets" => [
-                "current" => $offset,
-                "next" => $next_offset,
-                "prev" => $previous_offset,
-                "end" => $last_offset,
-                "total" => $row_count,
-                "totalCounted" => true
+            'offsets'  => [
+                'current'      => $offset,
+                'next'         => $next_offset,
+                'prev'         => $previous_offset,
+                'end'          => $last_offset,
+                'total'        => $row_count,
+                'totalCounted' => true
             ],
-            "ordering" => [
-                "orderBy" => $orderBy,
-                "sortOrder" => $sortOrder
+            'ordering' => [
+                'orderBy'   => $orderBy,
+                'sortOrder' => $sortOrder
             ],
             'pageData' => []
         ];
@@ -169,7 +169,7 @@ class SubpanelDataPort
 
         $beanData->fill_in_additional_list_fields();
 
-        $beanData->call_custom_logic("process_record");
+        $beanData->call_custom_logic('process_record');
 
         if (isset($parent_data[$beanData->id])) {
             $beanData->parent_name = $parent_data[$beanData->id]['parent_name'];

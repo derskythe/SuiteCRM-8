@@ -51,7 +51,7 @@ global $mod_strings;
 // the link url, display text for the link, and the icon name.
 
 if (ACLController::checkAccess('Project', 'edit', true)) {
-    $module_menu[] = array("index.php?module=Project&action=EditView&return_module=Project&return_action=DetailView",
+    $module_menu[] = array( 'index.php?module=Project&action=EditView&return_module=Project&return_action=DetailView',
     $mod_strings['LNK_NEW_PROJECT'], 'Create');
 }
 if (ACLController::checkAccess('Project', 'list', true)) {

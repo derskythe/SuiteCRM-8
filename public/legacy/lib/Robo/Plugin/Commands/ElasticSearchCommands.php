@@ -88,7 +88,7 @@ class ElasticSearchCommands extends Tasks
             return;
         }
 
-        $this->io()->title("Results");
+        $this->io()->title('Results');
         foreach ($hits as $key => $module) {
             $this->printModuleResults($showJson, $key, $module);
         }

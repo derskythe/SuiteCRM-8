@@ -41,4 +41,4 @@
 /**
  * Moved Controller into psr compliant filename
  */
-require_once "modules/Emails/EmailsController.php";
+require_once 'modules/Emails/EmailsController.php';

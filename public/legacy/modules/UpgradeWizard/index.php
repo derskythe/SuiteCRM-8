@@ -70,7 +70,7 @@ $trackerManager->pause();
 $trackerManager->unsetMonitors();
 
 ///////////////////////////////////////////////////////////////////////////////
-////	SYSTEM PREP
+////    SYSTEM PREP
 list($base_upgrade_dir, $base_tmp_upgrade_dir) = getUWDirs();
 $subdirs = array('full', 'langpack', 'module', 'patch', 'theme');
 
@@ -97,11 +97,11 @@ if (!isset($_SESSION['step']) || !is_array($_SESSION['step'])) {
     $_SESSION['step'] = array();
 }
 
-////	END SYSTEM PREP
+////    END SYSTEM PREP
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	LOGIC
+////    LOGIC
 $uh = new UpgradeHistory();
 $smarty = new Sugar_Smarty();
 set_upgrade_vars();
@@ -128,14 +128,14 @@ if (!isset($mod_strings['LBL_UW_CONVERT_THE_LICENSE']) || $mod_strings['LBL_UW_C
 }
 
 $license_title = $mod_strings['LBL_UW_ACCEPT_THE_LICENSE'];
-if ((isset($sugar_flavor) && $sugar_flavor != null) && ($sugar_flavor=='OS' || $sugar_flavor=='CE')) {
+if ((isset($sugar_flavor) && $sugar_flavor != null) && ($sugar_flavor === 'OS' || $sugar_flavor === 'CE')) {
     $license_title = $mod_strings['LBL_UW_CONVERT_THE_LICENSE'];
 }
 
-if (isset($_REQUEST['delete_package']) && $_REQUEST['delete_package'] == 'true') {
+if (isset($_REQUEST['delete_package']) && $_REQUEST['delete_package'] === 'true') {
     logThis('running delete old package');
     $error = '';
-    if (!isset($_REQUEST['install_file']) || ($_REQUEST['install_file'] == "")) {
+    if (!isset($_REQUEST['install_file']) || ($_REQUEST['install_file'] == '')) {
         logThis('ERROR: trying to delete non-existent file: ['.$_REQUEST['install_file'].']');
         $error .= $mod_strings['ERR_UW_NO_FILE_UPLOADED'].'<br>';
     }
@@ -148,7 +148,7 @@ if (isset($_REQUEST['delete_package']) && $_REQUEST['delete_package'] == 'true')
     }
 
     // delete back up instance
-    $delete_dir = 'upload://upgrades/patch/'.remove_file_extension(urldecode($_REQUEST['install_file'])) . "-restore";
+    $delete_dir = 'upload://upgrades/patch/'.remove_file_extension(urldecode($_REQUEST['install_file'])) . '-restore';
     if (is_dir($delete_dir) && !@rmdir_recursive($delete_dir)) {
         logThis('ERROR: could not delete: '.$delete_dir);
         $error .= $mod_strings['ERR_UW_FILE_NOT_DELETED'].$delete_dir.'<br>';
@@ -275,10 +275,10 @@ if (isset($_REQUEST['step']) && $_REQUEST['step'] !=null) {
     }
 }
 
-if ($upgradeStepFile == 'license_fiveO') {
+if ($upgradeStepFile === 'license_fiveO') {
     $disableNextForLicense = 'disabled = "disabled"';
 }
-if ($upgradeStepFile == 'end') {
+if ($upgradeStepFile === 'end') {
     //if(isset($_SESSION['current_db_version']) && substr($_SESSION['current_db_version'],0,1) == 4){
     ob_start();
     include('modules/ACL/install_actions.php');
@@ -301,11 +301,11 @@ if (!isset($additionalStep) || !$additionalStep) {
 
 $afterCurrentStep = $_REQUEST['step'] + 1;
 
-////	END LOGIC
+////    END LOGIC
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	UPGRADE HISTORY
+////    UPGRADE HISTORY
 // Reload language strings after copy
 if (empty($GLOBALS['current_language'])) {
     $GLOBALS['current_language'] = 'en_us';
@@ -319,27 +319,27 @@ $uwHistory  = '<table width="100%" border="0" cellspacing="0" cellpadding="0" cl
 $uwHistory .= "<ul>\n";
 $uwHistory .= "<table class=\"edit view\" cellspacing=5>\n";
 $uwHistory .= <<<eoq
-	<tr>
-		<td></td>
-		<td align=left>
-			<b>{$mod_strings['LBL_ML_NAME']}</b>
-		</td>
-		<td align=left>
-			<b>{$mod_strings['LBL_ML_TYPE']}</b>
-		</td>
-		<td align=left>
-			<b>{$mod_strings['LBL_ML_VERSION']}</b>
-		</td>
-		<td align=left>
-			<b>{$mod_strings['LBL_ML_INSTALLED']}</b>
-		</td>
-		<td align=left>
-			<b>{$mod_strings['LBL_ML_DESCRIPTION']}</b>
-		</td>
-		<td align=left>
-			<b>{$mod_strings['LBL_ML_ACTION']}</b>
-		</td>
-	</tr>
+    <tr>
+        <td></td>
+        <td align=left>
+            <b>{$mod_strings['LBL_ML_NAME']}</b>
+        </td>
+        <td align=left>
+            <b>{$mod_strings['LBL_ML_TYPE']}</b>
+        </td>
+        <td align=left>
+            <b>{$mod_strings['LBL_ML_VERSION']}</b>
+        </td>
+        <td align=left>
+            <b>{$mod_strings['LBL_ML_INSTALLED']}</b>
+        </td>
+        <td align=left>
+            <b>{$mod_strings['LBL_ML_DESCRIPTION']}</b>
+        </td>
+        <td align=left>
+            <b>{$mod_strings['LBL_ML_ACTION']}</b>
+        </td>
+    </tr>
 eoq;
 
 foreach ($installeds as $installed) {
@@ -348,19 +348,19 @@ foreach ($installeds as $installed) {
     $date_entered = $installed->date_entered;
     $type = $installed->type;
     //rrs only display patches here
-    if ($type == 'patch') {
+    if ($type === 'patch') {
         $version = $installed->version;
         $upgrades_installed++;
         $link = is_file($filename)? '   <input type="hidden" name="module" value="UpgradeWizard">
-					<input type="hidden" name="action" value="index">
-					<input type="hidden" name="step" value="'.$_REQUEST['step'].'">
-					<input type="hidden" name="delete_package" value="true">
-	        		<input type=hidden name="install_file" value="'.$filename.'" />
-	        		<input type=submit value="'.$mod_strings['LBL_BUTTON_DELETE'].'" />':'';
+                    <input type="hidden" name="action" value="index">
+                    <input type="hidden" name="step" value="'.$_REQUEST['step'].'">
+                    <input type="hidden" name="delete_package" value="true">
+                    <input type=hidden name="install_file" value="'.$filename.'" />
+                    <input type=submit value="'.$mod_strings['LBL_BUTTON_DELETE'].'" />':'';
 
         $view = 'default';
 
-        $target_manifest = remove_file_extension($filename) . "-manifest.php";
+        $target_manifest = remove_file_extension($filename) . '-manifest.php';
 
         // cn: bug 9174 - cleared out upgrade dirs, or corrupt entries in upgrade_history give us bad file paths
         if (is_file($target_manifest)) {
@@ -368,11 +368,12 @@ foreach ($installeds as $installed) {
             $name = empty($manifest['name']) ? $filename : $manifest['name'];
             $description = empty($manifest['description']) ? $mod_strings['LBL_UW_NONE'] : $manifest['description'];
 
-            if (isset($manifest['icon']) && $manifest['icon'] != "") {
-                $manifest_copy_files_to_dir = isset($manifest['copy_files']['to_dir']) ? clean_path($manifest['copy_files']['to_dir']) : "";
-                $manifest_copy_files_from_dir = isset($manifest['copy_files']['from_dir']) ? clean_path($manifest['copy_files']['from_dir']) : "";
+            if (isset($manifest['icon']) && $manifest['icon'] != '') {
+                $manifest_copy_files_to_dir = isset($manifest['copy_files']['to_dir']) ? clean_path($manifest['copy_files']['to_dir']) : '';
+                $manifest_copy_files_from_dir = isset($manifest['copy_files']['from_dir']) ? clean_path($manifest['copy_files']['from_dir']) : '';
                 $manifest_icon = clean_path($manifest['icon']);
-                $icon = "<!--not_in_theme!--><img src=\"" . $manifest_copy_files_to_dir . ($manifest_copy_files_from_dir != "" ? substr((string) $manifest_icon, strlen((string) $manifest_copy_files_from_dir)+1) : $manifest_icon) . "\">";
+                $icon = "<!--not_in_theme!--><img src=\"" . $manifest_copy_files_to_dir . ($manifest_copy_files_from_dir != ''
+                        ? substr((string) $manifest_icon, strlen((string) $manifest_copy_files_from_dir)+1) : $manifest_icon) . "\">";
             } else {
                 $icon = getImageForType($manifest['type']);
             }
@@ -388,96 +389,96 @@ foreach ($installeds as $installed) {
 if ($upgrades_installed == 0) {
     $uwHistory .= "<td colspan='6'>";
     $uwHistory .= $mod_strings['LBL_UW_NO_INSTALLED_UPGRADES'];
-    $uwHistory .= "</td></tr>";
+    $uwHistory .= '</td></tr>';
 }
 
 $uwHistory .= "</table></td></tr>
 </table>\n";
 $uwHistory .= "</ul>\n";
-////	END UPGRADE HISTORY
+////    END UPGRADE HISTORY
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PAGE OUTPUT
+////    PAGE OUTPUT
 
-if ($upgradeStepFile=='preflight' || $upgradeStepFile=='commit' || $upgradeStepFile=='end') {
+if ($upgradeStepFile === 'preflight' || $upgradeStepFile === 'commit' || $upgradeStepFile === 'end') {
     $UW_510RC_PACKAGE_MESSAGE=<<<eoq
 <table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<th colspan="2" align="center">
-			<h1><span class='error'><b>We do not recommended upgrading your production system to 5.1.0 RC. We recommend upgrading a development system for testing purposes.</b></span></h1>
-		</th>
-	</tr>
+    <tr>
+        <th colspan="2" align="center">
+            <h1><span class='error'><b>We do not recommended upgrading your production system to 5.1.0 RC. We recommend upgrading a development system for testing purposes.</b></span></h1>
+        </th>
+    </tr>
 </table>
 eoq;
 }
 $js=<<<eoq
 <script type="text/javascript" language="Javascript">
-	function toggleNwFiles(target) {
-		var div = document.getElementById(target);
+    function toggleNwFiles(target) {
+        var div = document.getElementById(target);
 
-		if(div.style.display == "none") {
-			div.style.display = "";
-		} else {
-			div.style.display = "none";
-		}
-	}
+        if(div.style.display == "none") {
+            div.style.display = "";
+        } else {
+            div.style.display = "none";
+        }
+    }
 
 
 
 function handlePreflight(step) {
-		if(step == 'preflight') {
-			if(document.getElementById('select_schema_change') != null){
-				document.getElementById('schema').value = document.getElementById('select_schema_change').value;
-			}
-			if(document.getElementById('diffs') != null) {
-				/* preset the hidden var for defaults */
-				checkSqlStatus(false);
+        if(step == 'preflight') {
+            if(document.getElementById('select_schema_change') != null){
+                document.getElementById('schema').value = document.getElementById('select_schema_change').value;
+            }
+            if(document.getElementById('diffs') != null) {
+                /* preset the hidden var for defaults */
+                checkSqlStatus(false);
 
-				theForm = document.getElementById('diffs');
-				var serial = '';
-				for(i=0; i<theForm.elements.length; i++) {
-						if(theForm.elements[i].type == 'checkbox' && theForm.elements[i].checked == false) {
-						// we only want "DON'T OVERWRITE" files
-						if(serial != '') {
-							serial += "::";
-						}
-						serial += theForm.elements[i].value;
-					}
-				}				document.getElementById('overwrite_files_serial').value = serial;
+                theForm = document.getElementById('diffs');
+                var serial = '';
+                for(i=0; i<theForm.elements.length; i++) {
+                        if(theForm.elements[i].type == 'checkbox' && theForm.elements[i].checked == false) {
+                        // we only want "DON'T OVERWRITE" files
+                        if(serial != '') {
+                            serial += "::";
+                        }
+                        serial += theForm.elements[i].value;
+                    }
+                }                document.getElementById('overwrite_files_serial').value = serial;
 
-				if(document.getElementById('addTask').checked == true) {
-					document.getElementById('addTaskReminder').value = 'remind';
-				}
-				if(document.getElementById('addEmail').checked == true) {
-					document.getElementById('addEmailReminder').value = 'remind';
-				}
-			}
-		}
+                if(document.getElementById('addTask').checked == true) {
+                    document.getElementById('addTaskReminder').value = 'remind';
+                }
+                if(document.getElementById('addEmail').checked == true) {
+                    document.getElementById('addEmailReminder').value = 'remind';
+                }
+            }
+        }
 
-		var merge_necessary = true;
-		if(step == 'layouts')
-		   merge_necessary = getSelectedModulesForLayoutMerge();
+        var merge_necessary = true;
+        if(step == 'layouts')
+           merge_necessary = getSelectedModulesForLayoutMerge();
 
-		if(!merge_necessary){
-			document.getElementById('step').value = '{$afterCurrentStep}';
-		}
+        if(!merge_necessary){
+            document.getElementById('step').value = '{$afterCurrentStep}';
+        }
 
-		return;
-	}
+        return;
+    }
 
 function handleUploadCheck(step, u_allow) {
-	if(step == 'upload' && !u_allow) {
-		document.getElementById('top_message').innerHTML = '<span class="error"><b>{$mod_strings['LBL_UW_FROZEN']}</b></span>';
-	}
+    if(step == 'upload' && !u_allow) {
+        document.getElementById('top_message').innerHTML = '<span class="error"><b>{$mod_strings['LBL_UW_FROZEN']}</b></span>';
+    }
 
-	return;
+    return;
 }
 
 
 function getSelectedModulesForLayoutMerge()
 {
-	var found_one = false;
+    var found_one = false;
     var results = new Array();
     var table = document.getElementById('layoutSelection');
     var moduleCheckboxes = table.getElementsByTagName('input');
@@ -595,9 +596,9 @@ $smarty->assign('UW_HISTORY', $uwHistory);
 $smarty->assign('disableNextForLicense', $disableNextForLicense);
 $u_allow='true';
 if (isset($stop) && $stop == true) {
-    $frozen = (isset($frozen)) ? "<br />".$frozen : '';
+    $frozen = (isset($frozen)) ? '<br />' .$frozen : '';
     $smarty->assign('frozen', $frozen);
-    if ($step == 'upload') {
+    if ($step === 'upload') {
         $u_allow = 'false';
     }
 }
@@ -611,5 +612,5 @@ $smarty->display('modules/UpgradeWizard/uw_main.tpl');
 
 // Clear session variables
 unset($_SESSION['UW_MAIN'], $_SESSION['UW_JS'], $_SESSION['STEP'], $_SESSION['STEPS'], $_SESSION['MOD'], $_SESSION['APP'], $_SESSION['showNext'], $_SESSION['showCancel'], $_SESSION['showBack'], $_SESSION['showRecheck'], $_SESSION['showDone'], $_SESSION['showExit'], $_SESSION['STEP_NEXT'], $_SESSION['STEP_CANCEL'], $_SESSION['STEP_BACK'], $_SESSION['STEP_RECHECK'], $_SESSION['STEPS_FILE'], $_SESSION['UW_HISTORY'], $_SESSION['disableNextForLicense'], $_SESSION['frozen'], $_SESSION['u_allow'], $_SESSION['top_message']);
-////	END PAGE OUTPUT
+////    END PAGE OUTPUT
 ///////////////////////////////////////////////////////////////////////////////

@@ -48,6 +48,9 @@ require_once 'include/SugarOAuthServer.php';
 #[\AllowDynamicProperties]
 class OauthTokensViewAuthorize extends SugarView
 {
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         if (!SugarOAuthServer::enabled()) {
@@ -84,15 +87,15 @@ class OauthTokensViewAuthorize extends SugarView
             if ($_REQUEST['sid'] != session_id() || $_SESSION['oauth_hash'] != $_REQUEST['hash']) {
                 sugar_die('Invalid request');
             }
-            $verify = $token->authorize(array("user" => $current_user->id));
+            $verify = $token->authorize(array( 'user' => $current_user->id));
             if (!empty($token->callback_url)) {
                 $redirect_url=$token->callback_url;
-                if (strstr((string) $redirect_url, "?") !== false) {
+                if (str_contains((string) $redirect_url, '?')) {
                     $redirect_url .= '&';
                 } else {
                     $redirect_url .= '?';
                 }
-                $redirect_url .= "oauth_verifier=".$verify.'&oauth_token='.$_REQUEST['token'];
+                $redirect_url .= 'oauth_verifier=' .$verify.'&oauth_token='. $_REQUEST['token'];
                 SugarApplication::redirect($redirect_url);
             }
             $sugar_smarty->assign('VERIFY', $verify);

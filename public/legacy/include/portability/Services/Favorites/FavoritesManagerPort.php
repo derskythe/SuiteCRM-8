@@ -49,9 +49,12 @@ class FavoritesManagerPort
 
     /**
      * Add favourite
+     *
      * @param string $module
      * @param string $id
+     *
      * @return array
+     * @throws Exception
      */
     public function add(string $module, string $id): array
     {
@@ -131,7 +134,7 @@ class FavoritesManagerPort
         $userId = $current_user->id ?? null;
 
         $excludedModules = ['Home', 'Administration', 'ModuleBuilder'];
-  
+
         if (empty($db) || empty($userId) || empty($module) || in_array($module, $excludedModules)) {
             return [];
         }
@@ -142,14 +145,14 @@ class FavoritesManagerPort
             return [];
         }
 
-        $query = "SELECT favorites.*
+        $query = 'SELECT favorites.*
                   FROM favorites
-                  JOIN " . $bean->table_name . " ON ( " . $bean->table_name . ".id = favorites.parent_id )
+                  JOIN ' . $bean->table_name . ' ON ( ' . $bean->table_name . ".id = favorites.parent_id )
                   WHERE favorites.assigned_user_id = '" . $db->quote($userId) . "'
                     AND favorites.parent_type = '" . $db->quote($module) . "'
                     AND favorites.deleted = 0
-                    AND " . $bean->table_name . ".deleted = 0
-                  ORDER BY favorites.date_entered DESC";
+                    AND " . $bean->table_name . '.deleted = 0
+                  ORDER BY favorites.date_entered DESC';
 
         $result = $db->limitQuery($query, 0, 10);
 

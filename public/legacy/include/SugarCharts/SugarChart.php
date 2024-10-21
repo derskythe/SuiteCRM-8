@@ -67,7 +67,7 @@ class SugarChart
     public $is_currency;
     public $supports_image_export = false;
     public $print_html_legend_pdf = false;
-    public $image_export_type = "";
+    public $image_export_type = '';
 
     public function __construct()
     {
@@ -88,7 +88,7 @@ class SugarChart
             $this->div = 1;
             $this->is_currency = false;
         }
-        $this->image_export_type = (extension_loaded('gd') && function_exists('gd_info')) ? "png" : "jpg";
+        $this->image_export_type = (extension_loaded('gd') && function_exists('gd_info')) ? 'png' : 'jpg';
     }
 
     public function getData($query)
@@ -124,7 +124,7 @@ class SugarChart
     {
         $url = $this->constructBaseURL();
         foreach ($this->url_params as $param => $value) {
-            if ($param == 'assigned_user_id') {
+            if ($param === 'assigned_user_id') {
                 $param = 'assigned_user_id[]';
             }
             if (is_array($value)) {
@@ -166,8 +166,8 @@ class SugarChart
     /**
      * returns the header for the constructed xml file for sugarcharts
      *
-     * @param 	nothing
-     * @return	string $header XML header
+     * @param     nothing
+     * @return    string $header XML header
      */
     public function xmlHeader()
     {
@@ -180,12 +180,12 @@ class SugarChart
     /**
      * returns the footer for the constructed xml file for sugarcharts
      *
-     * @param 	nothing
-     * @return	string $footer XML footer
+     * @param     nothing
+     * @return    string $footer XML footer
      */
     public function xmlFooter()
     {
-        $footer = "</sugarcharts>";
+        $footer = '</sugarcharts>';
 
         return $footer;
     }
@@ -193,13 +193,13 @@ class SugarChart
     /**
      * returns the properties tag for the constructed xml file for sugarcharts
      *
-     * @param 	nothing
-     * @return	string $properties XML properties tag
+     * @param     nothing
+     * @return    string $properties XML properties tag
      */
     public function xmlProperties()
     {
         // open the properties tag
-        $properties = $this->tab("<properties>", 1);
+        $properties = $this->tab('<properties>', 1);
 
         // grab the property and value from the chart_properties variable
         foreach ($this->chart_properties as $key => $value) {
@@ -211,17 +211,17 @@ class SugarChart
 
         if (!empty($this->colors_list)) {
             // open the colors tag
-            $properties .= $this->tab("<colors>", 2);
+            $properties .= $this->tab('<colors>', 2);
             foreach ($this->colors_list as $color) {
                 $properties .= $this->tab("<color>$color</color>", 3);
             }
 
             // close the colors tag
-            $properties .= $this->tab("</colors>", 2);
+            $properties .= $this->tab('</colors>', 2);
         }
 
         // close the properties tag
-        $properties .= $this->tab("</properties>", 1);
+        $properties .= $this->tab('</properties>', 1);
 
         return $properties;
     }
@@ -229,8 +229,8 @@ class SugarChart
     /**
      * returns the y-axis values for the chart
      *
-     * @param 	nothing
-     * @return	string $yAxis XML yAxis tag
+     * @param     nothing
+     * @return    string $yAxis XML yAxis tag
      */
     public function xmlYAxis()
     {
@@ -268,13 +268,13 @@ class SugarChart
         // to compensate, the yMax should be at least one step above the max value
         $this->chart_yAxis['yMax'] += $this->chart_yAxis['yStep'];
 
-        $yAxis = $this->tab("<yAxis>", 1);
+        $yAxis = $this->tab('<yAxis>', 1);
 
         foreach ($this->chart_yAxis as $key => $value) {
             $yAxis .= $this->tabValue((string)($key), $value, 2);
         }
 
-        $yAxis .= $this->tab("</yAxis>", 1);
+        $yAxis .= $this->tab('</yAxis>', 1);
 
         return $yAxis;
     }
@@ -282,8 +282,8 @@ class SugarChart
     /**
      * returns the total amount value for the group by field
      *
-     * @param 	group by field
-     * @return	int $total total value
+     * @param     group by field
+     * @return    int $total total value
      */
     public function calculateTotal($group_by)
     {
@@ -300,9 +300,9 @@ class SugarChart
     /**
      * returns text with tabs appended before it
      *
-     * @param 	string $str input string
-     *			int $depth number of times to tab
-     * @return	string with tabs appended before it
+     * @param     string $str input string
+     *            int $depth number of times to tab
+     * @return    string with tabs appended before it
      */
     public function tab($str, $depth)
     {
@@ -311,11 +311,11 @@ class SugarChart
     /**
      * returns text with tabs appended before it
      *
-     * @param 	string $str xml tag
-     *			int $tagFormat 2 = open and close tag, 1 = close, 0 = open
-     *			sting $value input string
-     *			int $depth number of times to tab
-     * @return	string with tabs appended before it
+     * @param     string $str xml tag
+     *            int $tagFormat 2 = open and close tag, 1 = close, 0 = open
+     *            sting $value input string
+     *            int $depth number of times to tab
+     * @return    string with tabs appended before it
      */
 
     public function tabValue($tag, $value, $depth)
@@ -325,8 +325,8 @@ class SugarChart
     /**
      * returns xml data format
      *
-     * @param 	none
-     * @return	string with xml data format
+     * @param     none
+     * @return    string with xml data format
      */
     public function processData()
     {
@@ -349,7 +349,7 @@ class SugarChart
 
             // push new item onto legend items list
             if (isset($drill_down)) {
-                if (!in_array($this->data_set[$i][$drill_down], $this->super_set)) {
+                if (!in_array($this->data_set[$i][$drill_down], $this->super_set, true)) {
                     $this->super_set[] = $this->data_set[$i][$drill_down];
                 }
             }
@@ -396,8 +396,8 @@ class SugarChart
     /**
      * returns correct yAxis min/max
      *
-     * @param 	value to check
-     * @return	yAxis min and max
+     * @param     value to check
+     * @return    yAxis min and max
      */
     public function checkYAxis($value)
     {
@@ -542,13 +542,15 @@ class SugarChart
             $data .= $this->tabValue('value', $value, 3);
             $data .= $this->tabValue('label', $label, 3);
             if (isset($drill_down) && $drill_down) {
-                if ($this->group_by[0] == 'm') {
+                if ($this->group_by[0] === 'm') {
                     $additional_param = '&date_closed_advanced=' . urlencode($key);
                 } else {
-                    if ($this->group_by[0] == 'sales_stage') {
-                        $additional_param = '&sales_stage_advanced[]='.urlencode(array_search($key, $GLOBALS['app_list_strings']['sales_stage_dom']));
+                    if ($this->group_by[0] === 'sales_stage') {
+                        $additional_param = '&sales_stage_advanced[]=' . urlencode(
+                                array_search($key, $GLOBALS['app_list_strings']['sales_stage_dom'], true)
+                            );
                     } else {
-                        $additional_param = "&" . $this->group_by[0] . "=" . urlencode($key);
+                        $additional_param = '&' . $this->group_by[0] . '=' . urlencode($key);
                     }
                 }
                 $url = $this->constructURL() . $additional_param;
@@ -575,12 +577,14 @@ class SugarChart
             $total = $this->calculateTotal($groupByKey);
             $this->checkYAxis($total);
 
-            if ($this->group_by[0] == 'm') {
+            if ($this->group_by[0] === 'm') {
                 $additional_param = '&date_closed_advanced=' . urlencode($groupByKey);
             } else {
                 $paramValue = (isset($value[0]['key']) && $value[0]['key'] != '') ? $value[0]['key'] : $groupByKey;
-                $paramValue = (isset($value[0][$this->group_by[0]."_dom_option"]) && $value[0][$this->group_by[0]."_dom_option"] != '') ? $value[0][$this->group_by[0]."_dom_option"] : $paramValue;
-                $additional_param = "&" . $this->group_by[0] . "=" . urlencode($paramValue);
+                $paramValue =
+                    (isset($value[0][$this->group_by[0] . '_dom_option']) && $value[0][$this->group_by[0] . '_dom_option'] != '')
+                        ? $value[0][$this->group_by[0] . '_dom_option'] : $paramValue;
+                $additional_param = '&' . $this->group_by[0] . '=' . urlencode($paramValue);
             }
 
             $url = $this->constructURL() . $additional_param;
@@ -613,13 +617,16 @@ class SugarChart
 
                     if ($objectInSaleStage) {
                         if (isset($objectInSaleStage[$group_by]) && $objectInSaleStage[$group_by] == $groupByKey) {
-                            if ($drill_down == 'user_name') {
+                            if ($drill_down === 'user_name') {
                                 $drill_down_param = '&assigned_user_id[]=' . urlencode($objectInSaleStage['assigned_user_id']);
                             } else {
-                                if ($drill_down == 'm') {
+                                if ($drill_down === 'm') {
                                     $drill_down_param = '&date_closed_advanced=' . urlencode($objectInSaleStage[$drill_down]);
                                 } else {
-                                    $paramValue = (isset($objectInSaleStage[$drill_down . "_dom_option"]) && $objectInSaleStage[$drill_down . "_dom_option"] != '') ? $objectInSaleStage[$drill_down . "_dom_option"] : $objectInSaleStage[$drill_down];
+                                    $paramValue =
+                                        (isset($objectInSaleStage[$drill_down . '_dom_option']) && $objectInSaleStage[$drill_down . '_dom_option'] != '')
+                                            ? $objectInSaleStage[$drill_down . '_dom_option']
+                                            : $objectInSaleStage[$drill_down];
                                     $drill_down_param = '&' . $drill_down . '=' . urlencode($paramValue);
                                 }
                             }
@@ -671,19 +678,19 @@ class SugarChart
      */
     public static function getXMLFileName($file_id)
     {
-        create_cache_directory("xml/".$GLOBALS['current_user']->getUserPrivGuid() . "_{$file_id}.xml");
+        create_cache_directory('xml/' . $GLOBALS['current_user']->getUserPrivGuid() . "_{$file_id}.xml");
 
-        return sugar_cached("xml/"). $GLOBALS['current_user']->getUserPrivGuid() . "_" . $file_id . ".xml";
+        return sugar_cached('xml/') . $GLOBALS['current_user']->getUserPrivGuid() . '_' . $file_id . '.xml';
     }
 
     public function processXmlData()
     {
         $data = '';
 
-        if ($this->chart_properties['type'] == 'group by chart') {
+        if ($this->chart_properties['type'] === 'group by chart') {
             $data .= $this->xmlDataForGroupByChart();
         } else {
-            if ($this->chart_properties['type'] == 'bar chart' || $this->chart_properties['type'] == 'horizontal bar chart') {
+            if ($this->chart_properties['type'] === 'bar chart' || $this->chart_properties['type'] === 'horizontal bar chart') {
                 $data .= $this->xmlDataBarChart();
             } else {
                 $data .= $this->xmlDataGenericChart();
@@ -705,8 +712,8 @@ class SugarChart
     /**
      * function to generate XML and return it
      *
-     * @param 	none
-     * @return	string $xmlContents with xml information
+     * @param     none
+     * @return    string $xmlContents with xml information
      */
     public function generateXML($xmlDataName = false)
     {
@@ -722,9 +729,11 @@ class SugarChart
     /**
      * function to save XML contents into a file
      *
-     * @param 	string $xmlFilename location of the xml file
-     *			string $xmlContents contents of the xml file
-     * @return	string boolean denoting whether save has failed
+     * @param string $xmlFilename location of the xml file
+     *                            string $xmlContents contents of the xml file
+     *
+     * @return    string boolean denoting whether save has failed
+     * @throws Exception
      */
     public function saveXMLFile($xmlFilename, $xmlContents)
     {
@@ -760,8 +769,8 @@ class SugarChart
     /**
      * generates xml file for Flash charts to use for internationalized instances
      *
-     * @param 	string $xmlFile	location of the XML file to write to
-     * @return	none
+     * @param     string $xmlFile    location of the XML file to write to
+     * @return    none
      */
     public function generateChartStrings($xmlFile)
     {
@@ -769,7 +778,7 @@ class SugarChart
 
         $chartStringsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         $chartStringsXML .= "<sugarlanguage version=\"1.0\">\n";
-        $chartStringsXML .= $this->tab("<charts>", 1);
+        $chartStringsXML .= $this->tab('<charts>', 1);
 
         if (empty($app_list_strings)) {
             //set module and application string arrays based upon selected language
@@ -781,7 +790,7 @@ class SugarChart
             $chartStringsXML .= $this->tab("<$tag>$chart_string</$tag>", 2);
         }
 
-        $chartStringsXML .= $this->tab("</charts>", 1);
+        $chartStringsXML .= $this->tab('</charts>', 1);
         $chartStringsXML .= "</sugarlanguage>\n";
 
         $this->saveXMLFile($xmlFile, $chartStringsXML);
@@ -790,10 +799,10 @@ class SugarChart
     /**
      * wrapper function to return the html code containing the chart in a div
      *
-     * @param 	string $name 	name of the div
-     *			string $xmlFile	location of the XML file
-     *			string $style	optional additional styles for the div
-     * @return	string returns the html code through smarty
+     * @param     string $name     name of the div
+     *            string $xmlFile    location of the XML file
+     *            string $style    optional additional styles for the div
+     * @return    string returns the html code through smarty
      */
     public function display($name, $xmlFile, $width='320', $height='480', $resize=false)
     {
@@ -803,17 +812,17 @@ class SugarChart
         global $current_language, $theme, $sugar_config,$app_strings;
 
         $this->app_strings = $app_strings;
-        $this->chartStringsXML = sugar_cached("xml/").'chart_strings.' . $current_language .'.lang.xml';
+        $this->chartStringsXML = sugar_cached('xml/') . 'chart_strings.' . $current_language . '.lang.xml';
         if (!file_exists($this->chartStringsXML)) {
             $this->generateChartStrings($this->chartStringsXML);
         }
 
-        $templateFile = "";
+        $templateFile = '';
         return $templateFile;
     }
 
 
-    public function getDashletScript($id, $xmlFile="")
+    public function getDashletScript($id, $xmlFile = '')
     {
         $xmlFile = (!$xmlFile) ? $sugar_config['tmp_dir']. $current_user->id . '_' . $this->id . '.xml' : $xmlFile;
         $chartStringsXML = $GLOBALS['sugar_config']['tmp_dir'].'chart_strings.' . $current_language .'.lang.xml';
@@ -824,7 +833,7 @@ class SugarChart
         $this->ss->assign('chartColorsXML', SugarThemeRegistry::current()->getImageURL('sugarColors.xml'));
         $this->ss->assign('chartLangFile', $GLOBALS['sugar_config']['tmp_dir'].'chart_strings.' . $GLOBALS['current_language'] .'.lang.xml');
 
-        $templateFile = "";
+        $templateFile = '';
         return $templateFile;
     }
 
@@ -853,7 +862,7 @@ class SugarChart
         if ($translate1) {
             $temp_sortby1 = array();
             foreach (array_keys($app_list_strings[$keycolname1.'_dom']) as $sortby1_value) {
-                if (in_array($sortby1_value, $sortby1)) {
+                if (in_array($sortby1_value, $sortby1, true)) {
                     $temp_sortby1[] = $sortby1_value;
                 }
             }
@@ -879,7 +888,7 @@ class SugarChart
             if ($translate2) {
                 $temp_sortby2 = array();
                 foreach (array_keys($app_list_strings[$keycolname2.'_dom']) as $sortby2_value) {
-                    if (in_array($sortby2_value, $sortby2)) {
+                    if (in_array($sortby2_value, $sortby2, true)) {
                         $temp_sortby2[] = $sortby2_value;
                     }
                 }
@@ -934,21 +943,21 @@ class SugarChart
 
     public function getChartResources()
     {
-        $resources = "";
+        $resources = '';
         return $resources;
     }
 
     public function getMySugarChartResources()
     {
-        $mySugarResources = "";
+        $mySugarResources = '';
         return $mySugarResources;
     }
 
     /**
      * wrapper function to return chart array after any additional processing
      *
-     * @param 	array $chartsArray 	array of chart config items that need processing
-     * @return	array $chartArray after it has been process
+     * @param     array $chartsArray     array of chart config items that need processing
+     * @return    array $chartArray after it has been process
      */
     public function chartArray($chartsArray)
     {

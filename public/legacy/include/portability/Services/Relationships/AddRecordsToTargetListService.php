@@ -90,11 +90,14 @@ class AddRecordsToTargetListService
 
     /**
      * Link records to target list
+     *
      * @param SugarBean|null $bean - bean object of base module
      * @param array $beanIds
      * @param string $modalModule
      * @param string $modalId
+     *
      * @return bool
+     * @throws Exception
      */
     protected function linkRecordsToTargetList(
         SugarBean $bean,

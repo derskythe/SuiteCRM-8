@@ -51,6 +51,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class ViewShowDuplicates extends SugarView
 {
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         global $app_strings;
@@ -60,12 +63,12 @@ class ViewShowDuplicates extends SugarView
         global $mod_strings;
 
         if (!isset($_SESSION['SHOW_DUPLICATES'])) {
-            $GLOBALS['log']->error("Unauthorized access to this area.");
-            sugar_die("Unauthorized access to this area.");
+            $GLOBALS['log']->error('Unauthorized access to this area.');
+            sugar_die('Unauthorized access to this area.');
         }
 
         parse_str($_SESSION['SHOW_DUPLICATES'], $_POST);
-        $post = array_map("securexss", $_POST);
+        $post = array_map('securexss', $_POST);
         foreach ($post as $k => $v) {
             $_POST[$k] = $v;
         }
@@ -83,7 +86,7 @@ class ViewShowDuplicates extends SugarView
         $count = is_countable($duplicates) ? count($duplicates) : 0;
         $db = DBManagerFactory::getInstance();
         if ($count > 0) {
-            $query .= "and (";
+            $query .= 'and (';
             $first = true;
             foreach ($duplicates as $duplicate_id) {
                 if (!$first) {
@@ -136,18 +139,18 @@ class ViewShowDuplicates extends SugarView
         if (!empty($_POST['return_module'])) {
             $this->ss->assign('RETURN_MODULE', $_POST['return_module']);
         } else {
-            $get .= "Leads";
+            $get .= 'Leads';
         }
 
-        $get .= "&return_action=";
+        $get .= '&return_action=';
         if (!empty($_POST['return_action'])) {
             $this->ss->assign('RETURN_ACTION', $_POST['return_action']);
         } else {
-            $get .= "DetailView";
+            $get .= 'DetailView';
         }
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	INBOUND EMAIL WORKFLOW
+        ////    INBOUND EMAIL WORKFLOW
         if (isset($_REQUEST['inbound_email_id'])) {
             $this->ss->assign('INBOUND_EMAIL_ID', $_REQUEST['inbound_email_id']);
             $this->ss->assign('RETURN_MODULE', 'Emails');
@@ -156,7 +159,7 @@ class ViewShowDuplicates extends SugarView
                 $this->ss->assign('START', $_REQUEST['start']);
             }
         }
-        ////	END INBOUND EMAIL WORKFLOW
+        ////    END INBOUND EMAIL WORKFLOW
         ///////////////////////////////////////////////////////////////////////////////
         if (!empty($_POST['popup'])) {
             $input .= '<input type="hidden" name="popup" value="'.$_POST['popup'].'">';

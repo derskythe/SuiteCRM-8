@@ -98,7 +98,7 @@ class Chart_pipeline_by_lead_source
             $datax = $app_list_strings['lead_source_dom'];
             $selected_datax = array_keys($app_list_strings['lead_source_dom']);
         }
-        $GLOBALS['log']->debug("datax is:");
+        $GLOBALS['log']->debug('datax is:');
         $GLOBALS['log']->debug($datax);
 
         $ids = array();
@@ -131,15 +131,17 @@ class Chart_pipeline_by_lead_source
                 $id_hash = $id_hash * -1;
             }
         }
-        $GLOBALS['log']->debug("ids is:");
+        $GLOBALS['log']->debug('ids is:');
         $GLOBALS['log']->debug($ids);
         $id_md5 = substr(md5($current_user->id), 0, 9);
 
 
-        $seps				= array("-", "/");
-        $dates				= array(date($GLOBALS['timedate']->dbDayFormat), $GLOBALS['timedate']->dbDayFormat);
-        $dateFileNameSafe	= str_replace($seps, "_", $dates);
-        $cache_file_name	= sugar_cached("xml/").$current_user->getUserPrivGuid()."_pipeline_by_lead_source_".$dateFileNameSafe[0]."_".$dateFileNameSafe[1].".xml";
+        $seps                = array( '-', '/' );
+        $dates                = array(date($GLOBALS['timedate']->dbDayFormat), $GLOBALS['timedate']->dbDayFormat);
+        $dateFileNameSafe    = str_replace($seps, '_', $dates);
+        $cache_file_name    = sugar_cached(
+                'xml/'
+            ).$current_user->getUserPrivGuid(). '_pipeline_by_lead_source_' . $dateFileNameSafe[0]. '_' . $dateFileNameSafe[1]. '.xml';
 
         $GLOBALS['log']->debug("cache file name is: $cache_file_name");
         global $currentModule,$action;
@@ -148,10 +150,10 @@ class Chart_pipeline_by_lead_source
 <?php
 echo '<span onmouseover="this.style.cursor=\'move\'" id="chart_handle_' . $this->order . '">' . get_form_header($current_module_strings['LBL_LEAD_SOURCE_FORM_TITLE'], $tools, false) . '</span>';
         if (empty($_SESSION['pbls_lead_sources'])) {
-            $_SESSION['pbls_lead_sources'] = "";
+            $_SESSION['pbls_lead_sources'] = '';
         }
         if (empty($_SESSION['pbls_ids'])) {
-            $_SESSION['pbls_ids'] = "";
+            $_SESSION['pbls_ids'] = '';
         } ?>
 
 <p>
@@ -162,14 +164,14 @@ echo '<span onmouseover="this.style.cursor=\'move\'" id="chart_handle_' . $this-
 <input type="hidden" name="pbls_refresh" value="true">
 <table cellpadding="0" cellspacing="0" border="0" class="edit view" align="center">
 <tr>
-	<td valign='top' nowrap><b><?php echo $current_module_strings['LBL_LEAD_SOURCES']; ?></b></td>
-	<td valign='top'><select name="pbls_lead_sources[]" multiple size='3'><?php echo get_select_options_with_id($app_list_strings['lead_source_dom'], $selected_datax); ?></select></td>
-	<td valign='top' nowrap><b><?php echo $current_module_strings['LBL_USERS']; ?></b></td>
-	<td valign='top'><select name="pbls_ids[]" multiple size='3'><?php $allUsers = get_user_array(false);
+    <td valign='top' nowrap><b><?php echo $current_module_strings['LBL_LEAD_SOURCES']; ?></b></td>
+    <td valign='top'><select name="pbls_lead_sources[]" multiple size='3'><?php echo get_select_options_with_id($app_list_strings['lead_source_dom'], $selected_datax); ?></select></td>
+    <td valign='top' nowrap><b><?php echo $current_module_strings['LBL_USERS']; ?></b></td>
+    <td valign='top'><select name="pbls_ids[]" multiple size='3'><?php $allUsers = get_user_array(false);
         echo get_select_options_with_id($allUsers, $ids); ?></select></td>
 <?php
 global $app_strings; ?>
-	<td align="right" valign="top"><input class="button" type="submit" title="<?php echo $app_strings['LBL_SELECT_BUTTON_TITLE']; ?>" value="<?php echo $app_strings['LBL_SELECT_BUTTON_LABEL']?>" /><input class="button" onClick="javascript: toggleDisplay('pbls_edit');" type="button" title="<?php echo $app_strings['LBL_CANCEL_BUTTON_TITLE']; ?>" accessKey="<?php echo $app_strings['LBL_CANCEL_BUTTON_KEY']; ?>" value="<?php echo $app_strings['LBL_CANCEL_BUTTON_LABEL']?>"/></td>
+    <td align="right" valign="top"><input class="button" type="submit" title="<?php echo $app_strings['LBL_SELECT_BUTTON_TITLE']; ?>" value="<?php echo $app_strings['LBL_SELECT_BUTTON_LABEL']?>" /><input class="button" onClick="javascript: toggleDisplay('pbls_edit');" type="button" title="<?php echo $app_strings['LBL_CANCEL_BUTTON_TITLE']; ?>" accessKey="<?php echo $app_strings['LBL_CANCEL_BUTTON_KEY']; ?>" value="<?php echo $app_strings['LBL_CANCEL_BUTTON_LABEL']?>"/></td>
 </tr>
 </table>
 </form>
@@ -177,8 +179,8 @@ global $app_strings; ?>
 </p>
 <?php
 // draw table
-echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refresh, $current_module_strings)."</p>";
-        echo "<P align='center'><span class='chartFootnote'>".$current_module_strings['LBL_LEAD_SOURCE_FORM_DESC']."</span></P>";
+echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refresh, $current_module_strings). '</p>';
+        echo "<P align='center'><span class='chartFootnote'>".$current_module_strings['LBL_LEAD_SOURCE_FORM_DESC']. '</span></P>';
 
         if (file_exists($cache_file_name)) {
             global $timedate;
@@ -221,17 +223,17 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
 
         if (!file_exists($cache_file_name) || $refresh == true) {
             ;
-            $GLOBALS['log']->debug("starting pipeline chart");
-            $GLOBALS['log']->debug("legends is:");
+            $GLOBALS['log']->debug('starting pipeline chart');
+            $GLOBALS['log']->debug('legends is:');
             $GLOBALS['log']->debug($legends);
-            $GLOBALS['log']->debug("user_id is: ");
+            $GLOBALS['log']->debug('user_id is: ');
             $GLOBALS['log']->debug($user_id);
             $GLOBALS['log']->debug("cache_file_name is: $cache_file_name");
 
             $opp = new Opportunity;
             //Now do the db queries
             //query for opportunity data that matches $legends and $user
-            $where="";
+            $where= '';
             //build the where clause for the query that matches $user
 
             $count = is_countable($user_id) ? count($user_id) : 0;
@@ -240,7 +242,7 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
                 foreach ($user_id as $the_id) {
                     $id[] = "'".$the_id."'";
                 }
-                $ids = implode(",", $id);
+                $ids = implode(',', $id);
                 $where .= "opportunities.assigned_user_id IN ($ids) ";
             }
             if (!empty($where)) {
@@ -253,12 +255,12 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
                 foreach ($legends as $key=>$value) {
                     $legendItem[] = "'".$key."'";
                 }
-                $legendItems = implode(",", $legendItem);
-                $where .= " opportunities.lead_source IN	($legendItems) ";
+                $legendItems = implode(',', $legendItem);
+                $where .= " opportunities.lead_source IN    ($legendItems) ";
             }
-            $query = "SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ";
-            $query .= "WHERE ".$where." AND opportunities.deleted=0 ";
-            $query .= "GROUP BY lead_source ORDER BY total DESC";
+            $query = 'SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ';
+            $query .= 'WHERE ' .$where. ' AND opportunities.deleted=0 ';
+            $query .= 'GROUP BY lead_source ORDER BY total DESC';
 
             //build pipeline by lead source data
             $total = 0;
@@ -398,7 +400,7 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
         $opp = new Opportunity;
         //Now do the db queries
         //query for opportunity data that matches $legends and $user
-        $where="";
+        $where= '';
         //build the where clause for the query that matches $user
 
         $count = is_countable($user_id) ? count($user_id) : 0;
@@ -407,7 +409,7 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
             foreach ($user_id as $the_id) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
         if (!empty($where)) {
@@ -420,12 +422,12 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
             foreach ($legends as $key=>$value) {
                 $legendItem[] = "'".$key."'";
             }
-            $legendItems = implode(",", $legendItem);
-            $where .= " opportunities.lead_source IN	($legendItems) ";
+            $legendItems = implode(',', $legendItem);
+            $where .= " opportunities.lead_source IN    ($legendItems) ";
         }
-        $query = "SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ";
-        $query .= "WHERE ".$where." AND opportunities.deleted=0 ";
-        $query .= "GROUP BY lead_source ORDER BY total DESC";
+        $query = 'SELECT lead_source,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ';
+        $query .= 'WHERE ' .$where. ' AND opportunities.deleted=0 ';
+        $query .= 'GROUP BY lead_source ORDER BY total DESC';
 
         return $query;
     }

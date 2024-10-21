@@ -61,8 +61,8 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
         }
 
         if (!empty($this->settings['address_cache_get_enabled']) && !empty($address)) {
-            $query = "SELECT " . $this->table_name . ".* FROM " . $this->table_name . " WHERE " .
-                    $this->table_name . ".deleted = 0 AND " .
+            $query = 'SELECT ' . $this->table_name . '.* FROM ' . $this->table_name . ' WHERE ' .
+                    $this->table_name . '.deleted = 0 AND ' .
                     $this->table_name . ".name='" . $this->db->quote($address) . "'";
             //var_dump($query);
             $cache_result = $this->db->limitQuery($query, 0, 1);
@@ -87,7 +87,10 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
 
     /**
      * Save New Address Info to the Address Cache Module / Table
+     *
      * @param $aInfo array of geocode info (lng, lat, status, address)
+     *
+     * @throws Exception
      */
     public function saveAddressCacheInfo($aInfo = array())
     {
@@ -132,9 +135,9 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
     {
 
         // Delete all from jjwg_address_cache
-        $query = "TRUNCATE TABLE jjwg_address_cache;";
+        $query = 'TRUNCATE TABLE jjwg_address_cache;';
         $delete_result = $this->db->query($query);
-        $query = "TRUNCATE TABLE jjwg_address_cache_audit;";
+        $query = 'TRUNCATE TABLE jjwg_address_cache_audit;';
         $delete_audit_result = $this->db->query($query);
     }
 

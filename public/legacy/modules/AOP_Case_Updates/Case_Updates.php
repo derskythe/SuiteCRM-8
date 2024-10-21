@@ -123,7 +123,7 @@ function caseUpdates(record){
 
             showSubPanel('history', null, true);
             //Reload the case updates stream and history panels
-		    $("#aop_case_updates_threaded_span").load("index.php?module=Cases&action=DetailView&record="+record + " #aop_case_updates_threaded_span", function(){
+            $("#aop_case_updates_threaded_span").load("index.php?module=Cases&action=DetailView&record="+record + " #aop_case_updates_threaded_span", function(){
 
 
             //Collapse all except newest update
@@ -141,7 +141,7 @@ function caseUpdates(record){
             }
 
         );
-	}
+    }
 }
 
         xmlhttp.send(params);
@@ -200,6 +200,7 @@ EOD;
 
 /**
  * @return mixed|string|void
+ * @throws SmartyException
  */
 function display_update_form()
 {
@@ -344,7 +345,7 @@ function quick_edit_case_updates($case)
     $roles = $acl->getUserRoles($id);
 
     //Return if user cannot edit cases
-    if ($roles === 'no edit cases' || in_array('no edit cases', $roles)) {
+    if ($roles === 'no edit cases' || in_array('no edit cases', $roles, true)) {
         return '';
     }
     $internalChecked = '';

@@ -55,7 +55,7 @@ class ContractsParseRule extends BaseRule
 
     public function preParse($panels, $view)
     {
-        if ($view == 'EditView') {
+        if ($view === 'EditView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {

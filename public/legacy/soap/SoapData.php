@@ -43,7 +43,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 require_once('soap/SoapRelationshipHelper.php');
 set_time_limit(360);
- 
+
 $server->register(
     'sync_get_modified_relationships',
     array('session'=>'xsd:string', 'module_name'=>'xsd:string','related_module'=>'xsd:string', 'from_date'=>'xsd:string', 'to_date'=>'xsd:string','offset'=>'xsd:int', 'max_results'=>'xsd:int','deleted'=>'xsd:int', 'module_id'=>'xsd:string', 'select_fields'=>'tns:select_fields', 'ids'=>'tns:select_fields', 'relationship_name'=>'xsd:string', 'deletion_date'=>'xsd:string', 'php_serialize'=>'xsd:int'),
@@ -99,9 +99,9 @@ function sync_get_modified_relationships($session, $module_name, $related_module
         $sugar_config['list_max_entries_per_page'] = $max_results;
     }
 
-    $date_query = "(m1.date_modified > " . DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($from_date)."'", 'datetime'). " AND m1.date_modified <= ". DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($to_date)."'", 'datetime')." AND {0}.deleted = $deleted)";
+    $date_query = '(m1.date_modified > ' . DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($from_date)."'", 'datetime'). ' AND m1.date_modified <= ' . DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($to_date)."'", 'datetime')." AND {0}.deleted = $deleted)";
     if (isset($deletion_date) && !empty($deletion_date)) {
-        $date_query .= " OR ({0}.date_modified > " . DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($deletion_date)."'", 'datetime'). " AND {0}.date_modified <= ". DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($to_date)."'", 'datetime')." AND {0}.deleted = 1)";
+        $date_query .= ' OR ({0}.date_modified > ' . DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($deletion_date)."'", 'datetime'). ' AND {0}.date_modified <= ' . DBManagerFactory::getInstance()->convert("'".DBManagerFactory::getInstance()->quote($to_date)."'", 'datetime'). ' AND {0}.deleted = 1)';
     }
 
     $in = '';
@@ -119,15 +119,15 @@ function sync_get_modified_relationships($session, $module_name, $related_module
     if (isset($in) && !empty($in)) {
         $query .= "( $date_query AND m1.id IN $in) OR (m1.id NOT IN $in AND {0}.deleted = 0)";
     } else {
-        $query .= "( {0}.deleted = 0)";
+        $query .= '( {0}.deleted = 0)';
     }
     if (isset($module_id) && !empty($module_id)) {
         //if(isset($in) && !empty($in)){
-        $query .= " AND";
+        $query .= ' AND';
         //}
         $query .= " m2.id = '".DBManagerFactory::getInstance()->quote($module_id)."'";
     }
-    if ($related_module == 'Meetings' || $related_module == 'Calls') {
+    if ($related_module === 'Meetings' || $related_module === 'Calls') {
         $query = string_format($query, array('m1'));
     }
     $results = retrieve_modified_relationships($module_name, $related_module, $query, $deleted, $offset, $max_results, $select_fields, $relationship_name);
@@ -204,10 +204,10 @@ function get_modified_entries($session, $module_name, $ids, $select_fields)
         if (!isset($seed->field_defs[$field])) {
             continue;
         }
-        $field_select .= $table_name.".".$field;
+        $field_select .= $table_name. '.' .$field;
 
         if ($index < ((is_countable($select_fields) ? count($select_fields) : 0) - 1)) {
-            $field_select .= ",";
+            $field_select .= ',';
             $index++;
         }
     }//end foreach
@@ -254,7 +254,7 @@ function get_modified_entries($session, $module_name, $ids, $select_fields)
         $val = get_return_value($temp, $table_name);
         $xml .= get_name_value_xml($val, $module_name);
     }
-    $xml .= "</items>";
+    $xml .= '</items>';
 
     $xml = base64_encode($xml);
 
@@ -296,17 +296,17 @@ function get_attendee_list($session, $module_name, $id)
 
     //rsmith
     $xml = '<?xml version="1.0" encoding="utf-8"?>';
-    if ($module_name == 'Meetings' || $module_name == 'Calls') {
+    if ($module_name === 'Meetings' || $module_name === 'Calls') {
         //if we find a meeting or call we want to send back the attendees
         $l_module_name = strtolower($module_name);
-        $table_name = $l_module_name."_users";
-        if ($module_name == 'Meetings') {
-            $join_field = "meeting";
+        $table_name = $l_module_name. '_users';
+        if ($module_name === 'Meetings') {
+            $join_field = 'meeting';
         } else {
-            $join_field = "call";
+            $join_field = 'call';
         }
         $xml .= '<attendees>';
-        $result = $seed->db->query("SELECT users.id, $table_name.date_modified, first_name, last_name FROM users INNER JOIN $table_name ON $table_name.user_id = users.id WHERE ".$table_name.".".$join_field."_id = '".DBManagerFactory::getInstance()->quote($id)."' AND $table_name.deleted = 0");
+        $result = $seed->db->query("SELECT users.id, $table_name.date_modified, first_name, last_name FROM users INNER JOIN $table_name ON $table_name.user_id = users.id WHERE ".$table_name. '.' .$join_field."_id = '".DBManagerFactory::getInstance()->quote($id)."' AND $table_name.deleted = 0");
         $user = BeanFactory::newBean('Users');
         while ($row = $seed->db->fetchByAssoc($result)) {
             $user->id = $row['id'];
@@ -319,8 +319,9 @@ function get_attendee_list($session, $module_name, $id)
             $xml .= '</attendee>';
         }
         //now get contacts
-        $table_name = $l_module_name."_contacts";
-        $result = $seed->db->query("SELECT contacts.id, $table_name.date_modified, first_name, last_name FROM contacts INNER JOIN $table_name ON $table_name.contact_id = contacts.id INNER JOIN $seed->table_name ON ".$seed->table_name.".id = ".$table_name.".".$join_field."_id WHERE ".$table_name.".".$join_field."_id = '".DBManagerFactory::getInstance()->quote($id)."' AND ".$table_name.".deleted = 0 AND (contacts.id != ".$seed->table_name.".parent_id OR ".$seed->table_name.".parent_id IS NULL)");
+        $table_name = $l_module_name. '_contacts';
+        $result = $seed->db->query("SELECT contacts.id, $table_name.date_modified, first_name, last_name FROM contacts INNER JOIN $table_name ON $table_name.contact_id = contacts.id INNER JOIN $seed->table_name ON ".$seed->table_name. '.id = ' .$table_name. '.' .$join_field. '_id WHERE ' .$table_name. '.' .$join_field."_id = '".DBManagerFactory::getInstance()->quote($id)."' AND ".$table_name. '.deleted = 0 AND (contacts.id != ' .$seed->table_name. '.parent_id OR ' .$seed->table_name. '.parent_id IS NULL)'
+        );
         $contact = BeanFactory::newBean('Contacts');
         while ($row = $seed->db->fetchByAssoc($result)) {
             $contact->id = $row['id'];

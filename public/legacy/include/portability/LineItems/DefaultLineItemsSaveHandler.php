@@ -92,10 +92,13 @@ class DefaultLineItemsSaveHandler implements LineItemsSaveHandlerInterface
 
     /**
      * Remove Line Item
+     *
      * @param SugarBean $bean
      * @param SugarBean $entry
      * @param string $linkField
      * @param string $removalType
+     *
+     * @throws Exception
      */
     protected function remove(SugarBean $bean, SugarBean $entry, string $linkField, string $removalType): void
     {

@@ -1,6 +1,6 @@
 <?php
 // created: 2013-03-22 16:34:19
-$dictionary["fp_events_contacts"] = array(
+$dictionary['fp_events_contacts'] = array(
   'true_relationship_type' => 'many-to-many',
   'relationships' =>
   array(

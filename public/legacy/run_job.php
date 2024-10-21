@@ -47,15 +47,16 @@ require_once('include/entryPoint.php');
 
 $sapi_type = php_sapi_name();
 // Allow only CLI invocation
-if (substr($sapi_type, 0, 3) != 'cli') {
-    sugar_die("run_job.php is CLI only.");
+if (!str_starts_with($sapi_type, 'cli')) {
+    sugar_die('run_job.php is CLI only.');
 }
 
 if ($argc < 3 || empty($argv[1]) || empty($argv[2])) {
-    sugar_die("run_job.php requires job ID and client ID as parameters.");
+    sugar_die('run_job.php requires job ID and client ID as parameters.');
 }
 
 if (empty($current_language)) {
+    global $sugar_config;
     $current_language = $sugar_config['default_language'];
 }
 

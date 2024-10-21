@@ -97,10 +97,11 @@ class SugarWidgetSubPanelIcon extends SugarWidgetField
         }
         $icon_img_html = '<span class="suitepicon suitepicon-module-'.strtolower(str_replace('_', '-', (string) $module)).'"></span>';
         if (!empty($layout_def['attachment_image_only']) && $layout_def['attachment_image_only'] == true) {
-            $ret="";
+            $ret = '';
         } else {
             if ($action_access) {
-                $ret = '<a href="index.php?module=' . $module . '&action=' . $action . '&record=' . $record	. '" >' . $icon_img_html . "</a>";
+                $ret =
+                    '<a href="index.php?module=' . $module . '&action=' . $action . '&record=' . $record . '" >' . $icon_img_html . '</a>';
             } else {
                 $ret = $icon_img_html;
             }
@@ -112,7 +113,7 @@ class SugarWidgetSubPanelIcon extends SugarWidgetField
             }
 
             $imagePath = '';
-            if ($layout_def['image2'] == '__VARIABLE') {
+            if ($layout_def['image2'] === '__VARIABLE') {
                 if (!empty($layout_def['fields'][$key.'_ICON'])) {
                     $imagePath = $layout_def['fields'][$key.'_ICON'];
                 }
@@ -135,11 +136,12 @@ class SugarWidgetSubPanelIcon extends SugarWidgetField
                 ) {
                     $key=$layout_def['fields'][strtoupper($layout_def['image2_url_field']['id_field'])];
                     $file=$layout_def['fields'][strtoupper($layout_def['image2_url_field']['filename_field'])];
-                    $filepath="index.php?entryPoint=download&id=".$key."&type=".$layout_def['module'];
+                    $filepath = 'index.php?entryPoint=download&id=' . $key . '&type=' . $layout_def['module'];
                 }
             } else {
                 if (!empty($layout_def['fields'][strtoupper($layout_def['image2_url_field'])])) {
-                    $filepath="index.php?entryPoint=download&id=".$layout_def['fields']['ID']."&type=".$layout_def['module'];
+                    $filepath =
+                        'index.php?entryPoint=download&id=' . $layout_def['fields']['ID'] . '&type=' . $layout_def['module'];
                 }
             }
             $icon_img_html = SugarThemeRegistry::current()->getImage($layout_def['image2'] . '', 'border="0"', null, null, '.gif', $layout_def['image2']);
@@ -151,7 +153,7 @@ class SugarWidgetSubPanelIcon extends SugarWidgetField
         }
         // now handle attachments for Emails
         else {
-            if (!empty($layout_def['module']) && $layout_def['module'] == 'Emails' && !empty($layout_def['fields']['ATTACHMENT_IMAGE'])) {
+            if (!empty($layout_def['module']) && $layout_def['module'] === 'Emails' && !empty($layout_def['fields']['ATTACHMENT_IMAGE'])) {
                 $ret.= $layout_def['fields']['ATTACHMENT_IMAGE'];
             }
         }

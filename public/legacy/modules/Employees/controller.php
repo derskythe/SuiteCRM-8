@@ -47,18 +47,22 @@ class EmployeesController extends SugarController
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function action_editview()
     {
         if (is_admin($GLOBALS['current_user']) || $_REQUEST['record'] == $GLOBALS['current_user']->id) {
             $this->view = 'edit';
         } else {
-            sugar_die("Unauthorized access to employees.");
+            sugar_die('Unauthorized access to employees.');
         }
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function action_delete()
     {
         if ($_REQUEST['record'] != $GLOBALS['current_user']->id && $GLOBALS['current_user']->isAdminForModule('Users')) {
@@ -70,9 +74,9 @@ class EmployeesController extends SugarController
             $u->mark_deleted($u->id);
             $GLOBALS['log']->info("User id: {$GLOBALS['current_user']->id} deleted user record: {$_REQUEST['record']}");
 
-            SugarApplication::redirect("index.php?module=Employees&action=index");
+            SugarApplication::redirect('index.php?module=Employees&action=index');
         } else {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
     }
 }

@@ -66,7 +66,7 @@ class SugarWidgetSubPanelGetLatestButton extends SugarWidgetField
             ) ||
             $layout_def['fields']['SELECTED_REVISION_ID'] === $layout_def['fields']['LATEST_REVISION_ID']
         ) {
-            return "";
+            return '';
         }
 
         global $app_strings;

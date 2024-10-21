@@ -49,15 +49,15 @@ $viewdefs['Notes']['EditView'] = array(
 'javascript' => '{sugar_getscript file="include/javascript/dashlets.js"}
 <script>
 function deleteAttachmentCallBack(text)
-	{literal} { {/literal}
-	if(text == \'true\') {literal} { {/literal}
-		document.getElementById(\'new_attachment\').style.display = \'\';
-		ajaxStatus.hideStatus();
-		document.getElementById(\'old_attachment\').innerHTML = \'\';
-	{literal} } {/literal} else {literal} { {/literal}
-		document.getElementById(\'new_attachment\').style.display = \'none\';
-		ajaxStatus.flashStatus(SUGAR.language.get(\'Notes\', \'ERR_REMOVING_ATTACHMENT\'), 2000);
-	{literal} } {/literal}
+    {literal} { {/literal}
+    if(text == \'true\') {literal} { {/literal}
+        document.getElementById(\'new_attachment\').style.display = \'\';
+        ajaxStatus.hideStatus();
+        document.getElementById(\'old_attachment\').innerHTML = \'\';
+    {literal} } {/literal} else {literal} { {/literal}
+        document.getElementById(\'new_attachment\').style.display = \'none\';
+        ajaxStatus.flashStatus(SUGAR.language.get(\'Notes\', \'ERR_REMOVING_ATTACHMENT\'), 2000);
+    {literal} } {/literal}
 {literal} } {/literal}
 </script>
 <script>toggle_portal_flag(); function toggle_portal_flag()  {literal} { {/literal} {$TOGGLE_JS} {literal} } {/literal} </script>',

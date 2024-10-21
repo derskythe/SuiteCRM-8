@@ -53,8 +53,8 @@ class SugarFieldCurrency extends SugarFieldFloat
         $currencyUSD = '-99';
 
         $amount = $parentFieldArray[strtoupper($vardef['name'])];
-        $currencyId = isset($parentFieldArray['CURRENCY_ID']) ? $parentFieldArray['CURRENCY_ID'] : "";
-        $currencySymbol = isset($parentFieldArray['CURRENCY_SYMBOL']) ? $parentFieldArray['CURRENCY_SYMBOL'] : "";
+        $currencyId = isset($parentFieldArray['CURRENCY_ID']) ? $parentFieldArray['CURRENCY_ID'] : '';
+        $currencySymbol = isset($parentFieldArray['CURRENCY_SYMBOL']) ? $parentFieldArray['CURRENCY_SYMBOL'] : '';
 
         if (empty($currencyId)) {
             $currencyId = $locale->getPrecedentPreference('currency');
@@ -63,7 +63,7 @@ class SugarFieldCurrency extends SugarFieldFloat
         if (empty($currencySymbol)) {
             $currencySymbol = $locale->getPrecedentPreference('default_currency_symbol');
         }
-        
+
         if (stripos($vardef['name'], '_USD')) {
             $userCurrencyId = $current_user->getPreference('currency');
             if (!empty($userCurrencyId) && $currencyUSD !== $userCurrencyId) {
@@ -93,9 +93,9 @@ class SugarFieldCurrency extends SugarFieldFloat
         $focus,
         ImportFieldSanitize $settings
         ) {
-        $value = str_replace($settings->currency_symbol, "", $value);
-        
-        $value = str_replace($settings->num_grp_sep, "", $value);       
+        $value = str_replace($settings->currency_symbol, '', $value);
+
+        $value = str_replace($settings->num_grp_sep, '', $value);
 
         if (isset($vardef['len'])) {
             // check for field length

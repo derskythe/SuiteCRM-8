@@ -167,8 +167,11 @@ class History implements HistoryInterface
 
     /**
      * Add an item to the history
+     *
      * @param string $path
+     *
      * @return string   A GMT Unix timestamp for this newly added item
+     * @throws DateMalformedStringException
      */
     public function append($path)
     {
@@ -180,7 +183,7 @@ class History implements HistoryInterface
         $now = TimeDate::getInstance()->getNow();
         $new_file = null;
         for ($retries = 0; !file_exists($new_file) && $retries < 5; $retries++) {
-            $now->modify("+1 second");
+            $now->modify('+1 second');
             $time = $now->__get('ts');
             $new_file = $this->getFileByTimestamp($time);
         }

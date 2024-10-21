@@ -103,7 +103,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * @param array
  * @param Smarty
  */
-function smarty_function_sugar_phone($params, &$smarty)
+function smarty_function_sugar_phone($params, $smarty)
 {
     if (!isset($params['value'])) {
         $smarty->trigger_error("sugar_phone: missing 'value' parameter");

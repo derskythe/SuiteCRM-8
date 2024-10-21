@@ -46,7 +46,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * @package Smarty
  * @subpackage plugins
  */
-function smarty_compiler_append($tag_attrs, &$compiler)
+function smarty_compiler_append($tag_attrs, $compiler)
 {
     $_params = $compiler->_parse_attrs($tag_attrs);
 

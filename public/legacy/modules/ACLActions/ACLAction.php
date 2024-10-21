@@ -54,11 +54,11 @@ if (file_exists(__DIR__ . '/../../modules/ACLActions/actiondefs.override.php')) 
 #[\AllowDynamicProperties]
 class ACLAction extends SugarBean
 {
-    public $module_dir = 'ACLActions';
-    public $object_name = 'ACLAction';
-    public $table_name = 'acl_actions';
-    public $new_schema = true;
-    public $disable_custom_fields = true;
+    public string $module_dir = 'ACLActions';
+    public string $object_name = 'ACLAction';
+    public string $table_name = 'acl_actions';
+    public bool $new_schema = true;
+    public bool $disable_custom_fields = true;
 
     public function __construct()
     {
@@ -91,11 +91,11 @@ class ACLAction extends SugarBean
                 $categoryQuoted = $db->quoted($category);
                 $typeQuoted = $db->quoted($type);
 
-                $query = "SELECT * FROM " . $tableName .
-                    " WHERE name = " . $actionNameQuoted .
-                    " AND category = " . $categoryQuoted .
-                    " AND acltype = " . $typeQuoted .
-                    " AND deleted = 0";
+                $query = 'SELECT * FROM ' . $tableName .
+                    ' WHERE name = ' . $actionNameQuoted .
+                    ' AND category = ' . $categoryQuoted .
+                    ' AND acltype = ' . $typeQuoted .
+                    ' AND deleted = 0';
 
                 $result = $db->query($query);
 
@@ -138,11 +138,11 @@ class ACLAction extends SugarBean
                 $categoryQuoted = $db->quoted($category);
                 $typeQuoted = $db->quoted($type);
 
-                $query = "SELECT * FROM " . $tableName .
-                    " WHERE name = " . $actionNameQuoted .
-                    " AND category = " . $categoryQuoted .
-                    " AND acltype = " . $typeQuoted .
-                    " AND deleted = 0";
+                $query = 'SELECT * FROM ' . $tableName .
+                    ' WHERE name = ' . $actionNameQuoted .
+                    ' AND category = ' . $categoryQuoted .
+                    ' AND acltype = ' . $typeQuoted .
+                    ' AND deleted = 0';
 
                 $result = $db->query($query);
 
@@ -243,14 +243,14 @@ class ACLAction extends SugarBean
      */
     public static function getDefaultActions($type = 'module', $action = '')
     {
-        $query = "SELECT * FROM acl_actions WHERE deleted=0 ";
+        $query = 'SELECT * FROM acl_actions WHERE deleted=0 ';
         if (!empty($type)) {
             $query .= " AND acltype='$type'";
         }
         if (!empty($action)) {
             $query .= "AND name='$action'";
         }
-        $query .= " ORDER BY category";
+        $query .= ' ORDER BY category';
 
         $db = DBManagerFactory::getInstance();
         $result = $db->query($query);
@@ -329,27 +329,27 @@ class ACLAction extends SugarBean
          * WHERE acl_actions.deleted=0 $additional_where ORDER BY category,name";
          */
         $query = "(SELECT acl_actions .*, acl_roles_actions.access_override, 1 as user_role
-				FROM acl_actions
-				INNER JOIN acl_roles_users ON acl_roles_users.user_id = '$user_id' AND  acl_roles_users.deleted = 0
-				LEFT JOIN acl_roles_actions ON acl_roles_actions.role_id = acl_roles_users.role_id AND acl_roles_actions.action_id = acl_actions.id AND acl_roles_actions.deleted=0
-				WHERE acl_actions.deleted=0 $additional_where )
+                FROM acl_actions
+                INNER JOIN acl_roles_users ON acl_roles_users.user_id = '$user_id' AND  acl_roles_users.deleted = 0
+                LEFT JOIN acl_roles_actions ON acl_roles_actions.role_id = acl_roles_users.role_id AND acl_roles_actions.action_id = acl_actions.id AND acl_roles_actions.deleted=0
+                WHERE acl_actions.deleted=0 $additional_where )
 
-				UNION
+                UNION
 
-				(SELECT acl_actions .*, acl_roles_actions.access_override, 0 as user_role
-				FROM acl_actions
-				INNER JOIN securitygroups_users ON securitygroups_users.user_id = '$user_id' AND  securitygroups_users.deleted = 0
-				INNER JOIN securitygroups_acl_roles ON securitygroups_users.securitygroup_id = securitygroups_acl_roles.securitygroup_id and securitygroups_acl_roles.deleted = 0
-				LEFT JOIN acl_roles_actions ON acl_roles_actions.role_id = securitygroups_acl_roles.role_id AND acl_roles_actions.action_id = acl_actions.id AND acl_roles_actions.deleted=0
-				WHERE acl_actions.deleted=0 $additional_where )
+                (SELECT acl_actions .*, acl_roles_actions.access_override, 0 as user_role
+                FROM acl_actions
+                INNER JOIN securitygroups_users ON securitygroups_users.user_id = '$user_id' AND  securitygroups_users.deleted = 0
+                INNER JOIN securitygroups_acl_roles ON securitygroups_users.securitygroup_id = securitygroups_acl_roles.securitygroup_id and securitygroups_acl_roles.deleted = 0
+                LEFT JOIN acl_roles_actions ON acl_roles_actions.role_id = securitygroups_acl_roles.role_id AND acl_roles_actions.action_id = acl_actions.id AND acl_roles_actions.deleted=0
+                WHERE acl_actions.deleted=0 $additional_where )
 
-				UNION
+                UNION
 
-				(SELECT acl_actions.*, 0 as access_override, -1 as user_role
-				FROM acl_actions
-				WHERE acl_actions.deleted = 0 )
+                (SELECT acl_actions.*, 0 as access_override, -1 as user_role
+                FROM acl_actions
+                WHERE acl_actions.deleted = 0 )
 
-				ORDER BY user_role desc, category,name,access_override desc"; //want non-null to show first
+                ORDER BY user_role desc, category,name,access_override desc"; //want non-null to show first
         /* END - SECURITY GROUPS */
         $result = $db->query($query);
         $selected_actions = array();
@@ -638,7 +638,7 @@ class ACLAction extends SugarBean
                     }
 
                     $categories[$cat_name][$type_name][$act_name]['accessColor'] = self::AccessColor($actionAclAccess);
-                    if ($type_name == 'module') {
+                    if ($type_name === 'module') {
                         $catModAccACL = null;
                         if (isset($categories[$cat_name]['module']['access']['aclaccess'])) {
                             $catModAccACL = $categories[$cat_name]['module']['access']['aclaccess'];
@@ -647,7 +647,7 @@ class ACLAction extends SugarBean
                         }
 
                         // Requires loose comparison
-                        if ($act_name != 'aclaccess' && $catModAccACL == ACL_ALLOW_DISABLED) {
+                        if ($act_name !== 'aclaccess' && $catModAccACL == ACL_ALLOW_DISABLED) {
                             $categories[$cat_name][$type_name][$act_name]['accessColor'] = 'darkgray';
                             $disabled[] = $cat_name;
                         }
@@ -663,7 +663,7 @@ class ACLAction extends SugarBean
                     $categories[$cat_name][$type_name][$act_name]['accessName'] = ACLAction::AccessName($actionAclAccess);
                     $categories[$cat_name][$type_name][$act_name]['accessLabel'] = ACLAction::AccessLabel($actionAclAccess);
 
-                    if ($cat_name == 'Users' && $act_name == 'admin') {
+                    if ($cat_name === 'Users' && $act_name === 'admin') {
                         $categories[$cat_name][$type_name][$act_name]['accessOptions'][ACL_ALLOW_DEFAULT] = ACLAction::AccessName(ACL_ALLOW_DEFAULT);;
                         $categories[$cat_name][$type_name][$act_name]['accessOptions'][ACL_ALLOW_DEV] = ACLAction::AccessName(ACL_ALLOW_DEV);;
                     } else {

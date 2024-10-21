@@ -137,7 +137,7 @@ $dictionary['Surveys'] = array(
             'massupdate' => 0,
             'default'    => 'Dissatisfied',
         ),
-        "surveys_surveyquestions"  => array(
+        'surveys_surveyquestions' => array(
             'name'         => 'surveys_surveyquestions',
             'type'         => 'link',
             'relationship' => 'surveys_surveyquestions',
@@ -147,7 +147,7 @@ $dictionary['Surveys'] = array(
             'side'         => 'right',
             'vname'        => 'LBL_SURVEYS_SURVEYQUESTIONS_FROM_SURVEYQUESTIONS_TITLE',
         ),
-        "surveys_surveyresponses"  => array(
+        'surveys_surveyresponses' => array(
             'name'         => 'surveys_surveyresponses',
             'type'         => 'link',
             'relationship' => 'surveys_surveyresponses',

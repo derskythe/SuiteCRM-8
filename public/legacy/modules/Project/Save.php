@@ -54,14 +54,14 @@ $sugarbean = BeanFactory::newBean('Project');
 $sugarbean = populateFromPost('', $sugarbean);
 
 $projectTasks = array();
-if (isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === "true") {
+if (isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === 'true') {
     $base_project_id = $_REQUEST['duplicateId'];
 } else {
     $base_project_id = $sugarbean->id;
 }
-if (isset($_REQUEST['save_type']) || isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === "true") {
+if (isset($_REQUEST['save_type']) || isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === 'true') {
     $query = "SELECT id FROM project_task WHERE project_id = '" . $base_project_id . "' AND deleted = 0";
-    $result = $sugarbean->db->query($query, true, "Error retrieving project tasks");
+    $result = $sugarbean->db->query($query, true, 'Error retrieving project tasks');
     $row = $sugarbean->db->fetchByAssoc($result);
 
     while ($row != null) {
@@ -78,11 +78,11 @@ if (isset($_REQUEST['save_type'])) {
     $sugarbean->id = '';
     $sugarbean->assigned_user_id = $current_user->id;
 
-    if ($_REQUEST['save_type'] == 'TemplateToProject') {
+    if ($_REQUEST['save_type'] === 'TemplateToProject') {
         $sugarbean->name = $_REQUEST['project_name'];
         $sugarbean->is_template = 0;
     } else {
-        if ($_REQUEST['save_type'] == 'ProjectToTemplate') {
+        if ($_REQUEST['save_type'] === 'ProjectToTemplate') {
             $sugarbean->name = $_REQUEST['template_name'];
             $sugarbean->is_template = true;
         }
@@ -112,10 +112,10 @@ if (isset($GLOBALS['check_notify'])) {
 $sugarbean->save($check_notify);
 $return_id = $sugarbean->id;
 
-if (isset($_REQUEST['save_type']) || isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === "true") {
+if (isset($_REQUEST['save_type']) || isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === 'true') {
     $projectTasksCount = count($projectTasks);
     for ($i = 0; $i < $projectTasksCount; $i++) {
-        if (isset($_REQUEST['save_type']) || (isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === "true")) {
+        if (isset($_REQUEST['save_type']) || (isset($_REQUEST['duplicateSave']) && $_REQUEST['duplicateSave'] === 'true')) {
             $projectTasks[$i]->id = '';
             $projectTasks[$i]->project_id = $sugarbean->id;
         }
@@ -124,18 +124,18 @@ if (isset($_REQUEST['save_type']) || isset($_REQUEST['duplicateSave']) && $_REQU
         }
         $projectTasks[$i]->team_id = $sugarbean->team_id ?? '';
         if (empty($projectTasks[$i]->duration_unit)) {
-            $projectTasks[$i]->duration_unit = " ";
+            $projectTasks[$i]->duration_unit = ' ';
         } //Since duration_unit cannot be null.
         $projectTasks[$i]->save(false);
     }
 }
 
 if (!empty($_REQUEST['return_module']) && !empty($_REQUEST['return_action'])) {
-    $_REQUEST['return_url'] = "index.php?module=" . $_REQUEST['return_module'] . "&action=record";
+    $_REQUEST['return_url'] = 'index.php?module=' . $_REQUEST['return_module'] . '&action=record';
 
     $returnId = !empty($_REQUEST['return_id']) ? $_REQUEST['return_id'] : $return_id;
     if (!empty($returnId)) {
-        $_REQUEST['return_url'] .= "&record=" . $returnId;
+        $_REQUEST['return_url'] .= '&record=' . $returnId;
     }
 
     handleRedirect($return_id, $_REQUEST['return_module']);
@@ -145,6 +145,6 @@ if ($sugarbean->is_template) {
     header("Location: index.php?action=ProjectTemplatesDetailView&module=Project&record=$return_id&return_module=Project&return_action=ProjectTemplatesEditView");
 } else {
     //customize default retrun view to make it to redirect to GanttChart view
-    $_REQUEST['return_url'] = "index.php?module=Project&action=view_GanttChart&record=" . $return_id;
+    $_REQUEST['return_url'] = 'index.php?module=Project&action=view_GanttChart&record=' . $return_id;
     handleRedirect($return_id, 'Project');
 }

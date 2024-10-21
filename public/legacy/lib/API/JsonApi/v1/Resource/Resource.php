@@ -51,12 +51,12 @@ use SuiteCRM\API\v8\Exception\ConflictException;
  */
 class Resource extends ResourceIdentifier
 {
-    protected static $JSON_API_SKIP_RESERVED_KEYWORDS = array(
+    protected static array $JSON_API_SKIP_RESERVED_KEYWORDS = array(
         'id',
         'type',
     );
 
-    protected static $JSON_API_RESERVED_KEYWORDS = array(
+    protected static array $JSON_API_RESERVED_KEYWORDS = array(
         'id',
         'type',
         'data',
@@ -83,35 +83,36 @@ class Resource extends ResourceIdentifier
     public const ATTRIBUTES = 'attributes';
 
     /**
-     * @var array $attributes
+     * @var ?array $attributes
      */
-    protected $attributes;
+    protected ?array $attributes;
 
     /**
-     * @var array $relationships
+     * @var ?array $relationships
      */
-    protected $relationships;
+    protected ?array $relationships;
 
     /**
-     * @var Links $links
+     * @var ?Links $links
      */
-    protected $links;
+    protected ?Links $links;
 
     /**
      * @var string $source rfc6901
      * @see https://tools.ietf.org/html/rfc6901
      */
-    protected $source;
+    protected string $source;
 
     /**
      * @param array $data
      * @param string $source rfc6901
-     * @return Resource|$this
-     * @throws ConflictException
+     *
+     * @return Resource|null
      * @throws BadRequestException
+     * @throws ConflictException
      * @see https://tools.ietf.org/html/rfc6901
      */
-    public function fromJsonApiRequest(array $data, $source = ResourceEnum::DEFAULT_SOURCE)
+    public function fromJsonApiRequest(array $data, string $source = ResourceEnum::DEFAULT_SOURCE) : Resource|null
     {
         if (isset($data['id'])) {
             $this->id = $data['id'];
@@ -140,7 +141,7 @@ class Resource extends ResourceIdentifier
     /**
      * @param Resource $resource
      */
-    public function mergeAttributes(Resource $resource)
+    public function mergeAttributes(Resource $resource) : void
     {
         $resourceArray = $resource->toJsonApiResponse();
         $this->attributes = array_merge($this->attributes, $resourceArray[self::ATTRIBUTES]);
@@ -149,8 +150,9 @@ class Resource extends ResourceIdentifier
     /**
      * @return array
      */
-    public function toJsonApiResponse()
+    public function toJsonApiResponse() : array
     {
+        parent::toJsonApiResponse();
         return $this->toJsonApiResponseWithFields(array_keys($this->attributes));
     }
 
@@ -159,7 +161,7 @@ class Resource extends ResourceIdentifier
      * @param array $fields
      * @return array - Return only the fields which exist in the $fields
      */
-    public function toJsonApiResponseWithFields(array $fields)
+    public function toJsonApiResponseWithFields(array $fields) : array
     {
         $response = array();
 
@@ -170,9 +172,9 @@ class Resource extends ResourceIdentifier
             if ($attribute === 'id') {
                 continue;
             }
-            if (in_array($attribute, $fields) === true) {
-                if (substr($attribute, -5) === "_file") {
-                    $value = "<OMITTED>";
+            if (in_array($attribute, $fields, true) === true) {
+                if (str_ends_with($attribute, '_file')) {
+                    $value = '<OMITTED>';
                 } else {
                     $value = $this->attributes[$attribute];
                 }
@@ -199,7 +201,7 @@ class Resource extends ResourceIdentifier
      * @param Links $links
      * @return $this
      */
-    public function withLinks(Links $links)
+    public function withLinks(Links $links) : ResourceIdentifier
     {
         $this->links = $links;
 
@@ -208,16 +210,16 @@ class Resource extends ResourceIdentifier
 
     /**
      * @param Relationship $relationship
-     * @return Resource|$this
+     * @return ResourceIdentifier|null
      */
-    public function withRelationship(\SuiteCRM\API\JsonApi\v1\Resource\Relationship $relationship)
+    public function withRelationship(\SuiteCRM\API\JsonApi\v1\Resource\Relationship $relationship) : ResourceIdentifier|null
     {
-        $relationshipName = $relationship->getRelatationshipName();
+        $relationshipName = $relationship->getRelationshipName();
         $this->relationships[$relationshipName] = $relationship->toJsonApiResponse();
         return clone $this;
     }
 
-    public function getRelationshipByName($link)
+    public function getRelationshipByName(string $link) : ResourceIdentifier|null
     {
         return $this->relationships[$link]['data'];
     }
@@ -226,14 +228,14 @@ class Resource extends ResourceIdentifier
      * Reserved words which must not be used in the Json API Request / Response
      * @return array
      */
-    public function getReservedKeywords()
+    public function getReservedKeywords() : array
     {
         return self::$JSON_API_RESERVED_KEYWORDS;
     }
     /**
      * @throws ConflictException
      */
-    protected function validateResource()
+    protected function validateResource() : void
     {
         // Validate ID
         if ($this->id === null) {
@@ -254,7 +256,7 @@ class Resource extends ResourceIdentifier
      * @param array $data
      * @throws BadRequestException
      */
-    private function relationshipFromDataArray(array $data)
+    private function relationshipFromDataArray(array $data) : void
     {
         if (isset($data[self::RELATIONSHIPS])) {
             $dataRelationships = $data[self::RELATIONSHIPS];
@@ -295,9 +297,9 @@ class Resource extends ResourceIdentifier
     }
 
     /**
-     * @param $data
+     * @param array $data
      */
-    private function attributesFromDataArray($data)
+    private function attributesFromDataArray(array $data) : void
     {
         global $sugar_config;
         foreach ($data[self::ATTRIBUTES] as $attributeName => $attributeValue) {
@@ -318,20 +320,21 @@ class Resource extends ResourceIdentifier
     }
 
     /**
-     * @param $toOneRelationship
-     * @param $relationshipName
+     * @param array $toOneRelationship
+     * @param string $relationshipName
+     *
      * @throws BadRequestException
      */
-    private function validateToOneRelationshipFromDataArray($toOneRelationship, $relationshipName)
+    private function validateToOneRelationshipFromDataArray(array $toOneRelationship, string $relationshipName) : void
     {
         // validate relationship
-        if (isset($toOneRelationship['id']) === false || empty($toOneRelationship['id'])) {
+        if (empty($toOneRelationship['id'])) {
             $exception = new BadRequestException('[Resource] [missing "to one" relationship field] "id"');
             $exception->setSource(self::DATA_RELATIONSHIPS . $relationshipName . '/id');
             throw $exception;
         }
 
-        if (isset($toOneRelationship['type']) === false || empty($toOneRelationship['type'])) {
+        if (empty($toOneRelationship['type'])) {
             $exception = new BadRequestException('[Resource] [missing "to one" relationship field] "type"');
             $exception->setSource(self::DATA_RELATIONSHIPS . $relationshipName . '/type');
             throw $exception;
@@ -346,17 +349,19 @@ class Resource extends ResourceIdentifier
     }
 
     /**
-     * @param $toManyRelationship
-     * @param $relationshipName
-     * @param $toManyRelationshipName
+     * @param array $toManyRelationship
+     * @param string $relationshipName
+     * @param string $toManyRelationshipName
+     *
      * @throws BadRequestException
      */
     private function validateToManyRelationshipFromDataArray(
-        $toManyRelationship,
-        $relationshipName,
-        $toManyRelationshipName
-    ) {
-        if (isset($toManyRelationship['id']) === false || empty($toManyRelationship['id'])) {
+        array $toManyRelationship,
+        string $relationshipName,
+        string $toManyRelationshipName
+    ) : void
+    {
+        if (empty($toManyRelationship['id'])) {
             $exception = new BadRequestException('[Resource] [missing "to many" relationship field] "id"');
             $exception->setSource(
                 self::DATA_RELATIONSHIPS . $relationshipName . '/' . $toManyRelationshipName . '/id'
@@ -364,7 +369,7 @@ class Resource extends ResourceIdentifier
             throw $exception;
         }
 
-        if (isset($toManyRelationship['type']) === false || empty($toManyRelationship['type'])) {
+        if (empty($toManyRelationship['type'])) {
             $exception = new BadRequestException('[Resource] [missing "to many" relationship field] "type"');
             $exception->setSource(
                 self::DATA_RELATIONSHIPS . $relationshipName . '/' . $toManyRelationshipName . '/type'

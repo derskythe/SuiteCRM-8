@@ -37,20 +37,24 @@
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  * @param $container
- * @return \SuiteCRM\API\v8\Controller\ApiController
+ * @return ApiController
  */
+
+use Psr\Log\LoggerInterface;
+use SuiteCRM\API\v8\Controller\ApiController;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Slim\Exception\ContainerValueNotFoundException;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @param ContainerInterface $container
- * @throws ContainerException
- * @throws ContainerValueNotFoundException
- * @return \SuiteCRM\API\v8\Controller\ApiController
+ *
+ * @return ApiController
+ * @throws ContainerExceptionInterface
+ * @throws NotFoundExceptionInterface
  */
-$container['ApiController'] = function ($container) {
-    $controller = new \SuiteCRM\API\v8\Controller\ApiController($container);
-    $controller->setLogger($container->get(\Psr\Log\LoggerInterface::class));
+$container['ApiController'] = function (ContainerInterface $container) {
+    $controller = new ApiController($container);
+    $controller->setLogger($container->get(LoggerInterface::class));
     return $controller;
 };

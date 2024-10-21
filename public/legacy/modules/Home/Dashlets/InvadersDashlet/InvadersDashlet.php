@@ -83,8 +83,9 @@ class InvadersDashlet extends Dashlet
      * Displays the dashlet
      *
      * @return string html to display dashlet
+     * @throws SmartyException
      */
-    public function display()
+    public function display() : string
     {
         $ss = new Sugar_Smarty();
         $ss->assign('id', $this->id);
@@ -99,6 +100,7 @@ class InvadersDashlet extends Dashlet
      * Displays the javascript for the dashlet
      *
      * @return string javascript to use with this dashlet
+     * @throws SmartyException
      */
     public function displayScript()
     {
@@ -114,6 +116,7 @@ class InvadersDashlet extends Dashlet
      * Displays the configuration form for the dashlet
      *
      * @return string html to display form
+     * @throws SmartyException
      */
     public function displayOptions()
     {

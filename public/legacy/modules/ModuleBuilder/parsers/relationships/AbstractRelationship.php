@@ -255,7 +255,7 @@ class AbstractRelationship
 
     public function getLeftModuleSystemLabel()
     {
-        if ($this->lhs_module == $this->rhs_module) {
+        if ($this->lhs_module === $this->rhs_module) {
             return $this->lhs_module.'_L';
         }
         return $this->lhs_module;
@@ -300,7 +300,8 @@ class AbstractRelationship
      * @param string $subpanelName      Name of the subpanel provided by the sourceModule
      * @param string $titleKeyName      Name of the subpanel title , if none, we will use the module name as the subpanel title.
      */
-    protected function getSubpanelDefinition($relationshipName, $sourceModule, $subpanelName, $titleKeyName = '', $source = "")
+    protected function getSubpanelDefinition($relationshipName, $sourceModule, $subpanelName, $titleKeyName = '', $source = ''
+    )
     {
         if (empty($source)) {
             $source = static::getValidDBName($relationshipName);
@@ -319,7 +320,7 @@ class AbstractRelationship
         }
         $subpanelDefinition [ 'get_subpanel_data' ] = $source ;
         $subpanelDefinition [ 'top_buttons' ] = array(
-            array('widget_class' => "SubPanelTopButtonQuickCreate"),
+            array('widget_class' => 'SubPanelTopButtonQuickCreate' ),
             array('widget_class' => 'SubPanelTopSelectButton', 'mode'=>'MultiSelect')
         );
 
@@ -334,7 +335,7 @@ class AbstractRelationship
      * @param string $sourceModule      Name of the source module for this field
      * @param string $relationshipName  Name of the relationship
      */
-    protected function getLinkFieldDefinition($sourceModule, $relationshipName, $right_side = false, $vname = "", $id_name = false)
+    protected function getLinkFieldDefinition($sourceModule, $relationshipName, $right_side = false, $vname = '', $id_name = false)
     {
         $vardef = array( ) ;
 
@@ -365,7 +366,7 @@ class AbstractRelationship
      * @param string $sourceModule      Name of the source module for this field
      * @param string $relationshipName  Name of the relationship
      */
-    protected function getLink2FieldDefinition($sourceModule, $relationshipName, $right_side = false, $vname = "")
+    protected function getLink2FieldDefinition($sourceModule, $relationshipName, $right_side = false, $vname = '')
     {
         $vardef = array( ) ;
 
@@ -396,7 +397,7 @@ class AbstractRelationship
     protected function getRelateFieldDefinition($sourceModule, $relationshipName, $vnameLabel='')
     {
         $vardef = array( ) ;
-        $vardef [ 'name' ] = static::getValidDBName($relationshipName . "_name") ; // must end in _name for the QuickSearch code in TemplateHandler->createQuickSearchCode
+        $vardef [ 'name' ] = static::getValidDBName($relationshipName . '_name') ; // must end in _name for the QuickSearch code in TemplateHandler->createQuickSearchCode
         $vardef [ 'type' ] = 'relate' ;
 
         $vardef [ 'source' ] = 'non-db' ;
@@ -458,9 +459,9 @@ class AbstractRelationship
                         require_once($GLOBALS ['beanFiles'] [$object]);
                         $bean = new $object();
                         if (isset($GLOBALS ['dictionary'] [$object] ['templates'])) {
-                            if (in_array('file', $GLOBALS ['dictionary'] [$object] ['templates'])) {
+                            if (in_array('file', $GLOBALS ['dictionary'] [$object] ['templates'], true)) {
                                 $vardef ['rname'] = 'document_name';
-                            } elseif (in_array('person', $GLOBALS ['dictionary'] [$object] ['templates'])) {
+                            } elseif (in_array('person', $GLOBALS ['dictionary'] [$object] ['templates'], true)) {
                                 $vardef ['db_concat_fields'] = array(0 => 'first_name', 1 => 'last_name');
                             }
                         }
@@ -523,7 +524,7 @@ class AbstractRelationship
                 $properties [ 'from_studio' ] = true;
             }
 
-            $rel_properties [ 'join_table' ] = static::getValidDBName($relationshipName."_c") ;
+            $rel_properties [ 'join_table' ] = static::getValidDBName($relationshipName. '_c') ;
             // a and b are in case the module relates to itself
             $rel_properties [ 'join_key_lhs' ] = $this->getJoinKeyLHS() ;
             $rel_properties [ 'join_key_rhs' ] = $this->getJoinKeyRHS() ;
@@ -551,7 +552,7 @@ class AbstractRelationship
         $properties [ 'fields' ] [] = array( 'name' => 'deleted' , 'type' => 'bool' , 'len' => '1' , 'default' => '0' , 'required' => true ) ;
         $properties [ 'fields' ] [] = array( 'name' => $rel_properties [ 'join_key_lhs' ] , 'type' => 'varchar' , 'len' => 36 ) ;
         $properties [ 'fields' ] [] = array( 'name' => $rel_properties [ 'join_key_rhs' ] , 'type' => 'varchar' , 'len' => 36 ) ;
-        if (strtolower($lhs_module) == 'documents' || strtolower($rhs_module) == 'documents') {
+        if (strtolower($lhs_module) === 'documents' || strtolower($rhs_module) === 'documents') {
             $properties [ 'fields' ] [] = array( 'name' => 'document_revision_id' , 'type' => 'varchar' , 'len' => '36' ) ;
         }
         // if we have an extended relationship condition, then add in the corresponding relationship_role_column to the relationship (join) table
@@ -598,7 +599,7 @@ class AbstractRelationship
      */
     public function getActivitiesSubModuleRelationshipName($activitiesSubModuleName)
     {
-        return $this->lhs_module . "_" . strtolower($activitiesSubModuleName) ;
+        return $this->lhs_module . '_' . strtolower($activitiesSubModuleName) ;
     }
 
     /*
@@ -638,7 +639,7 @@ class AbstractRelationship
     public function getJoinKeyLHS()
     {
         if (!isset($this->joinKeyLHS)) {
-            $this->joinKeyLHS = static::getValidDBName($this->relationship_name . $this->lhs_module . "_ida", true) ;
+            $this->joinKeyLHS = static::getValidDBName($this->relationship_name . $this->lhs_module . '_ida', true) ;
         }
 
         return $this->joinKeyLHS;
@@ -647,7 +648,7 @@ class AbstractRelationship
     public function getJoinKeyRHS()
     {
         if (!isset($this->joinKeyRHS)) {
-            $this->joinKeyRHS = static::getValidDBName($this->relationship_name . $this->rhs_module . "_idb", true) ;
+            $this->joinKeyRHS = static::getValidDBName($this->relationship_name . $this->rhs_module . '_idb', true) ;
         }
 
         return $this->joinKeyRHS;

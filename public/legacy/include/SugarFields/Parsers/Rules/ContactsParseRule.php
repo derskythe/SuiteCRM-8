@@ -48,6 +48,7 @@ class ContactsParseRule extends BaseRule
 {
     public function __construct()
     {
+        parent::__construct();
     }
 
 
@@ -56,7 +57,7 @@ class ContactsParseRule extends BaseRule
 
     public function preParse($panels, $view)
     {
-        if ($view == 'DetailView') {
+        if ($view === 'DetailView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {
@@ -71,9 +72,10 @@ class ContactsParseRule extends BaseRule
         return $panels;
     }
 
-    public function parsePanels(& $panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
-        if ($view == 'EditView') {
+        parent::parsePanels($panels, $view);
+        if ($view === 'EditView') {
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {
                     foreach ($row as $key=>$column) {

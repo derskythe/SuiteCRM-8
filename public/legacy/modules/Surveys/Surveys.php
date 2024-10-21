@@ -45,67 +45,28 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class Surveys extends Basic
 {
-
-    /** @var bool $new_schema */
-    public $new_schema = true;
-
     /** @var string $module_dir */
-    public $module_dir = 'Surveys';
+    public string $module_dir = 'Surveys';
 
     /** @var string $object_name */
-    public $object_name = 'Surveys';
+    public string $object_name = 'Surveys';
 
     /** @var string $table_name */
-    public $table_name = 'surveys';
-
-    /** @var bool $importable */
-    public $importable = false;
+    public string $table_name = 'surveys';
 
     /**
      * To ensure that modules created and deployed under CE will continue to function under team security
      * if the instance is upgraded to PRO
+     *
      * @var bool $disable_row_level_security
      */
     public $disable_row_level_security = true;
-
-    /** @var string $id */
-    public $id;
-
-    /** @var  string $name */
-    public $name;
-
-    /** @var  string $date_entered */
-    public $date_entered;
-
-    /** @var  string $date_modified */
-    public $date_modified;
-
-    /** @var  string $modified_user_id */
-    public $modified_user_id;
-
-    /** @var  string $modified_by_name */
-    public $modified_by_name;
-
-    /** @var  string $created_by */
-    public $created_by;
-
-    /** @var  string $created_by_name */
-    public $created_by_name;
-
-    /** @var  string $description */
-    public $description;
-
-    /** @var  int|bool $deleted */
-    public $deleted;
 
     /** @var  string $created_by_link */
     public $created_by_link;
 
     /** @var  string $modified_user_link */
     public $modified_user_link;
-
-    /** @var  string $assigned_user_id */
-    public $assigned_user_id;
 
     /** @var  string $assigned_user_name */
     public $assigned_user_name;
@@ -130,9 +91,10 @@ class Surveys extends Basic
 
     /**
      * @param string $interface
+     *
      * @return bool
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -144,7 +106,10 @@ class Surveys extends Basic
 
     /**
      * @param bool $check_notify
+     *
      * @return string
+     * @throws Exception
+     * @throws Exception
      */
     public function save($check_notify = false)
     {
@@ -183,6 +148,8 @@ class Surveys extends Basic
      * @param array $ids
      * @param array $deleted
      * @param string $questionId
+     *
+     * @throws Exception
      */
     private function saveOptions(array $options, array $ids, array $deleted, $questionId)
     {
@@ -223,6 +190,6 @@ class Surveys extends Basic
             return $this->submit_text;
         }
 
-        return "Submit";
+        return 'Submit';
     }
 }

@@ -5,7 +5,7 @@
  * To change the template for this generated file go to
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
- 
+
  if (!defined('sugarEntry') || !sugarEntry) {
      die('Not A Valid Entry Point');
  }
@@ -58,9 +58,9 @@ $searchFields['AOS_Invoices'] =
             'operator' => 'subquery',
             'checked_only' => true,
             'subquery' => "SELECT favorites.parent_id FROM favorites
-			                    WHERE favorites.deleted = 0
-			                        and favorites.parent_type = 'AOS_Invoices'
-			                        and favorites.assigned_user_id = '{1}'",
+                                WHERE favorites.deleted = 0
+                                    and favorites.parent_type = 'AOS_Invoices'
+                                    and favorites.assigned_user_id = '{1}'",
             'db_field'=>array('id')),
         //Range Search Support
         'range_total_amount' => array('query_type' => 'default', 'enable_range_search' => true),

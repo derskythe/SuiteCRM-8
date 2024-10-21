@@ -80,7 +80,7 @@ class AuthenticationController
                 ? $GLOBALS['sugar_config']['authenticationClass'] : 'SugarAuthenticate';
         }
 
-        if ($type == 'SugarAuthenticate' && !empty($GLOBALS['system_config']->settings['system_ldap_enabled']) && empty($_SESSION['sugar_user'])) {
+        if ($type === 'SugarAuthenticate' && !empty($GLOBALS['system_config']->settings['system_ldap_enabled']) && empty($_SESSION['sugar_user'])) {
             $type = 'LDAPAuthenticate';
         }
 
@@ -96,8 +96,8 @@ class AuthenticationController
 
         if (!empty($_REQUEST['no_saml'])
             && (
-                (is_subclass_of($type, 'SAMLAuthenticate') || 'SAMLAuthenticate' == $type) ||
-                (is_subclass_of($type, 'SAML2Authenticate') || 'SAML2Authenticate' == $type)
+                (is_subclass_of($type, 'SAMLAuthenticate') || 'SAMLAuthenticate' === $type) ||
+                (is_subclass_of($type, 'SAML2Authenticate') || 'SAML2Authenticate' === $type)
             )) {
             $type = 'SugarAuthenticate';
         }
@@ -163,11 +163,11 @@ class AuthenticationController
             $config = BeanFactory::newBean('Administration');
             $config->retrieveSettings();
             $postSilentInstallAdminWizardCompleted = $GLOBALS['current_user']->getPreference('postSilentInstallAdminWizardCompleted');
-            if ((is_admin($GLOBALS['current_user']) && empty($config->settings['system_adminwizard']) && $_REQUEST['action'] != 'AdminWizard') ||($postSilentInstallAdminWizardCompleted !== null && !$postSilentInstallAdminWizardCompleted)) {
+            if ((is_admin($GLOBALS['current_user']) && empty($config->settings['system_adminwizard']) && $_REQUEST['action'] !== 'AdminWizard') ||($postSilentInstallAdminWizardCompleted !== null && !$postSilentInstallAdminWizardCompleted)) {
                 $GLOBALS['module'] = 'Configurator';
                 $GLOBALS['action'] = 'AdminWizard';
                 ob_clean();
-                header("Location: index.php?module=Configurator&action=AdminWizard");
+                header('Location: index.php?module=Configurator&action=AdminWizard');
                 sugar_cleanup(true);
             }
 
@@ -179,11 +179,11 @@ class AuthenticationController
             if (!empty($PARAMS['ignoreTimeZoneRedirect'])) {
                 $checkTimeZone = false;
             }
-            if (empty($ut) && $checkTimeZone && $_REQUEST['action'] != 'SetTimezone' && $_REQUEST['action'] != 'SaveTimezone') {
+            if (empty($ut) && $checkTimeZone && $_REQUEST['action'] !== 'SetTimezone' && $_REQUEST['action'] !== 'SaveTimezone') {
                 $GLOBALS['module'] = 'Users';
                 $GLOBALS['action'] = 'Wizard';
                 ob_clean();
-                header("Location: index.php?module=Users&action=Wizard");
+                header('Location: index.php?module=Users&action=Wizard');
                 sugar_cleanup(true);
             }
         } else {

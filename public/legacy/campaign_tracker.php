@@ -64,7 +64,7 @@ if (!empty($_REQUEST['identifier'])) {
 }
 
 if (empty($_REQUEST['track'])) {
-    $track = "";
+    $track = '';
 } else {
     $track = $_REQUEST['track'];
 }

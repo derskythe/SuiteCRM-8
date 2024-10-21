@@ -54,7 +54,7 @@ class CampaignsParseRule extends BaseRule
 
     public function preParse($panels, $view)
     {
-        if ($view == 'EditView') {
+        if ($view === 'EditView') {
             $frequencyAdded = false;
             foreach ($panels as $name=>$panel) {
                 foreach ($panel as $rowCount=>$row) {

@@ -76,7 +76,7 @@ $dictionary['OutboundEmail'] = array('table' => 'outbound_email',
             'required' => true,
             'reportable' => false,
         ),
-            
+
                             'smtp_from_name' =>
         array(
             'name' => 'smtp_from_name',
@@ -89,7 +89,7 @@ $dictionary['OutboundEmail'] = array('table' => 'outbound_email',
             'vname' => 'LBL_SMTP_FROM_ADDR',
             'type' => 'varchar',
         ),
-            
+
         'mail_sendtype' => array(
             'name' => 'mail_sendtype',
             'vname' => 'LBL_MAIL_SENDTYPE',
@@ -156,19 +156,19 @@ $dictionary['OutboundEmail'] = array('table' => 'outbound_email',
     ),
     //'indices' => array (
     //array(
-    //	'name' => 'outbound_email_pk',
-    //	'type' =>'primary',
-    //	'fields' => array(
-    //		'id'
-    //	)
+    //    'name' => 'outbound_email_pk',
+    //    'type' =>'primary',
+    //    'fields' => array(
+    //        'id'
+    //    )
     //),
     //array(
-    //	'name' => 'oe_user_id_idx',
-    //	'type' =>'index',
-    //	'fields' => array(
-    //		//'id',
-    //		'user_id',
-    //	)
+    //    'name' => 'oe_user_id_idx',
+    //    'type' =>'index',
+    //    'fields' => array(
+    //        //'id',
+    //        'user_id',
+    //    )
     //),
     //), /* end indices */
 );

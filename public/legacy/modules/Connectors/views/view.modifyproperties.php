@@ -51,35 +51,36 @@ class ViewModifyProperties extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
-           "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration')."</a>",
-           "<a href='index.php?module=Connectors&action=ConnectorSettings'>".$mod_strings['LBL_ADMINISTRATION_MAIN']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration'). '</a>',
+            "<a href='index.php?module=Connectors&action=ConnectorSettings'>".$mod_strings['LBL_ADMINISTRATION_MAIN']. '</a>',
            $mod_strings['LBL_MODIFY_PROPERTIES_TITLE']
            );
     }
-    
+
     /**
      * @see SugarView::_getModuleTab()
      */
-    protected function _getModuleTab()
+    protected function _getModuleTab() : ?string
     {
         return 'Administration';
     }
-    
+
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()
     {
         global $mod_strings, $app_strings;
-        
+
         require_once('include/connectors/utils/ConnectorUtils.php');
         require_once('include/connectors/sources/SourceFactory.php');
-        
+
         $this->ss->assign('mod', $mod_strings);
         $this->ss->assign('APP', $app_strings);
         $connectors = ConnectorUtils::getConnectors(true);
@@ -91,7 +92,7 @@ class ViewModifyProperties extends SugarView
             $s = SourceFactory::getSource($id);
             $connector_strings = ConnectorUtils::getConnectorStrings($id);
             $fields = $s->getRequiredConfigFields();
-            
+
             if (!$s->isEnabledInAdminProperties() || empty($fields)) {
                 unset($connectorsToShow[$id]);
             } else {

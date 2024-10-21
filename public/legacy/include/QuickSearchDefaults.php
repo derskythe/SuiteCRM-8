@@ -112,16 +112,22 @@ class QuickSearchDefaults
             $field_list = array_merge($field_list, array('billing_address_street', 'billing_address_city',
                                                            'billing_address_state', 'billing_address_postalcode', 'billing_address_country'));
 
-            $populate_list = array_merge($populate_list, array($billingKey . "_address_street", $billingKey . "_address_city",
-                                                                $billingKey . "_address_state", $billingKey . "_address_postalcode", $billingKey . "_address_country"));
+            $populate_list = array_merge($populate_list, array( $billingKey . '_address_street',
+                                                                $billingKey . '_address_city',
+                                                                $billingKey . '_address_state',
+                                                                $billingKey . '_address_postalcode',
+                                                                $billingKey . '_address_country' ));
         } //if
 
         if ($shippingKey != null) {
             $field_list = array_merge($field_list, array('shipping_address_street', 'shipping_address_city',
                                                            'shipping_address_state', 'shipping_address_postalcode', 'shipping_address_country'));
 
-            $populate_list = array_merge($populate_list, array($shippingKey . "_address_street", $shippingKey . "_address_city",
-                                                                $shippingKey . "_address_state", $shippingKey . "_address_postalcode", $shippingKey . "_address_country"));
+            $populate_list = array_merge($populate_list, array( $shippingKey . '_address_street',
+                                                                $shippingKey . '_address_city',
+                                                                $shippingKey . '_address_state',
+                                                                $shippingKey . '_address_postalcode',
+                                                                $shippingKey . '_address_country' ));
         }
 
         if (!empty($additionalFields) && is_array($additionalFields)) {
@@ -242,7 +248,7 @@ class QuickSearchDefaults
     {
         global $sugar_version, $sugar_config, $theme;
         $qsScripts = '<script type="text/javascript">sqsWaitGif = "' . SugarThemeRegistry::current()->getImageURL('sqsWait.gif') . '";</script>
-		<script type="text/javascript" src="'. getJSPath('include/javascript/quicksearch.js') . '"></script>';
+        <script type="text/javascript" src="'. getJSPath('include/javascript/quicksearch.js') . '"></script>';
         return $qsScripts;
     }
 

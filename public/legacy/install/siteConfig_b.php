@@ -48,7 +48,7 @@ if (!isset($install_script) || !$install_script) {
     die($mod_strings['ERR_NO_DIRECT_SCRIPT']);
 }
 
-if (is_file("config.php")) {
+if (is_file('config.php')) {
     if (!empty($sugar_config['default_theme'])) {
         $_SESSION['site_default_theme'] = $sugar_config['default_theme'];
     }
@@ -90,12 +90,12 @@ if (is_file("config.php")) {
             $language_values[] = $value;
         }
 
-        $_SESSION['language_keys'] = urlencode(implode(",", $language_keys));
-        $_SESSION['language_values'] = urlencode(implode(",", $language_values));
+        $_SESSION['language_keys'] = urlencode(implode(',', $language_keys));
+        $_SESSION['language_values'] = urlencode(implode(',', $language_values));
     }
 }
 
-////	errors
+////    errors
 $errors = '';
 if (isset($validation_errors)) {
     if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0) {
@@ -109,7 +109,7 @@ if (isset($validation_errors)) {
 }
 
 
-////	ternaries
+////    ternaries
 $sugarUpdates = (isset($_SESSION['setup_site_sugarbeet']) && !empty($_SESSION['setup_site_sugarbeet'])) ? 'checked="checked"' : '';
 $siteSecurity = (isset($_SESSION['setup_site_defaults']) && !empty($_SESSION['setup_site_defaults'])) ? 'checked="checked"' : '';
 $customSession = (isset($_SESSION['setup_site_custom_session_path']) && !empty($_SESSION['setup_site_custom_session_path'])) ? 'checked="checked"' : '';
@@ -117,7 +117,7 @@ $customLog = (isset($_SESSION['setup_site_custom_log_dir']) && !empty($_SESSION[
 $customId = (isset($_SESSION['setup_site_specify_guid']) && !empty($_SESSION['setup_site_specify_guid'])) ? 'checked="checked"' : '';
 
 ///////////////////////////////////////////////////////////////////////////////
-////	START OUTPUT
+////    START OUTPUT
 $langHeader = get_language_header();
 $out =<<<EOQ
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -139,9 +139,9 @@ $out =<<<EOQ
       <tr><td colspan="2" id="help"><a href="{$help_url}" target='_blank'>{$mod_strings['LBL_HELP']} </a></td></tr>
     <tr>
       <th width="500">
-		<p>
-		<img src="{$sugar_md}" alt="SugarCRM" border="0">
-		</p>
+        <p>
+        <img src="{$sugar_md}" alt="SugarCRM" border="0">
+        </p>
    {$mod_strings['LBL_SITECFG_SECURITY_TITLE']}</th>
    <th width="200" style="text-align: right;">&nbsp;</th>
    </tr>
@@ -178,9 +178,9 @@ $out .= <<<EOQ
    <tr><td></td>
        <td style="text-align : right;"><span class="required">*</span></td>
        <td align="left">
-	       <div><div style="width:200px;float:left"><b>{$mod_strings['LBL_SITECFG_SESSION_PATH']}</b></div>
-	               <input type="text" name="setup_site_session_path" size='40' value="{$_SESSION['setup_site_session_path']}" /></td>
-	       </div>
+           <div><div style="width:200px;float:left"><b>{$mod_strings['LBL_SITECFG_SESSION_PATH']}</b></div>
+                   <input type="text" name="setup_site_session_path" size='40' value="{$_SESSION['setup_site_session_path']}" /></td>
+           </div>
        </td>
    </tr>
    </tbody>
@@ -211,9 +211,9 @@ $out .= <<<EOQ
    <tr><td></td>
        <td style="text-align : right;"><span class="required">*</span></td>
        <td align="left">
-	       <div><div style="width:200px;float:left"><b>{$mod_strings['LBL_SITECFG_APP_ID']}</b></div>
-	               <input type="text" name="setup_site_guid" size='30' value="{$_SESSION['setup_site_guid']}" />
-	       </div>
+           <div><div style="width:200px;float:left"><b>{$mod_strings['LBL_SITECFG_APP_ID']}</b></div>
+                   <input type="text" name="setup_site_guid" size='30' value="{$_SESSION['setup_site_guid']}" />
+           </div>
        </td>
    </tr>
    </tbody>

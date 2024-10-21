@@ -183,6 +183,8 @@ class EmailsController extends SugarController
 
     /**
      * Creates a record from the Quick Create Modal
+     *
+     * @throws Exception
      */
     public function action_QuickCreate()
     {
@@ -232,6 +234,9 @@ class EmailsController extends SugarController
     }
 
     /**
+     * @throws Exception
+     * @throws Exception
+     * @throws EmailException
      * @see EmailsViewSendemail
      */
     public function action_send()
@@ -336,7 +341,7 @@ class EmailsController extends SugarController
 
             $focusName = $request['parent_type'];
             $focus = BeanFactory::getBean($focusName, $request['parent_id']);
-            if ($email->module_dir == 'Accounts') {
+            if ($email->module_dir === 'Accounts') {
                 $focusName = 'Accounts';
             }
 
@@ -426,6 +431,8 @@ class EmailsController extends SugarController
     }
 
     /**
+     * @throws Exception
+     * @throws EmailException
      * @see EmailsViewCompose
      */
     public function action_SaveDraft()
@@ -460,6 +467,8 @@ class EmailsController extends SugarController
     /**
      * Gets the values of the "from" field
      * includes the signatures for each account
+     *
+     * @throws JsonException
      */
     public function action_getFromFields()
     {
@@ -491,7 +500,7 @@ class EmailsController extends SugarController
 
         if (!empty($_REQUEST['id'])) {
             $bean = BeanFactory::getBean('Emails', $_REQUEST['id']);
-            $data['draft'] = $bean->status == 'draft' ? 1 : 0;
+            $data['draft'] = $bean->status === 'draft' ? 1 : 0;
             if (!$attachmentBeans = BeanFactory::getBean('Notes')
                 ->get_full_list('', "parent_id = '" . $_REQUEST['id'] . "'")) {
                 LoggerManager::getLogger()->warn('No attachment Note for selected Email.');
@@ -567,7 +576,7 @@ class EmailsController extends SugarController
         $result = null;
 
         $db = DBManagerFactory::getInstance();
-        $emails = BeanFactory::getBean("Emails");
+        $emails = BeanFactory::getBean('Emails');
 
         $uid = $_REQUEST['uid'];
         $inboundEmailRecordId = $_REQUEST['inbound_email_record'];
@@ -575,7 +584,7 @@ class EmailsController extends SugarController
         $validator = new SuiteValidator();
 
         if ($validator->isValidId($uid)) {
-            $subQuery = "`mailbox_id` = " . $db->quoted($inboundEmailRecordId) . " AND `uid` = " . $db->quoted($uid);
+            $subQuery = '`mailbox_id` = ' . $db->quoted($inboundEmailRecordId) . ' AND `uid` = ' . $db->quoted($uid);
             $result = $emails->get_full_list('', $subQuery);
         }
 
@@ -621,7 +630,7 @@ class EmailsController extends SugarController
     public function action_GetCurrentUserID()
     {
         global $current_user;
-        echo json_encode(array("response" => $current_user->id));
+        echo json_encode(array( 'response' => $current_user->id));
         $this->view = 'ajax';
     }
 
@@ -774,7 +783,8 @@ class EmailsController extends SugarController
     /**
      * @param array $request
      * @param int $mode
-     * @throws InvalidArgumentException
+     *
+     * @throws InvalidArgumentException*@throws Exception
      * @see EmailsController::COMPOSE_BEAN_MODE_UNDEFINED
      * @see EmailsController::COMPOSE_BEAN_MODE_REPLY_TO
      * @see EmailsController::COMPOSE_BEAN_MODE_REPLY_TO_ALL
@@ -797,7 +807,7 @@ class EmailsController extends SugarController
         $ie->email = $email;
         $accounts = $ieAccountsFull = $ie->retrieveAllByGroupIdWithGroupAccounts($current_user->id);
         if (!$accounts) {
-            $url = 'index.php?module=Users&action=EditView&record=' . $current_user->id . "&showEmailSettingsPopup=1";
+            $url = 'index.php?module=Users&action=EditView&record=' . $current_user->id . '&showEmailSettingsPopup=1';
             SugarApplication::appendErrorMessage(
                 "You don't have any valid email account settings yet. <a href=\"$url\">Click here to set your email accounts.</a>"
             );
@@ -821,7 +831,7 @@ class EmailsController extends SugarController
             $this->bean->parent_name = $parent_name;
         }
 
-        $arrayOfToNames = explode(", ", $this->bean->to_addrs_names);
+        $arrayOfToNames = explode(', ', $this->bean->to_addrs_names);
         $mailbox = BeanFactory::getBean('InboundEmail', $this->bean->mailbox_id);
 
         if(count($arrayOfToNames) > 1){
@@ -919,7 +929,7 @@ class EmailsController extends SugarController
     private function getRequestedArgument($request, $key)
     {
         if (!isset($request[$key])) {
-            $GLOBALS['log']->error("Requested key is not set: ");
+            $GLOBALS['log']->error('Requested key is not set: ');
 
             return null;
         }
@@ -947,20 +957,22 @@ class EmailsController extends SugarController
 
     /**
      * @param array $request
+     *
      * @return bool|Email
-     * @see Email::id
+     * @throws Exception
      * @see EmailsController::action_ImportAndShowDetailView()
      * @see EmailsController::action_ImportView()
+     * @see Email::id
      */
     protected function setAfterImport($importedEmailId, $request)
     {
-        $emails = BeanFactory::getBean("Emails", $importedEmailId) ?? '';
+        $emails = BeanFactory::getBean('Emails', $importedEmailId) ?? '';
 
         if (!empty($emails)) {
             foreach ($request as $requestKey => $requestValue) {
-                if (strpos($requestKey, 'SET_AFTER_IMPORT_') !== false) {
+                if (str_contains($requestKey, 'SET_AFTER_IMPORT_')) {
                     $field = str_replace('SET_AFTER_IMPORT_', '', $requestKey);
-                    if (in_array($field, self::$doNotImportFields)) {
+                    if (in_array($field, self::$doNotImportFields, true)) {
                         continue;
                     }
                     $emails->{$field} = $requestValue;
@@ -975,7 +987,11 @@ class EmailsController extends SugarController
      * @param User $requestedUser
      * @param InboundEmail $requestedInboundEmail
      * @param Email $requestedEmail
+     *
      * @return bool false if user doesn't have access
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     protected function userIsAllowedToSendEmail($requestedUser, $requestedInboundEmail, $requestedEmail)
     {

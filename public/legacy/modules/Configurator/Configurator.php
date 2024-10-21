@@ -97,14 +97,14 @@ class Configurator
         $this->checkLoggerFileName();
 
         foreach ($_POST as $key => $value) {
-            if ($key === "logger_file_ext" || $key === 'logger_file_name') {
+            if ($key === 'logger_file_ext' || $key === 'logger_file_name') {
                 if ($value === '') {
                     $GLOBALS['log']->security("Log file extension can't be blank.");
                     continue;
                 }
             }
 
-            if (isset($this->config[$key]) || in_array($key, $this->allow_undefined)) {
+            if (isset($this->config[$key]) || in_array($key, $this->allow_undefined, true)) {
                 if (strcmp((string)$value, 'true') == 0) {
                     $value = true;
                 }
@@ -199,9 +199,12 @@ class Configurator
 
     /**
      * Check if has valid extension
+     *
      * @param string $fieldName
      * @param string $value
+     *
      * @return bool
+     * @throws Exception
      */
     public function hasValidExtension(string $fieldName, string $value): bool
     {
@@ -253,7 +256,7 @@ class Configurator
         // To remember checkbox state
         if (!$this->useAuthenticationClass && !$fromParseLoggerSettings) {
             if (isset($overrideArray['authenticationClass']) &&
-                $overrideArray['authenticationClass'] == 'SAMLAuthenticate') {
+                $overrideArray['authenticationClass'] === 'SAMLAuthenticate') {
                 unset($overrideArray['authenticationClass']);
             }
         }
@@ -276,7 +279,7 @@ class Configurator
         }
 
         foreach ($overrideArray as $key => $val) {
-            if (in_array($key, $this->allow_undefined) || isset($sugar_config[$key])) {
+            if (in_array($key, $this->allow_undefined, true) || isset($sugar_config[$key])) {
                 if (is_string($val) && strcmp($val, 'true') == 0) {
                     $val = true;
                     $this->config[$key] = $val;
@@ -311,9 +314,9 @@ class Configurator
         global $sugar_config, $sugar_version;
         $currentConfigArray = $this->readOverride();
         foreach ($currentConfigArray as $key => $val) {
-            if (in_array($key, $this->allow_undefined) || isset($sugar_config[$key])) {
+            if (in_array($key, $this->allow_undefined, true) || isset($sugar_config[$key])) {
                 if (empty($val)) {
-                    if (!empty($this->previous_sugar_override_config_array['stack_trace_errors']) && $key == 'stack_trace_errors') {
+                    if (!empty($this->previous_sugar_override_config_array['stack_trace_errors']) && $key === 'stack_trace_errors') {
                         require_once('include/TemplateHandler/TemplateHandler.php');
                         TemplateHandler::clearAll();
                         return;
@@ -334,7 +337,7 @@ class Configurator
         $this->populateFromPost();
         $this->handleOverride();
         $this->clearCache();
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('rebuild_all');
     }
 
@@ -343,7 +346,7 @@ class Configurator
         $sugar_config = array();
         if (file_exists('config_override.php')) {
             if (!is_readable('config_override.php')) {
-                $GLOBALS['log']->fatal("Unable to read the config_override.php file. Check the file permissions");
+                $GLOBALS['log']->fatal('Unable to read the config_override.php file. Check the file permissions');
             } else {
                 include('config_override.php');
             }
@@ -358,7 +361,7 @@ class Configurator
             touch('config_override.php');
         }
         if (!(make_writable('config_override.php')) || !(is_writable('config_override.php'))) {
-            $GLOBALS['log']->fatal("Unable to write to the config_override.php file. Check the file permissions");
+            $GLOBALS['log']->fatal('Unable to write to the config_override.php file. Check the file permissions');
             return;
         }
         sugar_file_put_contents('config_override.php', $override);
@@ -394,7 +397,7 @@ class Configurator
     public function saveImages()
     {
         if (!empty($_POST['company_logo'])) {
-            if ($this->saveCompanyLogo("upload://" . $_POST['company_logo']) === false) {
+            if ($this->saveCompanyLogo('upload://' . $_POST['company_logo']) === false) {
                 return false;
             }
         }
@@ -454,30 +457,30 @@ class Configurator
             $new_props = array();
             $key_names = array();
             foreach ($old_props as $value) {
-                if (!empty($value) && !preg_match("/^\/\//", $value)) {
-                    $temp = explode("=", $value);
+                if (!empty($value) && !preg_match('/^\/\//', $value)) {
+                    $temp = explode('=', $value);
                     $property = isset($temp[1]) ? $temp[1] : array();
-                    if (preg_match("/log4php.appender.A2.MaxFileSize=/", $value)) {
+                    if (preg_match('/log4php.appender.A2.MaxFileSize=/', $value)) {
                         setDeepArrayValue($this->config, 'logger_file_maxSize', rtrim($property));
-                    } elseif (preg_match("/log4php.appender.A2.File=/", $value)) {
-                        $ext = preg_split("/\./", $property);
-                        if (preg_match("/^\./", $property)) { //begins with .
+                    } elseif (preg_match('/log4php.appender.A2.File=/', $value)) {
+                        $ext = preg_split('/\./', $property);
+                        if (preg_match('/^\./', $property)) { //begins with .
                             setDeepArrayValue($this->config, 'logger_file_ext', isset($ext[2]) ? '.' . rtrim($ext[2]) : '.log');
-                            setDeepArrayValue($this->config, 'logger_file_name', rtrim("." . $ext[1]));
+                            setDeepArrayValue($this->config, 'logger_file_name', rtrim('.' . $ext[1]));
                         } else {
                             setDeepArrayValue($this->config, 'logger_file_ext', isset($ext[1]) ? '.' . rtrim($ext[1]) : '.log');
                             setDeepArrayValue($this->config, 'logger_file_name', rtrim($ext[0]));
                         }
-                    } elseif (preg_match("/log4php.appender.A2.layout.DateFormat=/", $value)) {
+                    } elseif (preg_match('/log4php.appender.A2.layout.DateFormat=/', $value)) {
                         setDeepArrayValue($this->config, 'logger_file_dateFormat', trim(rtrim($property), '""'));
-                    } elseif (preg_match("/log4php.rootLogger=/", $value)) {
-                        $property = explode(",", $property);
+                    } elseif (preg_match('/log4php.rootLogger=/', $value)) {
+                        $property = explode(',', $property);
                         setDeepArrayValue($this->config, 'logger_level', rtrim($property[0]));
                     }
                 }
             }
             setDeepArrayValue($this->config, 'logger_file_maxLogs', 10);
-            setDeepArrayValue($this->config, 'logger_file_suffix', "%m_%Y");
+            setDeepArrayValue($this->config, 'logger_file_suffix', '%m_%Y');
             $this->handleOverride();
             unlink('log4php.properties');
             $GLOBALS['sugar_config'] = $this->config; //load the rest of the sugar_config settings.

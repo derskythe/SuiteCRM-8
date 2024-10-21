@@ -76,7 +76,7 @@ class MeetingFormBase extends FormBase
         // global $default_language;
         // global $cal_codes;
 
-        $cal_lang = "en";
+        $cal_lang = 'en';
         $cal_dateformat = $timedate->get_cal_date_format();
 
         $lbl_required_symbol = $app_strings['LBL_REQUIRED_SYMBOL'];
@@ -95,23 +95,23 @@ class MeetingFormBase extends FormBase
         // Unimplemented until jscalendar language files are fixed
         // $cal_lang =(empty($cal_codes[$current_language])) ? $cal_codes[$default_language] : $cal_codes[$current_language];
         $form = <<<EOF
-					<input type="hidden" name="{$prefix}record" value="">
-					<input type="hidden" name="{$prefix}status" value="{$default_status}">
-					<input type="hidden" name="{$prefix}parent_type" value="{$default_parent_type}">
-					<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-					<input type="hidden" name="{$prefix}duration_hours" value="1">
-					<input type="hidden" name="{$prefix}duration_minutes" value="00">
-					<p>$lbl_subject<span class="required">$lbl_required_symbol</span><br>
-					<input name='{$prefix}name' size='25' maxlength='255' type="text"><br>
-					$lbl_date&nbsp;<span class="required">$lbl_required_symbol</span>&nbsp;<span class="dateFormat">$ntc_date_format</span><br>
-					<input name='{$prefix}date_start' id='jscal_field' onblur="parseDate(this, '$cal_dateformat');" type="text" maxlength="10" value="{$default_date_start}"> <!--not_in_theme!--><span class="suitepicon suitepicon-module-calendar"></span><br>
-					$lbl_time&nbsp;<span class="required">$lbl_required_symbol</span>&nbsp;<span class="dateFormat">$ntc_time_format</span><br>
-					<input name='{$prefix}time_start' type="text" maxlength='5' value="{$default_time_start}">{$time_ampm}</p>
-					<script type="text/javascript">
-					Calendar.setup({
-						inputField : "jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "jscal_trigger", singleClick : true, step : 1, weekNumbers:false
-					});
-					</script>
+                    <input type="hidden" name="{$prefix}record" value="">
+                    <input type="hidden" name="{$prefix}status" value="{$default_status}">
+                    <input type="hidden" name="{$prefix}parent_type" value="{$default_parent_type}">
+                    <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+                    <input type="hidden" name="{$prefix}duration_hours" value="1">
+                    <input type="hidden" name="{$prefix}duration_minutes" value="00">
+                    <p>$lbl_subject<span class="required">$lbl_required_symbol</span><br>
+                    <input name='{$prefix}name' size='25' maxlength='255' type="text"><br>
+                    $lbl_date&nbsp;<span class="required">$lbl_required_symbol</span>&nbsp;<span class="dateFormat">$ntc_date_format</span><br>
+                    <input name='{$prefix}date_start' id='jscal_field' onblur="parseDate(this, '$cal_dateformat');" type="text" maxlength="10" value="{$default_date_start}"> <!--not_in_theme!--><span class="suitepicon suitepicon-module-calendar"></span><br>
+                    $lbl_time&nbsp;<span class="required">$lbl_required_symbol</span>&nbsp;<span class="dateFormat">$ntc_time_format</span><br>
+                    <input name='{$prefix}time_start' type="text" maxlength='5' value="{$default_time_start}">{$time_ampm}</p>
+                    <script type="text/javascript">
+                    Calendar.setup({
+                        inputField : "jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "jscal_trigger", singleClick : true, step : 1, weekNumbers:false
+                    });
+                    </script>
 EOF;
 
 
@@ -151,16 +151,16 @@ EOF;
         $the_form .= <<<EOQ
 
 
-		<form name="{$prefix}MeetingSave" onSubmit="return check_form('{$prefix}MeetingSave')" method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="Meetings">
+        <form name="{$prefix}MeetingSave" onSubmit="return check_form('{$prefix}MeetingSave')" method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="Meetings">
 
-			<input type="hidden" name="{$prefix}action" value="Save">
+            <input type="hidden" name="{$prefix}action" value="Save">
 
 EOQ;
-        $the_form	.= $this->getFormBody($prefix, 'Meetings', "{$prefix}MeetingSave");
+        $the_form    .= $this->getFormBody($prefix, 'Meetings', "{$prefix}MeetingSave");
         $the_form .= <<<EOQ
-		<p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
-		</form>
+        <p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
+        </form>
 EOQ;
 
         $the_form .= get_left_form_footer();
@@ -172,9 +172,14 @@ EOQ;
 
     /**
      * handles save functionality for meetings
-     * @param	string prefix
-     * @param	bool redirect default True
-     * @param	bool useRequired default True
+     *
+     * @param string prefix
+     * @param bool redirect default True
+     * @param bool useRequired default True
+     *
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function handleSave($prefix, $redirect=true, $useRequired=false)
     {
@@ -209,7 +214,7 @@ EOQ;
         unset($_POST['recurring_source']);
 
         $time_format = $timedate->get_user_time_format();
-        $time_separator = ":";
+        $time_separator = ':';
         if (preg_match('/\d+([^\d])\d+([^\d]*)/s', (string) $time_format, $match)) {
             $time_separator = $match[1];
         }
@@ -250,7 +255,7 @@ EOQ;
         }
 
         //add assigned user and current user if this is the first time bean is saved
-        if (empty($focus->id) && !empty($_REQUEST['return_module']) && $_REQUEST['return_module'] =='Meetings' && !empty($_REQUEST['return_action']) && $_REQUEST['return_action'] =='DetailView') {
+        if (empty($focus->id) && !empty($_REQUEST['return_module']) && $_REQUEST['return_module'] === 'Meetings' && !empty($_REQUEST['return_action']) && $_REQUEST['return_action'] === 'DetailView') {
             //if return action is set to detail view and return module to meeting, then this is from the long form, do not add the assigned user (only the current user)
             //The current user is already added to UI and we want to give the current user the option of opting out of meeting.
             //add current user if the assigned to user is different than current user.
@@ -268,7 +273,7 @@ EOQ;
             $_POST['user_invitees'] .= ','.$_POST['assigned_user_id'].', ';
 
             //add current user if the assigned to user is different than current user.
-            if ($current_user->id != $_POST['assigned_user_id'] && $_REQUEST['module'] != "Calendar") {
+            if ($current_user->id != $_POST['assigned_user_id'] && $_REQUEST['module'] !== 'Calendar') {
                 $_POST['user_invitees'] .= ','.$current_user->id.', ';
             }
 
@@ -277,22 +282,22 @@ EOQ;
         }
 
 
-        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] == 'true') ||
+        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] === 'true') ||
         (isset($_POST['is_ajax_call']) && !empty($_POST['is_ajax_call']) && !empty($focus->id) ||
-        (isset($_POST['return_action']) && $_POST['return_action'] == 'SubPanelViewer') && !empty($focus->id))||
+        (isset($_POST['return_action']) && $_POST['return_action'] === 'SubPanelViewer') && !empty($focus->id))||
          !isset($_POST['user_invitees']) // we need to check that user_invitees exists before processing, it is ok to be empty
     ) {
             $focus->save(true);
             $return_id = $focus->id;
         } else {
-            if ($focus->status == 'Held' && $this->isEmptyReturnModuleAndAction() && !$this->isSaveFromDCMenu()) {
+            if ($focus->status === 'Held' && $this->isEmptyReturnModuleAndAction() && !$this->isSaveFromDCMenu()) {
                 //if we are closing the meeting, and the request does not have a return module AND return action set and it is not a save
                 //being triggered by the DCMenu (shortcut bar) then the request is coming from a dashlet or subpanel close icon and there is no
                 //need to process user invitees, just save the current values.
                 $focus->save(true);
             } else {
                 ///////////////////////////////////////////////////////////////////////////
-                ////	REMOVE INVITEE RELATIONSHIPS
+                ////    REMOVE INVITEE RELATIONSHIPS
                 if (!empty($_POST['user_invitees'])) {
                     $userInvitees = explode(',', trim($_POST['user_invitees'], ','));
                 } else {
@@ -307,7 +312,7 @@ EOQ;
                 $r = $focus->db->query($q);
                 $acceptStatusUsers = array();
                 while ($a = $focus->db->fetchByAssoc($r)) {
-                    if (!in_array($a['user_id'], $userInvitees)) {
+                    if (!in_array($a['user_id'], $userInvitees, true)) {
                         $deleteUsers[$a['user_id']] = $a['user_id'];
                     } else {
                         $acceptStatusUsers[$a['user_id']] = $a['accept_status'];
@@ -338,7 +343,7 @@ EOQ;
                 $r = $focus->db->query($q);
                 $acceptStatusContacts = array();
                 while ($a = $focus->db->fetchByAssoc($r)) {
-                    if (!in_array($a['contact_id'], $contactInvitees)) {
+                    if (!in_array($a['contact_id'], $contactInvitees, true)) {
                         $deleteContacts[$a['contact_id']] = $a['contact_id'];
                     } else {
                         $acceptStatusContacts[$a['contact_id']] = $a['accept_status'];
@@ -362,7 +367,7 @@ EOQ;
                 $r = $focus->db->query($q);
                 $acceptStatusLeads = array();
                 while ($a = $focus->db->fetchByAssoc($r)) {
-                    if (!in_array($a['lead_id'], $leadInvitees)) {
+                    if (!in_array($a['lead_id'], $leadInvitees, true)) {
                         $deleteLeads[$a['lead_id']] = $a['lead_id'];
                     } else {
                         $acceptStatusLeads[$a['lead_id']] = $a['accept_status'];
@@ -374,12 +379,12 @@ EOQ;
                         $focus->leads->delete($focus->id, $u);
                     }
                 }
-                ////	END REMOVE
+                ////    END REMOVE
                 ///////////////////////////////////////////////////////////////////////////
 
 
                 ///////////////////////////////////////////////////////////////////////////
-                ////	REBUILD INVITEE RELATIONSHIPS
+                ////    REBUILD INVITEE RELATIONSHIPS
                 $focus->users_arr = array();
                 $focus->users_arr = $userInvitees;
                 $focus->contacts_arr = array();
@@ -387,10 +392,10 @@ EOQ;
                 $focus->leads_arr = array();
                 $focus->leads_arr = $leadInvitees;
 
-                if (!empty($_POST['parent_id']) && $_POST['parent_type'] == 'Contacts') {
+                if (!empty($_POST['parent_id']) && $_POST['parent_type'] === 'Contacts') {
                     $focus->contacts_arr[] = $_POST['parent_id'];
                 }
-                if (!empty($_POST['parent_id']) && $_POST['parent_type'] == 'Leads') {
+                if (!empty($_POST['parent_id']) && $_POST['parent_type'] === 'Leads') {
                     $focus->leads_arr[] = $_POST['parent_id'];
                 }
                 // Call the Meeting module's save function to handle saving other fields besides
@@ -408,7 +413,7 @@ EOQ;
                 // Process users
                 $existing_users = array();
                 if (!empty($_POST['existing_invitees'])) {
-                    $existing_users =  explode(",", trim($_POST['existing_invitees'], ','));
+                    $existing_users =  explode(',', trim($_POST['existing_invitees'], ','));
                 }
 
                 foreach ($focus->users_arr as $user_id) {
@@ -432,7 +437,7 @@ EOQ;
                 // Process contacts
                 $existing_contacts =  array();
                 if (!empty($_POST['existing_contact_invitees'])) {
-                    $existing_contacts =  explode(",", trim($_POST['existing_contact_invitees'], ','));
+                    $existing_contacts =  explode(',', trim($_POST['existing_contact_invitees'], ','));
                 }
 
                 foreach ($focus->contacts_arr as $contact_id) {
@@ -455,7 +460,7 @@ EOQ;
                 // Process leads
                 $existing_leads =  array();
                 if (!empty($_POST['existing_lead_invitees'])) {
-                    $existing_leads =  explode(",", trim($_POST['existing_lead_invitees'], ','));
+                    $existing_leads =  explode(',', trim($_POST['existing_lead_invitees'], ','));
                 }
 
                 foreach ($focus->leads_arr as $lead_id) {
@@ -485,7 +490,7 @@ EOQ;
                     $focus->set_accept_status($current_user, 'accept');
                 }
 
-                ////	END REBUILD INVITEE RELATIONSHIPS
+                ////    END REBUILD INVITEE RELATIONSHIPS
             ///////////////////////////////////////////////////////////////////////////
             }
         }
@@ -496,8 +501,8 @@ EOQ;
             exit;
         }
 
-        if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] == 'Home') {
-            header("Location: index.php?module=Home&action=index");
+        if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] === 'Home') {
+            header('Location: index.php?module=Home&action=index');
         } else {
             if ($redirect) {
                 handleRedirect($return_id, 'Meetings');

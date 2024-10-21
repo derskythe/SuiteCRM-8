@@ -176,7 +176,10 @@ class SugarJobQueue
 
     /**
      * Delete a job
+     *
      * @param string $jobId
+     *
+     * @throws Exception
      */
     public function deleteJob($jobId)
     {
@@ -199,7 +202,7 @@ class SugarJobQueue
         $sql = "SELECT id FROM {$this->job_queue_table} WHERE status='".SchedulersJob::JOB_STATUS_RUNNING."' AND date_modified <= '{$date}'";
         $res = $this->db->query($sql);
         while ($row = $this->db->fetchByAssoc($res)) {
-            $this->resolveJob($row["id"], SchedulersJob::JOB_FAILURE, translate('ERR_TIMEOUT', 'SchedulersJobs'));
+            $this->resolveJob($row['id'], SchedulersJob::JOB_FAILURE, translate('ERR_TIMEOUT', 'SchedulersJobs'));
             $ret = false;
         }
         return $ret;
@@ -216,7 +219,7 @@ class SugarJobQueue
         $sql = "SELECT id FROM {$this->job_queue_table} WHERE status='".SchedulersJob::JOB_STATUS_DONE."' AND resolution='".SchedulersJob::JOB_SUCCESS."' AND date_modified <= '{$date}'";
         $res = $this->db->query($sql);
         while ($row = $this->db->fetchByAssoc($res)) {
-            $this->deleteJob($row["id"]);
+            $this->deleteJob($row['id']);
         }
 
         // Process failed jobs
@@ -224,7 +227,7 @@ class SugarJobQueue
         $sql = "SELECT id FROM {$this->job_queue_table} WHERE status='".SchedulersJob::JOB_STATUS_DONE."' AND resolution!='".SchedulersJob::JOB_SUCCESS."' AND date_modified <= '{$date}'";
         $res = $this->db->query($sql);
         while ($row = $this->db->fetchByAssoc($res)) {
-            $this->deleteJob($row["id"]);
+            $this->deleteJob($row['id']);
         }
     }
 
@@ -238,8 +241,11 @@ class SugarJobQueue
 
     /**
      * Fetch the next job in the queue and mark it running
+     *
      * @param string $clientID ID of the client requesting the job
+     *
      * @return SugarJob
+     * @throws Exception
      */
     public function nextJob($clientID)
     {

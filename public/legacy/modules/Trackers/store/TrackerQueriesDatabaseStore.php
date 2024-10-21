@@ -77,7 +77,7 @@ class TrackerQueriesDatabaseStore implements Store
             return;
         }
 
-        $fields['id'] = array('auto_increment' => true, "name" => "id", "type" => "int");
+        $fields['id'] = array( 'auto_increment' => true, 'name' => 'id', 'type' => 'int' );
         DBManagerFactory::getInstance()->insertParams($monitor->table_name, $fields, $values);
     }
 }

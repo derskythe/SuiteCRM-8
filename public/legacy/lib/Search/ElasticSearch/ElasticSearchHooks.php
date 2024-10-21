@@ -162,7 +162,7 @@ class ElasticSearchHooks
      */
     private function isBlacklisted()
     {
-        return !in_array($this->bean->module_name, $this->indexer->getModulesToIndex());
+        return !in_array($this->bean->module_name, $this->indexer->getModulesToIndex(), true);
     }
 
     private function correctAction()

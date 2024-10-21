@@ -39,7 +39,7 @@ class ClientRepository implements ClientRepositoryInterface
         $this->clientEntity->setIdentifier($clientIdentifier);
         $this->clientEntity->setName($client->name);
         $this->clientEntity->setRedirectUri($client->redirect_uri ?? '');
-		$this->clientEntity->setIsConfidential($client->is_confidential ?? false);
+        $this->clientEntity->setIsConfidential($client->is_confidential ?? false);
 
         return $this->clientEntity;
     }

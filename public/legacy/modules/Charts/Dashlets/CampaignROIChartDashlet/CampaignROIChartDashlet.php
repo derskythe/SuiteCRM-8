@@ -63,7 +63,7 @@ class CampaignROIChartDashlet extends DashletGenericChart
     {
         $this->getSeedBean()->disable_row_level_security = false;
 
-        $campaigns = $this->getSeedBean()->get_full_list("", "");
+        $campaigns = $this->getSeedBean()->get_full_list('', '');
         if ($campaigns != null) {
             foreach ($campaigns as $c) {
                 $this->_searchFields['campaign_id']['options'][$c->id] = $c->name;
@@ -76,9 +76,10 @@ class CampaignROIChartDashlet extends DashletGenericChart
     }
 
     /**
+     * @throws SmartyException
      * @see DashletGenericChart::display()
      */
-    public function display()
+    public function display() : string
     {
         $rawData = $this->constructQuery(
             $GLOBALS['app_list_strings']['roi_type_dom'],
@@ -243,11 +244,13 @@ EOD;
         $focus = BeanFactory::newBean('Campaigns');
         $focus->retrieve($campaign_id);
         $opp_count=0;
-        $opp_query  = "select count(*) opp_count,sum(" . DBManagerFactory::getInstance()->convert("amount_usdollar", "IFNULL", array(0)).")  total_value";
-        $opp_query .= " from opportunities";
+        $opp_query  = 'select count(*) opp_count,sum(' . DBManagerFactory::getInstance()->convert(
+                'amount_usdollar',
+                'IFNULL', array( 0)). ')  total_value';
+        $opp_query .= ' from opportunities';
         $opp_query .= " where campaign_id='$campaign_id'";
         $opp_query .= " and sales_stage='Prospecting'";
-        $opp_query .= " and deleted=0";
+        $opp_query .= ' and deleted=0';
 
         $opp_result=$focus->db->query($opp_query);
         $opp_data=$focus->db->fetchByAssoc($opp_result);
@@ -258,11 +261,11 @@ EOD;
         $chartData['Total Value']= $opp_data['total_value'];
 
         //report query
-        $opp_query1  = "select SUM(opp.amount) as revenue";
-        $opp_query1 .= " from opportunities opp";
-        $opp_query1 .= " right join campaigns camp on camp.id = opp.campaign_id";
+        $opp_query1  = 'select SUM(opp.amount) as revenue';
+        $opp_query1 .= ' from opportunities opp';
+        $opp_query1 .= ' right join campaigns camp on camp.id = opp.campaign_id';
         $opp_query1 .= " where opp.sales_stage = 'Closed Won'and camp.id='$campaign_id' and opp.deleted=0";
-        $opp_query1 .= " group by camp.name";
+        $opp_query1 .= ' group by camp.name';
 
         $opp_result1=$focus->db->query($opp_query1);
         $opp_data1=$focus->db->fetchByAssoc($opp_result1);
@@ -279,10 +282,11 @@ EOD;
 
         $chartData['Revenue']= $opp_data1[$mod_strings['LBL_ROI_CHART_REVENUE']];
 
-        $camp_query1  = "select camp.name, SUM(camp.actual_cost) as investment,SUM(camp.budget) as budget,SUM(camp.expected_revenue) as expected_revenue";
-        $camp_query1 .= " from campaigns camp";
+        $camp_query1  =
+            'select camp.name, SUM(camp.actual_cost) as investment,SUM(camp.budget) as budget,SUM(camp.expected_revenue) as expected_revenue';
+        $camp_query1 .= ' from campaigns camp';
         $camp_query1 .= " where camp.id='$campaign_id'";
-        $camp_query1 .= " group by camp.name";
+        $camp_query1 .= ' group by camp.name';
 
         $camp_result1=$focus->db->query($camp_query1);
         $camp_data1=$focus->db->fetchByAssoc($camp_result1);

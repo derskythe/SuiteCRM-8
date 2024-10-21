@@ -48,13 +48,13 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class ExternalOAuthProvider extends Basic
 {
-    public $module_dir = 'ExternalOAuthProvider';
-    public $object_name = 'ExternalOAuthProvider';
-    public $table_name = 'external_oauth_providers';
+    public string $module_dir = 'ExternalOAuthProvider';
+    public string $object_name = 'ExternalOAuthProvider';
+    public string $table_name = 'external_oauth_providers';
     public $disable_row_level_security = true;
 
-    public $id;
-    public $name;
+    public string $id;
+    public string $name;
     public $type;
     public $connector;
     public $redirect_uri;
@@ -154,7 +154,7 @@ class ExternalOAuthProvider extends Basic
     /**
      * @inheritDoc
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         if ($interface === 'ACL') {
             return true;

@@ -34,6 +34,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      * @inheritdoc
      *
      * @throws \InvalidArgumentException When access token is not found.
+     * @throws \Exception
      */
     public function persistNewRefreshToken(RefreshTokenEntityInterface $refreshTokenEntity)
     {
@@ -56,6 +57,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      * @inheritdoc
      *
      * @throws \InvalidArgumentException When refresh token is not found.
+     * @throws \Exception
      */
     public function revokeRefreshToken($tokenId)
     {
@@ -75,6 +77,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
     /**
      * @inheritdoc
+     * @throws \DateMalformedStringException
      */
     public function isRefreshTokenRevoked($tokenId)
     {

@@ -68,7 +68,11 @@ class RepairAndClear
         foreach ($this->actions as $current_action) {
             switch ($current_action) {
             case 'repairDatabase':
-                if (isset($mod_strings['LBL_ALL_MODULES']) && in_array($mod_strings['LBL_ALL_MODULES'], $this->module_list)) {
+                if (isset($mod_strings['LBL_ALL_MODULES']) && in_array(
+                        $mod_strings['LBL_ALL_MODULES'],
+                        $this->module_list,
+                        true
+                    )) {
                     $this->repairDatabase();
                 } else {
                     $this->repairDatabaseSelectModules();
@@ -143,7 +147,7 @@ class RepairAndClear
             $this->clearCacheDir($fs, $tempId, '/test');
             $this->clearCacheDir($fs, $tempId, '/qa');
 
-            require_once "include/portability/Services/Cache/CacheManager.php";
+            require_once 'include/portability/Services/Cache/CacheManager.php';
             (new CacheManager())->markAsNeedsUpdate('rebuild_all');
 
             if (function_exists('opcache_reset')) {
@@ -186,6 +190,9 @@ class RepairAndClear
         include_once('modules/Administration/repairDatabase.php');
     }
 
+    /**
+     * @throws Exception
+     */
     public function repairDatabaseSelectModules()
     {
         global $current_user, $mod_strings, $dictionary;
@@ -204,7 +211,11 @@ class RepairAndClear
                 ob_flush();
             }
             $sql = '';
-            if (!isset($mod_strings['LBL_ALL_MODULES']) || ($this->module_list && !in_array($mod_strings['LBL_ALL_MODULES'], $this->module_list))) {
+            if (!isset($mod_strings['LBL_ALL_MODULES']) || ($this->module_list && !in_array(
+                        $mod_strings['LBL_ALL_MODULES'],
+                        $this->module_list,
+                        true
+                    ))) {
                 $repair_related_modules = array_keys($dictionary);
                 //repair DB
                 $dm = inDeveloperMode();
@@ -220,7 +231,7 @@ class RepairAndClear
 
 
                             if ($this->show_output) {
-                                print_r("<p>" .$mod_strings['LBL_REPAIR_DB_FOR'].' '. $bean_name . "</p>");
+                                print_r('<p>' . $mod_strings['LBL_REPAIR_DB_FOR'].' '. $bean_name . '</p>');
                             }
                             $sql .= $db->repairTable($focus, $this->execute);
                         }
@@ -233,10 +244,10 @@ class RepairAndClear
                     echo "<script type=\"text/javascript\">document.getElementById('rdloading').style.display = \"none\";</script>";
                 }
                 if (isset($sql) && !empty($sql)) {
-                    $qry_str = "";
+                    $qry_str = '';
                     foreach (explode("\n", $sql) as $line) {
-                        if (!empty($line) && substr($line, -2) != "*/") {
-                            $line .= ";";
+                        if (!empty($line) && !str_ends_with($line, '*/')) {
+                            $line .= ';';
                         }
 
                         $qry_str .= $line . "\n";
@@ -298,7 +309,7 @@ class RepairAndClear
         if ($this->show_output) {
             echo "<h3>{$mod_strings['LBL_QR_XMLFILES']}</h3>";
         }
-        $this->_clearCache(sugar_cached("xml"), '.xml');
+        $this->_clearCache(sugar_cached('xml'), '.xml');
     }
     public function clearDashlets()
     {
@@ -331,7 +342,7 @@ class RepairAndClear
         if ($this->show_output) {
             echo "<h3>{$mod_strings['LBL_QR_CLEARTEMPLATE']}</h3>";
         }
-        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list, true)) {
             foreach ($this->module_list as $module_name_singular) {
                 $this->_clearCache(sugar_cached('modules/').$this->_getModuleNamePlural($module_name_singular), '.tpl');
             }
@@ -346,7 +357,11 @@ class RepairAndClear
         if ($this->show_output) {
             echo "<h3>{$mod_strings['LBL_QR_CLEARVADEFS']}</h3>";
         }
-        if (!empty($this->module_list) && is_array($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+        if (!empty($this->module_list) && is_array($this->module_list) && !in_array(
+                translate('LBL_ALL_MODULES'),
+                $this->module_list,
+                true
+            )) {
             foreach ($this->module_list as $module_name_singular) {
                 $this->_clearCache(sugar_cached('modules/').$this->_getModuleNamePlural($module_name_singular), 'vardefs.php');
             }
@@ -361,7 +376,7 @@ class RepairAndClear
             echo "<h3>{$mod_strings['LBL_QR_CLEARJS']}</h3>";
         }
 
-        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list, true)) {
             foreach ($this->module_list as $module_name_singular) {
                 $this->_clearCache(sugar_cached('modules/').$this->_getModuleNamePlural($module_name_singular), '.js');
             }
@@ -375,7 +390,7 @@ class RepairAndClear
         if ($this->show_output) {
             echo "<h3>{$mod_strings['LBL_QR_CLEARJSLANG']}</h3>";
         }
-        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list, true)) {
             foreach ($this->module_list as $module_name_singular) {
                 $this->_clearCache(sugar_cached('jsLanguage/').$this->_getModuleNamePlural($module_name_singular), '.js');
             }
@@ -395,7 +410,7 @@ class RepairAndClear
         }
         //clear cache using the list $module_list_from_cache
         if (!empty($this->module_list) && is_array($this->module_list)) {
-            if (in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+            if (in_array(translate('LBL_ALL_MODULES'), $this->module_list, true)) {
                 LanguageManager::clearLanguageCache();
             } else { //use the modules selected thrut the select list.
                 foreach ($this->module_list as $module_name) {
@@ -445,12 +460,12 @@ class RepairAndClear
     public function rebuildAuditTables()
     {
         global $mod_strings;
-        include('include/modules.php');	//bug 15661
+        include('include/modules.php');    //bug 15661
         if ($this->show_output) {
             echo "<h3> {$mod_strings['LBL_QR_REBUILDAUDIT']}</h3>";
         }
 
-        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+        if (!empty($this->module_list) && !in_array(translate('LBL_ALL_MODULES'), $this->module_list, true)) {
             foreach ($this->module_list as $bean_name) {
                 if (isset($beanFiles[$bean_name]) && file_exists($beanFiles[$bean_name])) {
                     require_once($beanFiles[$bean_name]);
@@ -458,7 +473,7 @@ class RepairAndClear
                 }
             }
         } else {
-            if (in_array(translate('LBL_ALL_MODULES'), $this->module_list)) {
+            if (in_array(translate('LBL_ALL_MODULES'), $this->module_list, true)) {
                 foreach ($beanFiles as $bean => $file) {
                     if (file_exists($file)) {
                         require_once($file);
@@ -484,7 +499,7 @@ class RepairAndClear
         if ($focus->is_AuditEnabled()) {
             if (!$focus->db->tableExists($focus->get_audit_table_name())) {
                 if ($this->show_output) {
-                    echo $mod_strings['LBL_QR_CREATING_TABLE']." ".$focus->get_audit_table_name().' '.$mod_strings['LBL_FOR'].' '. $focus->object_name.'.<br/>';
+                    echo $mod_strings['LBL_QR_CREATING_TABLE']. ' ' .$focus->get_audit_table_name().' '. $mod_strings['LBL_FOR'].' '. $focus->object_name.'.<br/>';
                 }
                 $focus->create_audit_table();
             } else {
@@ -521,11 +536,11 @@ class RepairAndClear
 
         if ($current = opendir($thedir)) {
             while (false !== ($children = readdir($current))) {
-                if ($children != "." && $children != "..") {
-                    if (is_dir($thedir . "/" . $children)) {
-                        $this->_clearCache($thedir . "/" . $children, $extension);
-                    } elseif (is_file($thedir . "/" . $children) && (substr_count($children, (string) $extension))) {
-                        unlink($thedir . "/" . $children);
+                if ($children !== '.' && $children !== '..') {
+                    if (is_dir($thedir . '/' . $children)) {
+                        $this->_clearCache($thedir . '/' . $children, $extension);
+                    } elseif (is_file($thedir . '/' . $children) && (substr_count($children, (string) $extension))) {
+                        unlink($thedir . '/' . $children);
                     }
                 }
             }

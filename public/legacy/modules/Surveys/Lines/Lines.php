@@ -3,13 +3,16 @@
 function survey_questions_display(Surveys $focus, $field, $value, $view)
 {
     $hasResponses = !empty($focus->id) && $focus->get_linked_beans('surveys_surveyresponses');
-    if ($view == 'EditView' && !$hasResponses) {
+    if ($view === 'EditView' && !$hasResponses) {
         return survey_questions_display_edit($focus, $field, $value, $view);
     }
 
     return survey_questions_display_detail($focus, $field, $value, $view);
 }
 
+/**
+ * @throws SmartyException
+ */
 function survey_questions_display_detail(Surveys $focus, $field, $value, $view)
 {
     global $app_list_strings, $mod_strings;
@@ -28,7 +31,7 @@ function survey_questions_display_detail(Surveys $focus, $field, $value, $view)
     $smarty->assign('questions', $questions);
     $smarty->assign('message', '');
     $isDuplicate = $_REQUEST['isDuplicate'] ?? 'false';
-    if ($view == 'EditView' && isFalse($isDuplicate)) {
+    if ($view === 'EditView' && isFalse($isDuplicate)) {
         $smarty->assign('message', $mod_strings['LBL_CANT_EDIT_RESPONDED']);
     }
     $smarty->assign('APP_LIST', $app_list_strings);
@@ -37,6 +40,9 @@ function survey_questions_display_detail(Surveys $focus, $field, $value, $view)
     return $html;
 }
 
+/**
+ * @throws SmartyException
+ */
 function survey_questions_display_edit(Surveys $focus, $field, $value, $view)
 {
     global $mod_strings, $app_list_strings;

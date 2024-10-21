@@ -61,10 +61,10 @@ r14718 - 2006-07-17 17:39:10 -0700 (Mon, 17 Jul 2006) - wayne - format the curre
  * @param array
  * @param Smarty
  */
-function smarty_function_sugar_currency_format($params, &$smarty) {
+function smarty_function_sugar_currency_format($params, $smarty) {
 
     // Bug #47406 : Currency field doesn't accept 0.00 as default value
-	if(!isset($params['var']) || $params['var'] === '') {
+    if(!isset($params['var']) || $params['var'] === '') {
         return '';
     }
 

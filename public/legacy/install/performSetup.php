@@ -42,6 +42,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+/**
+ * @throws JsonException
+ */
 function installStatus($msg, $cmd = null, $overwrite = false, $before = '[ok]<br>')
 {
     $fname = 'install/status.json';
@@ -63,7 +66,7 @@ $GLOBALS['installing'] = true;
 if (!isset($install_script) || !$install_script) {
     die($mod_strings['ERR_NO_DIRECT_SCRIPT']);
 }
-ini_set("output_buffering", "0");
+ini_set('output_buffering', '0');
 set_time_limit(3600);
 // flush after each output so the user can see the progress in real-time
 ob_implicit_flush();
@@ -108,12 +111,12 @@ global $setup_site_session_path;
 global $setup_site_log_level;
 
 
-$cache_dir                          = sugar_cached("");
-$line_entry_format                  = "&nbsp&nbsp&nbsp&nbsp&nbsp<b>";
-$line_exit_format                   = "... &nbsp&nbsp</b>";
+$cache_dir                          = sugar_cached('');
+$line_entry_format                  = '&nbsp&nbsp&nbsp&nbsp&nbsp<b>';
+$line_exit_format                   = '... &nbsp&nbsp</b>';
 $rel_dictionary                 = $dictionary; // sourced by modules/TableDictionary.php
-$render_table_close             = "";
-$render_table_open                  = "";
+$render_table_close             = '';
+$render_table_open                  = '';
 $setup_db_admin_password            = $_SESSION['setup_db_admin_password'];
 $setup_db_admin_user_name           = $_SESSION['setup_db_admin_user_name'];
 $setup_db_create_database           = $_SESSION['setup_db_create_database'];
@@ -135,7 +138,7 @@ $setup_site_host_name               = $parsed_url['host'];
 $setup_site_log_dir                 = isset($_SESSION['setup_site_custom_log_dir']) ? $_SESSION['setup_site_log_dir'] : '.';
 $setup_site_log_file                = 'suitecrm.log';  // may be an option later
 $setup_site_session_path            = isset($_SESSION['setup_site_custom_session_path']) ? $_SESSION['setup_site_session_path'] : '';
-$setup_site_log_level				='fatal';
+$setup_site_log_level                = 'debug';
 
 /*sugar_cache_clear('TeamSetsCache');
 if ( file_exists($cache_dir .'modules/Teams/TeamSetCache.php') ) {
@@ -182,36 +185,36 @@ $out =<<<EOQ
 EOQ;
 echo $out;
 installStatus($mod_strings['STAT_CONFIGURATION'], null, false, '');
-installLog("calling handleSugarConfig()");
+installLog('calling handleSugarConfig()');
 $bottle = handleSugarConfig();
 //installLog("calling handleLog4Php()");
 //handleLog4Php();
 
-$server_software = $_SERVER["SERVER_SOFTWARE"];
-if (strpos((string) $server_software, 'Microsoft-IIS') !== false) {
-    installLog("calling handleWebConfig()");
+$server_software = $_SERVER['SERVER_SOFTWARE'];
+if (str_contains((string) $server_software, 'Microsoft-IIS')) {
+    installLog('calling handleWebConfig()');
     handleWebConfig();
 } else {
-    installLog("calling handleHtaccess()");
+    installLog('calling handleHtaccess()');
     handleHtaccess();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ////    START TABLE STUFF
-echo "<br>";
+echo '<br>';
 echo "<b>{$mod_strings['LBL_PERFORM_TABLES']}</b>";
-echo "<br>";
+echo '<br>';
 
 // create the SugarCRM database
 if ($setup_db_create_database) {
-    installLog("calling handleDbCreateDatabase()");
+    installLog('calling handleDbCreateDatabase()');
     installerHook('pre_handleDbCreateDatabase');
     handleDbCreateDatabase();
     installerHook('post_handleDbCreateDatabase');
 } else {
 
 // ensure the charset and collation are utf8
-    installLog("calling handleDbCharsetCollation()");
+    installLog('calling handleDbCharsetCollation()');
     installerHook('pre_handleDbCharsetCollation');
     handleDbCharsetCollation();
     installerHook('post_handleDbCharsetCollation');
@@ -236,11 +239,11 @@ if ($setup_db_create_sugarsales_user) {
 foreach ($beanFiles as $bean => $file) {
     require_once($file);
 }
-echo "<br>";
+echo '<br>';
 // load up the config_override.php file.
 // This is used to provide default user settings
-if (is_file("config_override.php")) {
-    require_once("config_override.php");
+if (is_file('config_override.php')) {
+    require_once('config_override.php');
 }
 
 global $db;
@@ -274,7 +277,7 @@ $nonStandardModules = array(
  * loop through all the Beans and create their tables
  */
 installStatus($mod_strings['STAT_CREATE_DB']);
- installLog("looping through all the Beans and create their tables");
+ installLog('looping through all the Beans and create their tables');
  //start by clearing out the vardefs
  VardefManager::clearVardef();
 installerHook('pre_createAllModuleTables');
@@ -283,27 +286,27 @@ installerHook('pre_createAllModuleTables');
 foreach ($beanFiles as $bean => $file) {
     $doNotInit = array('Scheduler', 'SchedulersJob', 'ProjectTask','jjwg_Maps','jjwg_Address_Cache','jjwg_Areas','jjwg_Markers');
 
-    if (in_array($bean, $doNotInit)) {
+    if (in_array($bean, $doNotInit, true)) {
         $focus = new $bean(false);
     } else {
         $focus = new $bean();
     }
 
-    if ($bean == 'Configurator') {
+    if ($bean === 'Configurator') {
         continue;
     }
 
     $table_name = $focus->table_name;
     //installStatus(sprintf($mod_strings['STAT_CREATE_DB_TABLE'], $focus->table_name ));
-    installLog("processing table ".$focus->table_name);
+    installLog('processing table ' .$focus->table_name);
     // check to see if we have already setup this table
-    if (!in_array($table_name, $processed_tables)) {
-        if (!file_exists("modules/".$focus->module_dir."/vardefs.php")) {
+    if (!in_array($table_name, $processed_tables, true)) {
+        if (!file_exists('modules/' .$focus->module_dir. '/vardefs.php')) {
             continue;
         }
-        if (!in_array($bean, $nonStandardModules)) {
-            require_once("modules/".$focus->module_dir."/vardefs.php"); // load up $dictionary
-            if (isset($dictionary[$focus->object_name]['table']) && $dictionary[$focus->object_name]['table'] == 'does_not_exist') {
+        if (!in_array($bean, $nonStandardModules, true)) {
+            require_once('modules/' .$focus->module_dir. '/vardefs.php'); // load up $dictionary
+            if (isset($dictionary[$focus->object_name]['table']) && $dictionary[$focus->object_name]['table'] === 'does_not_exist') {
                 continue; // support new vardef definitions
             }
         } else {
@@ -317,31 +320,31 @@ foreach ($beanFiles as $bean => $file) {
 
         if ($setup_db_drop_tables) {
             drop_table_install($focus);
-            installLog("dropping table ".$focus->table_name);
+            installLog('dropping table ' .$focus->table_name);
         }
 
         if (create_table_if_not_exist($focus)) {
-            installLog("creating table ".$focus->table_name);
-            if ($bean == "User") {
+            installLog('creating table ' .$focus->table_name);
+            if ($bean === 'User') {
                 $new_tables = 1;
             }
-            if ($bean == "Administration") {
+            if ($bean === 'Administration') {
                 $new_config = 1;
             }
         }
 
-        installLog("creating Relationship Meta for ".$focus->getObjectName());
+        installLog('creating Relationship Meta for ' .$focus->getObjectName());
         installerHook('pre_createModuleTable', array('module' => $focus->getObjectName()));
         SugarBean::createRelationshipMeta($focus->getObjectName(), $db, $table_name, $empty, $focus->module_dir);
         installerHook('post_createModuleTable', array('module' => $focus->getObjectName()));
-        echo ".";
+        echo '.';
     } // end if()
 }
 
 
 installerHook('post_createAllModuleTables');
 
-echo "<br>";
+echo '<br>';
 ////    END TABLE STUFF
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -366,14 +369,14 @@ echo "<br>";
 
 ///////////////////////////////////////////////////////////////////////////////
 ////    START CREATE DEFAULTS
-    echo "<br>";
+    echo '<br>';
     echo "<b>{$mod_strings['LBL_PERFORM_CREATE_DEFAULT']}</b><br>";
-    echo "<br>";
+    echo '<br>';
 installStatus($mod_strings['STAT_CREATE_DEFAULT_SETTINGS']);
-    installLog("Begin creating Defaults");
+    installLog('Begin creating Defaults');
     installerHook('pre_createDefaultSettings');
     if ($new_config) {
-        installLog("insert defaults into config table");
+        installLog('insert defaults into config table');
         insert_default_settings();
     }
     installerHook('post_createDefaultSettings');
@@ -416,11 +419,11 @@ installStatus($mod_strings['STAT_CREATE_DEFAULT_SETTINGS']);
 
 
 // Enable Sugar Feeds and add all feeds by default
-installLog("Enable SugarFeeds");
+installLog('Enable SugarFeeds');
 enableSugarFeeds();
 
 // Install the logic hook for WorkFLow
-installLog("Creating WorkFlow logic hook");
+installLog('Creating WorkFlow logic hook');
 if (!function_exists('createWorkFlowLogicHook')) {
     function createWorkFlowLogicHook($filePath = 'Extension/application/Ext/LogicHooks/AOW_WorkFlow_Hook.php')
     {
@@ -459,7 +462,7 @@ createWorkFlowLogicHook();
 
 ///////////////////////////////////////////////////////////////////////////////
 ////    SETUP DONE
-installLog("Installation has completed *********");
+installLog('Installation has completed *********');
 
     $memoryUsed = '';
     if (function_exists('memory_get_usage')) {
@@ -468,7 +471,7 @@ installLog("Installation has completed *********");
 
 
     $errTcpip = '';
-    $fp = @fsockopen("www.suitecrm.com", 80, $errno, $errstr, 3);
+    $fp = @fsockopen('www.suitecrm.com', 80, $errno, $errstr, 3);
     if (!$fp) {
         $errTcpip = "<p>{$mod_strings['ERR_PERFORM_NO_TCPIP']}</p>";
     }
@@ -564,7 +567,7 @@ require_once('modules/Home/dashlets.php');
 if (isset($_SESSION['installation_scenarios'])) {
     foreach ($_SESSION['installation_scenarios'] as $scenario) {
         //If the item is not in $_SESSION['scenarios'], then unset them as they are not required
-        if (!in_array($scenario['key'], $_SESSION['scenarios'])) {
+        if (!in_array($scenario['key'], $_SESSION['scenarios'], true)) {
             foreach ($scenario['modules'] as $module) {
                 if (($removeKey = array_search($module, $enabled_tabs, true)) !== false) {
                     unset($enabled_tabs[$removeKey]);
@@ -627,14 +630,14 @@ post_install_modules();
 ////    START DEMO DATA
 
 // populating the db with seed data
-installLog("populating the db with seed data");
-if ($_SESSION['demoData'] != 'no') {
+installLog('populating the db with seed data');
+if ($_SESSION['demoData'] !== 'no') {
     installerHook('pre_installDemoData');
     set_time_limit(301);
 
-    echo "<br>";
+    echo '<br>';
     echo "<b>{$mod_strings['LBL_PERFORM_DEMO_DATA']}</b>";
-    echo "<br><br>";
+    echo '<br><br>';
 
     print($render_table_close);
     print($render_table_open);
@@ -642,7 +645,7 @@ if ($_SESSION['demoData'] != 'no') {
     global $current_user;
     $current_user = BeanFactory::newBean('Users');
     $current_user->retrieve(1);
-    include("install/populateSeedData.php");
+    include('install/populateSeedData.php');
     installerHook('post_installDemoData');
 }
 

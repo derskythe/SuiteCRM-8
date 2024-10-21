@@ -65,7 +65,7 @@ while ($row = $db->fetchByAssoc($result)) {
 $simulate = false;
 if (!isset($_REQUEST['run'])) {
     $simulate = true;
-    echo "SIMULATION MODE - NO CHANGES WILL BE MADE EXCEPT CLEARING CACHE";
+    echo 'SIMULATION MODE - NO CHANGES WILL BE MADE EXCEPT CLEARING CACHE';
 }
 
 foreach ($modules as $the_module => $fields) {
@@ -74,13 +74,13 @@ foreach ($modules as $the_module => $fields) {
 
     require_once($beanFiles[$class_name]);
     $mod = new $class_name();
-    if (!$db->tableExists($mod->table_name."_cstm")) {
+    if (!$db->tableExists($mod->table_name. '_cstm')) {
         $mod->custom_fields = BeanFactory::newBean('DynamicFields');
         $mod->custom_fields->setup($mod);
         $mod->custom_fields->createCustomTable();
     }
 
-    $table = $db->getTableDescription($mod->table_name."_cstm");
+    $table = $db->getTableDescription($mod->table_name. '_cstm');
     foreach ($table as $row) {
         $col = strtolower(empty($row['Field']) ? $row['field'] : $row['Field']);
         $the_field = $mod->custom_fields->getField($col);
@@ -91,22 +91,22 @@ foreach ($modules as $the_module => $fields) {
                 $type.=',' . $row['data_scale'];
             }
             $type.=')';
-        } elseif (!empty($row['data_length']) && (strtolower($row['type'])=='varchar' || strtolower($row['type'])=='varchar2')) {
+        } elseif (!empty($row['data_length']) && (strtolower($row['type']) === 'varchar' || strtolower($row['type']) === 'varchar2')) {
             $type.='(' . $row['data_length'] . ')';
         }
-        if (!isset($fields[$col]) && $col != 'id_c') {
+        if (!isset($fields[$col]) && $col !== 'id_c') {
             if (!$simulate) {
                 $db->query("ALTER TABLE $mod->table_name"."_cstm DROP COLUMN $col");
             }
             unset($fields[$col]);
             echo "Dropping Column $col from $mod->table_name"."_cstm for module $the_module<br>";
         } else {
-            if ($col != 'id_c') {
+            if ($col !== 'id_c') {
                 $db_data_type = strtolower(str_replace(' ', '', (string) $the_field->get_db_type()));
 
                 $type = strtolower(str_replace(' ', '', $type));
                 if (strcmp($db_data_type, $type) != 0) {
-                    echo "Fixing Column Type for $col changing $type to ".$db_data_type."<br>";
+                    echo "Fixing Column Type for $col changing $type to ".$db_data_type. '<br>';
                     if (!$simulate) {
                         $db->query($the_field->get_db_modify_alter_table($mod->table_name.'_cstm'));
                     }
@@ -117,9 +117,9 @@ foreach ($modules as $the_module => $fields) {
         }
     }
 
-    echo count($fields)." field(s) missing from $mod->table_name"."_cstm<br>";
+    echo count($fields)." field(s) missing from $mod->table_name". '_cstm<br>';
     foreach ($fields as $field) {
-        echo "Adding Column $field to $mod->table_name"."_cstm<br>";
+        echo "Adding Column $field to $mod->table_name". '_cstm<br>';
         if (!$simulate) {
             $mod->custom_fields->add_existing_custom_field($field);
         }

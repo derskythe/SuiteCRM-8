@@ -212,7 +212,7 @@ class SearchResults
         if (isset($obj->$link)) {
             $relId = $obj->$link->getFocus()->$relField;
             if (is_object($relId)) {
-                if (method_exists($relId, "getFocus")) {
+                if (method_exists($relId, 'getFocus')) {
                     $relId = $relId->getFocus()->id;
                 } else {
                     $relId = null;

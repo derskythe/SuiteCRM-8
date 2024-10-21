@@ -17,10 +17,10 @@ class SurveysViewReports extends SugarView
         $db = DBManagerFactory::getInstance();
         $quotedId = $db->quote($this->bean->id);
         $sentQuery = <<<EOF
-SELECT COUNT(campaign_log.target_id) AS sent, COUNT(DISTINCT campaign_log.target_id) AS distinct_sent 
+SELECT COUNT(campaign_log.target_id) AS sent, COUNT(DISTINCT campaign_log.target_id) AS distinct_sent
 FROM campaigns
-INNER JOIN campaign_log ON (campaigns.id = campaign_log.campaign_id 
-                            AND campaign_log.deleted = 0 
+INNER JOIN campaign_log ON (campaigns.id = campaign_log.campaign_id
+                            AND campaign_log.deleted = 0
                             AND activity_type = 'targeted'
                             AND campaign_log.target_type = 'Contacts')
 WHERE campaigns.survey_id = '$quotedId' AND campaigns.deleted = 0
@@ -31,6 +31,9 @@ EOF;
         return $surveysSent;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         global $mod_strings, $timedate;
@@ -57,15 +60,15 @@ EOF;
                 $questionId = $questionResponse->surveyquestion_id;
                 $dataType = $data[$questionId]['type'] ?? '';
                 switch ($dataType) {
-                    case "Checkbox":
+                    case 'Checkbox':
                         $answerBool = !empty($questionResponse->answer_bool) ? 1 : 0;
                         $data[$questionId]['responses'][$answerBool]['count']++;
                         $data[$questionId]['chartData'][$answerBool]++;
                         break;
-                    case "DateTime":
-                    case "Date":
+                    case 'DateTime':
+                    case 'Date':
                         $dateStr = $questionResponse->answer_datetime;
-                        if ($data[$questionId]['type'] == 'Date') {
+                        if ($data[$questionId]['type'] === 'Date') {
                             $date = $timedate->fromUser($questionResponse->answer_datetime);
                             if ($date) {
                                 $date = $timedate->tzGMT($date);
@@ -82,7 +85,7 @@ EOF;
                         );
 
                         break;
-                    case "Matrix":
+                    case 'Matrix':
                         $options =
                             $questionResponse->get_linked_beans(
                                 'surveyquestionoptions_surveyquestionresponses',
@@ -93,9 +96,9 @@ EOF;
                             $data[$questionId]['responses'][$option->id]['chartData'][$questionResponse->answer]++;
                         }
                         break;
-                    case "Multiselect":
-                    case "Radio":
-                    case "Dropdown":
+                    case 'Multiselect':
+                    case 'Radio':
+                    case 'Dropdown':
                         $options =
                             $questionResponse->get_linked_beans(
                                 'surveyquestionoptions_surveyquestionresponses',
@@ -106,13 +109,13 @@ EOF;
                             $data[$questionId]['chartData'][$option->id]++;
                         }
                         break;
-                    case "Rating":
-                    case "Scale":
+                    case 'Rating':
+                    case 'Scale':
                         $data[$questionId]['chartData'][$questionResponse->answer]++;
                         $data[$questionId]['responses'][$questionResponse->answer]['count']++;
                         break;
-                    case "Textbox":
-                    case "Text":
+                    case 'Textbox':
+                    case 'Text':
                     default:
                         $data[$questionId]['responses'][] = array(
                             'answer'  => $questionResponse->answer,
@@ -162,7 +165,7 @@ EOF;
             );
             foreach ($app_list_strings['surveys_matrix_options'] as $key => $val) {
                 $arr['responses'][$option->id]['options'][$key] = array('count' => 0, 'label' => $val);
-                $arr['responses'][$option->id]['chartLabels'][$key] = $val . "  ";
+                $arr['responses'][$option->id]['chartLabels'][$key] = $val . '  ';
                 $arr['responses'][$option->id]['chartData'][$key] = 0;
             }
         }
@@ -230,10 +233,10 @@ EOF;
                 'responses' => array(),
             );
             switch ($question->type) {
-                case "Checkbox":
+                case 'Checkbox':
                     $data[$question->id] = $this->getCheckboxQuestionSkeleton($data[$question->id]);
                     break;
-                case "Matrix":
+                case 'Matrix':
                     $options =
                         $question->get_linked_beans(
                             'surveyquestions_surveyquestionoptions',
@@ -242,9 +245,9 @@ EOF;
                         );
                     $data[$question->id] = $this->getMatrixQuestionSkeleton($data[$question->id], $options);
                     break;
-                case "Multiselect":
-                case "Radio":
-                case "Dropdown":
+                case 'Multiselect':
+                case 'Radio':
+                case 'Dropdown':
                     $options =
                         $question->get_linked_beans(
                             'surveyquestions_surveyquestionoptions',
@@ -253,14 +256,14 @@ EOF;
                         );
                     $data[$question->id] = $this->getChoiceQuestionSkeleton($data[$question->id], $options);
                     break;
-                case "Rating":
+                case 'Rating':
                     $data[$question->id] = $this->getRatingQuestionSkeleton($data[$question->id]);
                     break;
-                case "Scale":
+                case 'Scale':
                     $data[$question->id] = $this->getScaleQuestionSkeleton($data[$question->id]);
                     break;
-                case "Textbox":
-                case "Text":
+                case 'Textbox':
+                case 'Text':
                 default:
                     //No action needed;
                     break;

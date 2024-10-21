@@ -44,18 +44,21 @@ $social = $_REQUEST['social'];
 $twitter_user = $_REQUEST['twitter_user'];
 
 if(!empty($_REQUEST['code'])){
-    include_once("config.php");
+    include_once('config.php');
+    global $sugar_config;
     //nasty way of fixing the facebook login bug.
-    header("Location: " . $sugar_config['site_url'] . "?module=" . $_REQUEST['module'] . "&action=DetailView&record=" . $_REQUEST['record'] . "&");
+    header(
+        'Location: ' . $sugar_config['site_url'] . '?module=' . $_REQUEST['module'] . '&action=DetailView&record=' . $_REQUEST['record'] . '&'
+    );
 }
 
 //If its facebook or twitter call the relevent file.
     switch($social){
 
-        case "facebook":
-            require_once("include/social/facebook/facebookapi.php");
+        case 'facebook':
+            require_once('include/social/facebook/facebookapi.php');
             break;
-        case "twitter";
-            require_once("include/social/twitter/twitterapi.php");
+        case 'twitter';
+            require_once('include/social/twitter/twitterapi.php');
             break;
     }

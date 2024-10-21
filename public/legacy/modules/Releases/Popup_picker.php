@@ -68,7 +68,7 @@ class Popup_Picker
         $where = '';
         if (isset($_REQUEST['query'])) {
             $where_clauses = array();
-            append_where_clause($where_clauses, "name", "releases.name");
+            append_where_clause($where_clauses, 'name', 'releases.name');
 
             $where = generate_where_statement($where_clauses);
         }

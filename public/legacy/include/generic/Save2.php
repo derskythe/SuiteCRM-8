@@ -59,7 +59,7 @@ ARGS:
 require_once('include/formbase.php');
 
 $refreshsubpanel=true;
-if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
+if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] === 'report') {
     save_from_report(
         $_REQUEST['subpanel_id'] //report_id
                      ,
@@ -70,7 +70,7 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
         $_REQUEST['subpanel_field_name'] //link attribute name
     );
 } else {
-    if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'addtoprospectlist') {
+    if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] === 'addtoprospectlist') {
         $GLOBALS['log']->debug(print_r($_REQUEST, true));
         if (!empty($_REQUEST['prospect_list_id']) && !empty($_REQUEST['prospect_ids'])) {
             add_prospects_to_prospect_list(
@@ -93,7 +93,7 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
 
         $refreshsubpanel=false;
     } else {
-        if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'addcampaignlog') {
+        if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] === 'addcampaignlog') {
             //if param is set to "addcampaignlog", then we need to create a campaign log entry
             //for each campaign id passed in.
 
@@ -125,7 +125,7 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
 
             // If the user selected "All records" from the selection menu, we pull up the list
             // based on the query they used on that popup to relate them to the parent record
-            if (!empty($_REQUEST['select_entire_list']) &&  $_REQUEST['select_entire_list'] != 'undefined' && isset($_REQUEST['current_query_by_page'])) {
+            if (!empty($_REQUEST['select_entire_list']) &&  $_REQUEST['select_entire_list'] !== 'undefined' && isset($_REQUEST['current_query_by_page'])) {
                 $order_by = '';
                 $current_query_by_page = $_REQUEST['current_query_by_page'];
                 $current_query_by_page_array = json_decode(html_entity_decode((string) $current_query_by_page), true, 512, JSON_THROW_ON_ERROR);
@@ -166,7 +166,7 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
                         $where_clauses = '('. implode(' ) AND ( ', $where_clauses_arr) . ')';
                     }
                 }
-        
+
                 $query = $seed->create_new_list_query($order_by, $where_clauses);
                 $result = DBManagerFactory::getInstance()->query($query, true);
                 $uids = array();
@@ -176,7 +176,7 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
                 $_REQUEST['subpanel_id'] = $uids;
             }
 
-            if ($bean_name == 'Team') {
+            if ($bean_name === 'Team') {
                 $subpanel_id = $_REQUEST['subpanel_id'];
                 if (is_array($subpanel_id)) {
                     foreach ($subpanel_id as $id) {
@@ -191,7 +191,7 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
                 //parameters to the add metod.
                 $add_values =array();
                 foreach ($_REQUEST as $key=>$value) {
-                    if (strpos($key, "REL_ATTRIBUTE_") !== false) {
+                    if (str_contains($key, 'REL_ATTRIBUTE_')) {
                         $add_values[substr($key, 14)]=$value;
                     }
                 }
@@ -206,10 +206,14 @@ if (isset($_REQUEST['return_type'])  && $_REQUEST['return_type'] == 'report') {
 
 if ($refreshsubpanel) {
     //refresh contents of the sub-panel.
-    $GLOBALS['log']->debug("Location: index.php?sugar_body_only=1&module=".$_REQUEST['module']."&subpanel=".$_REQUEST['subpanel_module_name']."&action=SubPanelViewer&inline=1&record=".$_REQUEST['record']);
+    $GLOBALS['log']->debug(
+        'Location: index.php?sugar_body_only=1&module=' . $_REQUEST['module'] . '&subpanel=' . $_REQUEST['subpanel_module_name'] . '&action=SubPanelViewer&inline=1&record=' . $_REQUEST['record']
+    );
     if (empty($_REQUEST['refresh_page']) || $_REQUEST['refresh_page'] != 1) {
         $inline = isset($_REQUEST['inline'])?$_REQUEST['inline']: $inline;
-        header("Location: index.php?sugar_body_only=1&module=".$_REQUEST['module']."&subpanel=".$_REQUEST['subpanel_module_name']."&action=SubPanelViewer&inline=$inline&record=".$_REQUEST['record']);
+        header(
+            'Location: index.php?sugar_body_only=1&module=' . $_REQUEST['module'] . '&subpanel=' . $_REQUEST['subpanel_module_name'] . "&action=SubPanelViewer&inline=$inline&record=" . $_REQUEST['record']
+        );
     }
     exit;
 }

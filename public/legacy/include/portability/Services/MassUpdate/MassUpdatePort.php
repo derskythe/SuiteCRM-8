@@ -84,8 +84,12 @@ class MassUpdatePort extends MassUpdate
 
     /**
      * Executes the massupdate form
+     *
      * @param array $inputs to display in the popup window
+     *
      * @return array feedback
+     * @throws Exception
+     * @throws Exception
      */
     public function runMassUpdate(array $inputs): array
     {
@@ -317,9 +321,12 @@ class MassUpdatePort extends MassUpdate
 
     /**
      * Handle contact sync flag
+     *
      * @param array $inputs
      * @param string $id
      * @param array $feedback
+     *
+     * @throws Exception
      */
     protected function handleContactsSync(array $inputs, string $id, array &$feedback): void
     {
@@ -417,12 +424,12 @@ class MassUpdatePort extends MassUpdate
 
             $dynamic_field_name = $field_name['name'];
 
-            if (strpos($newbean->$dynamic_field_name, $parentenum_value) !== 0) {
+            if (!str_starts_with($newbean->$dynamic_field_name, $parentenum_value)) {
 
                 // Change to the default value of the correct value set.
                 $defaultValue = '';
                 foreach ($app_list_strings[$field_name['options']] as $key => $value) {
-                    if (strpos($key, $parentenum_value) === 0) {
+                    if (str_starts_with($key, $parentenum_value)) {
                         $defaultValue = $key;
                         break;
                     }

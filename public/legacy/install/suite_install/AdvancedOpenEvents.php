@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @throws Exception
+ */
 function install_aoe()
 {
     require_once('modules/Administration/Administration.php');

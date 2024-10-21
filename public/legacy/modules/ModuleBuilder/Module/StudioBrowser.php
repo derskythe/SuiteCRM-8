@@ -49,27 +49,31 @@ function cmp($a, $b)
 class StudioBrowser
 {
     public $modules = array();
-    
+
     public function loadModules()
     {
         global $current_user;
         $access = $current_user->getDeveloperModules();
         $d = dir('modules');
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) == '.' || !is_dir('modules/' . $e)) {
+            if (str_starts_with($e, '.') || !is_dir('modules/' . $e)) {
                 continue;
             }
-            if (file_exists('modules/' . $e . '/metadata/studio.php') && isset($GLOBALS [ 'beanList' ][$e]) && (in_array($e, $access) || $current_user->isAdmin())) { // installed modules must also exist in the beanList
+            if (file_exists('modules/' . $e . '/metadata/studio.php') && isset($GLOBALS ['beanList'][$e]) && (in_array(
+                        $e,
+                        $access,
+                        true
+                    ) || $current_user->isAdmin())) { // installed modules must also exist in the beanList
                 $this->modules[$e] =  StudioModuleFactory::getStudioModule($e) ;
             }
         }
     }
-    
+
     public function loadRelatableModules()
     {
         $d = dir('modules');
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) == '.' || !is_dir('modules/' . $e)) {
+            if (str_starts_with($e, '.') || !is_dir('modules/' . $e)) {
                 continue;
             }
             if (file_exists('modules/' . $e . '/metadata/studio.php') && isset($GLOBALS [ 'beanList' ][$e])) { // installed modules must also exist in the beanList
@@ -77,7 +81,7 @@ class StudioBrowser
             }
         }
     }
-        
+
     public function getNodes()
     {
         $this->loadModules();

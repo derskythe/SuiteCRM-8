@@ -967,7 +967,7 @@ $(document).ready(function(){
     if (empty($group_name)) {
         echo '{'.$GLOBALS['mod_strings']['LBL_MAP_NULL_GROUP_NAME'].'}';
     } else {
-        echo htmlentities($group_name, ENT_COMPAT, "UTF-8", false);
+        echo htmlentities($group_name, ENT_COMPAT, 'UTF-8', false);
     } ?><br/>
 <?php
   } ?>

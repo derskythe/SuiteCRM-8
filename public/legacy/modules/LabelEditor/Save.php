@@ -53,18 +53,18 @@ if (isset($_REQUEST['multi_edit'])) {
             create_field_label($module_name, $current_language, $key, $value, true);
         }
     }
-    $location = "index.php?action=LabelList&module=LabelEditor&refreshparent=1&sugar_body_only=1";
+    $location = 'index.php?action=LabelList&module=LabelEditor&refreshparent=1&sugar_body_only=1';
     header("Location:$location");
 } else {
     create_field_label($module_name, $current_language, $_REQUEST['record'], $_REQUEST['value'], true);
-    $location = "index.php?action=". $_REQUEST['return_action']."&module=". $_REQUEST['return_module'];
+    $location = 'index.php?action=' . $_REQUEST['return_action']. '&module=' . $_REQUEST['return_module'];
     if (isset($_REQUEST['module_name'])) {
-        $location .= "&module_name=" . $_REQUEST['module_name'];
+        $location .= '&module_name=' . $_REQUEST['module_name'];
     }
     if (isset($_REQUEST['sugar_body_only'])) {
-        $location .= "&sugar_body_only=" . $_REQUEST['sugar_body_only'];
+        $location .= '&sugar_body_only=' . $_REQUEST['sugar_body_only'];
     }
-    if (isset($_REQUEST['style']) && $_REQUEST['style'] == 'popup') {
+    if (isset($_REQUEST['style']) && $_REQUEST['style'] === 'popup') {
         $location .= '&refreshparent=1';
     }
     header("Location:$location");

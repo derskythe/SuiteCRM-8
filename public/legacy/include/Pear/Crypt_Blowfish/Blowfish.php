@@ -221,9 +221,9 @@ class Crypt_Blowfish
         $len = strlen($plainText);
         $plainText .= str_repeat(chr(0), (8 - ($len%8))%8);
         for ($i = 0; $i < $len; $i += 8) {
-            list(, $Xl, $Xr) = unpack("N2", substr($plainText, $i, 8));
+            list(, $Xl, $Xr) = unpack('N2', substr($plainText, $i, 8));
             $this->_encipher($Xl, $Xr);
-            $cipherText .= pack("N2", $Xl, $Xr);
+            $cipherText .= pack('N2', $Xl, $Xr);
         }
         return $cipherText;
     }
@@ -252,9 +252,9 @@ class Crypt_Blowfish
         $len = strlen($cipherText);
         $cipherText .= str_repeat(chr(0), (8 - ($len%8))%8);
         for ($i = 0; $i < $len; $i += 8) {
-            list(, $Xl, $Xr) = unpack("N2", substr($cipherText, $i, 8));
+            list(, $Xl, $Xr) = unpack('N2', substr($cipherText, $i, 8));
             $this->_decipher($Xl, $Xr);
-            $plainText .= pack("N2", $Xl, $Xr);
+            $plainText .= pack('N2', $Xl, $Xr);
         }
         return $plainText;
     }

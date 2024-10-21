@@ -52,9 +52,9 @@ $json = getJSONobj();
 $rmdir=true;
 $returnArray = array();
 if ($json->decode(html_entity_decode((string) $_REQUEST['forQuotes']))) {
-    $returnArray['forQuotes']="quotes";
+    $returnArray['forQuotes']= 'quotes';
 } else {
-    $returnArray['forQuotes']="company";
+    $returnArray['forQuotes']= 'company';
 }
 $upload_ok = false;
 $upload_path = 'tmp_logo_' . $returnArray['forQuotes'] . '_upload';
@@ -63,7 +63,7 @@ if (isset($_FILES['file_1'])) {
     if ($upload->confirm_upload()) {
         $upload_dir  = 'upload://' . $upload_path;
         UploadStream::ensureDir($upload_dir);
-        if (!verify_uploaded_image($upload->temp_file_location, $returnArray['forQuotes'] == 'quotes')) {
+        if (!verify_uploaded_image($upload->temp_file_location, $returnArray['forQuotes'] === 'quotes')) {
             $returnArray['data']='other';
             $returnArray['path'] = '';
             echo $json->encode($returnArray);
@@ -86,7 +86,7 @@ if (file_exists($file_name) && is_file($file_name)) {
     $encoded_file_name = rawurlencode(str_replace(' ', '_', (string) $upload->get_stored_file_name()));
     $returnArray['path'] = $upload_path . '/' . $encoded_file_name;
     $returnArray['url']= 'cache/images/'.$encoded_file_name;
-    if (!verify_uploaded_image($file_name, $returnArray['forQuotes'] == 'quotes')) {
+    if (!verify_uploaded_image($file_name, $returnArray['forQuotes'] === 'quotes')) {
         $returnArray['data']='other';
         $returnArray['path'] = '';
         unlink($file_name);
@@ -94,11 +94,11 @@ if (file_exists($file_name) && is_file($file_name)) {
         $img_size = getimagesize($file_name);
         $filetype = $img_size['mime'];
         $test=$img_size[0]/$img_size[1];
-        if (($test>10 || $test<1) && $returnArray['forQuotes'] == 'company') {
+        if (($test>10 || $test<1) && $returnArray['forQuotes'] === 'company') {
             $rmdir=false;
             $returnArray['data']='size';
         }
-        if (($test>20 || $test<3)&& $returnArray['forQuotes'] == 'quotes') {
+        if (($test>20 || $test<3)&& $returnArray['forQuotes'] === 'quotes') {
             $returnArray['data']='size';
         }
 

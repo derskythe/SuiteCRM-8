@@ -109,7 +109,7 @@ class ElasticSearchEngine extends SearchEngine
         $indexes = implode(',', array_map('strtolower', $searchModules));
 
         // Wildcard character required for Elasticsearch
-        $wildcardBe = "*";
+        $wildcardBe = '*';
 
         // Override frontend wildcard character
         if (isset($GLOBALS['sugar_config']['search_wildcard_char'])) {

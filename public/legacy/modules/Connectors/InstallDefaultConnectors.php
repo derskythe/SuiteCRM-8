@@ -84,7 +84,7 @@ if (file_exists('custom/modules/Connectors/metadata/display_config.php')) {
     foreach ($default_modules_sources as $module => $sources) {
         foreach ($sources as $source_key => $source) {
             foreach ($previous_connectors as $previous_connector) {
-                if (in_array($previous_connector, $default_modules_sources[$module])) {
+                if (in_array($previous_connector, $default_modules_sources[$module], true)) {
                     unset($default_modules_sources[$module][$previous_connector]);
                 }
             }

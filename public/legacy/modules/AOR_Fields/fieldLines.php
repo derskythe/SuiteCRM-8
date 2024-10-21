@@ -36,21 +36,21 @@ function display_field_lines($focus, $field, $value, $view)
 
     $html .= '<script src="cache/jsLanguage/AOR_Fields/'. $GLOBALS['current_language'] . '.js"></script>';
 
-    if ($view == 'EditView') {
+    if ($view === 'EditView') {
         $html .= '<script src="modules/AOR_Fields/fieldLines.js"></script>';
         $html .='<script></script>';
         $html .= "<table border='0' cellspacing='4' width='100%' id='fieldLines'></table>";
 
         $html .= "<div style='padding-top: 10px; padding-bottom:10px;'>";
         $html .= "<input type=\"button\" tabindex=\"116\" class=\"button\" value=\"".$mod_strings['LBL_ADD_FIELD']."\" id=\"btn_FieldLine\" onclick=\"insertFieldLine()\" disabled/>";
-        $html .= "</div>";
-        $html .= "<script>";
+        $html .= '</div>';
+        $html .= '<script>';
         $html .= "sort_by_values = \"".trim(preg_replace('/\s+/', ' ', (string) get_select_options_with_id($app_list_strings['aor_sort_operator'], '')))."\";";
-        $html .= "</script>";
+        $html .= '</script>';
 
         if (isset($focus->report_module) && $focus->report_module != '') {
-            require_once("modules/AOW_WorkFlow/aow_utils.php");
-            $html .= "<script>";
+            require_once('modules/AOW_WorkFlow/aow_utils.php');
+            $html .= '<script>';
             $html .= "report_rel_modules = \"".trim(preg_replace('/\s+/', ' ', (string) getModuleRelationships($focus->report_module)))."\";";
             $html .= "report_module = \"".$focus->report_module."\";";
             $html .= "document.getElementById('btn_FieldLine').disabled = '';";
@@ -64,11 +64,11 @@ function display_field_lines($focus, $field, $value, $view)
                     $field_name->module_path = unserialize(base64_decode($field_name->module_path));
                     $html .= "report_fields = \"".trim(preg_replace('/\s+/', ' ', (string) getModuleFields(getRelatedModule($focus->report_module, $field_name->module_path[0]))))."\";";
                     $field_item = json_encode($field_name->toArray());
-                    $html .= "loadFieldLine(".$field_item.");";
+                    $html .= 'loadFieldLine(' .$field_item. ');';
                 }
             }
             $html .= "report_fields = \"".trim(preg_replace('/\s+/', ' ', (string) getModuleFields($focus->report_module)))."\";";
-            $html .= "</script>";
+            $html .= '</script>';
         }
     }
     return $html;

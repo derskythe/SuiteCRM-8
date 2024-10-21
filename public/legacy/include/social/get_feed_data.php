@@ -117,9 +117,9 @@ if ($twitter_enabled) {
                 $tweets[$i]['text'] = replace_users($db, $tweets[$i]);
             }
 
-
-            $date = date("Y-m-d H:i:s", strtotime($tweets[$i]['created_at']));
-            $image = "<img src=" . $tweets[$i]['user']['profile_image_url_https'] . " style=float:left;padding-right:5px;padding-bottom:5px;/>";
+            $date = date('Y-m-d H:i:s', strtotime($tweets[$i]['created_at']));
+            $image =
+                '<img src=' . $tweets[$i]['user']['profile_image_url_https'] . ' style=float:left;padding-right:5px;padding-bottom:5px;/>';
             $duplicate_found = duplicate_check($db, $tweets[$i]['text'], $date);
 
             if (!$duplicate_found) {
@@ -128,7 +128,7 @@ if ($twitter_enabled) {
                 $sql = "INSERT INTO sugarfeed (id, name, date_entered, date_modified, modified_user_id, created_by, description, deleted, assigned_user_id, related_module, related_id, link_url, link_type)
                     VALUES
                      ('" . $id . "',
-                      '" . $image . "<b>" . $tweets[$i]['user']['name'] . " </b>',
+                      '" . $image . '<b>' . $tweets[$i]['user']['name'] . " </b>',
                       '" . $date . "',
                       '" . $date . "',
                       '1',
@@ -153,7 +153,7 @@ if ($twitter_enabled) {
 $facebook_enabled = check_enabled($db, 'facebook');
 
 if ($facebook_enabled) {
-    require_once("include/social/facebook/facebook.class.php");
+    require_once('include/social/facebook/facebook.class.php');
 
     $facebook_helper = new facebook_helper();
 
@@ -171,7 +171,6 @@ if ($facebook_enabled) {
     if ($user) {
         // $log = '<a class="button" href="' . $logoutUrl . '">Facebook Logout</a>';
     } else {
-        ;
         $log = '<a class="button" href="' . $loginUrl . '">Facebook Login</a>';
     }
 
@@ -181,7 +180,7 @@ if ($facebook_enabled) {
 
     if (isset($user_home['data'])) { // Check to prevent Undefined index error
         foreach ($user_home['data'] as $single) {
-            data_insert($single, "facebook");
+            data_insert($single, 'facebook');
         }
     }
 }
@@ -213,7 +212,7 @@ if ($facebook_enabled) {
         $message = $db->quote($temp[1]);
         $name = $db->quote($temp[0]);
         $assigned_user = '1';
-        $date = date("Y-m-d H:i:s", strtotime($single['created_time']));
+        $date = date('Y-m-d H:i:s', strtotime($single['created_time']));
 
 
         $sql_check = "SELECT * FROM sugarfeed WHERE description = '" . $message . "' AND date_entered = '" . $date . "'";
@@ -268,34 +267,52 @@ if ($facebook_enabled) {
     {
         // Fix to prevent undefined index notice
         if (!isset($stream['type'])) {
-            $stream['type'] = "";
+            $stream['type'] = '';
         }
-        
+
         //if simple post
         switch ($stream['type']) {
-            case "":
-                $string[1] = "<a href=http://www.facebook.com/" . $stream['from']['id'] . ">" . $stream['from']['name'] . "<a/> - " . substr($stream['message'], 0, 100);
+            case '':
+                $string[1] =
+                    '<a href=http://www.facebook.com/' . $stream['from']['id'] . '>' . $stream['from']['name'] . '<a/> - ' . substr(
+                        $stream['message'],
+                        0,
+                        100
+                    );
                 break;
-            case "link":
-                $string[0] = "<img style=float:left;padding-right:5px;padding-bottom:5px; src=http://graph.facebook.com/" . $stream['from']['id'] . "/picture />";
+            case 'link':
+                $string[0] =
+                    '<img style=float:left;padding-right:5px;padding-bottom:5px; src=http://graph.facebook.com/' . $stream['from']['id'] . '/picture />';
                 if (!empty($stream['name'])) {
                     $string[1] = '<b>' . $stream['from']['name']. '</b><p style=line-height:30px;>' .  $stream['name']  . '</p>' . '<a href=' . $stream['link'] . '>View article</a>';
                 } else {
                     //must be an article
-                    $string[1] = '<b>' . $stream['from']['name']. '</b>' . "  <a href=" . $stream['actions']['0']['link'] . ">likes an article</a>";
+                    $string[1] =
+                        '<b>' . $stream['from']['name'] . '</b>' . '  <a href=' . $stream['actions']['0']['link'] . '>likes an article</a>';
                 }
                 break;
-            case "status":
+            case 'status':
                 //
-                $string[0] = "<img style=float:left;padding-right:5px;padding-bottom:5px; src=http://graph.facebook.com/" . $stream['from']['id'] . "/picture />";
+                $string[0] =
+                    '<img style=float:left;padding-right:5px;padding-bottom:5px; src=http://graph.facebook.com/' . $stream['from']['id'] . '/picture />';
                 if (!empty($stream['story'])) {
-                    $string[1] = '<b>' . $stream['from']['name']. '</b><p style=line-height:30px;>' . substr($stream['story'], 0, 100) . "</p><a href=" . $stream['actions']['0']['link'] . ">View post on Facebook</a>";
+                    $string[1] =
+                        '<b>' . $stream['from']['name'] . '</b><p style=line-height:30px;>' . substr(
+                            $stream['story'],
+                            0,
+                            100
+                        ) . '</p><a href=' . $stream['actions']['0']['link'] . '>View post on Facebook</a>';
                 } else {
                     //wall post.
-                    $string[1] = '<b>' . $stream['from']['name'] . '</b><p style=line-height:30px;>' . substr($stream['message'], 0, 100) . "</p><a href=" . $stream['actions']['0']['link'] .">View post on Facebook</a>";
+                    $string[1] =
+                        '<b>' . $stream['from']['name'] . '</b><p style=line-height:30px;>' . substr(
+                            $stream['message'],
+                            0,
+                            100
+                        ) . '</p><a href=' . $stream['actions']['0']['link'] . '>View post on Facebook</a>';
                 }
                 break;
-            case "photos":
+            case 'photos':
                 break;
         }
         return $string;

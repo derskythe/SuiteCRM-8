@@ -177,7 +177,7 @@ class EmailFromValidator
                 self::EX_ERROR_CODE_TYRE_IS_INCORRECT
             );
         }
-        if (!in_array($error, $this->errors)) {
+        if (!in_array($error, $this->errors, true)) {
             $this->errors[] = $error;
         }
     }

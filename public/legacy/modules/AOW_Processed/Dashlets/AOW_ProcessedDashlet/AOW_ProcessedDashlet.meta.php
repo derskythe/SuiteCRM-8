@@ -25,10 +25,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * @author SalesAgility <info@salesagility.com>
  */
 
- 
+
 global $app_strings;
 
-$dashletMeta['AOW_ProcessedDashlet'] = array('module'		=> 'AOW_Processed',
+$dashletMeta['AOW_ProcessedDashlet'] = array('module'        => 'AOW_Processed',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'AOW_Processed'),
                                           'description' => 'A customizable view into AOW_Processed',
                                           'icon'        => 'icon_AOW_Processed_32.gif',

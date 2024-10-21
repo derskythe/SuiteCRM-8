@@ -45,8 +45,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 $subpanel_layout = array(
     'top_buttons' => array(
-//		array('widget_class' => 'SubPanelTopCreateButton'),
-//		array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Contacts'),
+//        array('widget_class' => 'SubPanelTopCreateButton'),
+//        array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Contacts'),
     ),
     'list_fields' => array(
         'aos_quote_name'=>array(

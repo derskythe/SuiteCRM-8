@@ -99,7 +99,7 @@ class VardefManager
 
     public static function addTemplate($module, $object, $template, $object_name=false)
     {
-        if ($template == 'default') {
+        if ($template === 'default') {
             $template = 'basic';
         }
         $templates = array();
@@ -127,7 +127,7 @@ class VardefManager
                 }
             }
         }
-       
+
         if (!empty($templates[$template])) {
             if (empty($GLOBALS['dictionary'][$object]['fields'])) {
                 $GLOBALS['dictionary'][$object]['fields'] = array();
@@ -186,7 +186,7 @@ class VardefManager
 
         $file = create_cache_directory('modules/' . $module . '/' . $object . 'vardefs.php');
 
-        $out="<?php \n \$GLOBALS[\"dictionary\"][\"". $object . "\"]=" . var_export($data, true) .";";
+        $out = "<?php \n \$GLOBALS[\"dictionary\"][\"" . $object . '"]=' . var_export($data, true) . ';';
         sugar_file_put_contents_atomic($file, $out);
         if (is_file($file) && is_readable($file)) {
             include($file);
@@ -292,7 +292,7 @@ class VardefManager
 
         //load custom fields into the vardef cache
         if ($cacheCustom) {
-            require_once("modules/DynamicFields/DynamicField.php");
+            require_once('modules/DynamicFields/DynamicField.php');
             $df = new DynamicField($module) ;
             $df->buildCache($module, false);
         }
@@ -339,7 +339,7 @@ class VardefManager
         $links = array();
         foreach ($vardef['fields'] as $name => $def) {
             //Look through all link fields for related modules that have calculated fields that use that relationship
-            if (!empty($def['type']) && $def['type'] == 'link' && !empty($def['relationship'])) {
+            if (!empty($def['type']) && $def['type'] === 'link' && !empty($def['relationship'])) {
                 $links[$name] = $def;
             }
         }
@@ -399,7 +399,7 @@ class VardefManager
             if (isset($vardef['fields'])
                 && isset($vardef['fields']['account_name'])
                 && isset($vardef['fields']['account_name']['type'])
-                && $vardef['fields']['account_name']['type'] == 'relate'
+                && $vardef['fields']['account_name']['type'] === 'relate'
                 && isset($vardef['fields']['account_name']['required'])) {
                 $vardef['fields']['account_name']['required'] = $GLOBALS['sugar_config']['require_accounts'];
             }

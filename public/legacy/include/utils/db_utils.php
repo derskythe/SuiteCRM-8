@@ -74,7 +74,7 @@ $toHTML = array(
 );
 $GLOBALS['toHTML_keys'] = array_keys($toHTML);
 $GLOBALS['toHTML_values'] = array_values($toHTML);
-$GLOBALS['toHTML_keys_set'] = implode("", $GLOBALS['toHTML_keys']);
+$GLOBALS['toHTML_keys_set'] = implode('', $GLOBALS['toHTML_keys']);
 /**
  * Replaces specific characters with their HTML entity values
  * @param string $string String to check/replace

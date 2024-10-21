@@ -52,7 +52,7 @@ if (is_admin($current_user)) {
     $database_entries = array();
     $module_entries = array();
 
-    $query = "SELECT * FROM fields_meta_data";
+    $query = 'SELECT * FROM fields_meta_data';
     $result = DBManagerFactory::getInstance()->query($query);
     while ($row = DBManagerFactory::getInstance()->fetchByAssoc($result)) {
         $name = $row['name'];
@@ -100,7 +100,7 @@ if (is_admin($current_user)) {
                 try {
                     $parser = ParserFactory::getParser($view, $module);
                 } catch (Exception $e) {
-                    $GLOBALS['log']->fatal("Caught exception in RepairFieldCasing script: ".$e->getMessage());
+                    $GLOBALS['log']->fatal('Caught exception in RepairFieldCasing script: ' .$e->getMessage());
                     continue;
                 }
                 if (isset($parser->_viewdefs['panels'])) {

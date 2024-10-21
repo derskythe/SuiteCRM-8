@@ -77,7 +77,7 @@ export class AppInit {
                     const routes = this.router.config;
                     const configRoutes = this.systemConfigStore.getConfigValue('module_routing');
 
-                    let loggedOutConfig = {
+                    const loggedOutConfig = {
                         path: 'logged-out',
                         component: LogoutComponent,
                         runGuardsAndResolvers: 'always',

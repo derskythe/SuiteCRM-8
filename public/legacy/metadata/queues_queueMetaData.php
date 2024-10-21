@@ -117,29 +117,29 @@ $dictionary['queues_queue'] = array('table' => 'queues_queue',
         ),
     ), /* end indices */
     'relationships' => array(
-        'child_queues_rel'	=> array(
-            'lhs_module'		=> 'Queues',
-            'lhs_table'			=> 'queues',
-            'lhs_key'			=> 'id',
-            'rhs_module'		=> 'Queues',
-            'rhs_table'			=> 'queues',
-            'rhs_key'			=> 'id',
+        'child_queues_rel'    => array(
+            'lhs_module'        => 'Queues',
+            'lhs_table'            => 'queues',
+            'lhs_key'            => 'id',
+            'rhs_module'        => 'Queues',
+            'rhs_table'            => 'queues',
+            'rhs_key'            => 'id',
             'relationship_type' => 'many-to-many',
-            'join_table'		=> 'queues_queue',
-            'join_key_lhs'		=> 'queue_id',
-            'join_key_rhs'		=> 'parent_id'
+            'join_table'        => 'queues_queue',
+            'join_key_lhs'        => 'queue_id',
+            'join_key_rhs'        => 'parent_id'
         ),
         'parent_queues_rel' => array(
-            'lhs_module'		=> 'Queues',
-            'lhs_table'			=> 'queues',
-            'lhs_key' 			=> 'id',
-            'rhs_module'		=> 'Queues',
-            'rhs_table'			=> 'queues',
-            'rhs_key' 			=> 'id',
+            'lhs_module'        => 'Queues',
+            'lhs_table'            => 'queues',
+            'lhs_key'             => 'id',
+            'rhs_module'        => 'Queues',
+            'rhs_table'            => 'queues',
+            'rhs_key'             => 'id',
             'relationship_type' => 'many-to-many',
-            'join_table'		=> 'queues_queue',
-            'join_key_rhs'		=> 'queue_id',
-            'join_key_lhs'		=> 'parent_id'
+            'join_table'        => 'queues_queue',
+            'join_key_rhs'        => 'queue_id',
+            'join_key_lhs'        => 'parent_id'
         ),
     ), /* end relationships */
 );

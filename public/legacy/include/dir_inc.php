@@ -44,6 +44,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 require_once 'include/SugarCache/SugarCache.php';
 
+/**
+ * @throws Exception
+ */
 function copy_recursive($source, $dest)
 {
     if (is_file($source)) {
@@ -64,7 +67,7 @@ function copy_recursive($source, $dest)
         return false;
     }
     while (false !== ($f = $d->read())) {
-        if ($f == "." || $f == "..") {
+        if ($f == '.' || $f == '..') {
             continue;
         }
         $status &= copy_recursive("$source/$f", "$dest/$f");
@@ -73,6 +76,9 @@ function copy_recursive($source, $dest)
     return $status;
 }
 
+/**
+ * @throws Exception
+ */
 function mkdir_recursive($path, $check_is_parent_dir = false)
 {
     if (is_dir($path)) {
@@ -97,13 +103,13 @@ function mkdir_recursive($path, $check_is_parent_dir = false)
     if ($basecmp === $pathcmp) {
         return true;
     }
-    $base .= "/";
+    $base .= '/';
     if (strncmp($pathcmp, $basecmp, strlen($basecmp)) == 0) {
         /* strip current path prefix */
         $path = substr($path, strlen($base));
     }
     $thePath = '';
-    $dirStructure = explode("/", $path);
+    $dirStructure = explode('/', $path);
     if ($dirStructure[0] == '') {
         // absolute path
         $base = '/';
@@ -119,7 +125,7 @@ function mkdir_recursive($path, $check_is_parent_dir = false)
         }
     }
     foreach ($dirStructure as $dirPath) {
-        $thePath .= $dirPath."/";
+        $thePath .= $dirPath . '/';
         $mkPath = $base.$thePath;
 
         if (!is_dir($mkPath)) {
@@ -146,9 +152,9 @@ function rmdir_recursive($path)
     $status = true;
 
     $d = dir($path);
-    
+
     while (($f = $d->read()) !== false) {
-        if ($f == "." || $f == "..") {
+        if ($f == '.' || $f == '..') {
             continue;
         }
         $status &= rmdir_recursive("$path/$f");
@@ -168,7 +174,7 @@ function findTextFiles($the_dir, $the_array)
     }
     $d = dir($the_dir);
     while (false !== ($f = $d->read())) {
-        if ($f == "." || $f == "..") {
+        if ($f == '.' || $f == '..') {
             continue;
         }
         if (is_dir("$the_dir/$f")) {
@@ -177,17 +183,17 @@ function findTextFiles($the_dir, $the_array)
         } else {
             switch (mime_content_type("$the_dir/$f")) {
                 // we take action on these cases
-                case "text/html":
-                case "text/plain":
+                case 'text/html':
+                case 'text/plain':
                     array_push($the_array, "$the_dir/$f");
                     break;
                 // we consciously skip these types
-                case "application/pdf":
-                case "application/x-zip":
-                case "image/gif":
-                case "image/jpeg":
-                case "image/png":
-                case "text/rtf":
+                case 'application/pdf':
+                case 'application/x-zip':
+                case 'image/gif':
+                case 'image/jpeg':
+                case 'image/png':
+                case 'text/rtf':
                     break;
                 default:
                     $GLOBALS['log']->info("no type handler for $the_dir/$f with mime_content_type: " . mime_content_type("$the_dir/$f") . "\n");
@@ -213,10 +219,8 @@ function findAllFiles($the_dir, $the_array, $include_dirs=false, $ext='', $exclu
     // jchi  #24296
     if (!empty($exclude_dir)) {
         $exclude_dir = is_array($exclude_dir)?$exclude_dir:array($exclude_dir);
-        foreach ($exclude_dir as $ex_dir) {
-            if ($the_dir == $ex_dir) {
-                return $the_array;
-            }
+        if (in_array($the_dir, $exclude_dir)) {
+            return $the_array;
         }
     }
     $the_dir = rtrim($the_dir, "/\\");
@@ -240,7 +244,7 @@ function findAllFiles($the_dir, $the_array, $include_dirs=false, $ext='', $exclu
     }
 
     while (false !== ($f = $d->read())) {
-        if ($f == "." || $f == "..") {
+        if ($f == '.' || $f == '..') {
             continue;
         }
 
@@ -278,7 +282,7 @@ function findAllFilesRelative($the_dir, $the_array)
     $original_dir   = getCwd();
     if (is_dir($the_dir)) {
         chdir($the_dir);
-        $the_array = findAllFiles(".", $the_array);
+        $the_array = findAllFiles('.', $the_array);
         if (is_dir($original_dir)) {
             chdir($original_dir);
         }
@@ -289,14 +293,14 @@ function findAllFilesRelative($the_dir, $the_array)
 /*
  * Obtain an array of files that have been modified after the $date_modified
  *
- * @param the_dir			the directory to begin the search
- * @param the_array			array to hold the results
- * @param date_modified		the date to use when searching for files that have
- * 							been modified
- * @param filter			optional regular expression filter
+ * @param the_dir            the directory to begin the search
+ * @param the_array            array to hold the results
+ * @param date_modified        the date to use when searching for files that have
+ *                             been modified
+ * @param filter            optional regular expression filter
  *
- * return					an array containing all of the files that have been
- * 							modified since date_modified
+ * return                    an array containing all of the files that have been
+ *                             modified since date_modified
  */
 function findAllTouchedFiles($the_dir, $the_array, $date_modified, $filter='')
 {
@@ -305,7 +309,7 @@ function findAllTouchedFiles($the_dir, $the_array, $date_modified, $filter='')
     }
     $d = dir($the_dir);
     while (false !== ($f = $d->read())) {
-        if ($f == "." || $f == "..") {
+        if ($f == '.' || $f == '..') {
             continue;
         }
         if (is_dir("$the_dir/$f")) {

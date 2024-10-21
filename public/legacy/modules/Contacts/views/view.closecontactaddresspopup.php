@@ -38,7 +38,7 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
- 
+
 
 #[\AllowDynamicProperties]
 class ContactsViewCloseContactAddressPopup extends ViewList
@@ -51,7 +51,7 @@ class ContactsViewCloseContactAddressPopup extends ViewList
     public function display()
     {
         if (isset($_REQUEST['close_window'])) {
-            echo "<script>window.close();</script>";
+            echo '<script>window.close();</script>';
         }
         parent::display();
     }

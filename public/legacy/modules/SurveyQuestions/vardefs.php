@@ -97,7 +97,7 @@ $dictionary['SurveyQuestions'] = array(
             'vname'    => 'LBL_HAPPINESS_QUESTION',
             'type'     => 'bool',
         ),
-        "surveyquestions_surveyquestionoptions"   => array(
+        'surveyquestions_surveyquestionoptions' => array(
             'name'         => 'surveyquestions_surveyquestionoptions',
             'type'         => 'link',
             'relationship' => 'surveyquestions_surveyquestionoptions',
@@ -107,7 +107,7 @@ $dictionary['SurveyQuestions'] = array(
             'side'         => 'right',
             'vname'        => 'LBL_SURVEYQUESTIONS_SURVEYQUESTIONOPTIONS_FROM_SURVEYQUESTIONOPTIONS_TITLE',
         ),
-        "surveyquestions_surveyquestionresponses" => array(
+        'surveyquestions_surveyquestionresponses' => array(
             'name'         => 'surveyquestions_surveyquestionresponses',
             'type'         => 'link',
             'relationship' => 'surveyquestions_surveyquestionresponses',
@@ -117,7 +117,7 @@ $dictionary['SurveyQuestions'] = array(
             'side'         => 'right',
             'vname'        => 'LBL_SURVEYQUESTIONS_SURVEYQUESTIONRESPONSES_FROM_SURVEYQUESTIONRESPONSES_TITLE',
         ),
-        "survey"                                  => array(
+        'survey' => array(
             'name'         => 'survey',
             'type'         => 'link',
             'relationship' => 'surveys_surveyquestions',
@@ -129,7 +129,7 @@ $dictionary['SurveyQuestions'] = array(
             'link_type'    => 'one',
             'side'         => 'left',
         ),
-        "survey_name"                             => array(
+        'survey_name' => array(
             'name'    => 'survey_name',
             'type'    => 'relate',
             'source'  => 'non-db',
@@ -141,7 +141,7 @@ $dictionary['SurveyQuestions'] = array(
             'module'  => 'Surveys',
             'rname'   => 'name',
         ),
-        "survey_id"                               => array(
+        'survey_id' => array(
             'name'       => 'survey_id',
             'type'       => 'id',
             'reportable' => false,
@@ -158,7 +158,7 @@ $dictionary['SurveyQuestions'] = array(
             'lhs_key'           => 'id',
             'relationship_type' => 'one-to-many',
         ),
-       "surveyquestions_surveyquestionresponses" => array(
+        'surveyquestions_surveyquestionresponses' => array(
             'rhs_module'        => 'SurveyQuestionResponses',
             'rhs_table'         => 'surveyquestionresponses',
             'rhs_key'           => 'surveyquestion_id',

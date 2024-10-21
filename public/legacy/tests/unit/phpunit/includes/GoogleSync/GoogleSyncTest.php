@@ -87,12 +87,12 @@ class GoogleSyncTest extends SuitePHPUnitFrameworkTestCase
         // Test GoogleSync::timezone
         $timezone = $object->getProperty('timezone');
         self::assertNotEmpty($timezone);
-        self::assertEquals("string", gettype($timezone));
+        self::assertEquals('string', gettype($timezone));
 
         // Test GoogleSync::authJson
         $authJson = $object->getProperty('authJson');
         self::assertNotEmpty($authJson);
-        self::assertEquals("array", gettype($authJson));
+        self::assertEquals('array', gettype($authJson));
 
         // Test GoogleSync::db
         $expectedClass = DBManager::class;
@@ -965,7 +965,7 @@ class GoogleSyncTest extends SuitePHPUnitFrameworkTestCase
         $cnt = 0;
         // base64 encoded of {"web":"test"}
         $json = 'eyJ3ZWIiOiJ0ZXN0In0=';
-        $query = "SELECT COUNT(*) AS cnt FROM users";
+        $query = 'SELECT COUNT(*) AS cnt FROM users';
         $db = DBManagerFactory::getInstance();
         $count = $db->getOne($query);
 
@@ -1003,7 +1003,7 @@ class GoogleSyncTest extends SuitePHPUnitFrameworkTestCase
         $object = new GoogleSyncMock($this->getFakeSugarConfig('{"web":"test"}'));
         $tempData = [];
         $countOfSyncUsers = $object->callMethod('setSyncUsers', [&$tempData]);
-        
+
         self::assertEquals($count, $tempData['founds']);
         self::assertGreaterThanOrEqual(2, $countOfSyncUsers);
     }

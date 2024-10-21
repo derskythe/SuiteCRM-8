@@ -91,7 +91,7 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
              $dropdown=$output;
          }
 
-         if ($type != 'studio') {
+         if ($type !== 'studio') {
              $mb = new ModuleBuilder();
              $module = $mb->getPackageModule($params['view_package'], $params['view_module']);
              $this->synchMBDropDown($dropdown_name, $dropdown, $selected_lang, $module);
@@ -105,9 +105,9 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
                  $GLOBALS['app_list_strings'][$dropdown_name] = $dropdown;
              }
              //write to contents
-             $contents = str_replace("?>", '', (string) $contents);
+             $contents = str_replace('?>', '', (string) $contents);
              if (empty($contents)) {
-                 $contents = "<?php";
+                 $contents = '<?php';
              }
              //add new drop down to the bottom
              if (!empty($params['use_push'])) {
@@ -119,7 +119,7 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
                          $pattern_match = '/\s*\$app_list_strings\s*\[\s*\''.$dropdown_name.'\'\s*\]\[\s*\''.$key.'\'\s*\]\s*=\s*[\'\"]{1}.*?[\'\"]{1};\s*/ism';
                          $contents = preg_replace($pattern_match, "\n", (string) $contents);
                          //add the new ones
-                         $contents .= "\n\$app_list_strings['$dropdown_name']['$key']=" . var_export_helper($value) . ";";
+                         $contents .= "\n\$app_list_strings['$dropdown_name']['$key']=" . var_export_helper($value) . ';';
                      }
                  }
              } else {
@@ -138,7 +138,7 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
 
      /**
      * function synchDropDown
-     * 	Ensures that the set of dropdown keys is consistant accross all languages.
+     *     Ensures that the set of dropdown keys is consistant accross all languages.
      *
      * @param $dropdown_name The name of the dropdown to be synched
      * @param $dropdown array The dropdown currently being saved
@@ -166,7 +166,7 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
 
      /**
      * function synchMBDropDown
-     * 	Ensures that the set of dropdown keys is consistant accross all languages in a ModuleBuilder Module
+     *     Ensures that the set of dropdown keys is consistant accross all languages in a ModuleBuilder Module
      *
      * @param $dropdown_name The name of the dropdown to be synched
      * @param $dropdown array The dropdown currently being saved
@@ -175,7 +175,7 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
      */
      public function synchMBDropDown($dropdown_name, $dropdown, $selected_lang, $module)
      {
-         $selected_lang	= $selected_lang . '.lang.php';
+         $selected_lang    = $selected_lang . '.lang.php';
          foreach ($module->mblanguage->appListStrings as $lang => $listStrings) {
              if ($lang != $selected_lang) {
                  $langDropDown = array();
@@ -221,13 +221,13 @@ require_once('modules/ModuleBuilder/parsers/ModuleBuilderParser.php');
      public function getNewCustomContents($dropdown_name, $dropdown, $lang)
      {
          $contents = return_custom_app_list_strings_file_contents($lang);
-         $contents = str_replace("?>", '', (string) $contents);
+         $contents = str_replace('?>', '', (string) $contents);
          if (empty($contents)) {
-             $contents = "<?php";
+             $contents = '<?php';
          }
          $contents = preg_replace($this->getPatternMatchGlobal($dropdown_name), "\n", $contents);
          $contents = preg_replace($this->getPatternMatch($dropdown_name), "\n", $contents);
-         $contents .= "\n\$app_list_strings['$dropdown_name']=" . var_export_helper($dropdown) . ";";
+         $contents .= "\n\$app_list_strings['$dropdown_name']=" . var_export_helper($dropdown) . ';';
          return $contents;
      }
  }

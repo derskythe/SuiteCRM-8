@@ -130,7 +130,7 @@ abstract class ImportDataSource implements Iterator
      * @return void
      */
     abstract public function getHeaderColumns();
-    
+
     /**
      * Set the source name.
      *
@@ -180,6 +180,8 @@ abstract class ImportDataSource implements Iterator
      * @param string $import_module name of the module we are doing the import into
      * @param string $module        name of the bean we are creating for this import
      * @param string $id            id of the recorded created in the $module
+     *
+     * @throws Exception
      */
     public static function writeRowToLastImport($import_module, $module, $id)
     {
@@ -194,10 +196,10 @@ abstract class ImportDataSource implements Iterator
         $last_import->deleted = null;
         $last_import->assigned_user_id = $GLOBALS['current_user']->id;
         $last_import->import_module = $import_module;
-        if ($module == 'Case') {
+        if ($module === 'Case') {
             $module = 'aCase';
         }
-        
+
         $last_import->bean_type = $module;
         $last_import->bean_id = $id;
         return $last_import->save();
@@ -267,7 +269,7 @@ abstract class ImportDataSource implements Iterator
             //of passed in fields into an array
             foreach ($field_names as $fv) {
                 $fv = trim($fv);
-                if (empty($fv) || $fv == 'delete') {
+                if (empty($fv) || $fv === 'delete') {
                     continue;
                 }
                 $new_keys = array_keys($_REQUEST, $fv);
@@ -279,7 +281,7 @@ abstract class ImportDataSource implements Iterator
             if (!empty($colnums)) {
                 //foreach column, strip the 'colnum_' prefix to the get the column key value
                 foreach ($colnums as $column_key) {
-                    if (strpos($column_key, 'colnum_') === 0) {
+                    if (str_starts_with($column_key, 'colnum_')) {
                         $colkey = substr($column_key, 7);
                     }
 
@@ -330,7 +332,7 @@ abstract class ImportDataSource implements Iterator
         //Add the error message to the first column
         array_unshift($rowData, $errorMessage);
         fputcsv($fp, $rowData);
-        
+
         fclose($fp);
         fclose($fpNoErrors);
     }

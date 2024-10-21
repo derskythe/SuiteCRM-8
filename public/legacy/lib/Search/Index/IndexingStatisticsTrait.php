@@ -94,6 +94,8 @@ trait IndexingStatisticsTrait
      *
      * @param float $end
      * @param float $start
+     *
+     * @throws \Exception
      */
     private function statistics($end, $start)
     {

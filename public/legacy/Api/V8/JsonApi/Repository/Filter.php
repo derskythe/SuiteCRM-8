@@ -50,7 +50,7 @@ class Filter
             if (isset($params['deleted']['eq'])) {
                 $deleted = ($params['deleted']['eq'] == 1);
             }
-            
+
             unset($params['deleted']);
         }
 
@@ -68,7 +68,7 @@ class Filter
                 throw new \InvalidArgumentException(sprintf('Filter field %s must be an array', $field));
             }
 
-            $isCustom = isset($bean->field_defs[$field]['source']) && ($bean->field_defs[$field]['source'] == 'custom_fields');
+            $isCustom = isset($bean->field_defs[$field]['source']) && ($bean->field_defs[$field]['source'] === 'custom_fields');
             $tableName = $isCustom ? $bean->get_custom_table_name() : $bean->getTableName();
 
             foreach ($expr as $op => $value) {

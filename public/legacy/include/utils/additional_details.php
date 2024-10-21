@@ -42,8 +42,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-
-    function additional_details($fields, SugarBean $bean, $params)
+/**
+ * @throws SmartyException
+ */
+function additional_details($fields, SugarBean $bean, $params)
     {
         global $current_language, $timedate, $app_list_strings;
         $mod_strings = return_module_language($current_language, $bean->module_name);
@@ -58,7 +60,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
                 continue;
             }
 
-            if ($bean->field_name_map[strtolower($i)]['type'] == 'datetime' || $bean->field_name_map[strtolower($i)]['type'] == 'datetimecombo') {
+            if ($bean->field_name_map[strtolower($i)]['type'] === 'datetime' || $bean->field_name_map[strtolower($i)]['type'] === 'datetimecombo') {
                 $db_date = $timedate->fromUser($f);
                 $db_date_format = $db_date->format('Y-m-d H:i:s');
                 $fields['DB_'.$i] = $db_date_format;

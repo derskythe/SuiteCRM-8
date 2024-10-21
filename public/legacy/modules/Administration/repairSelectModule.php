@@ -41,7 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-        
+
         global $mod_strings;
         global $current_language;
         $smarty = new Sugar_Smarty();
@@ -50,7 +50,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
             $values= array_values($temp_bean_list);
             $output= array_keys($temp_bean_list);
             $output_local = array();
-            if ($current_language != 'en_us') {
+            if ($current_language !== 'en_us') {
                 foreach ($output as $temp_out) {
                     $output_local[] = translate($temp_out);
                 }
@@ -96,4 +96,4 @@ if (!defined('sugarEntry') || !sugarEntry) {
             $smarty->assign('MOD', $mod_strings);
             $smarty->assign('checkbox_output', $checkbox_output);
             $smarty->assign('checkbox_values', $checkbox_values);
-            $smarty->display("modules/Administration/templates/QuickRepairAndRebuild.tpl");
+            $smarty->display('modules/Administration/templates/QuickRepairAndRebuild.tpl');

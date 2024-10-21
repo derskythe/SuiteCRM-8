@@ -63,7 +63,7 @@ class SugarTab
         }
 
         $key_all = translate('LBL_TABGROUP_ALL');
-        if ($selected_group == 'All') {
+        if ($selected_group === 'All') {
             $selected_group = $key_all;
         }
 
@@ -96,11 +96,17 @@ class SugarTab
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function fetch()
     {
         return $this->ss->fetch('include/SubPanel/tpls/' . $this->type . '.tpl');
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $this->ss->display('include/SubPanel/tpls/' . $this->type . '.tpl');

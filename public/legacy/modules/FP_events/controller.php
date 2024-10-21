@@ -267,7 +267,7 @@ class FP_eventsController extends SugarController
             $ids = array($ids);
         }
         //Target lists. Can incliude contacts, leads and targets as part of the target list
-        if ($type == 'target_list') {
+        if ($type === 'target_list') {
             foreach ($ids as $list) {
                 $event = BeanFactory::newBean('FP_events');
                 $event->retrieve($eventIDQuoted);
@@ -285,7 +285,7 @@ class FP_eventsController extends SugarController
                 foreach ($target_list->prospects->getBeans() as $contact) {
                     $contact_id_list = $event->fp_events_prospects_1->get();
 
-                    if (!in_array($contact->id, $contact_id_list)) { //check if its already related
+                    if (!in_array($contact->id, $contact_id_list, true)) { //check if its already related
 
                         $event->fp_events_prospects_1->add($contact->id);
                     }
@@ -294,7 +294,7 @@ class FP_eventsController extends SugarController
                 foreach ($target_list->contacts->getBeans() as $contact) {
                     $contact_id_list = $event->fp_events_contacts->get();
 
-                    if (!in_array($contact->id, $contact_id_list)) {
+                    if (!in_array($contact->id, $contact_id_list, true)) {
                         $event->fp_events_contacts->add($contact->id);
                     }
                 }
@@ -302,14 +302,14 @@ class FP_eventsController extends SugarController
                 foreach ($target_list->leads->getBeans() as $contact) {
                     $contact_id_list = $event->fp_events_leads_1->get();
 
-                    if (!in_array($contact->id, $contact_id_list)) {
+                    if (!in_array($contact->id, $contact_id_list, true)) {
                         $event->fp_events_leads_1->add($contact->id);
                     }
                 }
             }
         }
         //Targets
-        elseif ($type == 'targets') {
+        elseif ($type === 'targets') {
             foreach ($ids as $target) {
                 $event = BeanFactory::newBean('FP_events');
                 $event->retrieve($eventIDQuoted);
@@ -317,14 +317,14 @@ class FP_eventsController extends SugarController
 
                 $contact_id_list = $event->fp_events_prospects_1->get();//get array of currently linked targets
 
-                if (!in_array($target, $contact_id_list)) { //check if its already in the array
+                if (!in_array($target, $contact_id_list, true)) { //check if its already in the array
 
                     $event->fp_events_prospects_1->add($target);//if not add relationship
                 }
             }
         }
         //leads
-        elseif ($type == 'leads') {
+        elseif ($type === 'leads') {
             foreach ($ids as $lead) {
                 $event = BeanFactory::newBean('FP_events');
                 $event->retrieve($eventIDQuoted);
@@ -332,14 +332,14 @@ class FP_eventsController extends SugarController
 
                 $contact_id_list = $event->fp_events_leads_1->get();//get array of currently linked leads
 
-                if (!in_array($lead, $contact_id_list)) { //check if its already in the array
+                if (!in_array($lead, $contact_id_list, true)) { //check if its already in the array
 
                     $event->fp_events_leads_1->add($lead);//if not add relationship
                 }
             }
         }
         //contacts
-        elseif ($type == 'contacts') {
+        elseif ($type === 'contacts') {
             foreach ($ids as $contact) {
                 $event = BeanFactory::newBean('FP_events');
                 $event->retrieve($eventIDQuoted);
@@ -347,7 +347,7 @@ class FP_eventsController extends SugarController
 
                 $contact_id_list = $event->fp_events_contacts->get(); //get array of currently linked contacts
 
-                if (!in_array($contact, $contact_id_list)) {
+                if (!in_array($contact, $contact_id_list, true)) {
                     $event->fp_events_contacts->add($contact);
                 }
             }
@@ -356,6 +356,9 @@ class FP_eventsController extends SugarController
         die();
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function action_sendinvitemails()
     {
         $db = DBManagerFactory::getInstance();
@@ -400,11 +403,11 @@ class FP_eventsController extends SugarController
             $query = 'SELECT invite_status FROM fp_events_contacts_c WHERE fp_events_contactsfp_events_ida="'.$event->id.'" AND fp_events_contactscontacts_idb="'.$contact->id.'"';
             $status = $db->getOne($query);
 
-            if ($status == null || $status == '' || $status == 'Not Invited') {
+            if ($status == null || $status == '' || $status === 'Not Invited') {
                 $invite_count ++;
                 //set email links
-                $event->link = "<a href='".$siteUrl."/index.php?entryPoint=responseEntryPoint&event=".$event->id."&delegate=".$contact->id."&type=c&response=accept'>{$acceptLabel}</a>";
-                $event->link_declined = "<a href='".$siteUrl."/index.php?entryPoint=responseEntryPoint&event=".$event->id."&delegate=".$contact->id."&type=c&response=decline'>{$declineLabel}</a>";
+                $event->link = "<a href='".$siteUrl. '/index.php?entryPoint=responseEntryPoint&event=' .$event->id. '&delegate=' .$contact->id."&type=c&response=accept'>{$acceptLabel}</a>";
+                $event->link_declined = "<a href='".$siteUrl. '/index.php?entryPoint=responseEntryPoint&event=' .$event->id. '&delegate=' .$contact->id."&type=c&response=decline'>{$declineLabel}</a>";
 
                 //Get the TO name and e-mail address for the message
                 $rcpt_name = $contact->first_name . ' ' . $contact->last_name;
@@ -417,7 +420,8 @@ class FP_eventsController extends SugarController
                 //check email template is set, if not return error
                 if ($emailTemp->id == '') {
                     SugarApplication::appendErrorMessage($event_mod_strings['LBL_ERROR_MSG_5']);
-                    SugarApplication::redirect("index.php?module=FP_events&return_module=FP_events&action=DetailView&record=".$event->id);
+                    SugarApplication::redirect(
+                        'index.php?module=FP_events&return_module=FP_events&action=DetailView&record=' .$event->id);
                     die();
                 }
 
@@ -463,12 +467,12 @@ class FP_eventsController extends SugarController
             $query = 'SELECT invite_status FROM fp_events_prospects_1_c WHERE fp_events_prospects_1fp_events_ida="'.$event->id.'" AND fp_events_prospects_1prospects_idb="'.$target->id.'"';
             $status = $db->getOne($query);
 
-            if ($status == null || $status == '' || $status == 'Not Invited') {
+            if ($status == null || $status == '' || $status === 'Not Invited') {
                 $invite_count ++;
 
                 //set email links
-                $event->link = "<a href='".$siteUrl."/index.php?entryPoint=responseEntryPoint&event=".$event->id."&delegate=".$target->id."&type=t&response=accept'>{$acceptLabel}</a>";
-                $event->link_declined = "<a href='".$siteUrl."/index.php?entryPoint=responseEntryPoint&event=".$event->id."&delegate=".$target->id."&type=t&response=decline'>{$declineLabel}</a>";
+                $event->link = "<a href='".$siteUrl. '/index.php?entryPoint=responseEntryPoint&event=' .$event->id. '&delegate=' .$target->id."&type=t&response=accept'>{$acceptLabel}</a>";
+                $event->link_declined = "<a href='".$siteUrl. '/index.php?entryPoint=responseEntryPoint&event=' .$event->id. '&delegate=' .$target->id."&type=t&response=decline'>{$declineLabel}</a>";
 
                 //Get the TO name and e-mail address for the message
                 $rcpt_name = $target->first_name . ' ' . $target->last_name;
@@ -520,11 +524,11 @@ class FP_eventsController extends SugarController
             $query = 'SELECT invite_status FROM fp_events_leads_1_c WHERE fp_events_leads_1fp_events_ida="'.$event->id.'" AND fp_events_leads_1leads_idb="'.$lead->id.'"';
             $status = $db->getOne($query);
 
-            if ($status == null || $status == '' || $status == 'Not Invited') {
+            if ($status == null || $status == '' || $status === 'Not Invited') {
                 $invite_count ++;
                 //set email links
-                $event->link = "<a href='".$siteUrl."/index.php?entryPoint=responseEntryPoint&event=".$event->id."&delegate=".$lead->id."&type=l&response=accept'>{$acceptLabel}</a>";
-                $event->link_declined = "<a href='".$siteUrl."/index.php?entryPoint=responseEntryPoint&event=".$event->id."&delegate=".$lead->id."&type=l&response=decline'>{$declineLabel}</a>";
+                $event->link = "<a href='".$siteUrl. '/index.php?entryPoint=responseEntryPoint&event=' .$event->id. '&delegate=' .$lead->id."&type=l&response=accept'>{$acceptLabel}</a>";
+                $event->link_declined = "<a href='".$siteUrl. '/index.php?entryPoint=responseEntryPoint&event=' .$event->id. '&delegate=' .$lead->id."&type=l&response=decline'>{$declineLabel}</a>";
 
                 //Get the TO name and e-mail address for the message
                 $rcpt_name = $lead->first_name . ' ' . $lead->last_name;
@@ -571,30 +575,34 @@ class FP_eventsController extends SugarController
         //Redirect with error message if all linked contacts have already been invited
         if ($invite_count == 0) {
             SugarApplication::appendErrorMessage($event_mod_strings['LBL_ERROR_MSG_1']);
-            SugarApplication::redirect("index.php?module=FP_events&return_module=FP_events&action=DetailView&record=".$event->id);
+            SugarApplication::redirect('index.php?module=FP_events&return_module=FP_events&action=DetailView&record=' .$event->id);
         }
         //Redirect if all emails fail to send
         if ($error_count == $delegate_count) {
             $_SESSION['user_error_message'] = array();//clear the error message array
             SugarApplication::appendErrorMessage($event_mod_strings['LBL_ERROR_MSG_2'].$delegate_count);
-            SugarApplication::redirect("index.php?module=FP_events&return_module=FP_events&action=DetailView&record=".$event->id);
+            SugarApplication::redirect('index.php?module=FP_events&return_module=FP_events&action=DetailView&record=' .$event->id);
         } elseif ($error_count > 0 && $error_count <= 10) {//redirect with failed email count.
             $_SESSION['user_error_message'] = array();
             SugarApplication::appendErrorMessage($error_count.$event_mod_strings['LBL_ERROR_MSG_4']);
-            SugarApplication::redirect("index.php?module=FP_events&return_module=FP_events&action=DetailView&record=".$event->id);
+            SugarApplication::redirect('index.php?module=FP_events&return_module=FP_events&action=DetailView&record=' .$event->id);
         }
         // Redirect with error count if failed email attempts are greater than 10
         elseif ($error_count > 10) {
             $_SESSION['user_error_message'] = array();
             SugarApplication::appendErrorMessage($event_mod_strings['LBL_ERROR_MSG_3']);
-            SugarApplication::redirect("index.php?module=FP_events&return_module=FP_events&action=DetailView&record=".$event->id);
+            SugarApplication::redirect('index.php?module=FP_events&return_module=FP_events&action=DetailView&record=' .$event->id);
         } else {
             SugarApplication::appendErrorMessage($event_mod_strings['LBL_SUCCESS_MSG']);
-            SugarApplication::redirect("index.php?module=FP_events&return_module=FP_events&action=DetailView&record=".$event->id);
+            SugarApplication::redirect('index.php?module=FP_events&return_module=FP_events&action=DetailView&record=' .$event->id);
         }
     }
 
     //handles sending the emails
+
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function sendEmail($emailTo, $emailSubject, $emailToname, $emailBody, $altemailBody, SugarBean $relatedBean = null, $attachments = array())
     {
         $emailObj = BeanFactory::newBean('Emails');

@@ -131,34 +131,36 @@ class Chart_outcome_by_month
                 $id_hash = $id_hash * -1;
             }
         }
-        $GLOBALS['log']->debug("ids is:");
+        $GLOBALS['log']->debug('ids is:');
         $GLOBALS['log']->debug($ids);
         $id_md5 = substr(md5($current_user->id), 0, 9);
 
 
         // cn: format date_start|end to user's preferred
         global $timedate;
-        $dateDisplayStart	= strftime($timedate->get_user_date_format(), strtotime($date_start));
-        $dateDisplayEnd   	= strftime($timedate->get_user_date_format(), strtotime($date_end));
-        $seps				= array("-", "/");
-        $dates				= array($date_start, $date_end);
-        $dateFileNameSafe	= str_replace($seps, "_", $dates);
+        $dateDisplayStart    = strftime($timedate->get_user_date_format(), strtotime($date_start));
+        $dateDisplayEnd       = strftime($timedate->get_user_date_format(), strtotime($date_end));
+        $seps                = array( '-', '/' );
+        $dates                = array($date_start, $date_end);
+        $dateFileNameSafe    = str_replace($seps, '_', $dates);
 
-        $cache_file_name = sugar_cached("xml/").$current_user->getUserPrivGuid()."_outcome_by_month_".$dateFileNameSafe[0]."_".$dateFileNameSafe[1].".xml";
+        $cache_file_name = sugar_cached(
+                'xml/'
+            ).$current_user->getUserPrivGuid(). '_outcome_by_month_' . $dateFileNameSafe[0]. '_' . $dateFileNameSafe[1]. '.xml';
 
         $GLOBALS['log']->debug("cache file name is: $cache_file_name");
 
 
         global $app_strings;
         $tools='<div align="right"><a href="index.php?module='.$currentModule.'&action='. $action .'&obm_refresh=true" class="tabFormAdvLink">'.SugarThemeRegistry::current()->getImage('refresh', 'border="0" align="absmiddle"', null, null, '.gif', $mod_strings['LBL_REFRESH']).'&nbsp;'.$current_module_strings['LBL_REFRESH'].'</a>&nbsp;&nbsp;<a href="javascript: toggleDisplay(\'outcome_by_month_edit\');" class="tabFormAdvLink">'.SugarThemeRegistry::current()->getImage('edit', 'border="0" align="absmiddle"', null, null, '.gif', $mod_strings['LBL_EDIT']).'&nbsp;'. $current_module_strings['LBL_EDIT'].'</a>&nbsp;&nbsp;'.$extra_tools.'</div>'; ?>
-	<?php echo '<span onmouseover="this.style.cursor=\'move\'" id="chart_handle_' . $this->order . '">' . get_form_header($current_module_strings['LBL_YEAR_BY_OUTCOME'], $tools, false) . '</span>'; ?>
+    <?php echo '<span onmouseover="this.style.cursor=\'move\'" id="chart_handle_' . $this->order . '">' . get_form_header($current_module_strings['LBL_YEAR_BY_OUTCOME'], $tools, false) . '</span>'; ?>
 
 <?php
-    $cal_lang = "en";
+    $cal_lang = 'en';
         $cal_dateformat = parse_calendardate($app_strings['NTC_DATE_FORMAT']);
 
         if (empty($_SESSION['obm_ids'])) {
-            $_SESSION['obm_ids'] = "";
+            $_SESSION['obm_ids'] = '';
         } ?>
 <p>
 <div id='outcome_by_month_edit' style='display: none;'>
@@ -174,13 +176,13 @@ class Chart_outcome_by_month
         } ?>">
 <table cellpadding="0" cellspacing="0" border="0" class="edit view" align="center">
 <tr>
-	<td valign='top' nowrap ><b><?php echo $current_module_strings['LBL_YEAR']?></b><br><span class="dateFormat"><?php echo $app_strings['NTC_YEAR_FORMAT']?></span></td>
-	<td valign='top' ><input class="text" name="obm_year" size='12' maxlength='10' id='obm_year'  value='<?php if (isset($date_start)) {
+    <td valign='top' nowrap ><b><?php echo $current_module_strings['LBL_YEAR']?></b><br><span class="dateFormat"><?php echo $app_strings['NTC_YEAR_FORMAT']?></span></td>
+    <td valign='top' ><input class="text" name="obm_year" size='12' maxlength='10' id='obm_year'  value='<?php if (isset($date_start)) {
             echo substr((string) $date_start, 0, 4);
         } ?>'>&nbsp;&nbsp;</td>
-	<td valign='top'><b><?php echo $current_module_strings['LBL_USERS']; ?></b></td>
-	<td valign='top'><select name="obm_ids[]" multiple size='3'><?php echo get_select_options_with_id(get_user_array(false), $ids); ?></select></td>
-	<td align="right" valign="top"><input class="button" onclick="return verify_chart_data_outcome_by_month();" type="submit" title="<?php echo $app_strings['LBL_SELECT_BUTTON_TITLE']; ?>" value="<?php echo $app_strings['LBL_SELECT_BUTTON_LABEL']?>" /><input class="button" onClick="javascript: toggleDisplay('outcome_by_month_edit');" type="button" title="<?php echo $app_strings['LBL_CANCEL_BUTTON_TITLE']; ?>" accessKey="<?php echo $app_strings['LBL_CANCEL_BUTTON_KEY']; ?>" value="<?php echo $app_strings['LBL_CANCEL_BUTTON_LABEL']?>"/></td>
+    <td valign='top'><b><?php echo $current_module_strings['LBL_USERS']; ?></b></td>
+    <td valign='top'><select name="obm_ids[]" multiple size='3'><?php echo get_select_options_with_id(get_user_array(false), $ids); ?></select></td>
+    <td align="right" valign="top"><input class="button" onclick="return verify_chart_data_outcome_by_month();" type="submit" title="<?php echo $app_strings['LBL_SELECT_BUTTON_TITLE']; ?>" value="<?php echo $app_strings['LBL_SELECT_BUTTON_LABEL']?>" /><input class="button" onClick="javascript: toggleDisplay('outcome_by_month_edit');" type="button" title="<?php echo $app_strings['LBL_CANCEL_BUTTON_TITLE']; ?>" accessKey="<?php echo $app_strings['LBL_CANCEL_BUTTON_KEY']; ?>" value="<?php echo $app_strings['LBL_CANCEL_BUTTON_LABEL']?>"/></td>
 </tr>
 </table>
 </form>
@@ -189,8 +191,8 @@ class Chart_outcome_by_month
 </p>
 <?php
 // draw chart
-echo "<p align='center'>".$this->gen_xml($date_start, $date_end, $ids, $cache_file_name, $refresh, $current_module_strings)."</p>";
-        echo "<P align='center'><span class='chartFootnote'>".$current_module_strings['LBL_MONTH_BY_OUTCOME_DESC']."</span></P>"; ?>
+echo "<p align='center'>".$this->gen_xml($date_start, $date_end, $ids, $cache_file_name, $refresh, $current_module_strings). '</p>';
+        echo "<P align='center'><span class='chartFootnote'>".$current_module_strings['LBL_MONTH_BY_OUTCOME_DESC']. '</span></P>'; ?>
 
 
 <?php
@@ -235,11 +237,11 @@ echo get_validate_chart_js();
         if (!file_exists($cache_file_name) || $refresh == true) {
             $GLOBALS['log']->debug("date_start is: $date_start");
             $GLOBALS['log']->debug("date_end is: $date_end");
-            $GLOBALS['log']->debug("user_id is: ");
+            $GLOBALS['log']->debug('user_id is: ');
             $GLOBALS['log']->debug($user_id);
             $GLOBALS['log']->debug("cache_file_name is: $cache_file_name");
 
-            $where = "";
+            $where = '';
             //build the where clause for the query that matches $user
             $count = is_countable($user_id) ? count($user_id) : 0;
             $id = array();
@@ -247,7 +249,7 @@ echo get_validate_chart_js();
                 foreach ($user_id as $the_id) {
                     $id[] = "'".$the_id."'";
                 }
-                $ids = implode(",", $id);
+                $ids = implode(',', $id);
                 $where .= "opportunities.assigned_user_id IN ($ids) ";
             }
 
@@ -257,10 +259,10 @@ echo get_validate_chart_js();
 
             $opp = BeanFactory::newBean('Opportunities');
             //build the where clause for the query that matches $date_start and $date_end
-            $where .= "AND opportunities.date_closed >= ".DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date')." AND opportunities.date_closed <= ".DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date')." AND opportunities.deleted=0";
-            $query = "SELECT sales_stage,".DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))." as m, sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ";
-            $query .= "WHERE ".$where;
-            $query .= " GROUP BY sales_stage,".DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))."ORDER BY m";
+            $where .= 'AND opportunities.date_closed >= ' .DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date'). ' AND opportunities.date_closed <= ' .DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date'). ' AND opportunities.deleted=0';
+            $query = 'SELECT sales_stage,' .DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array( "'%Y-%m'"), array( "'YYYY-MM'")). ' as m, sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ';
+            $query .= 'WHERE ' .$where;
+            $query .= ' GROUP BY sales_stage,' .DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array( "'%Y-%m'"), array( "'YYYY-MM'")). 'ORDER BY m';
             //Now do the db queries
             //query for opportunity data that matches $datay and $user
 
@@ -274,7 +276,8 @@ echo get_validate_chart_js();
             $rowTotalArr = array();
             $rowTotalArr[] = 0;
             global $current_user;
-            $salesStages = array("Closed Lost"=>$app_list_strings['sales_stage_dom']["Closed Lost"],"Closed Won"=>$app_list_strings['sales_stage_dom']["Closed Won"],"Other"=>$other);
+            $salesStages = array( 'Closed Lost' => $app_list_strings['sales_stage_dom']['Closed Lost'], 'Closed Won' => $app_list_strings['sales_stage_dom']['Closed Won'],
+                                  'Other'       =>$other);
             if ($current_user->getPreference('currency')) {
                 $currency = BeanFactory::newBean('Currencies');
                 $currency->retrieve($current_user->getPreference('currency'));
@@ -289,11 +292,11 @@ echo get_validate_chart_js();
                 } else {
                     $sum = round($row['total']*$div);
                 }
-                if ($row['sales_stage'] == 'Closed Won' || $row['sales_stage'] == 'Closed Lost') {
+                if ($row['sales_stage'] === 'Closed Won' || $row['sales_stage'] === 'Closed Lost') {
                     $salesStage = $row['sales_stage'];
                     $salesStageT = $app_list_strings['sales_stage_dom'][$row['sales_stage']];
                 } else {
-                    $salesStage = "Other";
+                    $salesStage = 'Other';
                     $salesStageT = $other;
                 }
 
@@ -344,7 +347,7 @@ echo get_validate_chart_js();
             }
             $fileContents .= '     </colorLegend>'."\n";
             $fileContents .= '     <graphInfo>'."\n";
-            $fileContents .= '          <![CDATA['.$current_module_strings['LBL_DATE_RANGE']." ".$dateStartDisplay." ".$current_module_strings['LBL_DATE_RANGE_TO']." ".$dateEndDisplay."<br/>".$current_module_strings['LBL_OPP_SIZE'].' '.$symbol.'1'.$current_module_strings['LBL_OPP_THOUSANDS'].']]>'."\n";
+            $fileContents .= '          <![CDATA['.$current_module_strings['LBL_DATE_RANGE']. ' ' .$dateStartDisplay. ' ' . $current_module_strings['LBL_DATE_RANGE_TO']. ' ' .$dateEndDisplay. '<br/>' . $current_module_strings['LBL_OPP_SIZE'].' '.$symbol.'1'. $current_module_strings['LBL_OPP_THOUSANDS'].']]>'."\n";
             $fileContents .= '     </graphInfo>'."\n";
             $fileContents .= '     <chartColors ';
             foreach ($barChartColors as $key => $value) {
@@ -420,7 +423,7 @@ echo get_validate_chart_js();
 
         $user_id = $ids;
 
-        $where = "";
+        $where = '';
         //build the where clause for the query that matches $user
         $count = is_countable($user_id) ? count($user_id) : 0;
         $id = array();
@@ -428,7 +431,7 @@ echo get_validate_chart_js();
             foreach ($user_id as $the_id) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
 
@@ -438,10 +441,10 @@ echo get_validate_chart_js();
 
         $opp = BeanFactory::newBean('Opportunities');
         //build the where clause for the query that matches $date_start and $date_end
-        $where .= "AND opportunities.date_closed >= ".DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date')." AND opportunities.date_closed <= ".DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date')." AND opportunities.deleted=0";
-        $query = "SELECT sales_stage,".DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))." as m, sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ";
-        $query .= "WHERE ".$where;
-        $query .= " GROUP BY sales_stage,".DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))."ORDER BY m";
+        $where .= 'AND opportunities.date_closed >= ' .DBManagerFactory::getInstance()->convert("'".$date_start."'", 'date'). ' AND opportunities.date_closed <= ' .DBManagerFactory::getInstance()->convert("'".$date_end."'", 'date'). ' AND opportunities.deleted=0';
+        $query = 'SELECT sales_stage,' .DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array( "'%Y-%m'"), array( "'YYYY-MM'")). ' as m, sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ';
+        $query .= 'WHERE ' .$where;
+        $query .= ' GROUP BY sales_stage,' .DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array( "'%Y-%m'"), array( "'YYYY-MM'")). 'ORDER BY m';
         return $query;
     }
 

@@ -68,7 +68,7 @@ $modules_exempt_from_availability_check['Users']='Users';
 $modules_exempt_from_availability_check['Teams']='Teams';
 $modules_exempt_from_availability_check['SchedulersJobs']='SchedulersJobs';
 $modules_exempt_from_availability_check['DocumentRevisions']='DocumentRevisions';
-function query_module_access_list(&$user)
+function query_module_access_list($user)
 {
     require_once('modules/MySettings/TabController.php');
     $controller = new TabController();

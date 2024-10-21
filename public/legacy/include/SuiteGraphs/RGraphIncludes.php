@@ -24,7 +24,7 @@ $chart = <<<EOD
                 e.target.style.cursor = 'pointer';
             }
 
-            	var maxYForSmallNumbers = 5;    //The Y axis for bars needs to have at least a max of 5 of it shows (0,0,0,1,1) as per bug 876
+                var maxYForSmallNumbers = 5;    //The Y axis for bars needs to have at least a max of 5 of it shows (0,0,0,1,1) as per bug 876
                 function calculateMaxYForSmallNumbers(dataPoints)
                 {
                     var largest = null;
@@ -41,14 +41,14 @@ $chart = <<<EOD
             {
               var maxHeight = 500;
               var maxTextSize = 10;
-    
+
               graph.width = $(graph).parent().width();
               graph.height = ($(graph).parent().height() < maxHeight ? $(graph).parent().height() : maxHeight);
-    
+
               var text_size = Math.min(maxTextSize, (graph.width / 700) * 10 );
               graph.__object__["properties"]["chart.text.size"] = text_size;
               graph.__object__["properties"]["chart.key.text.size"] = text_size;
-                
+
               RGraph.redrawCanvas(graph);
             }
 
@@ -84,10 +84,10 @@ $chart = <<<EOD
                     var userId = $(divHolder).find(".userId").val();
                     var startDate = encodeURI($(divHolder).find(".startDate").val());
                     var endDate = encodeURI($(divHolder).find(".endDate").val());
-                    
+
                     var keys = window["chartHBarKeys"+graphId];
                     var stage = encodeURI(keys[bar[5]]);
-                    
+
                     window.open('index.php?module='+module+'&action='+action+'&query='+query+'&searchFormTab='+searchFormTab+'&assigned_user_id[]='+userId+'&date_closed_advanced_range_choice=between&start_range_date_closed_advanced='+startDate+'&end_range_date_closed_advanced='+endDate+'&sales_stage_advanced[]='+stage,'_self');
                 }
             }

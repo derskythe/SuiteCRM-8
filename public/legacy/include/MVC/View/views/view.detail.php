@@ -59,17 +59,7 @@ class ViewDetail extends SugarView
     public $dv;
 
     /**
-     * @see SugarView::preDisplay()
-     */
-    public function preDisplay()
-    {
-        $metadataFile = $this->getMetaDataFile();
-        $this->dv = new DetailView2();
-        $this->dv->ss =&  $this->ss;
-        $this->dv->setup($this->module, $this->bean, $metadataFile, get_custom_file_if_exists('include/DetailView/DetailView.tpl'));
-    }
-
-    /**
+     * @throws Exception
      * @see SugarView::display()
      */
     public function display()
@@ -79,5 +69,16 @@ class ViewDetail extends SugarView
         }
         $this->dv->process();
         echo $this->dv->display();
+    }
+
+    /**
+     * @see SugarView::preDisplay()
+     */
+    public function preDisplay() : void
+    {
+        $metadataFile = $this->getMetaDataFile();
+        $this->dv = new DetailView2();
+        $this->dv->ss =&  $this->ss;
+        $this->dv->setup($this->module, $this->bean, $metadataFile, get_custom_file_if_exists('include/DetailView/DetailView.tpl'));
     }
 }

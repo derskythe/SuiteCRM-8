@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-require_once("modules/Calendar/CalendarUtils.php");
+require_once('modules/Calendar/CalendarUtils.php');
 
 #[\AllowDynamicProperties]
 class CalendarController extends SugarController
@@ -120,7 +120,7 @@ class CalendarController extends SugarController
         unset($_REQUEST['send_invites'], $_POST['send_invites']); // prevent invites sending for recurring activities
 
         if ($record = $bean->id) {
-            if ($module == "Meetings" || $module == "Calls") {
+            if ($module === 'Meetings' || $module === 'Calls') {
                 if (!empty($_REQUEST['edit_all_recurrences'])) {
                     CalendarUtils::markRepeatDeleted($bean);
                 }
@@ -169,13 +169,16 @@ class CalendarController extends SugarController
 
     protected function action_getUser()
     {
-        $bean = BeanFactory::getBean("Users", $_REQUEST['record']);
-        echo json_encode(array("user_name" => $bean->user_name, "full_name" =>  $bean->full_name));
+        $bean = BeanFactory::getBean('Users', $_REQUEST['record']);
+        echo json_encode(array( 'user_name' => $bean->user_name, 'full_name' =>  $bean->full_name));
         die();
     }
+
     /**
      * Action Reschedule
      * Used for drag & drop
+     *
+     * @throws Exception
      */
     protected function action_reschedule()
     {
@@ -189,26 +192,26 @@ class CalendarController extends SugarController
 
         $_REQUEST['parent_name'] = $this->currentBean->parent_name;
 
-        $dateField = "date_start";
-        if ($this->currentBean->module_dir == "Tasks") {
-            $dateField = "date_due";
+        $dateField = 'date_start';
+        if ($this->currentBean->module_dir === 'Tasks') {
+            $dateField = 'date_due';
         }
         if ($_REQUEST['allDay'] == true) {
-            $endDateField = "date_end";
-            list($tmp, $time) = explode(" ", $this->currentBean->$endDateField);
-            list($date, $tmp) = explode(" ", $_REQUEST['enddatetime']);
-            $_REQUEST[ $endDateField ] = $date . " " . $tmp;
+            $endDateField = 'date_end';
+            list($tmp, $time) = explode(' ', $this->currentBean->$endDateField);
+            list($date, $tmp) = explode(' ', $_REQUEST['enddatetime']);
+            $_REQUEST[ $endDateField ] = $date . ' ' . $tmp;
             $_POST[$endDateField] = $_REQUEST[ $endDateField ];
         }
 
-        if (!empty($_REQUEST['calendar_style']) && $_REQUEST['calendar_style'] == "basic") {
-            list($tmp, $time) = explode(" ", $this->currentBean->$dateField);
-            list($date, $tmp) = explode(" ", $_REQUEST['datetime']);
-            $_POST['datetime'] = $date . " " . $tmp;
+        if (!empty($_REQUEST['calendar_style']) && $_REQUEST['calendar_style'] === 'basic') {
+            list($tmp, $time) = explode(' ', $this->currentBean->$dateField);
+            list($date, $tmp) = explode(' ', $_REQUEST['datetime']);
+            $_POST['datetime'] = $date . ' ' . $tmp;
         }
         $_POST[$dateField] = $_REQUEST['datetime'];
 
-        if ($this->currentBean->module_dir == "Tasks" && !empty($this->currentBean->date_start)) {
+        if ($this->currentBean->module_dir === 'Tasks' && !empty($this->currentBean->date_start)) {
             if ($GLOBALS['timedate']->fromUser($_POST['date_due'])->ts < $GLOBALS['timedate']->fromUser($this->currentBean->date_start)->ts) {
                 $this->view_object_map['jsonData'] = array(
                     'access' => 'no',
@@ -220,7 +223,7 @@ class CalendarController extends SugarController
 
         if ($commit) {
             require_once('include/formbase.php');
-            $this->currentBean = populateFromPost("", $this->currentBean);
+            $this->currentBean = populateFromPost('', $this->currentBean);
             $this->currentBean->save();
             $this->currentBean->retrieve($_REQUEST['record']);
 
@@ -230,6 +233,8 @@ class CalendarController extends SugarController
 
     /**
      * Action Remove
+     *
+     * @throws Exception
      */
     protected function action_remove()
     {
@@ -239,7 +244,7 @@ class CalendarController extends SugarController
             return;
         }
 
-        if ($this->currentBean->module_dir == "Meetings" || $this->currentBean->module_dir == "Calls") {
+        if ($this->currentBean->module_dir === 'Meetings' || $this->currentBean->module_dir === 'Calls') {
             if (!empty($_REQUEST['remove_all_recurrences']) && $_REQUEST['remove_all_recurrences']) {
                 CalendarUtils::markRepeatDeleted($this->currentBean);
             }
@@ -255,6 +260,8 @@ class CalendarController extends SugarController
     /**
      * Action Resize
      * Used for drag & drop resizing
+     *
+     * @throws Exception
      */
     protected function action_resize()
     {
@@ -265,7 +272,7 @@ class CalendarController extends SugarController
         }
 
         require_once('include/formbase.php');
-        $this->currentBean = populateFromPost("", $this->currentBean);
+        $this->currentBean = populateFromPost('', $this->currentBean);
         $this->currentBean->save();
 
         $this->view_object_map['jsonData'] = array(
@@ -288,7 +295,7 @@ class CalendarController extends SugarController
             $record = $_REQUEST['record'];
         }
 
-        require_once("data/BeanFactory.php");
+        require_once('data/BeanFactory.php');
         $this->currentBean = BeanFactory::getBean($module, $record);
 
         if (!empty($actionToCheck)) {
@@ -318,7 +325,7 @@ class CalendarController extends SugarController
 
         if (in_array($cal->view, array('day', 'week', 'month'))) {
             $cal->add_activities($GLOBALS['current_user']);
-        } elseif ($cal->view == 'shared') {
+        } elseif ($cal->view === 'shared') {
             $cal->init_shared();
             $sharedUser = BeanFactory::newBean('Users');
             foreach ($cal->shared_ids as $member) {

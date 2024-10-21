@@ -82,7 +82,7 @@ class component
             if (!empty($module) && ($bean = loadBean($module))) {
                 return $this->fillBean($args, $module, $bean);
             } else {
-                throw new Exception("Invalid bean");
+                throw new Exception('Invalid bean');
             }
         }
         return $result;
@@ -236,11 +236,11 @@ class component
                 if (!empty($field_defs[$arg]['input'])) {
                     $in_field = $field_defs[$arg]['input'];
                     $temp = explode('.', $in_field);
-                    $eval_code = "\$input_params";
+                    $eval_code = '$input_params';
                     foreach ($temp as $arr_key) {
                         $eval_code .= '[\'' . $arr_key . '\']';
                     }
-                    $eval_code .= "= \$val;";
+                    $eval_code .= '= $val;';
                     eval($eval_code);
                 } else {
                     $input_params[$arg] = $val;
@@ -252,6 +252,9 @@ class component
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function mapOutput($bean, $result)
     {
         if (is_object($bean)) {

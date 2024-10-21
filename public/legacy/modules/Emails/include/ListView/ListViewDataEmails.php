@@ -153,7 +153,7 @@ class ListViewDataEmails extends ListViewData
 
         $isValidator = new SuiteValidator();
         if ($inboundEmailID && !$isValidator->isValidId($inboundEmailID)) {
-            throw new SuiteException("Invalid Inbound Email ID" . ($inboundEmailID ? " ($inboundEmailID)" : ''));
+            throw new SuiteException('Invalid Inbound Email ID' . ($inboundEmailID ? " ($inboundEmailID)" : ''));
         }
 
         /**
@@ -178,21 +178,21 @@ class ListViewDataEmails extends ListViewData
     {
         switch ($folder->getType()) {
 
-            case "sent":
-                $this->searchType = "imap";
+            case 'sent':
+                $this->searchType = 'imap';
                 break;
 
-            case "draft":
-                $this->searchType = "crm";
+            case 'draft':
+                $this->searchType = 'crm';
                 break;
 
-            case "trash":
-                $this->searchType = "imap";
+            case 'trash':
+                $this->searchType = 'imap';
                 break;
 
             default:
                 $GLOBALS['log']->warn("unknown or undefined folder type (we will use 'imap' instead): " . $folder->getType());
-                $this->searchType = "imap";
+                $this->searchType = 'imap';
                 break;
         }
 
@@ -206,21 +206,21 @@ class ListViewDataEmails extends ListViewData
     private function setInboundEmailMailbox(Folder $folder, InboundEmail $inboundEmail)
     {
         switch ($folder->getType()) {
-            case "inbound":
+            case 'inbound':
                 // Use the mailbox associated with $folder rather than the option string
                 // Used in the IMAP connection string later
                 $inboundEmail->mailbox = $folder->getMailbox();
                 break;
 
-            case "draft":
+            case 'draft':
                 $inboundEmail->mailbox = $inboundEmail->get_stored_options('draftFolder');
                 break;
 
-            case "sent":
+            case 'sent':
                 $inboundEmail->mailbox = $inboundEmail->get_stored_options('sentFolder');
                 break;
 
-            case "trash":
+            case 'trash':
                 $inboundEmail->mailbox = $inboundEmail->get_stored_options('trashFolder');
                 break;
 
@@ -283,7 +283,7 @@ class ListViewDataEmails extends ListViewData
                     }
                 } else {
                     // use the field names
-                    if (in_array($filteredField, self::$mapIgnoreFields)) {
+                    if (in_array($filteredField, self::$mapIgnoreFields, true)) {
                         continue;
                     }
 
@@ -645,12 +645,12 @@ class ListViewDataEmails extends ListViewData
     public function isRequestedSearchAdvanced($request)
     {
         return
-            (isset($request["searchFormTab"]) && $request["searchFormTab"] == "advanced_search") ||
+            (isset($request['searchFormTab']) && $request['searchFormTab'] === 'advanced_search') ||
             (
-                isset($request["type_basic"]) && ((is_countable($request["type_basic"]) ? count($request["type_basic"]) : 0) > 1 ||
-                $request["type_basic"][0] != "")
+                isset($request['type_basic']) && ((is_countable($request['type_basic']) ? count($request['type_basic']) : 0) > 1 ||
+                    $request['type_basic'][0] != '')
             ) ||
-            (isset($request["module"]) && $request["module"] == "MergeRecords");
+            (isset($request['module']) && $request['module'] === 'MergeRecords');
     }
 
     /**
@@ -659,7 +659,7 @@ class ListViewDataEmails extends ListViewData
      */
     public function isRequestedSearchBasic($request)
     {
-        return isset($request["searchFormTab"]) && $request["searchFormTab"] == "basic_search";
+        return isset($request['searchFormTab']) && $request['searchFormTab'] === 'basic_search';
     }
 
 
@@ -806,7 +806,8 @@ class ListViewDataEmails extends ListViewData
 
                     // handle default case
 
-                    $GLOBALS['log']->fatal("Unknown or undefined search type" . ($this->searchType ? " ($this->searchType)" : ''));
+                    $GLOBALS['log']->fatal(
+                        'Unknown or undefined search type' . ($this->searchType ? " ($this->searchType)" : ''));
 
                     break;
             }
@@ -814,7 +815,7 @@ class ListViewDataEmails extends ListViewData
             $GLOBALS['log']->warn(
                 'Exception (class ' . get_class($e) .
                 ') message was: ' . $e->getMessage() .
-                " (code: " . $e->getCode() .
+                ' (code: ' . $e->getCode() .
                 ")\ntrace info:\n" . $e->getTraceAsString()
             );
         }

@@ -40,11 +40,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-
-
-
-
-
 //TODO Rename this to edit link
 #[\AllowDynamicProperties]
 class SugarWidgetSubPanelRelFieldEditButton extends SugarWidgetField
@@ -54,13 +49,12 @@ class SugarWidgetSubPanelRelFieldEditButton extends SugarWidgetField
         return '&nbsp;';
     }
 
-    public function displayList($layout_def)
+    public function displayList(&$layout_def)
     {
-        die("<pre>" . print_r($layout_def, true) . "</pre>");
+        die('<pre>' . print_r($layout_def, true) . '</pre>');
 
         $rel = $layout_def['linked_field'];
         $module = $layout_def['module'];
-
 
         global $app_strings;
 
@@ -79,9 +73,9 @@ class SugarWidgetSubPanelRelFieldEditButton extends SugarWidgetField
                 fixedcenter: false
             });
             var a = editRelPanel;
-			a.setHeader( 'Edit Properties' );
-			a.render(document.body);
-			a.params = {
+            a.setHeader( 'Edit Properties' );
+            a.render(document.body);
+            a.params = {
                 module: 'Relationships',
                 action: 'editfields',
                 rel_module: module,
@@ -92,10 +86,10 @@ class SugarWidgetSubPanelRelFieldEditButton extends SugarWidgetField
             a.load('index.php?' + SUGAR.util.paramsToUrl(a.params));
             a.show();
             a.center();
-		}";
+        }";
 
         return "<script>$script</script>"
-             . '<div onclick="editRel(\'p1_b1_accounts\', \'cac203f3-0380-495f-3231-4cf58f089f00\', \'Accounts\')">'
-             . $edit_icon_html . "</div>";
+            . '<div onclick="editRel(\'p1_b1_accounts\', \'cac203f3-0380-495f-3231-4cf58f089f00\', \'Accounts\')">'
+            . $edit_icon_html . '</div>';
     }
 }

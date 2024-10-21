@@ -107,7 +107,7 @@ class ListViewData
             }
         }
         if (!empty($direction)) {
-            if (strtolower($direction) == "desc") {
+            if (strtolower($direction) === 'desc') {
                 $direction = 'DESC';
             } else {
                 $direction = 'ASC';
@@ -192,8 +192,8 @@ class ListViewData
 
         $_SESSION[$module .'2_QUERY_QUERY'] = $where;
 
-        $_SESSION[strtoupper($baseName) . "_FROM_LIST_VIEW"] = $timestamp;
-        $_SESSION[strtoupper($baseName) . "_DETAIL_NAV_HISTORY"] = false;
+        $_SESSION[strtoupper($baseName) . '_FROM_LIST_VIEW'] = $timestamp;
+        $_SESSION[strtoupper($baseName) . '_DETAIL_NAV_HISTORY'] = false;
     }
 
     public function getTotalCount($main_query)
@@ -215,23 +215,23 @@ class ListViewData
      * if the $limit value is set to -1 then it will use the default limit and offset values
      *
      * it will return an array with two key values
-     * 	1. 'data'=> this is an array of row data
+     *     1. 'data'=> this is an array of row data
      *  2. 'pageData'=> this is an array containg three values
-     * 			a.'ordering'=> array('orderBy'=> the field being ordered by , 'sortOrder'=> 'ASC' or 'DESC')
-     * 			b.'urls'=>array('baseURL'=>url used to generate other urls ,
-     * 							'orderBy'=> the base url for order by
-     * 							//the following may not be set (so check empty to see if they are set)
-     * 							'nextPage'=> the url for the next group of results,
-     * 							'prevPage'=> the url for the prev group of results,
-     * 							'startPage'=> the url for the start of the group,
-     * 							'endPage'=> the url for the last set of results in the group
-     * 			c.'offsets'=>array(
-     * 								'current'=>current offset
-     * 								'next'=> next group offset
-     * 								'prev'=> prev group offset
-     * 								'end'=> the offset of the last group
-     * 								'total'=> the total count (only accurate if totalCounted = true otherwise it is either the total count if less than the limit or the total count + 1 )
-     * 								'totalCounted'=> if a count query was used to get the total count
+     *             a.'ordering'=> array('orderBy'=> the field being ordered by , 'sortOrder'=> 'ASC' or 'DESC')
+     *             b.'urls'=>array('baseURL'=>url used to generate other urls ,
+     *                             'orderBy'=> the base url for order by
+     *                             //the following may not be set (so check empty to see if they are set)
+     *                             'nextPage'=> the url for the next group of results,
+     *                             'prevPage'=> the url for the prev group of results,
+     *                             'startPage'=> the url for the start of the group,
+     *                             'endPage'=> the url for the last set of results in the group
+     *             c.'offsets'=>array(
+     *                                 'current'=>current offset
+     *                                 'next'=> next group offset
+     *                                 'prev'=> prev group offset
+     *                                 'end'=> the offset of the last group
+     *                                 'total'=> the total count (only accurate if totalCounted = true otherwise it is either the total count if less than the limit or the total count + 1 )
+     *                                 'totalCounted'=> if a count query was used to get the total count
      *
      * @param SugarBean $seed
      * @param string $where
@@ -239,9 +239,9 @@ class ListViewData
      * @param int:-1 $limit
      * @param string[]:array() $filter_fields
      * @param array:array() $params
-     * 	Potential $params are
-    	$params['distinct'] = use distinct key word
-    	$params['include_custom_fields'] = (on by default)
+     *     Potential $params are
+        $params['distinct'] = use distinct key word
+        $params['include_custom_fields'] = (on by default)
         $params['custom_XXXX'] = append custom statements to query
      * @param string:'id' $id_field
      * @return array('data'=> row data, 'pageData' => page data information, 'query' => original query string)
@@ -254,7 +254,7 @@ class ListViewData
         $this->seed =& $seed;
         $totalCounted = empty($GLOBALS['sugar_config']['disable_count_query']);
         $_SESSION['MAILMERGE_MODULE_FROM_LISTVIEW'] = $seed->module_dir;
-        if (empty($_REQUEST['action']) || $_REQUEST['action'] != 'Popup') {
+        if (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'Popup') {
             $_SESSION['MAILMERGE_MODULE'] = $seed->module_dir;
         }
 
@@ -279,11 +279,14 @@ class ListViewData
         // Bug 22740 - Tweak this check to strip off the table name off the order by parameter.
         // Samir Gandhi : Do not remove the report_cache.date_modified condition as the report list view is broken
         $orderby = $order['orderBy'];
-        if (strpos($order['orderBy'], '.') && ($order['orderBy'] != "report_cache.date_modified")) {
+        if (strpos($order['orderBy'], '.') && ($order['orderBy'] !== 'report_cache.date_modified')) {
             $orderby = substr($order['orderBy'], strpos($order['orderBy'], '.') + 1);
         }
-        if ($orderby != 'date_entered' && empty($params['custom_order']) && !in_array($orderby,
-                array_keys($filter_fields))) {
+        if ($orderby !== 'date_entered' && empty($params['custom_order']) && !in_array(
+                $orderby,
+                array_keys($filter_fields),
+                true
+            )) {
             $order['orderBy'] = '';
             $order['sortOrder'] = '';
         }
@@ -303,7 +306,7 @@ class ListViewData
         }
 
         // If $params tells us to override for the special last_name, first_name sorting
-        if (!empty($params['overrideLastNameOrder']) && $order['orderBy'] == 'last_name') {
+        if (!empty($params['overrideLastNameOrder']) && $order['orderBy'] === 'last_name') {
             $orderBy = 'last_name '.$order['sortOrder'].', first_name '.$order['sortOrder'];
         }
 
@@ -330,7 +333,7 @@ class ListViewData
         }
         $main_query = $ret_array['select'] . $params['custom_select'] . $ret_array['from'] . $params['custom_from'] . $ret_array['inner_join']. $ret_array['where'] . $params['custom_where'] . $ret_array['order_by'] . $params['custom_order_by'];
         //C.L. - Fix for 23461
-        if (empty($_REQUEST['action']) || $_REQUEST['action'] != 'Popup') {
+        if (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'Popup') {
             $_SESSION['export_where'] = $ret_array['where'];
         }
         if ($limit < -1) {
@@ -516,13 +519,15 @@ class ListViewData
 
         $queryString = '';
 
-        if (isset($_REQUEST["searchFormTab"]) && $_REQUEST["searchFormTab"] == "advanced_search" ||
-            isset($_REQUEST["type_basic"]) && (count($_REQUEST["type_basic"]) > 1 || $_REQUEST["type_basic"][0] != "") ||
-            isset($_REQUEST["module"]) && $_REQUEST["module"] == "MergeRecords") {
-            $queryString = "-advanced_search";
+        if (isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] === 'advanced_search' ||
+            isset($_REQUEST['type_basic']) && (count(
+                    $_REQUEST['type_basic']
+                ) > 1 || $_REQUEST['type_basic'][0] != '') ||
+            isset($_REQUEST['module']) && $_REQUEST['module'] === 'MergeRecords') {
+            $queryString = '-advanced_search';
         } else {
-            if (isset($_REQUEST["searchFormTab"]) && $_REQUEST["searchFormTab"] == "basic_search") {
-                if ($seed->module_dir == "Reports") {
+            if (isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] === 'basic_search') {
+                if ($seed->module_dir === 'Reports') {
                     $searchMetaData = SearchFormReports::retrieveReportsSearchDefs();
                 } else {
                     $searchMetaData = SearchForm::retrieveSearchDefs($seed->module_dir);
@@ -536,8 +541,8 @@ class ListViewData
 
                 foreach ($basicSearchFields as $basicSearchField) {
                     $field_name = (is_array($basicSearchField) && isset($basicSearchField['name'])) ? $basicSearchField['name'] : $basicSearchField;
-                    $field_name .= "_basic";
-                    if (isset($_REQUEST[$field_name])  && (!is_array($basicSearchField) || !isset($basicSearchField['type']) || $basicSearchField['type'] == 'text' || $basicSearchField['type'] == 'name')) {
+                    $field_name .= '_basic';
+                    if (isset($_REQUEST[$field_name])  && (!is_array($basicSearchField) || !isset($basicSearchField['type']) || $basicSearchField['type'] === 'text' || $basicSearchField['type'] === 'name')) {
                         // Ensure the encoding is UTF-8
                         $queryString = htmlentities($_REQUEST[$field_name], null, 'UTF-8');
                         break;
@@ -641,7 +646,7 @@ class ListViewData
 
         $results = $adFunction($fields);
 
-        $results['string'] = str_replace(array("&#039", "'"), '\&#039', $results['string']); // no xss!
+        $results['string'] = str_replace(array( '&#039', "'" ), '\&#039', $results['string']); // no xss!
 
         if (trim($results['string']) == '') {
             $results['string'] = $app_strings['LBL_NONE'];
@@ -660,10 +665,10 @@ class ListViewData
         $extra .= (!empty($results['viewLink']) ? "<a title=\'{$app_strings['LBL_VIEW_BUTTON']}\' href={$results['viewLink']}> <span class=\'suitepicon suitepicon-action-view-record\'></span></a>" : '');
 
         if ($close == true) {
-            $closeVal = "true";
+            $closeVal = 'true';
             $extra .=  "<a title=\'{$app_strings['LBL_ADDITIONAL_DETAILS_CLOSE_TITLE']}\' href=\'javascript: SUGAR.util.closeStaticAdditionalDetails();\'> <span class=\'suitepicon suitepicon-action-clear\'></span></a>";
         } else {
-            $closeVal = "false";
+            $closeVal = 'false';
         }
         $extra .= "',".$closeVal.")\"' class='info suitepicon suiteicon-action-info'>";
 

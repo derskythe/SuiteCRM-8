@@ -84,6 +84,8 @@ abstract class View
 
     /**
      * Renders the template.
+     *
+     * @throws \SmartyException
      */
     public function display(): void
     {

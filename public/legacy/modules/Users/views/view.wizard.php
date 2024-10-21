@@ -67,6 +67,8 @@ class ViewWizard extends SugarView
     }
 
     /**
+     * @throws SmartyException
+     * @throws Exception
      * @see SugarView::display()
      */
     public function display()
@@ -116,7 +118,7 @@ class ViewWizard extends SugarView
         $this->options['show_javascript'] = true;
         $this->renderJavascript();
         $this->options['show_javascript'] = false;
-        $this->ss->assign("SUGAR_JS", ob_get_contents().$themeObject->getJS());
+        $this->ss->assign('SUGAR_JS', ob_get_contents().$themeObject->getJS());
         ob_end_clean();
 
         $messenger_type = '<select tabindex="5" name="messenger_type">';
@@ -164,10 +166,10 @@ class ViewWizard extends SugarView
         $cur_id = $locale->getPrecedentPreference('currency', $current_user);
         if ($cur_id) {
             $selectCurrency = $currency->getSelectOptions($cur_id);
-            $this->ss->assign("CURRENCY", $selectCurrency);
+            $this->ss->assign('CURRENCY', $selectCurrency);
         } else {
             $selectCurrency = $currency->getSelectOptions();
-            $this->ss->assign("CURRENCY", $selectCurrency);
+            $this->ss->assign('CURRENCY', $selectCurrency);
         }
 
         $currenciesArray = $locale->currencies;
@@ -177,7 +179,7 @@ class ViewWizard extends SugarView
 var currencies = new Object;
 {$currenciesVars}
 function setSymbolValue(id) {
-	document.getElementById('symbol').value = currencies[id];
+    document.getElementById('symbol').value = currencies[id];
 }
 eoq;
         $this->ss->assign('currencySymbolJs', $currencySymbolsJs);
@@ -198,8 +200,8 @@ eoq;
 
         $num_grp_sep = $current_user->getPreference('num_grp_sep');
         $dec_sep = $current_user->getPreference('dec_sep');
-        $this->ss->assign("NUM_GRP_SEP", (empty($num_grp_sep) ? $sugar_config['default_number_grouping_seperator'] : $num_grp_sep));
-        $this->ss->assign("DEC_SEP", (empty($dec_sep) ? $sugar_config['default_decimal_seperator'] : $dec_sep));
+        $this->ss->assign('NUM_GRP_SEP', (empty($num_grp_sep) ? $sugar_config['default_number_grouping_seperator'] : $num_grp_sep));
+        $this->ss->assign('DEC_SEP', (empty($dec_sep) ? $sugar_config['default_decimal_seperator'] : $dec_sep));
         $this->ss->assign('getNumberJs', $locale->getNumberJs());
 
         //// Name display format
@@ -218,8 +220,8 @@ eoq;
 
         $this->ss->assign('TIMEOPTIONS', get_select_options_with_id($sugar_config['time_formats'], $current_user->_userPreferenceFocus->getDefaultPreference('default_time_format')));
         $this->ss->assign('DATEOPTIONS', get_select_options_with_id($sugar_config['date_formats'], $current_user->_userPreferenceFocus->getDefaultPreference('default_date_format')));
-        $this->ss->assign("MAIL_SENDTYPE", get_select_options_with_id($app_list_strings['notifymail_sendtype'], $current_user->getPreference('mail_sendtype')));
-        $this->ss->assign("NEW_EMAIL", $current_user->emailAddress->getEmailAddressWidgetEditView($current_user->id, $current_user->module_dir));
+        $this->ss->assign('MAIL_SENDTYPE', get_select_options_with_id($app_list_strings['notifymail_sendtype'], $current_user->getPreference('mail_sendtype')));
+        $this->ss->assign('NEW_EMAIL', $current_user->emailAddress->getEmailAddressWidgetEditView($current_user->id, $current_user->module_dir));
         $this->ss->assign('EMAIL_LINK_TYPE', get_select_options_with_id($app_list_strings['dom_email_link_type'], $current_user->getPreference('email_link_type')));
         $this->ss->assign('EDITOR_TYPE', get_select_options_with_id($app_list_strings['dom_editor_type'], $current_user->getPreference('editor_type')));
 
@@ -237,8 +239,8 @@ eoq;
         $mail_smtpport = $systemOutboundEmail->mail_smtpport;
         $mail_smtpssl = $systemOutboundEmail->mail_smtpssl;
         $mail_smtpdisplay = $systemOutboundEmail->mail_smtpdisplay;
-        $mail_smtpuser = "";
-        $mail_smtppass = "";
+        $mail_smtpuser = '';
+        $mail_smtppass = '';
         $mail_smtpauth_req=true;
         if (!empty($mail_smtpserver) && !empty($mail_smtptype)) {
             if (!$systemOutboundEmail->isAllowUserAccessToSystemDefaultOutbound()) {
@@ -254,11 +256,11 @@ eoq;
         $isAdmin = is_admin($current_user);
         $this->ss->assign('IS_ADMIN', $isAdmin);
 
-        $this->ss->assign("mail_smtpdisplay", $mail_smtpdisplay);
-        $this->ss->assign("mail_smtpuser", $mail_smtpuser);
-        $this->ss->assign("mail_smtppass", $mail_smtppass);
+        $this->ss->assign('mail_smtpdisplay', $mail_smtpdisplay);
+        $this->ss->assign('mail_smtpuser', $mail_smtpuser);
+        $this->ss->assign('mail_smtppass', $mail_smtppass);
         $this->ss->assign('mail_smtpserver', $mail_smtpserver);
-        $this->ss->assign("mail_smtpauth_req", $mail_smtpauth_req);
+        $this->ss->assign('mail_smtpauth_req', $mail_smtpauth_req);
         $this->ss->assign('MAIL_SMTPPORT', $mail_smtpport);
         $this->ss->assign('MAIL_SMTPSSL', $mail_smtpssl);
 

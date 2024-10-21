@@ -26,14 +26,20 @@
  *             dropdown to include given date unless explicitly set (Monte)
  *           - 1.3.4 fix behaviour of 0000-00-00 00:00:00 dates to match that
  *             of 0000-00-00 dates (cybot, boots)
- * @link http://smarty.php.net/manual/en/language.function.html.select.date.php {html_select_date}
+ *
+ * @link    http://smarty.php.net/manual/en/language.function.html.select.date.php {html_select_date}
  *      (Smarty online manual)
  * @version 1.3.4
- * @author Andrei Zmievski
- * @author Monte Ohrt <monte at ohrt dot com>
+ * @author  Andrei Zmievski
+ * @author  Monte Ohrt <monte at ohrt dot com>
+ *
  * @param array
  * @param Smarty
+ *
  * @return string
+ * @throws SmartyException
+ * @throws SmartyException
+ * @throws SmartyException
  */
 function smarty_function_html_select_date($params, &$smarty)
 {
@@ -41,18 +47,18 @@ function smarty_function_html_select_date($params, &$smarty)
     require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
     require_once $smarty->_get_plugin_filepath('function', 'html_options');
     /* Default values. */
-    $prefix          = "Date_";
-    $start_year      = strftime("%Y");
+    $prefix = 'Date_';
+    $start_year = strftime('%Y');
     $end_year        = $start_year;
     $display_days    = true;
     $display_months  = true;
     $display_years   = true;
-    $month_format    = "%B";
+    $month_format = '%B';
     /* Write months as numbers by default  GL */
-    $month_value_format = "%m";
-    $day_format      = "%02d";
+    $month_value_format = '%m';
+    $day_format = '%02d';
     /* Write day values using this format MB */
-    $day_value_format = "%d";
+    $day_value_format = '%d';
     $year_as_text    = false;
     /* Display years in reverse order? Ie. 2000,1999,.... */
     $reverse_years   = false;
@@ -146,18 +152,18 @@ function smarty_function_html_select_date($params, &$smarty)
         $time = strftime('%Y-%m-%d', smarty_make_timestamp($time));
     }
     // Now split this in pieces, which later can be used to set the select
-    $time = explode("-", $time);
+    $time = explode('-', $time);
 
     // make syntax "+N" or "-N" work with start_year and end_year
     if (preg_match('!^(\+|\-)\s*(\d+)$!', $end_year, $match)) {
-        if ($match[1] == '+') {
+        if ($match[1] === '+') {
             $end_year = strftime('%Y') + $match[2];
         } else {
             $end_year = strftime('%Y') - $match[2];
         }
     }
     if (preg_match('!^(\+|\-)\s*(\d+)$!', $start_year, $match)) {
-        if ($match[1] == '+') {
+        if ($match[1] === '+') {
             $start_year = strftime('%Y') + $match[2];
         } else {
             $start_year = strftime('%Y') - $match[2];
@@ -176,7 +182,7 @@ function smarty_function_html_select_date($params, &$smarty)
 
     $field_order = strtoupper($field_order);
 
-    $html_result = $month_result = $day_result = $year_result = "";
+    $html_result = $month_result = $day_result = $year_result = '';
 
     $field_separator_count = -1;
     if ($display_months) {

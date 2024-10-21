@@ -102,7 +102,7 @@ class SugarAuthenticateUser
     {
         global $login_error;
 
-        $GLOBALS['log']->debug("Starting user load for " . $name);
+        $GLOBALS['log']->debug('Starting user load for ' . $name);
         if (empty($name) || empty($password)) {
             return false;
         }
@@ -192,6 +192,8 @@ class SugarAuthenticateUser
     }
 
     /**
+     * @throws Exception
+     * @throws SuiteException
      * @global User $current_user
      */
     public function showFactorTokenInput()
@@ -199,7 +201,7 @@ class SugarAuthenticateUser
         global $current_user;
 
         $GLOBALS['log']->debug('Redirect to factor token input.....');
-        
+
         $factory = new FactorAuthFactory();
         $factorAuth = $factory->getFactorAuth();
         if (!$factorAuth->validateTokenMessage()) {
@@ -230,6 +232,8 @@ class SugarAuthenticateUser
 
     /**
      * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \Random\RandomException
      */
     public function sendFactorTokenToUser()
     {
@@ -309,8 +313,8 @@ class SugarAuthenticateUser
     {
         $logout = false;
         if (
-                isset($_REQUEST['module']) && $_REQUEST['module'] == 'Users' &&
-                isset($_REQUEST['action']) && $_REQUEST['action'] == 'Logout'
+                isset($_REQUEST['module']) && $_REQUEST['module'] === 'Users' &&
+                isset($_REQUEST['action']) && $_REQUEST['action'] === 'Logout'
         ) {
             $logout = true;
         }

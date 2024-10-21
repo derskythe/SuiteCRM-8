@@ -100,7 +100,7 @@ class GoogleCalendarSettingsHandler extends BaseHandler
     {
         // Check current user is admin
         if (!is_admin($this->currentUser)) {
-            $this->protectedDie("Unauthorized access to administration.");
+            $this->protectedDie('Unauthorized access to administration.');
         }
     }
 
@@ -111,7 +111,7 @@ class GoogleCalendarSettingsHandler extends BaseHandler
      */
     protected function doActions()
     {
-        if (isset($this->request['do']) && $this->request['do'] == 'save') {
+        if (isset($this->request['do']) && $this->request['do'] === 'save') {
             $this->configurator->config['google_auth_json'] = !empty($this->request['google_auth_json']);
             $this->configurator->saveConfig();
             $this->redirect('index.php?module=Administration&action=index');
@@ -123,6 +123,7 @@ class GoogleCalendarSettingsHandler extends BaseHandler
      * This function handles displaying the template
      *
      * @return void
+     * @throws SmartyException
      */
     public function handleDisplay()
     {
@@ -145,9 +146,9 @@ class GoogleCalendarSettingsHandler extends BaseHandler
     protected function getPageTitle()
     {
         return getClassicModuleTitle(
-            "Administration",
+            'Administration',
             array(
-                "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . "</a>",
+                "<a href='index.php?module=Administration&action=index'>" . translate('LBL_MODULE_NAME', 'Administration') . '</a>',
                 $this->modStrings['LBL_GOOGLE_AUTH_TITLE'],
             ),
             false

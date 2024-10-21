@@ -5,28 +5,34 @@
  * @subpackage plugins
  */
 
-
 /**
  * Smarty {html_select_time} function plugin
  *
  * Type:     function<br>
  * Name:     html_select_time<br>
  * Purpose:  Prints the dropdowns for time selection
- * @link http://smarty.php.net/manual/en/language.function.html.select.time.php {html_select_time}
+ *
+ * @link    http://smarty.php.net/manual/en/language.function.html.select.time.php {html_select_time}
  *          (Smarty online manual)
- * @author Roberto Berto <roberto@berto.net>
+ * @author  Roberto Berto <roberto@berto.net>
  * @credits Monte Ohrt <monte AT ohrt DOT com>
+ *
  * @param array
  * @param Smarty
+ *
  * @return string
- * @uses smarty_make_timestamp()
+ * @uses    smarty_make_timestamp()
+ * @throws SmartyException
+ * @throws SmartyException
+ * @throws SmartyException
+ * @throws SmartyException
  */
 function smarty_function_html_select_time($params, &$smarty)
 {
     require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
     require_once $smarty->_get_plugin_filepath('function', 'html_options');
     /* Default values. */
-    $prefix             = "Time_";
+    $prefix = 'Time_';
     $time               = time();
     $display_hours      = true;
     $display_minutes    = true;
@@ -129,7 +135,7 @@ function smarty_function_html_select_time($params, &$smarty)
             $html_result .= ' ' . $all_extra;
         }
         $html_result .= '>'."\n";
-        
+
         $html_result .= smarty_function_html_options(
             array('output'          => $minutes,
                                                            'values'          => $minutes,
@@ -152,7 +158,7 @@ function smarty_function_html_select_time($params, &$smarty)
         } else {
             $html_result .= '"' . $prefix . 'Second"';
         }
-        
+
         if (null !== $second_extra) {
             $html_result .= ' ' . $second_extra;
         }
@@ -160,7 +166,7 @@ function smarty_function_html_select_time($params, &$smarty)
             $html_result .= ' ' . $all_extra;
         }
         $html_result .= '>'."\n";
-        
+
         $html_result .= smarty_function_html_options(
             array('output'          => $seconds,
                                                            'values'          => $seconds,
@@ -178,7 +184,7 @@ function smarty_function_html_select_time($params, &$smarty)
         } else {
             $html_result .= '"' . $prefix . 'Meridian"';
         }
-        
+
         if (null !== $meridian_extra) {
             $html_result .= ' ' . $meridian_extra;
         }
@@ -186,7 +192,7 @@ function smarty_function_html_select_time($params, &$smarty)
             $html_result .= ' ' . $all_extra;
         }
         $html_result .= '>'."\n";
-        
+
         $html_result .= smarty_function_html_options(
             array('output'          => array('AM', 'PM'),
                                                            'values'          => array('am', 'pm'),

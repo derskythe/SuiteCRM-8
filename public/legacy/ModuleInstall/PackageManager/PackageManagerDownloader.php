@@ -57,7 +57,7 @@ class PackageManagerDownloader
     public static function download($session_id, $file_name, $save_dir = '', $download_server = '')
     {
         if (empty($save_dir)) {
-            $save_dir = "upload://";
+            $save_dir = 'upload://';
         }
         if (empty($download_server)) {
             $download_server = PACKAGE_MANAGER_DOWNLOAD_SERVER;

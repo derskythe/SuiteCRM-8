@@ -119,7 +119,7 @@ class DropDownHelper
             $index = $params['slot_' . $count];
             $key = (isset($params['key_' . $index]))?SugarCleaner::stripTags($params['key_' . $index]): 'BLANK';
             $value = (isset($params['value_' . $index]))?SugarCleaner::stripTags($params['value_' . $index]): '';
-            if ($key == 'BLANK') {
+            if ($key === 'BLANK') {
                 $key = '';
             }
             $key = trim($key);
@@ -138,9 +138,9 @@ class DropDownHelper
 
 
         //get rid of closing tags they are not needed and are just trouble
-        $contents = str_replace("?>", '', (string) $contents);
+        $contents = str_replace('?>', '', (string) $contents);
         if (empty($contents)) {
-            $contents = "<?php";
+            $contents = '<?php';
         }
         //add new drop down to the bottom
         if (!empty($params['use_push'])) {
@@ -152,7 +152,7 @@ class DropDownHelper
                     $contents = preg_replace(self::getPatternMatchGlobal($dropdown_name), "\n", (string) $contents);
                     $contents = preg_replace(self::getPatternMatch($dropdown_name), "\n", $contents);
                     //add the new ones
-                    $contents .= "\n\$app_list_strings['$dropdown_name']['$key']=" . var_export_helper($value) . ";";
+                    $contents .= "\n\$app_list_strings['$dropdown_name']['$key']=" . var_export_helper($value) . ';';
                 }
             }
         } else {
@@ -160,11 +160,11 @@ class DropDownHelper
             $contents = preg_replace(self::getPatternMatchGlobal($dropdown_name), "\n", $contents);
             $contents = preg_replace(self::getPatternMatch($dropdown_name), "\n", $contents);
             //add the new ones
-            $contents .= "\n\$app_list_strings['$dropdown_name']=" . var_export_helper($dropdown) . ";";
+            $contents .= "\n\$app_list_strings['$dropdown_name']=" . var_export_helper($dropdown) . ';';
         }
 
         // Bug 40234 - If we have no contents, we don't write the file. Checking for "<?php" because above it's set to that if empty
-        if ($contents != "<?php") {
+        if ($contents !== '<?php') {
             save_custom_app_list_strings_contents($contents, $selected_lang);
             sugar_cache_reset();
         }

@@ -50,10 +50,10 @@ class ViewHistory extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
@@ -73,7 +73,7 @@ class ViewHistory extends SugarView
         $json = getJSONobj();
         echo($json->encode($root));
     }
-    
+
     /**
      *
      * @return ExtNode built from the passed StudioModule

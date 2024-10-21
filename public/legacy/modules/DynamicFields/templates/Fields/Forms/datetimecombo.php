@@ -46,12 +46,12 @@ require_once('modules/DynamicFields/templates/Fields/TemplateDatetimecombo.php')
 function get_body(&$ss, $vardef)
 {
     $defaultTime = '';
-    $hours = "";
-    $minitues = "";
-    $meridiem = "";
+    $hours = '';
+    $minitues = '';
+    $meridiem = '';
     $td = new TemplateDatetimecombo();
     $ss->assign('default_values', array_flip($td->dateStrings));
-    
+
     global $timedate;
     $user_time_format = $timedate->get_user_time_format();
     $show_meridiem = preg_match('/pm$/i', (string) $user_time_format) ? true : false;
@@ -65,7 +65,7 @@ function get_body(&$ss, $vardef)
     $ss->assign('default_minutes_values', array_flip($td->minutesStrings));
     $ss->assign('default_meridiem_values', array_flip($td->meridiemStrings));
     if (isset($vardef['display_default']) && strstr((string) $vardef['display_default'], '&')) {
-        $dt = explode("&", $vardef['display_default']); //+1 day&06:00pm
+        $dt = explode('&', $vardef['display_default']); //+1 day&06:00pm
         $date = $dt[0];
         $defaultTime = $dt[1];
         $hours = substr($defaultTime, 0, 2);
@@ -73,10 +73,10 @@ function get_body(&$ss, $vardef)
         $meridiem = substr($defaultTime, 5, 2);
         if (!$show_meridiem) {
             preg_match('/(am|pm)$/i', $meridiem, $matches);
-            if (strtolower($matches[0]) == 'am' && $hours == 12) {
+            if (strtolower($matches[0]) === 'am' && $hours == 12) {
                 $hours = '00';
             } else {
-                if (strtolower($matches[0]) == 'pm' && $hours != 12) {
+                if (strtolower($matches[0]) === 'pm' && $hours != 12) {
                     $hours += 12;
                 }
             }

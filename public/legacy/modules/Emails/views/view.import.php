@@ -70,7 +70,7 @@ class EmailsViewImport extends ViewEdit
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $current_user;
 

@@ -145,7 +145,7 @@ class DynamicField
         if (!empty($GLOBALS['installing']) && $GLOBALS['installing'] == true || empty($this->db)) {
             return false;
         }
-        if ($module == '../data') {
+        if ($module === '../data') {
             return false;
         }
 
@@ -285,7 +285,7 @@ class DynamicField
             // Everything works off of vardefs, so let's have it save the users vardefs
             // to the employees module, because they both use the same table behind
             // the scenes
-            if ($module == 'Users') {
+            if ($module === 'Users') {
                 $manager->loadVardef('Employees', 'Employee', true);
 
                 return;
@@ -319,10 +319,10 @@ class DynamicField
             $select = '';
             $isList = is_array($expandedList);
             foreach ($this->bean->field_defs as $name => $field) {
-                if (!empty($field['source']) && $field['source'] == 'custom_fields' && (!$isList || !empty($expandedList[$name]))) {
+                if (!empty($field['source']) && $field['source'] === 'custom_fields' && (!$isList || !empty($expandedList[$name]))) {
                     // assumption: that the column name in _cstm is the same as the field name. Currently true.
                     // however, two types of dynamic fields do not have columns in the custom table - html fields (they're readonly) and flex relates (parent_name doesn't exist)
-                    if ($field['type'] != 'html' && $name != 'parent_name') {
+                    if ($field['type'] !== 'html' && $name !== 'parent_name') {
                         $select .= ",{$this->bean->table_name}_cstm.{$name}";
                     }
                 }
@@ -334,7 +334,7 @@ class DynamicField
             $jtAlias = 'relJoin';
             $jtCount = 1;
             foreach ($this->bean->field_defs as $name => $field) {
-                if ($field['type'] == 'relate' && isset($field['custom_module'])) {
+                if ($field['type'] === 'relate' && isset($field['custom_module'])) {
                     $relateJoinInfo = $this->getRelateJoin($field, $jtAlias . $jtCount);
                     $select .= $relateJoinInfo['select'];
                     $join .= $relateJoinInfo['from'];
@@ -361,7 +361,7 @@ class DynamicField
     public function getRelateJoin($field_def, $joinTableAlias, $withIdName = true)
     {
 
-        if (empty($field_def['type']) || $field_def['type'] != 'relate') {
+        if (empty($field_def['type']) || $field_def['type'] !== 'relate') {
             return false;
         }
 
@@ -377,7 +377,7 @@ class DynamicField
             if (isset($name_field_def['db_concat_fields'])) {
                 $name_field = $this->db->concat($joinTableAlias, $name_field_def['db_concat_fields']);
             } //If the name field is non-db, we need to find another field to display
-            elseif (!empty($rel_mod->field_defs['name']['source']) && $rel_mod->field_defs['name']['source'] == 'non-db' && !empty($field_def['rname'])) {
+            elseif (!empty($rel_mod->field_defs['name']['source']) && $rel_mod->field_defs['name']['source'] === 'non-db' && !empty($field_def['rname'])) {
                 $name_field = "$joinTableAlias." . $field_def['rname'];
             } else {
                 $name_field = "$joinTableAlias.name";
@@ -408,10 +408,10 @@ class DynamicField
             $this->bean->relDepth = 0;
         }
         foreach ($this->bean->field_defs as $field) {
-            if (empty($field['source']) || $field['source'] != 'custom_fields') {
+            if (empty($field['source']) || $field['source'] !== 'custom_fields') {
                 continue;
             }
-            if ($field['type'] == 'relate') {
+            if ($field['type'] === 'relate') {
                 $related_module = $field['ext2'];
                 $name = $field['name'];
                 if (empty($this->bean->$name)) { //Don't load the relationship twice
@@ -443,10 +443,10 @@ class DynamicField
             $values = "('" . $this->bean->id . "'";
             $first = true;
             foreach ($this->bean->field_defs as $name => $field) {
-                if (empty($field['source']) || $field['source'] != 'custom_fields') {
+                if (empty($field['source']) || $field['source'] !== 'custom_fields') {
                     continue;
                 }
-                if ($field['type'] == 'html' || $field['type'] == 'parent') {
+                if ($field['type'] === 'html' || $field['type'] === 'parent') {
                     continue;
                 }
 
@@ -467,7 +467,7 @@ class DynamicField
                             }
                         }
                     }
-                    if ($field['type'] == 'bool') {
+                    if ($field['type'] === 'bool') {
                         if ($this->bean->$name === false) {
                             $this->bean->$name = '0';
                         } elseif ($this->bean->$name === true) {
@@ -476,7 +476,7 @@ class DynamicField
                     }
 
                     $val = $this->bean->$name;
-                    if (($field['type'] == 'date' || $field['type'] == 'datetimecombo') && (empty($this->bean->$name) || $this->bean->$name == '1900-01-01')) {
+                    if (($field['type'] === 'date' || $field['type'] === 'datetimecombo') && (empty($this->bean->$name) || $this->bean->$name === '1900-01-01')) {
                         $quote = '';
                         $val = 'NULL';
                         $this->bean->$name = ''; // do not set it to string 'NULL'
@@ -590,6 +590,7 @@ class DynamicField
      * @param TemplateField $field
      *
      * @return bool
+     * @throws Exception
      */
     public function addFieldObject(&$field)
     {
@@ -688,10 +689,14 @@ class DynamicField
         $base_field = get_widget($field->type);
         foreach ($field->vardef_map as $property => $fmd_col) {
             //Skip over attributes that are either the default or part of the normal attributes stored in the DB
-            if (!isset($field->$property) || in_array($fmd_col, $column_fields) || in_array($property, $column_fields)
+            if (!isset($field->$property) || in_array($fmd_col, $column_fields, true) || in_array(
+                    $property,
+                    $column_fields,
+                    true
+                )
                 || $this->isDefaultValue($property, $field->$property, $base_field)
-                || $property == 'action' || $property == 'label_value' || $property == 'label'
-                || (substr((string) $property, 0, 3) == 'ext' && strlen((string) $property) == 4)
+                || $property === 'action' || $property === 'label_value' || $property === 'label'
+                || (str_starts_with((string) $property, 'ext') && strlen((string) $property) == 4)
             ) {
                 continue;
             }
@@ -747,7 +752,7 @@ class DynamicField
     protected function writeVardefExtension($bean_name, $field, $def_override)
     {
         //Hack for the broken cases module
-        $vBean = $bean_name == 'aCase' ? 'Case' : $bean_name;
+        $vBean = $bean_name === 'aCase' ? 'Case' : $bean_name;
         $file_loc = "$this->base_path/_override_sugarfield_{$field->name}.php";
 
         $out = "<?php\n // created: " . date('Y-m-d H:i:s') . "\n";
@@ -817,7 +822,7 @@ class DynamicField
         $field->name = $name;
         $field->type = $type;
         $field->len = $max_size;
-        $field->required = (!empty($required_option) && $required_option != 'optional');
+        $field->required = (!empty($required_option) && $required_option !== 'optional');
         $field->default = $default_value;
         $field->ext1 = $ext1;
         $field->ext2 = $ext2;
@@ -897,7 +902,7 @@ class DynamicField
         $out = '';
         if ($this->bean->hasCustomFields()) {
             foreach ($this->bean->field_defs as $name => $data) {
-                if (empty($data['source']) || $data['source'] != 'custom_fields') {
+                if (empty($data['source']) || $data['source'] !== 'custom_fields') {
                     continue;
                 }
                 $out .= $this->add_existing_custom_field($data, $execute);
@@ -943,7 +948,7 @@ class DynamicField
         $tablename = $this->bean->table_name . '_cstm';
         $compareFieldDefs = $db->get_columns($tablename);
         foreach ($this->bean->field_defs as $name => $data) {
-            if (empty($data['source']) || $data['source'] != 'custom_fields') {
+            if (empty($data['source']) || $data['source'] !== 'custom_fields') {
                 continue;
             }
             /*
@@ -1012,8 +1017,8 @@ class DynamicField
         }
         $exclusions = array('parent_type', 'parent_id', 'currency_id', 'parent_name');
         // Remove any non-db friendly characters
-        $return_value = preg_replace("/[^\w]+/", '_', $name);
-        if ($_C == true && !in_array($return_value, $exclusions) && substr($return_value, -2) != '_c') {
+        $return_value = preg_replace('/[^\w]+/', '_', $name);
+        if ($_C == true && !in_array($return_value, $exclusions, true) && !str_ends_with($return_value, '_c')) {
             $return_value .= '_c';
         }
         $cached_results[$name] = $return_value;
@@ -1108,7 +1113,7 @@ class DynamicField
         require_once 'modules/DynamicFields/FieldCases.php';
         $results = array();
         foreach ($this->bean->field_defs as $name => $data) {
-            if (empty($data['source']) || $data['source'] != 'custom_fields') {
+            if (empty($data['source']) || $data['source'] !== 'custom_fields') {
                 continue;
             }
             $field = get_widget($data ['type']);

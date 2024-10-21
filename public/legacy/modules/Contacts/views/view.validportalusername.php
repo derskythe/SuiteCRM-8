@@ -52,7 +52,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  *
  * @author Collin Lee
  * */
- 
+
 require_once('include/MVC/View/SugarView.php');
 
 #[\AllowDynamicProperties]
@@ -61,7 +61,7 @@ class ContactsViewValidPortalUsername extends SugarView
     /**
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         $this->display();
     }

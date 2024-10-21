@@ -152,7 +152,7 @@ class TemplateEnum extends TemplateText
         $def['len'] = $this->max_size;
         $def['studio'] = 'visible';
         // this class may be extended, so only do the unserialize for genuine TemplateEnums
-        if (get_class($this) == 'TemplateEnum' && empty($def['dependency'])) {
+        if (get_class($this) === 'TemplateEnum' && empty($def['dependency'])) {
             $def['dependency'] = $this->ext4 !== null? unserialize(html_entity_decode((string) $this->ext4)) : null ;
         }
         if (!empty($this->visibility_grid)) {

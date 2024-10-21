@@ -99,11 +99,11 @@ class OpportunityFormBase
         $form .= getPostToForm();
         if (isset($rows[0])) {
             foreach ($rows[0] as $key=>$value) {
-                if ($key != 'id') {
-                    $form .= "<td scope='col'>". $mod_strings[$mod_strings['db_'.$key]]. "</td>";
+                if ($key !== 'id') {
+                    $form .= "<td scope='col'>". $mod_strings[$mod_strings['db_'.$key]]. '</td>';
                 }
             }
-            $form .= "</tr>";
+            $form .= '</tr>';
         }
 
         $rowColor = 'oddListRowS1';
@@ -113,7 +113,7 @@ class OpportunityFormBase
             $form .= "<td width='1%' nowrap='nowrap'><a href='#' onclick='document.dupOpps.selectedOpportunity.value=\"{$row['id']}\";document.dupOpps.submit();'>[{$app_strings['LBL_SELECT_BUTTON_LABEL']}]</a>&nbsp;&nbsp;</td>";
             $wasSet = false;
             foreach ($row as $key=>$value) {
-                if ($key != 'id') {
+                if ($key !== 'id') {
                     if (!$wasSet) {
                         $form .= "<td scope='row'><a target='_blank' href='index.php?module=Opportunities&action=DetailView&record={$row['id']}'>$value</a></td>";
                         $wasSet = true;
@@ -123,15 +123,15 @@ class OpportunityFormBase
                 }
             }
 
-            if ($rowColor == 'evenListRowS1') {
+            if ($rowColor === 'evenListRowS1') {
                 $rowColor = 'oddListRowS1';
             } else {
                 $rowColor = 'evenListRowS1';
             }
-            $form .= "</tr>";
+            $form .= '</tr>';
         }
         $form .= "<tr class='pagination'><td colspan='$cols'><table width='100%' cellspacing='0' cellpadding='0' border='0'><tr><td><input type='submit' class='button' name='ContinueOpportunity' value='{$mod_strings['LNK_NEW_OPPORTUNITY']}'></td></tr></table></td></tr><tr>";
-        $form .= "</table><BR></form>";
+        $form .= '</table><BR></form>';
 
         return $form;
     }
@@ -158,14 +158,14 @@ class OpportunityFormBase
 
         $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
         $the_form .= <<<EOQ
-		<form name="{$prefix}OppSave" onSubmit="return check_form('{$prefix}OppSave')" method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="Opportunities">
-			<input type="hidden" name="{$prefix}action" value="Save">
+        <form name="{$prefix}OppSave" onSubmit="return check_form('{$prefix}OppSave')" method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="Opportunities">
+            <input type="hidden" name="{$prefix}action" value="Save">
 EOQ;
         $the_form .= $this->getFormBody($prefix, $mod, "{$prefix}OppSave");
         $the_form .= <<<EOQ
-		<input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " >
-		</form>
+        <input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " >
+        </form>
 
 EOQ;
         $the_form .= get_left_form_footer();
@@ -212,15 +212,15 @@ EOQ;
         //if(empty($this->bean->id))
         $prePopProb = 'document.getElementsByName(\''.$prefix.'sales_stage\')[0].onchange();';
         $probability_script=<<<EOQ
-	<script>
-	prob_array = $prob_array;
-	document.getElementsByName('{$prefix}sales_stage')[0].onchange = function() {
-			if(typeof(document.getElementsByName('{$prefix}sales_stage')[0].value) != "undefined" && prob_array[document.getElementsByName('{$prefix}sales_stage')[0].value]) {
-				document.getElementsByName('{$prefix}probability')[0].value = prob_array[document.getElementsByName('{$prefix}sales_stage')[0].value];
-			}
-		};
-	$prePopProb
-	</script>
+    <script>
+    prob_array = $prob_array;
+    document.getElementsByName('{$prefix}sales_stage')[0].onchange = function() {
+            if(typeof(document.getElementsByName('{$prefix}sales_stage')[0].value) != "undefined" && prob_array[document.getElementsByName('{$prefix}sales_stage')[0].value]) {
+                document.getElementsByName('{$prefix}probability')[0].value = prob_array[document.getElementsByName('{$prefix}sales_stage')[0].value];
+            }
+        };
+    $prePopProb
+    </script>
 EOQ;
 
         $ntc_date_format = $timedate->get_user_date_format();
@@ -234,9 +234,9 @@ EOQ;
 
         // Unimplemented until jscalendar language files are fixed
         // $cal_lang = (empty($cal_codes[$current_language])) ? $cal_codes[$default_language] : $cal_codes[$current_language];
-        $cal_lang = "en";
+        $cal_lang = 'en';
 
-        $the_form="";
+        $the_form= '';
 
 
         if (isset($lead->opportunity_amount)) {
@@ -246,9 +246,9 @@ EOQ;
         }
         $the_form .= <<<EOQ
 
-			<input type="hidden" name="{$prefix}record" value="">
-			<input type="hidden" name="{$prefix}account_name">
-			<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+            <input type="hidden" name="{$prefix}record" value="">
+            <input type="hidden" name="{$prefix}account_name">
+            <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
 
 <table cellspacing="0" cellpadding="0" border="0" width="100%">
 <tr>
@@ -257,7 +257,7 @@ EOQ;
 </tr>
 <tr>
     <td ><input name='{$prefix}name' type="text" value="{$lead->opportunity_name}"></td>
-	<td  rowspan="7"><textarea name='{$prefix}description' rows='5' cols='50'></textarea></td>
+    <td  rowspan="7"><textarea name='{$prefix}description' rows='5' cols='50'></textarea></td>
 </tr>
 <tr>
     <td scope="row">$lbl_date_closed&nbsp;<span class="required">$lbl_required_symbol</span></td>
@@ -283,9 +283,9 @@ EOQ;
 <tr>
     <td ><select name='{$prefix}sales_stage'>
 EOQ;
-        $the_form .= get_select_options_with_id($app_list_strings['sales_stage_dom'], "");
+        $the_form .= get_select_options_with_id($app_list_strings['sales_stage_dom'], '');
         $the_form .= <<<EOQ
-		</select></td>
+        </select></td>
 </tr>
 <tr>
     <td scope="row">$lbl_amount&nbsp;<span class="required">$lbl_required_symbol</span></td>
@@ -305,11 +305,11 @@ EOQ;
 
 </table>
 
-		<script type="text/javascript">
-		Calendar.setup ({
-			inputField : "{$prefix}jscal_field", ifFormat : "$cal_dateformat", showsTime : false, button : "{$prefix}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
-		});
-		</script>
+        <script type="text/javascript">
+        Calendar.setup ({
+            inputField : "{$prefix}jscal_field", ifFormat : "$cal_dateformat", showsTime : false, button : "{$prefix}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
+        });
+        </script>
 
 
 EOQ;
@@ -362,15 +362,15 @@ EOQ;
 
         // Unimplemented until jscalendar language files are fixed
         // $cal_lang = (empty($cal_codes[$current_language])) ? $cal_codes[$default_language] : $cal_codes[$current_language];
-        $cal_lang = "en";
+        $cal_lang = 'en';
 
         $the_form = <<<EOQ
 <p>
-			<input type="hidden" name="{$prefix}record" value="">
-			<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+            <input type="hidden" name="{$prefix}record" value="">
+            <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
 
-		$lbl_opportunity_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
-		<input name='{$prefix}name' type="text" value="">
+        $lbl_opportunity_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
+        <input name='{$prefix}name' type="text" value="">
 EOQ;
         if ($sugar_config['require_accounts']) {
 
@@ -394,28 +394,28 @@ EOQ;
             ///////////////////////////////////////
 
             $the_form .= <<<EOQ
-		{$mod_strings['LBL_ACCOUNT_NAME']}&nbsp;<span class="required">{$lbl_required_symbol}</span><br>
-		<input class='sqsEnabled' autocomplete='off' id='qc_account_name' name='account_name' type='text' value="" size="16"><input id='qc_account_id' name='account_id' type="hidden" value=''>&nbsp;<input title="{$app_strings['LBL_SELECT_BUTTON_TITLE']}" type="button" class="button" value='{$app_strings['LBL_SELECT_BUTTON_LABEL']}' name=btn1
-			onclick='open_popup("Accounts", 600, 400, "", true, false, {$encoded_popup_request_data});' /><br>
+        {$mod_strings['LBL_ACCOUNT_NAME']}&nbsp;<span class="required">{$lbl_required_symbol}</span><br>
+        <input class='sqsEnabled' autocomplete='off' id='qc_account_name' name='account_name' type='text' value="" size="16"><input id='qc_account_id' name='account_id' type="hidden" value=''>&nbsp;<input title="{$app_strings['LBL_SELECT_BUTTON_TITLE']}" type="button" class="button" value='{$app_strings['LBL_SELECT_BUTTON_LABEL']}' name=btn1
+            onclick='open_popup("Accounts", 600, 400, "", true, false, {$encoded_popup_request_data});' /><br>
 EOQ;
         }
         $the_form .= <<<EOQ
-		$lbl_date_closed&nbsp;<span class="required">$lbl_required_symbol</span> <br><span class="dateFormat">$ntc_date_format</span><br>
-		<input name='{$prefix}date_closed' size='12' maxlength='10' id='{$prefix}jscal_field' type="text" value=""> <!--not_in_theme!--><span class="suitepicon suitepicon-module-calendar"></span><br>
-		$lbl_sales_stage&nbsp;<span class="required">$lbl_required_symbol</span><br>
-		<select name='{$prefix}sales_stage'>
+        $lbl_date_closed&nbsp;<span class="required">$lbl_required_symbol</span> <br><span class="dateFormat">$ntc_date_format</span><br>
+        <input name='{$prefix}date_closed' size='12' maxlength='10' id='{$prefix}jscal_field' type="text" value=""> <!--not_in_theme!--><span class="suitepicon suitepicon-module-calendar"></span><br>
+        $lbl_sales_stage&nbsp;<span class="required">$lbl_required_symbol</span><br>
+        <select name='{$prefix}sales_stage'>
 EOQ;
-        $the_form .= get_select_options_with_id($app_list_strings['sales_stage_dom'], "");
+        $the_form .= get_select_options_with_id($app_list_strings['sales_stage_dom'], '');
         $the_form .= <<<EOQ
-		</select><br>
-		$lbl_amount&nbsp;<span class="required">$lbl_required_symbol</span><br>
-		<input name='{$prefix}amount' type="text"></p>
-		<input type='hidden' name='lead_source' value=''>
-		<script type="text/javascript">
-		Calendar.setup ({
-			inputField : "{$prefix}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "jscal_trigger", singleClick : true, step : 1, weekNumbers:false
-		});
-		</script>
+        </select><br>
+        $lbl_amount&nbsp;<span class="required">$lbl_required_symbol</span><br>
+        <input name='{$prefix}amount' type="text"></p>
+        <input type='hidden' name='lead_source' value=''>
+        <script type="text/javascript">
+        Calendar.setup ({
+            inputField : "{$prefix}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "jscal_trigger", singleClick : true, step : 1, weekNumbers:false
+        });
+        </script>
 EOQ;
 
 
@@ -439,6 +439,9 @@ EOQ;
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function handleSave($prefix, $redirect=true, $useRequired=false)
     {
         global $current_user;
@@ -473,9 +476,9 @@ EOQ;
         }
         $return_id = $focus->id;
 
-        $GLOBALS['log']->debug("Saved record with id of ".$return_id);
+        $GLOBALS['log']->debug('Saved record with id of ' .$return_id);
         if ($redirect) {
-            handleRedirect($return_id, "Opportunities");
+            handleRedirect($return_id, 'Opportunities');
         } else {
             return $focus;
         }

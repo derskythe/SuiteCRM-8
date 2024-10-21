@@ -52,7 +52,7 @@ global $gridline;
 
 
 echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array($mod_strings['LBL_UPGRADE_TITLE']), false);
-$str1="";
+$str1= '';
 if (DBManagerFactory::getInstance()->supports('fulltext')) {
     $str1='<tr><td scope="row">';
     $str1.=SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_ORACLE_FULLTEXT']);
@@ -63,12 +63,12 @@ if (DBManagerFactory::getInstance()->supports('fulltext')) {
 <p>
 <table class="other view">
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_QUICK_REPAIR_AND_REBUILD']); ?>&nbsp;<a href="./index.php?module=Administration&action=repair"><?php echo $mod_strings['LBL_QUICK_REPAIR_AND_REBUILD']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_QUICK_REPAIR_AND_REBUILD_DESC'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_QUICK_REPAIR_AND_REBUILD']); ?>&nbsp;<a href="./index.php?module=Administration&action=repair"><?php echo $mod_strings['LBL_QUICK_REPAIR_AND_REBUILD']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_QUICK_REPAIR_AND_REBUILD_DESC'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_EXPAND_DATABASE_COLUMNS']); ?>&nbsp;<a href="./index.php?module=Administration&action=expandDatabase"><?php echo $mod_strings['LBL_EXPAND_DATABASE_COLUMNS']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_EXPAND_DATABASE_COLUMNS_DESC'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_EXPAND_DATABASE_COLUMNS']); ?>&nbsp;<a href="./index.php?module=Administration&action=expandDatabase"><?php echo $mod_strings['LBL_EXPAND_DATABASE_COLUMNS']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_EXPAND_DATABASE_COLUMNS_DESC'] ; ?> </td>
 </tr>
     <tr>
         <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_ELASTICSEARCH_INDEX']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairESIndex"><?php echo $mod_strings['LBL_REPAIR_ELASTICSEARCH_INDEX']; ?></a></td>
@@ -76,8 +76,8 @@ if (DBManagerFactory::getInstance()->supports('fulltext')) {
     </tr>
 <tr>
 <?php
-$server_software = $_SERVER["SERVER_SOFTWARE"];
-if (strpos((string) $server_software, 'Microsoft-IIS') === false) {
+$server_software = $_SERVER['SERVER_SOFTWARE'];
+if (!str_contains((string) $server_software, 'Microsoft-IIS')) {
     ?>
     <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Rebuild', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REBUILD_HTACCESS']); ?>&nbsp;<a href="./index.php?module=Administration&action=UpgradeAccess"><?php echo $mod_strings['LBL_REBUILD_HTACCESS']; ?></a></td>
     <td> <?php echo $mod_strings['LBL_REBUILD_HTACCESS_DESC'] ; ?> </td>
@@ -95,12 +95,12 @@ if (strpos((string) $server_software, 'Microsoft-IIS') === false) {
     <td> <?php echo $mod_strings['LBL_REBUILD_CONFIG_DESC'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Rebuild', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REBUILD_REL_TITLE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RebuildRelationship"><?php echo $mod_strings['LBL_REBUILD_REL_TITLE']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_REBUILD_REL_DESC'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Rebuild', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REBUILD_REL_TITLE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RebuildRelationship"><?php echo $mod_strings['LBL_REBUILD_REL_TITLE']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_REBUILD_REL_DESC'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Rebuild', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REBUILD_SCHEDULERS_TITLE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RebuildSchedulers"><?php echo $mod_strings['LBL_REBUILD_SCHEDULERS_TITLE']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_REBUILD_SCHEDULERS_DESC_SHORT'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Rebuild', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REBUILD_SCHEDULERS_TITLE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RebuildSchedulers"><?php echo $mod_strings['LBL_REBUILD_SCHEDULERS_TITLE']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_REBUILD_SCHEDULERS_DESC_SHORT'] ; ?> </td>
 </tr>
 <tr>
     <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Rebuild', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REBUILD_DASHLETS_TITLE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RebuildDashlets"><?php echo $mod_strings['LBL_REBUILD_DASHLETS_TITLE']; ?></a></td>
@@ -139,24 +139,24 @@ if (strpos((string) $server_software, 'Microsoft-IIS') === false) {
     <td> <?php echo $mod_strings['LBL_REPAIR_FIELD_CASING_DESC_SHORT'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_ROLES']); ?>&nbsp;<a href="./index.php?module=ACL&action=install_actions"><?php echo $mod_strings['LBL_REPAIR_ROLES']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_REPAIR_ROLES_DESC'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_ROLES']); ?>&nbsp;<a href="./index.php?module=ACL&action=install_actions"><?php echo $mod_strings['LBL_REPAIR_ROLES']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_REPAIR_ROLES_DESC'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_IE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairIE"><?php echo $mod_strings['LBL_REPAIR_IE']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_REPAIR_IE_DESC'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_IE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairIE"><?php echo $mod_strings['LBL_REPAIR_IE']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_REPAIR_IE_DESC'] ; ?> </td>
 </tr>
 <tr>
     <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_SYNC_IE_EMAILS']); ?>&nbsp;<a href="./index.php?module=Administration&action=SyncInboundEmailAccounts"><?php echo $mod_strings['LBL_SYNC_IE_EMAILS']; ?></a></td>
     <td> <?php echo $mod_strings['LBL_SYNC_IE_EMAILS_DESC'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_XSS']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairXSS"><?php echo $mod_strings['LBL_REPAIR_XSS']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_REPAIRXSS_TITLE'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_XSS']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairXSS"><?php echo $mod_strings['LBL_REPAIR_XSS']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_REPAIRXSS_TITLE'] ; ?> </td>
 </tr>
 <tr>
-	<td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_ACTIVITIES']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairActivities"><?php echo $mod_strings['LBL_REPAIR_ACTIVITIES']; ?></a></td>
-	<td> <?php echo $mod_strings['LBL_REPAIR_ACTIVITIES_DESC'] ; ?> </td>
+    <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_ACTIVITIES']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairActivities"><?php echo $mod_strings['LBL_REPAIR_ACTIVITIES']; ?></a></td>
+    <td> <?php echo $mod_strings['LBL_REPAIR_ACTIVITIES_DESC'] ; ?> </td>
 </tr>
 <tr>
     <td scope="row"><?php echo SugarThemeRegistry::current()->getImage('Repair', 'align="absmiddle" border="0"', null, null, '.gif', $mod_strings['LBL_REPAIR_SEED_USERS_TITLE']); ?>&nbsp;<a href="./index.php?module=Administration&action=RepairSeedUsers"><?php echo $mod_strings['LBL_REPAIR_SEED_USERS_TITLE']; ?></a></td>

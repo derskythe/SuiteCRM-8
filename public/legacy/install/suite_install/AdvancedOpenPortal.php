@@ -40,6 +40,8 @@
 
 /**
  * install aop
+ *
+ * @throws Exception
  */
 function install_aop()
 {
@@ -58,7 +60,7 @@ function install_aop()
             $template->$field = $value;
         }
         $template->save();
-        $sugar_config['aop'][$configKey . "_id"] = $template->id;
+        $sugar_config['aop'][$configKey . '_id'] = $template->id;
     }
     ksort($sugar_config);
     write_array_to_file('sugar_config', $sugar_config, 'config.php');
@@ -183,17 +185,17 @@ function getTemplates()
         'type' => 'system',
         'body' => 'Hi $contact_first_name $contact_last_name,
 
-					   Your case $acase_name (# $acase_case_number) has been closed on $acase_date_entered
-					   Status:				$acase_status
-					   Reference:			$acase_case_number
-					   Resolution:			$acase_resolution',
+                       Your case $acase_name (# $acase_case_number) has been closed on $acase_date_entered
+                       Status:                $acase_status
+                       Reference:            $acase_case_number
+                       Resolution:            $acase_resolution',
         'body_html' => '<p> Hi $contact_first_name $contact_last_name,</p>
-					    <p>Your case $acase_name (# $acase_case_number) has been closed on $acase_date_entered</p>
-					    <table border="0"><tbody>
-					    <tr><td>Status</td><td>$acase_status</td></tr>
-					    <tr><td>Reference</td><td>$acase_case_number</td></tr>
-					    <tr><td>Resolution</td><td>$acase_resolution</td></tr>
-					    </tbody></table>'
+                        <p>Your case $acase_name (# $acase_case_number) has been closed on $acase_date_entered</p>
+                        <table border="0"><tbody>
+                        <tr><td>Status</td><td>$acase_status</td></tr>
+                        <tr><td>Reference</td><td>$acase_case_number</td></tr>
+                        <tr><td>Resolution</td><td>$acase_resolution</td></tr>
+                        </tbody></table>'
     );
 
     $templates['joomla_account_creation_email_template'] = array(
@@ -203,11 +205,11 @@ function getTemplates()
         'subject' => 'Support Portal Account Created',
         'type' => 'system',
         'body' => 'Hi $contact_name,
-					   An account has been created for you at $portal_address.
-					   You may login using this email address and the password $joomla_pass',
+                       An account has been created for you at $portal_address.
+                       You may login using this email address and the password $joomla_pass',
         'body_html' => '<p>Hi $contact_name,</p>
-					    <p>An account has been created for you at <a href="$portal_address">$portal_address</a>.</p>
-					    <p>You may login using this email address and the password $joomla_pass</p>'
+                        <p>An account has been created for you at <a href="$portal_address">$portal_address</a>.</p>
+                        <p>You may login using this email address and the password $joomla_pass</p>'
     );
 
     $templates['case_creation_email_template'] = array(
@@ -218,17 +220,17 @@ function getTemplates()
         'type' => 'system',
         'body' => 'Hi $contact_first_name $contact_last_name,
 
-					   We\'ve received your case $acase_name (# $acase_case_number) on $acase_date_entered
-					   Status:		$acase_status
-					   Reference:	$acase_case_number
-					   Description:	$acase_description',
+                       We\'ve received your case $acase_name (# $acase_case_number) on $acase_date_entered
+                       Status:        $acase_status
+                       Reference:    $acase_case_number
+                       Description:    $acase_description',
         'body_html' => '<p> Hi $contact_first_name $contact_last_name,</p>
-					    <p>We\'ve received your case $acase_name (# $acase_case_number) on $acase_date_entered</p>
-					    <table border="0"><tbody>
-					    <tr><td>Status</td><td>$acase_status</td></tr>
-					    <tr><td>Reference</td><td>$acase_case_number</td></tr>
-					    <tr><td>Description</td><td>$acase_description</td></tr>
-					    </tbody></table>'
+                        <p>We\'ve received your case $acase_name (# $acase_case_number) on $acase_date_entered</p>
+                        <table border="0"><tbody>
+                        <tr><td>Status</td><td>$acase_status</td></tr>
+                        <tr><td>Reference</td><td>$acase_case_number</td></tr>
+                        <tr><td>Description</td><td>$acase_description</td></tr>
+                        </tbody></table>'
     );
 
     $templates['contact_email_template'] = array(
@@ -239,14 +241,14 @@ function getTemplates()
         'type' => 'system',
         'body' => 'Hi $user_first_name $user_last_name,
 
-					   You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:
-					       $contact_first_name $contact_last_name, said:
-					               $aop_case_updates_description',
+                       You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:
+                           $contact_first_name $contact_last_name, said:
+                                   $aop_case_updates_description',
         'body_html' => '<p>Hi $contact_first_name $contact_last_name,</p>
-					    <p> </p>
-					    <p>You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:</p>
-					    <p><strong>$user_first_name $user_last_name said:</strong></p>
-					    <p style="padding-left:30px;">$aop_case_updates_description</p>'
+                        <p> </p>
+                        <p>You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:</p>
+                        <p><strong>$user_first_name $user_last_name said:</strong></p>
+                        <p style="padding-left:30px;">$aop_case_updates_description</p>'
     );
 
     $templates['user_email_template'] = array(
@@ -257,17 +259,17 @@ function getTemplates()
         'type' => 'system',
         'body' => 'Hi $user_first_name $user_last_name,
 
-					   You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:
-					       $contact_first_name $contact_last_name, said:
-					               $aop_case_updates_description
+                       You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:
+                           $contact_first_name $contact_last_name, said:
+                                   $aop_case_updates_description
                         You may review this Case at:
                             $sugarurl/index.php?module=Cases&action=DetailView&record=$acase_id;',
         'body_html' => '<p>Hi $user_first_name $user_last_name,</p>
-					     <p> </p>
-					     <p>You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:</p>
-					     <p><strong>$contact_first_name $contact_last_name, said:</strong></p>
-					     <p style="padding-left:30px;">$aop_case_updates_description</p>
-					     <p>You may review this Case at: $sugarurl/index.php?module=Cases&action=DetailView&record=$acase_id;</p>'
+                         <p> </p>
+                         <p>You\'ve had an update to your case $acase_name (# $acase_case_number) on $aop_case_updates_date_entered:</p>
+                         <p><strong>$contact_first_name $contact_last_name, said:</strong></p>
+                         <p style="padding-left:30px;">$aop_case_updates_description</p>
+                         <p>You may review this Case at: $sugarurl/index.php?module=Cases&action=DetailView&record=$acase_id;</p>'
     );
 
     return $templates;

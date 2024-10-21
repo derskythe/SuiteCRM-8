@@ -49,8 +49,9 @@ class AOS_Products_Quotes extends AOS_Products_Quotes_sugar
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save_lines($post_data, $parent, $groups = array(), $key = '')
     {
         $line_count = isset($post_data[$key . 'name']) ? count($post_data[$key . 'name']) : 0;
@@ -120,6 +121,8 @@ class AOS_Products_Quotes extends AOS_Products_Quotes_sugar
 
     /**
      * @param $parent SugarBean
+     *
+     * @throws Exception
      */
     public function mark_lines_deleted($parent)
     {

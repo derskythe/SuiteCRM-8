@@ -41,7 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 global $current_user;
-$module_name = "Favorites";
+$module_name = 'Favorites';
 
 $searchFields['Favorites'] = array(
 

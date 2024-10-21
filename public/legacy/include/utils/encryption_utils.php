@@ -56,7 +56,7 @@ function sugarDecode($key, $encoded)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	BLOWFISH
+////    BLOWFISH
 /**
  * retrives the system's private key; will build one if not found, but anything encrypted before is gone...
  * @param string type

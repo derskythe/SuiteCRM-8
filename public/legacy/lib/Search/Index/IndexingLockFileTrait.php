@@ -76,13 +76,13 @@ trait IndexingLockFileTrait
         $data = (int) $data;
 
         if (empty($data)) {
-            $this->logger->warn('Failed to read lock file. Returning \'false\'.');
+            $this->logger->warning('Failed to read lock file. Returning \'false\'.');
             return false;
         }
 
         $carbon = Carbon::createFromTimestamp($data);
 
-        $this->logger->debug(sprintf("Last logged indexing performed on %s (%s)", $carbon->toDateTimeString(), $carbon->diffForHumans()));
+        $this->logger->debug(sprintf('Last logged indexing performed on %s (%s)', $carbon->toDateTimeString(), $carbon->diffForHumans()));
 
         return $carbon;
     }

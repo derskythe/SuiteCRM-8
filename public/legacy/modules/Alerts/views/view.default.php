@@ -49,7 +49,7 @@ class AlertsViewDefault extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         return array('Alerts');
     }
@@ -57,11 +57,12 @@ class AlertsViewDefault extends SugarView
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
     public function display()

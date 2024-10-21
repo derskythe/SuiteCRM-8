@@ -42,7 +42,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 /*********************************************************************************
-
  * Description:  Contains a variety of utility functions specific to this module.
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
@@ -64,45 +63,45 @@ function get_configsettings_js()
 
 function notify_setrequired(f) {
 
-	return true;
+ return true;
 }
 
 function add_checks(f) {
-	removeFromValidate('ConfigureSettings', 'mail_smtpserver');
-	removeFromValidate('ConfigureSettings', 'mail_smtpport');
-	removeFromValidate('ConfigureSettings', 'mail_smtpuser');
-	removeFromValidate('ConfigureSettings', 'mail_smtppass');
-	
-	removeFromValidate('ConfigureSettings', 'proxy_port');
-	removeFromValidate('ConfigureSettings', 'proxy_host');
-	removeFromValidate('ConfigureSettings', 'proxy_username');
-	removeFromValidate('ConfigureSettings', 'proxy_password');
-	
-	removeFromValidate('ConfigureSettings', 'list_max_entries_per_page');
-	removeFromValidate('ConfigureSettings', 'list_max_entries_per_subpanel');	
-	
-	if (typeof f.mail_sendtype != "undefined" && f.mail_sendtype.value == "SMTP") {
-		addToValidate('ConfigureSettings', 'mail_smtpserver', 'varchar', 'true', '{$mod_strings['LBL_MAIL_SMTPSERVER']}');
-		addToValidate('ConfigureSettings', 'mail_smtpport', 'int', 'true', '{$mod_strings['LBL_MAIL_SMTPPORT']}');
-		if (f.mail_smtpauth_req.checked) {
-			addToValidate('ConfigureSettings', 'mail_smtpuser', 'varchar', 'true', '{$mod_strings['LBL_MAIL_SMTPUSER']}');
-			addToValidate('ConfigureSettings', 'mail_smtppass', 'varchar', 'true', '{$mod_strings['LBL_MAIL_SMTPPASS']}');
-		}
-	}
-	
-	if (typeof f.proxy_on != "undefined" && f.proxy_on.checked ) {
-		addToValidate('ConfigureSettings', 'proxy_port', 'int', 'true', '{$mod_strings['LBL_PROXY_PORT']}');
-		addToValidate('ConfigureSettings', 'proxy_host', 'varchar', 'true', '{$mod_strings['LBL_PROXY_HOST']}');
-		if (f.proxy_auth.checked ) {
-			addToValidate('ConfigureSettings', 'proxy_username', 'varchar', 'true', '{$mod_strings['LBL_PROXY_USERNAME']}');
-			addToValidate('ConfigureSettings', 'proxy_password', 'varchar', 'true', '{$mod_strings['LBL_PROXY_PASSWORD']}');
-		}
-	}
-	
-	addToValidateMoreThan('ConfigureSettings', 'list_max_entries_per_page', 'int', true, '', 1);
-	addToValidateMoreThan('ConfigureSettings', 'list_max_entries_per_subpanel', 'int', true, '', 1);
-	
-	return true;
+ removeFromValidate('ConfigureSettings', 'mail_smtpserver');
+ removeFromValidate('ConfigureSettings', 'mail_smtpport');
+ removeFromValidate('ConfigureSettings', 'mail_smtpuser');
+ removeFromValidate('ConfigureSettings', 'mail_smtppass');
+
+ removeFromValidate('ConfigureSettings', 'proxy_port');
+ removeFromValidate('ConfigureSettings', 'proxy_host');
+ removeFromValidate('ConfigureSettings', 'proxy_username');
+ removeFromValidate('ConfigureSettings', 'proxy_password');
+
+ removeFromValidate('ConfigureSettings', 'list_max_entries_per_page');
+ removeFromValidate('ConfigureSettings', 'list_max_entries_per_subpanel');
+
+ if (typeof f.mail_sendtype != "undefined" && f.mail_sendtype.value == "SMTP") {
+  addToValidate('ConfigureSettings', 'mail_smtpserver', 'varchar', 'true', '{$mod_strings['LBL_MAIL_SMTPSERVER']}');
+  addToValidate('ConfigureSettings', 'mail_smtpport', 'int', 'true', '{$mod_strings['LBL_MAIL_SMTPPORT']}');
+  if (f.mail_smtpauth_req.checked) {
+   addToValidate('ConfigureSettings', 'mail_smtpuser', 'varchar', 'true', '{$mod_strings['LBL_MAIL_SMTPUSER']}');
+   addToValidate('ConfigureSettings', 'mail_smtppass', 'varchar', 'true', '{$mod_strings['LBL_MAIL_SMTPPASS']}');
+  }
+ }
+
+ if (typeof f.proxy_on != "undefined" && f.proxy_on.checked ) {
+  addToValidate('ConfigureSettings', 'proxy_port', 'int', 'true', '{$mod_strings['LBL_PROXY_PORT']}');
+  addToValidate('ConfigureSettings', 'proxy_host', 'varchar', 'true', '{$mod_strings['LBL_PROXY_HOST']}');
+  if (f.proxy_auth.checked ) {
+   addToValidate('ConfigureSettings', 'proxy_username', 'varchar', 'true', '{$mod_strings['LBL_PROXY_USERNAME']}');
+   addToValidate('ConfigureSettings', 'proxy_password', 'varchar', 'true', '{$mod_strings['LBL_PROXY_PASSWORD']}');
+  }
+ }
+
+ addToValidateMoreThan('ConfigureSettings', 'list_max_entries_per_page', 'int', true, '', 1);
+ addToValidateMoreThan('ConfigureSettings', 'list_max_entries_per_subpanel', 'int', true, '', 1);
+
+ return true;
 }
 
 notify_setrequired(document.ConfigureSettings);

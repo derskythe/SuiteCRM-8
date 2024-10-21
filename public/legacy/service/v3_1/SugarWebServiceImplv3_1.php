@@ -160,7 +160,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
         $linkoutput_list = array();
         $output_list = array();
         $using_cp = false;
-        if ($module_name == 'CampaignProspects') {
+        if ($module_name === 'CampaignProspects') {
             $module_name = 'Prospects';
             $using_cp = true;
         }
@@ -271,7 +271,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
         }
 
         foreach ($name_value_list as $name => $value) {
-            if (is_array($value) && $value['name'] == 'id') {
+            if (is_array($value) && $value['name'] === 'id') {
                 $seed->retrieve($value['value']);
                 break;
             } elseif ($name === 'id') {
@@ -281,7 +281,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
 
         $return_fields = array();
         foreach ($name_value_list as $name => $value) {
-            if ($module_name == 'Users' && !empty($seed->id) && ($seed->id != $current_user->id) && $name == 'user_hash') {
+            if ($module_name === 'Users' && !empty($seed->id) && ($seed->id != $current_user->id) && $name === 'user_hash') {
                 continue;
             }
             if (!empty($seed->field_name_map[$name]['sensitive'])) {
@@ -357,7 +357,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
         $system_config->retrieveSettings('system');
         $authController = new AuthenticationController();
         //rrs
-        if (!empty($user_auth['encryption']) && $user_auth['encryption'] === 'PLAIN' && $authController->authController->userAuthenticateClass != "LDAPAuthenticateUser") {
+        if (!empty($user_auth['encryption']) && $user_auth['encryption'] === 'PLAIN' && $authController->authController->userAuthenticateClass !== 'LDAPAuthenticateUser') {
             $user_auth['password'] = md5($user_auth['password']);
         }
         $isLoginSuccess = $authController->login(
@@ -393,7 +393,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
             self::$helperObject->setFaultObject($error);
 
             return;
-        } elseif ($authController->authController->userAuthenticateClass == "LDAPAuthenticateUser"
+        } elseif ($authController->authController->userAuthenticateClass === 'LDAPAuthenticateUser'
             && (empty($user_auth['encryption']) || $user_auth['encryption'] !== 'PLAIN')
         ) {
             $error->set_error('ldap_error');
@@ -557,10 +557,10 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
 
         $results = array();
         foreach ($modules as $mod) {
-            if (strtolower($mod) == 'app_strings') {
+            if (strtolower($mod) === 'app_strings') {
                 $values = return_application_language($current_language);
                 $key = 'app_strings';
-            } elseif (strtolower($mod) == 'app_list_strings') {
+            } elseif (strtolower($mod) === 'app_list_strings') {
                 $values = return_app_list_strings_language($current_language);
                 $key = 'app_list_strings';
             } else {
@@ -614,7 +614,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
             $seed = new $class_name();
 
             foreach ($a_view as $view) {
-                $aclViewCheck = (strtolower($view) == 'subpanel') ? 'DetailView' : ucfirst(strtolower($view)) . 'View';
+                $aclViewCheck = (strtolower($view) === 'subpanel') ? 'DetailView' : ucfirst(strtolower($view)) . 'View';
                 if (!$acl_check || $seed->ACLAccess($aclViewCheck, true)) {
                     foreach ($a_type as $type) {
                         $a_vardefs = self::$helperObject->get_module_view_defs($module_name, $type, $view);
@@ -667,7 +667,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
         global $beanList, $beanFiles;
         $error = new SoapError();
         $using_cp = false;
-        if ($module_name == 'CampaignProspects') {
+        if ($module_name === 'CampaignProspects') {
             $module_name = 'Prospects';
             $using_cp = true;
         }
@@ -856,7 +856,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
 
 
         foreach ($unified_search_modules as $module => $data) {
-            if (in_array($module, $modules)) {
+            if (in_array($module, $modules, true)) {
                 $modules_to_search[$module] = $beanList[$module];
             } // if
         } // foreach
@@ -879,8 +879,8 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
                 require_once $beanFiles[$beanName];
                 $seed = new $beanName();
                 require_once 'include/SearchForm/SearchForm2.php';
-                if ($beanName == "User"
-                    || $beanName == "ProjectTask"
+                if ($beanName === 'User'
+                    || $beanName === 'ProjectTask'
                 ) {
                     if (!self::$helperObject->check_modules_access($current_user, $seed->module_dir, 'read')) {
                         continue;
@@ -891,8 +891,8 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
                 }
 
                 $selectOnlyQueryFields = array();
-                if ($beanName != "User"
-                    && $beanName != "ProjectTask"
+                if ($beanName !== 'User'
+                    && $beanName !== 'ProjectTask'
                 ) {
                     $searchForm = new SearchForm($seed, $name);
 
@@ -937,14 +937,14 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
                                 $filterFields[] = strtolower($colName);
                             }
                         }
-                        if (!in_array('id', $filterFields)) {
+                        if (!in_array('id', $filterFields, true)) {
                             $filterFields[] = 'id';
                         }
                     }
 
                     //Pull in any db fields used for the unified search query so the correct joins will be added
                     foreach ($unifiedSearchFields[$name] as $field => $def) {
-                        if (isset($def['db_field']) && !in_array($field, $filterFields)) {
+                        if (isset($def['db_field']) && !in_array($field, $filterFields, true)) {
                             $filterFields[] = $field;
                             $selectOnlyQueryFields[] = $field;
                         }
@@ -956,7 +956,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
                         $where = "($where) AND $ownerWhere";
                     }
 
-                    if ($beanName == "Employee") {
+                    if ($beanName === 'Employee') {
                         $where = "($where) AND users.deleted = 0 AND users.is_group = 0 AND users.employee_status = 'Active'";
                     }
 
@@ -988,14 +988,15 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
                     }
                     $main_query = $ret_array['select'] . $params['custom_select'] . $ret_array['from'] . $params['custom_from'] . $ret_array['where'] . $params['custom_where'] . $ret_array['order_by'] . $params['custom_order_by'];
                 } else {
-                    if ($beanName == "User") {
+                    if ($beanName === 'User') {
                         $filterFields = array('id', 'user_name', 'first_name', 'last_name', 'email_address');
-                        $main_query = "select users.id, ea.email_address, users.user_name, first_name, last_name from users ";
+                        $main_query =
+                            'select users.id, ea.email_address, users.user_name, first_name, last_name from users ';
                         $main_query = $main_query . " LEFT JOIN email_addr_bean_rel eabl ON (users.id = eabl.bean_id and eabl.bean_module = '{$seed->module_dir}')
     LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ";
                         $main_query = $main_query . "where ((users.first_name like '{$search_string}') or (users.last_name like '{$search_string}') or (users.user_name like '{$search_string}') or (ea.email_address like '{$search_string}')) and users.deleted = 0 and users.is_group = 0 and users.employee_status = 'Active'";
                     } // if
-                    if ($beanName == "ProjectTask") {
+                    if ($beanName === 'ProjectTask') {
                         $filterFields = array('id', 'name', 'project_id', 'project_name');
                         $main_query = "select {$seed->table_name}.project_task_id id,{$seed->table_name}.project_id, {$seed->table_name}.name, project.name project_name from {$seed->table_name} ";
                         $seed->add_team_security_where_clause($main_query);
@@ -1021,7 +1022,7 @@ class SugarWebServiceImplv3_1 extends SugarWebServiceImplv3
                 while ($row = $seed->db->fetchByAssoc($result)) {
                     $nameValueArray = array();
                     foreach ($filterFields as $field) {
-                        if (in_array($field, $selectOnlyQueryFields)) {
+                        if (in_array($field, $selectOnlyQueryFields, true)) {
                             continue;
                         }
                         $nameValue = array();

@@ -12,6 +12,9 @@ class MinutesField extends AbstractField
         return $this->isSatisfied($date->format('i'), $value);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function increment(\DateTime $date, $invert = false)
     {
         if ($invert) {

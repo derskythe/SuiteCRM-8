@@ -103,7 +103,7 @@ class ImportListView
         $this->headerColumns = $this->dataSource->getHeaderColumns();
 
         if (!isset($params['offset'])) {
-            throw new Exception("Missing required parameter offset for ImportListView");
+            throw new Exception('Missing required parameter offset for ImportListView');
         } else {
             $this->dataSource->setCurrentOffset($params['offset']);
         }
@@ -117,7 +117,9 @@ class ImportListView
      * Display the list view like table.
      *
      * @param bool $return True if we should return the content rather than echoing.
+     *
      * @return
+     * @throws SmartyException
      */
     public function display($return = false)
     {

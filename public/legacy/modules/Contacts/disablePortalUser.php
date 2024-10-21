@@ -35,7 +35,7 @@ require_once('modules/Contacts/Contact.php');
 $bean = BeanFactory::newBean('Contacts');
 $bean->retrieve($_REQUEST['record']);
 
-if (array_key_exists("aop", $sugar_config) && array_key_exists("joomla_url", $sugar_config['aop'])) {
+if (array_key_exists('aop', $sugar_config) && array_key_exists('joomla_url', $sugar_config['aop'])) {
     $portalURL = $sugar_config['aop']['joomla_url'];
     $wbsv = file_get_contents($portalURL.'/index.php?option=com_advancedopenportal&task=disable_user&sug='.$_REQUEST['record'].'&uid='.$bean->joomla_account_id);
     $res = json_decode($wbsv);
@@ -51,4 +51,4 @@ if (array_key_exists("aop", $sugar_config) && array_key_exists("joomla_url", $su
     SugarApplication::appendErrorMessage($mod_strings['LBL_NO_JOOMLA_URL']);
 }
 
-SugarApplication::redirect("index.php?module=Contacts&action=DetailView&record=".$_REQUEST['record']);
+SugarApplication::redirect('index.php?module=Contacts&action=DetailView&record=' . $_REQUEST['record']);

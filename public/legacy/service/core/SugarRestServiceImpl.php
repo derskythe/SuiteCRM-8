@@ -48,10 +48,10 @@ if (!defined('sugarEntry')) {
 require_once('service/core/SugarWebServiceImpl.php');
 #[\AllowDynamicProperties]
 class SugarRestServiceImpl extends SugarWebServiceImpl {
-	
-	public function md5($string){
-		return md5($string);
-	}
+
+    public function md5($string){
+        return md5($string);
+    }
 }
 require_once('service/core/SugarRestUtils.php');
 SugarRestServiceImpl::$helperObject = new SugarRestUtils();

@@ -59,7 +59,7 @@ if (!isset($prefix)) {
 
 global $timedate;
 $time_format = $timedate->get_user_time_format();
-$time_separator = ":";
+$time_separator = ':';
 if (preg_match('/\d+([^\d])\d+([^\d]*)/s', (string) $time_format, $match)) {
     $time_separator = $match[1];
 }
@@ -119,12 +119,12 @@ if (isset($_REQUEST['date_start']) && strlen(trim($_REQUEST['date_start']))<8) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	INBOUND EMAIL HANDLING
+////    INBOUND EMAIL HANDLING
 ///////////////////////////////////////////////////////////////////////////////
 if (isset($_REQUEST['inbound_email_id']) && !empty($_REQUEST['inbound_email_id'])) {
     // fake this case like it's already saved.
     $focus->save();
-    
+
     $email = BeanFactory::newBean('Emails');
     $email->retrieve($_REQUEST['inbound_email_id']);
     $email->parent_type = 'Tasks';
@@ -134,11 +134,12 @@ if (isset($_REQUEST['inbound_email_id']) && !empty($_REQUEST['inbound_email_id']
     $email->save();
     $email->load_relationship('tasks');
     $email->tasks->add($focus->id);
-    
-    header("Location: index.php?&module=Emails&action=EditView&type=out&inbound_email_id=".$_REQUEST['inbound_email_id']."&parent_id=".$email->parent_id."&parent_type=".$email->parent_type.'&start='.$_REQUEST['start'].'&assigned_user_id='.$current_user->id);
+
+    header(
+        'Location: index.php?&module=Emails&action=EditView&type=out&inbound_email_id=' . $_REQUEST['inbound_email_id']. '&parent_id=' .$email->parent_id. '&parent_type=' .$email->parent_type.'&start='. $_REQUEST['start'].'&assigned_user_id='.$current_user->id);
     exit();
 }
-////	END INBOUND EMAIL HANDLING
+////    END INBOUND EMAIL HANDLING
 ///////////////////////////////////////////////////////////////////////////////
 
 // CCL - Bugs 41103 and 43751.  41103 address the issue where the parent_id is set, but

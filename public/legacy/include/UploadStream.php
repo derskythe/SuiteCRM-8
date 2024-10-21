@@ -51,7 +51,7 @@ require_once('include/externalAPI/ExternalAPIFactory.php');
 #[\AllowDynamicProperties]
 class UploadStream
 {
-    public const STREAM_NAME = "upload";
+    public const STREAM_NAME = 'upload';
     protected static $upload_dir;
 
     /**
@@ -117,14 +117,16 @@ class UploadStream
 
     /**
      * Get upload directory
+     *
      * @return string
+     * @throws Exception
      */
     public static function getDir()
     {
         if (empty(self::$upload_dir)) {
             self::$upload_dir = rtrim($GLOBALS['sugar_config']['upload_dir'], '/\\');
             if (empty(self::$upload_dir)) {
-                self::$upload_dir = "upload";
+                self::$upload_dir = 'upload';
             }
             if (!file_exists(self::$upload_dir)) {
                 sugar_mkdir(self::$upload_dir, 0755, true);
@@ -159,19 +161,22 @@ class UploadStream
     public static function path($path)
     {
         $path = substr($path, strlen(self::STREAM_NAME) + 3); // cut off upload://
-        $path = str_replace("\\", "/", $path); // canonicalize path
-        if ($path == ".." || substr($path, 0, 3) == "../" || substr($path, -3, 3) == "/.." || strstr($path, "/../")) {
+        $path = str_replace("\\", '/', $path); // canonicalize path
+        if ($path === '..' || str_starts_with($path, '../') || str_ends_with($path, '/..') || strstr($path, '/../')) {
             return null;
         }
 
-        return self::getDir() . "/" . $path;
+        return self::getDir() . '/' . $path;
     }
 
     /**
      * Ensure upload subdir exists
+     *
      * @param string $path Upload stream path (with upload://)
      * @param bool $writable
+     *
      * @return boolean
+     * @throws Exception
      */
     public static function ensureDir($path, $writable = true)
     {
@@ -253,7 +258,7 @@ class UploadStream
         if (empty($fullpath)) {
             return false;
         }
-        if ($mode == 'r') {
+        if ($mode === 'r') {
             $this->fp = fopen($fullpath, $mode);
         } else {
             // if we will be writing, try to transparently create the directory

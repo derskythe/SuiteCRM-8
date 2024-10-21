@@ -12,7 +12,7 @@
  * @param Smarty $smarty
  * @return string smarty varname
  */
-function smarty_function_sugar_varname($params, &$smarty)
+function smarty_function_sugar_varname($params, $smarty)
 {
     if (empty($params['key'])) {
         $smarty->trigger_error("sugarvar: missing 'key' parameter");

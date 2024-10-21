@@ -48,7 +48,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 function checkDBSettings($silent=false)
 {
     $sugar_db_version = '';
-    installLog("Begin DB Check Process *************");
+    installLog('Begin DB Check Process *************');
     global $mod_strings;
     $errors = array();
     copyInputsIntoSession();
@@ -70,7 +70,7 @@ function checkDBSettings($silent=false)
         installLog("ERROR::  {$errors[$errIdx]}");
     }
 
-    if ($_SESSION['setup_db_type'] != 'oci8') {
+    if ($_SESSION['setup_db_type'] !== 'oci8') {
         // Oracle doesn't need host name, others do
         if (trim($_SESSION['setup_db_host_name']) == '') {
             $errors['ERR_DB_HOSTNAME'] = $mod_strings['ERR_DB_HOSTNAME'];
@@ -79,7 +79,7 @@ function checkDBSettings($silent=false)
     }
 
     //check to see that password and retype are same, if needed
-    if (!empty($_SESSION['dbUSRData']) && ($_SESSION['dbUSRData']=='create' || $_SESSION['dbUSRData']=='provide')) {
+    if (!empty($_SESSION['dbUSRData']) && ($_SESSION['dbUSRData'] === 'create' || $_SESSION['dbUSRData'] === 'provide')) {
         if ($_SESSION['setup_db_sugarsales_password'] != $_SESSION['setup_db_sugarsales_password_retype']) {
             $errors['ERR_DBCONF_PASSWORD_MISMATCH'] = $mod_strings['ERR_DBCONF_PASSWORD_MISMATCH'];
             installLog("ERROR::  {$errors['ERR_DBCONF_PASSWORD_MISMATCH']}");
@@ -88,19 +88,19 @@ function checkDBSettings($silent=false)
 
     // bail if the basic info isn't valid
     if (count($errors) > 0) {
-        installLog("Basic form info is INVALID, exit Process.");
+        installLog('Basic form info is INVALID, exit Process.');
         return printErrors($errors);
     } else {
-        installLog("Basic form info is valid, continuing Process.");
+        installLog('Basic form info is valid, continuing Process.');
     }
 
     $dbconfig = array(
-                "db_host_name" => $_SESSION['setup_db_host_name'],
-                "db_host_instance" => isset($_SESSION['setup_db_host_instance']) ? $_SESSION['setup_db_host_instance'] : null,
+        'db_host_name'     => $_SESSION['setup_db_host_name'],
+        'db_host_instance' => isset($_SESSION['setup_db_host_instance']) ? $_SESSION['setup_db_host_instance'] : null,
         );
 
     if (!empty($_SESSION['setup_db_port_num'])) {
-        $dbconfig["db_port"] = $_SESSION['setup_db_port_num'];
+        $dbconfig['db_port'] = $_SESSION['setup_db_port_num'];
     } else {
         $_SESSION['setup_db_port_num'] = '';
     }
@@ -108,7 +108,7 @@ function checkDBSettings($silent=false)
     // Needed for database implementation that do not allow connections to the server directly
     // and that typically require the manual setup of a database instances such as DB2
     if (empty($_SESSION['setup_db_create_database'])) {
-        $dbconfig["db_name"] = $_SESSION['setup_db_database_name'];
+        $dbconfig['db_name'] = $_SESSION['setup_db_database_name'];
     }
 
     // check database name validation in different database types (default is mssql)
@@ -133,9 +133,9 @@ function checkDBSettings($silent=false)
 
     // test the account that will talk to the db if we're not creating it
     if ($_SESSION['setup_db_sugarsales_user'] != '' && !$_SESSION['setup_db_create_sugarsales_user']) {
-        $dbconfig["db_user_name"] = $_SESSION['setup_db_sugarsales_user'];
-        $dbconfig["db_password"] = $_SESSION['setup_db_sugarsales_password'];
-        installLog("Testing user account...");
+        $dbconfig['db_user_name'] = $_SESSION['setup_db_sugarsales_user'];
+        $dbconfig['db_password'] = $_SESSION['setup_db_sugarsales_password'];
+        installLog('Testing user account...');
 
         // try connecting to the DB
         if (!$db->connect($dbconfig, false)) {
@@ -154,9 +154,9 @@ function checkDBSettings($silent=false)
             $errors['ERR_DB_PRIV_USER'] = $mod_strings['ERR_DB_PRIV_USER'];
             installLog("ERROR:: {$errors['ERR_DB_PRIV_USER']}");
         } else {
-            installLog("Testing priviliged account...");
-            $dbconfig["db_user_name"] = $_SESSION['setup_db_admin_user_name'];
-            $dbconfig["db_password"] = $_SESSION['setup_db_admin_password'];
+            installLog('Testing priviliged account...');
+            $dbconfig['db_user_name'] = $_SESSION['setup_db_admin_user_name'];
+            $dbconfig['db_password'] = $_SESSION['setup_db_admin_password'];
             if (!$db->connect($dbconfig, false)) {
                 $error = $db->lastError();
                 $errors['ERR_DB_LOGIN_FAILURE'] = $mod_strings['ERR_DB_LOGIN_FAILURE'];
@@ -203,7 +203,7 @@ function checkDBSettings($silent=false)
                     $errors[$error] = call_user_func_array('sprintf', $check);
                     installLog("ERROR:: {$errors[$error]}");
                 } else {
-                    installLog("Passed DB install check");
+                    installLog('Passed DB install check');
                 }
 
                 $db->disconnect();
@@ -217,7 +217,7 @@ function checkDBSettings($silent=false)
     } else {
         printErrors($errors);
     }
-    installLog("End DB Check Process *************");
+    installLog('End DB Check Process *************');
 }
 
 function printErrors($errors)
@@ -225,22 +225,24 @@ function printErrors($errors)
     global $mod_strings;
     if ((is_countable($errors) ? count($errors) : 0) == 0) {
         echo 'dbCheckPassed';
-        installLog("SUCCESS:: no errors detected!");
+        installLog('SUCCESS:: no errors detected!');
     } else {
-        if (((is_countable($errors) ? count($errors) : 0) == 1 && (isset($errors["ERR_DB_EXISTS_PROCEED"])||isset($errors["ERR_DB_EXISTS_WITH_CONFIG"])))  ||
-    ((is_countable($errors) ? count($errors) : 0) == 2 && isset($errors["ERR_DB_EXISTS_PROCEED"]) && isset($errors["ERR_DB_EXISTS_WITH_CONFIG"]))) {
+        if (((is_countable($errors) ? count($errors) : 0) == 1 && (isset($errors['ERR_DB_EXISTS_PROCEED'])||isset($errors['ERR_DB_EXISTS_WITH_CONFIG'])))  ||
+    ((is_countable($errors) ? count($errors) : 0) == 2 && isset($errors['ERR_DB_EXISTS_PROCEED']) && isset($errors['ERR_DB_EXISTS_WITH_CONFIG']))) {
             ///throw alert asking to overwwrite db
             echo 'preexeest';
-            installLog("WARNING:: no errors detected, but DB tables will be dropped!, issuing warning to user");
+            installLog('WARNING:: no errors detected, but DB tables will be dropped!, issuing warning to user');
         } else {
-            installLog("FATAL:: errors have been detected!  User will not be allowed to continue.  Errors are as follow:");
+            installLog(
+                'FATAL:: errors have been detected!  User will not be allowed to continue.  Errors are as follow:'
+            );
             //print out errors
             $validationErr  = "<p><b>{$mod_strings['ERR_DBCONF_VALIDATION']}</b></p>";
             $validationErr .= '<ul>';
 
             foreach ($errors as $key =>$erMsg) {
-                if ($key != "ERR_DB_EXISTS_PROCEED" && $key != "ERR_DB_EXISTS_WITH_CONFIG") {
-                    if ($_SESSION['dbUSRData'] == 'same' && $key == 'ERR_DB_ADMIN') {
+                if ($key !== 'ERR_DB_EXISTS_PROCEED' && $key !== 'ERR_DB_EXISTS_WITH_CONFIG') {
+                    if ($_SESSION['dbUSRData'] === 'same' && $key === 'ERR_DB_ADMIN') {
                         installLog(".. {$erMsg}");
                         break;
                     }
@@ -299,7 +301,7 @@ function copyInputsIntoSession()
     }
 
     // on a silent install, copy values from $_SESSION into $_REQUEST
-    if (isset($_REQUEST['goto']) && $_REQUEST['goto'] == 'SilentInstall') {
+    if (isset($_REQUEST['goto']) && $_REQUEST['goto'] === 'SilentInstall') {
         if (isset($_SESSION['dbUSRData']) && !empty($_SESSION['dbUSRData'])) {
             $_REQUEST['dbUSRData'] = $_SESSION['dbUSRData'];
         } else {
@@ -319,7 +321,7 @@ function copyInputsIntoSession()
     //make sure we are creating or using provided user for app db connections
             $_SESSION['setup_db_create_sugarsales_user']  = true;//get_boolean_from_request('setup_db_create_sugarsales_user');
             $db = getInstallDbInstance();
-    if (!$db->supports("create_user")) {
+    if (!$db->supports('create_user')) {
         //if the DB doesn't support creating users, make the admin user/password same as connecting user/password
         $_SESSION['setup_db_sugarsales_user']             = $_SESSION['setup_db_admin_user_name'];
         $_SESSION['setup_db_sugarsales_password']         = $_SESSION['setup_db_admin_password'];
@@ -339,19 +341,19 @@ function copyInputsIntoSession()
         }
 
 
-        if ($_SESSION['dbUSRData'] == 'auto') {
+        if ($_SESSION['dbUSRData'] === 'auto') {
             //create user automatically
             $_SESSION['setup_db_create_sugarsales_user']          = true;
-            $_SESSION['setup_db_sugarsales_user']                 = "sugar".create_db_user_creds(5);
+            $_SESSION['setup_db_sugarsales_user']                 = 'sugar' .create_db_user_creds(5);
             $_SESSION['setup_db_sugarsales_password']             = create_db_user_creds(10);
             $_SESSION['setup_db_sugarsales_password_retype']      = $_SESSION['setup_db_sugarsales_password'];
-        } elseif ($_SESSION['dbUSRData'] == 'provide') {
+        } elseif ($_SESSION['dbUSRData'] === 'provide') {
             //use provided user info
             $_SESSION['setup_db_create_sugarsales_user']          = false;
             $_SESSION['setup_db_sugarsales_user']                 = $_REQUEST['setup_db_sugarsales_user'];
             $_SESSION['setup_db_sugarsales_password']             = $_REQUEST['setup_db_sugarsales_password'];
             $_SESSION['setup_db_sugarsales_password_retype']      = $_REQUEST['setup_db_sugarsales_password_retype'];
-        } elseif ($_SESSION['dbUSRData'] == 'create') {
+        } elseif ($_SESSION['dbUSRData'] === 'create') {
             // create user with provided info
             $_SESSION['setup_db_create_sugarsales_user']        = true;
             $_SESSION['setup_db_sugarsales_user']               = $_REQUEST['setup_db_sugarsales_user'];
@@ -383,7 +385,7 @@ function copyInputsIntoSession()
         $_SESSION['setup_db_create_database'] = false;
     }
 
-    if (isset($_REQUEST['goto']) && $_REQUEST['goto'] == 'SilentInstall' && isset($_SESSION['setup_db_drop_tables'])) {
+    if (isset($_REQUEST['goto']) && $_REQUEST['goto'] === 'SilentInstall' && isset($_SESSION['setup_db_drop_tables'])) {
         //set up for Oracle Silent Installer
         $_REQUEST['setup_db_drop_tables'] = $_SESSION['setup_db_drop_tables'] ;
     }

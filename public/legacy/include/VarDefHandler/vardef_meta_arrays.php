@@ -50,10 +50,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
 $vardef_meta_array = array(
 
     'standard_display' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id'),
             'name' => array('parent_type', 'deleted'),
         //end exclusion
@@ -69,10 +69,10 @@ $vardef_meta_array = array(
     ),
 //////////////////////////////////////////////////////////////////
     'normal_trigger' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id', 'link', 'datetime', 'date','datetimecombo'),
             'custom_type' => array('id', 'link', 'datetime', 'date','datetimecombo'),
             'name' => array('assigned_user_name', 'parent_type', 'deleted','filename', 'file_mime_type', 'file_url'),
@@ -94,10 +94,10 @@ $vardef_meta_array = array(
     ),
     //////////////////////////////////////////////////////////////////
     'normal_date_trigger' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id', 'link'),
             'custom_type' => array('id', 'link'),
             'name' => array('assigned_user_name', 'parent_type', 'deleted','filename', 'file_mime_type', 'file_url'),
@@ -119,10 +119,10 @@ $vardef_meta_array = array(
     ),
 //////////////////////////////////////////////////////////////////
     'time_trigger' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id', 'link', 'team_list', 'time'),
             'custom_type' => array('id', 'link', 'team_list', 'time'),
             'name' => array('parent_type', 'team_name', 'assigned_user_name', 'parent_type', 'deleted' ,'filename', 'file_mime_type', 'file_url'),
@@ -142,10 +142,10 @@ $vardef_meta_array = array(
     ),
 //////////////////////////////////////////////////////////////////
     'action_filter' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id', 'link', 'datetime', 'time'),
             'custom_type' => array('id', 'link', 'datetime', 'time'),
             'source' => array('non-db'),
@@ -168,11 +168,11 @@ $vardef_meta_array = array(
     ),
 //////////////////////////////////////////////////////////////////
     'rel_filter' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
             'type' => array('link'),
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
         'name' => array('direct_reports', 'accept_status'),
         //end exclusion
         ),
@@ -192,11 +192,11 @@ $vardef_meta_array = array(
     ),
 ///////////////////////////////////////////////////////////
     'trigger_rel_filter' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
             'type' => array('link'),
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
         'name' => array('direct_reports', 'accept_status'),
         //end exclusion
         ),
@@ -217,11 +217,11 @@ $vardef_meta_array = array(
     ),
 ///////////////////////////////////////////////////////////
     'alert_rel_filter' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
             'type' => array('link'),
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
         'name' => array('direct_reports', 'accept_status'),
         //end exclusion
         ),
@@ -242,10 +242,10 @@ $vardef_meta_array = array(
     ),
 ///////////////////////////////////////////////////////////
     'template_filter' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id', 'link'),
             'custom_type' => array('id', 'link'),
             'source' => array('non-db'),
@@ -267,10 +267,10 @@ $vardef_meta_array = array(
     ),
 //////////////////////////////////////////////////////////////
     'alert_trigger' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
             'type' => array('id', 'link', 'datetime', 'date'),
             'custom_type' => array('id', 'link', 'datetime', 'date'),
             'name' => array('assigned_user_name', 'parent_type', 'deleted', 'filename', 'file_mime_type', 'file_url'),
@@ -292,11 +292,11 @@ $vardef_meta_array = array(
     ),
 //////////////////////////////////////////////////////////////////
     'template_rel_filter' => array(
-        'inclusion' =>	array(
+        'inclusion' =>    array(
             'type' => array('link'),
         //end inclusion
         ),
-        'exclusion' =>	array(
+        'exclusion' =>    array(
         'name' => array('direct_reports', 'accept_status'),
         //end exclusion
         ),

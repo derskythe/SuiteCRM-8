@@ -13,7 +13,7 @@ class ProspectsListViewSmarty extends ListViewSmarty
 
 
 
-    public function buildExportLink($id = 'export_link')
+    public function buildExportLink($id = 'export_link') : string
     {
         global $app_strings;
 
@@ -21,7 +21,7 @@ class ProspectsListViewSmarty extends ListViewSmarty
                 "onclick=\"return sListView.send_form(true, '{$_REQUEST['module']}', " .
                 "'index.php?entryPoint=export', " .
                 "'{$app_strings['LBL_LISTVIEW_NO_SELECTED']}')\">{$app_strings['LBL_EXPORT']}</a>" .
-                "</li><li>". // List item hack
+            '</li><li>' . // List item hack
                 "<a href='javascript:void(0)' id='map_listview_top' " .
                 " onclick=\"return sListView.send_form(true, 'jjwg_Maps', " .
                 "'index.php?entryPoint=jjwg_Maps&display_module={$_REQUEST['module']}', " .
@@ -32,18 +32,19 @@ class ProspectsListViewSmarty extends ListViewSmarty
 
     /**
      *
-     * @param File $file Template file to use
-     * @param array $data from ListViewData
-     * @param string $htmlpublic the corresponding html public in xtpl per row
+     * @param File $file      Template file to use
+     * @param array $data     from ListViewData
+     * @param string $htmlVar the corresponding html public in xtpl per row
+     *
      * @return bool|void
      */
-    public function process($file, $data, $htmlpublic)
+    public function process($file, $data, $htmlVar) : bool
     {
         $configurator = new Configurator();
         if ($configurator->isConfirmOptInEnabled()) {
             $this->actionsMenuExtraItems[] = $this->buildSendConfirmOptInEmailToPersonAndCompany();
         }
 
-        return parent::process($file, $data, $htmlpublic);
+        return parent::process($file, $data, $htmlVar);
     }
 }

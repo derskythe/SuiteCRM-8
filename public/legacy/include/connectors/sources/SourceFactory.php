@@ -60,11 +60,11 @@ class SourceFactory
     {
         $dir = str_replace('_', '/', (string) $class);
 
-        if (strpos($dir, '..') !== false) {
+        if (str_contains($dir, '..')) {
             return null;
         }
 
-        $parts = explode("/", $dir);
+        $parts = explode('/', $dir);
         $file = $parts[count($parts)-1];
         $pos = strrpos($file, '/');
         //if(file_exists("connectors/sources/{$dir}/{$file}.php") || file_exists("custom/connectors/sources/{$dir}/{$file}.php")){

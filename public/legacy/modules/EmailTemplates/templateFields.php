@@ -48,7 +48,7 @@ function generateFieldDefsJS2()
             $focus = new $beanList[$key];
             $loopControl[$key][$key] = $focus;
             $prefixes[$key] = strtolower($focus->object_name) . '_';
-            if ($focus->object_name == 'Case') {
+            if ($focus->object_name === 'Case') {
                 $prefixes[$key] = 'a' . strtolower($focus->object_name) . '_';
             }
         }
@@ -73,9 +73,9 @@ function generateFieldDefsJS2()
         foreach ($beans as $beankey => $bean) {
             foreach ($bean->field_defs as $key => $field_def) {
                 if (    /*($field_def['type'] == 'relate' && empty($field_def['custom_type'])) ||*/
-                    ($field_def['type'] == 'assigned_user_name' || $field_def['type'] == 'link') ||
-                    ($field_def['type'] == 'bool') ||
-                    (in_array($field_def['name'], $badFields))
+                    ($field_def['type'] === 'assigned_user_name' || $field_def['type'] === 'link') ||
+                    ($field_def['type'] === 'bool') ||
+                    (in_array($field_def['name'], $badFields, true))
                 ) {
                     continue;
                 }
@@ -85,9 +85,9 @@ function generateFieldDefsJS2()
                 // valid def found, process
                 $optionKey = strtolower("{$prefixes[$collectionKey]}{$key}");
                 if (isset($field_def['vname'])) {
-                    $optionLabel = preg_replace('/:$/', "", (string) translate($field_def['vname'], $beankey));
+                    $optionLabel = preg_replace('/:$/', '', (string) translate($field_def['vname'], $beankey));
                 } else {
-                    $optionLabel = preg_replace('/:$/', "", (string) $field_def['name']);
+                    $optionLabel = preg_replace('/:$/', '', (string) $field_def['name']);
                 }
                 $dup = 1;
                 foreach ($collection[$collectionKey] as $value) {
@@ -97,16 +97,16 @@ function generateFieldDefsJS2()
                     }
                 }
                 if ($dup) {
-                    $collection[$collectionKey][] = array("name" => $optionKey, "value" => $optionLabel);
+                    $collection[$collectionKey][] = array( 'name' => $optionKey, 'value' => $optionLabel);
                 }
             }
         }
     }
 
     $json = getJSONobj();
-    $ret = "var field_defs = ";
+    $ret = 'var field_defs = ';
     $ret .= $json->encode($collection, false);
-    $ret .= ";";
+    $ret .= ';';
     return $ret;
 }
 
@@ -126,19 +126,19 @@ function genDropDownJS2()
 
     foreach ($app_list_strings['moduleList'] as $key => $name) {
         if (isset($beanList[$key]) && isset($beanFiles[$beanList[$key]]) && !str_begin($key, 'AOW_') && !str_begin($key, 'zr2_')) {
-            if ($key == 'Contacts') {
+            if ($key === 'Contacts') {
                 $dropdown .= "<option value='" . $key . "'>
-						" . $lblContactAndOthers . "
-		  	       </option>";
+                        " . $lblContactAndOthers . '
+                     </option>';
             } else {
                 if (isset($app_list_strings['moduleListSingular'][$key])) {
                     $dropdown .= "<option value='" . $key . "'>
-						" . $app_list_strings['moduleListSingular'][$key] . "
-		  	       </option>";
+                        " . $app_list_strings['moduleListSingular'][$key] . '
+                     </option>';
                 } else {
                     $dropdown .= "<option value='" . $key . "'>
-						" . $app_list_strings['moduleList'][$key] . "
-		  	       </option>";
+                        " . $app_list_strings['moduleList'][$key] . '
+                     </option>';
                 }
             }
         }

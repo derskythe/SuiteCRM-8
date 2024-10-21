@@ -35,12 +35,12 @@ class ProjectTest extends SuitePHPUnitFrameworkTestCase
 
         //test without setting assigned_user_id
         $project->fill_in_additional_detail_fields();
-        self::assertEquals("", $project->assigned_user_name);
+        self::assertEquals('', $project->assigned_user_name);
 
         //test with assigned_user_id set
         $project->assigned_user_id = 1;
         $project->fill_in_additional_detail_fields();
-        self::assertEquals("Administrator", $project->assigned_user_name);
+        self::assertEquals('Administrator', $project->assigned_user_name);
     }
 
     public function testfill_in_additional_list_fields(): void
@@ -49,12 +49,12 @@ class ProjectTest extends SuitePHPUnitFrameworkTestCase
 
         //test without setting assigned_user_id
         $project->fill_in_additional_list_fields();
-        self::assertEquals("", $project->assigned_user_name);
+        self::assertEquals('', $project->assigned_user_name);
 
         //test with assigned_user_id set
         $project->assigned_user_id = 1;
         $project->fill_in_additional_list_fields();
-        self::assertEquals("Administrator", $project->assigned_user_name);
+        self::assertEquals('Administrator', $project->assigned_user_name);
     }
 
     public function testsave_relationship_changes(): void
@@ -63,7 +63,7 @@ class ProjectTest extends SuitePHPUnitFrameworkTestCase
 
         $project->id =1;
         $_REQUEST['relate_id'] = 2;
-        $_REQUEST['relate_to'] = "contacts";
+        $_REQUEST['relate_to'] = 'contacts';
 
         // Execute the method and test that it works and doesn't throw an exception.
         try {
@@ -82,7 +82,7 @@ class ProjectTest extends SuitePHPUnitFrameworkTestCase
         self::assertEquals(null, $project->get_summary_text());
 
         //test with name set
-        $project->name = "test";
+        $project->name = 'test';
         self::assertEquals('test', $project->get_summary_text());
     }
 
@@ -123,7 +123,7 @@ class ProjectTest extends SuitePHPUnitFrameworkTestCase
 
         $this->assertSame($expected, $actual);
         */
-        self::assertTrue(true, "NEEDS FIXING!");
+        self::assertTrue(true, 'NEEDS FIXING!');
     }
 
     public function testbean_implements(): void

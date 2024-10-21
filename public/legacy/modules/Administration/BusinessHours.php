@@ -10,32 +10,32 @@ global $app_strings;
 global $theme;
 
 if (!is_admin($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 
 require_once('modules/Configurator/Configurator.php');
 
 echo getClassicModuleTitle(
-    "Administration",
+    'Administration',
     array(
-        "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration')."</a>",
+        "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration'). '</a>',
         $mod_strings['LBL_BUSINESS_HOURS_DESC'],
     ),
     false
 );
 
-$sugar_smarty	= new Sugar_Smarty();
-$errors			= array();
+$sugar_smarty    = new Sugar_Smarty();
+$errors            = array();
 $days = array('Monday' => $mod_strings['LBL_MONDAY'],'Tuesday' => $mod_strings['LBL_TUESDAY'],'Wednesday' => $mod_strings['LBL_WEDNESDAY'],'Thursday' => $mod_strings['LBL_THURSDAY'],'Friday' => $mod_strings['LBL_FRIDAY'],'Saturday' => $mod_strings['LBL_SATURDAY'],'Sunday' => $mod_strings['LBL_SUNDAY']);
-$businessHours = BeanFactory::getBean("AOBH_BusinessHours");
+$businessHours = BeanFactory::getBean('AOBH_BusinessHours');
 
-if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'save') {
+if (isset($_REQUEST['do']) && $_REQUEST['do'] === 'save') {
     foreach ($days as $day => $label) {
         $bh = $businessHours->getOrCreate($day);
         $bh->day = $day;
-        $bh->open_status = array_key_exists("open_status_".$day, $_REQUEST) ? $_REQUEST["open_status_".$day] : false;
-        $bh->opening_hours = $_REQUEST["opening_time_".$day];
-        $bh->closing_hours = $_REQUEST["closing_time_".$day];
+        $bh->open_status = array_key_exists('open_status_' .$day, $_REQUEST) ? $_REQUEST['open_status_' .$day] : false;
+        $bh->opening_hours = $_REQUEST['opening_time_' .$day];
+        $bh->closing_hours = $_REQUEST['closing_time_' .$day];
         $bh->save();
     }
     SugarApplication::redirect('index.php?module=Administration&action=index');
@@ -57,7 +57,7 @@ foreach ($days as $day => $label) {
     $drops['closing'] = $hours;
 
     $drops['label'] = $label;
-    
+
     $dayDropdowns[$day] = $drops;
 }
 $sugar_smarty->assign('DAY_DROPDOWNS', $dayDropdowns);
@@ -67,7 +67,7 @@ $sugar_smarty->assign('MOD', $mod_strings);
 $sugar_smarty->assign('APP', $app_strings);
 $sugar_smarty->assign('APP_LIST', $app_list_strings);
 $sugar_smarty->assign('LANGUAGES', get_languages());
-$sugar_smarty->assign("JAVASCRIPT", get_set_focus_js());
+$sugar_smarty->assign('JAVASCRIPT', get_set_focus_js());
 $sugar_smarty->assign('error', $errors);
 
 $buttons =  <<<EOQ
@@ -81,7 +81,7 @@ $buttons =  <<<EOQ
                 &nbsp;<input title="{$mod_strings['LBL_CANCEL_BUTTON_TITLE']}"  onclick="document.location.href='index.php?module=Administration&action=index'" class="button"  type="button" name="cancel" value="  {$app_strings['LBL_CANCEL_BUTTON_LABEL']}  " >
 EOQ;
 
-$sugar_smarty->assign("BUTTONS", $buttons);
+$sugar_smarty->assign('BUTTONS', $buttons);
 
 $sugar_smarty->display('modules/Administration/BusinessHours.tpl');
 

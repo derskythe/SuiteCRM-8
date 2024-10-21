@@ -85,7 +85,7 @@ foreach ($focus->merge_bean->column_fields as $field) {
             $value = encodeMultienumValue($value);
         }
         $focus->merge_bean->$field = $value;
-    } elseif (isset($focus->merge_bean->field_name_map[$field]['type']) && $focus->merge_bean->field_name_map[$field]['type'] == 'bool') {
+    } elseif (isset($focus->merge_bean->field_name_map[$field]['type']) && $focus->merge_bean->field_name_map[$field]['type'] === 'bool') {
         $focus->merge_bean->$field = 0;
     }
 }
@@ -131,24 +131,28 @@ if (is_array($_POST['merged_ids'])) {
             continue;
         }
         foreach ($linked_fields as $name => $properties) {
-            if ($properties['name'] == 'modified_user_link' || $properties['name'] == 'created_by_link' || in_array($properties['name'], $exclude)) {
+            if ($properties['name'] === 'modified_user_link' || $properties['name'] === 'created_by_link' || in_array(
+                    $properties['name'],
+                    $exclude,
+                    true
+                )) {
                 continue;
             }
             if (isset($properties['duplicate_merge']) &&
-                ($properties['duplicate_merge'] == 'disabled' ||
-                    $properties['duplicate_merge'] == 'false' ||
-                    $properties['name'] == 'assigned_user_link')
+                ($properties['duplicate_merge'] === 'disabled' ||
+                    $properties['duplicate_merge'] === 'false' ||
+                    $properties['name'] === 'assigned_user_link')
             ) {
                 continue;
             }
-            if ($name == 'accounts' && $focus->merge_bean->module_dir == 'Opportunities') {
+            if ($name === 'accounts' && $focus->merge_bean->module_dir === 'Opportunities') {
                 continue;
             }
 
             if ($mergeSource->load_relationship($name)) {
                 //check to see if loaded relationship is with email address
                 $relName = $mergeSource->$name->getRelatedModuleName();
-                if (!empty($relName) && strtolower($relName) == 'emailaddresses') {
+                if (!empty($relName) && strtolower($relName) === 'emailaddresses') {
                     //handle email address merge
                     handleEmailMerge($focus, $name, $mergeSource->$name->get());
                 } else {
@@ -239,7 +243,7 @@ function handleEmailMerge($focus, $name, $data)
 
     //compare the two arrays and remove duplicates
     foreach ($newEmails as $k => $n) {
-        if (!in_array($n, $existingEmails)) {
+        if (!in_array($n, $existingEmails, true)) {
             $mrgArray[$k] = $n;
         }
     }

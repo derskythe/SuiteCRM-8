@@ -110,9 +110,9 @@ class SugarWidgetSubPanelTopSelectContactsButton extends SugarWidgetSubPanelTopS
             $this->module_name = $subpanel_name;
         }
 
-        if ($subpanel_name == 'Project') {
+        if ($subpanel_name === 'Project') {
             $link_field_name = 'project_contacts_1';
-        } elseif ($subpanel_name == 'AM_ProjectTemplates') {
+        } elseif ($subpanel_name === 'AM_ProjectTemplates') {
             $link_field_name = 'am_projecttemplates_contacts_1';
         } else {
             $link_field_name = $subpanel_definition->get_data_source_name(true);
@@ -126,12 +126,12 @@ class SugarWidgetSubPanelTopSelectContactsButton extends SugarWidgetSubPanelTopS
             if (is_array($widget_data['initial_filter_fields'])) {
                 foreach ($widget_data['initial_filter_fields'] as $value=>$alias) {
                     if (isset($focus->$value) && !empty($focus->$value)) {
-                        $initial_filter.="&".$alias . '='.urlencode($focus->$value);
+                        $initial_filter .= '&' . $alias . '=' . urlencode($focus->$value);
                     }
                 }
             }
         }
-        $create="true";
+        $create = 'true';
         if (isset($widget_data['create'])) {
             $create=$widget_data['create'];
         }
@@ -165,8 +165,8 @@ class SugarWidgetSubPanelTopSelectContactsButton extends SugarWidgetSubPanelTopS
         }
 
         if (is_array($this->button_properties) && !empty($this->button_properties['add_to_passthru_data']['return_type'])) {
-            if ($this->button_properties['add_to_passthru_data']['return_type']=='report') {
-                $initial_filter = "&module_name=". urlencode($widget_data['module']);
+            if ($this->button_properties['add_to_passthru_data']['return_type'] === 'report') {
+                $initial_filter = '&module_name=' . urlencode($widget_data['module']);
             }
         }
         $json_encoded_php_array = $this->_create_json_encoded_popup_request($popup_request_data);

@@ -70,7 +70,7 @@ class ViewClassicTest extends SuitePHPUnitFrameworkTestCase
 
     public function testdisplay(): void
     {
-        self::markTestIncomplete("Warning was: Test code or tested code did not (only) close its own output buffers");
+        self::markTestIncomplete('Warning was: Test code or tested code did not (only) close its own output buffers');
 
         if (isset($_SESSION)) {
             $session = $_SESSION;

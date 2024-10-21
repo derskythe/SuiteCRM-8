@@ -66,7 +66,7 @@ class ImportView extends SugarView
         $this->importModule = isset($_REQUEST['import_module']) ? $_REQUEST['import_module'] : '';
     }
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         if (!is_file('cache/jsLanguage/Import/' . $GLOBALS['current_language'] . '.js')) {
             require_once('include/language/jsLanguage.php');
@@ -79,7 +79,7 @@ class ImportView extends SugarView
     /**
      * @see SugarView::getMenu()
      */
-    public function getMenu($module = null)
+    public function getMenu(string $module = null)
     {
         global $mod_strings, $current_language;
 
@@ -98,7 +98,7 @@ class ImportView extends SugarView
     /**
      * @see SugarView::_getModuleTab()
      */
-    protected function _getModuleTab()
+    protected function _getModuleTab() : ?string
     {
         global $app_list_strings, $moduleTabMap;
 
@@ -125,7 +125,7 @@ class ImportView extends SugarView
      * @param bool $encode
      * @return void
      */
-    protected function sendJsonOutput($html = "", $submitContent = "", $script = "", $encode = false)
+    protected function sendJsonOutput($html = '', $submitContent = '', $script = '', $encode = false)
     {
         $title = $this->getModuleTitle(false);
         $out = array(
@@ -147,7 +147,7 @@ class ImportView extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings, $app_list_strings;
         $returnArray = array(string_format($mod_strings[$this->pageTitleKey], array($this->currentStep)));
@@ -170,23 +170,25 @@ class ImportView extends SugarView
     }
 
     /**
-    * Displays the Smarty template for an error
-    *
-    * @param string $message error message to show
-    * @param string $module what module we were importing into
-    * @param string $action what page we should go back to
-    */
+     * Displays the Smarty template for an error
+     *
+     * @param string $message error message to show
+     * @param string $module  what module we were importing into
+     * @param string $action  what page we should go back to
+     *
+     * @throws SmartyException
+     */
     protected function _showImportError($message, $module, $action = 'Step1')
     {
         $ss = new Sugar_Smarty();
 
-        $ss->assign("MESSAGE", $message);
-        $ss->assign("ACTION", $action);
-        $ss->assign("IMPORT_MODULE", $module);
-        $ss->assign("MOD", $GLOBALS['mod_strings']);
-        $ss->assign("SOURCE", "");
+        $ss->assign('MESSAGE', $message);
+        $ss->assign('ACTION', $action);
+        $ss->assign('IMPORT_MODULE', $module);
+        $ss->assign('MOD', $GLOBALS['mod_strings']);
+        $ss->assign('SOURCE', '');
         if (isset($_REQUEST['source'])) {
-            $ss->assign("SOURCE", $_REQUEST['source']);
+            $ss->assign('SOURCE', $_REQUEST['source']);
         }
 
         echo $ss->fetch('modules/Import/tpls/error.tpl');

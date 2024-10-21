@@ -2,6 +2,7 @@
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
+
 /**
  *
  * SugarCRM Community Edition is a customer relationship management program developed by
@@ -40,12 +41,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-
-
-
-
-
-
 #[\AllowDynamicProperties]
 class SugarWidgetSubPanelRemoveButtonProjects extends SugarWidgetField
 {
@@ -54,7 +49,7 @@ class SugarWidgetSubPanelRemoveButtonProjects extends SugarWidgetField
         return '&nbsp;';
     }
 
-    public function displayList($layout_def)
+    public function displayList(&$layout_def)
     {
         global $app_strings;
 
@@ -63,10 +58,10 @@ class SugarWidgetSubPanelRemoveButtonProjects extends SugarWidgetField
         $parent_record_id = $_REQUEST['record'];
         $parent_module = $_REQUEST['module'];
 
-        if ($layout_def['module'] == 'Holidays') {
+        if ($layout_def['module'] === 'Holidays') {
             $action = 'DeleteHolidayRelationship';
         } else {
-            if ($layout_def['module'] == 'Users' || $layout_def['module'] == 'Contacts') {
+            if ($layout_def['module'] === 'Users' || $layout_def['module'] === 'Contacts') {
                 $action = 'DeleteResourceRelationship';
             } else {
                 $action = 'DeleteRelationship';
@@ -74,14 +69,13 @@ class SugarWidgetSubPanelRemoveButtonProjects extends SugarWidgetField
         }
 
         $record = $layout_def['fields']['ID'];
-        $current_module=$layout_def['module'];
-        $hideremove=false;
+        $current_module = $layout_def['module'];
+        $hideremove = false;
 
         $return_module = $_REQUEST['module'];
         $return_action = 'SubPanelViewer';
         $subpanel = $layout_def['subpanel_id'];
         $return_id = $_REQUEST['record'];
-
 
         $focus = BeanFactory::newBean('Project');
 
@@ -94,7 +88,7 @@ class SugarWidgetSubPanelRemoveButtonProjects extends SugarWidgetField
         }
 
         if (isset($layout_def['linked_field_set']) && !empty($layout_def['linked_field_set'])) {
-            $linked_field= $layout_def['linked_field_set'] ;
+            $linked_field = $layout_def['linked_field_set'];
         } else {
             $linked_field = $layout_def['linked_field'];
         }
@@ -102,26 +96,35 @@ class SugarWidgetSubPanelRemoveButtonProjects extends SugarWidgetField
         if (!empty($layout_def['refresh_page'])) {
             $refresh_page = 1;
         }
-        $return_url = "index.php?module=$return_module&action=$return_action&subpanel=$subpanel&record=$return_id&sugar_body_only=1&inline=1";
+        $return_url =
+            "index.php?module=$return_module&action=$return_action&subpanel=$subpanel&record=$return_id&sugar_body_only=1&inline=1";
 
         $icon_remove_text = strtolower($app_strings['LBL_ID_FF_REMOVE']);
-        $icon_remove_html = SugarThemeRegistry::current()->getImage('delete_inline', 'align="absmiddle" border="0"', null, null, '.gif', '');//setting alt to blank on purpose on subpanels for 508
+        $icon_remove_html =
+            SugarThemeRegistry::current()->getImage(
+                'delete_inline',
+                'align="absmiddle" border="0"',
+                null,
+                null,
+                '.gif',
+                ''
+            );//setting alt to blank on purpose on subpanels for 508
         $remove_url = $layout_def['start_link_wrapper']
             . "index.php?module=$parent_module"
             . "&action=$action"
             . "&record=$parent_record_id"
             . "&linked_field=$linked_field"
             . "&linked_id=$record"
-            . "&return_url=" . urlencode(urlencode($return_url))
-            . "&refresh_page=1"
+            . '&return_url=' . urlencode(urlencode($return_url))
+            . '&refresh_page=1'
             . $layout_def['end_link_wrapper'];
         $remove_confirmation_text = $app_strings['NTC_REMOVE_CONFIRMATION'];
         //based on listview since that lets you select records
         if ($layout_def['ListView'] && !$hideremove && $is_owner) {
             return '<a href="' . $remove_url . '"'
-            . ' class="listViewTdToolsS1"'
-            . " onclick=\"return confirm('$remove_confirmation_text');\""
-            . ">$icon_remove_html&nbsp;$icon_remove_text</a>";
+                . ' class="listViewTdToolsS1"'
+                . " onclick=\"return confirm('$remove_confirmation_text');\""
+                . ">$icon_remove_html&nbsp;$icon_remove_text</a>";
         } else {
             return '';
         }

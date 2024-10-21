@@ -56,7 +56,7 @@ class DefaultFilterMapper implements FilterMapperInterface
         foreach ($legacyValue as $legacyValueKey => $legacyValueValue) {
 
             switch ($legacyValueValue) {
-                case "__SuiteCRMEmptyString__":
+                case '__SuiteCRMEmptyString__':
                     $mapEmptyString = true;
                     $legacyValue[$legacyValueKey] = '';
                     break;
@@ -77,7 +77,7 @@ class DefaultFilterMapper implements FilterMapperInterface
     public function toApi(string $mappedValue, array $criteriaItem): string
     {
         if ($criteriaItem['fieldType'] === 'enum' && $mappedValue === '') {
-            $mappedValue = "__SuiteCRMEmptyString__";
+            $mappedValue = '__SuiteCRMEmptyString__';
         }
 
         return $mappedValue;

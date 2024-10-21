@@ -75,13 +75,13 @@ class GoogleSync extends GoogleSyncBase
         $eventTitle = isset($event) ? $event->getSummary() : null;
 
         if (!empty($meetingTitle) && !empty($eventTitle)) {
-            $title = $meetingTitle . " / " . $eventTitle;
+            $title = $meetingTitle . ' / ' . $eventTitle;
         }
         if (empty($meetingTitle) || empty($eventTitle)) {
             $title = $meetingTitle . $eventTitle;
         }
         if (empty($meetingTitle) && empty($eventTitle)) {
-            $title = "UNNAMED RECORD";
+            $title = 'UNNAMED RECORD';
         }
         return $title;
     }
@@ -102,23 +102,23 @@ class GoogleSync extends GoogleSyncBase
         $title = $this->getTitle($meeting, $event);
 
         switch ($action) {
-            case "push":
+            case 'push':
                 $this->logger->info(__FILE__ . ':' . __LINE__ . ' ' . __METHOD__ . ' - ' . 'Pushing Record: ' . $title);
                 $ret = $this->pushEvent($meeting, $event);
                 break;
-            case "pull":
+            case 'pull':
                 $this->logger->info(__FILE__ . ':' . __LINE__ . ' ' . __METHOD__ . ' - ' . 'Pulling Record: ' . $title);
                 $ret = $this->pullEvent($event, $meeting);
                 break;
-            case "skip":
+            case 'skip':
                 $this->logger->info(__FILE__ . ':' . __LINE__ . ' ' . __METHOD__ . ' - ' . 'Skipping Record: ' . $title);
                 $ret = true;
                 break;
-            case "push_delete":
+            case 'push_delete':
                 $this->logger->info(__FILE__ . ':' . __LINE__ . ' ' . __METHOD__ . ' - ' . 'Push Deleting Record: ' . $title);
                 $ret = $this->delEvent($event, $meeting->id);
                 break;
-            case "pull_delete":
+            case 'pull_delete':
                 $this->logger->info(__FILE__ . ':' . __LINE__ . ' ' . __METHOD__ . ' - ' . 'Pull Deleting Record: ' . $title);
                 $ret = $this->delMeeting($meeting);
                 break;
@@ -140,6 +140,14 @@ class GoogleSync extends GoogleSyncBase
      * @param string $id The SuiteCRM user id
      *
      * @return bool true, unless an exception is thrown by called function
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
+     * @throws GoogleSyncException
      */
     public function doSync($id)
     {
@@ -196,10 +204,11 @@ class GoogleSync extends GoogleSyncBase
      * Used when an event w/ a matching ID is on both ends of the sync.
      * At least one of the params is required.
      *
-     * @param Meeting|null $meeting (optional) Meeting Bean or Google\Service\Calendar\Event Object
+     * @param Meeting|null $meeting                      (optional) Meeting Bean or Google\Service\Calendar\Event Object
      * @param \Google\Service\Calendar\Event|null $event (optional) Google\Service\Calendar\Event Object
      *
      * @return string|bool 'push(_delete)', 'pull(_delete)', 'skip', false (on error)
+     * @throws GoogleSyncException
      */
     protected function pushPullSkip(Meeting $meeting = null, Google\Service\Calendar\Event $event = null)
     {
@@ -220,7 +229,7 @@ class GoogleSync extends GoogleSyncBase
 
         // Can we skip this event?
         if ($helper->isSkippable($meeting, $event, $timeArray, $this->syncedList)) {
-            return "skip";
+            return 'skip';
         }
 
         // Event was modified since last sync
@@ -277,6 +286,7 @@ class GoogleSync extends GoogleSyncBase
      * Sync them one by one.
      *
      * @return bool Success/Failure
+     * @throws GoogleSyncException
      */
     public function syncAllUsers()
     {

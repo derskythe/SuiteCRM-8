@@ -47,7 +47,7 @@ class SugarCachesMash extends SugarCacheAbstract
      * @see SugarCacheAbstract::$_priority
      */
     protected $_priority = 950;
-    
+
     /**
      * @see SugarCacheAbstract::useBackend()
      */
@@ -56,15 +56,15 @@ class SugarCachesMash extends SugarCacheAbstract
         if (!parent::useBackend()) {
             return false;
         }
-        
-        if (function_exists("zget")
+
+        if (function_exists('zget')
                 && empty($GLOBALS['sugar_config']['external_cache_disabled_smash'])) {
             return true;
         }
-            
+
         return false;
     }
-    
+
     /**
      * @see SugarCacheAbstract::_setExternal()
      */
@@ -74,7 +74,7 @@ class SugarCachesMash extends SugarCacheAbstract
         ) {
         zput('/tmp/'.$this->_keyPrefix.'/'.$key, $value, $this->_expireTimeout);
     }
-    
+
     /**
      * @see SugarCacheAbstract::_getExternal()
      */
@@ -83,7 +83,7 @@ class SugarCachesMash extends SugarCacheAbstract
         ) {
         return zget('/tmp/'.$this->_keyPrefix.'/'.$key, null);
     }
-    
+
     /**
      * @see SugarCacheAbstract::_clearExternal()
      */
@@ -92,7 +92,7 @@ class SugarCachesMash extends SugarCacheAbstract
         ) {
         zdelete('/tmp/'.$this->_keyPrefix.'/'.$key);
     }
-    
+
     /**
      * @see SugarCacheAbstract::_resetExternal()
      */

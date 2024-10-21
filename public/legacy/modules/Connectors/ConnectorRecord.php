@@ -47,8 +47,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
  #[\AllowDynamicProperties]
  class ConnectorRecord extends MergeRecord
  {
-     public $object_name = 'ConnectorRecord';
-     public $module_dir = 'Connector';
+     public string $object_name = 'ConnectorRecord';
+     public string $module_dir = 'Connector';
 
 
      public function __construct($merge_module = '', $merge_id = '')

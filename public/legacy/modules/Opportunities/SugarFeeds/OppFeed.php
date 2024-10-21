@@ -47,7 +47,7 @@ require_once('modules/SugarFeed/feedLogicBase.php');
 #[\AllowDynamicProperties]
 class OppFeed extends FeedLogicBase
 {
-    public $module = "Opportunities";
+    public $module = 'Opportunities';
     public function pushFeed($bean, $event, $arguments)
     {
         $text = '';
@@ -56,13 +56,13 @@ class OppFeed extends FeedLogicBase
             $currency->retrieve($bean->currency_id);
             $text = '{SugarFeed.CREATED_OPPORTUNITY} [' . $bean->module_dir . ':' . $bean->id . ':' . $bean->name . '] {SugarFeed.WITH} [Accounts:' . $bean->account_id . ':' . $bean->account_name . '] {SugarFeed.FOR_AMOUNT} ' . $currency->symbol. format_number($bean->amount);
         } else {
-            if (!empty($bean->fetched_row['sales_stage']) && $bean->fetched_row['sales_stage'] != $bean->sales_stage && $bean->sales_stage == 'Closed Won') {
+            if (!empty($bean->fetched_row['sales_stage']) && $bean->fetched_row['sales_stage'] != $bean->sales_stage && $bean->sales_stage === 'Closed Won') {
                 $currency = BeanFactory::newBean('Currencies');
                 $currency->retrieve($bean->currency_id);
                 $text = '{SugarFeed.WON_OPPORTUNITY} [' . $bean->module_dir . ':' . $bean->id . ':' . $bean->name . '] {SugarFeed.WITH} [Accounts:' . $bean->account_id . ':' . $bean->account_name . '] {SugarFeed.FOR_AMOUNT} '. $currency->symbol . format_number($bean->amount);
             }
         }
-        
+
         if (!empty($text)) {
             SugarFeed::pushFeed2($text, $bean);
         }

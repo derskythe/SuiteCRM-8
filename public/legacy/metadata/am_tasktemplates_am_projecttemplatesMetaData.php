@@ -1,6 +1,6 @@
 <?php
 // created: 2014-05-30 00:06:35
-$dictionary["am_tasktemplates_am_projecttemplates"] = array(
+$dictionary['am_tasktemplates_am_projecttemplates'] = array(
   'true_relationship_type' => 'one-to-many',
   'relationships' =>
   array(

@@ -19,7 +19,7 @@
  * @param Smarty
  * @return string
  */
-function smarty_function_popup($params, &$smarty)
+function smarty_function_popup($params, $smarty)
 {
     $append = '';
     foreach ($params as $_key=>$_value) {
@@ -29,7 +29,7 @@ function smarty_function_popup($params, &$smarty)
             case 'function':
             case 'inarray':
                 $$_key = (string)$_value;
-                if ($_key == 'function' || $_key == 'inarray')
+                if ($_key === 'function' || $_key === 'inarray')
                     $append .= ',' . strtoupper($_key) . ",'$_value'";
                 break;
 
@@ -103,11 +103,13 @@ function smarty_function_popup($params, &$smarty)
         return false;
     }
 
-    if (empty($trigger)) { $trigger = "onmouseover"; }
+    if (empty($trigger)) {
+        $trigger = 'onmouseover';
+    }
 
     $retval = $trigger . '="return overlib(\''.preg_replace(array("!'!","![\r\n]!"),array("\'",'\r'),$text).'\'';
     $retval .= $append . ');"';
-    if ($trigger == 'onmouseover')
+    if ($trigger === 'onmouseover')
        $retval .= ' onmouseout="nd();"';
 
 

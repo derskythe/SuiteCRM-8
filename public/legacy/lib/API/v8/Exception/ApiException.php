@@ -59,13 +59,13 @@ class ApiException extends LangException
     public const DEFAULT_CODE = 8000;
     public const HTTP_STATUS = 500;
     public const DETAIL_TEXT_LABEL = 'LBL_API_EXCEPTION_DETAIL';
-    
+
     /**
      *
      * @var array
      */
     protected $source = ['pointer' => null, 'parameter' => null];
-    
+
     /**
      *
      * @var LangText
@@ -79,7 +79,7 @@ class ApiException extends LangException
      * @param \Exception|null $previous
      * @param LangText|null $langMessage
      */
-    public function __construct($message = "", $code = 0, \Exception $previous = null, LangText $langMessage = null)
+    public function __construct($message = '', $code = 0, \Exception $previous = null, LangText $langMessage = null)
     {
         parent::__construct((self::MSG_PREFIX === $this::MSG_PREFIX ? $this::MSG_PREFIX : self::MSG_PREFIX . ' ' . $this::MSG_PREFIX) . ' ' . $message, $code ? $code : self::DEFAULT_CODE, $previous, $langMessage);
     }
@@ -101,7 +101,7 @@ class ApiException extends LangException
     {
         $this->detail = $detail;
     }
-    
+
     /**
      * @param array|string $source
      */
@@ -112,7 +112,7 @@ class ApiException extends LangException
         }
         $this->source = $source;
     }
-    
+
     /**
      *
      * @return array

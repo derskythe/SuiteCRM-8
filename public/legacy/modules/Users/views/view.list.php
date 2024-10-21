@@ -43,7 +43,7 @@
 #[\AllowDynamicProperties]
 class UsersViewList extends ViewList
 {
-    public function preDisplay()
+    public function preDisplay() : void
     {
         //bug #46690: Developer Access to Users/Teams/Roles
         if (!$GLOBALS['current_user']->isAdminForModule('Users') && !$GLOBALS['current_user']->isDeveloperForModule('Users')) {
@@ -55,6 +55,9 @@ class UsersViewList extends ViewList
         $this->lv->email = false;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function listViewProcess()
     {
         $this->processSearchForm();
@@ -64,10 +67,10 @@ class UsersViewList extends ViewList
             return;
         }
         if (empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false) {
-            $this->lv->ss->assign("SEARCH", true);
+            $this->lv->ss->assign('SEARCH', true);
             $this->lv->ss->assign('savedSearchData', $this->searchForm->getSavedSearchData());
             if (!empty($this->where)) {
-                $this->where .= " AND";
+                $this->where .= ' AND';
             }
             $this->where .= " (users.status !='Reserved' or users.status is null) ";
             $this->lv->setup($this->seed, 'include/ListView/ListViewGeneric.tpl', $this->where, $this->params);

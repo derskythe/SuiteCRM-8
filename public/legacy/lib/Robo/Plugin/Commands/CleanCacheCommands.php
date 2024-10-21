@@ -101,7 +101,7 @@ class CleanCacheCommands extends \Robo\Tasks
                 return in_array($directory->getRelativePathname(), $cachesToDelete);
             });
 
-        $this->say("Found Sub-Cache Directories to Clean: ");
+        $this->say('Found Sub-Cache Directories to Clean: ');
         $this->io()->listing(iterator_to_array($subCachesToDelete));
         $toDelete = array_merge($toDelete, iterator_to_array($subCachesToDelete));
 
@@ -113,7 +113,7 @@ class CleanCacheCommands extends \Robo\Tasks
             ->in($cacheDir . 'modules')
             ->exclude($doNotDelete);
 
-        $this->say("Found Module-Cache Directories to Clean: ");
+        $this->say('Found Module-Cache Directories to Clean: ');
         $this->io()->listing(iterator_to_array($moduleCachesToDelete));
         $toDelete = array_merge($toDelete, iterator_to_array($moduleCachesToDelete));
 

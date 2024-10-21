@@ -53,7 +53,7 @@ class SugarFieldInt extends SugarFieldBase
         if ($rawField === '' || $rawField === null) {
             return '';
         }
-            
+
         return format_number($rawField, 0, 0);
     }
 
@@ -120,10 +120,10 @@ class SugarFieldInt extends SugarFieldBase
             }
             return $this->fetch('include/SugarFields/Fields/Int/RangeSearchForm.tpl');
         }
-    
+
         return $this->fetch($this->findTemplate('SearchForm'));
     }
-    
+
     /**
      * @see SugarFieldBase::importSanitize()
      */
@@ -133,11 +133,11 @@ class SugarFieldInt extends SugarFieldBase
         $focus,
         ImportFieldSanitize $settings
         ) {
-        $value = str_replace($settings->num_grp_sep, "", $value);
-        if (!is_numeric($value) || strstr($value, ".")) {
+        $value = str_replace($settings->num_grp_sep, '', $value);
+        if (!is_numeric($value) || strstr($value, '.')) {
             return false;
         }
-        
+
         return $value;
     }
 }

@@ -49,8 +49,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  */
 
-require_once("modules/Import/Forms.php");
-require_once("include/MVC/Controller/SugarController.php");
+require_once('modules/Import/Forms.php');
+require_once('include/MVC/Controller/SugarController.php');
 require_once('modules/Import/sources/ImportFile.php');
 require_once('modules/Import/views/ImportListView.php');
 
@@ -58,6 +58,7 @@ require_once('modules/Import/views/ImportListView.php');
 class ImportController extends SugarController
 {
     /**
+     * @throws Exception
      * @see SugarController::loadBean()
      */
     public function loadBean()
@@ -77,7 +78,7 @@ class ImportController extends SugarController
         if ($this->bean) {
             if (!$this->bean->importable) {
                 $this->bean = false;
-            } elseif ($_REQUEST['import_module'] == 'Users' && !is_admin($GLOBALS['current_user'])) {
+            } elseif ($_REQUEST['import_module'] === 'Users' && !is_admin($GLOBALS['current_user'])) {
                 $this->bean = false;
             } elseif ($this->bean->bean_implements('ACL')) {
                 if (!ACLController::checkAccess($this->bean->module_dir, 'import', true)) {
@@ -87,7 +88,7 @@ class ImportController extends SugarController
             }
         }
 
-        if (!$this->bean && $this->importModule != "Administration") {
+        if (!$this->bean && $this->importModule !== 'Administration') {
             $_REQUEST['message'] = $mod_strings['LBL_ERROR_IMPORTS_NOT_SET_UP'];
             $this->view = 'error';
             $this->_processed = true;
@@ -101,6 +102,9 @@ class ImportController extends SugarController
         $this->action_Step1();
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_mapping()
     {
         global $mod_strings, $current_user;
@@ -116,12 +120,12 @@ class ImportController extends SugarController
 
             $import_map = $import_map->retrieve($_REQUEST['import_map_id'], false);
 
-            if ($_REQUEST['publish'] == 'yes') {
+            if ($_REQUEST['publish'] === 'yes') {
                 $result = $import_map->mark_published($current_user->id, true);
                 if (!$result) {
                     $results['message'] = $mod_strings['LBL_ERROR_UNABLE_TO_PUBLISH'];
                 }
-            } elseif ($_REQUEST['publish'] == 'no') {
+            } elseif ($_REQUEST['publish'] === 'no') {
                 // if you don't own this importmap, you do now, unless you have a map by the same name
                 $result = $import_map->mark_published($current_user->id, false);
                 if (!$result) {
@@ -134,6 +138,9 @@ class ImportController extends SugarController
         sugar_cleanup(true);
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function action_RefreshMapping()
     {
         global $mod_strings;
@@ -142,7 +149,7 @@ class ImportController extends SugarController
         $v = new ImportViewConfirm();
         $fileName = $_REQUEST['importFile'];
 
-        if (isset($fileName) && strpos((string) $fileName, '..') !== false) {
+        if (isset($fileName) && str_contains((string) $fileName, '..')) {
             LoggerManager::getLogger()->security('Directory navigation attack denied');
             return;
         }
@@ -152,7 +159,7 @@ class ImportController extends SugarController
             return;
         }
 
-        if (strpos((string) $fileName, 'phar://') !== false) {
+        if (str_contains((string) $fileName, 'phar://')) {
             LoggerManager::getLogger()->fatal('Invalid importFile file path');
             return;
         }
@@ -172,26 +179,29 @@ class ImportController extends SugarController
         $rows = $v->getSampleSet($importFile);
 
         $ss = new Sugar_Smarty();
-        $ss->assign("SAMPLE_ROWS", $rows);
-        $ss->assign("HAS_HEADER", $hasHeader);
-        $ss->assign("column_count", $v->getMaxColumnsInSampleSet($rows));
-        $ss->assign("MOD", $mod_strings);
+        $ss->assign('SAMPLE_ROWS', $rows);
+        $ss->assign('HAS_HEADER', $hasHeader);
+        $ss->assign('column_count', $v->getMaxColumnsInSampleSet($rows));
+        $ss->assign('MOD', $mod_strings);
         $ss->display('modules/Import/tpls/confirm_table.tpl');
         sugar_cleanup(true);
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function action_RefreshTable()
     {
         $offset = isset($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
         $tableID = isset($_REQUEST['tableID']) ? $_REQUEST['tableID'] : 'errors';
-        $has_header = $_REQUEST['has_header'] == 'on' ? true : false;
-        if ($tableID == 'dup') {
+        $has_header = $_REQUEST['has_header'] === 'on' ? true : false;
+        if ($tableID === 'dup') {
             $tableFilename = ImportCacheFiles::getDuplicateFileName();
         } else {
             $tableFilename = ImportCacheFiles::getErrorRecordsFileName();
         }
 
-        $if = new ImportFile($tableFilename, ",", '"', false, false);
+        $if = new ImportFile($tableFilename, ',', '"', false, false);
         $if->setHeaderRow($has_header);
         $lv = new ImportListView($if, array('offset'=> $offset), $tableID);
         $lv->display(false);
@@ -202,7 +212,7 @@ class ImportController extends SugarController
     public function action_Step1()
     {
         $fromAdminView = isset($_REQUEST['from_admin_wizard']) ? $_REQUEST['from_admin_wizard'] : false;
-        if ($this->importModule == 'Administration' || $fromAdminView
+        if ($this->importModule === 'Administration' || $fromAdminView
         ) {
             $this->view = 'step1';
         } else {

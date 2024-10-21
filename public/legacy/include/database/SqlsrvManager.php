@@ -94,63 +94,65 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 
-include_once('include/database/MssqlManager.php');
+include_once(__DIR__ . '/../../include/database/MssqlManager.php');
 
 /**
  * SQL Server (sqlsrv) manager
  */
 class SqlsrvManager extends MssqlManager
 {
-    public $dbName = 'SQL Server';
-    public $variant = 'sqlsrv';
-    public $priority = 10;
-    public $label = 'LBL_MSSQL_SQLSRV';
+    public string $dbName = 'SQL Server';
+    public string $variant = 'sqlsrv';
+    public int $priority = 10;
+    public string $label = 'LBL_MSSQL_SQLSRV';
 
-    protected $capabilities = array(
-        "affected_rows" => true,
-        'fulltext' => true,
+    protected array $capabilities = array(
+        'affected_rows'  => true,
+        'fulltext'       => true,
         'limit_subquery' => true,
-        'create_user' => true,
-        "create_db" => true,
+        'create_user'    => true,
+        'create_db'      => true,
     );
 
-    protected $type_map = array(
-        'int' => 'int',
-        'double' => 'float',
-        'float' => 'float',
-        'uint' => 'int',
-        'ulong' => 'int',
-        'long' => 'bigint',
-        'short' => 'smallint',
-        'varchar' => 'nvarchar',
-        'text' => 'nvarchar(max)',
-        'longtext' => 'nvarchar(max)',
-        'date' => 'datetime',
-        'enum' => 'nvarchar',
-        'relate' => 'nvarchar',
-        'multienum' => 'nvarchar(max)',
-        'html' => 'nvarchar(max)',
-        'emailbody' => 'nvarchar(max)',
-        'longhtml' => 'nvarchar(max)',
-        'datetime' => 'datetime',
+    protected array $type_map = array(
+        'int'           => 'int',
+        'double'        => 'float',
+        'float'         => 'float',
+        'uint'          => 'int',
+        'ulong'         => 'int',
+        'long'          => 'bigint',
+        'short'         => 'smallint',
+        'varchar'       => 'nvarchar',
+        'text'          => 'nvarchar(max)',
+        'longtext'      => 'nvarchar(max)',
+        'date'          => 'datetime',
+        'enum'          => 'nvarchar',
+        'relate'        => 'nvarchar',
+        'multienum'     => 'nvarchar(max)',
+        'html'          => 'nvarchar(max)',
+        'emailbody'     => 'nvarchar(max)',
+        'longhtml'      => 'nvarchar(max)',
+        'datetime'      => 'datetime',
         'datetimecombo' => 'datetime',
-        'time' => 'datetime',
-        'bool' => 'bit',
-        'tinyint' => 'tinyint',
-        'char' => 'char',
-        'blob' => 'nvarchar(max)',
-        'longblob' => 'nvarchar(max)',
-        'currency' => 'decimal(26,6)',
-        'decimal' => 'decimal',
-        'decimal2' => 'decimal',
-        'id' => 'varchar(36)',
-        'url' => 'nvarchar',
-        'encrypt' => 'nvarchar',
-        'file' => 'nvarchar',
-        'decimal_tpl' => 'decimal(%d, %d)',
+        'time'          => 'datetime',
+        'bool'          => 'bit',
+        'tinyint'       => 'tinyint',
+        'char'          => 'char',
+        'blob'          => 'nvarchar(max)',
+        'longblob'      => 'nvarchar(max)',
+        'currency'      => 'decimal(26,6)',
+        'decimal'       => 'decimal',
+        'decimal2'      => 'decimal',
+        'id'            => 'varchar(36)',
+        'url'           => 'nvarchar',
+        'encrypt'       => 'nvarchar',
+        'file'          => 'nvarchar',
+        'decimal_tpl'   => 'decimal(%d, %d)',
     );
 
     /**
+     * @throws Exception
+     * @throws Exception
      * @see DBManager::connect()
      */
     public function connect(array $configOptions = null, $dieOnError = false)
@@ -175,23 +177,25 @@ class SqlsrvManager extends MssqlManager
          * since the driver will handle that for us
          */
         $options = array(
-            "UID" => $configOptions['db_user_name'],
-            "PWD" => $configOptions['db_password'],
-            "CharacterSet" => "UTF-8",
-            "ReturnDatesAsStrings" => true,
-            "MultipleActiveResultSets" => true,
+            'UID'                      => $configOptions['db_user_name'],
+            'PWD'                      => $configOptions['db_password'],
+            'CharacterSet'             => 'UTF-8',
+            'ReturnDatesAsStrings'     => true,
+            'MultipleActiveResultSets' => true,
         );
         if (!empty($configOptions['db_name'])) {
-            $options["Database"] = $configOptions['db_name'];
+            $options['Database'] = $configOptions['db_name'];
         }
         $this->database = sqlsrv_connect($connect_param, $options);
         if (empty($this->database)) {
-            $GLOBALS['log']->fatal("Could not connect to server " . $configOptions['db_host_name'] . " as " . $configOptions['db_user_name'] . ".");
+            $GLOBALS['log']->fatal(
+                'Could not connect to server ' . $configOptions['db_host_name'] . ' as ' . $configOptions['db_user_name'] . '.'
+            );
             if ($dieOnError) {
                 if (isset($GLOBALS['app_strings']['ERR_NO_DB'])) {
                     sugar_die($GLOBALS['app_strings']['ERR_NO_DB']);
                 } else {
-                    sugar_die("Could not connect to the database. Please refer to suitecrm.log for details (4).");
+                    sugar_die('Could not connect to the database. Please refer to suitecrm.log for details (4).');
                 }
             } else {
                 return false;
@@ -199,14 +203,14 @@ class SqlsrvManager extends MssqlManager
         }
 
         if ($this->checkError('Could Not Connect:', $dieOnError)) {
-            $GLOBALS['log']->info("connected to db");
+            $GLOBALS['log']->info('connected to db');
         }
 
         sqlsrv_query($this->database, 'SET DATEFORMAT mdy');
 
         $this->connectOptions = $configOptions;
 
-        $GLOBALS['log']->info("Connect:" . $this->database);
+        $GLOBALS['log']->info('Connect:' . $this->database);
 
         return true;
     }
@@ -214,7 +218,13 @@ class SqlsrvManager extends MssqlManager
     /**
      * @see DBManager::query()
      */
-    public function query($sql, $dieOnError = false, $msg = '', $suppress = false, $keepResult = false)
+    public function query(
+        string|array $sql,
+        bool         $dieOnError = false,
+        string       $msg = '',
+        bool         $suppress = false,
+        bool         $keepResult = false
+    )
     {
         if (is_array($sql)) {
             return $this->queryArray($sql, $dieOnError, $msg, $suppress);
@@ -231,7 +241,6 @@ class SqlsrvManager extends MssqlManager
         $this->query_time = microtime(true) - $this->query_time;
         $GLOBALS['log']->info('Query Execution Time:' . $this->query_time);
 
-
         $this->checkError($msg . ' Query Failed:' . $sql . '::', $dieOnError);
 
         //suppress non error messages
@@ -243,7 +252,7 @@ class SqlsrvManager extends MssqlManager
     /**
      * @see DBManager::getFieldsArray()
      */
-    public function getFieldsArray($result, $make_lower_case = false)
+    public function getFieldsArray(mixed $result, bool $make_lower_case = false) : array
     {
         $field_array = array();
 
@@ -266,7 +275,7 @@ class SqlsrvManager extends MssqlManager
     /**
      * @see DBManager::fetchRow()
      */
-    public function fetchRow($result)
+    public function fetchRow(mixed $result) : array
     {
         if (empty($result)) {
             return false;
@@ -282,7 +291,7 @@ class SqlsrvManager extends MssqlManager
             // We need to strip empty spaces
             // notice we only strip if one space is returned.  we do not want to strip
             // strings with intentional spaces (" foo ")
-            if (!empty($column) && $column == " ") {
+            if (!empty($column) && $column === ' ') {
                 $row[$key] = '';
             }
         }
@@ -293,9 +302,9 @@ class SqlsrvManager extends MssqlManager
     /**
      * @see DBManager::convert()
      */
-    public function convert($string, $type, array $additional_parameters = array())
+    public function convert(string $string, string $type, array $additional_parameters = array()) : string
     {
-        if ($type == 'datetime') { // see http://msdn.microsoft.com/en-us/library/ms187928.aspx for details
+        if ($type === 'datetime') { // see http://msdn.microsoft.com/en-us/library/ms187928.aspx for details
             return "CONVERT(datetime,$string,120)";
         } else {
             return parent::convert($string, $type, $additional_parameters);
@@ -304,19 +313,20 @@ class SqlsrvManager extends MssqlManager
 
     /**
      * Compares two vardefs. Overriding 39098  due to bug: 39098 . IN 6.0 we changed the id columns to dbType = 'id'
-     * for example emails_beans.  In 554 the field email_id was nvarchar but in 6.0 since it id dbType = 'id' we would want to alter
-     * it to varchar. This code will prevent it.
+     * for example emails_beans.  In 554 the field email_id was nvarchar but in 6.0 since it id dbType = 'id' we would
+     * want to alter it to varchar. This code will prevent it.
      *
-     * @param  array $fielddef1
-     * @param  array $fielddef2
+     * @param array $fielddef1
+     * @param array $fielddef2
+     *
      * @return bool   true if they match, false if they don't
      */
-    public function compareVarDefs($fielddef1, $fielddef2, $ignoreName = false)
+    public function compareVarDefs($fielddef1, $fielddef2, $ignoreName = false) : bool
     {
-        if ((isset($fielddef2['dbType']) && $fielddef2['dbType'] == 'id') || preg_match(
-            '/(_id$|^id$)/',
-            (string) $fielddef2['name']
-        )
+        if ((isset($fielddef2['dbType']) && $fielddef2['dbType'] === 'id') || preg_match(
+                '/(_id$|^id$)/',
+                (string) $fielddef2['name']
+            )
         ) {
             if (isset($fielddef1['type']) && isset($fielddef2['type'])) {
                 $fielddef2['type'] = $fielddef1['type'];
@@ -344,7 +354,7 @@ class SqlsrvManager extends MssqlManager
     /**
      * @see DBManager::freeDbResult()
      */
-    protected function freeDbResult($dbResult)
+    protected function freeDbResult(mixed $dbResult) : void
     {
         if (!empty($dbResult)) {
             sqlsrv_free_stmt($dbResult);
@@ -353,7 +363,8 @@ class SqlsrvManager extends MssqlManager
 
 
     /**
-     * Detect if no clustered index has been created for a table; if none created then just pick the first index and make it that
+     * Detect if no clustered index has been created for a table; if none created then just pick the first index and
+     * make it that
      */
     public function getConstraintSql($indices, $table)
     {
@@ -363,7 +374,7 @@ class SqlsrvManager extends MssqlManager
 
         // check to see if one of the passed in indices is a primary one; if so we can bail as well
         foreach ($indices as $index) {
-            if ($index['type'] == 'primary') {
+            if ($index['type'] === 'primary') {
                 return parent::getConstraintSql($indices, $table);
             }
         }
@@ -379,25 +390,25 @@ class SqlsrvManager extends MssqlManager
     /**
      * @see DBManager::get_columns()
      */
-    public function get_columns($tablename)
+    public function get_columns(string $table_name) : array
     {
         //find all unique indexes and primary keys.
-        $result = $this->query("sp_columns_90 $tablename");
+        $result = $this->query('sp_columns_90 ' . $table_name);
 
         $columns = array();
         while (($row = $this->fetchByAssoc($result)) != null) {
             $column_name = strtolower($row['COLUMN_NAME']);
             $columns[$column_name]['name'] = $column_name;
             $columns[$column_name]['type'] = strtolower($row['TYPE_NAME']);
-            if ($row['TYPE_NAME'] == 'decimal') {
+            if ($row['TYPE_NAME'] === 'decimal') {
                 $columns[$column_name]['len'] = strtolower($row['PRECISION']);
                 $columns[$column_name]['len'] .= ',' . strtolower($row['SCALE']);
-            } elseif (in_array($row['TYPE_NAME'], array('nchar', 'nvarchar'))) {
+            } elseif (in_array($row['TYPE_NAME'], array( 'nchar', 'nvarchar' ))) {
                 $columns[$column_name]['len'] = strtolower($row['PRECISION']);
-                if ($row['TYPE_NAME'] == 'nvarchar' && $row['PRECISION'] == '0') {
+                if ($row['TYPE_NAME'] === 'nvarchar' && $row['PRECISION'] == '0') {
                     $columns[$column_name]['len'] = 'max';
                 }
-            } elseif (!in_array($row['TYPE_NAME'], array('datetime', 'text'))) {
+            } elseif (!in_array($row['TYPE_NAME'], array( 'datetime', 'text' ))) {
                 $columns[$column_name]['len'] = strtolower($row['LENGTH']);
             }
             if (stristr((string) $row['TYPE_NAME'], 'identity')) {
@@ -405,17 +416,20 @@ class SqlsrvManager extends MssqlManager
                 $columns[$column_name]['type'] = str_replace(' identity', '', strtolower($row['TYPE_NAME']));
             }
 
-            if (!empty($row['IS_NULLABLE']) && $row['IS_NULLABLE'] == 'NO' && (empty($row['KEY']) || !stristr(
-                (string) $row['KEY'],
-                'PRI'
-            ))
+            if (!empty($row['IS_NULLABLE']) && $row['IS_NULLABLE'] === 'NO' && (empty($row['KEY']) || !stristr(
+                        (string) $row['KEY'],
+                        'PRI'
+                    ))
             ) {
                 $columns[strtolower($row['COLUMN_NAME'])]['required'] = 'true';
             }
 
             $column_def = 1;
-            if (strtolower($tablename) == 'relationships') {
-                $column_def = $this->getOne("select cdefault from syscolumns where id = object_id('relationships') and name = '$column_name'");
+            if (strtolower($table_name) === 'relationships') {
+                $column_def =
+                    $this->getOne(
+                        "select cdefault from syscolumns where id = object_id('relationships') and name = '$column_name'"
+                    );
             }
             if ($column_def != 0 && ($row['COLUMN_DEF'] != null)) {    // NOTE Not using !empty as an empty string may be a viable default value.
                 $matches = array();
@@ -436,18 +450,19 @@ class SqlsrvManager extends MssqlManager
     /**
      * protected function to return true if the given tablename has any clustered indexes defined.
      *
-     * @param  string $tableName
+     * @param string $tableName
+     *
      * @return bool
      */
     protected function doesTableHaveAClusteredIndexDefined($tableName)
     {
         $query = <<<EOSQL
-SELECT IST.TABLE_NAME
-    FROM INFORMATION_SCHEMA.TABLES IST
-    WHERE objectProperty(object_id(IST.TABLE_NAME), 'IsUserTable') = 1
-        AND objectProperty(object_id(IST.TABLE_NAME), 'TableHasClustIndex') = 1
-        AND IST.TABLE_NAME = '{$tableName}'
-EOSQL;
+            SELECT IST.TABLE_NAME
+                FROM INFORMATION_SCHEMA.TABLES IST
+                WHERE objectProperty(object_id(IST.TABLE_NAME), 'IsUserTable') = 1
+                    AND objectProperty(object_id(IST.TABLE_NAME), 'TableHasClustIndex') = 1
+                    AND IST.TABLE_NAME = '{$tableName}'
+            EOSQL;
 
         $result = $this->getOne($query);
         if (!$result) {
@@ -460,17 +475,18 @@ EOSQL;
     /**
      * protected function to return true if the given tablename has any fulltext indexes defined.
      *
-     * @param  string $tableName
+     * @param string $tableName
+     *
      * @return bool
      */
     protected function doesTableHaveAFulltextIndexDefined($tableName)
     {
         $query = <<<EOSQL
-SELECT 1
-    FROM sys.fulltext_indexes i
-        JOIN sys.objects o ON i.object_id = o.object_id
-    WHERE o.name = '{$tableName}'
-EOSQL;
+            SELECT 1
+                FROM sys.fulltext_indexes i
+                    JOIN sys.objects o ON i.object_id = o.object_id
+                WHERE o.name = '{$tableName}'
+            EOSQL;
 
         $result = $this->getOne($query);
         if (!$result) {
@@ -486,33 +502,41 @@ EOSQL;
      * @see DBManager::changeColumnSQL()
      * @see MssqlHelper::changeColumnSQL()
      */
-    protected function changeColumnSQL($tablename, $fieldDefs, $action, $ignoreRequired = false)
+    protected function changeColumnSQL(
+        string $table_name,
+        array  $field_definitions,
+        string $action,
+        bool   $ignoreRequired = false
+    ) : array|string
     {
         $sql = '';
-        if ($action == 'drop' && $this->doesTableHaveAFulltextIndexDefined($tablename)) {
-            $sql .= "DROP FULLTEXT INDEX ON {$tablename}";
+        if ($action === 'drop' && $this->doesTableHaveAFulltextIndexDefined($table_name)) {
+            $sql .= "DROP FULLTEXT INDEX ON {$table_name}";
         }
 
-        $sql .= parent::changeColumnSQL($tablename, $fieldDefs, $action, $ignoreRequired);
+        $sql .= parent::changeColumnSQL($table_name, $field_definitions, $action, $ignoreRequired);
 
         return $sql;
     }
 
     /**
      * Truncate table
-     * @param  $name
+     *
+     * @param string $name
+     *
      * @return string
      */
-    public function truncateTableSQL($name)
+    public function truncateTableSQL(string $name) : string
     {
         return "TRUNCATE TABLE $name";
     }
 
     /**
      * (non-PHPdoc)
+     *
      * @see DBManager::lastDbError()
      */
-    public function lastDbError()
+    public function lastDbError() : bool|string
     {
         $errors = sqlsrv_errors(SQLSRV_ERR_ERRORS);
         if (empty($errors)) {
@@ -551,10 +575,11 @@ EOSQL;
 
     /**
      * (non-PHPdoc)
-     * @see DBManager::getDbInfo()
+     *
      * @return array
+     * @see DBManager::getDbInfo()
      */
-    public function getDbInfo()
+    public function getDbInfo() : ?array
     {
         $info = array_merge(sqlsrv_client_info(), sqlsrv_server_info());
 
@@ -563,16 +588,18 @@ EOSQL;
 
     /**
      * Execute data manipulation statement, then roll it back
+     *
      * @param  $type
      * @param  $table
      * @param  $query
+     *
      * @return string
      */
     protected function verifyGenericQueryRollback($type, $table, $query)
     {
         $this->log->debug("verifying $type statement");
         if (!sqlsrv_begin_transaction($this->database)) {
-            return "Failed to create transaction";
+            return 'Failed to create transaction';
         }
         $this->query($query, false);
         $error = $this->lastError();
@@ -583,52 +610,60 @@ EOSQL;
 
     /**
      * Tests an INSERT INTO query
+     *
      * @param string table The table name to get DDL
      * @param string query The query to test.
+     *
      * @return string Non-empty if error found
      */
     public function verifyInsertInto($table, $query)
     {
-        return $this->verifyGenericQueryRollback("INSERT", $table, $query);
+        return $this->verifyGenericQueryRollback('INSERT', $table, $query);
     }
 
     /**
      * Tests an UPDATE query
+     *
      * @param string table The table name to get DDL
      * @param string query The query to test.
+     *
      * @return string Non-empty if error found
      */
     public function verifyUpdate($table, $query)
     {
-        return $this->verifyGenericQueryRollback("UPDATE", $table, $query);
+        return $this->verifyGenericQueryRollback('UPDATE', $table, $query);
     }
 
     /**
      * Tests an DELETE FROM query
+     *
      * @param string table The table name to get DDL
      * @param string query The query to test.
+     *
      * @return string Non-empty if error found
      */
     public function verifyDeleteFrom($table, $query)
     {
-        return $this->verifyGenericQueryRollback("DELETE", $table, $query);
+        return $this->verifyGenericQueryRollback('DELETE', $table, $query);
     }
 
     /**
      * Select database
+     *
      * @param string $dbname
      */
     protected function selectDb($dbname)
     {
-        return $this->query("USE " . $this->quoted($dbname));
+        return $this->query('USE ' . $this->quoted($dbname));
     }
 
     /**
      * Check if this driver can be used
+     *
      * @return bool
      */
-    public function valid()
+    public function valid() : bool
     {
-        return function_exists("sqlsrv_connect");
+        return function_exists('sqlsrv_connect');
     }
 }

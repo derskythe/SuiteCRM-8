@@ -47,7 +47,7 @@ class SugarFieldBool extends SugarFieldBase
     /**
      *
      * @return The html for a drop down if the search field is not 'my_items_only' or a dropdown for all other fields.
-     *			This strange behavior arises from the special needs of PM. They want the my items to be checkboxes and all other boolean fields to be dropdowns.
+     *            This strange behavior arises from the special needs of PM. They want the my items to be checkboxes and all other boolean fields to be dropdowns.
      * @author Navjeet Singh
      * @param $parentFieldArray -
      **/
@@ -55,7 +55,7 @@ class SugarFieldBool extends SugarFieldBase
     {
         $this->setup($parentFieldArray, $vardef, $displayParams, $tabindex);
         //If there was a type override to specifically render it as a boolean, show the EditView checkbox
-        if (preg_match("/(favorites|current_user|open)_only.*/", $vardef['name'])) {
+        if (preg_match('/(favorites|current_user|open)_only.*/', $vardef['name'])) {
             return $this->fetch($this->findTemplate('EditView'));
         } else {
             return $this->fetch($this->findTemplate('SearchView'));
@@ -79,7 +79,7 @@ class SugarFieldBool extends SugarFieldBase
             //Convert all the values to a real bool.
             $value = (int) ($bool_search > 3);
         }
-        if (isset($vardef['dbType']) && $vardef['dbType'] == 'varchar') {
+        if (isset($vardef['dbType']) && $vardef['dbType'] === 'varchar') {
             $value = ($value ? 'on' : 'off');
         }
 
@@ -90,10 +90,10 @@ class SugarFieldBool extends SugarFieldBase
     {
         global $app_list_strings;
         // This does not return a smarty section, instead it returns a direct value
-        if ($inputField == 'bool_true' || $inputField === true) { // Note: true must be absolute true
+        if ($inputField === 'bool_true' || $inputField === true) { // Note: true must be absolute true
             return $app_list_strings['checkbox_dom']['1'];
         } else {
-            if ($inputField == 'bool_false' || $inputField === false) { // Note: false must be absolute false
+            if ($inputField === 'bool_false' || $inputField === false) { // Note: false must be absolute false
                 return $app_list_strings['checkbox_dom']['2'];
             } else { // otherwise we return blank display
                 return '';
@@ -107,7 +107,7 @@ class SugarFieldBool extends SugarFieldBase
             $unformattedField = false;
             return $unformattedField;
         }
-        if ($formattedField == '0' || $formattedField == 'off' || $formattedField == 'false' || $formattedField == 'no') {
+        if ($formattedField == '0' || $formattedField === 'off' || $formattedField === 'false' || $formattedField === 'no') {
             $unformattedField = false;
         } else {
             $unformattedField = true;

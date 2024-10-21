@@ -50,8 +50,8 @@ class Localization
 {
     public $availableCharsets = array(
         'BIG-5',        //Taiwan and Hong Kong
-        /*'CP866'			  // ms-dos Cyrillic */
-        /*'CP949'			  //Microsoft Korean */
+        /*'CP866'              // ms-dos Cyrillic */
+        /*'CP949'              //Microsoft Korean */
         'CP1251',       //MS Cyrillic
         'CP1252',       //MS Western European & US
         'EUC-CN',       //Simplified Chinese GB2312
@@ -156,7 +156,7 @@ class Localization
             $userPref = $current_user->getPreference($prefName);
         }
         // Bug 39171 - If we are asking for default_email_charset, check in emailSettings['defaultOutboundCharset'] as well
-        if ($prefName == 'default_email_charset') {
+        if ($prefName === 'default_email_charset') {
             if ($user != null) {
                 $emailSettings = $user->getPreference('emailSettings', 'Emails');
             } elseif (!empty($current_user)) {
@@ -182,7 +182,7 @@ class Localization
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	CURRENCY HANDLING
+    ////    CURRENCY HANDLING
     /**
      * wrapper for whatever currency system we implement
      */
@@ -317,12 +317,12 @@ class Localization
 
         return $ret;
     }
-    ////	END CURRENCY HANDLING
+    ////    END CURRENCY HANDLING
     ///////////////////////////////////////////////////////////////////////////
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	CHARSET TRANSLATION
+    ////    CHARSET TRANSLATION
     /**
      * returns a mod|app_strings array in the target charset
      * @param array strings $mod_string, et.al.
@@ -345,8 +345,8 @@ class Localization
 
     /**
      * translates the passed variable for email sending (export)
-     * @param	mixed the var (array or string) to translate
-     * @return	mixed the translated variable
+     * @param    mixed the var (array or string) to translate
+     * @return    mixed the translated variable
      */
     public function translateForEmail($var)
     {
@@ -449,7 +449,7 @@ class Localization
     /**
      * translates a character set from one to another, and the into MIME-header friendly format
      */
-    public function translateCharsetMIME($string, $fromCharset, $toCharset = 'UTF-8', $encoding = "Q")
+    public function translateCharsetMIME($string, $fromCharset, $toCharset = 'UTF-8', $encoding = 'Q')
     {
         $previousEncoding = mb_internal_encoding();
         mb_internal_encoding($fromCharset);
@@ -460,7 +460,7 @@ class Localization
 
     public function normalizeCharset($charset)
     {
-        $charset = strtolower(preg_replace("/[\-\_]*/", "", $charset));
+        $charset = strtolower(preg_replace('/[\-\_]*/', '', $charset));
         return $charset;
     }
 
@@ -501,11 +501,11 @@ class Localization
         $charset = $this->getPrecedentPreference('default_email_charset', $user);
         return $charset;
     }
-    ////	END CHARSET TRANSLATION
+    ////    END CHARSET TRANSLATION
     ///////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	NUMBER DISPLAY FORMATTING CODE
+    ////    NUMBER DISPLAY FORMATTING CODE
     public function getDecimalSeparator($user = null)
     {
         // Bug50887 this is purposefully misspelled as ..._separator to match the way it's defined throughout the app.
@@ -663,11 +663,11 @@ JAVASCRIPT;
         return $out;
     }
 
-    ////	END NUMBER DISPLAY FORMATTING CODE
+    ////    END NUMBER DISPLAY FORMATTING CODE
     ///////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	NAME DISPLAY FORMATTING CODE
+    ////    NAME DISPLAY FORMATTING CODE
     /**
      * get's the Name format macro string, preferring $current_user
      * @return string format Name Format macro for locale
@@ -692,7 +692,15 @@ JAVASCRIPT;
      * when the formatted name would be blank
      * @return string formattedName
      */
-    public function getLocaleFormattedName($firstName, $lastName, $salutationKey = '', $title = '', $format = "", $user = null, $returnEmptyStringIfEmpty = false)
+    public function getLocaleFormattedName(
+        $firstName,
+        $lastName,
+        $salutationKey = '',
+        $title = '',
+        $format = '',
+        $user = null,
+        $returnEmptyStringIfEmpty = false
+    )
     {
         global $current_user;
         global $app_list_strings;
@@ -869,7 +877,7 @@ JAVASCRIPT;
         }
         return $newOpts;
     }
-    ////	END NAME DISPLAY FORMATTING CODE
+    ////    END NAME DISPLAY FORMATTING CODE
     ///////////////////////////////////////////////////////////////////////////
 
     /**

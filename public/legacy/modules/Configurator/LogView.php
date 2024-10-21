@@ -49,7 +49,7 @@ if (!is_admin($current_user)) {
 }
 $filter = '';
 if (!empty($_REQUEST['filter'])) {
-    $filter = 	$_REQUEST['filter'];
+    $filter =     $_REQUEST['filter'];
 }
 $ignore_self = false;
 if (!empty($_REQUEST['ignore_self'])) {
@@ -88,9 +88,9 @@ $logfile = $config->get('logger.file.name');
 $log_dir = $config->get('log_dir');
 $log_dir = $log_dir . (empty($log_dir)?'':'/');
 $file_suffix = $config->get('logger.file.suffix');
-$date_suffix = "";
+$date_suffix = '';
 if (!empty($file_suffix)) {
-    $date_suffix = "_" . date(str_replace("%", "", (string) $file_suffix));
+    $date_suffix = '_' . date(str_replace('%', '', (string) $file_suffix));
 }
 
 $logFile = $log_dir . $logfile . $date_suffix . $ext;

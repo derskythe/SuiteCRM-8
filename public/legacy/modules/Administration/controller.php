@@ -45,6 +45,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class AdministrationController extends SugarController
 {
+    /**
+     * @throws Exception
+     */
     public function action_savetabs()
     {
         require_once('include/SubPanel/SubPanelDefinitions.php');
@@ -72,7 +75,7 @@ class AdministrationController extends SugarController
             $subPanelDefinition->set_hidden_subpanels($disabledTabsKeyArray);
         }
 
-        header("Location: index.php?module=Administration&action=ConfigureTabs");
+        header('Location: index.php?module=Administration&action=ConfigureTabs');
     }
 
     public function action_savelanguages()
@@ -83,7 +86,7 @@ class AdministrationController extends SugarController
         $toDecode = html_entity_decode((string) $_REQUEST['enabled_langs'], ENT_QUOTES);
         $enabled_langs = json_decode($toDecode);
 
-        if (in_array($current_language, $disabled_langs)){
+        if (in_array($current_language, $disabled_langs, true)) {
             $GLOBALS['log']->fatal($mod_strings['LBL_CANNOT_DISABLE_CURRENT_LANGUAGE']);
             displayAdminError(translate('LBL_CANNOT_DISABLE_CURRENT_LANGUAGE', 'Administration'));
             SugarApplication::redirect('index.php?module=Administration&action=Languages');
@@ -94,9 +97,9 @@ class AdministrationController extends SugarController
         $cfg->config['disabled_languages'] = implode(',', $disabled_langs);
         // TODO: find way to enforce order
         $cfg->handleOverride();
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('app-metadata-language-strings-'. $current_language);
-        header("Location: index.php?module=Administration&action=Languages");
+        header('Location: index.php?module=Administration&action=Languages');
     }
 
 
@@ -107,6 +110,7 @@ class AdministrationController extends SugarController
      * It instantiates an instance of UnifiedSearchAdvanced and then calls the saveGlobalSearchSettings
      * method.
      *
+     * @throws Exception
      */
     public function action_saveglobalsearchsettings()
     {
@@ -124,7 +128,7 @@ class AdministrationController extends SugarController
             $return = 'true';
             echo $return;
         } catch (Exception $ex) {
-            echo "false";
+            echo 'false';
         }
     }
 
@@ -153,7 +157,7 @@ class AdministrationController extends SugarController
         $cfg->config['addAjaxBannedModules'] = empty($disabled) ? false : $disabled;
         $cfg->addKeyToIgnoreOverride('addAjaxBannedModules', $disabled);
         $cfg->handleOverride();
-        $this->view = "configureajaxui";
+        $this->view = 'configureajaxui';
     }
 
 

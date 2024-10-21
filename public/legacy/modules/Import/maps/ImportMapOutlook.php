@@ -69,7 +69,7 @@ class ImportMapOutlook extends ImportMapOther
      * Do we have a header?
      */
     public $has_header = true;
-    
+
     /**
      * Gets the default mapping for a module
      *
@@ -84,9 +84,9 @@ class ImportMapOutlook extends ImportMapOther
         case 'Contacts':
         case 'Leads':
             return $return_array + array(
-                "Job Title"=>"title",
-                "Home Country"=>"alt_address_country",
-                "E-mail 2 Address"=>"email2",
+                    'Job Title'        => 'title',
+                    'Home Country'     => 'alt_address_country',
+                    'E-mail 2 Address' => 'email2',
                 );
             break;
         case 'Accounts':

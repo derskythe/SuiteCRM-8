@@ -48,31 +48,31 @@
 class SugarDateTime extends DateTime
 {
     // Recognized properties and their formats
-    protected $formats = array(
-        "sec" => "s",
-        "min" => "i",
-        "hour" => "G",
-        "zhour" => "H",
-        "day" => "j",
-        "zday" => "d",
-        "days_in_month" => "t",
-        "day_of_week" => "w",
-        "day_of_year" => "z",
-        "week" => "W",
-        "month" => "n",
-        "zmonth" => "m",
-        "year" => "Y",
-        "am_pm" => "A",
-        "hour_12" => "g",
+    protected array $formats = array(
+        'sec'           => 's',
+        'min'           => 'i',
+        'hour'          => 'G',
+        'zhour'         => 'H',
+        'day'           => 'j',
+        'zday'          => 'd',
+        'days_in_month' => 't',
+        'day_of_week'   => 'w',
+        'day_of_year'   => 'z',
+        'week'          => 'W',
+        'month'         => 'n',
+        'zmonth'        => 'm',
+        'year'          => 'Y',
+        'am_pm'         => 'A',
+        'hour_12'       => 'g',
     );
 
     // Property aliases
-    protected $var_gets = array(
-        "24_hour" => "hour",
-        "day_of_week" => "day_of_week_long",
-        "day_of_week_short" => "day_of_week_short",
-        "month_name" => "month_long",
-        "hour" => "hour_12",
+    protected array $var_gets = array(
+        '24_hour'           => 'hour',
+        'day_of_week'       => 'day_of_week_long',
+        'day_of_week_short' => 'day_of_week_short',
+        'month_name'        => 'month_long',
+        'hour'              => 'hour_12',
     );
 
     /**
@@ -106,7 +106,9 @@ class SugarDateTime extends DateTime
      * @param string $format Format like in date()
      * @param string $time Time to parse
      * @param DateTimeZone $timezone
+     *
      * @return SugarDateTime|bool|null|mixed
+     * @throws DateMalformedStringException
      * @see DateTime::createFromFormat
      */
     #[ReturnTypeWillChange]
@@ -115,9 +117,9 @@ class SugarDateTime extends DateTime
         if (empty($time) || empty($format)) {
             return false;
         }
-        if (self::$use_php_parser && is_callable(array("DateTime", "createFromFormat"))) {
+        if (self::$use_php_parser && is_callable(array( 'DateTime', 'createFromFormat' ))) {
             // 5.3, hurray!
-            if (!empty($timezone)) {
+            if ($timezone !== null) {
                 $d = parent::createFromFormat($format, $time, $timezone);
             } else {
                 $d = parent::createFromFormat($format, $time);
@@ -129,7 +131,7 @@ class SugarDateTime extends DateTime
         if (!$d) {
             return false;
         }
-        $sd = new self($d->format(DateTime::ISO8601));
+        $sd = new self($d->format(DateTimeInterface::ATOM));
         $sd->setTimezone($d->getTimezone());
         return $sd;
     }
@@ -148,13 +150,13 @@ class SugarDateTime extends DateTime
     protected static function _createFromFormat($format, $time, DateTimeZone $timezone = null)
     {
         $res = new self();
-        if (!empty($timezone)) {
+        if ($timezone !== null) {
             $res->setTimezone($timezone);
         }
-        if (self::$use_strptime && function_exists("strptime")) {
+        if (self::$use_strptime && function_exists('strptime')) {
             $str_format = str_replace(array_keys(TimeDate::$format_to_str), array_values(TimeDate::$format_to_str), $format);
             // for a reason unknown to modern science, %P doesn't work in strptime
-            $str_format = str_replace("%P", "%p", $str_format);
+            $str_format = str_replace('%P', '%p', $str_format);
             // strip spaces before am/pm as our formats don't have them
             $time = preg_replace('/\s+(AM|PM)/i', '\1', $time);
             // TODO: better way to not risk locale stuff problems?
@@ -163,17 +165,17 @@ class SugarDateTime extends DateTime
                 $GLOBALS['log']->error("Cannot parse $time for format $format");
                 return null;
             }
-            if ($data["tm_year"] == 0) {
-                unset($data["tm_year"]);
+            if ($data['tm_year'] === 0) {
+                unset($data['tm_year']);
             }
-            if ($data["tm_mday"] == 0) {
-                unset($data["tm_mday"]);
+            if ($data['tm_mday'] === 0) {
+                unset($data['tm_mday']);
             }
-            if (isset($data["tm_year"])) {
-                $data["tm_year"] += 1900;
+            if (isset($data['tm_year'])) {
+                $data['tm_year'] += 1900;
             }
-            if (isset($data["tm_mon"])) {
-                $data["tm_mon"]++;
+            if (isset($data['tm_mon'])) {
+                $data['tm_mon']++;
             }
             $data += self::$data_init; // fill in missing parts
         } else {
@@ -184,23 +186,25 @@ class SugarDateTime extends DateTime
             $GLOBALS['log']->error("Cannot parse $time for format $format");
             return null;
         }
-        if (isset($data["tm_year"])) {
-            $res->setDate($data["tm_year"], $data["tm_mon"], $data["tm_mday"]);
+        if (isset($data['tm_year'])) {
+            $res->setDate($data['tm_year'], $data['tm_mon'], $data['tm_mday']);
         }
-        $res->setTime($data["tm_hour"], $data["tm_min"], $data["tm_sec"]);
+        $res->setTime($data['tm_hour'], $data['tm_min'], $data['tm_sec']);
         return $res;
     }
 
     /**
      * Load language Calendar strings
-     * @internal
+     *
      * @param string $name string section to return
+     *
      * @return array
+     * @internal
      */
-    protected function _getStrings($name)
+    protected function _getStrings(string $name)
     {
         if (empty($this->_strings)) {
-            $this->_strings = return_mod_list_strings_language($GLOBALS['current_language'], "Calendar");
+            $this->_strings = return_mod_list_strings_language($GLOBALS['current_language'], 'Calendar');
         }
         return $this->_strings[$name];
     }
@@ -218,23 +222,22 @@ class SugarDateTime extends DateTime
         }
         // conditional, derived and translated ones
         switch ($var) {
-            case "ts":
-                return $this->format("U")+0;
-            case "tz_offset":
+            case 'ts':
+                return $this->format('U');
+            case 'tz_offset':
                 return $this->getTimezone()->getOffset($this);
-            case "days_in_year":
-                return $this->format("L") == '1'?366:365;
-                break;
-            case "day_of_week_short":
+            case 'days_in_year':
+                return $this->format('L') === '1' ? 366 : 365;
+            case 'day_of_week_short':
                 $str = $this->_getStrings('dom_cal_weekdays');
                 return $str[$this->day_of_week];
-            case "day_of_week_long":
+            case 'day_of_week_long':
                 $str = $this->_getStrings('dom_cal_weekdays_long');
                 return $str[$this->day_of_week];
-            case "month_short":
+            case 'month_short':
                 $str = $this->_getStrings('dom_cal_month');
                 return $str[$this->month];
-            case "month_long":
+            case 'month_long':
                 $str = $this->_getStrings('dom_cal_month_long');
                 return $str[$this->month];
         }
@@ -247,15 +250,17 @@ class SugarDateTime extends DateTime
      *
      * @param string $name
      * @param array $args
+     *
      * @return mixed
+     * @throws Exception
      */
     public function __call($name, $args)
     {
         // fill in 5.2.x gaps
-        if ($name == "getTimestamp") {
+        if ($name === 'getTimestamp') {
             return $this->format('U')+0;
         }
-        if ($name == "setTimestamp") {
+        if ($name === 'setTimestamp') {
             $sec = (int)$args[0];
             $sd = new self("@$sec");
             $sd->setTimezone($this->getTimezone());
@@ -263,7 +268,7 @@ class SugarDateTime extends DateTime
         }
 
         // getters
-        if (substr($name, 0, 4) == "get_") {
+        if (str_starts_with($name, 'get_')) {
             $var = substr($name, 4);
 
             if (isset($this->var_gets[$var])) {
@@ -274,22 +279,25 @@ class SugarDateTime extends DateTime
                 return $this->__get($var);
             }
         }
-        $GLOBALS['log']->fatal("SugarDateTime: unknowm method $name called");
-        sugar_die("SugarDateTime: unknowm method $name called");
+        $message = sprintf('SugarDateTime: unknowm method %s called', $name);
+        $GLOBALS['log']->fatal($message);
+        sugar_die($message);
         return false;
     }
 
     /**
      * Get specific hour of today.
      *
-     * @deprecated This function is unused and will be removed in a future release.
      * @param int $hour_index
+     *
      * @return SugarDateTime
+     * @throws Exception
+     * @deprecated This function is unused and will be removed in a future release.
      */
     public function get_datetime_by_index_today($hour_index)
     {
         if ($hour_index < 0 || $hour_index > 23) {
-            sugar_die("hour is outside of range");
+            sugar_die('hour is outside of range');
         }
 
         $newdate = clone $this;
@@ -366,10 +374,12 @@ class SugarDateTime extends DateTime
     /**
      * Get new date, modified by date expression
      *
+     * @param string $expression
+     *
+     * @return SugarDateTime
+     * @throws DateMalformedStringException
      * @example $yesterday = $today->get("yesterday");
      *
-     * @param string $expression
-     * @return SugarDateTime
      */
     public function get($expression)
     {
@@ -380,8 +390,11 @@ class SugarDateTime extends DateTime
 
     /**
      * Create from ISO 8601 datetime
+     *
      * @param string $str
+     *
      * @return SugarDateTime
+     * @throws DateMalformedStringException
      */
     public static function parse_utc_date_time($str)
     {
@@ -392,17 +405,20 @@ class SugarDateTime extends DateTime
      * Create a list of time slots for calendar view
      * Times must be in user TZ
      *
-     * @deprecated This function is unused and will be removed in a future release.
-     * @param string $view Which view we are using - day, week, month
+     * @param string $view              Which view we are using - day, week, month
      * @param SugarDateTime $start_time Start time
-     * @param SugarDateTime $end_time End time
+     * @param SugarDateTime $end_time   End time
+     *
      * @return array
+     * @throws DateMalformedStringException
+     * @throws DateMalformedStringException
+     * @deprecated This function is unused and will be removed in a future release.
      */
     public static function getHashList($view, $start_time, $end_time)
     {
         $hash_list = array();
 
-        if ($view != 'day') {
+        if ($view !== 'day') {
             $end_time = $end_time->get_day_end_time();
         }
 
@@ -415,12 +431,12 @@ class SugarDateTime extends DateTime
         $new_time->setTime($new_time->hour, 0, 0);
 
         while ($new_time->ts < $end) {
-            if ($view == 'day') {
-                $hash_list[] = $new_time->format(TimeDate::DB_DATE_FORMAT) . ":" . $new_time->hour;
-                $new_time->modify("next hour");
+            if ($view === 'day') {
+                $hash_list[] = $new_time->format(TimeDate::DB_DATE_FORMAT) . ':' . $new_time->hour;
+                $new_time->modify('next hour');
             } else {
                 $hash_list[] = $new_time->format(TimeDate::DB_DATE_FORMAT);
-                $new_time->modify("next day");
+                $new_time->modify('next day');
             }
         }
 
@@ -439,9 +455,9 @@ class SugarDateTime extends DateTime
     {
         $newdate = clone $this;
         $newdate->setDate(
-            $year?$year:$this->year,
-            $month?$month:$this->month,
-            $day?$day:$this->day
+            $year ? : $this->year,
+            $month ? : $this->month,
+            $day ? : $this->day
         );
         $newdate->setTime(0, 0);
         return $newdate;
@@ -459,9 +475,9 @@ class SugarDateTime extends DateTime
     {
         $newdate = clone $this;
         $newdate->setDate(
-            $year?$year:$this->year,
-            $month?$month:$this->month,
-            $day?$day:$this->day
+            $year ? : $this->year,
+            $month ? : $this->month,
+            $day ? : $this->day
         );
         $newdate->setTime(23, 59, 59);
         return $newdate;
@@ -494,7 +510,7 @@ class SugarDateTime extends DateTime
     {
         if ($tz) {
             if (empty(self::$_gmt)) {
-                self::$_gmt = new DateTimeZone("UTC");
+                self::$_gmt = new DateTimeZone('UTC');
             }
             $this->setTimezone(self::$_gmt);
         }
@@ -513,7 +529,7 @@ class SugarDateTime extends DateTime
     {
         if ($tz) {
             if (empty(self::$_gmt)) {
-                self::$_gmt = new DateTimeZone("UTC");
+                self::$_gmt = new DateTimeZone('UTC');
             }
             $this->setTimezone(self::$_gmt);
         }
@@ -527,7 +543,7 @@ class SugarDateTime extends DateTime
      */
     public function get_date_str()
     {
-        return sprintf("&year=%d&month=%d&day=%d&hour=%d", $this->year, $this->month, $this->day, $this->hour);
+        return sprintf('&year=%d&month=%d&day=%d&hour=%d', $this->year, $this->month, $this->day, $this->hour);
     }
 
     /**
@@ -555,9 +571,9 @@ class SugarDateTime extends DateTime
     );
 
     protected static $data_init = array(
-        "tm_hour" => 0,
-        "tm_min" => 0,
-        "tm_sec" => 0,
+        'tm_hour' => 0,
+        'tm_min'  => 0,
+        'tm_sec'  => 0,
     );
 
     protected static $strptime_short_mon;
@@ -580,11 +596,11 @@ class SugarDateTime extends DateTime
         $data = self::$data_init;
         if (empty(self::$strptime_short_mon)) {
             self::$strptime_short_mon = array_flip($this->_getStrings('dom_cal_month'));
-            unset(self::$strptime_short_mon[""]);
+            unset(self::$strptime_short_mon['']);
         }
         if (empty(self::$strptime_long_mon)) {
             self::$strptime_long_mon = array_flip($this->_getStrings('dom_cal_month_long'));
-            unset(self::$strptime_long_mon[""]);
+            unset(self::$strptime_long_mon['']);
         }
 
         $regexp = TimeDate::get_regular_expression($format);
@@ -602,7 +618,7 @@ class SugarDateTime extends DateTime
             // FIXME: locale?
             $mon = $dateparts[$regexp['positions']['F']];
             if (isset(self::$sugar_strptime_long_mon[$mon])) {
-                $data["tm_mon"] = self::$sugar_strptime_long_mon[$mon];
+                $data['tm_mon'] = self::$sugar_strptime_long_mon[$mon];
             } else {
                 return false;
             }
@@ -611,22 +627,22 @@ class SugarDateTime extends DateTime
             // FIXME: locale?
             $mon = $dateparts[$regexp['positions']['M']];
             if (isset(self::$sugar_strptime_short_mon[$mon])) {
-                $data["tm_mon"] = self::$sugar_strptime_short_mon[$mon];
+                $data['tm_mon'] = self::$sugar_strptime_short_mon[$mon];
             } else {
                 return false;
             }
         }
         if (isset($regexp['positions']['a']) && !empty($dateparts[$regexp['positions']['a']])) {
             $ampm = trim($dateparts[$regexp['positions']['a']]);
-            if ($ampm == 'pm') {
-                if ($data["tm_hour"] != 12) {
-                    $data["tm_hour"] += 12;
+            if ($ampm === 'pm') {
+                if ($data['tm_hour'] != 12) {
+                    $data['tm_hour'] += 12;
                 }
             } else {
-                if ($ampm == 'am') {
-                    if ($data["tm_hour"] == 12) {
+                if ($ampm === 'am') {
+                    if ($data['tm_hour'] == 12) {
                         // 12:00am is 00:00
-                        $data["tm_hour"] = 0;
+                        $data['tm_hour'] = 0;
                     }
                 } else {
                     return false;
@@ -636,15 +652,15 @@ class SugarDateTime extends DateTime
 
         if (isset($regexp['positions']['A']) && !empty($dateparts[$regexp['positions']['A']])) {
             $ampm = trim($dateparts[$regexp['positions']['A']]);
-            if ($ampm == 'PM') {
-                if ($data["tm_hour"] != 12) {
-                    $data["tm_hour"] += 12;
+            if ($ampm === 'PM') {
+                if ($data['tm_hour'] != 12) {
+                    $data['tm_hour'] += 12;
                 }
             } else {
-                if ($ampm == 'AM') {
-                    if ($data["tm_hour"] == 12) {
+                if ($ampm === 'AM') {
+                    if ($data['tm_hour'] == 12) {
                         // 12:00am is 00:00
-                        $data["tm_hour"] = 0;
+                        $data['tm_hour'] = 0;
                     }
                 } else {
                     return false;

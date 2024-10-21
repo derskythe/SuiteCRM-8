@@ -38,7 +38,7 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-$dictionary["aok_knowledgebase_categories"] = array(
+$dictionary['aok_knowledgebase_categories'] = array(
   'true_relationship_type' => 'many-to-many',
   'relationships' =>
   array(

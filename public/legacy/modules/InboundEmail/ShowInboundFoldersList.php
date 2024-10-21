@@ -67,24 +67,24 @@ global $app_list_strings;
 global $current_user;
 global $sugar_config;
 
-$title				= '';
-$msg				= '';
-$tls				= '';
-$cert				= '';
-$ssl				= '';
-$notls				= '';
-$novalidate_cert	= '';
-$useSsl				= false;
-$deletedFoldersList = "";
+$title                = '';
+$msg                = '';
+$tls                = '';
+$cert                = '';
+$ssl                = '';
+$notls                = '';
+$novalidate_cert    = '';
+$useSsl                = false;
+$deletedFoldersList = '';
 
 ///////////////////////////////////////////////////////////////////////////////
-////	TITLES
+////    TITLES
 
 $popupBoolean = false;
-if (isset($_REQUEST['target']) && $_REQUEST['target'] == 'Popup') {
+if (isset($_REQUEST['target']) && $_REQUEST['target'] === 'Popup') {
     $popupBoolean = true;
 }
-if (isset($_REQUEST['target1']) && $_REQUEST['target1'] == 'Popup') {
+if (isset($_REQUEST['target1']) && $_REQUEST['target1'] === 'Popup') {
     $popupBoolean = true;
 }
 
@@ -95,16 +95,16 @@ if ($popupBoolean) {
 
 $subdcriptionFolderHelp = $app_strings['LBL_EMAIL_SUBSCRIPTION_FOLDER_HELP'];
 
-if (isset($_REQUEST['ssl']) && ($_REQUEST['ssl'] == "true" || $_REQUEST['ssl'] == 1)) {
+if (isset($_REQUEST['ssl']) && ($_REQUEST['ssl'] === 'true' || $_REQUEST['ssl'] == 1)) {
     $useSsl = true;
 }
 
-$searchField = !empty($_REQUEST['searchField']) ? $_REQUEST['searchField'] : "";
+$searchField = !empty($_REQUEST['searchField']) ? $_REQUEST['searchField'] : '';
 $multipleString = "multiple=\"true\"";
 if (!empty($searchField)) {
-    $subdcriptionFolderHelp = "";
-    $multipleString = "";
-    if ($searchField == 'trash') {
+    $subdcriptionFolderHelp = '';
+    $multipleString = '';
+    if ($searchField === 'trash') {
         $title = $mod_strings['LBL_SELECT_TRASH_FOLDERS'];
     } else {
         $title = $mod_strings['LBL_SELECT_SENT_FOLDERS'];
@@ -146,15 +146,15 @@ if ($popupBoolean) {
     $foldersList = $returnArray['foldersList'];
     if ($returnArray['status']) {
         $msg = $returnArray['statusMessage'];
-        $requestMailBox = explode(",", $_REQUEST['mailbox']);
-        $foldersListArray = explode(",", $foldersList);
-        $deletedFoldersString = "";
+        $requestMailBox = explode(',', $_REQUEST['mailbox']);
+        $foldersListArray = explode(',', $foldersList);
+        $deletedFoldersString = '';
         $count = 0;
         if (!empty($requestMailBox) && !empty($foldersListArray)) {
             foreach ($requestMailBox as $mailbox) {
                 if (!in_array($mailbox, $foldersListArray)) {
                     if ($count != 0) {
-                        $deletedFoldersString = $deletedFoldersString . " ,";
+                        $deletedFoldersString = $deletedFoldersString . ' ,';
                     }
                     $deletedFoldersString = $deletedFoldersString . $mailbox;
                     $count++;
@@ -170,82 +170,82 @@ if ($popupBoolean) {
     }
 }
 
-////	END TITLES
+////    END TITLES
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	COMMON CODE
+////    COMMON CODE
 echo '<table width="100%" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td>&nbsp;
-				</td>
-				<td valign="top">
-					<div id="sf_msg">
-					'.$msg.'
-					</div>
-				</td>
-			</tr>';
+            <tr>
+                <td>&nbsp;
+                </td>
+                <td valign="top">
+                    <div id="sf_msg">
+                    '.$msg.'
+                    </div>
+                </td>
+            </tr>';
 if (!empty($subdcriptionFolderHelp)) {
     echo '<tr>
-				<td>&nbsp;
-				</td>
-				<td>&nbsp;
-				</td>
-			</tr>
-			<tr align="center">
-				<td>&nbsp;
-				</td>
-				<td>'.$subdcriptionFolderHelp.'
-				</td>
-			</tr>';
+                <td>&nbsp;
+                </td>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr align="center">
+                <td>&nbsp;
+                </td>
+                <td>'.$subdcriptionFolderHelp.'
+                </td>
+            </tr>';
 } // if
 echo '<tr>
-				<td>&nbsp;
-				</td>
-				<td valign="top">
-					<div id="sf_deletedFoldersList" style="display:none;">
-					'.$deletedFoldersList.'
-					</div>
-				</td>
-			</tr>
-			<tr align="center">
-				<td>&nbsp;
-				</td>
-				<td  valign="top">
-					<select '.$multipleString.' size="12" name="inboundmailboxes" id="sf_inboundmailboxes">
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>&nbsp;
-				</td>
-				<td>&nbsp;
-				</td>
-			</tr>
-			<tr align="center">
-				<td>&nbsp;
-				</td>
-				<td>
-					<input type="button" style="" class="button" value="'.$app_strings['LBL_DONE_BUTTON_LABEL'].'" onclick="setMailbox();">
-					<input type="button" class="button" value="'.$app_strings['LBL_EMAIL_CANCEL'].'" onclick="SUGAR.inboundEmail.listDlg.hide()">
-				</td>
-			</tr>
-			<tr>
-				<td>&nbsp;
-				</td>
-				<td>&nbsp;
-				</td>
-			</tr>';
-echo '	</table>';
+                <td>&nbsp;
+                </td>
+                <td valign="top">
+                    <div id="sf_deletedFoldersList" style="display:none;">
+                    '.$deletedFoldersList.'
+                    </div>
+                </td>
+            </tr>
+            <tr align="center">
+                <td>&nbsp;
+                </td>
+                <td  valign="top">
+                    <select '.$multipleString.' size="12" name="inboundmailboxes" id="sf_inboundmailboxes">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+                <td>&nbsp;
+                </td>
+            </tr>
+            <tr align="center">
+                <td>&nbsp;
+                </td>
+                <td>
+                    <input type="button" style="" class="button" value="'.$app_strings['LBL_DONE_BUTTON_LABEL'].'" onclick="setMailbox();">
+                    <input type="button" class="button" value="'.$app_strings['LBL_EMAIL_CANCEL'].'" onclick="SUGAR.inboundEmail.listDlg.hide()">
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;
+                </td>
+                <td>&nbsp;
+                </td>
+            </tr>';
+echo '    </table>';
 
-////	END COMMON CODE
+////    END COMMON CODE
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	COMPLETE RENDERING OF THE POPUP
+////    COMPLETE RENDERING OF THE POPUP
 echo '<input type="hidden" id="sf_returnstatus" name="returnstatus" value="'. $returnArray['status'] .'">';
 echo '<input type="hidden" id="sf_foldersList" name="foldersList" value="'. htmlspecialchars((string) $foldersList) .'">';
-echo '<input type="hidden" id="sf_selectedfoldersList" name="selectedfoldersList" value="'. implode(",", $requestMailBox) .'">';
+echo '<input type="hidden" id="sf_selectedfoldersList" name="selectedfoldersList" value="'. implode(',', $requestMailBox) .'">';
 echo '<input type="hidden" id="sf_searchField" name="searchField" value="'. $searchField .'">';
 
 echo '
@@ -279,59 +279,59 @@ echo '
         }
         SUGAR.inboundEmail.listDlg.hide();
      }
-	function switchMsg() {
-		if(typeof(document.getElementById("sf_msg")) != "undefined") {
-			document.getElementById("sf_msg").innerHTML = "'.$msg.'";
-			var deletedFoldersList = document.getElementById("sf_deletedFoldersList");
-			deletedFoldersList.innerHTML = "'. $deletedFoldersList .'";
-			if (deletedFoldersList.innerHTML.length > 0) {
-				deletedFoldersList.style.display = "";
-			} // if
-			var selectedFoldersListObject = new Object();
-			var selectedFoldersListArray = document.getElementById("sf_selectedfoldersList").value.split(",");
-			for (var j = 0 ; j < selectedFoldersListArray.length ; j++) {
-				selectedFoldersListObject[selectedFoldersListArray[j]] = selectedFoldersListArray[j];
-			} // for
-			if (document.getElementById("sf_returnstatus").value == "1") {
-				var foldersList = document.getElementById("sf_foldersList").value;
-				var foldersArray = foldersList.split(",");
-				var inboundmailboxes = document.getElementById("sf_inboundmailboxes");
-				for (var i = 0 ; i < foldersArray.length ; i++) {
-					var opt = new Option(foldersArray[i], foldersArray[i]);
-					if (selectedFoldersListObject[foldersArray[i]] != null) {
-						opt.selected = true;
-					}
-					inboundmailboxes.options.add(opt);
-				} // for
-			} // if
-			var selectdFoldersValue = document.getElementById("sf_selectedfoldersList").value;
-			var searchFieldValue = document.getElementById("sf_searchField").value;
-			if (selectdFoldersValue.length <= 0) {
-				if (searchFieldValue.length > 0) {
-					if (searchFieldValue == "trash") {
-						var inboundmailboxes = document.getElementById("sf_inboundmailboxes");
-						for (var i = 0 ; i < inboundmailboxes.options.length ; i++) {
-							if ((inboundmailboxes.options[i].text.search(/trash/i) != -1) ||
-								(inboundmailboxes.options[i].text.search(/delete/i) != -1)) {
+    function switchMsg() {
+        if(typeof(document.getElementById("sf_msg")) != "undefined") {
+            document.getElementById("sf_msg").innerHTML = "'.$msg.'";
+            var deletedFoldersList = document.getElementById("sf_deletedFoldersList");
+            deletedFoldersList.innerHTML = "'. $deletedFoldersList .'";
+            if (deletedFoldersList.innerHTML.length > 0) {
+                deletedFoldersList.style.display = "";
+            } // if
+            var selectedFoldersListObject = new Object();
+            var selectedFoldersListArray = document.getElementById("sf_selectedfoldersList").value.split(",");
+            for (var j = 0 ; j < selectedFoldersListArray.length ; j++) {
+                selectedFoldersListObject[selectedFoldersListArray[j]] = selectedFoldersListArray[j];
+            } // for
+            if (document.getElementById("sf_returnstatus").value == "1") {
+                var foldersList = document.getElementById("sf_foldersList").value;
+                var foldersArray = foldersList.split(",");
+                var inboundmailboxes = document.getElementById("sf_inboundmailboxes");
+                for (var i = 0 ; i < foldersArray.length ; i++) {
+                    var opt = new Option(foldersArray[i], foldersArray[i]);
+                    if (selectedFoldersListObject[foldersArray[i]] != null) {
+                        opt.selected = true;
+                    }
+                    inboundmailboxes.options.add(opt);
+                } // for
+            } // if
+            var selectdFoldersValue = document.getElementById("sf_selectedfoldersList").value;
+            var searchFieldValue = document.getElementById("sf_searchField").value;
+            if (selectdFoldersValue.length <= 0) {
+                if (searchFieldValue.length > 0) {
+                    if (searchFieldValue == "trash") {
+                        var inboundmailboxes = document.getElementById("sf_inboundmailboxes");
+                        for (var i = 0 ; i < inboundmailboxes.options.length ; i++) {
+                            if ((inboundmailboxes.options[i].text.search(/trash/i) != -1) ||
+                                (inboundmailboxes.options[i].text.search(/delete/i) != -1)) {
 
-								inboundmailboxes.options[i].selected = true;
-								break;
-							}
-						} // for
-					} // if
-					if (searchFieldValue == "sent") {
-						var inboundmailboxes = document.getElementById("sf_inboundmailboxes");
-						for (var i = 0 ; i < inboundmailboxes.options.length ; i++) {
-							if (inboundmailboxes.options[i].text.search(/sent/i) != -1) {
+                                inboundmailboxes.options[i].selected = true;
+                                break;
+                            }
+                        } // for
+                    } // if
+                    if (searchFieldValue == "sent") {
+                        var inboundmailboxes = document.getElementById("sf_inboundmailboxes");
+                        for (var i = 0 ; i < inboundmailboxes.options.length ; i++) {
+                            if (inboundmailboxes.options[i].text.search(/sent/i) != -1) {
 
-								inboundmailboxes.options[i].selected = true;
-								break;
-							}
-						} // for
-					} // if
-				} // if
-			} // if
-		}
-	}
-	switchMsg();
+                                inboundmailboxes.options[i].selected = true;
+                                break;
+                            }
+                        } // for
+                    } // if
+                } // if
+            } // if
+        }
+    }
+    switchMsg();
 </script>';

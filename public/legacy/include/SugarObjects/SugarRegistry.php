@@ -44,6 +44,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 /**
  * Global registry
+ *
  * @api
  */
 class SugarRegistry
@@ -55,17 +56,18 @@ class SugarRegistry
     {
     }
 
-    public static function getInstance($name = 'default')
+    public static function getInstance(string $name = 'default') : self
     {
         if (!isset(self::$_instances[$name])) {
             self::$_instances[$name] = new self();
         }
+
         return self::$_instances[$name];
     }
 
     public function __get($key)
     {
-        return isset($this->_data[$key]) ? $this->_data[$key] : null;
+        return $this->_data[$key] ?? null;
     }
 
     public function __set($key, $value)
@@ -83,7 +85,7 @@ class SugarRegistry
         unset($this->_data[$key]);
     }
 
-    public function addToGlobals()
+    public function addToGlobals() : void
     {
         foreach ($this->_data as $k => $v) {
             $GLOBALS[$k] = $v;

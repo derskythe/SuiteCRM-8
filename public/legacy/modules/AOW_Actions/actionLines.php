@@ -39,7 +39,7 @@ function display_action_lines(SugarBean $focus, $field, $value, $view)
     $app_list_actions = [];
     $app_list_actions[''] = '';
 
-    if ($view == 'EditView') {
+    if ($view === 'EditView') {
         $html .= '<script src="modules/AOW_Actions/actionLines.js"></script>';
 
         $aow_actions_list = array();
@@ -69,9 +69,9 @@ function display_action_lines(SugarBean $focus, $field, $value, $view)
 
         $html .= "<table id='actionLines'></table>";
 
-        $html .= "<div>";
+        $html .= '<div>';
         $html .= "<input type=\"button\" tabindex=\"116\" class=\"button\" value=\"".$mod_strings['LBL_ADD_ACTION']."\" id=\"btn_ActionLine\" onclick=\"insertActionLine()\" disabled/>";
-        $html .= "</div>";
+        $html .= '</div>';
 
         if (isset($focus->flow_module) && $focus->flow_module != '') {
             $html .= "<script>document.getElementById('btn_ActionLine').disabled = '';</script>";
@@ -85,13 +85,13 @@ function display_action_lines(SugarBean $focus, $field, $value, $view)
                     $action_name->retrieve($row['id']);
                     $action_item = json_encode($action_name->toArray());
 
-                    $html .= "<script>
-                            loadActionLine(".$action_item.");
-                        </script>";
+                    $html .= '<script>
+                            loadActionLine(' .$action_item. ');
+                        </script>';
                 }
             }
         }
-    } elseif ($view == 'DetailView') {
+    } elseif ($view === 'DetailView') {
         $html .= "<table border='0' width='100%' cellpadding='0' cellspacing='0'>";
         $idQuoted = $focus->db->quoted($focus->id);
         $sql = 'SELECT id FROM aow_actions WHERE aow_workflow_id = ' . $idQuoted . ' AND deleted = 0 ORDER BY action_order ASC';
@@ -101,9 +101,9 @@ function display_action_lines(SugarBean $focus, $field, $value, $view)
             $action_name = BeanFactory::newBean('AOW_Actions');
             $action_name->retrieve($row['id']);
 
-            $html .= "<tr><td>". $action_name->action_order ."</td><td>".$action_name->name."</td><td>". translate('LBL_'.strtoupper($action_name->action), 'AOW_Actions')."</td></tr>";
+            $html .= '<tr><td>' . $action_name->action_order . '</td><td>' .$action_name->name. '</td><td>' . translate('LBL_'.strtoupper($action_name->action), 'AOW_Actions'). '</td></tr>';
         }
-        $html .= "</table>";
+        $html .= '</table>';
     }
     return $html;
 }

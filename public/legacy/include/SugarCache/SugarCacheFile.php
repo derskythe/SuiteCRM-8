@@ -105,6 +105,8 @@ class SugarCacheFile extends SugarCacheAbstract
 
     /**
      * This is needed to prevent unserialize vulnerability
+     *
+     * @throws Exception
      */
     public function __wakeup()
     {
@@ -112,7 +114,7 @@ class SugarCacheFile extends SugarCacheAbstract
         foreach (get_object_vars($this) as $k => $v) {
             $this->$k = null;
         }
-        throw new Exception("Not a serializable object");
+        throw new Exception('Not a serializable object');
     }
 
     /**

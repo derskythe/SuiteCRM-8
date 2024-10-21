@@ -39,7 +39,7 @@
  */
 
 if (!defined('sugarEntry') || !sugarEntry) {
-       die('Not A Valid Entry Point');
+    die('Not a Valid Entry Point');
 }
 
 use \ReCaptcha\ReCaptcha as ReCaptcha;
@@ -49,7 +49,7 @@ use SuiteCRM\Utility\SuiteLogger as SuiteLogger;
 /**
  * @return array|null
  */
-function getRecaptchaSettings()
+function getRecaptchaSettings() : ?array
 {
     $administration = BeanFactory::newBean('Administration');
     $administration->retrieveSettings('captcha');
@@ -199,6 +199,8 @@ function displayRecaptchaValidation()
 
 /**
  * @return string recaptcha enabled template or the recaptcha disabled template
+ * @throws SmartyException
+ * @throws SmartyException
  */
 function displayRecaptcha()
 {

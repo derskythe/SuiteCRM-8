@@ -57,9 +57,9 @@ class MySugar
 
     public function checkDashletDisplay()
     {
-        if ((!in_array($this->type, $GLOBALS['moduleList'])
-                && !in_array($this->type, $GLOBALS['modInvisList']))
-                && (!in_array('Activities', $GLOBALS['moduleList']))) {
+        if ((!in_array($this->type, $GLOBALS['moduleList'], true)
+                && !in_array($this->type, $GLOBALS['modInvisList'], true))
+            && (!in_array('Activities', $GLOBALS['moduleList'], true))) {
             $displayDashlet = false;
         } elseif (ACLController::moduleSupportsACL($this->type)) {
             $bean = SugarModule::get($this->type)->loadBean();
@@ -76,7 +76,7 @@ class MySugar
 
     public function addDashlet()
     {
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 
@@ -102,7 +102,7 @@ class MySugar
 
             $guid = create_guid();
             $options = array();
-            if (isset($_POST['type'], $_POST['type_module']) && $_POST['type'] == 'web') {
+            if (isset($_POST['type'], $_POST['type_module']) && $_POST['type'] === 'web') {
                 $dashlet_module = 'Home';
                 require_once('include/Dashlets/DashletRssFeedTitle.php');
                 $options['url'] = $_POST['type_module'];
@@ -123,7 +123,7 @@ class MySugar
 
 
             if (!array_key_exists('current_tab', $_SESSION)) {
-                $_SESSION["current_tab"] = '0';
+                $_SESSION['current_tab'] = '0';
             }
 
             array_unshift($pages[$_SESSION['current_tab']]['columns'][0]['dashlets'], $guid);
@@ -148,7 +148,7 @@ class MySugar
             $sortOrder = '';
             $orderBy = '';
             foreach ($_REQUEST as $k => $v) {
-                if ($k == 'lvso') {
+                if ($k === 'lvso') {
                     $sortOrder = $v;
                 } else {
                     if (preg_match('/Home2_.+_ORDER_BY/', $k)) {
@@ -167,7 +167,7 @@ class MySugar
                 $dashletDefs[$id]['options'] = $dashlet->saveOptions($_REQUEST);
                 $current_user->setPreference('dashlets', $dashletDefs, 0, $this->type);
             }
-            if (!empty($_REQUEST['dynamic']) && $_REQUEST['dynamic'] == 'true' && $dashlet->hasScript) {
+            if (!empty($_REQUEST['dynamic']) && $_REQUEST['dynamic'] === 'true' && $dashlet->hasScript) {
                 $dashlet->isConfigurable = false;
                 echo $dashlet->getTitle('') . $app_strings['LBL_RELOAD_PAGE'];
             } else {
@@ -183,7 +183,7 @@ class MySugar
                 echo $dashlet->getFooter();
             }
         } else {
-            header("Location: index.php?action=index&module=". $this->type);
+            header('Location: index.php?action=index&module=' . $this->type);
         }
     }
 
@@ -200,7 +200,7 @@ class MySugar
             $dashlet->process();
             echo $dashlet->displayScript();
         } else {
-            header("Location: index.php?action=index&module=". $this->type);
+            header('Location: index.php?action=index&module=' . $this->type);
         }
     }
 
@@ -239,6 +239,9 @@ class MySugar
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function dashletsDialog()
     {
         require_once('include/MySugar/DashletsDialog/DashletsDialog.php');
@@ -263,7 +266,7 @@ class MySugar
         $sugar_smarty->assign('APP', $app_strings);
         $sugar_smarty->assign('moduleName', $this->type);
 
-        if ($this->type == 'Home') {
+        if ($this->type === 'Home') {
             $sugar_smarty->assign('modules', $dashletsList);
             $sugar_smarty->assign('tools', $toolsList);
         }
@@ -284,6 +287,9 @@ EOJS;
     }
 
 
+    /**
+     * @throws SmartyException
+     */
     public function searchModuleToolsDashlets($searchStr, $category)
     {
         require_once('include/MySugar/DashletsDialog/DashletsDialog.php');
@@ -330,6 +336,9 @@ EOJS;
         return $sugar_smarty->fetch('include/MySugar/tpls/dashletsSearchResults.tpl');
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function searchChartsDashlets($searchStr)
     {
         require_once('include/MySugar/DashletsDialog/DashletsDialog.php');
@@ -366,10 +375,10 @@ EOJS;
         $searchStr = $_REQUEST['search'];
         $category = $_REQUEST['category'];
 
-        if ($category == 'module' || $category == 'tools') {
+        if ($category === 'module' || $category === 'tools') {
             $html = $this->searchModuleToolsDashlets($searchStr, $category);
         } else {
-            if ($category == 'chart') {
+            if ($category === 'chart') {
                 $html = $this->searchChartsDashlets($searchStr);
             }
         }
@@ -407,7 +416,7 @@ EOJS;
     {
         global $current_user;
 
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return;
         }
 

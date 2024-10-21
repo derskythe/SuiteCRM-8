@@ -63,6 +63,7 @@ class PipelineBySalesStageDashlet extends DashletGenericChart
     protected $_seedName = 'Opportunities';
 
     /**
+     * @throws DateMalformedStringException
      * @see DashletGenericChart::__construct()
      */
     public function __construct(
@@ -76,7 +77,7 @@ class PipelineBySalesStageDashlet extends DashletGenericChart
         }
 
         if (empty($options['pbss_date_end'])) {
-            $options['pbss_date_end'] = $timedate->asDbDate($timedate->getNow()->modify("+6 months"));
+            $options['pbss_date_end'] = $timedate->asDbDate($timedate->getNow()->modify('+6 months'));
         }
 
         if (empty($options['title'])) {
@@ -108,9 +109,10 @@ class PipelineBySalesStageDashlet extends DashletGenericChart
     }
 
     /**
+     * @throws SmartyException
      * @see DashletGenericChart::display()
      */
-    public function display()
+    public function display() : string
     {
         global $current_user, $sugar_config;
 
@@ -325,14 +327,14 @@ EOD;
     protected function constructQuery()
     {
         $conversion_rate = $this->currency->conversion_rate;
-        $query = "  SELECT opportunities.sales_stage,
+        $query = '  SELECT opportunities.sales_stage,
                         count(*) AS opp_count,
-                        sum((amount_usdollar*".$conversion_rate.")/1000) AS total
-                    FROM users,opportunities  ";
-        $query .= " WHERE opportunities.date_closed >= ". DBManagerFactory::getInstance()->convert("'".$this->pbss_date_start."'", 'date').
-            " AND opportunities.date_closed <= ".DBManagerFactory::getInstance()->convert("'".$this->pbss_date_end."'", 'date') .
-            " AND opportunities.assigned_user_id = users.id  AND opportunities.deleted=0 ";
-        $query .= " GROUP BY opportunities.sales_stage";
+                        sum((amount_usdollar*' .$conversion_rate. ')/1000) AS total
+                    FROM users,opportunities  ';
+        $query .= ' WHERE opportunities.date_closed >= ' . DBManagerFactory::getInstance()->convert("'".$this->pbss_date_start."'", 'date').
+            ' AND opportunities.date_closed <= ' .DBManagerFactory::getInstance()->convert("'".$this->pbss_date_end."'", 'date') .
+            ' AND opportunities.assigned_user_id = users.id  AND opportunities.deleted=0 ';
+        $query .= ' GROUP BY opportunities.sales_stage';
         return $query;
     }
 

@@ -93,6 +93,7 @@ function sugar_mkdir($pathname, $mode = null, $recursive = false, $context = nul
             }
         }
     } else {
+        $pathname = realpath($pathname);
         $errorMessage = "Cannot create directory $pathname cannot be touched";
         if (is_null($GLOBALS['log'])) {
             throw new Exception("Error occurred but the system doesn't have logger. Error message: \"$errorMessage\"");
@@ -147,7 +148,7 @@ function sugar_fclose($handle)
 
     $result = fclose($handle);
 
-    if ((new SplFileInfo($filename))->getExtension() == 'php') {
+    if ((new SplFileInfo($filename))->getExtension() === 'php') {
         SugarCache::cleanFile($filename);
     }
 
@@ -187,7 +188,7 @@ function sugar_file_put_contents($filename, $data, $flags = null, $context = nul
     }
 
     $result = file_put_contents($filename, $data, $flags, $context);
-    if ((new SplFileInfo($filename))->getExtension() == 'php') {
+    if ((new SplFileInfo($filename))->getExtension() === 'php') {
         SugarCache::cleanFile($filename);
     }
 
@@ -240,7 +241,7 @@ function sugar_file_put_contents_atomic($filename, $data, $mode = 'wb')
         }else{
             $result = sugar_chmod($filename, 0755);
         }
-        if ((new SplFileInfo($filename))->getExtension() == 'php') {
+        if ((new SplFileInfo($filename))->getExtension() === 'php') {
             SugarCache::cleanFile($filename);
         }
         return $result;

@@ -73,9 +73,9 @@ $out =<<<EOQ
     <tr>
       <td colspan="2">
       <p>
-		<img src="{$sugar_md}" alt="SugarCRM" border="0">
+        <img src="{$sugar_md}" alt="SugarCRM" border="0">
       </p>
-	  {$disabled_text}
+      {$disabled_text}
       </td>
     </tr>
 

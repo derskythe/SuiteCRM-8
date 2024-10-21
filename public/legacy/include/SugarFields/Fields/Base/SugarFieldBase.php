@@ -73,8 +73,11 @@ class SugarFieldBase
 
     /**
      * parse and fetch template
+     *
      * @param string $path template
+     *
      * @return string
+     * @throws SmartyException
      */
     public function fetch($path)
     {
@@ -194,7 +197,7 @@ class SugarFieldBase
         $tabindex = 1;
         //fixing bug #46666: don't need to format enum and radioenum fields
         //because they are already formated in SugarBean.php in the function get_list_view_array() as fix of bug #21672
-        if ($this->type != 'Enum' && $this->type != 'Radioenum') {
+        if ($this->type !== 'Enum' && $this->type !== 'Radioenum') {
             $parentFieldArray = $this->setupFieldArray($parentFieldArray, $vardef);
         } else {
             $vardef['name'] = strtoupper($vardef['name']);
@@ -248,7 +251,7 @@ class SugarFieldBase
      */
     public function getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
     {
-        if (!empty($vardef['function']['returns']) && $vardef['function']['returns'] == 'html') {
+        if (!empty($vardef['function']['returns']) && $vardef['function']['returns'] === 'html') {
             $type = $this->type;
             $this->type = 'Base';
             $result = $this->getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex);
@@ -343,7 +346,7 @@ class SugarFieldBase
             } else {
                 $onListView = false;
             }
-            if (isset($vardef['function']['returns']) && $vardef['function']['returns'] == 'html') {
+            if (isset($vardef['function']['returns']) && $vardef['function']['returns'] === 'html') {
                 $returnsHtml = true;
             } else {
                 $returnsHtml = false;
@@ -640,7 +643,7 @@ class SugarFieldBase
      */
     protected function isRangeSearchView($vardef)
     {
-        return !empty($vardef['enable_range_search']) && !empty($_REQUEST['action']) && $_REQUEST['action'] != 'Popup';
+        return !empty($vardef['enable_range_search']) && !empty($_REQUEST['action']) && $_REQUEST['action'] !== 'Popup';
     }
 
     /**

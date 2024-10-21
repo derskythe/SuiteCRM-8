@@ -55,26 +55,26 @@ if (is_admin($current_user) || isset($from_sync_client) || is_admin_for_any_modu
     $export = false;
 
     if (count($_POST) && isset($_POST['raction'])) {
-        if (isset($_POST['raction']) && strtolower($_POST['raction']) == "export") {
+        if (isset($_POST['raction']) && strtolower($_POST['raction']) === 'export') {
             //jc - output buffering is being used. if we do not clean the output buffer
             //the contents of the buffer up to the length of the repair statement(s)
             //will be saved in the file...
             ob_clean();
 
-            header("Content-Disposition: attachment; filename=repairSugarDB.sql");
+            header('Content-Disposition: attachment; filename=repairSugarDB.sql');
             header("Content-Type: text/sql; charset={$app_strings['LBL_CHARSET']}");
-            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-            header("Last-Modified: " . TimeDate::httpTime());
-            header("Cache-Control: post-check=0, pre-check=0", false);
-            header("Content-Length: " . strlen((string) $_POST['sql']));
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . TimeDate::httpTime());
+            header('Cache-Control: post-check=0, pre-check=0', false);
+            header('Content-Length: ' . strlen((string) $_POST['sql']));
 
             //jc:7347 - for whatever reason, html_entity_decode is choking on converting
             //the html entity &#039; to a single quote, so we will use str_replace
             //instead
-            $sql = str_replace(array('&#039;', '&#96;'), array("'", "`"), (string) $_POST['sql']);
+            $sql = str_replace(array('&#039;', '&#96;'), array( "'", '`' ), (string) $_POST['sql']);
             //echo html_entity_decode($_POST['sql']);
             echo $sql;
-        } elseif (isset($_POST['raction']) && strtolower($_POST['raction']) == "execute") {
+        } elseif (isset($_POST['raction']) && strtolower($_POST['raction']) === 'execute') {
             $sql = str_replace(
                 array(
                     "\n",
@@ -84,11 +84,11 @@ if (is_admin($current_user) || isset($from_sync_client) || is_admin_for_any_modu
                 array(
                     '',
                     "'",
-                    "`"
+                    '`'
                 ),
                 preg_replace('#(/\*.+?\*/\n*)#', '', (string) $_POST['sql'])
             );
-            foreach (explode(";", $sql) as $stmt) {
+            foreach (explode(';', $sql) as $stmt) {
                 $stmt = trim($stmt);
 
                 if (!empty($stmt)) {
@@ -125,7 +125,7 @@ if (is_admin($current_user) || isset($from_sync_client) || is_admin_for_any_modu
                 if (($focus instanceof SugarBean) && $focus->hasCustomFields() && !isset($repairedTables[$focus->table_name . '_cstm'])) {
                     $df = new DynamicField($focus->module_dir);
                     //Need to check if the method exists as during upgrade an old version of Dynamic Fields may be loaded.
-                    if (method_exists($df, "repairCustomFields")) {
+                    if (method_exists($df, 'repairCustomFields')) {
                         $df->bean = $focus;
                         $sql .= $df->repairCustomFields($execute);
                         $repairedTables[$focus->table_name . '_cstm'] = true;
@@ -160,10 +160,10 @@ if (is_admin($current_user) || isset($from_sync_client) || is_admin_for_any_modu
             echo "<script type=\"text/javascript\">document.getElementById('rdloading').style.display = \"none\";</script>";
 
             if (isset($sql) && !empty($sql)) {
-                $qry_str = "";
+                $qry_str = '';
                 foreach (explode("\n", $sql) as $line) {
-                    if (!empty($line) && substr($line, -2) != "*/") {
-                        $line .= ";";
+                    if (!empty($line) && !str_ends_with($line, '*/')) {
+                        $line .= ';';
                     }
 
                     $qry_str .= $line . "\n";

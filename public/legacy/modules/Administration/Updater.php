@@ -49,11 +49,11 @@ global $current_user;
 global $sugar_config;
 
 $xtpl=new XTemplate('modules/Administration/Updater.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 
-if (isset($_REQUEST['useraction']) && ($_REQUEST['useraction']=='Save' || $_REQUEST['useraction']=='CheckNow')) {
-    if (!empty($_REQUEST['type']) && $_REQUEST['type'] == 'automatic') {
+if (isset($_REQUEST['useraction']) && ($_REQUEST['useraction'] === 'Save' || $_REQUEST['useraction'] === 'CheckNow')) {
+    if (!empty($_REQUEST['type']) && $_REQUEST['type'] === 'automatic') {
         set_CheckUpdates_config_setting('automatic');
     } else {
         set_CheckUpdates_config_setting('manual');
@@ -69,20 +69,20 @@ if (isset($_REQUEST['useraction']) && ($_REQUEST['useraction']=='Save' || $_REQU
 }
 
 echo getClassicModuleTitle(
-    "Administration",
+    'Administration',
     array(
-            "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration')."</a>",
+        "<a href='index.php?module=Administration&action=index'>".translate('LBL_MODULE_NAME', 'Administration'). '</a>',
            $mod_strings['LBL_SUITE_UPDATE_TITLE'],
            ),
     false
         );
 
 if (get_sugarbeat()) {
-    $xtpl->assign("SEND_STAT_CHECKED", "checked");
+    $xtpl->assign('SEND_STAT_CHECKED', 'checked');
 }
 
-if (get_CheckUpdates_config_setting()=='automatic') {
-    $xtpl->assign("AUTOMATIC_CHECKED", "checked");
+if (get_CheckUpdates_config_setting() === 'automatic') {
+    $xtpl->assign('AUTOMATIC_CHECKED', 'checked');
 }
 
 
@@ -104,7 +104,7 @@ if (!empty($license->settings['license_latest_versions'])) {
         foreach ($versions as $version) {
             if (compareVersions($version['version'], $sugar_version)) {
                 $has_updates = true;
-                $xtpl->assign("VERSION", $version);
+                $xtpl->assign('VERSION', $version);
                 $xtpl->parse('main.updates.version');
             }
         }
@@ -117,8 +117,8 @@ if (!empty($license->settings['license_latest_versions'])) {
 }
 
 //return module and index.
-$xtpl->assign("RETURN_MODULE", "Administration");
-$xtpl->assign("RETURN_ACTION", "index");
+$xtpl->assign('RETURN_MODULE', 'Administration');
+$xtpl->assign('RETURN_ACTION', 'index');
 
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->parse('main');
+$xtpl->out('main');

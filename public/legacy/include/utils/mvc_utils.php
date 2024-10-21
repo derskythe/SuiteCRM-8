@@ -53,8 +53,8 @@ function loadParentView($type)
 
 function getPrintLink()
 {
-    if (isset($_REQUEST['action']) && $_REQUEST['action'] == "ajaxui") {
-        return "javascript:SUGAR.ajaxUI.print();";
+    if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'ajaxui') {
+        return 'javascript:SUGAR.ajaxUI.print();';
     }
     $requestString = null;
     if (isset($GLOBALS['request_string'])) {
@@ -83,8 +83,8 @@ function ajaxBannedModules()
         'Releases',
         'Groups',
         'EmailMan',
-        "Administration",
-        "ModuleBuilder",
+        'Administration',
+        'ModuleBuilder',
         'Schedulers',
         'SchedulersJobs',
         'DynamicFields',

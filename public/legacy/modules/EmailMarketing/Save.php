@@ -82,8 +82,8 @@ if (!empty($_POST['assigned_user_id']) && ($marketing->assigned_user_id != $_POS
     $check_notify = false;
 }
 foreach ($marketing->column_fields as $field) {
-    if ($field == 'all_prospect_lists') {
-        if (isset($_POST[$field]) && $_POST[$field]=='on') {
+    if ($field === 'all_prospect_lists') {
+        if (isset($_POST[$field]) && $_POST[$field] === 'on') {
             $marketing->$field = 1;
         } else {
             $marketing->$field = 0;
@@ -105,12 +105,12 @@ foreach ($marketing->additional_column_fields as $field) {
 
 $marketing->campaign_id = $_REQUEST['campaign_id'];
 
-if (isset($_REQUEST['func']) && $_REQUEST['func'] == 'wizardUpdate') {
+if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'wizardUpdate') {
     foreach ($_POST as $key => $value) {
         if (preg_match('/^wiz_step3_(.*)$/', $key, $match)) {
             $field = $match[1];
             $marketing->$field = $value;
-            if ($field=='time_start') {
+            if ($field === 'time_start') {
                 $marketing->date_start .= ' ' . $value . (isset($_REQUEST['meridiem']) ? $_REQUEST['meridiem'] : '');
             }
         }
@@ -144,13 +144,13 @@ if ($marketing->all_prospect_lists==1) {
         }
     }
 }
-if ($_REQUEST['action'] != 'WizardMarketingSave' && (!isset($_REQUEST['func']) || $_REQUEST['func'] != 'wizardUpdate')) {
+if ($_REQUEST['action'] !== 'WizardMarketingSave' && (!isset($_REQUEST['func']) || $_REQUEST['func'] !== 'wizardUpdate')) {
     $header_URL = "Location: index.php?action=DetailView&module=Campaigns&record={$_REQUEST['campaign_id']}";
     $GLOBALS['log']->debug("about to post header URL of: $header_URL");
     header($header_URL);
 }
 
-if (isset($_REQUEST['func']) && $_REQUEST['func'] == 'wizardUpdate') {
+if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'wizardUpdate') {
     $resp = array();
     $resp['error'] = false;
     $resp['data'] = json_encode(array('id' => $marketing->id));

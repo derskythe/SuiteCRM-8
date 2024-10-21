@@ -17,7 +17,7 @@ $ampm = $_POST['date_start_meridiem'] ?? '';
 $time_format = $timedate->get_user_time_format(); //get the logged in users time settings
 
 //Combine date and time dependant on users settings
-$time_separator = ":";
+$time_separator = ':';
 if (preg_match('/\d+([^\d])\d+([^\d]*)/s', (string) $time_format, $match)) {
     $time_separator = $match[1];
 }
@@ -49,7 +49,7 @@ $result = $call->db->getOne($query);
 $Date = strtotime($result);
 $newDate = strtotime('+'.$hours.' hours', $Date);
 $newDate = strtotime('+'.$mins.' minutes', $newDate);
-$newDate = date("Y-m-d H:i:s", $newDate);
+$newDate = date('Y-m-d H:i:s', $newDate);
 $call->date_end = $newDate;
 //save call and call attempt history
 $reschedule = BeanFactory::newBean('Calls_Reschedule');

@@ -156,10 +156,10 @@ class StudioParser
         $this->curFile = $file;
         $this->curText = file_get_contents($file);
         $this->form = <<<EOQ
-		</form>
-		<form name='studio'  method='POST'>
-			<input type='hidden' name='action' value='save'>
-			<input type='hidden' name='module' value='Studio'>
+        </form>
+        <form name='studio'  method='POST'>
+            <input type='hidden' name='action' value='save'>
+            <input type='hidden' name='module' value='Studio'>
 
 EOQ;
     }
@@ -172,11 +172,11 @@ EOQ;
             }
             if (!empty($button['plain'])) {
                 $text .= <<<EOQ
-				<td valign='center' {$button['actionScript']}>
+                <td valign='center' {$button['actionScript']}>
 EOQ;
             } else {
                 $text .= <<<EOQ
-				<td valign='center' class='button' style='cursor:default' onmousedown='this.className="buttonOn";return false;' onmouseup='this.className="button"' onmouseout='this.className="button"' {$button['actionScript']} >
+                <td valign='center' class='button' style='cursor:default' onmousedown='this.className="buttonOn";return false;' onmouseup='this.className="button"' onmouseout='this.className="button"' {$button['actionScript']} >
 EOQ;
             }
             if (!isset($button['image'])) {
@@ -221,7 +221,7 @@ EOQ;
     public function getForm()
     {
         return $this->form  . <<<EOQ
-		</form>
+        </form>
 
 
 EOQ;
@@ -235,7 +235,7 @@ EOQ;
             require_once('modules/'. $module . '/metadata/studio.php');
         }
         if ($fileId) {
-            return 	$GLOBALS['studioDefs'][$module][$fileId];
+            return     $GLOBALS['studioDefs'][$module][$fileId];
         }
         return $GLOBALS['studioDefs'][$module];
     }
@@ -360,9 +360,9 @@ EOQ;
             $fileparts = preg_split("'<!--\s*(BEGIN|END)\s*:\s*main\s*-->'", (string) $output);
             if (!empty($fileparts) && count($fileparts) > 1) {
                 $function = function ($matches) {
-                    $name = str_replace(array("[", "]"), "", (string) $matches[1]);
-                    if ((strpos($name, "LBL_") === 0) && (strpos($name, "_basic") === 0)) {
-                        return str_replace($name, $name . "_basic", (string) $matches[0]);
+                    $name = str_replace(array( '[', ']' ), '', (string) $matches[1]);
+                    if ((str_starts_with($name, 'LBL_')) && (str_starts_with($name, '_basic'))) {
+                        return str_replace($name, $name . '_basic', (string) $matches[0]);
                     }
                     return  $matches[0];
                 };
@@ -483,7 +483,7 @@ EOQ;
 
         $form_string = "require_once('modules/".$module."/Forms.php');";
 
-        if ($type == 'edit' || $type == 'detail') {
+        if ($type === 'edit' || $type === 'detail') {
             if (empty($_REQUEST['record'])) {
                 $buffer = preg_replace('(\$xtpl[\ ]*=)', "\$focus->assign_display_fields('$module'); \$0", (string) $buffer);
             } else {
@@ -506,7 +506,7 @@ EOQ;
                 $buffer = str_replace('echo get_form_footer();', '$search_form->parse("main");'."\n".'$search_form->out("main");'."\necho '<br><b>".translate('LBL_ADVANCED', 'DynamicLayout')."</b><br>';".'$search_form->parse("advanced");'."\n".'$search_form->out("advanced");'."\n \$sugar_config['list_max_entries_per_page'] = 1;", $buffer);
             }
         } else {
-            if ($type == 'detail') {
+            if ($type === 'detail') {
                 $buffer = str_replace('header(', 'if(false) header(', (string) $buffer);
             }
         }
@@ -530,52 +530,52 @@ EOQ;
         $custom_type = $this->curType;
         $v = getVersionedPath('');
         return<<<EOQ
-		<style type='text/css'>
-		.slot {
-		border-width:1px;border-color:#999999;border-style:solid;padding:0px 1px 0px 1px;margin:2px;cursor:move;
+        <style type='text/css'>
+        .slot {
+        border-width:1px;border-color:#999999;border-style:solid;padding:0px 1px 0px 1px;margin:2px;cursor:move;
 
-	}
+    }
 
-	.slotB {
-	border-width:0;cursor:move;
+    .slotB {
+    border-width:0;cursor:move;
 
-	}
-	</style>
+    }
+    </style>
 
-	<!-- Namespace source file -->
+    <!-- Namespace source file -->
 
-	<script type="text/javascript" src="modules/Studio/JSTransaction.js?v=$v" ></script>
-	<script>
-	var jstransaction = new JSTransaction();
-	</script>
+    <script type="text/javascript" src="modules/Studio/JSTransaction.js?v=$v" ></script>
+    <script>
+    var jstransaction = new JSTransaction();
+    </script>
 
-	<!-- Drag and Drop source file -->
-	<script type="text/javascript" src="include/javascript/yui/build/dragdrop/dragdrop.js?v=$v" ></script>
-	<script type="text/javascript" src="modules/Studio/studiodd.js?v=$v" ></script>
-	<script type="text/javascript" src="modules/Studio/studio.js?v=$v" ></script>
-	<script>
+    <!-- Drag and Drop source file -->
+    <script type="text/javascript" src="include/javascript/yui/build/dragdrop/dragdrop.js?v=$v" ></script>
+    <script type="text/javascript" src="modules/Studio/studiodd.js?v=$v" ></script>
+    <script type="text/javascript" src="modules/Studio/studio.js?v=$v" ></script>
+    <script>
 
-	var yahooSlots = [];
+    var yahooSlots = [];
 
-	function dragDropInit(){
+    function dragDropInit(){
 
-	YAHOO.util.DDM.mode = YAHOO.util.DDM.POINT;
+    YAHOO.util.DDM.mode = YAHOO.util.DDM.POINT;
 
-	for(mj = 0; mj <= $this->yahooSlotCount; mj++){
-	yahooSlots["slot" + mj] = new ygDDSlot("slot" + mj, "studio");
-	}
-	for(mj = 0; mj < dyn_field_count; mj++){
-	yahooSlots["dyn_field_" + mj] = new ygDDSlot("dyn_field_" + mj, "studio");
-	}
-	// initPointMode();
-	yahooSlots['s_field_delete'] =  new YAHOO.util.DDTarget("s_field_delete", 'studio');
-	}
+    for(mj = 0; mj <= $this->yahooSlotCount; mj++){
+    yahooSlots["slot" + mj] = new ygDDSlot("slot" + mj, "studio");
+    }
+    for(mj = 0; mj < dyn_field_count; mj++){
+    yahooSlots["dyn_field_" + mj] = new ygDDSlot("dyn_field_" + mj, "studio");
+    }
+    // initPointMode();
+    yahooSlots['s_field_delete'] =  new YAHOO.util.DDTarget("s_field_delete", 'studio');
+    }
 
-	YAHOO.util.Event.addListener(window, "load", dragDropInit);
-	var custom_module = '$custom_module';
-	var custom_view = '$custom_type';
+    YAHOO.util.Event.addListener(window, "load", dragDropInit);
+    var custom_module = '$custom_module';
+    var custom_view = '$custom_type';
 
-			</script>
+            </script>
 
 EOQ;
     }
@@ -614,7 +614,7 @@ EOQ;
             $explode = explode($slot[0], $view, 2);
             $style = '';
             $explode[0] .= "<div id = 'slot$displayCount'  $class style='cursor: move$style'>";
-            $explode[1] = "</div>".$explode[1];
+            $explode[1] = '</div>' . $explode[1];
             $return_view .= $explode[0].$slot[4];
             $view = $explode[1];
             $counter ++;

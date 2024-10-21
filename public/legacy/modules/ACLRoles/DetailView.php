@@ -68,7 +68,7 @@ $sugar_smarty->assign('RETURN', $return);
 $params = [];
 $params[] = "<a href='index.php?module=ACLRoles&action=index'>{$mod_strings['LBL_MODULE_NAME']}</a>";
 $params[] = $role->get_summary_text();
-echo getClassicModuleTitle("ACLRoles", $params, true);
+echo getClassicModuleTitle('ACLRoles', $params, true);
 $hide_hide_supanels = true;
 
 $buttons = [];

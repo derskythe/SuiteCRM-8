@@ -239,7 +239,7 @@ class NormalizeRecords extends BatchJob
     {
         global $timedate;
 
-        if (!preg_match("/^\d\d\d\d-\d\d-\d\d$/", $repairFrom)) {
+        if (!preg_match('/^\d\d\d\d-\d\d-\d\d$/', $repairFrom)) {
             return false;
         }
 
@@ -254,8 +254,11 @@ class NormalizeRecords extends BatchJob
 
     /**
      * Get entry
+     *
      * @param string $key
+     *
      * @return mixed|string
+     * @throws Exception
      */
     protected static function getConfigEntry(string $key)
     {
@@ -300,7 +303,7 @@ class NormalizeRecords extends BatchJob
 
         foreach ($moduleList as $module) {
 
-            if (empty($GLOBALS["beanList"][$module])) {
+            if (empty($GLOBALS['beanList'][$module])) {
                 continue;
             }
 
@@ -397,7 +400,7 @@ class NormalizeRecords extends BatchJob
             'normalize_count' => 0
         ];
         $fieldList = $this->getRepairableFieldNames($type);
-        $this->debugLog("$type " . count($ids) . " records checked");
+        $this->debugLog("$type " . count($ids) . ' records checked');
         $this->debugLog("Processing $type");
 
         $i = 0;
@@ -417,15 +420,15 @@ class NormalizeRecords extends BatchJob
             $bean->processed = true;
             $bean->notify_inworkflow = false;
             $bean->saveFields($normalized);
-            $this->debugLog("$type - " . $bean->id . " normalized");
+            $this->debugLog("$type - " . $bean->id . ' normalized');
             ++$i;
             if ($i % 100 === 0) {
                 $this->debugLog("$i records have been saved");
             }
         }
-        $messages[] = "$type " . $i . " records normalized";
+        $messages[] = "$type " . $i . ' records normalized';
         $result['normalize_count'] = $i;
-        $this->debugLog("$type " . $i . " records normalized");
+        $this->debugLog("$type " . $i . ' records normalized');
 
         $result['messages'] = $messages;
 
@@ -535,8 +538,8 @@ class NormalizeRecords extends BatchJob
         }
 
         if (empty($records)) {
-            $this->debugLog("No records retrieved for bean type " . $type);
-            $this->debugLog("" . $sql);
+            $this->debugLog('No records retrieved for bean type ' . $type);
+            $this->debugLog('' . $sql);
         }
 
         return $records;
@@ -550,7 +553,7 @@ class NormalizeRecords extends BatchJob
     {
         global $log;
 
-        $log->info("[utf-normalize] " . $string);
+        $log->info('[utf-normalize] ' . $string);
     }
 
     /**
@@ -576,11 +579,11 @@ class NormalizeRecords extends BatchJob
     {
         $moduleList = [];
         if (empty($moduleList)) {
-            $moduleList = $GLOBALS["moduleList"];
+            $moduleList = $GLOBALS['moduleList'];
             $moduleList[] = 'Users';
         }
 
-        $modInvisList = $GLOBALS["modInvisList"] ?? [];
+        $modInvisList = $GLOBALS['modInvisList'] ?? [];
 
         $toExlude = [
             'Calendar',

@@ -143,7 +143,7 @@ class SearchResultsController extends Controller
         try {
             $smarty->assign('resultsAsBean', $this->results->getHitsAsBeans());
         } catch (\SuiteCRM\Exception\Exception $e) {
-            LoggerManager::getLogger()->fatal("Failed to retrieve ElasticSearch options");
+            LoggerManager::getLogger()->fatal('Failed to retrieve ElasticSearch options');
         }
 
         parent::display();

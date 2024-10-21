@@ -55,8 +55,8 @@ $langDropDown = get_select_options_with_id($supportedLanguages, $current_languag
 
 if (!isset($_SESSION['licenseKey_submitted']) || !$_SESSION['licenseKey_submitted']) {
     $_SESSION['setup_license_key_users']        = 0;
-    $_SESSION['setup_license_key_expire_date']  = "";
-    $_SESSION['setup_license_key']              = "";
+    $_SESSION['setup_license_key_expire_date']  = '';
+    $_SESSION['setup_license_key']              = '';
     $_SESSION['setup_num_lic_oc']              = 0;
 } else {
 }
@@ -99,7 +99,7 @@ EOQ;
 
 $typical_checked ='checked';
 $custom_checked ='';
-if (isset($_SESSION['install_type']) && $_SESSION['install_type']=='custom') {
+if (isset($_SESSION['install_type']) && $_SESSION['install_type'] === 'custom') {
     $typical_checked ='';
     $custom_checked ='checked';
 } else {

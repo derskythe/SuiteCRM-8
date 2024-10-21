@@ -12,9 +12,9 @@ class AssignGroups
         global $sugar_config;
 
         //only process if action is Save (meaning a user has triggered this event and not the portal or automated process)
-        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Save'
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Save'
             && isset($sugar_config['securitysuite_popup_select']) && $sugar_config['securitysuite_popup_select'] == true
-            && empty($bean->fetched_row['id']) && $bean->module_dir != "Users" && $bean->module_dir != "SugarFeed") {
+            && empty($bean->fetched_row['id']) && $bean->module_dir !== 'Users' && $bean->module_dir !== 'SugarFeed') {
             //Upload an attachment to an Email Template and save. If user with multi groups - popup select option
             //it will redirect to notes instead of EmailTemplate and relationship will fail...check below to avoid
             if (!empty($_REQUEST['module']) && $_REQUEST['module'] != $bean->module_dir) {
@@ -27,7 +27,7 @@ class AssignGroups
                 //sanity check
                 if (array_key_exists($bean->module_dir, $security_modules)) {
                     //add each group in securitygroup_list to new record
-                    $rel_name = SecurityGroup::getLinkName($bean->module_dir, "SecurityGroups");
+                    $rel_name = SecurityGroup::getLinkName($bean->module_dir, 'SecurityGroups');
 
                     $bean->load_relationship($rel_name);
                     foreach ($_REQUEST['securitygroup_list'] as $group_id) {
@@ -43,8 +43,8 @@ class AssignGroups
                 $_SESSION['securitysuite_error'] = $ss_mod_strings['LBL_ERROR_DUPLICATE'];
             }
         } elseif (isset($sugar_config['securitysuite_user_popup']) && $sugar_config['securitysuite_user_popup'] == true
-            && empty($bean->fetched_row['id']) && $bean->module_dir == "Users"
-            && isset($_REQUEST['action']) && $_REQUEST['action'] != 'SaveSignature') { //Bug: 589
+            && empty($bean->fetched_row['id']) && $bean->module_dir === 'Users'
+            && isset($_REQUEST['action']) && $_REQUEST['action'] !== 'SaveSignature') { //Bug: 589
 
             //$_REQUEST['return_module'] = $bean->module_dir;
             //$_REQUEST['return_action'] = "DetailView";
@@ -90,14 +90,14 @@ class AssignGroups
         }
 
 
-        if (isset($action) && ($action == "Save" || $action == "SetTimezone")) {
+        if (isset($action) && ($action === 'Save' || $action === 'SetTimezone')) {
             return;
         }
 
         if ((
                 //(isset($sugar_config['securitysuite_popup_select']) && $sugar_config['securitysuite_popup_select'] == true)
                 //||
-            ($module == "Users" && isset($sugar_config['securitysuite_user_popup']) && $sugar_config['securitysuite_user_popup'] == true)
+            ($module === 'Users' && isset($sugar_config['securitysuite_user_popup']) && $sugar_config['securitysuite_user_popup'] == true)
             )
 
             //&& isset($_SESSION['securitygroups_popup_'.$module]) && !empty($_SESSION['securitygroups_popup_'.$module])
@@ -109,17 +109,17 @@ class AssignGroups
                 unset($_SESSION['securitygroups_popup'][$popup_index]);
 
                 require_once('modules/SecurityGroups/SecurityGroup.php');
-                if ($module == 'Users') {
-                    $rel_name = "SecurityGroups";
+                if ($module === 'Users') {
+                    $rel_name = 'SecurityGroups';
                 } else {
-                    $rel_name = SecurityGroup::getLinkName($module, "SecurityGroups");
+                    $rel_name = SecurityGroup::getLinkName($module, 'SecurityGroups');
                 }
 
                 //this only works if on the detail view of the record actually saved...
                 //so ajaxui breaks this as it stays on the parent
                 $auto_popup = <<<EOQ
 <script type="text/javascript" language="javascript">
-	open_popup("SecurityGroups",600,400,"",true,true,{"call_back_function":"securitysuite_set_return_and_save_background","form_name":"DetailView","field_to_name_array":{"id":"subpanel_id"},"passthru_data":{"module":"$module","record":"$record_id","child_field":"$rel_name","return_url":"","link_field_name":"$rel_name","module_name":"$rel_name","refresh_page":"1"}},"MultiSelect",true);
+    open_popup("SecurityGroups",600,400,"",true,true,{"call_back_function":"securitysuite_set_return_and_save_background","form_name":"DetailView","field_to_name_array":{"id":"subpanel_id"},"passthru_data":{"module":"$module","record":"$record_id","child_field":"$rel_name","return_url":"","link_field_name":"$rel_name","module_name":"$rel_name","refresh_page":"1"}},"MultiSelect",true);
 </script>
 EOQ;
 
@@ -146,15 +146,15 @@ EOQ;
         }
 
 
-        $no_mass_assign_list = array("Emails" => "Emails", "ACLRoles" => "ACLRoles"); //,"Users"=>"Users");
+        $no_mass_assign_list = array( 'Emails' => 'Emails', 'ACLRoles' => 'ACLRoles' ); //,"Users"=>"Users");
         //check if security suite enabled
         $action = strtolower($action);
-        if (isset($module) && ($action == "list" || $action == "index" || $action == "listview")
+        if (isset($module) && ($action === 'list' || $action === 'index' || $action === 'listview')
             && (!isset($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] != true)
             && !array_key_exists($module, $no_mass_assign_list)
         ) {
             global $current_user;
-            if (is_admin($current_user) || ACLAction::getUserAccessLevel($current_user->id, "SecurityGroups", 'access') == ACL_ALLOW_ENABLED) {
+            if (is_admin($current_user) || ACLAction::getUserAccessLevel($current_user->id, 'SecurityGroups', 'access') == ACL_ALLOW_ENABLED) {
                 require_once('modules/SecurityGroups/SecurityGroup.php');
                 $groupFocus = BeanFactory::newBean('SecurityGroups');
                 $security_modules = SecurityGroup::getSecurityModules();
@@ -167,12 +167,12 @@ EOQ;
 
                     $form_header = get_form_header($current_module_strings['LBL_MASS_ASSIGN'], '', false);
 
-                    $groups = $groupFocus->get_list("name", "", 0, -99, -99);
-                    $options = array("" => "");
+                    $groups = $groupFocus->get_list('name', '', 0, -99, -99);
+                    $options = array( '' => '' );
                     foreach ($groups['list'] as $group) {
                         $options[$group->id] = $group->name;
                     }
-                    $group_options = get_select_options_with_id($options, "");
+                    $group_options = get_select_options_with_id($options, '');
 
                     $export_where = !empty($_SESSION['export_where']) ? $_SESSION['export_where'] : '';
                     $export_where_md5 = md5($export_where);
@@ -270,32 +270,32 @@ function send_massassign(mode, no_record_txt, start_string, end_string, del) {
 
 </script>
 
-		<form action='index.php' method='post' name='MassAssign_SecurityGroups'  id='MassAssign_SecurityGroups'>
-			<input type='hidden' name='action' value='MassAssign' />
-			<input type='hidden' name='module' value='SecurityGroups' />
-			<input type='hidden' name='return_action' value='{$action}' />
-			<input type='hidden' name='return_module' value='{$module}' />
-			<input type="hidden" name="export_where_md5" value="{$export_where_md5}">
-			<textarea style='display: none' name='uid'></textarea>
+        <form action='index.php' method='post' name='MassAssign_SecurityGroups'  id='MassAssign_SecurityGroups'>
+            <input type='hidden' name='action' value='MassAssign' />
+            <input type='hidden' name='module' value='SecurityGroups' />
+            <input type='hidden' name='return_action' value='{$action}' />
+            <input type='hidden' name='return_module' value='{$module}' />
+            <input type="hidden" name="export_where_md5" value="{$export_where_md5}">
+            <textarea style='display: none' name='uid'></textarea>
 
 
-		<div id='massassign_form'>$form_header
-		<table cellpadding='0' cellspacing='0' border='0' width='100%'>
-		<tr>
-		<td style='padding-bottom: 2px;' class='listViewButtons'>
-		<input type='submit' name='Assign' value='{$current_module_strings['LBL_ASSIGN']}' onclick="return send_massassign('selected', '{$app_strings['LBL_LISTVIEW_NO_SELECTED']}','{$current_module_strings['LBL_ASSIGN_CONFIRM']}','{$current_module_strings['LBL_CONFIRM_END']}',0);" class='button'>
-		<input type='submit' name='Remove' value='{$current_module_strings['LBL_REMOVE']}' onclick="return send_massassign('selected', '{$app_strings['LBL_LISTVIEW_NO_SELECTED']}','{$current_module_strings['LBL_REMOVE_CONFIRM']}','{$current_module_strings['LBL_CONFIRM_END']}',1);" class='button'>
+        <div id='massassign_form'>$form_header
+        <table cellpadding='0' cellspacing='0' border='0' width='100%'>
+        <tr>
+        <td style='padding-bottom: 2px;' class='listViewButtons'>
+        <input type='submit' name='Assign' value='{$current_module_strings['LBL_ASSIGN']}' onclick="return send_massassign('selected', '{$app_strings['LBL_LISTVIEW_NO_SELECTED']}','{$current_module_strings['LBL_ASSIGN_CONFIRM']}','{$current_module_strings['LBL_CONFIRM_END']}',0);" class='button'>
+        <input type='submit' name='Remove' value='{$current_module_strings['LBL_REMOVE']}' onclick="return send_massassign('selected', '{$app_strings['LBL_LISTVIEW_NO_SELECTED']}','{$current_module_strings['LBL_REMOVE_CONFIRM']}','{$current_module_strings['LBL_CONFIRM_END']}',1);" class='button'>
 
 
-		</td></tr></table>
-		<table cellpadding='0' cellspacing='0' border='0' width='100%' class='tabForm' id='mass_update_table'>
-		<tr><td><table width='100%' border='0' cellspacing='0' cellpadding='0'>
-		<tr>
-		<td>{$current_module_strings['LBL_GROUP']}</td>
-		<td><select name='massassign_group' id="massassign_group" tabindex='1'>{$group_options}</select></td>
-		</tr>
-		</table></td></tr></table></div>
-		</form>
+        </td></tr></table>
+        <table cellpadding='0' cellspacing='0' border='0' width='100%' class='tabForm' id='mass_update_table'>
+        <tr><td><table width='100%' border='0' cellspacing='0' cellpadding='0'>
+        <tr>
+        <td>{$current_module_strings['LBL_GROUP']}</td>
+        <td><select name='massassign_group' id="massassign_group" tabindex='1'>{$group_options}</select></td>
+        </tr>
+        </table></td></tr></table></div>
+        </form>
 EOQ;
 
 

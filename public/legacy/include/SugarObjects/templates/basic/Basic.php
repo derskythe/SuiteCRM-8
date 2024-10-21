@@ -39,7 +39,6 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 class Basic extends SugarBean
 {
     /**
@@ -52,6 +51,8 @@ class Basic extends SugarBean
 
     /**
      * Constructor
+     *
+     * @throws Exception
      */
     public function __construct()
     {
@@ -63,12 +64,14 @@ class Basic extends SugarBean
      */
     public function get_summary_text()
     {
-        return (string)$this->name;
+        return (string) $this->name;
     }
 
     /**
      * Return Email address from an email address field eg email1
+     *
      * @param string $emailField
+     *
      * @return \EmailAddress|null
      * @throws InvalidArgumentException
      */
@@ -78,17 +81,18 @@ class Basic extends SugarBean
 
         /** @var EmailAddress $emailAddressBean */
         $emailAddressBean = BeanFactory::getBean('EmailAddresses');
-        
+
         // Fixed #5657: Only update state if email address is exist
         $emailAddressId = $this->getEmailAddressId($emailField);
         $emailAddressBean->retrieve($emailAddressId);
-        
+
         return $emailAddressBean;
     }
 
     /**
      *
      * @param string $emailField
+     *
      * @return string|null EmailAddress ID or null on error
      * @throws \InvalidArgumentException
      */
@@ -101,12 +105,14 @@ class Basic extends SugarBean
 
         if (!$emailAddress) {
             $log->warn('Trying to get an empty email address.');
+
             return null;
         }
 
         // List view requires us to retrieve the mail so we can see the email addresses
         if (!$this->retrieve()) {
             $log->fatal('A Basic can not retrive.');
+
             return null;
         }
 
@@ -123,6 +129,7 @@ class Basic extends SugarBean
         if (!$found) {
             // Changed exception to error as demo data is never selected.
             $log->fatal('A Basic bean has not selected email address. (' . $emailAddress . ')');
+
             return null;
         }
 
@@ -132,6 +139,7 @@ class Basic extends SugarBean
     /**
      *
      * @param string $emailField
+     *
      * @throws InvalidArgumentException
      */
     protected function validateSugarEmailAddressField($emailField)
@@ -150,6 +158,7 @@ class Basic extends SugarBean
     /**
      *
      * @param string $emailAddress
+     *
      * @return string
      */
     private function cleanUpEmailAddress($emailAddress)

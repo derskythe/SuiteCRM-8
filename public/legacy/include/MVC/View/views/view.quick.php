@@ -61,8 +61,9 @@ class ViewQuick extends ViewDetail
     }
 
 
-
-
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $this->dv->showVCRControl = false;

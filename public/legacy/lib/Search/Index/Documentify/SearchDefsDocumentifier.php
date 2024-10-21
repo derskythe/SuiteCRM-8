@@ -78,7 +78,7 @@ class SearchDefsDocumentifier extends AbstractDocumentifier
                 new SugarLoggerHandler(),
             ]);
         } catch (Exception $exception) {
-            LoggerManager::getLogger()->error('Failed to start Monolog loggers');
+            LoggerManager::getLogger()?->error('Failed to start Monolog loggers');
         }
 
         $this->mapper = ArrayMapper::make()
@@ -127,22 +127,22 @@ class SearchDefsDocumentifier extends AbstractDocumentifier
         $goodOperators = ['=', 'in'];
 
         foreach ($fields as $key => $field) {
-            if (in_array($key, $badKeys)) {
+            if (in_array($key, $badKeys, true)) {
                 continue;
             }
 
-            if (isset($field['query_type']) && $field['query_type'] != 'default') {
-                $this->logger->warn("[$module]->$key is not a supported query type [{$field['query_type']}]");
-                continue;
-            };
-
-            if (!empty($field['operator']) && !in_array($field['operator'], $goodOperators)) {
-                $this->logger->warn("[$module]->$key has an unsupported operator [{$field['operator']}]");
-                $this->logger->warn("field:\n" . json_encode($field, JSON_PRETTY_PRINT));
+            if (isset($field['query_type']) && $field['query_type'] !== 'default') {
+                $this->logger->warning("[$module]->$key is not a supported query type [{$field['query_type']}]");
                 continue;
             }
 
-            if (strpos((string) $key, 'range_date') !== false) {
+            if (!empty($field['operator']) && !in_array($field['operator'], $goodOperators, true)) {
+                $this->logger->warning("[$module]->$key has an unsupported operator [{$field['operator']}]");
+                $this->logger->warning("field:\n" . json_encode($field, JSON_PRETTY_PRINT));
+                continue;
+            }
+
+            if (str_contains((string) $key, 'range_date')) {
                 continue;
             }
 
@@ -189,7 +189,7 @@ class SearchDefsDocumentifier extends AbstractDocumentifier
      *
      * @return mixed
      */
-    private function &parseBeans(\SugarBean $bean, array &$fields)
+    private function &parseBeans(\SugarBean $bean, array $fields)
     {
         $body = [];
 

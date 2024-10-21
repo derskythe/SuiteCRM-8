@@ -38,10 +38,11 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 /**
  * Searches through the installed relationships to find broken self referencing one-to-many relationships
  * (wrong field used in the subpanel, and the left link not marked as left)
+ *
+ * @throws Exception
  */
 function upgrade_custom_relationships($modules = array())
 {
@@ -49,14 +50,14 @@ function upgrade_custom_relationships($modules = array())
     if (!is_admin($current_user)) {
         sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']);
     }
-    
-    require_once("modules/ModuleBuilder/parsers/relationships/DeployedRelationships.php");
-    require_once("modules/ModuleBuilder/parsers/relationships/OneToManyRelationship.php");
-    
+
+    require_once('modules/ModuleBuilder/parsers/relationships/DeployedRelationships.php');
+    require_once('modules/ModuleBuilder/parsers/relationships/OneToManyRelationship.php');
+
     if (empty($modules)) {
         $modules = $moduleList;
     }
-    
+
     foreach ($modules as $module) {
         $depRels = new DeployedRelationships($module);
         $relList = $depRels->getRelationshipList();
@@ -64,26 +65,26 @@ function upgrade_custom_relationships($modules = array())
             $relObject = $depRels->get($relName);
             $def = $relObject->getDefinition();
             //We only need to fix self referencing one to many relationships
-            if ($def['lhs_module'] == $def['rhs_module'] && $def['is_custom'] && $def['relationship_type'] == "one-to-many") {
+            if ($def['lhs_module'] == $def['rhs_module'] && $def['is_custom'] && $def['relationship_type'] === 'one-to-many') {
                 $layout_defs = array();
                 if (!is_dir("custom/Extension/modules/$module/Ext/Layoutdefs") || !is_dir("custom/Extension/modules/$module/Ext/Vardefs")) {
                     continue;
                 }
                 //Find the extension file containing the vardefs for this relationship
                 foreach (scandir("custom/Extension/modules/$module/Ext/Vardefs") as $file) {
-                    if (substr((string) $file, 0, 1) != "." && strtolower(substr((string) $file, -4)) == ".php") {
-                        $dictionary = array($module => array("fields" => array()));
+                    if (!str_starts_with((string) $file, '.') && strtolower(substr((string) $file, -4)) === '.php') {
+                        $dictionary = array($module => array( 'fields' => array()));
                         $filePath = "custom/Extension/modules/$module/Ext/Vardefs/$file";
                         include($filePath);
-                        if (isset($dictionary[$module]["fields"][$relName])) {
-                            $rhsDef = $dictionary[$module]["fields"][$relName];
+                        if (isset($dictionary[$module]['fields'][$relName])) {
+                            $rhsDef = $dictionary[$module]['fields'][$relName];
                             //Update the vardef for the left side link field
-                            if (!isset($rhsDef['side']) || $rhsDef['side'] != 'left') {
+                            if (!isset($rhsDef['side']) || $rhsDef['side'] !== 'left') {
                                 $rhsDef['side'] = 'left';
                                 $fileContents = file_get_contents($filePath);
                                 $out = preg_replace(
                                     '/\$dictionary[\w"\'\[\]]*?' . $relName . '["\'\[\]]*?\s*?=\s*?array\s*?\(.*?\);/s',
-                                    '$dictionary["' . $module . '"]["fields"]["' . $relName . '"]=' . var_export_helper($rhsDef) . ";",
+                                    '$dictionary["' . $module . '"]["fields"]["' . $relName . '"]=' . var_export_helper($rhsDef) . ';',
                                     $fileContents
                                 );
                                 sugar_file_put_contents($filePath, $out);
@@ -93,16 +94,16 @@ function upgrade_custom_relationships($modules = array())
                 }
                 //Find the extension file containing the subpanel definition for this relationship
                 foreach (scandir("custom/Extension/modules/$module/Ext/Layoutdefs") as $file) {
-                    if (substr((string) $file, 0, 1) != "." && strtolower(substr((string) $file, -4)) == ".php") {
-                        $layout_defs = array($module => array("subpanel_setup" => array()));
+                    if (!str_starts_with((string) $file, '.') && strtolower(substr((string) $file, -4)) === '.php') {
+                        $layout_defs = array($module => array( 'subpanel_setup' => array()));
                         $filePath = "custom/Extension/modules/$module/Ext/Layoutdefs/$file";
                         include($filePath);
-                        foreach ($layout_defs[$module]["subpanel_setup"] as $key => $subDef) {
-                            if ($layout_defs[$module]["subpanel_setup"][$key]['get_subpanel_data'] == $relName) {
+                        foreach ($layout_defs[$module]['subpanel_setup'] as $key => $subDef) {
+                            if ($layout_defs[$module]['subpanel_setup'][$key]['get_subpanel_data'] == $relName) {
                                 $fileContents = file_get_contents($filePath);
                                 $out = preg_replace(
                                     '/[\'"]get_subpanel_data[\'"]\s*=>\s*[\'"]' . $relName . '[\'"],/s',
-                                    "'get_subpanel_data' => '{$def["join_key_lhs"]}',",
+                                    "'get_subpanel_data' => '{$def['join_key_lhs']}',",
                                     $fileContents
                                 );
                                 sugar_file_put_contents($filePath, $out);

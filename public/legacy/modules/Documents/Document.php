@@ -49,18 +49,11 @@ require_once('include/SugarObjects/templates/file/File.php');
 #[\AllowDynamicProperties]
 class Document extends File
 {
-    public $id;
     public $document_name;
-    public $description;
     public $category_id;
     public $subcategory_id;
     public $status_id;
     public $status;
-    public $created_by;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
     public $active_date;
     public $exp_date;
     public $document_revision_id;
@@ -84,21 +77,13 @@ class Document extends File
     public $file_url;
     public $file_url_noimage;
 
-    public $table_name = "documents";
-    public $object_name = "Document";
+
     public $user_preferences;
 
     public $encodeFields = array();
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array('revision');
-
-    public $new_schema = true;
-    public $module_dir = 'Documents';
-
-    public $relationship_fields = array(
-        'contract_id' => 'contracts',
-    );
+    public bool $new_schema = true;
 
     public $authenticated;
     public $show_preview = false;
@@ -106,13 +91,21 @@ class Document extends File
     public function __construct()
     {
         parent::__construct();
-        $this->setupCustomFields('Documents'); //parameter is module name
+        $this->table_name = 'documents';
+        $this->object_name = 'Document';
+        $this->additional_column_fields = array( 'revision' );
+        $this->module_dir = 'Documents';
+        $this->relationship_fields = array(
+            'contract_id' => 'contracts',
+        );
+        $this->setupCustomFields($this->object_name); //parameter is module name
         $this->disable_row_level_security = false;
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save($check_notify = false)
     {
         if (empty($this->doc_type)) {
@@ -202,7 +195,7 @@ class Document extends File
 
             if ((isset($_POST['load_signed_id']) && !empty($_POST['load_signed_id']))) {
                 $loadSignedIdQuoted = $this->db->quote($_POST['load_signed_id']);
-                $query="update linked_documents set deleted=1 where id='".$loadSignedIdQuoted."'";
+                $query = "update linked_documents set deleted=1 where id='" . $loadSignedIdQuoted . "'";
                 $this->db->query($query);
             }
         }
@@ -212,15 +205,17 @@ class Document extends File
 
     public function get_summary_text()
     {
-        return (string)$this->document_name;
+        return (string) $this->document_name;
     }
 
     public function is_authenticated()
     {
         if (!isset($this->authenticated)) {
             LoggerManager::getLogger()->warn('Document::$authenticated is not set');
+
             return null;
         }
+
         return $this->authenticated;
     }
 
@@ -239,10 +234,10 @@ class Document extends File
 
         if (!empty($this->document_revision_id)) {
             $query = "SELECT users.first_name AS first_name, users.last_name AS last_name, document_revisions.date_entered AS rev_date,
-            	 document_revisions.filename AS filename, document_revisions.revision AS revision,
-            	 document_revisions.file_ext AS file_ext, document_revisions.file_mime_type AS file_mime_type
-            	 FROM users, document_revisions
-            	 WHERE users.id = document_revisions.created_by AND document_revisions.id = '$this->document_revision_id'";
+                 document_revisions.filename AS filename, document_revisions.revision AS revision,
+                 document_revisions.file_ext AS file_ext, document_revisions.file_mime_type AS file_mime_type
+                 FROM users, document_revisions
+                 WHERE users.id = document_revisions.created_by AND document_revisions.id = '$this->document_revision_id'";
 
             $result = $this->db->query($query);
             $row = $this->db->fetchByAssoc($result);
@@ -265,8 +260,9 @@ class Document extends File
             global $img_name, $img_name_bare;
 
             if (!empty($row['file_ext'])) {
-                $img_name = SugarThemeRegistry::current()->getImageURL(strtolower($row['file_ext']) . "_image_inline.gif");
-                $img_name_bare = strtolower($row['file_ext']) . "_image_inline";
+                $img_name =
+                    SugarThemeRegistry::current()->getImageURL(strtolower($row['file_ext']) . '_image_inline.gif');
+                $img_name_bare = strtolower($row['file_ext']) . '_image_inline';
 
                 $allowedPreview = $sugar_config['allowed_preview'] ?? [];
 
@@ -281,44 +277,49 @@ class Document extends File
         if (!empty($img_name) && file_exists($img_name)) {
             $img_name = $img_name_bare;
         } else {
-            $img_name = "def_image_inline"; //todo change the default image.
+            $img_name = 'def_image_inline'; //todo change the default image.
         }
         if ($this->ACLAccess('DetailView')) {
             if (!empty($this->doc_type) && $this->doc_type != 'Sugar' && !empty($this->doc_url)) {
-                $file_url = "<a href='" . $this->doc_url . "' target='_blank'>" . SugarThemeRegistry::current()->getImage(
-                    $this->doc_type . '_image_inline',
-                    'border="0"',
-                    null,
-                    null,
-                    '.png',
-                    $mod_strings['LBL_LIST_VIEW_DOCUMENT']
-                ) . "</a>";
+                $file_url =
+                    "<a href='" . $this->doc_url . "' target='_blank'>" . SugarThemeRegistry::current()->getImage(
+                        $this->doc_type . '_image_inline',
+                        'border="0"',
+                        null,
+                        null,
+                        '.png',
+                        $mod_strings['LBL_LIST_VIEW_DOCUMENT']
+                    ) . '</a>';
             } else {
-                $file_url = "<a href='index.php?entryPoint=download&id={$this->document_revision_id}&type=Documents' target='_blank'>" . SugarThemeRegistry::current()->getImage(
-                    $img_name,
-                    'border="0"',
-                    null,
-                    null,
-                    '.gif',
-                    $mod_strings['LBL_LIST_VIEW_DOCUMENT']
-                ) . "</a>";
+                $file_url =
+                    "<a href='index.php?entryPoint=download&id={$this->document_revision_id}&type=Documents' target='_blank'>" . SugarThemeRegistry::current(
+                    )->getImage(
+                        $img_name,
+                        'border="0"',
+                        null,
+                        null,
+                        '.gif',
+                        $mod_strings['LBL_LIST_VIEW_DOCUMENT']
+                    ) . '</a>';
             }
 
             $this->file_url = $file_url;
             $this->file_url_noimage = "index.php?entryPoint=download&type=Documents&id={$this->document_revision_id}";
         } else {
-            $this->file_url = "";
-            $this->file_url_noimage = "";
+            $this->file_url = '';
+            $this->file_url_noimage = '';
         }
 
         //get last_rev_by user name.
         if (!empty($row)) {
             $this->last_rev_created_name = $locale->getLocaleFormattedName($row['first_name'], $row['last_name']);
 
-            $this->last_rev_create_date = $timedate->to_display_date_time($this->db->fromConvert(
-                $row['rev_date'],
-                'datetime'
-            ));
+            $this->last_rev_create_date = $timedate->to_display_date_time(
+                $this->db->fromConvert(
+                    $row['rev_date'],
+                    'datetime'
+                )
+            );
             $this->last_rev_mime_type = $row['file_mime_type'];
         }
 
@@ -328,7 +329,8 @@ class Document extends File
         }
         if (!empty($this->related_doc_id)) {
             $this->related_doc_name = (new Document())->get_document_name($this->related_doc_id);
-            $this->related_doc_rev_number = (new DocumentRevision)->get_document_revision_name($this->related_doc_rev_id);
+            $this->related_doc_rev_number =
+                (new DocumentRevision)->get_document_revision_name($this->related_doc_rev_id);
         }
     }
 
@@ -337,28 +339,28 @@ class Document extends File
         return $list_form;
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $query = "SELECT
-						documents.*";
+        $query = 'SELECT
+                        documents.*';
         $query .= $custom_join['select'];
-        $query .= " FROM documents ";
+        $query .= ' FROM documents ';
         $query .= $custom_join['join'];
 
-        $where_auto = " documents.deleted = 0";
+        $where_auto = ' documents.deleted = 0';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= " WHERE $where AND " . $where_auto;
         } else {
-            $query .= " WHERE " . $where_auto;
+            $query .= ' WHERE ' . $where_auto;
         }
 
-        if ($order_by != "") {
+        if ($order_by != '') {
             $query .= " ORDER BY $order_by";
         } else {
-            $query .= " ORDER BY documents.document_name";
+            $query .= ' ORDER BY documents.document_name';
         }
 
         return $query;
@@ -373,7 +375,6 @@ class Document extends File
 
         $this->fill_in_additional_list_fields();
 
-
         $document_fields['FILENAME'] = $this->filename;
         $document_fields['FILE_URL'] = $this->file_url;
         $document_fields['FILE_URL_NOIMAGE'] = $this->file_url_noimage;
@@ -382,28 +383,39 @@ class Document extends File
             if (!isset($this->category_id)) {
                 LoggerManager::getLogger()->warn('Undefined category id for document list view data.');
             } else {
-                LoggerManager::getLogger()->warn('In language app strings[document_category_dom] does not found for category id for document list view data: ' . $this->category_id);
+                LoggerManager::getLogger()->warn(
+                    'In language app strings[document_category_dom] does not found for category id for document list view data: ' . $this->category_id
+                );
             }
         }
 
         if (!isset($app_list_strings['document_category_dom'][$this->category_id])) {
-            LoggerManager::getLogger()->warn('Category ID is not found in document_category_dom in app_list_string for getting list view date of Document.');
+            LoggerManager::getLogger()->warn(
+                'Category ID is not found in document_category_dom in app_list_string for getting list view date of Document.'
+            );
             $appListStringDocumentCategoryDomForThisCategoryId = null;
         } else {
-            $appListStringDocumentCategoryDomForThisCategoryId = $app_list_strings['document_category_dom'][$this->category_id];
+            $appListStringDocumentCategoryDomForThisCategoryId =
+                $app_list_strings['document_category_dom'][$this->category_id];
         }
 
         if (!isset($app_list_strings['document_category_dom'][$this->category_id])) {
-            LoggerManager::getLogger()->warn('Category ID is not found in document_category_dom in app_list_string for getting list view date of Document.');
+            LoggerManager::getLogger()->warn(
+                'Category ID is not found in document_category_dom in app_list_string for getting list view date of Document.'
+            );
             $appListStringDocumentCategoryDomForThisSubCategoryId = null;
         } else {
-            $appListStringDocumentCategoryDomForThisSubCategoryId = $app_list_strings['document_subcategory_dom'][$this->subcategory_id];
+            $appListStringDocumentCategoryDomForThisSubCategoryId =
+                $app_list_strings['document_subcategory_dom'][$this->subcategory_id];
         }
 
-        $document_fields['CATEGORY_ID'] = empty($this->category_id) ? "" : $appListStringDocumentCategoryDomForThisCategoryId;
-        $document_fields['SUBCATEGORY_ID'] = empty($this->subcategory_id) ? "" : $appListStringDocumentCategoryDomForThisSubCategoryId;
+        $document_fields['CATEGORY_ID'] =
+            empty($this->category_id) ? '' : $appListStringDocumentCategoryDomForThisCategoryId;
+        $document_fields['SUBCATEGORY_ID'] =
+            empty($this->subcategory_id) ? '' : $appListStringDocumentCategoryDomForThisSubCategoryId;
         $document_fields['NAME'] = $this->document_name;
-        $document_fields['DOCUMENT_NAME_JAVASCRIPT'] = DBManagerFactory::getInstance()->quote($document_fields['DOCUMENT_NAME']);
+        $document_fields['DOCUMENT_NAME_JAVASCRIPT'] =
+            DBManagerFactory::getInstance()->quote($document_fields['DOCUMENT_NAME']);
 
         return $document_fields;
     }
@@ -416,6 +428,8 @@ class Document extends File
      * remove DocumentRevision relationships and then optionally delete Contracts depending on the version.
      *
      * @param $id String The record id of the Document instance
+     *
+     * @throws Exception
      */
     public function mark_relationships_deleted($id)
     {
@@ -433,7 +447,7 @@ class Document extends File
     }
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':

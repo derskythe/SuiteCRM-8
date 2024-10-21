@@ -63,38 +63,36 @@ use SuiteCRM\Utility\SuiteLogger as Logger;
 #[\AllowDynamicProperties]
 class ApiController implements LoggerAwareInterface
 {
-    public const CONTENT_TYPE = 'application/vnd.api+json';
-    public const CONTENT_TYPE_JSON = 'application/vnd.api+json';
+    public const CONTENT_TYPE        = 'application/vnd.api+json';
+    public const CONTENT_TYPE_JSON   = 'application/vnd.api+json';
     public const CONTENT_TYPE_HEADER = 'Content-Type';
-    public const LINKS = 'links';
+    public const LINKS               = 'links';
 
-    public const VERSION_MAJOR = 8;
-    public const VERSION_MINOR = 0;
-    public const VERSION_PATCH = 0;
+    public const VERSION_MAJOR     = 8;
+    public const VERSION_MINOR     = 0;
+    public const VERSION_PATCH     = 0;
     public const VERSION_STABILITY = 'ALPHA';
 
     /**
      * @var LoggerInterface $logger
      */
-    protected $logger;
+    protected LoggerInterface|null $logger;
 
     /**
      * @var ContainerInterface $containers
      */
-    protected $containers;
+    protected ContainerInterface $containers;
 
 
     /**
      * @var Paths $paths
      */
-    protected $paths;
+    protected Paths $paths;
 
     /**
      * ApiController constructor.
+     *
      * @param ContainerInterface $containers
-     * @throws ContainerException
-     * @throws NotFoundExceptionInterface
-     * @throws ContainerExceptionInterface
      */
     public function __construct(ContainerInterface $containers)
     {
@@ -103,41 +101,47 @@ class ApiController implements LoggerAwareInterface
     }
 
     /**
-     * @param Request $request
+     * @param ServerRequestInterface $request
      * @param Response $response
      * @param array $payload
+     *
      * @return Response
-     * @throws RuntimeException
+     * @throws ContainerExceptionInterface Error while retrieving the entry.
+     * @throws NotFoundExceptionInterface No entry was found for **this** identifier.
      */
-    protected function generateJsonApiResponse(Request $request, Response $response, $payload)
+    protected function generateJsonApiResponse(
+        ServerRequestInterface $request,
+        Response               $response,
+        array                  $payload
+    ) : Response
     {
         $apiErrorObjectArrays = [];
         try {
             $negotiated = $this->negotiatedJsonApiContent($request, $response);
-            if (in_array($negotiated->getStatusCode(), array(415, 406), true)) {
+            if (in_array($negotiated->getStatusCode(), array( 415, 406 ), true)) {
                 // return error instead of response
                 return $negotiated;
             }
 
             $payload['meta']['suiteapi'] = array(
-              'major' => self::VERSION_MAJOR,
-              'minor' => self::VERSION_MINOR,
-              'patch' => self::VERSION_PATCH,
-              'stability' => self::VERSION_STABILITY,
+                'major'     => self::VERSION_MAJOR,
+                'minor'     => self::VERSION_MINOR,
+                'patch'     => self::VERSION_PATCH,
+                'stability' => self::VERSION_STABILITY,
             );
 
             $jsonAPI = $this->containers->get('JsonApi');
             $payload['jsonapi'] = $jsonAPI->toJsonApiResponse();
 
             // Validate Response
-            $data = json_decode(json_encode($payload));
+            $data = json_decode(json_encode($payload, JSON_THROW_ON_ERROR), false, 512, JSON_THROW_ON_ERROR);
 
             $validator = new Validator();
-            $validator->validate($data, (object)['$ref' => 'file://' . realpath($jsonAPI->getSchemaPath())]);
+            $validator->validate($data, (object) [ '$ref' => 'file://' . realpath($jsonAPI->getSchemaPath()) ]);
 
             if (!$validator->isValid()) {
                 $errors = $validator->getErrors();
-                $this->logger->error('[Invalid Payload Response]'. json_encode($payload));
+                $this->logger->error('[Invalid Payload Response]' . json_encode($payload, JSON_THROW_ON_ERROR));
                 $apiErrorObjects = [];
                 foreach ($errors as $error) {
                     $apiErrorObject = new JsonApiErrorObject();
@@ -148,22 +152,21 @@ class ApiController implements LoggerAwareInterface
                 $payload['errors'] = array_merge($payload['errors'], $apiErrorObjectArrays);
             }
 
-            json_encode($payload);
-            if (json_last_error() != JSON_ERROR_NONE) {
+            json_encode($payload, JSON_THROW_ON_ERROR);
+            if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new Exception('Generating JSON payload failed: ' . json_last_error_msg());
             }
 
-            if (isset($payload['errors'][0]['status'])) {
-                $status = $payload['errors'][0]['status'];
-            } else {
-                $status = $response->getStatusCode();
-            }
+            $status = $payload['errors'][0]['status'] ?? $response->getStatusCode();
+
             return $response
                 ->withHeader(self::CONTENT_TYPE_HEADER, self::CONTENT_TYPE)
                 ->withStatus($status)
                 ->write(json_encode($payload));
         } catch (\Exception $e) {
-            $errorMessage = 'Generate JSON API Response exception detected: ' . get_class($e) . ': ' . $e->getMessage() . ' (' . $e->getCode() . ')';
+            $errorMessage =
+                'Generate JSON API Response exception detected: ' . get_class($e) . ': ' . $e->getMessage(
+                ) . ' (' . $e->getCode() . ')';
             if (inDeveloperMode()) {
                 ErrorMessage::log($errorMessage);
             }
@@ -176,19 +179,27 @@ class ApiController implements LoggerAwareInterface
      * @param Request $request
      * @param \Exception $e
      * @param array $payload
+     *
      * @return array
      * @throws RuntimeException
      */
-    protected function handleExceptionIntoPayloadError(Request $request, \Exception $exception, $payload)
+    protected function handleExceptionIntoPayloadError(
+        ServerRequestInterface $request,
+        \Exception             $exception,
+        array                  $payload
+    ) : array
     {
         try {
             ErrorMessage::log($exception->getMessage());
             $error = new JsonApiErrorObject();
             $error->retrieveFromRequest($request)->retrieveFromException($exception);
             $payload['errors'][] = $error->export();
+
             return $payload;
         } catch (Exception $e) {
-            $errorMessage = 'Generate JSON API Error Response exception detected: ' . get_class($e) . ': ' . $e->getMessage() . ' (' . $e->getCode() . ')';
+            $errorMessage =
+                'Generate JSON API Error Response exception detected: ' . get_class($e) . ': ' . $e->getMessage(
+                ) . ' (' . $e->getCode() . ')';
             if (inDeveloperMode()) {
                 ErrorMessage::log($errorMessage);
             }
@@ -200,14 +211,21 @@ class ApiController implements LoggerAwareInterface
      * @param Request $request
      * @param Response $response
      * @param \Exception|ApiException $exception
+     *
      * @return integer
-     * @throws RuntimeException
+     * @return Response
+     * @throws ContainerExceptionInterface Error while retrieving the entry.
+     * @throws NotFoundExceptionInterface No entry was found for **this** identifier.
      */
-    public function generateJsonApiErrorResponse(Request $request, Response $response, \Exception $exception)
+    public function generateJsonApiErrorResponse(
+        Request                 $request,
+        Response                $response,
+        ApiException|\Exception $exception
+    ) : int
     {
         try {
             $jsonError = array(
-                'code' => $exception->getCode(),
+                'code'  => $exception->getCode(),
                 'title' => $exception->getMessage(),
             );
 
@@ -232,8 +250,6 @@ class ApiController implements LoggerAwareInterface
                 $this->logger->error($logMessage);
             }
 
-
-
             $jsonError['status'] = $response->getStatusCode();
 
             $payload = array(
@@ -243,9 +259,9 @@ class ApiController implements LoggerAwareInterface
             );
 
             $payload['meta']['suiteapi'] = array(
-                'major' => self::VERSION_MAJOR,
-                'minor' => self::VERSION_MINOR,
-                'patch' => self::VERSION_PATCH,
+                'major'     => self::VERSION_MAJOR,
+                'minor'     => self::VERSION_MINOR,
+                'patch'     => self::VERSION_PATCH,
                 'stability' => self::VERSION_STABILITY,
             );
 
@@ -253,14 +269,15 @@ class ApiController implements LoggerAwareInterface
             $jsonAPI = $this->containers->get('JsonApi');
             $payload['jsonapi'] = $jsonAPI->toJsonApiResponse();
 
-
             $payload = $this->handleExceptionIntoPayloadError($request, $exception, $payload);
 
             return $response
                 ->withHeader(self::CONTENT_TYPE_HEADER, self::CONTENT_TYPE)
                 ->write(json_encode($payload));
         } catch (\Exception $e) {
-            $errorMessage = 'Generate JSON API Error Response exception detected: ' . get_class($e) . ': ' . $e->getMessage() . ' (' . $e->getCode() . ')';
+            $errorMessage =
+                'Generate JSON API Error Response exception detected: ' . get_class($e) . ': ' . $e->getMessage(
+                ) . ' (' . $e->getCode() . ')';
             if (inDeveloperMode()) {
                 ErrorMessage::log($errorMessage);
             }
@@ -271,15 +288,19 @@ class ApiController implements LoggerAwareInterface
     /**
      * @param Request $request
      * @param Response $response
+     *
      * @return Response
      * @throws NotAcceptableException
      * @throws UnsupportedMediaTypeException
      */
-    protected function negotiatedJsonApiContent(Request $request, Response $response)
+    protected function negotiatedJsonApiContent(ServerRequestInterface $request, Response $response) : Response
     {
         $contentType = $request->getContentType();
         if ($contentType !== self::CONTENT_TYPE) {
-            throw new UnsupportedMediaTypeException('Request "Content-Type" should be "' . self::CONTENT_TYPE . '", ' . ($contentType ? '"' . $contentType . '" given' : 'request doesn\'t have "Content-Type"') . ' in header.');
+            throw new UnsupportedMediaTypeException(
+                'Request "Content-Type" should be "' . self::CONTENT_TYPE . '", ' . ($contentType
+                    ? '"' . $contentType . '" given' : 'request doesn\'t have "Content-Type"') . ' in header.'
+            );
         }
 
         $header = $request->getHeader('Accept');
@@ -290,7 +311,10 @@ class ApiController implements LoggerAwareInterface
             throw new NotAcceptableException('Header should contains exactly one "Accept" header.');
         }
         if ($header[0] !== self::CONTENT_TYPE) {
-            throw new NotAcceptableException('Header "Accept" should be "' . self::CONTENT_TYPE . '", ' . ($header[0] ? '"' . $header[0] . '" given.' : 'request doesn\'t have "Accept"'));
+            throw new NotAcceptableException(
+                'Header "Accept" should be "' . self::CONTENT_TYPE . '", ' . ($header[0] ? '"' . $header[0] . '" given.'
+                    : 'request doesn\'t have "Accept"')
+            );
         }
 
         if ($this->logger === null) {
@@ -304,28 +328,34 @@ class ApiController implements LoggerAwareInterface
 
     /**
      * @param Request $request
+     *
+     * @throws ContainerExceptionInterface
      * @throws InvalidJsonApiRequestException
+     * @throws NotFoundExceptionInterface
+     * @throws \JsonException
      */
-    protected function validateRequestWithJsonApiSchema(Request $request)
+    protected function validateRequestWithJsonApiSchema(ServerRequestInterface $request) : void
     {
         // Validate Response
         $jsonAPI = $this->containers->get('JsonApi');
-        $data = json_decode($request->getBody());
+        $data = json_decode($request->getContent(), false, 512, JSON_THROW_ON_ERROR);
 
         $validator = new Validator();
-        $validator->validate($data, (object)['$ref' => 'file://' . realpath($jsonAPI->getSchemaPath())]);
+        $validator->validate($data, (object) [ '$ref' => 'file://' . realpath($jsonAPI->getSchemaPath()) ]);
 
         if (!$validator->isValid()) {
             $errors = $validator->getErrors();
-            $this->logger->error('[Invalid Payload Request]'. $request->getBody());
-            throw new InvalidJsonApiRequestException('Invalid Payload Request deteced: ' . $errors[0]['property']. ' ' .$errors[0]['message']);
+            $this->logger->error('[Invalid Payload Request]' . $request->getBody());
+            throw new InvalidJsonApiRequestException(
+                'Invalid Payload Request deteced: ' . $errors[0]['property'] . ' ' . $errors[0]['message']
+            );
         }
     }
 
     /**
      * @return int
      */
-    public function getVersionMajor()
+    public function getVersionMajor() : int
     {
         return self::VERSION_MAJOR;
     }
@@ -333,7 +363,7 @@ class ApiController implements LoggerAwareInterface
     /**
      * @return int
      */
-    public function getVersionMinor()
+    public function getVersionMinor() : int
     {
         return self::VERSION_MINOR;
     }
@@ -341,7 +371,7 @@ class ApiController implements LoggerAwareInterface
     /**
      * @return int
      */
-    public function getVersionPatch()
+    public function getVersionPatch() : int
     {
         return self::VERSION_PATCH;
     }
@@ -349,7 +379,7 @@ class ApiController implements LoggerAwareInterface
     /**
      * @return string
      */
-    public function getVersionStability()
+    public function getVersionStability() : string
     {
         return self::VERSION_STABILITY;
     }
@@ -357,7 +387,7 @@ class ApiController implements LoggerAwareInterface
     /**
      * @param LoggerInterface $logger
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

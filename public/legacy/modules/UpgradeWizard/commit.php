@@ -103,7 +103,7 @@ if (!isset($_SESSION['committed'])) {
         if (!isset($_SESSION['install_file']) || empty($_SESSION['install_file']) || !is_file($_SESSION['install_file'])) {
             if (file_exists(clean_path($base_tmp_upgrade_dir)) && $handle = opendir(clean_path($base_tmp_upgrade_dir))) {
                 while (false !== ($file = readdir($handle))) {
-                    if ($file != '.' && $file != '..') {
+                    if ($file !== '.' && $file !== '..') {
                         //echo $base_tmp_upgrade_dir."/".$file.'</br>';
                         if (is_file($base_tmp_upgrade_dir.'/'.$file.'/manifest.php')) {
                             require_once $base_tmp_upgrade_dir.'/'.$file.'/manifest.php';
@@ -129,13 +129,13 @@ if (!isset($_SESSION['committed'])) {
             $redirect_new_wizard = $sugar_config['site_url'].'/index.php?module=UpgradeWizard&action=index';
             echo '<form name="redirect" action="'.$redirect_new_wizard.'"  method="POST">';
             $upgrade_directories_not_found = <<<eoq
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th colspan="2" align="left">
-				<span class='error'><b>'Upload file missing or has been deleted. Refresh the page to go back to UpgradeWizard start'</b></span>
-			</th>
-		</tr>
-	</table>
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th colspan="2" align="left">
+                <span class='error'><b>'Upload file missing or has been deleted. Refresh the page to go back to UpgradeWizard start'</b></span>
+            </th>
+        </tr>
+    </table>
 eoq;
             $uwMain = $upgrade_directories_not_found;
 
@@ -200,13 +200,13 @@ eoq;
         $redirect_new_wizard = $sugar_config['site_url'].'/index.php?module=UpgradeWizard&action=index';
         echo '<form name="redirect" action="'.$redirect_new_wizard.'"  method="POST">';
         $upgrade_directories_not_found = <<<eoq
-	<table cellpadding="3" cellspacing="0" border="0">
-		<tr>
-			<th colspan="2" align="left">
-				<span class='error'><b>'Upload file missing or has been deleted. Refresh the page to go back to UpgradeWizard start'</b></span>
-			</th>
-		</tr>
-	</table>
+    <table cellpadding="3" cellspacing="0" border="0">
+        <tr>
+            <th colspan="2" align="left">
+                <span class='error'><b>'Upload file missing or has been deleted. Refresh the page to go back to UpgradeWizard start'</b></span>
+            </th>
+        </tr>
+    </table>
 eoq;
         $uwMain = $upgrade_directories_not_found;
 
@@ -221,17 +221,17 @@ eoq;
     $rest_dir = remove_file_extension($install_file).'-restore';
 
     ///////////////////////////////////////////////////////////////////////////////
-    ////	MAKE BACKUPS OF TARGET FILES
+    ////    MAKE BACKUPS OF TARGET FILES
     if (!didThisStepRunBefore('commit', 'commitMakeBackupFiles')) {
         set_upgrade_progress('commit', 'in_progress', 'commitMakeBackupFiles', 'in_progress');
         $errors = commitMakeBackupFiles($rest_dir, $install_file, $unzip_dir, $zip_from_dir, array());
         set_upgrade_progress('commit', 'in_progress', 'commitMakeBackupFiles', 'done');
     }
-    ////	END MAKE BACKUPS OF TARGET FILES
+    ////    END MAKE BACKUPS OF TARGET FILES
     ///////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////////
-    ////	HANDLE PREINSTALL SCRIPTS
+    ////    HANDLE PREINSTALL SCRIPTS
     if (empty($errors)) {
         $file = "$unzip_dir/".constant('SUGARCRM_PRE_INSTALL_FILE');
         if (is_file($file)) {
@@ -247,7 +247,7 @@ eoq;
         }
     }
 
-    ////	HANDLE PREINSTALL SCRIPTS
+    ////    HANDLE PREINSTALL SCRIPTS
     ///////////////////////////////////////////////////////////////////////////////
     //Clean smarty from cache
     $cachedir = sugar_cached('smarty');
@@ -264,7 +264,7 @@ eoq;
 
     //Also add the three-way merge here. The idea is after the 451 html files have
     //been converted run the 3-way merge. If 500 then just run the 3-way merge
-    $ce_to_pro_ent = isset($manifest['name']) && ($manifest['name'] == 'SugarCE to SugarPro' || $manifest['name'] == 'SugarCE to SugarEnt' || $manifest['name'] == 'SugarCE to SugarCorp' || $manifest['name'] == 'SugarCE to SugarUlt');
+    $ce_to_pro_ent = isset($manifest['name']) && ($manifest['name'] === 'SugarCE to SugarPro' || $manifest['name'] === 'SugarCE to SugarEnt' || $manifest['name'] === 'SugarCE to SugarCorp' || $manifest['name'] === 'SugarCE to SugarUlt');
 
     if (file_exists('modules/UpgradeWizard/SugarMerge/SugarMerge.php')) {
         require_once 'modules/UpgradeWizard/SugarMerge/SugarMerge.php';
@@ -292,7 +292,7 @@ eoq;
     }
     //END COPY NEW FILES INTO TARGET INSTANCE
     ///////////////////////////////////////////////////////////////////////////////
-    ////	HANDLE POSTINSTALL SCRIPTS
+    ////    HANDLE POSTINSTALL SCRIPTS
     logThis('Starting post_install()...');
     if (!function_exists('inDeveloperMode')) {
         //this function was introduced from tokyo in the file include/utils.php, so when upgrading from 5.1x and 5.2x we should declare the this function
@@ -412,7 +412,7 @@ eoq;
     //fix_dropdown_list();
 
     ///////////////////////////////////////////////////////////////////////////////
-    ////	REGISTER UPGRADE
+    ////    REGISTER UPGRADE
 
     logThis('Registering upgrade with UpgradeHistory');
     if (!didThisStepRunBefore('commit', 'upgradeHistory')) {
@@ -433,7 +433,7 @@ eoq;
         }
         set_upgrade_progress('commit', 'in_progress', 'upgradeHistory', 'done');
     }
-    ////	REGISTER UPGRADE
+    ////    REGISTER UPGRADE
     ///////////////////////////////////////////////////////////////////////////////
 } else {
     $backupFilesExist = false;
@@ -445,7 +445,7 @@ eoq;
 $_SESSION['committed'] = true;
 
 ///////////////////////////////////////////////////////////////////////////////
-////	FINISH AND OUTPUT
+////    FINISH AND OUTPUT
 if (empty($errors)) {
     $stop = false;
 }
@@ -481,11 +481,11 @@ if (version_compare($_SESSION['current_db_version'], $_SESSION['target_db_versio
         $old_schema .= '</div></p>';
 
         $old_schema_opt = "<b>{$mod_strings['LBL_UW_DROP_SCHEMA_METHOD']}</b>
-						<select name=\"schema_drop\" id=\"select_schema_drop\" onchange=\"checkSchemaDropStatus();\">
-							<option value=\"manual\">{$mod_strings['LBL_UW_DROP_SCHEMA_MANUAL']}</option>
-							<option value=\"sugar\">{$mod_strings['LBL_UW_DROP_SCHEMA_UPGRADE_WIZARD']}</option>
-						</select>
-					";
+                        <select name=\"schema_drop\" id=\"select_schema_drop\" onchange=\"checkSchemaDropStatus();\">
+                            <option value=\"manual\">{$mod_strings['LBL_UW_DROP_SCHEMA_MANUAL']}</option>
+                            <option value=\"sugar\">{$mod_strings['LBL_UW_DROP_SCHEMA_UPGRADE_WIZARD']}</option>
+                        </select>
+                    ";
     }
 
     //also add the cache cleaning here.
@@ -544,66 +544,66 @@ if (empty($mod_strings['LBL_UPGRADE_TAKES_TIME_HAVE_PATIENCE'])) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	HANDLE REMINDERS
+////    HANDLE REMINDERS
 commitHandleReminders($skippedFiles);
-////	HANDLE REMINDERS
+////    HANDLE REMINDERS
 ///////////////////////////////////////////////////////////////////////////////
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	OUTPUT
+////    OUTPUT
 $uwMain = <<<eoq
 <script type="text/javascript" language="javascript">
-	function toggleRebuild() {
-		var target = document.getElementById('rebuildResult');
+    function toggleRebuild() {
+        var target = document.getElementById('rebuildResult');
 
-		if(target.innerHTML == '') {
-			target.innerHTML = rebuildResult; // found in UWrebuild()
-		} else {
-			target.innerHTML = '';
-		}
-	}
+        if(target.innerHTML == '') {
+            target.innerHTML = rebuildResult; // found in UWrebuild()
+        } else {
+            target.innerHTML = '';
+        }
+    }
 </script>
 <table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<td>
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-		<td align="left">
-			<p>
-			{$delete_chance}
-			</p>
-			<p>
-			{$backupDesc}
-			</p>
-			<p>
-			{$customized_mods_Desc}
-			</p>
-			<p>
-			{$copiedDesc}
-			</p>
-			<p>
-			{$skippedDesc}
-			</p>
-			<p>
-			{$skipped_queries_Desc}
-			</p>
-			<p>
-			{$rebuildResult}
-			</p>
-		</td>
-	</tr>
-	<tr><td>
-		<p>
-		{$old_schema}
-		</p>
-	</td></tr>
-	<tr><td>
-		{$old_schema_opt}
-	</td></tr>
+    <tr>
+        <td>
+            &nbsp;
+        </td>
+    </tr>
+    <tr>
+        <td align="left">
+            <p>
+            {$delete_chance}
+            </p>
+            <p>
+            {$backupDesc}
+            </p>
+            <p>
+            {$customized_mods_Desc}
+            </p>
+            <p>
+            {$copiedDesc}
+            </p>
+            <p>
+            {$skippedDesc}
+            </p>
+            <p>
+            {$skipped_queries_Desc}
+            </p>
+            <p>
+            {$rebuildResult}
+            </p>
+        </td>
+    </tr>
+    <tr><td>
+        <p>
+        {$old_schema}
+        </p>
+    </td></tr>
+    <tr><td>
+        {$old_schema_opt}
+    </td></tr>
 </table>
 <div id="upgradeDiv" style="display:none">
     <table cellspacing="0" cellpadding="0" border="0">
@@ -614,14 +614,14 @@ $uwMain = <<<eoq
  </div>
  <script>
 function checkSchemaDropStatus() {
-	if(document.getElementById('select_schema_drop') != null){
-		var schemaSelect = document.getElementById('select_schema_drop');
-		var schemaDropMethod = document.getElementById('schema_drop');
-		if(schemaSelect.options[schemaSelect.selectedIndex].value == 'manual') {
-			schemaDropMethod.value = 'manual';
-		} else {
-			schemaDropMethod.value = 'sugar';
-		}
+    if(document.getElementById('select_schema_drop') != null){
+        var schemaSelect = document.getElementById('select_schema_drop');
+        var schemaDropMethod = document.getElementById('schema_drop');
+        if(schemaSelect.options[schemaSelect.selectedIndex].value == 'manual') {
+            schemaDropMethod.value = 'manual';
+        } else {
+            schemaDropMethod.value = 'sugar';
+        }
    }
 }
  checkSchemaDropStatus();

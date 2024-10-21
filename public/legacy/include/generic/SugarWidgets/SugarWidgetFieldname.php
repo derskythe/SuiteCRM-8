@@ -80,12 +80,12 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
         $record = $layout_def['fields'][$key];
         $layout_def['name'] = $name;
         global $current_user;
-        if ($module == 'Users' && !is_admin($current_user)) {
+        if ($module === 'Users' && !is_admin($current_user)) {
             $module = 'Employees';
         }
         $str = "<a target='_blank' href=\"index.php?action=DetailView&module=$module&record=$record\">";
         $str .= $this->displayListPlain($layout_def);
-        $str .= "</a>";
+        $str .= '</a>';
 
 
         global $sugar_config;
@@ -96,11 +96,14 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
             $str .= $value;
             $field_name = $layout_def['name'];
             $field_type = $field_def['type'] ?? '';
-            $str .= "</a>";
-            if ($field_name == 'name') {
-                $str .= "&nbsp;" .SugarThemeRegistry::current()->getImage("edit_inline", "border='0' alt='Edit Layout' align='bottom' onClick='SUGAR.reportsInlineEdit.inlineEdit(\"$div_id\",\"$value\",\"$module\",\"$record\",\"$field_name\",\"$field_type\");'");
+            $str .= '</a>';
+            if ($field_name === 'name') {
+                $str .= '&nbsp;' . SugarThemeRegistry::current()->getImage(
+                        'edit_inline',
+                        "border='0' alt='Edit Layout' align='bottom' onClick='SUGAR.reportsInlineEdit.inlineEdit(\"$div_id\",\"$value\",\"$module\",\"$record\",\"$field_name\",\"$field_type\");'"
+                    );
             }
-            $str .= "</div>";
+            $str .= '</div>';
         }
         return $str;
     }
@@ -117,13 +120,13 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
             return parent::_get_column_select($layout_def);
         }
 
-        //	 'fields' are the two fields to concatenate to create the name.
+        //     'fields' are the two fields to concatenate to create the name.
         if (! empty($layout_def['table_alias'])) {
             $alias = $this->reporter->db->concat($layout_def['table_alias'], $field_def['fields']);
         } elseif (! empty($layout_def['name'])) {
             $alias = $layout_def['name'];
         } else {
-            $alias = "*";
+            $alias = '*';
         }
 
         return $alias;
@@ -139,7 +142,7 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
             $field_def = array();
         }
 
-        //	 'fields' are the two fields to concatenate to create the name
+        //     'fields' are the two fields to concatenate to create the name
         if (!isset($field_def['fields'])) {
             return $this->_get_normal_column_select($layout_def);
         }
@@ -151,24 +154,34 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
         }
 
         if (! empty($layout_def['table_alias'])) {
-            $comps = preg_split("/([fl])/", $localeNameFormat, null, PREG_SPLIT_DELIM_CAPTURE);
+            $comps = preg_split('/([fl])/', $localeNameFormat, null, PREG_SPLIT_DELIM_CAPTURE);
             $name = array();
             foreach ($comps as $val) {
-                if ($val == 'f') {
-                    $name[] = $this->reporter->db->convert($layout_def['table_alias'].".".$field_def['fields'][0], 'IFNULL', array("''"));
-                } elseif ($val == 'l') {
-                    $name[] = $this->reporter->db->convert($layout_def['table_alias'].".".$field_def['fields'][1], 'IFNULL', array("''"));
+                if ($val === 'f') {
+                    $name[] =
+                        $this->reporter->db->convert(
+                            $layout_def['table_alias'] . '.' . $field_def['fields'][0],
+                            'IFNULL',
+                            array( "''" )
+                        );
+                } elseif ($val === 'l') {
+                    $name[] =
+                        $this->reporter->db->convert(
+                            $layout_def['table_alias'] . '.' . $field_def['fields'][1],
+                            'IFNULL',
+                            array( "''" )
+                        );
                 } else {
                     if (!empty($val)) {
                         $name[] = $this->reporter->db->quoted($val);
                     }
                 }
             }
-            $alias = $this->reporter->db->convert($name, "CONCAT");
+            $alias = $this->reporter->db->convert($name, 'CONCAT');
         } elseif (! empty($layout_def['name'])) {
             $alias = $layout_def['name'];
         } else {
-            $alias = "*";
+            $alias = '*';
         }
 
         return $alias;
@@ -183,12 +196,12 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
         if (is_array($layout_def['input_name0'])) {
             $input_name0 = $layout_def['input_name0'][0];
         }
-        if ($input_name0 == 'Current User') {
+        if ($input_name0 === 'Current User') {
             global $current_user;
             $input_name0 = $current_user->id;
         }
 
-        return $this->sugarWidgetFieldId->_get_column_select($layout_def)."="
+        return $this->sugarWidgetFieldId->_get_column_select($layout_def) . '='
             .$this->reporter->db->quoted($input_name0)."\n";
     }
 
@@ -201,12 +214,12 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
         if (is_array($layout_def['input_name0'])) {
             $input_name0 = $layout_def['input_name0'][0];
         }
-        if ($input_name0 == 'Current User') {
+        if ($input_name0 === 'Current User') {
             global $current_user;
             $input_name0 = $current_user->id;
         }
 
-        return $this->sugarWidgetFieldId->_get_column_select($layout_def)."<>"
+        return $this->sugarWidgetFieldId->_get_column_select($layout_def) . '<>'
             .$this->reporter->db->quoted($input_name0)."\n";
     }
 
@@ -220,7 +233,7 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
         $arr = array();
 
         foreach ($layout_def['input_name0'] as $value) {
-            if ($value == 'Current User') {
+            if ($value === 'Current User') {
                 global $current_user;
                 array_push($arr, $this->reporter->db->quoted($current_user->id));
             } else {
@@ -228,9 +241,9 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
             }
         }
 
-        $str = implode(",", $arr);
+        $str = implode(',', $arr);
 
-        return $this->sugarWidgetFieldId->_get_column_select($layout_def)." IN (".$str.")\n";
+        return $this->sugarWidgetFieldId->_get_column_select($layout_def) . ' IN (' . $str . ")\n";
     }
     // $rename_columns, if true then you're coming from reports
     public function queryFilternot_one_of($layout_def, $rename_columns = true)
@@ -242,7 +255,7 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
         $arr = array();
 
         foreach ($layout_def['input_name0'] as $value) {
-            if ($value == 'Current User') {
+            if ($value === 'Current User') {
                 global $current_user;
                 array_push($arr, $this->reporter->db->quoted($current_user->id));
             } else {
@@ -250,14 +263,14 @@ class SugarWidgetFieldName extends SugarWidgetFieldVarchar
             }
         }
 
-        $str = implode(",", $arr);
+        $str = implode(',', $arr);
 
-        return $this->sugarWidgetFieldId->_get_column_select($layout_def)." NOT IN (".$str.")\n";
+        return $this->sugarWidgetFieldId->_get_column_select($layout_def) . ' NOT IN (' . $str . ")\n";
     }
 
     public function &queryGroupBy($layout_def)
     {
-        if ($layout_def['name'] == 'full_name') {
+        if ($layout_def['name'] === 'full_name') {
             $layout_def['name'] = 'id';
             $layout_def['type'] = 'id';
 

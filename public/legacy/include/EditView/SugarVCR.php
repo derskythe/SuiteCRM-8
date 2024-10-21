@@ -38,8 +38,8 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
- define('VCREND', '50');
- define('VCRSTART', '10');
+const VCREND = '50';
+const VCRSTART = '10';
  /**
   * @api
   */
@@ -87,9 +87,12 @@
          return $menu;
      }
 
+     /**
+      * @throws SmartyException
+      */
      public static function menu($module, $offset, $isAuditEnabled, $saveAndContinue = false)
      {
-         $html_text = "";
+         $html_text = '';
          if ($offset < 0) {
              $offset = 0;
          }
@@ -99,7 +102,7 @@
          $stored_vcr_query = SugarVCR::retrieve($module);
 
          // bug 15893 - only show VCR if called as an element in a set of records
-         if (!empty($_REQUEST['record']) && !empty($stored_vcr_query) && isset($_REQUEST['offset']) && (empty($_REQUEST['isDuplicate']) || $_REQUEST['isDuplicate'] == 'false')) {
+         if (!empty($_REQUEST['record']) && !empty($stored_vcr_query) && isset($_REQUEST['offset']) && (empty($_REQUEST['isDuplicate']) || $_REQUEST['isDuplicate'] === 'false')) {
              //syncing with display offset;
              $offset ++;
              $action = (!empty($_REQUEST['action']) ? $_REQUEST['action'] : 'EditView');
@@ -111,12 +114,12 @@
                  $list_link = ajaxLink('index.php?action=' . $action . '&module=' . $module . '&record=' . $menu['NEXT'] . '&offset=' . ($offset + 1));
              }
 
-             $previous_link = "";
+             $previous_link = '';
              if (!empty($menu['PREV'])) {
                  $previous_link = ajaxLink('index.php?module=' . $module . '&action=' . $action . '&offset=' . ($offset - 1) . '&record=' . $menu['PREV']);
              }
 
-             $next_link = "";
+             $next_link = '';
              if (!empty($menu['NEXT'])) {
                  $next_link = ajaxLink('index.php?module=' . $module . '&action=' . $action . '&offset=' . ($offset + 1) . '&record=' . $menu['NEXT']);
              }

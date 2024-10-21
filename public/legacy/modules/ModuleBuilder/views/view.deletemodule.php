@@ -40,17 +40,17 @@
 
 require_once('modules/ModuleBuilder/MB/AjaxCompose.php');
 require_once('modules/ModuleBuilder/MB/ModuleBuilder.php');
- 
+
 #[\AllowDynamicProperties]
 class Viewdeletemodule extends SugarView
 {
     /**
-    	 * @see SugarView::_getModuleTitleParams()
-    	 */
-    protected function _getModuleTitleParams($browserTitle = false)
+         * @see SugarView::_getModuleTitleParams()
+         */
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),

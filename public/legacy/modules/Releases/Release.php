@@ -56,25 +56,25 @@ if (!defined('sugarEntry') || !sugarEntry) {
 class Release extends SugarBean
 {
     // Stored fields
-    public $id;
-    public $deleted;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-    public $name;
+    public string $id;
+    public int $deleted;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $created_by;
+    public string $created_by_name;
+    public string $modified_by_name;
+    public string $name;
     public $status;
 
-    public $table_name = "releases";
+    public string $table_name = 'releases';
 
-    public $object_name = "Release";
-    public $module_dir = 'Releases';
-    public $new_schema = true;
+    public string $object_name = 'Release';
+    public string $module_dir = 'Releases';
+    public bool $new_schema = true;
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array();
+    public array $additional_column_fields = array();
 
     public function __construct()
     {
@@ -92,19 +92,19 @@ class Release extends SugarBean
     public function get_releases($add_blank=false, $status='Active', $where='')
     {
         if ($where!='') {
-            $query = "SELECT id, name FROM $this->table_name where ". $where ." and deleted=0 ";
+            $query = "SELECT id, name FROM $this->table_name where ". $where . ' and deleted=0 ';
         } else {
             $query = "SELECT id, name FROM $this->table_name where deleted=0 ";
         }
-        if ($status=='Active') {
+        if ($status === 'Active') {
             $query .= " and status='Active' ";
-        } elseif ($status=='Hidden') {
+        } elseif ($status === 'Hidden') {
             $query .= " and status='Hidden' ";
-        } elseif ($status=='All') {
+        } elseif ($status === 'All') {
         }
-        $query .= " order by list_order asc";
+        $query .= ' order by list_order asc';
         $result = $this->db->query($query, false);
-        $GLOBALS['log']->debug("get_releases: result is ".var_export($result, true));
+        $GLOBALS['log']->debug('get_releases: result is ' .var_export($result, true));
 
         $list = array();
         if ($add_blank) {
@@ -115,8 +115,8 @@ class Release extends SugarBean
         while (($row = $this->db->fetchByAssoc($result)) != null) {
             //while ($row = $this->db->fetchByAssoc($result)) {
             $list[$row['id']] = $row['name'];
-            $GLOBALS['log']->debug("row id is:".$row['id']);
-            $GLOBALS['log']->debug("row name is:".$row['name']);
+            $GLOBALS['log']->debug('row id is:' . $row['id']);
+            $GLOBALS['log']->debug('row name is:' . $row['name']);
         }
         //}
         return $list;
@@ -135,7 +135,7 @@ class Release extends SugarBean
     {
         global $app_list_strings;
         $temp_array = $this->get_list_view_array();
-        $temp_array["ENCODED_NAME"]=$this->name;
+        $temp_array['ENCODED_NAME']=$this->name;
 
         if (!isset($app_list_strings['release_status_dom'][$this->status])) {
             LoggerManager::getLogger()->warn('Release get_list_view_data: Undefined index: "' . $this->status . '"');
@@ -145,12 +145,12 @@ class Release extends SugarBean
         }
 
         $temp_array['ENCODED_STATUS'] = $appListStringReleaseStatusDomThisStatus;
-        //	$temp_array["ENCODED_NAME"]=htmlspecialchars($this->name, ENT_QUOTES);
+        //    $temp_array["ENCODED_NAME"]=htmlspecialchars($this->name, ENT_QUOTES);
         return $temp_array;
     }
     /**
-    	builds a generic search based on the query string using or
-    	do not include any $this-> because this is called on without having the class instantiated
+        builds a generic search based on the query string using or
+        do not include any $this-> because this is called on without having the class instantiated
     */
     public function build_generic_where_clause($the_query_string)
     {
@@ -158,10 +158,10 @@ class Release extends SugarBean
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);
         array_push($where_clauses, "name like '$the_query_string%'");
 
-        $the_where = "";
+        $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != "") {
-                $the_where .= " or ";
+            if ($the_where != '') {
+                $the_where .= ' or ';
             }
             $the_where .= $clause;
         }

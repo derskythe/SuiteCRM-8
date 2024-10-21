@@ -53,7 +53,7 @@ class StringUtils
      * Converts a string from camelCase to snake_case
      *
      * @param string $input
-     * @param bool   $uppercase
+     * @param bool $uppercase
      *
      * @return string
      */

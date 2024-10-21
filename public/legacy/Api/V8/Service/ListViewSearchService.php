@@ -40,6 +40,7 @@
 
 namespace Api\V8\Service;
 
+use SuiteCRM\ErrorMessageException;
 use Api\V8\BeanDecorator\BeanManager;
 use Api\V8\JsonApi\Helper\AttributeObjectHelper;
 use Api\V8\JsonApi\Helper\PaginationObjectHelper;
@@ -68,7 +69,7 @@ include_once __DIR__ . '/../../../include/ListView/ListViewFacade.php';
 #[\AllowDynamicProperties]
 class ListViewSearchService
 {
-    
+
     /**
      * @var BeanManager
      */
@@ -85,7 +86,7 @@ class ListViewSearchService
     ) {
         $this->beanManager = $beanManager;
     }
-    
+
     /**
      *
      * @param LangText $trans
@@ -93,7 +94,9 @@ class ListViewSearchService
      * @param string $part
      * @param string $valueKey
      * @param array $displayColumns
+     *
      * @return array
+     * @throws ErrorMessageException
      */
     protected function getDataTranslated($trans, $data, $part, $valueKey, $displayColumns)
     {
@@ -106,14 +109,14 @@ class ListViewSearchService
             } else {
                 \LoggerManager::getLogger()->warn("Not found translation text key for search defs for selected module field: $key");
             }
-            
+
             $label = $text ? $trans->getText($text) : $text;
             $data[$part][$key][$valueKey] = $label;
         }
-        
+
         return $data;
     }
-    
+
     /**
      * @param ListViewSearchParams $params
      *
@@ -122,15 +125,15 @@ class ListViewSearchService
     public function getListViewSearchDefs(ListViewSearchParams $params)
     {
         // retrieving search defs
-        
+
         $moduleName = $params->getModuleName();
         $searchDefs = SearchForm::retrieveSearchDefs($moduleName);
-        
+
         // get list view defs
         $displayColumns = ListViewFacade::getDisplayColumns($moduleName);
-        
+
         // simplified data struct
-        
+
         $data = [
             'module' => $moduleName,
             'templateMeta' => $searchDefs['searchdefs'][$moduleName]['templateMeta'],
@@ -138,22 +141,22 @@ class ListViewSearchService
             'advanced' => array_values($searchDefs['searchdefs'][$moduleName]['layout']['advanced_search']),
             'fields' => $searchDefs['searchFields'][$moduleName]
         ];
-        
+
         // translations
-        
+
         $trans = new LangText(null, null, LangText::USING_ALL_STRINGS, true, false, $moduleName);
-        
-        
+
+
         $data = $this->getDataTranslated($trans, $data, 'basic', 'label', $displayColumns);
         $data = $this->getDataTranslated($trans, $data, 'advanced', 'label', $displayColumns);
         $data = $this->getDataTranslated($trans, $data, 'fields', 'vname', $displayColumns);
-        
+
         // generate response
-        
+
         $dataResponse = new DataResponse('SearchDefs', null);
         $attributeResponse = new AttributeResponse($data);
         $dataResponse->setAttributes($attributeResponse);
-        
+
         $response = new DocumentResponse();
         $response->setData($dataResponse);
         return $response;

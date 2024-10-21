@@ -47,13 +47,16 @@ class AlertsController extends SugarController
         $bean = BeanFactory::getBean('Alerts');
 
         $this->view_object_map['Flash'] = '';
-        $this->view_object_map['Results'] = $bean->get_full_list("alerts.date_entered", "alerts.assigned_user_id = '".$current_user->id."' AND is_read != '1'");
+        $this->view_object_map['Results'] = $bean->get_full_list('alerts.date_entered', "alerts.assigned_user_id = '".$current_user->id."' AND is_read != '1'");
         if ($this->view_object_map['Results'] == '') {
             $this->view_object_map['Flash'] =$app_strings['LBL_NOTIFICATIONS_NONE'];
         }
         $this->view = 'default';
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_add()
     {
         global $current_user;
@@ -107,7 +110,7 @@ class AlertsController extends SugarController
         if (isset($_POST) && $reminder_id) {
             $bean = BeanFactory::getBean('Alerts');
             $result = $bean->get_full_list(
-                "",
+                '',
                 "alerts.assigned_user_id = '" . $current_user->id . "' AND reminder_id = '" . $bean->db->quote($reminder_id) . "'"
             );
             if (empty($result)) {
@@ -134,6 +137,9 @@ class AlertsController extends SugarController
         echo json_encode(['result' => (int)$shouldShowReminderPopup], true);
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_markAsRead()
     {
         $bean = BeanFactory::getBean('Alerts', $_GET['record']);
@@ -143,6 +149,9 @@ class AlertsController extends SugarController
         $this->view = 'json';
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_redirect()
     {
         $bean = BeanFactory::getBean('Alerts', $_GET['record']);

@@ -24,7 +24,7 @@ if (isset($_REQUEST['root_directory'])) {
     $forceReb = false;
     //make sure that the rebuild option has been chosen
     if (isset($_REQUEST['js_rebuild_concat'])) {
-        if ($_REQUEST['js_rebuild_concat'] == 'rebuild') {
+        if ($_REQUEST['js_rebuild_concat'] === 'rebuild') {
             //rebuild if files have changed
             $js_groupings = array();
             if (isset($_REQUEST['root_directory'])) {
@@ -71,7 +71,7 @@ if (isset($_REQUEST['root_directory'])) {
 } else {
     //run via command line
     //print_r($argv);
-    $from="";
+    $from= '';
 
     if (isset($argv[1]) && !empty($argv[1])) {
         $from = $argv[1];
@@ -81,14 +81,14 @@ if (isset($_REQUEST['root_directory'])) {
         return;
     }
 
-    if ($argv[1] != '-?') {
+    if ($argv[1] !== '-?') {
         chdir($from);
         require_once('include/utils.php');
         require_once('include/utils/file_utils.php');
         require_once('include/utils/sugar_file_utils.php');
     }
     if (!function_exists('sugar_cached')) {
-        if ($argv[1] != '-?') {
+        if ($argv[1] !== '-?') {
             require_once($from.'/./include/utils.php');
             require_once($from.'/./include/utils/file_utils.php');
             require_once($from.'/./include/utils/sugar_file_utils.php');
@@ -101,31 +101,31 @@ if (isset($_REQUEST['root_directory'])) {
         }
     }
 
-    if ($argv[1] == '-?') {
+    if ($argv[1] === '-?') {
         $argv[2] = '-?';
     }
 
     //if second argument is set, then process commands
     if (!empty($argv[2])) {
-        if ($argv[2] == '-r') {
+        if ($argv[2] === '-r') {
             //replace the compressed scripts with the backed up version
             reverseScripts("$from/jssource/src_files", $from);
-        } elseif ($argv[2] == '-m') {
+        } elseif ($argv[2] === '-m') {
             //replace the scripts, and then minify the scripts again
             reverseScripts("$from/jssource/src_files", $from);
-            BackUpAndCompressScriptFiles($from, "", false, true);
-        } elseif ($argv[2] == '-c') {
+            BackUpAndCompressScriptFiles($from, '', false, true);
+        } elseif ($argv[2] === '-c') {
             //replace the scripts, concatenate the files, and then minify the scripts again
             reverseScripts("$from/jssource/src_files", $from);
-            BackUpAndCompressScriptFiles($from, "", false, true);
+            BackUpAndCompressScriptFiles($from, '', false, true);
             ConcatenateFiles($from, true);
-        } elseif ($argv[2] == '-mo') {
+        } elseif ($argv[2] === '-mo') {
             //do not replace the scriptsjust minify the existing scripts again
-            BackUpAndCompressScriptFiles($from, "", false, true);
-        } elseif ($argv[2] == '-co') {
+            BackUpAndCompressScriptFiles($from, '', false, true);
+        } elseif ($argv[2] === '-co') {
             //concatenate the files only
             ConcatenateFiles($from, true);
-        } elseif ($argv[2] == '-?') {
+        } elseif ($argv[2] === '-?') {
             die("
     Usage : minify <root path> [[-r]|[-m]|[-c]]
 
@@ -155,7 +155,7 @@ if (isset($_REQUEST['root_directory'])) {
     } else {
         //default is to concatenate the files, then back up and compress them
         if (empty($from)) {
-            echo("directory root to process was not specified");
+            echo('directory root to process was not specified');
         }
 
         BackUpAndCompressScriptFiles($from, '', true, true);

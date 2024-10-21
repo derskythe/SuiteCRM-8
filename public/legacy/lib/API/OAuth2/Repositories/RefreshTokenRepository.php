@@ -38,6 +38,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
 
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     public function revokeRefreshToken($tokenId)
     {
@@ -58,6 +59,8 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
     /**
      * {@inheritdoc}
      * @return bool
+     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     public function isRefreshTokenRevoked($tokenId)
     {

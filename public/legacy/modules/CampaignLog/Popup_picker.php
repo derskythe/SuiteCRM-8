@@ -77,12 +77,12 @@ class Popup_Picker
         $where = '';
         if (isset($_REQUEST['query'])) {
             $where_clauses = array();
-            append_where_clause($where_clauses, "target_id", "campaign_log.target_id");
+            append_where_clause($where_clauses, 'target_id', 'campaign_log.target_id');
             //append_where_clause($where_clauses, "last_name", "prospects.last_name");
 
             $where = generate_where_statement($where_clauses);
             if (!empty($where)) {
-                $where.=" AND ";
+                $where.= ' AND ';
             }
             $where .=" activity_type='targeted'";
         }
@@ -118,7 +118,7 @@ class Popup_Picker
         $button  = "<form action='index.php' method='post' name='form' id='form'>\n";
         //START:FOR MULTI-SELECT
         $multi_select=false;
-        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) == 'MULTISELECT') {
+        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) === 'MULTISELECT') {
             $multi_select=true;
             $button .= "<input type='button' name='button' class='button' onclick=\"send_back_selected('Prospects',document.MassUpdate,'mass[]','" .$app_strings['ERR_NOTHING_SELECTED']."');\" title='"
                 .$app_strings['LBL_SELECT_BUTTON_TITLE']."' value='  "
@@ -165,9 +165,9 @@ class Popup_Picker
         $ListView->setXTemplate($form);
         $ListView->multi_select_popup=$multi_select;  //FOR MULTI-SELECT
         if ($multi_select) {
-            $ListView->xTemplate->assign("TAG_TYPE", "SPAN");
+            $ListView->xTemplate->assign('TAG_TYPE', 'SPAN');
         } else {
-            $ListView->xTemplate->assign("TAG_TYPE", "A");
+            $ListView->xTemplate->assign('TAG_TYPE', 'A');
         }//FOR MULTI-SELECT
         //$ListView->setHeaderTitle($mod_strings['LBL_LIST_FORM_TITLE']); //FOR MULTI-SELECT
         //$ListView->setHeaderText($button); //FOR MULTI-SELECT

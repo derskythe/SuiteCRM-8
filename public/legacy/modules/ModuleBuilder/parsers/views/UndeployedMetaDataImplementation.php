@@ -61,6 +61,9 @@ class UndeployedMetaDataImplementation extends AbstractMetaDataImplementation im
       * @throws Exception Thrown if the provided view doesn't exist for this module
       */
 
+    /**
+     * @throws Exception
+     */
     public function __construct($view, $moduleName, $packageName)
     {
 
@@ -157,7 +160,7 @@ class UndeployedMetaDataImplementation extends AbstractMetaDataImplementation im
             $this->_history->append($this->_sourceFilename) ;
         }
         $filename = $this->getFileName($this->_view, $this->_moduleName, MB_BASEMETADATALOCATION);
-        $GLOBALS ['log']->debug(get_class($this) . "->deploy(): writing to " . $filename);
+        $GLOBALS ['log']->debug(get_class($this) . '->deploy(): writing to ' . $filename);
         $this->_saveToFile($filename, $defs);
     }
 
@@ -195,7 +198,7 @@ class UndeployedMetaDataImplementation extends AbstractMetaDataImplementation im
         }
         // END ASSERTIONS
 
-        $filenames = array(  	MB_DASHLETSEARCH => 'dashletviewdefs',
+        $filenames = array(      MB_DASHLETSEARCH => 'dashletviewdefs',
                                 MB_DASHLET => 'dashletviewdefs',
                                 MB_LISTVIEW => 'listviewdefs' ,
                                 MB_BASICSEARCH => 'searchdefs' ,

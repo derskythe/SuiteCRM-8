@@ -226,7 +226,9 @@ class DateFormatService
     /**
      * @param $dateStr
      * @param $modification
+     *
      * @return string
+     * @throws DateMalformedStringException
      */
     public function modifyDate($dateStr, $modification): string
     {
@@ -252,4 +254,3 @@ class DateFormatService
         return $date->modify($modification)->format($format);
     }
 }
-

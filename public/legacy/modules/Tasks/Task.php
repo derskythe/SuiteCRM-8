@@ -46,19 +46,19 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class Task extends SugarBean
 {
-    public $field_name_map;
+    public ?array $field_name_map;
 
     // Stored fields
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $assigned_user_id;
-    public $modified_user_id;
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-    public $description;
-    public $name;
+    public string $id;
+    public string $date_entered;
+    public string $date_modified;
+    public string $assigned_user_id;
+    public string $modified_user_id;
+    public string $created_by;
+    public string $created_by_name;
+    public string $modified_by_name;
+    public string $description;
+    public string $name;
     public $status;
     public $date_due_flag;
     public $date_due;
@@ -78,16 +78,16 @@ class Task extends SugarBean
     public $assigned_user_name;
 
     //bug 28138 todo
-    //	var $default_task_name_values = array('Assemble catalogs', 'Make travel arrangements', 'Send a letter', 'Send contract', 'Send fax', 'Send a follow-up letter', 'Send literature', 'Send proposal', 'Send quote', 'Call to schedule meeting', 'Setup evaluation', 'Get demo feedback', 'Arrange introduction', 'Escalate support request', 'Close out support request', 'Ship product', 'Arrange reference call', 'Schedule training', 'Send local user group information', 'Add to mailing list');
+    //    var $default_task_name_values = array('Assemble catalogs', 'Make travel arrangements', 'Send a letter', 'Send contract', 'Send fax', 'Send a follow-up letter', 'Send literature', 'Send proposal', 'Send quote', 'Call to schedule meeting', 'Setup evaluation', 'Get demo feedback', 'Arrange introduction', 'Escalate support request', 'Close out support request', 'Ship product', 'Arrange reference call', 'Schedule training', 'Send local user group information', 'Add to mailing list');
 
-    public $table_name = "tasks";
+    public string $table_name = 'tasks';
 
-    public $object_name = "Task";
-    public $module_dir = 'Tasks';
+    public string $object_name = 'Task';
+    public string $module_dir = 'Tasks';
 
-    public $importable = true;
+    public bool $importable = true;
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array('assigned_user_name', 'assigned_user_id', 'contact_name', 'contact_phone', 'contact_email', 'parent_name');
+    public array $additional_column_fields = array( 'assigned_user_name', 'assigned_user_id', 'contact_name', 'contact_phone', 'contact_email', 'parent_name');
 
 
     public function __construct()
@@ -98,7 +98,7 @@ class Task extends SugarBean
 
 
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     public function save($check_notify = false)
     {
@@ -113,31 +113,31 @@ class Task extends SugarBean
         return (string)$this->name;
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join='')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $contact_required = stristr((string) $where, "contacts");
+        $contact_required = stristr((string) $where, 'contacts');
         if ($contact_required) {
-            $query = "SELECT tasks.*, contacts.first_name, contacts.last_name, users.user_name as assigned_user_name ";
+            $query = 'SELECT tasks.*, contacts.first_name, contacts.last_name, users.user_name as assigned_user_name ';
             $query .= $custom_join['select'];
-            $query .= " FROM contacts, tasks ";
-            $where_auto = "tasks.contact_id = contacts.id AND tasks.deleted=0 AND contacts.deleted=0";
+            $query .= ' FROM contacts, tasks ';
+            $where_auto = 'tasks.contact_id = contacts.id AND tasks.deleted=0 AND contacts.deleted=0';
         } else {
             $query = 'SELECT tasks.*, users.user_name as assigned_user_name ';
             $query .= $custom_join['select'];
             $query .= ' FROM tasks ';
-            $where_auto = "tasks.deleted=0";
+            $where_auto = 'tasks.deleted=0';
         }
 
 
         $query .= $custom_join['join'];
-        $query .= "  LEFT JOIN users ON tasks.assigned_user_id=users.id ";
+        $query .= '  LEFT JOIN users ON tasks.assigned_user_id=users.id ';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where $where AND ".$where_auto;
         } else {
-            $query .= "where ".$where_auto;
+            $query .= 'where ' .$where_auto;
         }
 
         $order_by = $this->process_order_by($order_by);
@@ -158,7 +158,7 @@ class Task extends SugarBean
             $contact = BeanFactory::newBean('Contacts');
             $contact->retrieve($this->contact_id);
 
-            if ($contact->id != "") {
+            if ($contact->id != '') {
                 $this->contact_name = $contact->full_name;
                 $this->contact_name_owner = $contact->assigned_user_id;
                 $this->contact_name_mod = 'Contacts';
@@ -195,16 +195,16 @@ class Task extends SugarBean
             if (is_subclass_of($parent, 'File')) {
                 $query = "SELECT document_name, assigned_user_id parent_name_owner from $parent->table_name where id = '$this->parent_id'";
             } else {
-                $query = "SELECT name ";
+                $query = 'SELECT name ';
                 if (isset($parent->field_defs['assigned_user_id'])) {
-                    $query .= " , assigned_user_id parent_name_owner ";
+                    $query .= ' , assigned_user_id parent_name_owner ';
                 } else {
-                    $query .= " , created_by parent_name_owner ";
+                    $query .= ' , created_by parent_name_owner ';
                 }
                 $query .= " from $parent->table_name where id = '$this->parent_id'";
             }
         }
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
 
         // Get the id and the name.
         $row = $this->db->fetchByAssoc($result);
@@ -245,13 +245,13 @@ class Task extends SugarBean
         $dd = $timedate->to_db_date($date_due, false);
         $taskClass = 'futureTask';
         if ($dd < $today) {
-            if ($task_fields['STATUS']=='Completed' || $task_fields['STATUS']=='Deferred') {
+            if ($task_fields['STATUS'] === 'Completed' || $task_fields['STATUS'] === 'Deferred') {
                 $taskClass = '';
             } else {
                 $taskClass = 'overdueTask';
             }
         } else {
-            if ($dd	== $today) {
+            if ($dd    == $today) {
                 $taskClass = 'todaysTask';
             }
         }
@@ -266,7 +266,7 @@ class Task extends SugarBean
         global $mod_strings, $app_list_strings, $timedate;
 
         $override_date_for_subpanel = false;
-        if (!empty($_REQUEST['module']) && $_REQUEST['module'] !='Calendar' && $_REQUEST['module'] !='Tasks' && $_REQUEST['module'] !='Home') {
+        if (!empty($_REQUEST['module']) && $_REQUEST['module'] !== 'Calendar' && $_REQUEST['module'] !== 'Tasks' && $_REQUEST['module'] !== 'Home') {
             //this is a subpanel list view, so override the due date with start date so that collections subpanel works as expected
             $override_date_for_subpanel = true;
         }
@@ -298,14 +298,14 @@ class Task extends SugarBean
         if (isset($this->parent_type)) {
             $task_fields['PARENT_MODULE'] = $this->parent_type;
         }
-        if ($this->status != "Completed" && $this->status != "Deferred") {
+        if ($this->status !== 'Completed' && $this->status !== 'Deferred') {
             $setCompleteUrl = "<b><a id='{$this->id}' class='list-view-data-icon' title='".translate('LBL_LIST_CLOSE', 'Tasks')."' onclick='SUGAR.util.closeActivityPanel.show(\"{$this->module_dir}\",\"{$this->id}\",\"Completed\",\"listview\",\"1\");'>";
             $task_fields['SET_COMPLETE'] = $setCompleteUrl . "<span class='suitepicon suitepicon-action-clear'></span></a></b>";
         }
 
         // make sure we grab the localized version of the contact name, if a contact is provided
         if (!empty($this->contact_id)) {
-            $contact_temp = BeanFactory::getBean("Contacts", $this->contact_id);
+            $contact_temp = BeanFactory::getBean('Contacts', $this->contact_id);
             if (!empty($contact_temp)) {
                 // Make first name, last name, salutation and title of Contacts respect field level ACLs
                 $contact_temp->_create_proper_name_field();
@@ -322,7 +322,7 @@ class Task extends SugarBean
             $task_fields['TITLE'] .= $title . $task_fields['CONTACT_NAME'];
         }
         if (!empty($this->parent_name)) {
-            $task_fields['TITLE'] .= "\n".$app_list_strings['parent_type_display'][$this->parent_type].": ".$this->parent_name;
+            $task_fields['TITLE'] .= "\n".$app_list_strings['parent_type_display'][$this->parent_type]. ': ' .$this->parent_name;
             $task_fields['PARENT_NAME']=$this->parent_name;
         }
 
@@ -335,24 +335,24 @@ class Task extends SugarBean
         global $timedate;
         $notifyUser = $task->current_notify_user;
         $prefDate = $notifyUser->getUserDateTimePreferences();
-        $xtpl->assign("TASK_SUBJECT", $task->name);
+        $xtpl->assign('TASK_SUBJECT', $task->name);
         //MFH #13507
-        $xtpl->assign("TASK_PRIORITY", (isset($task->priority)?$app_list_strings['task_priority_dom'][$task->priority]:""));
+        $xtpl->assign('TASK_PRIORITY', (isset($task->priority)? $app_list_strings['task_priority_dom'][$task->priority]: ''));
 
         if (!empty($task->date_due)) {
             $duedate = $timedate->fromDb($task->date_due);
-            $xtpl->assign("TASK_DUEDATE", $timedate->asUser($duedate, $notifyUser)." ".TimeDate::userTimezoneSuffix($duedate, $notifyUser));
+            $xtpl->assign('TASK_DUEDATE', $timedate->asUser($duedate, $notifyUser). ' ' .TimeDate::userTimezoneSuffix($duedate, $notifyUser));
         } else {
-            $xtpl->assign("TASK_DUEDATE", '');
+            $xtpl->assign('TASK_DUEDATE', '');
         }
 
-        $xtpl->assign("TASK_STATUS", (isset($task->status)?$app_list_strings['task_status_dom'][$task->status]:""));
-        $xtpl->assign("TASK_DESCRIPTION", nl2br($task->description));
+        $xtpl->assign('TASK_STATUS', (isset($task->status)? $app_list_strings['task_status_dom'][$task->status]: ''));
+        $xtpl->assign('TASK_DESCRIPTION', nl2br($task->description));
 
         return $xtpl;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':return true;
@@ -380,7 +380,7 @@ class Task extends SugarBean
                     }
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess($this->parent_type, $this->parent_id, 'view');
             /* END - SECURITY GROUPS */
         }
@@ -411,7 +411,7 @@ class Task extends SugarBean
                     $is_owner = $current_user->id == $parent_bean->assigned_user_id;
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess('Contacts', $this->contact_id, 'view');
             /* END - SECURITY GROUPS */
         }

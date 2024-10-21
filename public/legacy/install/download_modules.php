@@ -88,8 +88,8 @@ $GLOBALS['log'] = LoggerManager::getLogger();
 
 ///////////////////////////////////////////////////////////////////////////////
 ////    PREP VARS FOR LANG PACK
-    $base_upgrade_dir       = sugar_cached("upgrades");
-    $base_tmp_upgrade_dir   = $base_upgrade_dir."/temp";
+    $base_upgrade_dir       = sugar_cached('upgrades');
+    $base_tmp_upgrade_dir   = $base_upgrade_dir. '/temp';
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ if (isset($_REQUEST['languagePackAction']) && !empty($_REQUEST['languagePackActi
         case 'upload':
         $perform = false;
         $tempFile = '';
-        if (isset($_REQUEST['release_id']) && $_REQUEST['release_id'] != "") {
+        if (isset($_REQUEST['release_id']) && $_REQUEST['release_id'] != '') {
             require_once('ModuleInstall/PackageManager/PackageManager.php');
             $pm = new PackageManager();
             $tempFile = $pm->download($_REQUEST['release_id']);
@@ -112,7 +112,7 @@ if (isset($_REQUEST['languagePackAction']) && !empty($_REQUEST['languagePackActi
             $file = new UploadFile('language_pack');
             if ($file->confirm_upload()) {
                 $perform = true;
-                if (strpos((string) $file->mime_type, 'zip') !== false) { // only .zip files
+                if (str_contains((string) $file->mime_type, 'zip')) { // only .zip files
                     $tempFile = $file->get_stored_filename();
                     if ($file->final_move($tempFile)) {
                         $perform = true;
@@ -135,7 +135,7 @@ if (isset($_REQUEST['languagePackAction']) && !empty($_REQUEST['languagePackActi
 
             if (count($errors) > 0) {
                 foreach ($errors as $error) {
-                    $uploadResult .= $error."<br />";
+                    $uploadResult .= $error. '<br />';
                 }
             }
             break; // end 'validate'
@@ -195,8 +195,8 @@ if (isset($validation_errors)) {
 
 ///////////////////////////////////////////////////////////////////////////////
 ////    BEING PAGE OUTPUT
-$disabled = "";
-$result = "";
+$disabled = '';
+$result = '';
 $langHeader = get_language_header();
 $out =<<<EOQ
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -227,9 +227,9 @@ $out =<<<EOQ
       <tr><td colspan="2" id="help"><a href="{$help_url}" target='_blank'>{$mod_strings['LBL_HELP']} </a></td></tr>
     <tr>
       <th width="500">
-		<p>
-		<img src="{$sugar_md}" alt="SugarCRM" border="0">
-		</p>{$mod_strings['LBL_MODULE_TITLE']}</th>
+        <p>
+        <img src="{$sugar_md}" alt="SugarCRM" border="0">
+        </p>{$mod_strings['LBL_MODULE_TITLE']}</th>
       <th width="200" style="text-align: right;">&nbsp;
         </th>
     </tr>
@@ -251,17 +251,17 @@ $form =<<<EOQ1
                         <input type="hidden" name="language" value="{$lang_curr}">
                         <input type="hidden" name="goto" value="{$mod_strings['LBL_CHECKSYS_RECHECK']}">
                         <input type="hidden" name="languagePackAction" value="upload">
-						<input type="hidden" name="install_type" value="custom">
+                        <input type="hidden" name="install_type" value="custom">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="edit view">
                         <tr>
                             <td>
                                 <table width="450" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
-										<td colspan='2'>
-											 {$mod_strings['LBL_LANG_UPLOAD']}:<br />
-										</td>
-									</tr>
-									<tr>
+                                        <td colspan='2'>
+                                             {$mod_strings['LBL_LANG_UPLOAD']}:<br />
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td>
 
                                         <input type="file" name="language_pack" onchange="uploadCheck();" size="40" />
@@ -289,24 +289,24 @@ $form =<<<EOQ1
  function uploadCheck(){
    var len = escape(document.the_form.language_pack.value).length;
    if(escape(document.the_form.language_pack.value).substr(len-3,len) !='zip'){
-   		//document.the_form.upgrade_zip.value = '';
-   		//document.getElementById("upgrade_zip").value = '';
-   		alert('Not a zip file');
-   		document.the_form.language_pack.value = '';
-   		//document.getElementById("language_pack").value='';
-   		document.getElementById("upload_button").disabled='disabled';
+           //document.the_form.upgrade_zip.value = '';
+           //document.getElementById("upgrade_zip").value = '';
+           alert('Not a zip file');
+           document.the_form.language_pack.value = '';
+           //document.getElementById("language_pack").value='';
+           document.getElementById("upload_button").disabled='disabled';
    }
    else{
-	//AJAX call for checking the file size and comparing with php.ini settings.
-	var callback = {
-		 success:function(r) {
-		 	document.the_form.upload_button.disabled='';
-		 }
-	}
+    //AJAX call for checking the file size and comparing with php.ini settings.
+    var callback = {
+         success:function(r) {
+             document.the_form.upload_button.disabled='';
+         }
+    }
     //var file_name = document.getElementById('upgrade_zip').value;
-	var file_name = document.the_form.language_pack.value;
-	postData = 'file_name=' + file_name + 'install&action=UploadLangFileCheck&to_pdf=1';
-	YAHOO.util.Connect.asyncRequest('POST', 'index.php', callback, postData);
+    var file_name = document.the_form.language_pack.value;
+    postData = 'file_name=' + file_name + 'install&action=UploadLangFileCheck&to_pdf=1';
+    YAHOO.util.Connect.asyncRequest('POST', 'index.php', callback, postData);
    }
 }
 </script>

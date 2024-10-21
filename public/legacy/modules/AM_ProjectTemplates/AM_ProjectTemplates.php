@@ -92,9 +92,9 @@ class AM_ProjectTemplates extends AM_ProjectTemplates_sugar
     {
         $focus = $this;
 
-        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] == 'true') ||
+        if ((isset($_POST['isSaveFromDetailView']) && $_POST['isSaveFromDetailView'] === 'true') ||
             (isset($_POST['is_ajax_call']) && !empty($_POST['is_ajax_call']) && !empty($focus->id) ||
-            (isset($_POST['return_action']) && $_POST['return_action'] == 'SubPanelViewer') && !empty($focus->id))||
+            (isset($_POST['return_action']) && $_POST['return_action'] === 'SubPanelViewer') && !empty($focus->id))||
              !isset($_POST['user_invitees']) // we need to check that user_invitees exists before processing, it is ok to be empty
         ) {
             parent::save(true) ;
@@ -123,14 +123,14 @@ class AM_ProjectTemplates extends AM_ProjectTemplates_sugar
             if (!empty($this->id)) {
 
 
-                ////	REMOVE RESOURCE RELATIONSHIPS
+                ////    REMOVE RESOURCE RELATIONSHIPS
                 // Calculate which users to flag as deleted and which to add
 
                 // Get all users for the project template
                 $focus->load_relationship('users');
                 $users = $focus->get_linked_beans('am_projecttemplates_users_1', 'User');
                 foreach ($users as $a) {
-                    if (!in_array($a->id, $userInvitees)) {
+                    if (!in_array($a->id, $userInvitees, true)) {
                         $deleteUsers[$a->id] = $a->id;
                     } else {
                         $existingUsers[$a->id] = $a->id;
@@ -153,7 +153,7 @@ class AM_ProjectTemplates extends AM_ProjectTemplates_sugar
                 $focus->load_relationship('contacts');
                 $contacts = $focus->get_linked_beans('am_projecttemplates_contacts_1', 'Contact');
                 foreach ($contacts as $a) {
-                    if (!in_array($a->id, $contactInvitees)) {
+                    if (!in_array($a->id, $contactInvitees, true)) {
                         $deleteContacts[$a->id] = $a->id;
                     } else {
                         $existingContacts[$a->id] = $a->id;
@@ -172,13 +172,13 @@ class AM_ProjectTemplates extends AM_ProjectTemplates_sugar
                     echo $sql;
                 }
 
-                ////	END REMOVE
+                ////    END REMOVE
             }
 
             $return_id = parent::save($check_notify);
             $focus->retrieve($return_id);
 
-            ////	REBUILD INVITEE RELATIONSHIPS
+            ////    REBUILD INVITEE RELATIONSHIPS
 
             // Process users
             $focus->load_relationship('users');
@@ -200,7 +200,7 @@ class AM_ProjectTemplates extends AM_ProjectTemplates_sugar
                 $focus->am_projecttemplates_contacts_1->add($contact_id);
             }
 
-            ////	END REBUILD INVITEE RELATIONSHIPS
+            ////    END REBUILD INVITEE RELATIONSHIPS
             ///////////////////////////////////////////////////////////////////////////
         }
 

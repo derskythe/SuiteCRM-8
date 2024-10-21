@@ -56,7 +56,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * @param  $other_text string to next to the title.  Typically used for form buttons.
  * @param  $show_help  boolean which determines if the print and help links are shown.
  * @param  $print_out  boolean which determines if the print/echo out code
+ *
  * @return string HTML
+ * @throws SmartyException
  */
 function get_form_header(
     $form_title,
@@ -67,10 +69,10 @@ function get_form_header(
     global $sugar_version, $sugar_flavor, $server_unique_key, $current_language, $current_module, $current_action, $app_strings;
 
     $blankImageURL = SugarThemeRegistry::current()->getImageURL('blank.gif');
-    $printImageURL = SugarThemeRegistry::current()->getImageURL("print.gif");
-    $helpImageURL  = SugarThemeRegistry::current()->getImageURL("help.gif");
+    $printImageURL = SugarThemeRegistry::current()->getImageURL('print.gif');
+    $helpImageURL = SugarThemeRegistry::current()->getImageURL('help.gif');
 
-    $keywords = array("/class=\"button\"/","/class='button'/","/class=button/","/<\/form>/");
+    $keywords = array( '/class="button"/', "/class='button'/", '/class=button/', '/<\/form>/' );
     $match = false;
     foreach ($keywords as $left) {
         if (preg_match($left, (string) $other_text)) {
@@ -130,8 +132,8 @@ function get_module_title(
     global $app_strings;
 
     $the_title = "<div class='moduleTitle'>\n";
-    $module = preg_replace("/ /", "", (string) $module);
-    $iconPath = "";
+    $module = preg_replace('/ /', '', (string) $module);
+    $iconPath = '';
     if (is_file(SugarThemeRegistry::current()->getImageURL('icon_'.$module.'_32.png', false))) {
         $iconPath = SugarThemeRegistry::current()->getImageURL('icon_'.$module.'_32.png');
     } else {
@@ -142,13 +144,13 @@ function get_module_title(
     if (!empty($iconPath)) {
         $the_title .= '<h2>';
         $sw = new SugarView();
-        if (SugarThemeRegistry::current()->directionality == "ltr") {
+        if (SugarThemeRegistry::current()->directionality === 'ltr') {
             $the_title .= "<a href='index.php?module={$module}&action=index'><img src='{$iconPath}' " . "alt='".$module."' title='".$module."' align='absmiddle'></a>";
-            $the_title .= ($count >= 1) ? $sw->getBreadCrumbSymbol() : "";
+            $the_title .= ($count >= 1) ? $sw->getBreadCrumbSymbol() : '';
             $the_title .=  $module_title.'';
         } else {
             $the_title .= $module_title;
-            $the_title .= ($count > 1) ? $sw->getBreadCrumbSymbol() : "";
+            $the_title .= ($count > 1) ? $sw->getBreadCrumbSymbol() : '';
             $the_title .= "<a href='index.php?module={$module}&action=index'><img src='{$iconPath}' "  . "alt='".$module."' title='".$module."' align='absmiddle'></a>";
         }
         $the_title .= '</h2>';
@@ -156,7 +158,7 @@ function get_module_title(
         $the_title .="<h2> $module_title </h2>";
     }
     $the_title .= "\n";
-    
+
     if ($show_create) {
         $the_title .= "<span class='utils'>";
         $createRecordURL = SugarThemeRegistry::current()->getImageURL('create-record.gif');
@@ -206,8 +208,8 @@ function getClassicModuleTitle($module, $params, $show_create=false, $index_url_
     $module_title = '';
     $index = 0;
 
-    $module = preg_replace("/ /", "", (string) $module);
-    $iconPath = "";
+    $module = preg_replace('/ /', '', (string) $module);
+    $iconPath = '';
     $the_title = "<div class='moduleTitle'>\n";
 
     if (!empty($module)) {
@@ -224,11 +226,11 @@ function getClassicModuleTitle($module, $params, $show_create=false, $index_url_
     }
 
     $new_params = array_pop($params);
-    if (!is_null($new_params) && ($new_params !== "")) {
+    if (!is_null($new_params) && ($new_params !== '')) {
         $module_title = $new_params;
     }
     if (!empty($module_title)) {
-        $the_title .= "<h2>".$module_title."</h2>\n";//removing empty H2 tag for 508 compliance
+        $the_title .= '<h2>' . $module_title . "</h2>\n";//removing empty H2 tag for 508 compliance
     }
 
 

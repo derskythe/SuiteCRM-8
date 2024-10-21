@@ -66,7 +66,7 @@ class UploadFile
     public $file;
     public $file_ext;
     public $mime_type;
-    protected static $url = "upload/";
+    protected static $url = 'upload/';
 
     /**
      * Upload errors
@@ -168,7 +168,7 @@ class UploadFile
 
         // if the parameters are empty strings, just return back the upload_dir
         if (empty($bean_id) && empty($stored_file_name)) {
-            return "upload://";
+            return 'upload://';
         }
 
         if (!$skip_rename) {
@@ -297,7 +297,7 @@ class UploadFile
         }
 
         if (!UploadStream::writable()) {
-            $GLOBALS['log']->fatal("ERROR: cannot write to upload directory");
+            $GLOBALS['log']->fatal('ERROR: cannot write to upload directory');
 
             return false;
         }
@@ -351,10 +351,10 @@ class UploadFile
         $filetype = isset($_FILES_element['type']) ? $_FILES_element['type'] : null;
         $file_ext = pathinfo((string) $filename, PATHINFO_EXTENSION);
 
-        $is_image = strpos((string) $filetype, 'image/') === 0;
+        $is_image = str_starts_with((string) $filetype, 'image/');
         // if it's an image, or no file extension is available and the mime is octet-stream
         // try to determine the mime type
-        $recheckMime = $is_image || (empty($file_ext) && $filetype == 'application/octet-stream');
+        $recheckMime = $is_image || (empty($file_ext) && $filetype === 'application/octet-stream');
 
         $mime = 'application/octet-stream';
         if ($filetype && !$recheckMime) {
@@ -439,7 +439,7 @@ class UploadFile
                 $stored_file_name = substr((string) $stored_file_name, 0, $end);
                 $this->original_file_name = $_FILES[$this->field_name]['name'];
             }
-            $stored_file_name = str_replace("\\", "", (string) $stored_file_name);
+            $stored_file_name = str_replace("\\", '', (string) $stored_file_name);
         } else {
             $stored_file_name = $this->stored_file_name;
             $this->original_file_name = $stored_file_name;
@@ -449,8 +449,8 @@ class UploadFile
         // cn: bug 6347 - fix file extension detection
         foreach ($sugar_config['upload_badext'] as $badExt) {
             if (strtolower($this->file_ext) === strtolower($badExt)) {
-                $stored_file_name .= ".txt";
-                $this->file_ext = "txt";
+                $stored_file_name .= '.txt';
+                $this->file_ext = 'txt';
                 break; // no need to look for more
             }
         }
@@ -468,7 +468,7 @@ class UploadFile
         global $log;
 
         $destination = $bean_id;
-        if (substr($destination, 0, 9) != 'upload://') {
+        if (!str_starts_with($destination, 'upload://')) {
             $destination = 'upload://' . $bean_id;
         }
 
@@ -500,7 +500,7 @@ class UploadFile
     public function upload_doc($bean, $bean_id, $doc_type, $file_name, $mime_type)
     {
         $result = [];
-        if (!empty($doc_type) && $doc_type != 'Sugar') {
+        if (!empty($doc_type) && $doc_type !== 'Sugar') {
             global $sugar_config;
             $destination = $this->get_upload_path($bean_id);
             sugar_rename($destination, str_replace($bean_id, $bean_id . '_' . $file_name, $destination));
@@ -519,13 +519,13 @@ class UploadFile
                 } else {
                     $result['success'] = false;
                     // FIXME: Translate
-                    $GLOBALS['log']->error("Could not load the requested API (" . $doc_type . ")");
+                    $GLOBALS['log']->error('Could not load the requested API (' . $doc_type . ')');
                     $result['errorMessage'] = 'Could not find a proper API';
                 }
             } catch (Exception $e) {
                 $result['success'] = false;
                 $result['errorMessage'] = $e->getMessage();
-                $GLOBALS['log']->error("Caught exception: (" . $e->getMessage() . ") ");
+                $GLOBALS['log']->error('Caught exception: (' . $e->getMessage() . ') ');
             }
             if (!$result['success']) {
                 sugar_rename($new_destination, str_replace($bean_id . '_' . $file_name, $bean_id, $new_destination));
@@ -578,7 +578,7 @@ class UploadFile
      */
     public function get_upload_dir()
     {
-        return "upload://";
+        return 'upload://';
     }
 
     /**
@@ -587,7 +587,7 @@ class UploadFile
      */
     public static function realpath($path)
     {
-        if (substr($path, 0, 9) == "upload://") {
+        if (str_starts_with($path, 'upload://')) {
             $path = UploadStream::path($path);
         }
         $ret = realpath($path);
@@ -601,7 +601,7 @@ class UploadFile
      */
     public static function relativeName($path)
     {
-        if (substr($path, 0, 9) == "upload://") {
+        if (str_starts_with($path, 'upload://')) {
             $path = substr($path, 9);
         }
 

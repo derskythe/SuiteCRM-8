@@ -42,11 +42,11 @@ require_once('include/SugarFields/Fields/Base/SugarFieldBase.php');
 class SugarFieldCollection extends SugarFieldBase
 {
     public $tpl_path;
-    
+
     public function getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
     {
         $nolink = array('Users');
-        if (in_array($vardef['module'], $nolink)) {
+        if (in_array($vardef['module'], $nolink, true)) {
             $displayParams['nolink']=true;
         } else {
             $displayParams['nolink']=false;
@@ -105,24 +105,24 @@ class SugarFieldCollection extends SugarFieldBase
     */
     public function save(&$bean, $params, $field, $properties, $prefix = '')
     {
-        if (isset($_POST["primary_" . $field . "_collection"])) {
+        if (isset($_POST['primary_' . $field . '_collection'])) {
             $save = false;
-            $value_name = $field . "_values";
+            $value_name = $field . '_values';
             $link_field = array();
             // populate $link_field from POST
             foreach ($_POST as $name=>$value) {
-                if (strpos($name, $field . "_collection_") !== false) {
+                if (str_contains($name, $field . '_collection_')) {
                     $num = substr($name, -1);
                     if (is_numeric($num)) {
                         $num = (int)$num;
-                        if (strpos($name, $field . "_collection_extra_") !== false) {
-                            $extra_field = substr($name, $field . "_collection_extra_" . $num);
+                        if (str_contains($name, $field . '_collection_extra_')) {
+                            $extra_field = substr($name, $field . '_collection_extra_' . $num);
                             $link_field[$num]['extra_field'][$extra_field]=$value;
                         } else {
-                            if ($name == $field . "_collection_" . $num) {
+                            if ($name == $field . '_collection_' . $num) {
                                 $link_field[$num]['name']=$value;
                             } else {
-                                if ($name == "id_" . $field . "_collection_" . $num) {
+                                if ($name == 'id_' . $field . '_collection_' . $num) {
                                     $link_field[$num]['id']=$value;
                                 }
                             }
@@ -131,8 +131,8 @@ class SugarFieldCollection extends SugarFieldBase
                 }
             }
             // Set Primary
-            if (isset($_POST["primary_" . $field . "_collection"])) {
-                $primary = $_POST["primary_" . $field . "_collection"];
+            if (isset($_POST['primary_' . $field . '_collection'])) {
+                $primary = $_POST['primary_' . $field . '_collection'];
                 $primary = (int)$primary;
                 $link_field[$primary]['primary']=true;
             }
@@ -140,7 +140,7 @@ class SugarFieldCollection extends SugarFieldBase
             require('include/modules.php');
             require_once('data/Link.php');
             $class = load_link_class($bean->field_defs[$field]);
-            
+
             $link_obj = new $class($bean->field_defs[$field]['relationship'], $bean, $bean->field_defs[$field]);
             $module = $link_obj->getRelatedModuleName();
             $beanName = $beanList[$module];
@@ -154,9 +154,9 @@ class SugarFieldCollection extends SugarFieldBase
                     unset($link_field[$k]);
                     break;
                 }
-                if (!isset($link_field[$k]['id']) || empty($link_field[$k]['id']) || (isset($_POST[$field . "_new_on_update"]) && $_POST[$field . "_new_on_update"] === 'true')) {
+                if (!isset($link_field[$k]['id']) || empty($link_field[$k]['id']) || (isset($_POST[$field . '_new_on_update']) && $_POST[$field . '_new_on_update'] === 'true')) {
                     // Create a new record
-                    if (isset($_POST[$field . "_allow_new"]) && ($_POST[$field . "_allow_new"] === 'false' || $_POST[$field . "_allow_new"] === false)) {
+                    if (isset($_POST[$field . '_allow_new']) && ($_POST[$field . '_allow_new'] === 'false' || $_POST[$field . '_allow_new'] === false)) {
                         // Not allow to create a new record so remove from $link_field
                         unset($link_field[$k]);
                         break;
@@ -184,10 +184,10 @@ class SugarFieldCollection extends SugarFieldBase
                     }
                     // Update the changed fields
                     foreach ($update_fields as $kk=>$vv) {
-                        if (!isset($_POST[$field . "_allow_update"]) || ($_POST[$field . "_allow_update"] !== 'false' && $_POST[$field . "_allow_update"] !== false)) {
+                        if (!isset($_POST[$field . '_allow_update']) || ($_POST[$field . '_allow_update'] !== 'false' && $_POST[$field . '_allow_update'] !== false)) {
                             //allow to update the extra_field in the record
                             if (isset($v['extra_field'][$kk]) && $vv == true) {
-                                $extra_field_name = str_replace("_".$field."_collection_extra_".$k, "", $kk);
+                                $extra_field_name = str_replace('_' . $field . '_collection_extra_' . $k, '', $kk);
                                 if ($obj->$extra_field_name != $v['extra_field'][$kk]) {
                                     $save = true;
                                     $obj->$extra_field_name=$v['extra_field'][$kk];

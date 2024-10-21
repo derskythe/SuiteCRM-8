@@ -66,7 +66,7 @@ r22124 - 2007-04-20 16:54:53 -0700 (Fri, 20 Apr 2007) - clee -
  * @author Wayne Pan {wayne at sugarcrm.com}
  */
 
-function smarty_function_sugarvar($params, &$smarty)
+function smarty_function_sugarvar($params, $smarty)
 {
     if (empty($params['key'])) {
         $smarty->trigger_error("sugarvar: missing 'key' parameter");

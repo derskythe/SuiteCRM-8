@@ -48,8 +48,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
-require_once('include/SugarLogger/LoggerManager.php');
-require_once('include/SugarLogger/LoggerTemplate.php');
+require_once(__DIR__ . '/LoggerManager.php');
+require_once(__DIR__ . '/LoggerTemplate.php');
 
 /**
  * Default SugarCRM Logger
@@ -61,48 +61,51 @@ class SugarLogger implements LoggerTemplate
     /**
      * properties for the SugarLogger
      */
-    protected $logfile = 'suitecrm';
-    protected $ext = '.log';
-    protected $dateFormat = '%c';
-    protected $logSize = '10MB';
-    protected $maxLogs = 10;
-    protected $filesuffix = "";
-    protected $date_suffix = "";
-    protected $log_dir = '.';
-    protected $defaultPerms = 0664;
-
+    protected string $logfile = LoggerTemplate::DEFAULT_LOGGER_FILE_NAME;
+    protected string $ext = LoggerTemplate::DEFAULT_LOGGER_FILE_EXTENSION;
+    protected string $dateFormat = LoggerTemplate::DEFAULT_LOGGER_DATE_FORMAT;
+    protected string $logSize = LoggerTemplate::DEFAULT_LOGGER_FILE_SIZE;
+    protected int $maxLogs = 10;
+    protected string $file_suffix = LoggerTemplate::DEFAULT_LOGGER_FILE_SUFFIX;
+    protected string $date_suffix = '';
+    protected string $log_dir = LoggerTemplate::DEFAULT_LOGGER_LOG_DIR;
+    protected mixed $defaultPerms = LoggerTemplate::DEFAULT_LOGGER_DEFAULT_PERMS;
 
     /**
      * used for config screen
      */
-    public static $filename_suffix = array(
+    public static array $filename_suffix = array(
         //bug#50265: Added none option for previous version users
-        "" => "None",
-        "%m_%Y"    => "Month_Year",
-        "%d_%m"    => "Day_Month",
-        "%m_%d_%y" => "Month_Day_Year",
-        );
+        ''           => 'None',
+        'MM_yyyy'    => 'Month_Year',
+        'dd_MM'      => 'Day_Month',
+        'MM_dd_yyyy' => 'Month_Day_Year',
+    );
 
     /**
      * Let's us know if we've initialized the logger file
      */
-    protected $initialized = false;
+    protected bool $initialized = false;
 
     /**
      * Logger file handle
      */
-    protected $fp = false;
+    protected mixed $fp = null;
 
-    public function __get(
-        $key
-        ) {
+    /**
+     * @var string
+     */
+    private string $full_log_file = '';
+
+    public function __get($key)
+    {
         return $this->$key;
     }
 
     /**
      * Used by the diagnostic tools to get SugarLogger log file information
      */
-    public function getLogFileNameWithPath()
+    public function getLogFileNameWithPath(): string
     {
         return $this->full_log_file;
     }
@@ -110,9 +113,9 @@ class SugarLogger implements LoggerTemplate
     /**
      * Used by the diagnostic tools to get SugarLogger log file information
      */
-    public function getLogFileName()
+    public function getLogFileName(): string
     {
-        return ltrim($this->full_log_file, "./");
+        return ltrim($this->full_log_file, './');
     }
 
     /**
@@ -128,35 +131,72 @@ class SugarLogger implements LoggerTemplate
         $this->dateFormat = $config->get('logger.file.dateFormat', $this->dateFormat);
         $this->logSize = $config->get('logger.file.maxSize', $this->logSize);
         $this->maxLogs = $config->get('logger.file.maxLogs', $this->maxLogs);
-        $this->filesuffix = $config->get('logger.file.suffix', $this->filesuffix);
+        $this->file_suffix = $config->get('logger.file.suffix', $this->file_suffix);
         $this->defaultPerms = $config->get('logger.file.perms', $this->defaultPerms);
         $log_dir = $config->get('log_dir', $this->log_dir);
-        $this->log_dir = $log_dir . (empty($log_dir)?'':'/');
+        if (empty($log_dir)) {
+            $this->log_dir = realpath(LoggerTemplate::DEFAULT_LOGGER_LOG_DIR);
+        } else {
+            // Check for last symbol is not '/'
+            $this->log_dir = !str_ends_with($log_dir, '/')
+                ? realpath($log_dir)
+                : realpath(substr($log_dir, 0, count($log_dir) - 1));
+        }
         unset($config);
         $this->_doInitialization();
         LoggerManager::setLogger('default', 'SugarLogger');
     }
 
     /**
+     * @param string $size
+     * @return int
+     */
+    private function parseUnits(string $size): int
+    {
+        static $units = [
+            'k' => 1024,
+            'm' => 1024 * 1024,
+            'g' => 1024 * 1024 * 1024,
+        ];
+        if (empty(($size) || strlen($size) < 2)) {
+            $size = self::DEFAULT_LOGGER_FILE_SIZE;
+        }
+        $rollAt = 0;
+        if (preg_match('/^\s*([0-9]+\.[0-9]+|\.?[0-9]+)\s*(k|m|g|b)(b?ytes)?/i', $size, $match)) {
+            $rollAt = (int)$match[1] * $units[strtolower($match[2])];
+        }
+
+        if ($rollAt == 0) {
+            // Ooops
+            return $units['g'];
+        }
+
+        return $rollAt;
+    }
+
+    /**
      * Handles the SugarLogger initialization
      */
-    protected function _doInitialization()
+    protected function _doInitialization(): void
     {
-        if ($this->filesuffix && array_key_exists($this->filesuffix, self::$filename_suffix)) { //if the global config contains date-format suffix, it will create suffix by parsing datetime
-            $this->date_suffix = "_" . date(str_replace("%", "", $this->filesuffix));
+        if ($this->file_suffix && array_key_exists($this->file_suffix, self::$filename_suffix)) {
+            //if the global config contains date-format suffix, it will create suffix by parsing datetime
+            $this->date_suffix = sprintf('_%s', date($this->file_suffix));
+        } else {
+            $this->date_suffix = '';
         }
-        $this->full_log_file = $this->log_dir . $this->logfile . $this->date_suffix . $this->ext;
+        $this->full_log_file = $this->log_dir . DIRECTORY_SEPARATOR . $this->logfile . $this->date_suffix . $this->ext;
         $this->initialized = $this->_fileCanBeCreatedAndWrittenTo();
         $this->rollLog();
     }
 
     /**
      * Checks to see if the SugarLogger file can be created and written to
-     * @noinspection PhpUndefinedFieldInspection
      * @return bool
      */
-    protected function _fileCanBeCreatedAndWrittenTo()
+    protected function _fileCanBeCreatedAndWrittenTo(): bool
     {
+        clearstatcache(true, $this->full_log_file);
         if (is_writable($this->full_log_file)) {
             return true;
         }
@@ -168,6 +208,8 @@ class SugarLogger implements LoggerTemplate
             }
 
             return is_writable($this->full_log_file);
+        } else {
+            trigger_error("SugarLogger::log() failed to open file pointer for file: {$this->full_log_file}", E_USER_NOTICE);
         }
 
         return false;
@@ -178,20 +220,28 @@ class SugarLogger implements LoggerTemplate
      * the 'show_log_trace' config variable is set and true
      * @return string a readable trace string
      */
-    private function getTraceString()
+    private function getTraceString(): string
     {
-        $ret = '';
         $trace = debug_backtrace();
-        foreach ($trace as $call) {
-            $file = isset($call['file']) ? $call['file'] : '???';
-            $line = isset($call['line']) ? $call['line'] : '???';
-            $class = isset($call['class']) ? $call['class'] : '';
-            $type = isset($call['type']) ? $call['type'] : '';
-            $function = isset($call['function']) ? $call['function'] : '???';
-            $ret .= "\nCall in {$file} at #{$line} from {$class}{$type}{$function}(...)";
+        if (empty($trace)) {
+            return "-empty-\n";
         }
-        $ret .= "\n";
-        return $ret;
+        $ret = array(count($trace) + 2);
+        $ret[0] = PHP_EOL;
+        for ($i = 0; $i < count($ret); $i++) {
+            $call = $trace[$i];
+
+            $file = $call['file'] ?? '???';
+            $line = $call['line'] ?? '???';
+            $class = $call['class'] ?? '';
+            $type = $call['type'] ?? '';
+            $function = $call['function'] ?? '???';
+
+            $ret[$i + 1] = sprintf('In %s#%d from %s%s%s(..)', $file, $line, $class, $type, $function);
+        }
+        $ret[count($ret) - 1] = PHP_EOL;
+
+        return join(PHP_EOL, $ret);
     }
 
     /**
@@ -199,88 +249,111 @@ class SugarLogger implements LoggerTemplate
      * and show a backtrace information in log when
      * the 'show_log_trace' config variable is set and true
      * see LoggerTemplate::log()
+     * @param string $method
+     * @param array|string $message
      */
-    public function log(
-        $level,
-        $message
-        ) {
-        global $sugar_config;
+    public function log(string $method, array|string $message): void
+    {
+        global /** @var array $sugar_config */
+        $sugar_config;
 
         if (!$this->initialized) {
+            trigger_error("SugarLogger::log() not initialized and failed to log message: {$message}", E_USER_NOTICE);
             return;
         }
         //lets get the current user id or default to -none- if it is not set yet
-        $userID = (!empty($GLOBALS['current_user']->id))?$GLOBALS['current_user']->id:'-none-';
+        $userID = (!empty($GLOBALS['current_user']->id))
+            ? $GLOBALS['current_user']->id
+            : '-none-';
 
         //if we haven't opened a file pointer yet let's do that
-        if (! $this->fp) {
+        if (!isset($this->fp) || empty($this->fp)) {
             $this->fp = fopen($this->full_log_file, 'ab');
+
+            fwrite(
+                $this->fp,
+                sprintf(
+                    '[%s] - %s%s',
+                    date($this->dateFormat),
+                    'Started Logger Write',
+                    PHP_EOL));
         }
 
-
+        $final_message = '';
         // change to a string if there is just one entry
         if (is_array($message) && count($message) == 1) {
-            $message = array_shift($message);
+            $final_message .= join(PHP_EOL, $message);
+        } else if (is_array($message)) {
+            // change to a human-readable array output if it's any other array
+            $final_message .= print_r($message, true);
+        } else {
+            $final_message .= $message . PHP_EOL;
         }
-        // change to a human-readable array output if it's any other array
-        if (is_array($message)) {
-            $message = print_r($message, true);
-        }
-
 
         if (isset($sugar_config['show_log_trace']) && $sugar_config['show_log_trace']) {
             $trace = $this->getTraceString();
-            $message .= ("\n" . $trace);
+            $final_message .= (PHP_EOL . $trace);
         }
 
         //write out to the file including the time in the dateFormat the process id , the user id , and the log level as well as the message
-        fwrite(
-            $this->fp,
-            strftime($this->dateFormat) . ' [' . getmypid() . '][' . $userID . '][' . strtoupper($level) . '] ' . $message . "\n"
+        if (isset($this->fp)) {
+            fwrite(
+                $this->fp,
+                sprintf(
+                    '[%s] - [%s][%s][%s] | %s%s',
+                    date($this->dateFormat),
+                    getmypid(),
+                    $userID,
+                    str_pad(strtoupper($method), 5, ' '),
+                    $final_message,
+                    PHP_EOL
+                )
             );
+        } else {
+            trigger_error("SugarLogger::log() failed to open file pointer for file: {$this->full_log_file}", E_USER_WARNING);
+        }
     }
 
     /**
      * rolls the logger file to start using a new file
      */
-    protected function rollLog(
-        $force = false
-        ) {
-        if (!$this->initialized || empty($this->logSize)) {
+    protected function rollLog($force = false): void
+    {
+        if (!$this->initialized || empty($this->logSize) || empty($this->full_log_file)) {
+            trigger_error("SugarLogger::rollLog() not initialized and failed to roll log file: {$this->full_log_file}", E_USER_NOTICE);
             return;
         }
         // bug#50265: Parse the its unit string and get the size properly
-        $units = array(
-            'b' => 1,                   //Bytes
-            'k' => 1024,                //KBytes
-            'm' => 1024 * 1024,         //MBytes
-            'g' => 1024 * 1024 * 1024,  //GBytes
-        );
-        if (preg_match('/^\s*([0-9]+\.[0-9]+|\.?[0-9]+)\s*(k|m|g|b)(b?ytes)?/i', $this->logSize, $match)) {
-            $rollAt = ( int ) $match[1] * $units[strtolower($match[2])];
-        }
-        //check if our log file is greater than that or if we are forcing the log to roll if and only if roll size assigned the value correctly
-        if ($force || ($rollAt && filesize($this->full_log_file) >= $rollAt)) {
-            //now lets move the logs starting at the oldest and going to the newest
-            for ($i = $this->maxLogs - 2; $i > 0; $i --) {
-                if (file_exists($this->log_dir . $this->logfile . $this->date_suffix . '_'. $i . $this->ext)) {
-                    $to = $i + 1;
-                    $old_name = $this->log_dir . $this->logfile . $this->date_suffix . '_'. $i . $this->ext;
-                    $new_name = $this->log_dir . $this->logfile . $this->date_suffix . '_'. $to . $this->ext;
-                    //nsingh- Bug 22548  Win systems fail if new file name already exists. The fix below checks for that.
-                    //if/else branch is necessary as suggested by someone on php-doc ( see rename function ).
-                    sugar_rename($old_name, $new_name);
 
-                    //rename ( $this->logfile . $i . $this->ext, $this->logfile . $to . $this->ext );
-                }
-            }
-            //now lets move the current .log file
-            sugar_rename($this->full_log_file, $this->log_dir . $this->logfile . $this->date_suffix . '_1' . $this->ext);
+        // check if our log file is greater than that or if we are forcing the log to roll if and only if roll size assigned the value correctly
+        $rollAt = $this->parseUnits($this->logSize);
+        if (!$force && (filesize($this->full_log_file) < $rollAt)) {
+            return;
         }
+
+        //now lets move the logs starting at the oldest and going to the newest
+        for ($i = $this->maxLogs - 2; $i > 0; $i--) {
+            $old_name = sprintf('%s%s%s_%d%s', $this->log_dir, $this->logfile, $this->date_suffix, $i, $this->ext);
+            if (file_exists($old_name)) {
+                $to = $i + 1;
+                $new_name = sprintf('%s%s%s_%d%s', $this->log_dir, $this->logfile, $this->date_suffix, $to, $this->ext);
+                //nsingh- Bug 22548  Win systems fail if new file name already exists. The fix below checks for that.
+                //if/else branch is necessary as suggested by someone on php-doc ( see rename function ).
+                sugar_rename($old_name, $new_name);
+
+                //rename ( $this->logfile . $i . $this->ext, $this->logfile . $to . $this->ext );
+            }
+        }
+        //now lets move the current .log file
+        sugar_rename(
+            $this->full_log_file,
+            sprintf('%s%s%s_1%s', $this->log_dir, $this->logfile, $this->date_suffix, $this->ext)
+        );
     }
 
     /**
-     * This is needed to prevent unserialize vulnerability
+     * This is needed to prevent un-serialize vulnerability
+     * @throws Exception
      */
     public function __wakeup()
     {
@@ -288,7 +361,8 @@ class SugarLogger implements LoggerTemplate
         foreach (get_object_vars($this) as $k => $v) {
             $this->$k = null;
         }
-        throw new Exception("Not a serializable object");
+        trigger_error('SugarLogger::__wakeup() is not allowed', E_USER_NOTICE);
+        throw new Exception('Not a serializable object');
     }
 
     /**
@@ -298,9 +372,13 @@ class SugarLogger implements LoggerTemplate
      */
     public function __destruct()
     {
-        if ($this->fp) {
-            fclose($this->fp);
-            $this->fp = false;
+        if (!isset($this->fp)) {
+            return;
         }
+
+        $this->log('info', 'Shutting down SugarLogger');
+        fflush($this->fp);
+        fclose($this->fp);
+        unset($this->fp);
     }
 }

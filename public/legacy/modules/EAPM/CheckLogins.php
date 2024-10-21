@@ -54,7 +54,7 @@ if (!empty($_REQUEST['api'])) {
     if (isset($checkList[$_REQUEST['api']])) {
         $newCheckList[$_REQUEST['api']] = $checkList[$_REQUEST['api']];
     }
-    
+
     $checkList = $newCheckList;
 }
 
@@ -62,7 +62,7 @@ $failList = array();
 
 if (is_array($checkList)) {
     foreach ($checkList as $apiName => $apiOpts) {
-        if ($apiOpts['authMethod'] == 'oauth') {
+        if ($apiOpts['authMethod'] === 'oauth') {
             $api = ExternalAPIFactory::loadAPI($apiName);
             if (is_object($api)) {
                 $loginCheck = $api->quickCheckLogin();
@@ -71,7 +71,7 @@ if (is_array($checkList)) {
             }
             if (! $loginCheck['success']) {
                 $thisFail = array();
-                
+
                 $thisFail['checkURL'] = 'index.php?module=EAPM&closeWhenDone=1&action=QuickSave&application='.$apiName;
 
                 $translateKey = 'LBL_EXTAPI_'.strtoupper($apiName);
@@ -82,7 +82,7 @@ if (is_array($checkList)) {
                 }
 
                 $thisFail['label'] = str_replace('{0}', $apiLabel, (string) translate('LBL_ERR_FAILED_QUICKCHECK', 'EAPM'));
-                
+
                 $failList[$apiName] = $thisFail;
             }
         }

@@ -57,13 +57,13 @@ class SugarWidgetSubPanelTopSelectAccountButton extends SugarWidgetSubPanelTopSe
         * See bug 25633
         * Bug25633 code change start
         */
-        if (!ACLController::checkAccess($widget_data["module"], "edit", true)) {
+        if (!ACLController::checkAccess($widget_data['module'], 'edit', true)) {
             return ;
         }
         /*
         * Bug25633 code change end
         */
-        
+
         return parent::display($widget_data);
     }
 }

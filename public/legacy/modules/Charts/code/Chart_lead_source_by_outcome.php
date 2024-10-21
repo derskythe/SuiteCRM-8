@@ -123,15 +123,17 @@ class Chart_lead_source_by_outcome
                 $id_hash = $id_hash * -1;
             }
         }
-        $GLOBALS['log']->debug("ids is:");
+        $GLOBALS['log']->debug('ids is:');
         $GLOBALS['log']->debug($ids);
         $id_md5 = substr(md5($current_user->id), 0, 9);
 
 
-        $seps				= array("-", "/");
-        $dates				= array(date($GLOBALS['timedate']->dbDayFormat), $GLOBALS['timedate']->dbDayFormat);
-        $dateFileNameSafe	= str_replace($seps, "_", $dates);
-        $cache_file_name	= sugar_cached("xml/").$current_user->getUserPrivGuid()."_lead_source_by_outcome_".$dateFileNameSafe[0]."_".$dateFileNameSafe[1].".xml";
+        $seps                = array( '-', '/' );
+        $dates                = array(date($GLOBALS['timedate']->dbDayFormat), $GLOBALS['timedate']->dbDayFormat);
+        $dateFileNameSafe    = str_replace($seps, '_', $dates);
+        $cache_file_name    = sugar_cached(
+                'xml/'
+            ).$current_user->getUserPrivGuid(). '_lead_source_by_outcome_' . $dateFileNameSafe[0]. '_' . $dateFileNameSafe[1]. '.xml';
         $GLOBALS['log']->debug("cache file name is: $cache_file_name");
 
 
@@ -141,7 +143,7 @@ class Chart_lead_source_by_outcome
 echo '<span onmouseover="this.style.cursor=\'move\'" id="chart_handle_' . $this->order . '">' . get_form_header($current_module_strings['LBL_LEAD_SOURCE_BY_OUTCOME'], $tools, false) . '</span>';
 
         if (empty($_SESSION['lsbo_ids'])) {
-            $_SESSION['lsbo_ids'] = "";
+            $_SESSION['lsbo_ids'] = '';
         } ?>
 
 <p>
@@ -152,28 +154,28 @@ echo '<span onmouseover="this.style.cursor=\'move\'" id="chart_handle_' . $this-
 <input type="hidden" name="lsbo_refresh" value="true">
 <table cellpadding="0" cellspacing="0" border="0" class="edit view" align="center">
 <tr>
-	<td valign='top' nowrap><b><?php echo $current_module_strings['LBL_LEAD_SOURCES']; ?></b></td>
-	<td valign='top'><select name="lsbo_lead_sources[]" multiple size='3'><?php echo get_select_options_with_id($app_list_strings['lead_source_dom'], $selected_datax); ?></select></td>
+    <td valign='top' nowrap><b><?php echo $current_module_strings['LBL_LEAD_SOURCES']; ?></b></td>
+    <td valign='top'><select name="lsbo_lead_sources[]" multiple size='3'><?php echo get_select_options_with_id($app_list_strings['lead_source_dom'], $selected_datax); ?></select></td>
 </tr>
 
 <tr>
-	<td valign='top' nowrap><b><?php echo $current_module_strings['LBL_USERS']; ?></b></td>
-	<td valign='top'><select name="lsbo_ids[]" multiple size='3'><?php echo get_select_options_with_id(get_user_array(false), $ids); ?></select></td>
+    <td valign='top' nowrap><b><?php echo $current_module_strings['LBL_USERS']; ?></b></td>
+    <td valign='top'><select name="lsbo_ids[]" multiple size='3'><?php echo get_select_options_with_id(get_user_array(false), $ids); ?></select></td>
 </tr>
 
 <tr>
 <?php
 global $app_strings; ?>
-	<td align="right" colspan="2"> <input class="button" type="submit" title="<?php echo $app_strings['LBL_SELECT_BUTTON_TITLE']; ?>" value="<?php echo $app_strings['LBL_SELECT_BUTTON_LABEL']?>" /><input class="button" onClick="javascript: toggleDisplay('lsbo_edit');" type="button" title="<?php echo $app_strings['LBL_CANCEL_BUTTON_TITLE']; ?>" accessKey="<?php echo $app_strings['LBL_CANCEL_BUTTON_KEY']; ?>" value="<?php echo $app_strings['LBL_CANCEL_BUTTON_LABEL']?>"/></td>
-	</tr>
+    <td align="right" colspan="2"> <input class="button" type="submit" title="<?php echo $app_strings['LBL_SELECT_BUTTON_TITLE']; ?>" value="<?php echo $app_strings['LBL_SELECT_BUTTON_LABEL']?>" /><input class="button" onClick="javascript: toggleDisplay('lsbo_edit');" type="button" title="<?php echo $app_strings['LBL_CANCEL_BUTTON_TITLE']; ?>" accessKey="<?php echo $app_strings['LBL_CANCEL_BUTTON_KEY']; ?>" value="<?php echo $app_strings['LBL_CANCEL_BUTTON_LABEL']?>"/></td>
+    </tr>
 </table>
 </form>
 </div>
 </p>
 <?php
 
-echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refresh, $current_module_strings)."</p>";
-        echo "<P align='center'><span class='chartFootnote'>".$current_module_strings['LBL_LEAD_SOURCE_BY_OUTCOME_DESC']."</span></P>";
+echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refresh, $current_module_strings). '</p>';
+        echo "<P align='center'><span class='chartFootnote'>".$current_module_strings['LBL_LEAD_SOURCE_BY_OUTCOME_DESC']. '</span></P>';
 
 
         if (file_exists($cache_file_name)) {
@@ -218,13 +220,13 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
         $kDelim = $current_user->getPreference('num_grp_sep');
 
         if (!file_exists($cache_file_name) || $refresh == true) {
-            $GLOBALS['log']->debug("datay is:");
+            $GLOBALS['log']->debug('datay is:');
             $GLOBALS['log']->debug($datay);
-            $GLOBALS['log']->debug("user_id is: ");
+            $GLOBALS['log']->debug('user_id is: ');
             $GLOBALS['log']->debug($user_id);
             $GLOBALS['log']->debug("cache_file_name is: $cache_file_name");
             $opp = BeanFactory::newBean('Opportunities');
-            $where="";
+            $where= '';
             //build the where clause for the query that matches $user
             $count = is_countable($user_id) ? count($user_id) : 0;
             $id = array();
@@ -232,7 +234,7 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
                 foreach ($user_id as $the_id) {
                     $id[] = "'".$the_id."'";
                 }
-                $ids = implode(",", $id);
+                $ids = implode(',', $id);
                 $where .= "opportunities.assigned_user_id IN ($ids) ";
             }
 
@@ -243,12 +245,13 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
                 foreach ($datay as $key=>$value) {
                     $datayArr[] = "'".$key."'";
                 }
-                $datayArr = implode(",", $datayArr);
-                $where .= "AND opportunities.lead_source IN	($datayArr) ";
+                $datayArr = implode(',', $datayArr);
+                $where .= "AND opportunities.lead_source IN    ($datayArr) ";
             }
-            $query = "SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ";
-            $query .= "WHERE " .$where." AND opportunities.deleted=0 ";
-            $query .= " GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage";
+            $query =
+                'SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ';
+            $query .= 'WHERE ' .$where. ' AND opportunities.deleted=0 ';
+            $query .= ' GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage';
             //Now do the db queries
             //query for opportunity data that matches $datay and $user
 
@@ -262,7 +265,8 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
             $rowTotalArr = array();
             $rowTotalArr[] = 0;
             global $current_user;
-            $salesStages = array("Closed Lost"=>$app_list_strings['sales_stage_dom']["Closed Lost"],"Closed Won"=>$app_list_strings['sales_stage_dom']["Closed Won"],"Other"=>$other);
+            $salesStages = array( 'Closed Lost' => $app_list_strings['sales_stage_dom']['Closed Lost'], 'Closed Won' => $app_list_strings['sales_stage_dom']['Closed Won'],
+                                  'Other'       =>$other);
             if ($current_user->getPreference('currency')) {
                 $currency = BeanFactory::newBean('Currencies');
                 $currency->retrieve($current_user->getPreference('currency'));
@@ -280,11 +284,11 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
                 if ($row['lead_source'] == '') {
                     $row['lead_source'] = $current_module_strings['NTC_NO_LEGENDS'];
                 }
-                if ($row['sales_stage'] == 'Closed Won' || $row['sales_stage'] == 'Closed Lost') {
+                if ($row['sales_stage'] === 'Closed Won' || $row['sales_stage'] === 'Closed Lost') {
                     $salesStage = $row['sales_stage'];
                     $salesStageT = $app_list_strings['sales_stage_dom'][$row['sales_stage']];
                 } else {
-                    $salesStage = "Other";
+                    $salesStage = 'Other';
                     $salesStageT = $other;
                 }
                 if (!isset($leadSourceArr[$row['lead_source']]['row_total'])) {
@@ -406,7 +410,7 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
         $user_id = $ids;
 
         $opp = BeanFactory::newBean('Opportunities');
-        $where="";
+        $where= '';
         //build the where clause for the query that matches $user
         $count = is_countable($user_id) ? count($user_id) : 0;
         $id = array();
@@ -414,7 +418,7 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
             foreach ($user_id as $the_id) {
                 $id[] = "'".$the_id."'";
             }
-            $ids = implode(",", $id);
+            $ids = implode(',', $id);
             $where .= "opportunities.assigned_user_id IN ($ids) ";
         }
 
@@ -425,12 +429,13 @@ echo "<p align='center'>".$this->gen_xml($datax, $ids, $cache_file_name, $refres
             foreach ($datay as $key=>$value) {
                 $datayArr[] = "'".$key."'";
             }
-            $datayArr = implode(",", $datayArr);
-            $where .= "AND opportunities.lead_source IN	($datayArr) ";
+            $datayArr = implode(',', $datayArr);
+            $where .= "AND opportunities.lead_source IN    ($datayArr) ";
         }
-        $query = "SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ";
-        $query .= "WHERE " .$where." AND opportunities.deleted=0 ";
-        $query .= " GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage";
+        $query =
+            'SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total,count(*) as opp_count FROM opportunities ';
+        $query .= 'WHERE ' .$where. ' AND opportunities.deleted=0 ';
+        $query .= ' GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage';
 
         return $query;
     }

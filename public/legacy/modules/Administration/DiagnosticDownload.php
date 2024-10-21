@@ -46,10 +46,10 @@ global $current_user;
 
 
 if (!is_admin($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 if (isset($GLOBALS['sugar_config']['hide_admin_diagnostics']) && $GLOBALS['sugar_config']['hide_admin_diagnostics']) {
-    sugar_die("Unauthorized access to diagnostic tool.");
+    sugar_die('Unauthorized access to diagnostic tool.');
 }
 
 if (!isset($_REQUEST['guid']) || !isset($_REQUEST['time'])) {
@@ -62,10 +62,10 @@ $filesize = filesize($path);
 ob_clean();
 header('Content-Description: File Transfer');
 header('Content-type: application/octet-stream');
-header("Pragma: public");
-header("Expires: 0");
-header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header('Pragma: public');
+header('Expires: 0');
+header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header("Content-Disposition: attachment; filename=$guid.zip");
-header("Content-Transfer-Encoding: binary");
+header('Content-Transfer-Encoding: binary');
 header("Content-Length: $filesize");
 readfile($path);

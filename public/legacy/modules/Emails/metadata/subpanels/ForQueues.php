@@ -45,9 +45,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 
 //$layout_defs['ForQueues'] = array(
-//	'top_buttons' => array(
-//			array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Queues'),
-//		),
+//    'top_buttons' => array(
+//            array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Queues'),
+//        ),
 //);
 
 
@@ -55,11 +55,11 @@ $subpanel_layout = array(
     'top_buttons' => array(
             array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Queues'),
     ),
-    'where' => "",
+    'where' => '',
 
     'fill_in_additional_fields'=>true,
     'list_fields' => array(
-/*		'mass_update' => array (
+/*        'mass_update' => array (
 
         ),
 */        'object_image'=>array(
@@ -84,8 +84,8 @@ $subpanel_layout = array(
         'contact_id'=>array(
             'usage'=>'query_only',
             'force_exists'=>true,
-        )	,
-/*		'parent_name'=>array(
+        )    ,
+/*        'parent_name'=>array(
              'vname' => 'LBL_LIST_RELATED_TO',
              'width' => '22%',
              'target_record_key' => 'parent_id',
@@ -97,7 +97,7 @@ $subpanel_layout = array(
             'vname' => 'LBL_DATE_MODIFIED',
              'width' => '10%',
         ),
-/*		'edit_button'=>array(
+/*        'edit_button'=>array(
              'widget_class' => 'SubPanelEditButton',
              'width' => '2%',
         ),

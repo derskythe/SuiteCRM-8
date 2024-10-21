@@ -134,10 +134,10 @@ function get_widget($type)
             default:
                         $file = false;
                         if (file_exists('custom/modules/DynamicFields/templates/Fields/Template'. ucfirst($type) . '.php')) {
-                            $file  =	'custom/modules/DynamicFields/templates/Fields/Template'. ucfirst($type) . '.php';
+                            $file  =    'custom/modules/DynamicFields/templates/Fields/Template'. ucfirst($type) . '.php';
                         } else {
                             if (file_exists('modules/DynamicFields/templates/Fields/Template'. ucfirst($type) . '.php')) {
-                                $file  =	'modules/DynamicFields/templates/Fields/Template'. ucfirst($type) . '.php';
+                                $file  =    'modules/DynamicFields/templates/Fields/Template'. ucfirst($type) . '.php';
                             }
                         }
                         if (!empty($file)) {

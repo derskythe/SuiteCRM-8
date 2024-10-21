@@ -56,11 +56,11 @@ class EmailsViewDetail extends ViewDetail
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $metadataFile = $this->getMetaDataFile();
         $this->dv = new EmailsDetailView();
-        $this->dv->ss =&  $this->ss;
+        $this->dv->ss =& $this->ss;
         $this->dv->populateBean($_REQUEST);
         $this->dv->setup(
             $this->module,

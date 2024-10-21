@@ -50,7 +50,7 @@ class SugarFieldText extends SugarFieldBase
 
         $editor = $vardef['editor'] ?? '';
 
-        if (!isset($displayParams['htmlescape']) && $editor != "html") {
+        if (!isset($displayParams['htmlescape']) && $editor !== 'html') {
             $displayParams['htmlescape'] = true;
         }
 
@@ -58,13 +58,16 @@ class SugarFieldText extends SugarFieldBase
             $displayParams['url2html'] = true;
         }
 
-        if (isset($vardef['editor']) && $vardef['editor'] === "html") {
+        if (isset($vardef['editor']) && $vardef['editor'] === 'html') {
             $displayParams['purifyHtml'] = $displayParams['purifyHtml'] ?? true;
         }
 
         return parent::getDetailViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex);
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function getClassicEditView($field_id='description', $value='', $prefix='', $rich_text=false, $maxlength='', $tabindex=1, $cols=80, $rows=4)
     {
         $this->ss->assign('prefix', $prefix);
@@ -98,17 +101,17 @@ class SugarFieldText extends SugarFieldBase
     public function setup($parentFieldArray, $vardef, $displayParams, $tabindex, $twopass = true)
     {
         parent::setup($parentFieldArray, $vardef, $displayParams, $tabindex, $twopass);
-        $initiate = "";
+        $initiate = '';
 
-        if (isset($vardef['editor']) && $vardef['editor'] === "html") {
+        if (isset($vardef['editor']) && $vardef['editor'] === 'html') {
             if (!isset($displayParams['htmlescape'])) {
                 $displayParams['htmlescape'] = false;
             }
-            if (isset($vardef['editor']) && $vardef['editor'] === "html") {
+            if (isset($vardef['editor']) && $vardef['editor'] === 'html') {
                 $displayParams['purifyHtml'] = $displayParams['purifyHtml'] ?? true;
             }
 
-            if ($_REQUEST['action'] === "EditView") {
+            if ($_REQUEST['action'] === 'EditView') {
                 $form_name = $displayParams['formName'] ?? '';
 
                 if (!empty($this->ss->_tpl_vars['displayParams']['formName'])) {
@@ -121,9 +124,9 @@ class SugarFieldText extends SugarFieldBase
                 $config['plugins'] = 'code, table, link, image, wordcount';
 
                 if ($form_name !== '') {
-                    $config['selector'] = "#{$form_name} " . "#" . $vardef['name'];
+                    $config['selector'] = "#{$form_name} " . '#' . $vardef['name'];
                 } else {
-                    $config['selector'] = "#" . $vardef['name'];
+                    $config['selector'] = '#' . $vardef['name'];
                 }
 
                 $config['toolbar1'] = 'fontselect | fontsizeselect | bold italic underline | forecolor backcolor | styleselect | outdent indent | link image | code table';
@@ -133,6 +136,6 @@ class SugarFieldText extends SugarFieldBase
             }
         }
 
-        $this->ss->assign("tinymce", $initiate);
+        $this->ss->assign('tinymce', $initiate);
     }
 }

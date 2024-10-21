@@ -63,7 +63,7 @@ class InboundEmailController extends SugarController
     public function action_SetDefault()
     {
         global $current_user;
-        $outbound_id = empty($_REQUEST['record']) ? "" : $_REQUEST['record'];
+        $outbound_id = empty($_REQUEST['record']) ? '' : $_REQUEST['record'];
         $ie = BeanFactory::newBean('InboundEmail');
 
         $ownerId = $this->bean->created_by ?? '';
@@ -81,7 +81,7 @@ class InboundEmailController extends SugarController
         $action = (!empty($this->return_action) ? $this->return_action : 'DetailView');
         $id = (!empty($this->return_id) ? $this->return_id : $outbound_id);
 
-        $url = "index.php?module=" . $module . "&action=" . $action . "&record=" . $id;
+        $url = 'index.php?module=' . $module . '&action=' . $action . '&record=' . $id;
         $this->set_redirect($url);
     }
 }

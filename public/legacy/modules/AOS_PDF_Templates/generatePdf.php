@@ -54,7 +54,7 @@ global $mod_strings, $sugar_config;
 $bean = BeanFactory::getBean($_REQUEST['module'], $_REQUEST['uid']);
 
 if (!$bean) {
-    sugar_die("Invalid Record");
+    sugar_die('Invalid Record');
 }
 
 $task = $_REQUEST['task'];
@@ -113,7 +113,7 @@ $replace = array('',
 $header = preg_replace($search, $replace, (string) $template->pdfheader);
 $footer = preg_replace($search, $replace, (string) $template->pdffooter);
 $text = preg_replace($search, $replace, (string) $template->description);
-$text = str_replace("<p><pagebreak /></p>", "<pagebreak />", $text);
+$text = str_replace('<p><pagebreak /></p>', '<pagebreak />', $text);
 $text = preg_replace_callback(
     '/\{DATE\s+(.*?)\}/',
     function ($matches) {
@@ -123,12 +123,12 @@ $text = preg_replace_callback(
 );
 $text = str_replace("\$aos_quotes", "\$" . $variableName, $text);
 $text = str_replace("\$aos_invoices", "\$" . $variableName, $text);
-$text = str_replace("\$total_amt", "\$" . $variableName . "_total_amt", $text);
-$text = str_replace("\$discount_amount", "\$" . $variableName . "_discount_amount", $text);
-$text = str_replace("\$subtotal_amount", "\$" . $variableName . "_subtotal_amount", $text);
-$text = str_replace("\$tax_amount", "\$" . $variableName . "_tax_amount", $text);
-$text = str_replace("\$shipping_amount", "\$" . $variableName . "_shipping_amount", $text);
-$text = str_replace("\$total_amount", "\$" . $variableName . "_total_amount", $text);
+$text = str_replace("\$total_amt", "\$" . $variableName . '_total_amt', $text);
+$text = str_replace("\$discount_amount", "\$" . $variableName . '_discount_amount', $text);
+$text = str_replace("\$subtotal_amount", "\$" . $variableName . '_subtotal_amount', $text);
+$text = str_replace("\$tax_amount", "\$" . $variableName . '_tax_amount', $text);
+$text = str_replace("\$shipping_amount", "\$" . $variableName . '_shipping_amount', $text);
+$text = str_replace("\$total_amount", "\$" . $variableName . '_total_amount', $text);
 
 $text = populate_group_lines($text, $lineItemsGroups, $lineItems);
 
@@ -136,10 +136,10 @@ $converted = templateParser::parse_template($text, $object_arr);
 $header = templateParser::parse_template($header, $object_arr);
 $footer = templateParser::parse_template($footer, $object_arr);
 
-$printable = str_replace("\n", "<br />", (string) $converted);
+$printable = str_replace("\n", '<br />', (string) $converted);
 
 if ($task === 'pdf' || $task === 'emailpdf') {
-    $file_name = $mod_strings['LBL_PDF_NAME'] . "_" . str_replace(" ", "_", (string) $bean->name) . ".pdf";
+    $file_name = $mod_strings['LBL_PDF_NAME'] . '_' . str_replace(' ', '_', (string) $bean->name) . '.pdf';
 
     try {
         $pdf = PDFWrapper::getPDFEngine();
@@ -161,7 +161,7 @@ if ($task === 'pdf' || $task === 'emailpdf') {
         $pdf->writeHTML($printable);
 
         if ($task === 'pdf') {
-            $pdf->outputPDF($file_name, "D");
+            $pdf->outputPDF($file_name, 'D');
         } else {
             $fp = fopen($sugar_config['upload_dir'] . 'attachfile.pdf', 'wb');
             fclose($fp);
@@ -172,7 +172,7 @@ if ($task === 'pdf' || $task === 'emailpdf') {
     } catch (PDFException $e) {
         LoggerManager::getLogger()->warn('PDFException: ' . $e->getMessage());
     }
-} elseif ($task == 'email') {
+} elseif ($task === 'email') {
     $sendEmail = new sendEmail();
     $sendEmail->send_email($bean, $bean->module_dir, $printable, '', false);
 }
@@ -192,7 +192,7 @@ function populate_group_lines($text, $lineItemsGroups, $lineItems, $element = 't
 
     $groups = BeanFactory::newBean('AOS_Line_Item_Groups');
     foreach ($groups->field_defs as $name => $arr) {
-        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) == 'id') || $arr['type'] == 'id' || $arr['type'] == 'link')) {
+        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) === 'id') || $arr['type'] === 'id' || $arr['type'] === 'link')) {
             $curNum = strpos((string) $text, '$aos_line_item_groups_' . $name);
             if ($curNum) {
                 if ($curNum < $firstNum || $firstNum == 0) {
@@ -221,7 +221,7 @@ function populate_group_lines($text, $lineItemsGroups, $lineItems, $element = 't
             //Read line start <tr> value
             $tcount = strrpos($text, $startElement);
             $lsValue = substr($text, $tcount);
-            $tcount = strpos($lsValue, ">") + 1;
+            $tcount = strpos($lsValue, '>') + 1;
             $lsValue = substr($lsValue, 0, $tcount);
 
 
@@ -280,7 +280,7 @@ function populate_product_lines($text, $lineItems, $element = 'tr')
     //Find first and last valid line values
     $product_quote = BeanFactory::newBean('AOS_Products_Quotes');
     foreach ($product_quote->field_defs as $name => $arr) {
-        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) == 'id') || $arr['type'] == 'id' || $arr['type'] == 'link')) {
+        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) === 'id') || $arr['type'] === 'id' || $arr['type'] === 'link')) {
             $curNum = strpos((string) $text, '$aos_products_quotes_' . $name);
 
             if ($curNum) {
@@ -298,7 +298,7 @@ function populate_product_lines($text, $lineItems, $element = 'tr')
 
     $product = BeanFactory::newBean('AOS_Products');
     foreach ($product->field_defs as $name => $arr) {
-        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) == 'id') || $arr['type'] == 'id' || $arr['type'] == 'link')) {
+        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) === 'id') || $arr['type'] === 'id' || $arr['type'] === 'link')) {
             $curNum = strpos((string) $text, '$aos_products_' . $name);
             if ($curNum) {
                 if ($curNum < $firstNum || $firstNum == 0) {
@@ -332,7 +332,7 @@ function populate_product_lines($text, $lineItems, $element = 'tr')
 
         $tcount = strrpos($temp, $startElement);
         $lsValue = substr($temp, $tcount);
-        $tcount = strpos($lsValue, ">") + 1;
+        $tcount = strpos($lsValue, '>') + 1;
         $lsValue = substr($lsValue, 0, $tcount);
 
         //Read line end values
@@ -379,7 +379,7 @@ function populate_service_lines($text, $lineItems, $element = 'tr')
     //Find first and last valid line values
     $product_quote = BeanFactory::newBean('AOS_Products_Quotes');
     foreach ($product_quote->field_defs as $name => $arr) {
-        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) == 'id') || $arr['type'] == 'id' || $arr['type'] == 'link')) {
+        if (!((isset($arr['dbType']) && strtolower($arr['dbType']) === 'id') || $arr['type'] === 'id' || $arr['type'] === 'link')) {
             $curNum = strpos($text, '$aos_services_quotes_' . $name);
             if ($curNum) {
                 if ($curNum < $firstNum || $firstNum == 0) {
@@ -411,7 +411,7 @@ function populate_service_lines($text, $lineItems, $element = 'tr')
 
         $tcount = strrpos($temp, $startElement);
         $lsValue = substr($temp, $tcount);
-        $tcount = strpos($lsValue, ">") + 1;
+        $tcount = strpos($lsValue, '>') + 1;
         $lsValue = substr($lsValue, 0, $tcount);
 
         //Read line end values

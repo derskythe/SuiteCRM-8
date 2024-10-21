@@ -108,9 +108,10 @@ class ViewList extends SugarView
     }
 
 
-
     /**
      * Prepare List View
+     *
+     * @throws Exception
      */
     public function listViewPrepare()
     {
@@ -143,7 +144,11 @@ class ViewList extends SugarView
                 }
                 $current_query_by_page = json_decode(html_entity_decode($_REQUEST['current_query_by_page']), true);
                 foreach ($current_query_by_page as $search_key => $search_value) {
-                    if ($search_key != $module . '2_' . strtoupper($this->bean->object_name) . '_offset' && !in_array($search_key, $blockVariables)) {
+                    if ($search_key != $module . '2_' . strtoupper($this->bean->object_name) . '_offset' && !in_array(
+                            $search_key,
+                            $blockVariables,
+                            true
+                        )) {
                         if (!is_array($search_value)) {
                             $_REQUEST[$search_key] = securexss($search_value);
                         } else {
@@ -157,7 +162,7 @@ class ViewList extends SugarView
             }
         }
         if (!empty($_REQUEST['saved_search_select'])) {
-            if ($_REQUEST['saved_search_select'] == '_none' || !empty($_REQUEST['button'])) {
+            if ($_REQUEST['saved_search_select'] === '_none' || !empty($_REQUEST['button'])) {
                 $_SESSION['LastSavedView'][$_REQUEST['module']] = '';
                 unset($_REQUEST['saved_search_select']);
                 unset($_REQUEST['saved_search_select_name']);
@@ -170,7 +175,7 @@ class ViewList extends SugarView
                     $current_user->setPreference('ListViewDisplayColumns', array(), 0, $mod);
                 }
             } else {
-                if (empty($_REQUEST['button']) && (empty($_REQUEST['clear_query']) || $_REQUEST['clear_query'] != 'true')) {
+                if (empty($_REQUEST['button']) && (empty($_REQUEST['clear_query']) || $_REQUEST['clear_query'] !== 'true')) {
                     $this->saved_search = loadBean('SavedSearch');
                     $this->saved_search->retrieveSavedSearch($_REQUEST['saved_search_select']);
                     $this->saved_search->populateRequest();
@@ -268,6 +273,8 @@ class ViewList extends SugarView
 
     /**
      * Process List View
+     *
+     * @throws SmartyException
      */
     public function listViewProcess()
     {
@@ -278,7 +285,7 @@ class ViewList extends SugarView
             return;
         }
         if (empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false) {
-            $this->lv->ss->assign("SEARCH", true);
+            $this->lv->ss->assign('SEARCH', true);
             $this->lv->ss->assign('savedSearchData', $this->searchForm->getSavedSearchData());
             $this->lv->setup($this->seed, 'include/ListView/ListViewGeneric.tpl', $this->where, $this->params);
             $savedSearchName = empty($_REQUEST['saved_search_select_name']) ? '' : (' - ' . $_REQUEST['saved_search_select_name']);
@@ -295,15 +302,15 @@ class ViewList extends SugarView
 
         //search
         $view = 'basic_search';
-        if (!empty($_REQUEST['search_form_view']) && $_REQUEST['search_form_view'] == 'advanced_search') {
+        if (!empty($_REQUEST['search_form_view']) && $_REQUEST['search_form_view'] === 'advanced_search') {
             $view = $_REQUEST['search_form_view'];
         }
         $this->headers = true;
 
         if (!empty($_REQUEST['search_form_only']) && $_REQUEST['search_form_only']) {
             $this->headers = false;
-        } elseif (!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] != 'false') {
-            if (isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] == 'advanced_search') {
+        } elseif (!isset($_REQUEST['search_form']) || $_REQUEST['search_form'] !== 'false') {
+            if (isset($_REQUEST['searchFormTab']) && $_REQUEST['searchFormTab'] === 'advanced_search') {
                 $view = 'advanced_search';
             } else {
                 $view = 'basic_search';
@@ -337,7 +344,7 @@ class ViewList extends SugarView
     {
         if (isset($_REQUEST['query'])) {
             // we have a query
-            if (!empty($_SERVER['HTTP_REFERER']) && preg_match('/action=EditView/', $_SERVER['HTTP_REFERER'])) { // from EditView cancel
+            if (!empty($_SERVER['HTTP_REFERER']) && str_contains($_SERVER['HTTP_REFERER'], 'action=EditView')) { // from EditView cancel
                 $this->searchForm->populateFromArray($this->storeQuery->query);
             } else {
                 $this->searchForm->populateFromRequest();
@@ -374,7 +381,7 @@ class ViewList extends SugarView
     /**
      * Setup View
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->lv = new ListViewSmarty();
     }
@@ -396,7 +403,7 @@ class ViewList extends SugarView
      *
      * @return SearchForm
      */
-    protected function getSearchForm2($seed, $module, $action = "index")
+    protected function getSearchForm2($seed, $module, $action = 'index')
     {
         // SearchForm2.php is required_onced above before calling this function
         // hence the order of parameters is different from SearchForm.php

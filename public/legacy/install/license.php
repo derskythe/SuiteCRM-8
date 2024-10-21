@@ -53,8 +53,8 @@ if (!isset($_SESSION['license_submitted']) || !$_SESSION['license_submitted']) {
 
 $checked = (isset($_SESSION['setup_license_accept']) && !empty($_SESSION['setup_license_accept'])) ? 'checked="on"' : '';
 
-require_once("install/install_utils.php");
-$license_file = getLicenseContents("LICENSE.txt");
+require_once('install/install_utils.php');
+$license_file = getLicenseContents('LICENSE.txt');
 $langHeader = get_language_header();
 $out =<<<EOQ
 <!DOCTYPE HTML>
@@ -94,7 +94,7 @@ $out =<<<EOQ
             <input type="checkbox" class="checkbox" name="setup_license_accept" id="button_next2" onClick='toggleNextButton();' {$checked} />
             <a href='javascript:void(0)' onClick='toggleLicenseAccept();toggleNextButton();'>{$mod_strings['LBL_LICENSE_I_ACCEPT']}</a>
             <input type="button" class="button" name="print_license" id="button_print_license" value="{$mod_strings['LBL_LICENSE_PRINTABLE']}"
-        	onClick='window.open("install.php?page=licensePrint&language={$current_language}");' />
+            onClick='window.open("install.php?page=licensePrint&language={$current_language}");' />
         </div>
         </div>
         <div id="installcontrols">

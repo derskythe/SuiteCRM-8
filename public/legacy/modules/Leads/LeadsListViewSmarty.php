@@ -21,7 +21,7 @@ class LeadsListViewSmarty extends ListViewSmarty
      * @param string $htmlVar the corresponding html public in xtpl per row
      * @return bool|void
      */
-    public function process($file, $data, $htmlVar)
+    public function process($file, $data, $htmlVar) : bool
     {
         $configurator = new Configurator();
         if ($configurator->isConfirmOptInEnabled()) {
@@ -37,12 +37,12 @@ class LeadsListViewSmarty extends ListViewSmarty
         return $ret;
     }
 
-    public function buildExportLink($id = 'export_link')
+    public function buildExportLink($id = 'export_link') : string
     {
         global $app_strings;
         global $sugar_config;
 
-        $script = "";
+        $script = '';
         if (ACLController::checkAccess($this->seed->module_dir, 'export', true)) {
             if ($this->export) {
                 $script = parent::buildExportLink($id);

@@ -67,7 +67,7 @@ class ProspectLink extends Link2
      * @param bool $return_array
      * @return array|string
      */
-    public function getJoin($params, $return_array = false)
+    public function getJoin($params, $return_array = false) : array|string
     {
         $join_type = ' INNER JOIN ';
         if (isset($params['join_type'])) {
@@ -77,7 +77,7 @@ class ProspectLink extends Link2
         $linkIsLHS = $this->getSide() == REL_LHS;
 
         if (
-            $this->_relationship->relationship_type == 'one-to-many'
+            $this->_relationship->relationship_type === 'one-to-many'
             && $linkIsLHS
         ) {
             $table_with_alias = $table = $this->_relationship->rhs_table;

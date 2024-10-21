@@ -54,8 +54,8 @@ class Gantt
         $this->start_date = $start_date;
         $this->end_date = $end_date;
         $this->tasks = $tasks;
-        
-        
+
+
         //draw the grid
         $this->draw($this->start_date, $this->end_date, $this->tasks);
     }
@@ -237,16 +237,22 @@ class Gantt
 
 
     //Returns an array containing the years, months and days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws DateMalformedPeriodStringException
+     * @throws DateMalformedIntervalStringException
+     */
     public function year_month($start_date, $end_date, $diff_interval=1)
     {
         $begin = new DateTime($start_date);
         $end = new DateTime($end_date);
         $end->add(new DateInterval('P'. $diff_interval .'D')); //Add 1 day to include the end date as a day
-        
+
         $interval = new DateInterval('P1D'); // 1 month interval
         $period = new DatePeriod($begin, $interval, $end);
         $aResult = array();
-        
+
         foreach ($period as $dt) {
             $y = $dt->format('Y');
             $m = $GLOBALS['app_list_strings']['dom_cal_month_short'][$dt->format('n')];
@@ -260,6 +266,10 @@ class Gantt
     }
 
     //Returns the total number of days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function count_days($start_date, $end_date)
     {
         $d1 = new DateTime($start_date);
@@ -275,6 +285,10 @@ class Gantt
         return $difference->days;
     }
     //Returns the time span between two dates in years  months and days
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function time_range($start_date, $end_date)
     {
         $datetime1 = new DateTime($start_date);
@@ -286,8 +300,9 @@ class Gantt
 
     public function substr_unicode($str, $s, $l = null)
     {
-        return implode("", array_slice(
-            preg_split("//u", (string) $str, -1, PREG_SPLIT_NO_EMPTY),
+        return implode(
+            '', array_slice(
+            preg_split('//u', (string) $str, -1, PREG_SPLIT_NO_EMPTY),
             $s,
             $l
         ));

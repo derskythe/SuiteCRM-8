@@ -77,7 +77,7 @@ class TemplateRange extends TemplateText
         //If we are enabling range search, make sure we add the start and end range fields
         if (!empty($this->enable_range_search)) {
             //If range search is enabled, set the options attribute for the dropdown choice selections
-            $this->options = ($this->type == 'date' || $this->type == 'datetimecombo' || $this->type == 'datetime') ? 'date_range_search_dom' : 'numeric_range_search_dom';
+            $this->options = ($this->type === 'date' || $this->type === 'datetimecombo' || $this->type === 'datetime') ? 'date_range_search_dom' : 'numeric_range_search_dom';
 
             if (isset($_REQUEST['view_module'])) {
                 $module = $_REQUEST['view_module'];
@@ -96,7 +96,7 @@ class TemplateRange extends TemplateText
                     $field_name_start = 'start_range_' . $field_name;
                     $field_name_end = 'end_range_' . $field_name;
 
-                    $isDateField = $this->type == 'date' || $this->type == 'datetimecombo' || $this->type == 'datetime';
+                    $isDateField = $this->type === 'date' || $this->type === 'datetimecombo' || $this->type === 'datetime';
 
 
                     $searchFields[$module][$field_name_range] = array('query_type'=>'default', 'enable_range_search'=>true);
@@ -190,7 +190,7 @@ class TemplateRange extends TemplateText
         $vardef = parent::get_field_def();
         if (!empty($this->enable_range_search)) {
             $vardef['enable_range_search'] = $this->enable_range_search;
-            $vardef['options'] = ($this->type == 'date' || $this->type == 'datetimecombo' || $this->type == 'datetime') ? 'date_range_search_dom' : 'numeric_range_search_dom';
+            $vardef['options'] = ($this->type === 'date' || $this->type === 'datetimecombo' || $this->type === 'datetime') ? 'date_range_search_dom' : 'numeric_range_search_dom';
         } else {
             $vardef['enable_range_search'] = false;
         }
@@ -229,7 +229,7 @@ class TemplateRange extends TemplateText
 
                 $type = $field['type'];
 
-                $isDateField = $type == 'date' || $type == 'datetimecombo' || $type == 'datetime';
+                $isDateField = $type === 'date' || $type === 'datetimecombo' || $type === 'datetime';
 
                 $searchFields[$module][$field_name_range] = array('query_type'=>'default', 'enable_range_search'=>true);
                 if ($isDateField) {

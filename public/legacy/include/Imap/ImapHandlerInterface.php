@@ -338,7 +338,7 @@ interface ImapHandlerInterface
      * @param string $defaulthost
      * @return object
      */
-    public function rfc822ParseHeaders($headers, $defaulthost = "UNKNOWN");
+    public function rfc822ParseHeaders($headers, $defaulthost = 'UNKNOWN');
 
     /**
      * @return object|bool Returns FALSE on failure.

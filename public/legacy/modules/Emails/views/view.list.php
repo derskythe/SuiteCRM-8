@@ -56,7 +56,7 @@ class EmailsViewList extends ViewList
     /**
      * setup display
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $_REQUEST['orderBy'] = 'date_sent_received';
         $_REQUEST['sortOrder'] = 'DESC';

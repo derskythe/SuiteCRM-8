@@ -91,6 +91,8 @@ class SyncInboundEmailAccountsPage
      * Show basic UI for Sync Inbound Email Accounts
      *
      * @param $ieList
+     *
+     * @throws SmartyException
      */
     public function showForm($ieList)
     {

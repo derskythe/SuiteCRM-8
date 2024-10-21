@@ -1,8 +1,11 @@
 <?php
 
+/**
+ * @throws SmartyException
+ */
 function question_responses_display(SurveyResponses $focus, $field, $value, $view)
 {
-    if ($view == 'EditView') {
+    if ($view === 'EditView') {
         return '';
     }
     global $app_list_strings;
@@ -45,11 +48,11 @@ function convertQuestionResponseForDisplay($responseArr, $type)
         return '';
     }
     switch ($type) {
-        case "Checkbox":
+        case 'Checkbox':
             return $responseArr[0]->answer_bool ? '<img width=20 src="modules/Surveys/imgs/checked.png"/>' : '';
-        case "Radio":
-        case "Dropdown":
-        case "Multiselect":
+        case 'Radio':
+        case 'Dropdown':
+        case 'Multiselect':
             $bits = array();
             foreach ($responseArr as $response) {
                 $options =
@@ -63,7 +66,7 @@ function convertQuestionResponseForDisplay($responseArr, $type)
             }
 
             return implode(',', $bits);
-        case "Matrix":
+        case 'Matrix':
             $str = '<dl>';
             $strArr = array();
             foreach ($responseArr as $response) {
@@ -96,9 +99,9 @@ function convertQuestionResponseForDisplay($responseArr, $type)
             $str .= '</dl>';
 
             return $str;
-        case "DateTime":
+        case 'DateTime':
             return $responseArr[0]->answer_datetime;
-        case "Date":
+        case 'Date':
             $date = $timedate->fromUser($responseArr[0]->answer_datetime);
             if (!$date) {
                 return $responseArr[0]->answer_datetime;
@@ -108,16 +111,16 @@ function convertQuestionResponseForDisplay($responseArr, $type)
                 return $timedate->asUserDate($date);
             }
             // no break
-        case "Rating":
+        case 'Rating':
             $answer = $responseArr[0]->answer ?? '';
             if (is_int($answer)) {
                 return str_repeat('<img width=20 src="modules/Surveys/imgs/star.png"/>', $answer);
             }
             return '';
-        case "Scale":
+        case 'Scale':
             return $responseArr[0]->answer . '/10';
-        case "Textbox":
-        case "Text":
+        case 'Textbox':
+        case 'Text':
         default:
             return $responseArr[0]->answer;
     }

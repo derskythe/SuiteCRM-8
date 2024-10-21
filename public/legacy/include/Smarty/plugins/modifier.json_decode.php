@@ -41,6 +41,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+/**
+ * @throws JsonException
+ */
 function smarty_modifier_json_decode($value)
 {
     if (empty($value) || !is_string($value)) {

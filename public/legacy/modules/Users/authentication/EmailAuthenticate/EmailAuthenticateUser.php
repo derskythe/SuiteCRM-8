@@ -65,7 +65,7 @@ class EmailAuthenticateUser extends SugarAuthenticateUser
     {
         global $login_error;
 
-        $GLOBALS['log']->debug("Starting user load for ". $name);
+        $GLOBALS['log']->debug('Starting user load for ' . $name);
         if (empty($name) || empty($password)) {
             return false;
         }
@@ -118,6 +118,8 @@ class EmailAuthenticateUser extends SugarAuthenticateUser
      *
      * @param unknown_type $user_id
      * @param unknown_type $password
+     *
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function sendEmailPassword($user_id, $password)
     {
@@ -130,7 +132,7 @@ class EmailAuthenticateUser extends SugarAuthenticateUser
             return;
         }
 
-        require_once("include/SugarPHPMailer.php");
+        require_once('include/SugarPHPMailer.php');
         global $locale;
         $OBCharset = $locale->getPrecedentPreference('default_email_charset');
         $notify_mail = new SugarPHPMailer();
@@ -146,7 +148,7 @@ class EmailAuthenticateUser extends SugarAuthenticateUser
         if (!$notify_mail->Send()) {
             $GLOBALS['log']->warn("Notifications: error sending e-mail (method: {$notify_mail->Mailer}), (error: {$notify_mail->ErrorInfo})");
         } else {
-            $GLOBALS['log']->info("Notifications: e-mail successfully sent");
+            $GLOBALS['log']->info('Notifications: e-mail successfully sent');
         }
     }
 }

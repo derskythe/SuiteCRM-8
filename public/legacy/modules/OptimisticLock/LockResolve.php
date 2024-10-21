@@ -58,7 +58,7 @@ function display_conflict_between_objects($object_1, $object_2, $field_defs, $mo
         $value = $object_1[$name];
         $compare = $object_2->$name;
 
-        if (!is_scalar($value) || $compare instanceof Link || in_array($name, $skip)) {
+        if (!is_scalar($value) || $compare instanceof Link || in_array($name, $skip, true)) {
             continue;
         }
 

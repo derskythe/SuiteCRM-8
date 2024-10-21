@@ -60,7 +60,7 @@ class UndefinedVardefRule extends BaseRule
     }
 
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
         foreach ($panels as $name=>$panel) {
             foreach ($panel as $rowCount=>$row) {

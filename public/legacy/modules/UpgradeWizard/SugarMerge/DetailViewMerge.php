@@ -68,7 +68,7 @@ class DetailViewMerge extends EditViewMerge
      *
      * @var BOOLEAN
      */
-    protected $scanForMultiPanel = true;	/**
+    protected $scanForMultiPanel = true;    /**
      * Parses out the fields for each files meta data and then calls on mergeFields and setPanels
      *
      */

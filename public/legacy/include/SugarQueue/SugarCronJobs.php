@@ -99,7 +99,7 @@ class SugarCronJobs
     public function __construct()
     {
         $this->queue = new SugarJobQueue();
-        $this->lockfile = sugar_cached("modules/Schedulers/lastrun");
+        $this->lockfile = sugar_cached('modules/Schedulers/lastrun');
         if (!empty($GLOBALS['sugar_config']['cron']['max_cron_jobs'])) {
             $this->max_jobs = $GLOBALS['sugar_config']['cron']['max_cron_jobs'];
         }
@@ -208,7 +208,7 @@ class SugarCronJobs
     {
         // throttle
         if (!$this->throttle()) {
-            $GLOBALS['log']->fatal("Job runs too frequently, throttled to protect the system.");
+            $GLOBALS['log']->fatal('Job runs too frequently, throttled to protect the system.');
             return;
         }
         // clean stale jobs
@@ -223,7 +223,7 @@ class SugarCronJobs
         }
         // run jobs
         $cutoff = time()+$this->max_runtime;
-        register_shutdown_function(array($this, "unexpectedExit"));
+        register_shutdown_function(array( $this, 'unexpectedExit' ));
         $myid = $this->getMyId();
         for ($count=0;$count<$this->max_jobs;$count++) {
             $this->job = $this->queue->nextJob($myid);

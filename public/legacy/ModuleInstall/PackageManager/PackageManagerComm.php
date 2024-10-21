@@ -41,8 +41,8 @@
 require_once('include/nusoap/nusoap.php');
 require_once('ModuleInstall/PackageManager/PackageManagerDownloader.php');
 
-define("HTTPS_URL", "https://depot.sugarcrm.com/depot/SugarDepotSoap.php");
-define("ACTIVE_STATUS", "ACTIVE");
+define('HTTPS_URL', 'https://depot.sugarcrm.com/depot/SugarDepotSoap.php');
+define('ACTIVE_STATUS', 'ACTIVE');
 
 #[\AllowDynamicProperties]
 class PackageManagerComm
@@ -110,7 +110,7 @@ class PackageManagerComm
     {
         if (empty($_SESSION['SugarDepotSessionID'])) {
             global $license;
-            $GLOBALS['log']->debug("Begin SugarDepot Login");
+            $GLOBALS['log']->debug('Begin SugarDepot Login');
             self::initialize(false);
             require('sugar_version.php');
             require('config.php');
@@ -133,7 +133,7 @@ class PackageManagerComm
             if (!is_array($result)) {
                 $_SESSION['SugarDepotSessionID'] = $result;
             }
-            $GLOBALS['log']->debug("End SugarDepot Login");
+            $GLOBALS['log']->debug('End SugarDepot Login');
             return $result;
         } else {
             return $_SESSION['SugarDepotSessionID'];
@@ -255,22 +255,22 @@ class PackageManagerComm
     /**
      * Call the PackageManagerDownloader function which uses curl in order to download the specified file
      *
-     * @param filename	the file to download
+     * @param filename    the file to download
      * @return path to downloaded file
      */
     public static function performDownload($filename)
     {
         self::initialize();
         //check for fault
-        $GLOBALS['log']->debug("Performing download from depot: Session ID: ".$_SESSION['SugarDepotSessionID']." Filename: ".$filename);
+        $GLOBALS['log']->debug('Performing download from depot: Session ID: ' . $_SESSION['SugarDepotSessionID']. ' Filename: ' .$filename);
         return PackageManagerDownloader::download($_SESSION['SugarDepotSessionID'], $filename);
     }
 
     /**
      * Retrieve documentation for the given release or package
      *
-     * @param package_id	the specified package to retrieve documentation
-     * @param release_id	the specified release to retrieve documentation
+     * @param package_id    the specified package to retrieve documentation
+     * @param release_id    the specified release to retrieve documentation
      *
      * @return documents
      */
@@ -290,13 +290,13 @@ class PackageManagerComm
     /**
      * Log that the user has clicked on a document
      *
-     * @param document_id	the document the user has clicked on
+     * @param document_id    the document the user has clicked on
      */
     public function downloadedDocumentation($document_id)
     {
         self::initialize();
         //check for fault
-        $GLOBALS['log']->debug("Logging Document: ".$document_id);
+        $GLOBALS['log']->debug('Logging Document: ' .$document_id);
         $GLOBALS['SugarDepot']->call('depotDownloadedDocumentation', array('session_id' => $_SESSION['SugarDepotSessionID'], 'document_id' => $document_id));
     }
 
@@ -304,8 +304,8 @@ class PackageManagerComm
      * Send the list of installed objects, could be patches, or modules, .. to the depot and allow the depot to send back
      * a list of corresponding updates
      *
-     * @param objects_to_check	an array of name_value_lists which contain the appropriate values
-     * 							which will allow the depot to check for updates
+     * @param objects_to_check    an array of name_value_lists which contain the appropriate values
+     *                             which will allow the depot to check for updates
      *
      * @return array of name_value_lists of corresponding updates
      */

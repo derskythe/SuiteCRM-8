@@ -73,7 +73,7 @@ class ContactsViewEdit extends ViewEdit
         if (empty($admin->settings['portal_on']) || !$admin->settings['portal_on']) {
             unset($this->ev->sectionPanels[strtoupper('lbl_portal_information')]);
         } else {
-            if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
+            if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
                 $this->ev->fieldDefs['portal_name']['value'] = '';
                 $this->ev->fieldDefs['portal_active']['value'] = '0';
                 $this->ev->fieldDefs['portal_password']['value'] = '';

@@ -38,7 +38,7 @@
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-$dictionary["OutboundEmailAccounts"] = [
+$dictionary['OutboundEmailAccounts'] = [
     'table' => 'outbound_email',
     'audited' => true,
     'inline_edit' => false,

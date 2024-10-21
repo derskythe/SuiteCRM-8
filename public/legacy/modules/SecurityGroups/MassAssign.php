@@ -39,11 +39,11 @@ if (!empty($_REQUEST['uid'])) {
 elseif (isset($_REQUEST['entire'])) {
     if (isset($_SESSION['export_where']) && !empty($_SESSION['export_where'])) { // bug 4679
         $where = $_SESSION['export_where'];
-        $whereArr = explode(" ", trim($where));
+        $whereArr = explode(' ', trim($where));
         if ($whereArr[0] === trim('where')) {
             $whereClean = array_shift($whereArr);
         }
-        $where = implode(" ", $whereArr);
+        $where = implode(' ', $whereArr);
     } else {
         $where = '';
     }
@@ -66,7 +66,7 @@ elseif (isset($_REQUEST['entire'])) {
 }
 
 if (isset($_POST['mass']) && is_array($_POST['mass'])) {
-    $rel_name = "";
+    $rel_name = '';
     foreach ($_POST['mass'] as $id) {
         if (isset($_POST['Delete'])) {
             $sugarbean->retrieve($id);
@@ -74,11 +74,11 @@ if (isset($_POST['mass']) && is_array($_POST['mass'])) {
             //if($sugarbean->ACLAccess('Delete')){
 
             $GLOBALS['log']->debug("MassAssign - deleting relationship: $groupFocus->name");
-            if ($sugarbean->module_dir == 'Users') {
-                $rel_name = "SecurityGroups";
+            if ($sugarbean->module_dir === 'Users') {
+                $rel_name = 'SecurityGroups';
             } else {
                 if (empty($rel_name) || !isset($rel_name)) {
-                    $rel_name = $groupFocus->getLinkName($sugarbean->module_dir, "SecurityGroups");
+                    $rel_name = $groupFocus->getLinkName($sugarbean->module_dir, 'SecurityGroups');
                 }
             }
             $sugarbean->load_relationship($rel_name);
@@ -93,14 +93,14 @@ if (isset($_POST['mass']) && is_array($_POST['mass'])) {
             //if($sugarbean->ACLAccess('Save')){
 
             $GLOBALS['log']->debug("MassAssign - adding relationship: $groupFocus->name");
-            if ($sugarbean->module_dir == 'Users') {
-                $rel_name = "SecurityGroups";
+            if ($sugarbean->module_dir === 'Users') {
+                $rel_name = 'SecurityGroups';
             } else {
                 if (empty($rel_name) || !isset($rel_name)) {
-                    $rel_name = $groupFocus->getLinkName($sugarbean->module_dir, "SecurityGroups");
+                    $rel_name = $groupFocus->getLinkName($sugarbean->module_dir, 'SecurityGroups');
                 }
             }
-            $GLOBALS['log']->debug("MassAssign - adding relationship relationship name: ".$rel_name);
+            $GLOBALS['log']->debug('MassAssign - adding relationship relationship name: ' .$rel_name);
             $sugarbean->load_relationship($rel_name);
             $sugarbean->$rel_name->add($groupFocus->id);
 

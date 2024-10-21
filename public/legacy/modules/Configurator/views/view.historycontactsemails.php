@@ -51,23 +51,29 @@ class ConfiguratorViewHistoryContactsEmails extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
         return array(
-           "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>',
            $mod_strings['LBL_HISTORY_SUBPANEL']
            );
     }
 
-    public function preDisplay()
+    /**
+     * @throws Exception
+     */
+    public function preDisplay() : void
     {
         if (!is_admin($GLOBALS['current_user'])) {
             sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']);
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $modules = array();
@@ -91,14 +97,14 @@ class ConfiguratorViewHistoryContactsEmails extends SugarView
 
             $isValid = false;
             foreach ($subPanel->layout_defs['subpanel_setup'] as $subPanelDef) {
-                if (empty($subPanelDef['module']) || $subPanelDef['module'] != 'History') {
+                if (empty($subPanelDef['module']) || $subPanelDef['module'] !== 'History') {
                     continue;
                 }
                 if (empty($subPanelDef['collection_list'])) {
                     continue;
                 }
                 foreach ($subPanelDef['collection_list'] as $v) {
-                    if (!empty($v['get_subpanel_data']) && $v['get_subpanel_data'] == 'function:get_emails_by_assign_or_link') {
+                    if (!empty($v['get_subpanel_data']) && $v['get_subpanel_data'] === 'function:get_emails_by_assign_or_link') {
                         $isValid = true;
                         break 2;
                     }
@@ -110,7 +116,7 @@ class ConfiguratorViewHistoryContactsEmails extends SugarView
 
             $bean->load_relationships();
             foreach ($bean->get_linked_fields() as $fieldName => $fieldDef) {
-                if ($bean->$fieldName->getRelatedModuleName() == 'Contacts') {
+                if ($bean->$fieldName->getRelatedModuleName() === 'Contacts') {
                     $modules[$moduleName] = array(
                         'module' => $moduleName,
                         'label' => translate($moduleName),

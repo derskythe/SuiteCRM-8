@@ -53,24 +53,24 @@ class TemplateURL extends TemplateText
         $this->vardef_map['ext4'] = 'link_target';
         $this->vardef_map['link_target'] = 'ext4';
     }
-    
+
     public $type='url';
     public function get_html_edit()
     {
         $this->prepare();
         return "<input type='text' name='". $this->name. "' id='".$this->name."' size='".$this->size."' title='{" . strtoupper($this->name) ."_HELP}' value='{". strtoupper($this->name). "}'>";
     }
-    
+
     public function get_html_detail()
     {
         $xtpl_var = strtoupper($this->name);
-        return "<a href='{" . $xtpl_var . "}' target='_blank'>{" . $xtpl_var . "}</a>";
+        return "<a href='{" . $xtpl_var . "}' target='_blank'>{" . $xtpl_var . '}</a>';
     }
-    
+
     public function get_xtpl_detail()
     {
         $value = parent::get_xtpl_detail();
-        if (!empty($value) && substr_count((string) $value, '://') == 0 && substr((string) $value, 0, 8) != 'index.php') {
+        if (!empty($value) && substr_count((string) $value, '://') == 0 && substr((string) $value, 0, 8) !== 'index.php') {
             $value = 'http://' . $value;
         }
         return $value;

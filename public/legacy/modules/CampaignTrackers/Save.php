@@ -67,7 +67,7 @@ foreach ($focus->additional_column_fields as $field) {
     }
 }
 //set check box states.
-if (isset($_POST['is_optout']) && $_POST['is_optout'] =='on') {
+if (isset($_POST['is_optout']) && $_POST['is_optout'] === 'on') {
     $focus->is_optout=1;
     $focus->tracker_url='index.php?entryPoint=removeme';
 } else {
@@ -76,7 +76,7 @@ if (isset($_POST['is_optout']) && $_POST['is_optout'] =='on') {
 
 $focus->save($check_notify);
 $return_id = $focus->id;
-$GLOBALS['log']->debug("Saved record with id of ".$return_id);
+$GLOBALS['log']->debug('Saved record with id of ' .$return_id);
 
 if (isset($_POST['response_json']) && $_POST['response_json']) {
     $results['data'] = array('id' => $focus->id);

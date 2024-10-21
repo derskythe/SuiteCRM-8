@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="3145f4b0-3c4b-4cfc-8db6-59506f67e91f" name="suite_crm@localhost Mapping">
+      <data-sources db="194d6ef2-6c15-4a2b-b4a5-70f03a353cbb" ddl="540a001f-be2a-4a3e-9192-04be29bb95a7" />
+      <scope>
+        <node kind="schema" qname="suite_crm" />
+      </scope>
+    </mapping>
+  </component>
+  <component name="SqlDataSourceStorage">
+    <option name="dataSources">
+      <list>
+        <State>
+          <option name="id" value="540a001f-be2a-4a3e-9192-04be29bb95a7" />
+          <option name="name" value="suite_crm@localhost (DDL)" />
+          <option name="dbmsName" value="MARIADB" />
+          <option name="urls">
+            <array>
+              <option value="file://$PROJECT_DIR$/cache/ddl" />
+            </array>
+          </option>
+          <option name="outLayout" value="File per object by schema.groovy" />
+        </State>
+      </list>
+    </option>
+  </component>
+</project>

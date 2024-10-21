@@ -17,7 +17,7 @@
  * @param array
  * @param Smarty
  */
-function smarty_function_suite_check_access($params, &$smarty)
+function smarty_function_suite_check_access($params, $smarty)
 {
     if (empty($params['module'])) {
         $smarty->trigger_error("sugar_check_access: missing 'module' parameter");

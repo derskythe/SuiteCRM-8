@@ -6,28 +6,28 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class SecurityGroupMessage extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'SecurityGroups';
-    public $object_name = 'SecurityGroupMessage';
-    public $table_name = 'securitygroups_message';
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'SecurityGroups';
+    public string $object_name = 'SecurityGroupMessage';
+    public string $table_name = 'securitygroups_message';
+    public bool $importable = false;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
 
 
-    public $additional_column_fields = array();
-    public $field_defs = array(
+    public array $additional_column_fields = array();
+    public ?array $field_defs = array(
        'id'=>array('name' =>'id', 'type' =>'char', 'len'=>'36', 'default'=>'')
       , 'name'=>array('name' =>'name', 'type' =>'varchar', 'len'=>'255', )
       , 'date_entered'=>array('name' => 'date_entered','type' => 'datetime')
@@ -55,9 +55,9 @@ class SecurityGroupMessage extends Basic
         $delete = '';
 
         $group_owner = false;
-        $securitygroup_name = "";
+        $securitygroup_name = '';
         if (empty($data['SECURITYGROUP_ID'])) {
-            $securitygroup_name = "All";
+            $securitygroup_name = 'All';
         } else {
             require_once('modules/SecurityGroups/SecurityGroup.php');
             $securitygroup = BeanFactory::newBean('SecurityGroups');
@@ -73,9 +73,9 @@ class SecurityGroupMessage extends Basic
             $delete = SugarThemeRegistry::current()->getImage('delete_inline', 'width="12" height="12" border="0" align="absmiddle" style="vertical-align: bottom;" onclick=\'Message.deleteMessage("'. $data['ID'] . '", "{this.id}")\'', null, null, '.gif', '');
         }
 
-        $username = "";
+        $username = '';
         if (empty($data['CREATED_BY'])) {
-            $username = "Unknown";
+            $username = 'Unknown';
         } else {
             require_once('modules/Users/User.php');
             $user = BeanFactory::newBean('Users');
@@ -91,6 +91,9 @@ class SecurityGroupMessage extends Basic
     }
 
 
+    /**
+     * @throws Exception
+     */
     public static function saveMessage($text, $securitygroup_id)
     {
         //if no security group id then must be admin. Otherwise, make sure the user is a member of the group
@@ -174,7 +177,7 @@ class SecurityGroupMessage extends Basic
         return $result . ' ' . translate('LBL_TIME_AGO', 'SugarFeed');
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':return false;

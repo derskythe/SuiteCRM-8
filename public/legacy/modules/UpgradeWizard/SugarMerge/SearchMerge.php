@@ -117,7 +117,7 @@ class SearchMerge extends ListViewMerge
 
         //first only deal with ones that have their location coming from the custom source
         foreach ($this->mergedFields as $id =>$field) {
-            if ($field['loc']['source'] == 'custom') {
+            if ($field['loc']['source'] === 'custom') {
                 $panels[$field['loc']['panel']][] = $field['data'];
                 unset($this->mergedFields[$id]);
             }
@@ -160,7 +160,7 @@ class SearchMerge extends ListViewMerge
         bool $dryRun = false
     ): bool {
         //Bug 37207
-        if ($module == 'Connectors') {
+        if ($module === 'Connectors') {
             return false;
         }
 

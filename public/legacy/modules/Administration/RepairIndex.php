@@ -43,7 +43,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	LOCAL UTILITY
+////    LOCAL UTILITY
 function compare($table_name, $db_indexes, $var_indexes)
 {
     global $add_index, $drop_index, $change_index;
@@ -79,18 +79,18 @@ function compare($table_name, $db_indexes, $var_indexes)
 
         //no matching index in database.
         if (empty($sel_db_index)) {
-            $add_index[]=DBManagerFactory::getInstance()->add_drop_constraint($table_name, $var_i_def);
+            $add_index[] = DBManagerFactory::getInstance()->addDropConstraint($table_name, $var_i_def);
             continue;
         }
         if (!$field_list_match) {
             //drop the db index and create new index based on vardef
-            $drop_index[]=DBManagerFactory::getInstance()->add_drop_constraint($table_name, $sel_db_index, true);
-            $add_index[]=DBManagerFactory::getInstance()->add_drop_constraint($table_name, $var_i_def);
+            $drop_index[] = DBManagerFactory::getInstance()->addDropConstraint($table_name, $sel_db_index, true);
+            $add_index[] = DBManagerFactory::getInstance()->addDropConstraint($table_name, $var_i_def);
             continue;
         }
         //check for name match.
         //it should not occur for indexes of type primary or unique.
-        if ($var_i_def['type'] != 'primary' && $var_i_def['type'] != 'unique' && $var_i_def['name'] != $sel_db_index['name']) {
+        if ($var_i_def['type'] !== 'primary' && $var_i_def['type'] !== 'unique' && $var_i_def['name'] != $sel_db_index['name']) {
             //rename index.
             $rename=DBManagerFactory::getInstance()->renameIndexDefs($sel_db_index, $var_i_def, $table_name);
             if (is_array($rename)) {
@@ -102,14 +102,14 @@ function compare($table_name, $db_indexes, $var_indexes)
         }
     }
 }
-////	END LOCAL UTILITY
+////    END LOCAL UTILITY
 ///////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PROCESS
+////    PROCESS
 if (!is_admin($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 set_time_limit(3600);
 /**
@@ -130,9 +130,9 @@ $db = &DBManagerFactory::getInstance();
 $processed_tables=array();
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PROCESS MODULE BEANS
-(function_exists('logThis')) ? logThis("found ".count($beanFiles)." Beans to process") : "";
-(function_exists('logThis')) ? logThis("found ".count($dictionary)." Dictionary entries to process") : "";
+////    PROCESS MODULE BEANS
+(function_exists('logThis')) ? logThis('found ' .count($beanFiles). ' Beans to process') : '';
+(function_exists('logThis')) ? logThis('found ' .count($dictionary). ' Dictionary entries to process') : '';
 
 foreach ($beanFiles as $beanname=>$beanpath) {
     require_once($beanpath);
@@ -156,7 +156,7 @@ foreach ($beanFiles as $beanname=>$beanpath) {
     $var_indices=array();
     foreach ($indices as $definition) {
         //database helpers do not know how to handle full text indices
-        if ($definition['type']=='fulltext') {
+        if ($definition['type'] === 'fulltext') {
             continue;
         }
 
@@ -168,12 +168,12 @@ foreach ($beanFiles as $beanname=>$beanpath) {
     $db_indices=$focus->db->get_indices($focus->table_name);
     compare($focus->table_name, $db_indices, $var_indices);
 }
-////	END PROCESS MODULE BEANS
+////    END PROCESS MODULE BEANS
 ///////////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PROCESS RELATIONSHIP METADATA - run thru many to many relationship files too...
+////    PROCESS RELATIONSHIP METADATA - run thru many to many relationship files too...
 include('modules/TableDictionary.php');
 foreach ($dictionary as $rel=>$rel_def) {
     if (!empty($rel_def['indices'])) {
@@ -195,73 +195,73 @@ foreach ($dictionary as $rel=>$rel_def) {
 
     compare($rel_def['table'], $db_indices, $var_indices);
 }
-////	END PROCESS RELATIONSHIP METADATA
+////    END PROCESS RELATIONSHIP METADATA
 ///////////////////////////////////////////////////////////////////////////////
 
 
-(function_exists('logThis')) ? logThis("RepairIndex: we have ".count($drop_index)." indices to DROP.") : "";
-(function_exists('logThis')) ? logThis("RepairIndex: we have ".count($add_index)." indices to ADD.") : "";
-(function_exists('logThis')) ? logThis("RepairIndex: we have ".count($change_index)." indices to CHANGE.") : "";
+(function_exists('logThis')) ? logThis('RepairIndex: we have ' .count($drop_index). ' indices to DROP.') : '';
+(function_exists('logThis')) ? logThis('RepairIndex: we have ' .count($add_index). ' indices to ADD.') : '';
+(function_exists('logThis')) ? logThis('RepairIndex: we have ' .count($change_index). ' indices to CHANGE.') : '';
 
 if ((count($drop_index) > 0 || count($add_index) > 0 || count($change_index) > 0)) {
-    if (!isset($_REQUEST['mode']) || $_REQUEST['mode'] != 'execute') {
-        echo ($_REQUEST['silent']) ? "" : "<BR><BR><BR>";
-        echo ($_REQUEST['silent']) ? "" : "<a href='index.php?module=Administration&action=RepairIndex&mode=execute'>Execute Script</a>";
+    if (!isset($_REQUEST['mode']) || $_REQUEST['mode'] !== 'execute') {
+        echo ($_REQUEST['silent']) ? '' : '<BR><BR><BR>';
+        echo ($_REQUEST['silent']) ? '' : "<a href='index.php?module=Administration&action=RepairIndex&mode=execute'>Execute Script</a>";
     }
 
     $focus = BeanFactory::newBean('Accounts');
     if (count($drop_index) > 0) {
-        if (isset($_REQUEST['mode']) && $_REQUEST['mode']=='execute') {
-            echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_DROPPING'];
+        if (isset($_REQUEST['mode']) && $_REQUEST['mode'] === 'execute') {
+            echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_DROPPING'];
             foreach ($drop_index as $statement) {
-                echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_EXECUTING'].$statement;
-                (function_exists('logThis')) ? logThis("RepairIndex: {$statement}") : "";
+                echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_EXECUTING'].$statement;
+                (function_exists('logThis')) ? logThis("RepairIndex: {$statement}") : '';
                 $focus->db->query($statement);
             }
         } else {
-            echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_DROP'];
+            echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_DROP'];
             foreach ($drop_index as $statement) {
-                echo ($_REQUEST['silent']) ? "" : "<BR>".$statement.";";
+                echo ($_REQUEST['silent']) ? '' : '<BR>' .$statement. ';';
             }
         }
     }
 
     if (count($add_index) > 0) {
-        if (isset($_REQUEST['mode']) && $_REQUEST['mode']=='execute') {
-            echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_ADDING'];
+        if (isset($_REQUEST['mode']) && $_REQUEST['mode'] === 'execute') {
+            echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_ADDING'];
             foreach ($add_index as $statement) {
-                echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_EXECUTING'].$statement;
-                (function_exists('logThis')) ? logThis("RepairIndex: {$statement}") : "";
+                echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_EXECUTING'].$statement;
+                (function_exists('logThis')) ? logThis("RepairIndex: {$statement}") : '';
                 $focus->db->query($statement);
             }
         } else {
-            echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_ADD'];
+            echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_ADD'];
             foreach ($add_index as $statement) {
-                echo ($_REQUEST['silent']) ? "" : "<BR>".$statement.";";
+                echo ($_REQUEST['silent']) ? '' : '<BR>' .$statement. ';';
             }
         }
     }
     if (count($change_index) > 0) {
-        if (isset($_REQUEST['mode']) && $_REQUEST['mode']=='execute') {
-            echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_ALTERING'];
+        if (isset($_REQUEST['mode']) && $_REQUEST['mode'] === 'execute') {
+            echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_ALTERING'];
             foreach ($change_index as $statement) {
-                echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_EXECUTING'].$statement;
-                (function_exists('logThis')) ? logThis("RepairIndex: {$statement}") : "";
+                echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_EXECUTING'].$statement;
+                (function_exists('logThis')) ? logThis("RepairIndex: {$statement}") : '';
                 $focus->db->query($statement);
             }
         } else {
-            echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_ALTER'];
+            echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_ALTER'];
             foreach ($change_index as $statement) {
-                echo ($_REQUEST['silent']) ? "" : "<BR>".$statement.";";
+                echo ($_REQUEST['silent']) ? '' : '<BR>' .$statement. ';';
             }
         }
     }
 
-    if (!isset($_REQUEST['mode']) || $_REQUEST['mode'] != 'execute') {
-        echo ($_REQUEST['silent']) ? "" : "<BR><BR><BR>";
-        echo ($_REQUEST['silent']) ? "" : "<a href='index.php?module=Administration&action=RepairIndex&mode=execute'>Execute Script</a>";
+    if (!isset($_REQUEST['mode']) || $_REQUEST['mode'] !== 'execute') {
+        echo ($_REQUEST['silent']) ? '' : '<BR><BR><BR>';
+        echo ($_REQUEST['silent']) ? '' : "<a href='index.php?module=Administration&action=RepairIndex&mode=execute'>Execute Script</a>";
     }
 } else {
-    (function_exists('logThis')) ? logThis("RepairIndex: Index definitions are in sync.") : "";
-    echo ($_REQUEST['silent']) ? "" : $mod_strings['LBL_REPAIR_INDEX_SYNC'];
+    (function_exists('logThis')) ? logThis('RepairIndex: Index definitions are in sync.') : '';
+    echo ($_REQUEST['silent']) ? '' : $mod_strings['LBL_REPAIR_INDEX_SYNC'];
 }

@@ -52,13 +52,16 @@ class SugarWidgetTabs
     public $tabs;
     public $current_key;
 
-    public function __construct(&$tabs, $current_key, $jscallback)
+    public function __construct($tabs, $current_key, $jscallback)
     {
         $this->tabs = $tabs;
         $this->current_key = $current_key;
         $this->jscallback = $jscallback;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display()
     {
         $template = new Sugar_Smarty();

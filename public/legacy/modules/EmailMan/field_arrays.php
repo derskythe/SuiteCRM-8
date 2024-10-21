@@ -49,26 +49,28 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 $fields_array['EmailMan'] = array('column_fields' => array(
-        "id"
-        , "date_entered"
-        , "date_modified"
-        , 'user_id'
-        , 'module'
-        , 'module_id'
-        , 'marketing_id'
-        , 'campaign_id'
-        , 'list_id'
-        , 'template_id'
-        , 'from_email'
-        , 'from_name'
-        , 'invalid_email'
-        , 'send_date_time'
-        , 'in_queue'
-        , 'in_queue_date'
-        ,'send_attempts'
+    'id'
+    ,
+    'date_entered'
+    ,
+    'date_modified'
+    , 'user_id'
+    , 'module'
+    , 'module_id'
+    , 'marketing_id'
+    , 'campaign_id'
+    , 'list_id'
+    , 'template_id'
+    , 'from_email'
+    , 'from_name'
+    , 'invalid_email'
+    , 'send_date_time'
+    , 'in_queue'
+    , 'in_queue_date'
+    , 'send_attempts'
         ),
         'list_fields' =>  array(
-        "id"
+            'id'
         , 'user_id'
         , 'module'
         , 'module_id'

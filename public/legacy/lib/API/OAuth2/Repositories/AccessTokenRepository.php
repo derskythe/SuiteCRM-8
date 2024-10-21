@@ -50,8 +50,10 @@ use SuiteCRM\API\OAuth2\Entities\AccessTokenEntity;
 class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public const ACCESS_TOKEN_FIELD = 'access_token';
+
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
@@ -77,6 +79,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     public function revokeAccessToken($tokenId)
     {
@@ -98,6 +101,8 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     /**
      * {@inheritdoc}
      * @return bool
+     * @throws \Exception
+     * @throws \DateMalformedStringException
      */
     public function isAccessTokenRevoked($tokenId)
     {

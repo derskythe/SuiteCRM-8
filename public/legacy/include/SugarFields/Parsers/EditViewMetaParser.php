@@ -57,24 +57,25 @@ class EditViewMetaParser extends MetaParser
     public function __construct()
     {
         $this->mView = 'EditView';
+        parent::__construct();
     }
-
-
 
 
     /**
      * parse
      *
-     * @param string $filePath The file path of the HTML file to parse
-     * @param array $vardefs The module's vardefs
-     * @param string $moduleDir The module's directory
-     * @param boolean $merge  value indicating whether or not to merge the parsed contents
-     * @param array|null $masterCopy The file path of the mater copy of the metadata file to merge against
+     * @param string $filePath      The file path of the HTML file to parse
+     * @param array $vardefs        The module's vardefs
+     * @param string $moduleDir     The module's directory
+     * @param boolean $merge        value indicating whether or not to merge the parsed contents
+     * @param bool|null $masterCopy The file path of the mater copy of the metadata file to merge against
+     *
      * @return string format of metadata contents
-     **/
-    public function parse($filePath, $vardefs = array(), $moduleDir = '', $merge=false, $masterCopy=null)
+     */
+    public function parse(string $filePath, array $vardefs = array(), string $moduleDir = '', bool $merge=false, bool $masterCopy=null) : string
     {
         global $app_strings;
+        parent::parse($filePath, $vardefs, $moduleDir, $merge, $masterCopy);
         $contents = file_get_contents($filePath);
         $contents = $this->trimHTML($contents);
         $contents = $this->stripFlavorTags($contents);
@@ -83,14 +84,14 @@ class EditViewMetaParser extends MetaParser
         $contents = $this->fixDuplicateTrTags($contents);
         $contents = $this->fixRowsWithMissingTr($contents);
 
-        $tables = $this->getElementsByType("table", $contents);
+        $tables = $this->getElementsByType('table', $contents);
         $formElements = $this->getFormElements($tables[0]);
         $hiddenInputs = array();
         foreach ($formElements as $elem) {
-            $type = $this->getTagAttribute("type", $elem);
+            $type = $this->getTagAttribute('type', $elem);
             if (preg_match('/hidden/si', $type)) {
-                $name = $this->getTagAttribute("name", $elem);
-                $value = $this->getTagAttribute("value", $elem);
+                $name = $this->getTagAttribute('name', $elem);
+                $value = $this->getTagAttribute('value', $elem);
                 $hiddenInputs[$name] = $value;
             }
         }
@@ -104,13 +105,13 @@ class EditViewMetaParser extends MetaParser
         $tableCount = 0;
         foreach ($tables as $table) {
             $table = $this->fixTablesWithMissingTr($table);
-            $toptr = $this->getElementsByType("tr", $table);
+            $toptr = $this->getElementsByType('tr', $table);
             foreach ($toptr as $tr) {
-                $tabledata = $this->getElementsByType("table", $tr);
+                $tabledata = $this->getElementsByType('table', $tr);
                 $data = array();
-                $panelKey = $tableCount == 0 ? "default" : '';
+                $panelKey = $tableCount == 0 ? 'default' : '';
                 foreach ($tabledata as $t) {
-                    $vals = array_values($this->getElementsByType("tr", $t));
+                    $vals = array_values($this->getElementsByType('tr', $t));
                     if (preg_match_all('/<h4[^>]*?>.*?(\{MOD\.|\{APP\.)(LBL_[^\}]*?)[\}].*?<\/h4>/s', $vals[0], $matches, PREG_SET_ORDER)) {
                         array_shift($vals);
                         $panelKey = count($matches[0]) == 3 ? strtolower($matches[0][2]) : $panelKey;
@@ -132,7 +133,7 @@ class EditViewMetaParser extends MetaParser
 
        foreach ($tablerows as $trow) {
            $emptyCount = 0;
-           $tablecolumns = $this->getElementsByType("td", $trow);
+           $tablecolumns = $this->getElementsByType('td', $trow);
            $col = array();
            $slot = 0;
 
@@ -140,11 +141,11 @@ class EditViewMetaParser extends MetaParser
                $hasRequiredLabel = false;
 
                //Get the sugar attribute value in the span elements of each table row
-               $sugarAttrLabel = $this->getTagAttribute("sugar", $tcols, "'^slot[^b]+$'");
+               $sugarAttrLabel = $this->getTagAttribute('sugar', $tcols, "'^slot[^b]+$'");
 
                //If there was no sugar attribute, try id (some versions of EditView.html used this instead)
                if (empty($sugarAttrLabel)) {
-                   $sugarAttrLabel = $this->getTagAttribute("id", $tcols, "'^slot[^b]+$'");
+                   $sugarAttrLabel = $this->getTagAttribute('id', $tcols, "'^slot[^b]+$'");
                }
 
                //Check if this field is required
@@ -152,11 +153,11 @@ class EditViewMetaParser extends MetaParser
                    $hasRequiredLabel = $this->hasRequiredSpanLabel($tcols);
                }
 
-               $sugarAttrValue = $this->getTagAttribute("sugar", $tcols, "'slot[0-9]+b$'");
+               $sugarAttrValue = $this->getTagAttribute('sugar', $tcols, "'slot[0-9]+b$'");
 
                //If there was no sugar attribute, try id (some versions of EditView.html used this instead)
                if (empty($sugarAttrValue)) {
-                   $sugarAttrValue = $this->getTagAttribute("id", $tcols, "'slot[0-9]+b$'");
+                   $sugarAttrValue = $this->getTagAttribute('id', $tcols, "'slot[0-9]+b$'");
                }
 
                // If there wasn't any slot numbering/lettering then just default to expect label->vallue pairs
@@ -168,14 +169,14 @@ class EditViewMetaParser extends MetaParser
                $slot++;
 
                if ($sugarAttrValue) {
-                   $spanValue = $this->getElementValue("span", $tcols);
+                   $spanValue = $this->getElementValue('span', $tcols);
 
                    if (empty($spanValue)) {
-                       $spanValue = $this->getElementValue("slot", $tcols);
+                       $spanValue = $this->getElementValue('slot', $tcols);
                    }
 
                    if (empty($spanValue)) {
-                       $spanValue = $this->getElementValue("td", $tcols);
+                       $spanValue = $this->getElementValue('td', $tcols);
                    }
 
                    //Get all the editable form elements' names
@@ -201,7 +202,7 @@ class EditViewMetaParser extends MetaParser
                                $name = $matches[0][1];
                                $customCode = $spanValue;
                                foreach ($matches as $pair) {
-                                   if (preg_match("/^(mod[\.]|app[\.]).*?/i", $pair[1])) {
+                                   if (preg_match('/^(mod[\.]|app[\.]).*?/i', $pair[1])) {
                                        $customCode = str_replace($pair[1], '$'.strtoupper($pair[1]), $customCode);
                                    } else {
                                        if (!empty($vardefs[$pair[1]])) {
@@ -215,7 +216,7 @@ class EditViewMetaParser extends MetaParser
                                } //foreach
                            } else {
                                //If it is only a label, skip
-                               if (preg_match("/^(mod[\.]|app[\.]).*?/i", $matches[0][1])) {
+                               if (preg_match('/^(mod[\.]|app[\.]).*?/i', $matches[0][1])) {
                                    continue;
                                }
                                $name = strtolower($matches[0][1]);
@@ -261,11 +262,11 @@ class EditViewMetaParser extends MetaParser
                    }
 
                    // Build the entry
-                   if (preg_match("/<textarea/si", $spanValue)) {
+                   if (preg_match('/<textarea/si', $spanValue)) {
                        //special case for textarea form elements (add the displayParams)
                        $displayParams = array();
-                       $displayParams['rows'] = $this->getTagAttribute("rows", $spanValue);
-                       $displayParams['cols'] = $this->getTagAttribute("cols", $spanValue);
+                       $displayParams['rows'] = $this->getTagAttribute('rows', $spanValue);
+                       $displayParams['cols'] = $this->getTagAttribute('cols', $spanValue);
 
                        if (!empty($displayParams['rows']) && !empty($displayParams['cols'])) {
                            $field = array();

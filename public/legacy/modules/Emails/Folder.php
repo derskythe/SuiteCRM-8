@@ -85,7 +85,7 @@ class Folder
     {
         $this->db = DBManagerFactory::getInstance();
         $this->id = null;
-        $this->type = "inbound";
+        $this->type = 'inbound';
     }
 
     /**
@@ -114,7 +114,7 @@ class Folder
                 $this->mailbox = $row['name'];
             }
         } else {
-            throw new SuiteException("Invalid or empty Email Folder ID");
+            throw new SuiteException('Invalid or empty Email Folder ID');
         }
 
         return $this->id;
@@ -132,7 +132,7 @@ class Folder
             $this->retrieve($foldersId);
             $_SESSION['CURRENT_IMAP_MAILBOX_ID'] = $request['folders_id'];
         } else {
-            $GLOBALS['log']->warn("Empty or undefined Email Folder ID");
+            $GLOBALS['log']->warn('Empty or undefined Email Folder ID');
         }
 
         return $this;
@@ -168,7 +168,7 @@ class Folder
         }
 
         $_SESSION['CURRENT_IMAP_MAILBOX_ID'] = '';
-        $GLOBALS['log']->warn("Empty or undefined Email Folder ID");
+        $GLOBALS['log']->warn('Empty or undefined Email Folder ID');
     }
 
     /**

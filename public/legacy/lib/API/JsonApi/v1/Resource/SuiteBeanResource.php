@@ -198,10 +198,12 @@ class SuiteBeanResource extends Resource
 
     /**
      * SugarBean will save try to save the SugarBean and update any relationships which have a data key
+     *
      * @return \SugarBean
      * @throws BadRequestException
      * @throws ApiException
-     * @throws ConflictException
+     * @throws ConflictException*@throws \Exception
+     * @throws \Exception
      */
     public function toSugarBean()
     {
@@ -234,7 +236,7 @@ class SuiteBeanResource extends Resource
             }
 
             // Skip the reserved keywords which can be safely skipped
-            if (in_array($fieldName, self::$JSON_API_SKIP_RESERVED_KEYWORDS)) {
+            if (in_array($fieldName, self::$JSON_API_SKIP_RESERVED_KEYWORDS, true)) {
                 $exception = new ReservedKeywordNotAllowedException();
                 $logMessage =
                     ' Code: [' . $exception->getCode() . ']' .
@@ -432,7 +434,7 @@ class SuiteBeanResource extends Resource
      * @throws BadRequestException
      * @throws ConflictException
      */
-    public function fromJsonApiRequest(array $data, $source = ResourceEnum::DEFAULT_SOURCE)
+    public function fromJsonApiRequest(array $data, $source = ResourceEnum::DEFAULT_SOURCE) : ?Resource
     {
         return $this->fromResource(parent::fromJsonApiRequest($data, $source));
     }
@@ -456,7 +458,7 @@ class SuiteBeanResource extends Resource
      * @param Relationship $relationship
      * @return SuiteBeanResource
      */
-    public function withRelationship(\SuiteCRM\API\JsonApi\v1\Resource\Relationship $relationship)
+    public function withRelationship(\SuiteCRM\API\JsonApi\v1\Resource\Relationship $relationship) : ?ResourceIdentifier
     {
         $relationshipName = $relationship->getRelationshipName();
         $this->relationships[$relationshipName]['data'] = $relationship->toJsonApiResponse();
@@ -511,9 +513,13 @@ class SuiteBeanResource extends Resource
 
     /**
      * POST to upload a base64 encoded file. Expects the file to be assigned to {field}_file attribute
+     *
      * @param \SugarBean $bean
      * @param string $fieldName
+     *
      * @return \SugarBean
+     * @throws \Exception
+     * @throws \Exception
      */
     private function saveFileToBean(\SugarBean $bean, $fieldName)
     {

@@ -59,20 +59,20 @@ if (isset($_REQUEST['record']) && !empty($_REQUEST['record'])) {
     $focus->retrieve($_REQUEST['record']);
 }
 
-if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-    $focus->id = "";
+if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
+    $focus->id = '';
 }
 $GLOBALS['log']->info('EmailTemplate detail view');
 
 ///////////////////////////////////////////////////////////////////////////////
-////	OUTPUT
+////    OUTPUT
 echo insert_popup_header();
 echo getClassicModuleTitle($mod_strings['LBL_MODULE_NAME'], array($mod_strings['LBL_SIGNATURE'].' '.$focus->name), true);
 
 $xtpl = new XTemplate('modules/Users/UserSignatureEditView.html');
 $xtpl->assign('MOD', $mod_strings);
 $xtpl->assign('APP', $app_strings);
-    
+
 $xtpl->assign('CANCEL_SCRIPT', 'window.close()');
 
 if (isset($_REQUEST['return_module'])) {
@@ -99,7 +99,7 @@ if (isset($_REQUEST['the_user_id'])) {
     $xtpl->assign('THE_USER_ID', $_REQUEST['the_user_id']);
 }
 $tiny = new SugarTinyMCE();
-$xtpl->assign("tinyjs", $tiny->getInstance('sigText'));
+$xtpl->assign('tinyjs', $tiny->getInstance('sigText'));
 
 $xtpl->parse('main.textarea');
 

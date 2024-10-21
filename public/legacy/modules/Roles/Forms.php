@@ -61,14 +61,14 @@ function get_validate_record_js()
 
 <script type="text/javascript" language="Javascript">
 function verify_data(form) {
-	var isError = false;
-	var errorMessage = "";
+    var isError = false;
+    var errorMessage = "";
 
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
-	return true;
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
+    return true;
 }
 </script>
 
@@ -87,22 +87,22 @@ function get_chooser_js()
 function set_chooser()
 {
 
-	var display_tabs_def = '';
-	var hide_tabs_def = '';
-		
-	for(i=0; i < object_refs['display_tabs'].options.length ;i++)
-	{
-		display_tabs_def += object_refs['display_tabs'].options[i].value+":::";
-	}
+    var display_tabs_def = '';
+    var hide_tabs_def = '';
 
-	for(i=0; i < object_refs['hide_tabs'].options.length ;i++)
-	{
-		hide_tabs_def += object_refs['hide_tabs'].options[i].value+":::";
-	}
+    for(i=0; i < object_refs['display_tabs'].options.length ;i++)
+    {
+        display_tabs_def += object_refs['display_tabs'].options[i].value+":::";
+    }
+
+    for(i=0; i < object_refs['hide_tabs'].options.length ;i++)
+    {
+        hide_tabs_def += object_refs['hide_tabs'].options[i].value+":::";
+    }
 
 
-	document.EditView.display_tabs_def.value = display_tabs_def;
-	document.EditView.hide_tabs_def.value = hide_tabs_def;
+    document.EditView.display_tabs_def.value = display_tabs_def;
+    document.EditView.hide_tabs_def.value = hide_tabs_def;
 
 
 }

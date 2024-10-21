@@ -46,12 +46,12 @@ $GLOBALS['studioReadOnlyFields'] = array('date_entered'=>1, 'date_modified'=>1, 
 class TemplateField
 {
     /*
-    	The view is the context this field will be used in
-    	-edit
-    	-list
-    	-detail
-    	-search
-    	*/
+        The view is the context this field will be used in
+        -edit
+        -list
+        -detail
+        -search
+        */
     public $view = 'edit';
     public $name = '';
     public $vname = '';
@@ -88,8 +88,8 @@ class TemplateField
         'default_value'=>'default',
         'default'=>'default_value',
         'display_default'=>'default_value',
-    //		'default_value'=>'default_value',
-    //		'default'=>'default_value',
+    //        'default_value'=>'default_value',
+    //        'default'=>'default_value',
         'len'=>'len',
         'required'=>'required',
         'type'=>'type',
@@ -120,8 +120,8 @@ class TemplateField
     }
 
     /*
-    	HTML FUNCTIONS
-    	*/
+        HTML FUNCTIONS
+        */
     public function get_html()
     {
         $view = $this->view;
@@ -164,14 +164,14 @@ class TemplateField
     }
     public function get_html_label()
     {
-        $label =  "{MOD." .$this->vname . "}";
+        $label =  '{MOD.' .$this->vname . '}';
         if (!empty($GLOBALS['app_strings'][$this->vname])) {
-            $label = "{APP." .$this->label . "}";
+            $label = '{APP.' .$this->label . '}';
         }
-        if ($this->view == 'edit' && $this->is_required()) {
+        if ($this->view === 'edit' && $this->is_required()) {
             $label .= '<span class="required">*</span>';
         }
-        if ($this->view == 'list') {
+        if ($this->view === 'list') {
             if (isset($this->bean)) {
                 if (!empty($this->id)) {
                     $name = $this->bean->table_name . '_cstm.'. $this->name;
@@ -184,14 +184,14 @@ class TemplateField
                 $name = $this->name;
                 $arrow = $name;
             }
-            $label = "<a href='{ORDER_BY}$name' class='listViewThLinkS1'>{MOD.$this->label}{arrow_start}{".$arrow."_arrow}{arrow_end}</a>";
+            $label = "<a href='{ORDER_BY}$name' class='listViewThLinkS1'>{MOD.$this->label}{arrow_start}{".$arrow. '_arrow}{arrow_end}</a>';
         }
         return $label;
     }
 
     /*
-    	XTPL FUNCTIONS
-    	*/
+        XTPL FUNCTIONS
+        */
 
     public function get_xtpl($bean = false)
     {
@@ -243,8 +243,8 @@ class TemplateField
 
 
     /*
-    	DB FUNCTIONS
-    	*/
+        DB FUNCTIONS
+        */
 
     public function get_db_type()
     {
@@ -254,7 +254,7 @@ class TemplateField
         if (!empty($type)) {
             return " $type";
         }
-        $type = DBManagerFactory::getInstance()->getColumnType("varchar");
+        $type = DBManagerFactory::getInstance()->getColumnType('varchar');
         return " $type({$this->len})";
     }
 
@@ -264,7 +264,7 @@ class TemplateField
         if (!$modify || empty($this->new_field_definition['default_value']) || $this->new_field_definition['default_value'] != $this->default_value) {
             if (!is_null($this->default_value)) { // add a default value if it is not null - we want to set a default even if default_value is '0', which is not null, but which is empty()
                 if (null == trim($this->default_value)) {
-                    return " DEFAULT NULL";
+                    return ' DEFAULT NULL';
                 } else {
                     return " DEFAULT '$this->default_value'";
                 }
@@ -284,21 +284,21 @@ class TemplateField
 
     public function get_db_required($modify=false)
     {
-        //		$GLOBALS['log']->debug('get_db_required required='.$this->required." and ".(($modify)?"true":"false")." and ".print_r($this->new_field_definition,true));
-        $req = "";
+        //        $GLOBALS['log']->debug('get_db_required required='.$this->required." and ".(($modify)?"true":"false")." and ".print_r($this->new_field_definition,true));
+        $req = '';
 
         if ($modify) {
             if (!empty($this->new_field_definition['required'])) {
                 if ($this->required && $this->new_field_definition['required'] != $this->required) {
-                    $req = " NULL ";
+                    $req = ' NULL ';
                 }
             } else {
-                $req = ($this->required) ? " NOT NULL " : ''; // bug 17184 tyoung - set required correctly when modifying custom field in Studio
+                $req = ($this->required) ? ' NOT NULL ' : ''; // bug 17184 tyoung - set required correctly when modifying custom field in Studio
             }
         } else {
             if (empty($this->new_field_definition['required']) || $this->new_field_definition['required'] != $this->required) {
                 if (!empty($this->required) && $this->required) {
-                    $req = " NOT NULL";
+                    $req = ' NOT NULL';
                 }
             }
         }
@@ -306,24 +306,24 @@ class TemplateField
         return $req;
     }
 
-    /*	function get_db_required($modify=false){
-    	$GLOBALS['log']->debug('get_db_required required='.$this->required." and ".(($modify)?"true":"false")." and ".print_r($this->new_field_definition,true));
-    	if ($modify) {
-    	if (!empty($this->new_field_definition['required'])) {
-    	if ($this->required and $this->new_field_definition['required'] != $this->required) {
-    	return " null ";
-    	}
-    	return "";
-    	}
-    	}
-    	if (empty($this->new_field_definition['required']) or $this->new_field_definition['required'] != $this->required ) {
-    	if(!empty($this->required) && $this->required){
-    	return " NOT NULL";
-    	}
-    	}
-    	return '';
-    	}
-    	*/
+    /*    function get_db_required($modify=false){
+        $GLOBALS['log']->debug('get_db_required required='.$this->required." and ".(($modify)?"true":"false")." and ".print_r($this->new_field_definition,true));
+        if ($modify) {
+        if (!empty($this->new_field_definition['required'])) {
+        if ($this->required and $this->new_field_definition['required'] != $this->required) {
+        return " null ";
+        }
+        return "";
+        }
+        }
+        if (empty($this->new_field_definition['required']) or $this->new_field_definition['required'] != $this->required ) {
+        if(!empty($this->required) && $this->required){
+        return " NOT NULL";
+        }
+        }
+        return '';
+        }
+        */
     /**
      * Oracle Support: do not set required constraint if no default value is supplied.
      * In this case the default value will be handled by the application/sugarbean.
@@ -374,7 +374,7 @@ class TemplateField
             'inline_edit'=>$this->convertBooleanValue($this->inline_edit),
             'reportable'=>$this->convertBooleanValue($this->reportable),
             'unified_search'=>$this->convertBooleanValue($this->unified_search),
-            'merge_filter' => empty($this->merge_filter) ? "disabled" : $this->merge_filter
+            'merge_filter' => empty($this->merge_filter) ? 'disabled' : $this->merge_filter
         );
         if (isset($this->full_text_search)) {
             $array['full_text_search'] = $this->full_text_search;
@@ -461,7 +461,7 @@ class TemplateField
                 $this->duplicate_merge_dom_value = 1;
             }
         } else {
-            if ($this->merge_filter === "selected") {
+            if ($this->merge_filter === 'selected') {
                 $this->duplicate_merge_dom_value = 3;
             } else {
                 if (empty($this->duplicate_merge) || $this->duplicate_merge === 'disabled') {
@@ -476,8 +476,8 @@ class TemplateField
     }
 
     /*
-    	HELPER FUNCTIONS
-    	*/
+        HELPER FUNCTIONS
+        */
 
 
     public function prepare()
@@ -497,7 +497,7 @@ class TemplateField
         $fmd_to_dyn_map = array('comments' => 'comment', 'require_option' => 'required', 'label' => 'vname',
                                 'mass_update' => 'massupdate', 'max_size' => 'len', 'default_value' => 'default', 'id_name' => 'ext3');
         if (!is_array($row)) {
-            $GLOBALS['log']->error("Error: TemplateField->populateFromRow expecting Array");
+            $GLOBALS['log']->error('Error: TemplateField->populateFromRow expecting Array');
         }
         //Bug 24189: Copy fields from FMD format to Field objects and vice versa
         foreach ($fmd_to_dyn_map as $fmd_key => $dyn_key) {
@@ -508,7 +508,7 @@ class TemplateField
                 $this->$dyn_key = $row[$fmd_key];
             }
         }
-        foreach ($row as	$key=>$value) {
+        foreach ($row as    $key=>$value) {
             $this->$key = $value;
         }
     }
@@ -521,13 +521,13 @@ class TemplateField
 
                 //  Bug #48826. Some fields are allowed to have special characters and must be decoded from the request
                 // Bug 49774, 49775: Strip html tags from 'formula' and 'dependency'.
-                if (is_string($this->$vardef) && in_array($vardef, $this->decode_from_request_fields_map)) {
+                if (is_string($this->$vardef) && in_array($vardef, $this->decode_from_request_fields_map, true)) {
                     $this->$vardef = html_entity_decode(strip_tags(from_html($this->$vardef)));
                 }
 
 
                 //Remove potential xss code from help field
-                if ($field == 'help' && !empty($this->$vardef)) {
+                if ($field === 'help' && !empty($this->$vardef)) {
                     $help = htmlspecialchars_decode((string) $this->$vardef, ENT_QUOTES);
 
                     // Fix for issue #1170 - text in studio can't accept the special language characters.
@@ -591,7 +591,7 @@ class TemplateField
      */
     public function save($df)
     {
-        //	    $GLOBALS['log']->debug('saving field: '.print_r($this,true));
+        //        $GLOBALS['log']->debug('saving field: '.print_r($this,true));
         $df->addFieldObject($this);
 
         require_once('modules/ModuleBuilder/parsers/parser.searchfields.php');

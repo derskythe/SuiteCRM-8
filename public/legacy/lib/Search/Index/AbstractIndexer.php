@@ -43,6 +43,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+use Psr\Log\LoggerInterface;
 use InvalidArgumentException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -72,8 +73,10 @@ abstract class AbstractIndexer
     protected $documentifier = null;
     /** @var string[] The modules that have to be indexed */
     protected $modulesToIndex = null;
-    /** @var Logger Monolog instance to log on a separate file */
-    protected $logger;
+    /**
+     * @var LoggerInterface|null Monolog instance to log on a separate file
+     */
+    protected LoggerInterface|null $logger;
     /** @var string where the log files are going to be stored */
     protected $logFile = 'search_index.log';
 
@@ -242,6 +245,8 @@ abstract class AbstractIndexer
      * Overrides the list of modules that have to be indexed for the next indexing runs.
      *
      * @param string[] $modules
+     *
+     * @throws \JsonException
      */
     public function setModulesToIndex(array $modules)
     {
@@ -273,7 +278,7 @@ abstract class AbstractIndexer
             return;
         }
 
-        throw new InvalidArgumentException("Wrong type provided to AddModulesToIndex");
+        throw new InvalidArgumentException('Wrong type provided to AddModulesToIndex');
     }
 
     /**

@@ -85,13 +85,13 @@ $novalidate_cert    = '';
 $useSsl                = false;
 
 ///////////////////////////////////////////////////////////////////////////////
-////	TITLES
+////    TITLES
 
 $popupBoolean = false;
-if (isset($_REQUEST['target']) && $_REQUEST['target'] == 'Popup') {
+if (isset($_REQUEST['target']) && $_REQUEST['target'] === 'Popup') {
     $popupBoolean = true;
 }
-if (isset($_REQUEST['target1']) && $_REQUEST['target1'] == 'Popup') {
+if (isset($_REQUEST['target1']) && $_REQUEST['target1'] === 'Popup') {
     $popupBoolean = true;
 }
 
@@ -100,7 +100,7 @@ if ($popupBoolean) {
     $msg = $mod_strings['LBL_TEST_WAIT_MESSAGE'];
 }
 
-if (isset($_REQUEST['ssl']) && ($_REQUEST['ssl'] == "true" || $_REQUEST['ssl'] == 1)) {
+if (isset($_REQUEST['ssl']) && ($_REQUEST['ssl'] === 'true' || $_REQUEST['ssl'] == 1)) {
     $msg .= $mod_strings['LBL_FIND_SSL_WARN'];
     $useSsl = true;
 }
@@ -138,11 +138,11 @@ if ($popupBoolean) {
     $msg = $ie->connectMailserver(true);
 }
 
-////	END TITLES
+////    END TITLES
 ///////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	COMMON CODE
+////    COMMON CODE
 echo /*'
 <HTML>
     <HEAD>
@@ -158,40 +158,40 @@ echo /*'
 
     </HEAD>
     <body style="margin: 10px">*/'
-	<p>
-		<table width="100%" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<td>
-					'.SugarThemeRegistry::current()->getImage('h3Arrow', 'border="0"', 11, 11, ".gif", $mod_strings['LBL_POPUP_TITLE']).'
-				</td>
-				<td>
-					<h3>&nbsp;'.$title.'</h3>
-				</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td valign="top">
-					<div id="testSettingsMsg">
-					'.$msg.'
-					</div>
-					<div id="testSettingsTic"></div>
-					<div id="testSettingsErr">'.$iniError.'</div>
-				</td>
-			</tr>';
+    <p>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+                <td>
+                    '.SugarThemeRegistry::current()->getImage('h3Arrow', 'border="0"', 11, 11, '.gif', $mod_strings['LBL_POPUP_TITLE']).'
+                </td>
+                <td>
+                    <h3>&nbsp;'.$title.'</h3>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td valign="top">
+                    <div id="testSettingsMsg">
+                    '.$msg.'
+                    </div>
+                    <div id="testSettingsTic"></div>
+                    <div id="testSettingsErr">'.$iniError.'</div>
+                </td>
+            </tr>';
 
 if ($popupBoolean) {
-    /*	echo '	<tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr>
-    				<td></td>
-    				<td>
-    					<form name="form">
-    					<input name="close" type="button" title="'.$mod_strings['LBL_CLOSE_POPUP'].'"  value="    '.$mod_strings['LBL_CLOSE_POPUP'].'    " onClick="window.close()">
-    					</form>
-    				</td>
-    			</tr>';*/
+    /*    echo '    <tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr>
+                    <td></td>
+                    <td>
+                        <form name="form">
+                        <input name="close" type="button" title="'.$mod_strings['LBL_CLOSE_POPUP'].'"  value="    '.$mod_strings['LBL_CLOSE_POPUP'].'    " onClick="window.close()">
+                        </form>
+                    </td>
+                </tr>';*/
 }
 
-echo '	</table>';
+echo '    </table>';
 
 
-////	END COMMON CODE
+////    END COMMON CODE
 ///////////////////////////////////////////////////////////////////////////////

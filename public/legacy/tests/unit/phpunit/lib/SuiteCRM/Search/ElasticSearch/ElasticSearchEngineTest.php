@@ -54,8 +54,8 @@ class ElasticSearchEngineTest extends SearchTestAbstract
     public function testValidateQuery(): void
     {
         $engine = new ElasticSearchEngine();
-        $str = " test AND test2 OR t-test3 ";
-        $exp = "test AND test2 OR t-test3";
+        $str = ' test AND test2 OR t-test3 ';
+        $exp = 'test AND test2 OR t-test3';
         $query = SearchQuery::fromString($str);
 
         $this->invokeMethod($engine, 'validateQuery', [&$query]);
@@ -66,7 +66,7 @@ class ElasticSearchEngineTest extends SearchTestAbstract
     public function testCreateSearchParams1(): void
     {
         $engine = new ElasticSearchEngine();
-        $searchString = "hello search*";
+        $searchString = 'hello search*';
         $size = 30;
         $from = 5;
 
@@ -98,7 +98,7 @@ class ElasticSearchEngineTest extends SearchTestAbstract
     public function testCreateSearchParams2(): void
     {
         $engine = new ElasticSearchEngine();
-        $searchString = "test*";
+        $searchString = 'test*';
         $size = 30;
 
         $query = SearchQuery::fromString($searchString, $size);
@@ -128,7 +128,7 @@ class ElasticSearchEngineTest extends SearchTestAbstract
 
     public function testRunElasticSearch(): void
     {
-        $query = SearchQuery::fromString("a");
+        $query = SearchQuery::fromString('a');
 
         $mockedResults = $this->getMockedHits();
 
@@ -246,9 +246,9 @@ class ElasticSearchEngineTest extends SearchTestAbstract
                     'failed' => 0,
                 ],
             'hits' => [
-                "total" => 0,
-                "max_score" => null,
-                "hits" => [],
+                'total'     => 0,
+                'max_score' => null,
+                'hits'      => [],
             ]
         ];
     }

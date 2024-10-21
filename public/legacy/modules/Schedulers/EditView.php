@@ -47,7 +47,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 global $current_user;
 if (!is_admin($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 
 $_REQUEST['edit']='true';
@@ -67,15 +67,15 @@ $mod_strings = return_module_language($current_language, 'Schedulers');
 $focus = BeanFactory::newBean('Schedulers');
 $focus->checkCurl();
 if (isset($_REQUEST['record'])) {
-    $GLOBALS['log']->debug("In Scheduler edit view, about to retrieve record: ".$_REQUEST['record']);
+    $GLOBALS['log']->debug('In Scheduler edit view, about to retrieve record: ' . $_REQUEST['record']);
     $result = $focus->retrieve($_REQUEST['record']);
     if ($result == null) {
         sugar_die($app_strings['ERROR_NO_RECORD']);
     }
 }
-if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-    $GLOBALS['log']->debug("isDuplicate found - duplicating record of id: ".$focus->id);
-    $focus->id = "";
+if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
+    $GLOBALS['log']->debug('isDuplicate found - duplicating record of id: ' .$focus->id);
+    $focus->id = '';
 }
 
 
@@ -88,9 +88,9 @@ if (empty($focus->id)) {
     $params[] = "<a href='index.php?module=Schedulers&action=DetailView&record={$focus->id}'>{$focus->name}</a>";
     $params[] = $GLOBALS['app_strings']['LBL_EDIT_BUTTON_LABEL'];
 }
-echo getClassicModuleTitle("Schedulers", $params, true);
+echo getClassicModuleTitle('Schedulers', $params, true);
 
-$GLOBALS['log']->info("Scheduler Edit View");
+$GLOBALS['log']->info('Scheduler Edit View');
 /* End standard EditView setup logic */
 
 // javascript calls
@@ -113,7 +113,7 @@ $javascript->addToValidateBinaryDependency('time_minute_from', 'alpha', 'Active 
 $dtStart = $focus->date_time_start;
 $dtEnd = $focus->date_time_end;
 if (!empty($dtStart)) {
-    $exStart = explode(" ", $dtStart);
+    $exStart = explode(' ', $dtStart);
     $date_start = $exStart[0];
     $time_start = $exStart[1];
 } else {
@@ -122,8 +122,8 @@ if (!empty($dtStart)) {
     $time_start = '';
 }
 
-if (!empty($dtEnd) && $dtEnd != '2020-12-31 23:59') {
-    $exEnd = explode(" ", $dtEnd);
+if (!empty($dtEnd) && $dtEnd !== '2020-12-31 23:59') {
+    $exEnd = explode(' ', $dtEnd);
     $date_end = $exEnd[0];
     $time_end = $exEnd[1];
 } else {
@@ -157,10 +157,10 @@ if (is_array($job_strings) && !empty($job_strings)) {
     $job_function = "<option value=''>--</option>";
     foreach ($job_strings as $k => $function) {
         $job_function .= "<option value='function::".$function."'";
-        if ($focus->job === "function::".$function) {
-            $job_function .= " SELECTED ";
+        if ($focus->job === 'function::' .$function) {
+            $job_function .= ' SELECTED ';
         }
-        $job_function .= ">".$mod_strings['LBL_'.strtoupper($function)]."</option>";
+        $job_function .= '>' . $mod_strings['LBL_'.strtoupper($function)]. '</option>';
     }
 }
 
@@ -170,9 +170,9 @@ if (empty($time_meridiem_start)) {
 }
 
 for ($i = $start_at; $i < $num_of_hours; $i ++) {
-    $i = $i."";
+    $i = $i. '';
     if (strlen($i) == 1) {
-        $i = "0".$i;
+        $i = '0' .$i;
     }
     $hours_arr[$i] = $i;
 }
@@ -189,7 +189,7 @@ $mins_arr_unreq[''] = '--';
 
 // explode crontab notation
 if (!empty($focus->job_interval)) {
-    $exInterval = explode("::", $focus->job_interval);
+    $exInterval = explode('::', $focus->job_interval);
 } else {
     $exInterval = array('*','*','*','*','*');
 }
@@ -200,7 +200,7 @@ if (!empty($focus->job_interval)) {
 $xtpl = new XTemplate('modules/Schedulers/EditView.html');
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PARSING FOR BASIC SETUP
+////    PARSING FOR BASIC SETUP
 // Days of the week
 $xtpl->assign('USE_ADV_BOOL', 'false');
 $xtDays = array(1 => 'MON',
@@ -211,15 +211,15 @@ $xtDays = array(1 => 'MON',
                 6 => 'SAT',
                 0 => 'SUN');
 
-if ($exInterval[4] == '*') {
-    $xtpl->assign('ALL', "CHECKED");
-    $xtpl->assign('MON', "CHECKED");
-    $xtpl->assign('TUE', "CHECKED");
-    $xtpl->assign('WED', "CHECKED");
-    $xtpl->assign('THU', "CHECKED");
-    $xtpl->assign('FRI', "CHECKED");
-    $xtpl->assign('SAT', "CHECKED");
-    $xtpl->assign('SUN', "CHECKED");
+if ($exInterval[4] === '*') {
+    $xtpl->assign('ALL', 'CHECKED');
+    $xtpl->assign('MON', 'CHECKED');
+    $xtpl->assign('TUE', 'CHECKED');
+    $xtpl->assign('WED', 'CHECKED');
+    $xtpl->assign('THU', 'CHECKED');
+    $xtpl->assign('FRI', 'CHECKED');
+    $xtpl->assign('SAT', 'CHECKED');
+    $xtpl->assign('SUN', 'CHECKED');
 } elseif (strpos($exInterval[4], ',')) {
     $daysRun = array();
     $exDays = explode(',', trim($exInterval[4]));
@@ -227,19 +227,19 @@ if ($exInterval[4] == '*') {
         if (strpos($days, '-')) {
             $exDaysRange = explode('-', $days);
             for ($i=$exDaysRange[0]; $i<=$exDaysRange[1]; $i++) {
-                $xtpl->assign($xtDays[$days], "CHECKED");
+                $xtpl->assign($xtDays[$days], 'CHECKED');
             }
         } else {
-            $xtpl->assign($xtDays[$days], "CHECKED");
+            $xtpl->assign($xtDays[$days], 'CHECKED');
         }
     }
 } elseif (strpos($exInterval[4], '-')) {
     $exDaysRange = explode('-', $exInterval[4]);
     for ($i=$exDaysRange[0]; $i<=$exDaysRange[1]; $i++) {
-        $xtpl->assign($xtDays[$i], "CHECKED");
+        $xtpl->assign($xtDays[$i], 'CHECKED');
     }
 } else {
-    $xtpl->assign($xtDays[$exInterval[4]], "CHECKED");
+    $xtpl->assign($xtDays[$exInterval[4]], 'CHECKED');
 }
 
 // Hours
@@ -247,17 +247,17 @@ for ($i=1; $i<=30; $i++) {
     $ints[$i] = $i;
 }
 $use_adv = false;
-if ($exInterval[0] == '*' && $exInterval[1] == '*') {
+if ($exInterval[0] === '*' && $exInterval[1] === '*') {
     $xtpl->assign('BASIC_INTERVAL', get_select_options_with_id($ints, '1'));
     $xtpl->assign('BASIC_PERIOD', get_select_options_with_id($app_list_strings['scheduler_period_dom'], 'min'));
 // hours
-} elseif (strpos($exInterval[1], '*/') !== false && $exInterval[0] == '0') {
+} elseif (str_contains($exInterval[1], '*/') && $exInterval[0] == '0') {
     // we have a "BASIC" type of hour setting
     $exHours = explode('/', $exInterval[1]);
     $xtpl->assign('BASIC_INTERVAL', get_select_options_with_id($ints, $exHours[1]));
     $xtpl->assign('BASIC_PERIOD', get_select_options_with_id($app_list_strings['scheduler_period_dom'], 'hour'));
 // Minutes
-} elseif (strpos($exInterval[0], '*/') !== false && $exInterval[1] == '*') {
+} elseif (str_contains($exInterval[0], '*/') && $exInterval[1] === '*') {
     // we have a "BASIC" type of min setting
     $exMins = explode('/', $exInterval[0]);
     $xtpl->assign('BASIC_INTERVAL', get_select_options_with_id($ints, $exMins[1]));
@@ -273,7 +273,7 @@ if ($exInterval[0] == '*' && $exInterval[1] == '*') {
 
 
 
-////	END PARSING FOR BASIC
+////    END PARSING FOR BASIC
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -325,7 +325,7 @@ if ($focus->catch_up == 1) {
     $xtpl->assign('CATCH_UP_CHECKED', 'CHECKED');
 }
 // job
-if (strstr((string) $focus->job, 'url::')) {
+if (str_contains((string) $focus->job, 'url::')) {
     $job_url = str_replace('url::', '', (string) $focus->job);
 } else {
     $job_url = 'http://';
@@ -346,10 +346,10 @@ $xtpl->assign('MONTHS', $exInterval[3]);
 $xtpl->assign('DAY_OF_WEEK', $exInterval[4]);
 $xtpl->assign('ROLLOVER', $email->rolloverStyle);
 
-$xtpl->assign('SERVER_TIMEZONE', date("T"));
-$xtpl->assign('SERVER_OFFSET', date("O"));
+$xtpl->assign('SERVER_TIMEZONE', date('T'));
+$xtpl->assign('SERVER_OFFSET', date('O'));
 
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->parse('main');
+$xtpl->out('main');
 
 //$focus->displayCronInstructions();

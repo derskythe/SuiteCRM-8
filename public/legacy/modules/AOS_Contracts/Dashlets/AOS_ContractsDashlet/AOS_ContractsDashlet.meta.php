@@ -34,10 +34,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
- 
+
 global $app_strings;
 
-$dashletMeta['AOS_ContractsDashlet'] = array('module'		=> 'AOS_Contracts',
+$dashletMeta['AOS_ContractsDashlet'] = array('module'        => 'AOS_Contracts',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'AOS_Contracts'),
                                           'description' => 'A customizable view into AOS_Contracts',
                                           'icon'        => 'icon_AOS_Contracts_32.gif',

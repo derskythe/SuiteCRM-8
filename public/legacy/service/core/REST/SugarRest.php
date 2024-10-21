@@ -82,7 +82,7 @@ if (!defined('sugarEntry')) {
                  echo '<pre>';
                  $reflect = new ReflectionClass(get_class($this->implementation));
                  $restWSDL = (string)$reflect;
-                 $restWSDL = preg_replace('/@@.*/', "", $restWSDL);
+                 $restWSDL = preg_replace('/@@.*/', '', $restWSDL);
                  echo $restWSDL;
              } else {
                  $er = new SoapError();

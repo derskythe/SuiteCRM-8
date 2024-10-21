@@ -43,6 +43,9 @@ require_once('modules/ModuleBuilder/MB/AjaxCompose.php');
 #[\AllowDynamicProperties]
 class ViewDisplaydeploy extends SugarView
 {
+    /**
+     * @throws SmartyException
+     */
     public function __construct()
     {
         $smarty = new Sugar_Smarty();
@@ -62,7 +65,7 @@ class ViewDisplaydeploy extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 

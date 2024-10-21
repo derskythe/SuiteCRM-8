@@ -112,7 +112,7 @@ class SugarAutoLoader
             $class = substr((string) $class, strlen((string) $module));
         }
 
-        if (substr((string) $class, 0, 4) == 'View') {
+        if (str_starts_with((string) $class, 'View')) {
             $view = strtolower(substr((string) $class, 4));
             if ($module) {
                 $modulepath = "modules/$module/views/view.$view.php";
@@ -151,8 +151,8 @@ class SugarAutoLoader
     protected static function getFilenameForSugarWidget($class)
     {
         //Only bother to check if the class name starts with SugarWidget
-        if (strpos((string) $class, 'SugarWidget') !== false) {
-            if (strpos((string) $class, 'SugarWidgetField') !== false) {
+        if (str_contains((string) $class, 'SugarWidget')) {
+            if (str_contains((string) $class, 'SugarWidgetField')) {
                 //We need to lowercase the portion after SugarWidgetField
                 $name = substr((string) $class, 16);
                 if (!empty($name)) {

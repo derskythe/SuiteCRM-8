@@ -32,7 +32,7 @@ class delete_project_tasks
     {
         $db = DBManagerFactory::getInstance();
         $Task = BeanFactory::getBean('ProjectTask');
-        $tasks = $Task->get_full_list("order_number", "project_task.project_id = '".$bean->id."'");
+        $tasks = $Task->get_full_list('order_number', "project_task.project_id = '".$bean->id."'");
 
         foreach ($tasks as $task) {
             $query = "UPDATE project_task SET deleted ='1' WHERE id ='".$task->id."'";

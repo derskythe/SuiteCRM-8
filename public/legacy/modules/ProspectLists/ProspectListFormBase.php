@@ -75,16 +75,16 @@ class ProspectListFormBase
 
         $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
         $the_form .= <<<EOQ
-		<form name="{$prefix}ProspectListSave" onSubmit="return check_form('{$prefix}ProspectListSave');" method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="ProspectLists">
-			<input type="hidden" name="{$prefix}action" value="Save">
-			<input type="hidden" name="assigned_user_id" value='{$user_id}'>
+        <form name="{$prefix}ProspectListSave" onSubmit="return check_form('{$prefix}ProspectListSave');" method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="ProspectLists">
+            <input type="hidden" name="{$prefix}action" value="Save">
+            <input type="hidden" name="assigned_user_id" value='{$user_id}'>
 EOQ;
 
-        $the_form .= $this->getFormBody($prefix, $mod, $prefix."ProspectListSave");
+        $the_form .= $this->getFormBody($prefix, $mod, $prefix. 'ProspectListSave');
         $the_form .= <<<EOQ
-		<p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
-		</form>
+        <p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
+        </form>
 
 EOQ;
 
@@ -121,11 +121,11 @@ EOQ;
         $lbl_list_type = $mod_strings['LBL_LIST_TYPE'];
 
         $form = <<<EOQ
-			<p><input type="hidden" name="record" value="">
-			$lbl_prospect_list_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
-			<input name='name' type="text" value=""><br>
-			$lbl_list_type&nbsp;<span class="required">$lbl_required_symbol</span><br>
-			<select name="list_type">$list_options</select></p>
+            <p><input type="hidden" name="record" value="">
+            $lbl_prospect_list_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
+            <input name='name' type="text" value=""><br>
+            $lbl_list_type&nbsp;<span class="required">$lbl_required_symbol</span><br>
+            <select name="list_type">$list_options</select></p>
 EOQ;
 
 
@@ -139,6 +139,9 @@ EOQ;
         return $form;
     }
 
+    /**
+     * @throws Exception
+     */
     public function handleSave($prefix, $redirect=true, $useRequired=false)
     {
         require_once('include/formbase.php');
@@ -162,8 +165,8 @@ EOQ;
 
         $return_id = $focus->save();
         if ($redirect) {
-            $GLOBALS['log']->debug("Saved record with id of ".$return_id);
-            handleRedirect($return_id, "ProspectLists");
+            $GLOBALS['log']->debug('Saved record with id of ' .$return_id);
+            handleRedirect($return_id, 'ProspectLists');
         } else {
             return $focus;
         }

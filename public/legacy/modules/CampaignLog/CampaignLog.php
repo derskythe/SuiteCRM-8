@@ -45,22 +45,22 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class CampaignLog extends SugarBean
 {
-    public $table_name = 'campaign_log';
-    public $object_name = 'CampaignLog';
-    public $module_dir = 'CampaignLog';
+    public string $table_name = 'campaign_log';
+    public string $object_name = 'CampaignLog';
+    public string $module_dir = 'CampaignLog';
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     public $campaign_id;
     public $target_tracker_key;
     public $target_id;
     public $target_type;
-    public $date_modified;
+    public string $date_modified;
     public $activity_type;
     public $activity_date;
     public $related_id;
     public $related_type;
-    public $deleted;
+    public int $deleted;
     public $list_id;
     public $hits;
     public $more_information;
@@ -88,17 +88,17 @@ class CampaignLog extends SugarBean
 
         $table = strtolower($temp_array['TARGET_TYPE']);
 
-        if ($temp_array['TARGET_TYPE']=='Accounts') {
+        if ($temp_array['TARGET_TYPE'] === 'Accounts') {
             $query = "select name from $table where id = ".$this->db->quoted($temp_array['TARGET_ID']);
         } else {
-            $query = "select first_name, last_name, ".$this->db->concat($table, array('first_name', 'last_name'))." name from $table" .
-                " where id = ".$this->db->quoted($temp_array['TARGET_ID']);
+            $query = 'select first_name, last_name, ' .$this->db->concat($table, array( 'first_name', 'last_name'))." name from $table" .
+                ' where id = ' .$this->db->quoted($temp_array['TARGET_ID']);
         }
         $result=$this->db->query($query);
         $row=$this->db->fetchByAssoc($result);
 
         if ($row) {
-            if ($temp_array['TARGET_TYPE']=='Accounts') {
+            if ($temp_array['TARGET_TYPE'] === 'Accounts') {
                 $temp_array['RECIPIENT_NAME']=$row['name'];
             } else {
                 $full_name = $locale->getLocaleFormattedName($row['first_name'], $row['last_name'], '');
@@ -122,13 +122,13 @@ class CampaignLog extends SugarBean
     {
         $return_str = '';
         if (!empty($trgt_id)) {
-            $qry  = " select eabr.primary_address, ea.email_address";
-            $qry .= " from email_addresses ea ";
-            $qry .= " Left Join email_addr_bean_rel eabr on eabr.email_address_id = ea.id ";
+            $qry  = ' select eabr.primary_address, ea.email_address';
+            $qry .= ' from email_addresses ea ';
+            $qry .= ' Left Join email_addr_bean_rel eabr on eabr.email_address_id = ea.id ';
             $qry .= " where eabr.bean_id = '{$trgt_id}' ";
-            $qry .= " and ea.deleted = 0 ";
-            $qry .= " and eabr.deleted = 0" ;
-            $qry .= " order by primary_address desc ";
+            $qry .= ' and ea.deleted = 0 ';
+            $qry .= ' and eabr.deleted = 0';
+            $qry .= ' order by primary_address desc ';
 
             $result=$this->db->query($qry);
             $row=$this->db->fetchByAssoc($result);
@@ -148,7 +148,7 @@ class CampaignLog extends SugarBean
     {
         global $locale;
         $db= DBManagerFactory::getInstance();
-        if ($related_type == 'Emails') {
+        if ($related_type === 'Emails') {
             $query="SELECT name from emails where id='$related_id'";
             $result=$db->query($query);
             $row=$db->fetchByAssoc($result);
@@ -156,7 +156,7 @@ class CampaignLog extends SugarBean
                 return $row['name'];
             }
         }
-        if ($related_type == 'Contacts') {
+        if ($related_type === 'Contacts') {
             $query="SELECT first_name, last_name from contacts where id='$related_id'";
             $result=$db->query($query);
             $row=$db->fetchByAssoc($result);
@@ -164,7 +164,7 @@ class CampaignLog extends SugarBean
                 return $full_name = $locale->getLocaleFormattedName($row['first_name'], $row['last_name']);
             }
         }
-        if ($related_type == 'Leads') {
+        if ($related_type === 'Leads') {
             $query="SELECT first_name, last_name from leads where id='$related_id'";
             $result=$db->query($query);
             $row=$db->fetchByAssoc($result);
@@ -172,7 +172,7 @@ class CampaignLog extends SugarBean
                 return $full_name = $locale->getLocaleFormattedName($row['first_name'], $row['last_name']);
             }
         }
-        if ($related_type == 'Prospects') {
+        if ($related_type === 'Prospects') {
             $query="SELECT first_name, last_name from prospects where id='$related_id'";
             $result=$db->query($query);
             $row=$db->fetchByAssoc($result);
@@ -180,7 +180,7 @@ class CampaignLog extends SugarBean
                 return $full_name = $locale->getLocaleFormattedName($row['first_name'], $row['last_name']);
             }
         }
-        if ($related_type == 'CampaignTrackers') {
+        if ($related_type === 'CampaignTrackers') {
             $query="SELECT tracker_url from campaign_trkrs where id='$related_id'";
             $result=$db->query($query);
             $row=$db->fetchByAssoc($result);
@@ -188,7 +188,7 @@ class CampaignLog extends SugarBean
                 return $row['tracker_url'] ;
             }
         }
-        if ($related_type == 'Accounts') {
+        if ($related_type === 'Accounts') {
             $query="SELECT name from accounts where id='$related_id'";
             $result=$db->query($query);
             $row=$db->fetchByAssoc($result);

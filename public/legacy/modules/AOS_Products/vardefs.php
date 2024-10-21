@@ -297,7 +297,7 @@ $dictionary['AOS_Products'] = array(
                 'reportable' => false,
                 'comment' => 'Path to file (can be URL)'
             ),
-        "aos_product_category" => array(
+        'aos_product_category' => array(
             'name' => 'aos_product_category',
             'type' => 'link',
             'relationship' => 'product_categories',
@@ -328,7 +328,7 @@ $dictionary['AOS_Products'] = array(
             'quicksearch' => 'enabled',
             'studio' => 'visible',
         ),
-        "aos_product_category_id" => array(
+        'aos_product_category_id' => array(
             'name' => 'aos_product_category_id',
             'type' => 'id',
             'reportable' => false,
@@ -336,7 +336,7 @@ $dictionary['AOS_Products'] = array(
         ),
     ),
     'relationships' => array(
-        "product_categories" => array(
+        'product_categories' => array(
             'lhs_module' => 'AOS_Product_Categories',
             'lhs_table' => 'aos_product_categories',
             'lhs_key' => 'id',

@@ -51,10 +51,10 @@ class hooks{
             LoggerManager::getLogger()->warn('Not defined action in request');
         }
 
-        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'DetailView') {
-            include("modules/Connectors/connectors/sources/ext/rest/facebook/mapping.php");
-            if (file_exists("custom/modules/Connectors/connectors/sources/ext/rest/facebook/mapping.php")) {
-                include("custom/modules/Connectors/connectors/sources/ext/rest/facebook/mapping.php");
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'DetailView') {
+            include('modules/Connectors/connectors/sources/ext/rest/facebook/mapping.php');
+            if (file_exists('custom/modules/Connectors/connectors/sources/ext/rest/facebook/mapping.php')) {
+                include('custom/modules/Connectors/connectors/sources/ext/rest/facebook/mapping.php');
             }
             if (array_key_exists($_REQUEST['module'], $mapping['beans'])) {
                 echo '<script src="include/social/facebook/facebook_subpanel.js"></script>';
@@ -64,9 +64,9 @@ class hooks{
 
             $mapping = '';
             include('modules/Connectors/connectors/sources/ext/rest/twitter/mapping.php');
-	    if (file_exists("custom/modules/Connectors/connectors/sources/ext/rest/twitter/mapping.php")) {
-	        include("custom/modules/Connectors/connectors/sources/ext/rest/twitter/mapping.php");
-	    }
+            if (file_exists('custom/modules/Connectors/connectors/sources/ext/rest/twitter/mapping.php')) {
+                include('custom/modules/Connectors/connectors/sources/ext/rest/twitter/mapping.php');
+        }
             if(array_key_exists($_REQUEST['module'], $mapping['beans'])){
                echo '<script src="include/social/twitter/twitter_feed.js"></script>';
                echo '<script src="include/social/twitter/twitter.js"></script>';
@@ -75,4 +75,3 @@ class hooks{
     }
 
 }
-

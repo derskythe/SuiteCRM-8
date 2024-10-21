@@ -51,20 +51,20 @@ class TeamDemoData
     public $_large_scale_test;
 
     public $guids = array(
-        'jim'	=> 'seed_jim_id',
-        'sarah'	=> 'seed_sarah_id',
-        'sally'	=> 'seed_sally_id',
-        'max'	=> 'seed_max_id',
-        'will'	=> 'seed_will_id',
-        'chris'	=> 'seed_chris_id',
+        'jim'    => 'seed_jim_id',
+        'sarah'    => 'seed_sarah_id',
+        'sally'    => 'seed_sally_id',
+        'max'    => 'seed_max_id',
+        'will'    => 'seed_will_id',
+        'chris'    => 'seed_chris_id',
     /*
      * Pending fix of demo data mechanism
-        'jim'	=> 'jim00000-0000-0000-0000-000000000000',
-        'sarah'	=> 'sarah000-0000-0000-0000-000000000000',
-        'sally'	=> 'sally000-0000-0000-0000-000000000000',
-        'max'	=> 'max00000-0000-0000-0000-000000000000',
-        'will'	=> 'will0000-0000-0000-0000-000000000000',
-        'chris'	=> 'chris000-0000-0000-0000-000000000000',
+        'jim'    => 'jim00000-0000-0000-0000-000000000000',
+        'sarah'    => 'sarah000-0000-0000-0000-000000000000',
+        'sally'    => 'sally000-0000-0000-0000-000000000000',
+        'max'    => 'max00000-0000-0000-0000-000000000000',
+        'will'    => 'will0000-0000-0000-0000-000000000000',
+        'chris'    => 'chris000-0000-0000-0000-000000000000',
     */
     );
 
@@ -103,14 +103,14 @@ class TeamDemoData
     public function add_users_to_team()
     {
         // Create the west team memberships
-        $this->_team->retrieve("West");
+        $this->_team->retrieve('West');
         $this->_team->add_user_to_team($this->guids['sarah']);
         $this->_team->add_user_to_team($this->guids['sally']);
-        $this->_team->add_user_to_team($this->guids["max"]);
+        $this->_team->add_user_to_team($this->guids['max']);
 
         // Create the east team memberships
-        $this->_team->retrieve("East");
-        $this->_team->add_user_to_team($this->guids["will"]);
+        $this->_team->retrieve('East');
+        $this->_team->add_user_to_team($this->guids['will']);
         $this->_team->add_user_to_team($this->guids['chris']);
     }
 
@@ -145,12 +145,12 @@ class TeamDemoData
     public function _seed_data_get_teamset_list()
     {
         $teamsets = array();
-        $teamsets[] = array("East", "West");
-        $teamsets[] = array("East", "West", "1");
-        $teamsets[] = array("West", "East");
-        $teamsets[] = array("West", "East", "1");
-        $teamsets[] = array("1", "East");
-        $teamsets[] = array("1", "West");
+        $teamsets[] = array( 'East', 'West' );
+        $teamsets[] = array( 'East', 'West', '1' );
+        $teamsets[] = array( 'West', 'East' );
+        $teamsets[] = array( 'West', 'East', '1' );
+        $teamsets[] = array( '1', 'East' );
+        $teamsets[] = array( '1', 'West' );
         return $teamsets;
     }
 
@@ -162,23 +162,23 @@ class TeamDemoData
     {
         $teams = array();
         //bug 28138 todo
-        $teams[] = "north";
-        $teams[] = "south";
-        $teams[] = "left";
-        $teams[] = "right";
-        $teams[] = "in";
-        $teams[] = "out";
-        $teams[] = "fly";
-        $teams[] = "walk";
-        $teams[] = "crawl";
-        $teams[] = "pivot";
-        $teams[] = "money";
-        $teams[] = "dinero";
-        $teams[] = "shadow";
-        $teams[] = "roof";
-        $teams[] = "sales";
-        $teams[] = "pillow";
-        $teams[] = "feather";
+        $teams[] = 'north';
+        $teams[] = 'south';
+        $teams[] = 'left';
+        $teams[] = 'right';
+        $teams[] = 'in';
+        $teams[] = 'out';
+        $teams[] = 'fly';
+        $teams[] = 'walk';
+        $teams[] = 'crawl';
+        $teams[] = 'pivot';
+        $teams[] = 'money';
+        $teams[] = 'dinero';
+        $teams[] = 'shadow';
+        $teams[] = 'roof';
+        $teams[] = 'sales';
+        $teams[] = 'pillow';
+        $teams[] = 'feather';
 
         return $teams;
     }

@@ -41,7 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-$layout_defs["AM_ProjectTemplates"] = array(
+$layout_defs['AM_ProjectTemplates'] = array(
     'subpanel_setup' => array(
         'am_tasktemplates_am_projecttemplates' =>
             array(
@@ -122,7 +122,7 @@ $layout_defs["AM_ProjectTemplates"] = array(
 
             )
         ),
-        
+
 
 
 

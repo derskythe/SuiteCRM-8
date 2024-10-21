@@ -108,14 +108,14 @@ $title = getClassicModuleTitle('ACLRoles', $params, true);
 $sugarSmarty->assign('TITLE', $title);
 
 $actionButtons = [
-    "<input title=" . $app_strings['LBL_SAVE_BUTTON_TITLE'] . " id='save_button'
-		accessKey=" . $app_strings['LBL_SAVE_BUTTON_KEY'] . " class='button primary'
-		onclick=\"this.form.action.value='Save';return check_form('EditView');\"
-		type='submit' name='button' value=" . $app_strings['LBL_SAVE_BUTTON_LABEL'] . " >",
-    "<input title=" . $app_strings['LBL_CANCEL_BUTTON_TITLE'] . "
-		class='button cancel_button' accessKey=" . $app_strings['LBL_CANCEL_BUTTON_KEY'] . "
-		type='submit' name='save' value=" . $app_strings['LBL_CANCEL_BUTTON_LABEL'] . "
-		onclick=\"document.EditView.action.value='" . $return['action'] . "';document.EditView.module.value='" .
+    '<input title=' . $app_strings['LBL_SAVE_BUTTON_TITLE'] . " id='save_button'
+        accessKey=" . $app_strings['LBL_SAVE_BUTTON_KEY'] . " class='button primary'
+        onclick=\"this.form.action.value='Save';return check_form('EditView');\"
+        type='submit' name='button' value=" . $app_strings['LBL_SAVE_BUTTON_LABEL'] . ' >',
+    '<input title=' . $app_strings['LBL_CANCEL_BUTTON_TITLE'] . "
+        class='button cancel_button' accessKey=" . $app_strings['LBL_CANCEL_BUTTON_KEY'] . "
+        type='submit' name='save' value=" . $app_strings['LBL_CANCEL_BUTTON_LABEL'] . "
+        onclick=\"document.EditView.action.value='" . $return['action'] . "';document.EditView.module.value='" .
     $return['module'] . "';document.EditView.record.value='" . $return['record'] . "';document.EditView.submit();\">",
 ];
 

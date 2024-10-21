@@ -306,7 +306,7 @@ class DeployedMetaDataImplementation extends AbstractMetaDataImplementation impl
             $this->_history->append($this->_sourceFilename);
         }
 
-        $GLOBALS ['log']->debug(get_class($this) . "->save(): writing to " . $this->getFileName(
+        $GLOBALS ['log']->debug(get_class($this) . '->save(): writing to ' . $this->getFileName(
             $this->_view,
             $this->_moduleName,
             null,
@@ -345,7 +345,7 @@ class DeployedMetaDataImplementation extends AbstractMetaDataImplementation impl
             unlink($this->getFileName($this->_view, $this->_moduleName, null, MB_WORKINGMETADATALOCATION));
         }
         $filename = $this->getFileName($this->_view, $this->_moduleName, null, MB_CUSTOMMETADATALOCATION);
-        $GLOBALS ['log']->debug(get_class($this) . "->deploy(): writing to " . $filename);
+        $GLOBALS ['log']->debug(get_class($this) . '->deploy(): writing to ' . $filename);
         $this->_saveToFile($filename, $layoutDefinitions);
         $this->addInsights($filename, $this->_moduleName, $this->_view);
 
@@ -357,11 +357,15 @@ class DeployedMetaDataImplementation extends AbstractMetaDataImplementation impl
     /**
      * Construct a full pathname for the requested metadata
      * Can be called statically
-     * @param string $view The view type, that is, EditView, DetailView etc
+     *
+     * @param string $view       The view type, that is, EditView, DetailView etc
      * @param string $moduleName The name of the module that will use this layout
      * @param string $packageName
      * @param string $type
+     *
      * @return string
+     * @throws Exception
+     * @throws Exception
      */
     public function getFileName($view, $moduleName, $packageName, $type = MB_CUSTOMMETADATALOCATION)
     {
@@ -415,10 +419,10 @@ class DeployedMetaDataImplementation extends AbstractMetaDataImplementation impl
     private function replaceVariables($defs, $module)
     {
         $var_values = array(
-            "<object_name>" => $module->seed->object_name,
-            "<_object_name>" => strtolower($module->seed->object_name),
-            "<OBJECT_NAME>" => strtoupper($module->seed->object_name),
-            "<module_name>" => $module->seed->module_dir,
+            '<object_name>'  => $module->seed->object_name,
+            '<_object_name>' => strtolower($module->seed->object_name),
+            '<OBJECT_NAME>'  => strtoupper($module->seed->object_name),
+            '<module_name>'  => $module->seed->module_dir,
             '<_module_name>' => strtolower($module->seed->module_dir)
         );
 

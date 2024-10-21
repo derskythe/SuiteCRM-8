@@ -247,15 +247,15 @@ r22618 - 2007-05-09 15:36:06 -0700 (Wed, 09 May 2007) - clee - Added file.
  * ...
  * $viewdefs['Accounts']['EditView'] = array(
  * 'templateMeta' => array(
- *	'form' => array('buttons'=>array('SAVE',
- *	                                 array('customCode'=>'<input title="{$APP.LBL_CLOSE_AND_CREATE_BUTTON_TITLE}" ' .
- *	                                 		'                    accessKey="{$APP.LBL_CLOSE_AND_CREATE_BUTTON_KEY}" ' .
- *	                                 		'                    class="button" ' .
- *	                                 		'					 onclick="alert(\'hello {$id} \')"; ' .
- *	                                 		'                    type="submit" ' .
- *	                                 		'                    name="button" ' .
- *	                                 		'                    value="{$APP.LBL_CLOSE_AND_CREATE_BUTTON_LABEL}">')
- *	                                 )),
+ *    'form' => array('buttons'=>array('SAVE',
+ *                                     array('customCode'=>'<input title="{$APP.LBL_CLOSE_AND_CREATE_BUTTON_TITLE}" ' .
+ *                                             '                    accessKey="{$APP.LBL_CLOSE_AND_CREATE_BUTTON_KEY}" ' .
+ *                                             '                    class="button" ' .
+ *                                             '                     onclick="alert(\'hello {$id} \')"; ' .
+ *                                             '                    type="submit" ' .
+ *                                             '                    name="button" ' .
+ *                                             '                    value="{$APP.LBL_CLOSE_AND_CREATE_BUTTON_LABEL}">')
+ *                                     )),
  * ...
  *
  * Please note that you should ensure that your customCode is generic in the sense that there are no
@@ -279,20 +279,22 @@ r22618 - 2007-05-09 15:36:06 -0700 (Wed, 09 May 2007) - clee - Added file.
  * @param $params The runtime Smarty key/value arguments
  * @param $smarty The reference to the Smarty object used in this invocation
  */
-function smarty_function_sugar_button($params, &$smarty)
+function smarty_function_sugar_button($params, $smarty)
 {
     if (empty($params['module'])) {
-        $smarty->trigger_error("sugar_button: missing required param (module)");
+        $smarty->trigger_error('sugar_button: missing required param (module)');
     } elseif (empty($params['id'])) {
-        $smarty->trigger_error("sugar_button: missing required param (id)");
+        $smarty->trigger_error('sugar_button: missing required param (id)');
     } elseif (empty($params['view'])) {
-        $smarty->trigger_error("sugar_button: missing required param (view)");
+        $smarty->trigger_error('sugar_button: missing required param (view)');
     }
 
-    $js_form = (empty($params['form_id'])) ? "var _form = (this.form) ? this.form : document.forms[0];" : "var _form = document.getElementById('{$params['form_id']}');";
+    $js_form =
+        (empty($params['form_id'])) ? 'var _form = (this.form) ? this.form : document.forms[0];'
+            : "var _form = document.getElementById('{$params['form_id']}');";
 
     $type = $params['id'] ?? '';
-    $location = (empty($params['location'])) ? "" : "_".$params['location'];
+    $location = (empty($params['location'])) ? '' : '_' . $params['location'];
 
     $formName = $params['form_id'] ?? '';
 
@@ -302,11 +304,11 @@ function smarty_function_sugar_button($params, &$smarty)
         $module = $params['module'];
         $view = $params['view'];
         switch (strtoupper($type)) {
-            case "SEARCH":
+            case 'SEARCH':
                 $output = '<input tabindex="2" title="{$APP.LBL_SEARCH_BUTTON_TITLE}" onclick="SUGAR.savedViews.setChooser();" class="button" type="submit" name="button" value="{$APP.LBL_SEARCH_BUTTON_LABEL}" id="search_form_submit"/>&nbsp;';
             break;
 
-            case "CANCEL":
+            case 'CANCEL':
 
                 //If the return action is not empty and the return action is detail view and the id is not empty
                 $cancelButton  = '{if !empty($smarty.request.return_action) && ($smarty.request.return_action == "DetailView" && !empty($smarty.request.return_id))}';
@@ -342,11 +344,11 @@ function smarty_function_sugar_button($params, &$smarty)
                 $output = $cancelButton;
             break;
 
-            case "DELETE":
+            case 'DELETE':
                 $output = '{if $bean->aclAccess("delete")}<input title="{$APP.LBL_DELETE_BUTTON_TITLE}" accessKey="{$APP.LBL_DELETE_BUTTON_KEY}" class="button" onclick="'.$js_form.' _form.return_module.value=\'' . $module . '\'; _form.return_action.value=\'ListView\'; _form.action.value=\'Delete\'; if(confirm(\'{$APP.NTC_DELETE_CONFIRMATION}\')) SUGAR.ajaxUI.submitForm(_form); return false;" type="submit" name="Delete" value="{$APP.LBL_DELETE_BUTTON_LABEL}" id="delete_button">{/if} ';
             break;
 
-            case "DUPLICATE":
+            case 'DUPLICATE':
                 $hrefParts = ['index.php?'];
                 $hrefParts[] = "module=$module";
                 $hrefParts[] = "&action=$view";
@@ -369,7 +371,7 @@ function smarty_function_sugar_button($params, &$smarty)
                            {/if}';
             break;
 
-            case "EDIT":
+            case 'EDIT':
                 $hrefParts = ['index.php?'];
                 $hrefParts[] = "module=$module";
                 $hrefParts[] = '&action=EditView';
@@ -390,7 +392,7 @@ function smarty_function_sugar_button($params, &$smarty)
                            {/if}';
             break;
 
-            case "FIND_DUPLICATES":
+            case 'FIND_DUPLICATES':
                 $hrefParts = ['index.php?'];
                 $hrefParts[] = 'module=MergeRecords';
                 $hrefParts[] = '&action=Step1';
@@ -410,13 +412,13 @@ function smarty_function_sugar_button($params, &$smarty)
                            {/if}';
             break;
 
-            case "SAVE":
-                $view = ($_REQUEST['action'] == 'EditView') ? 'EditView' : (($view == 'EditView') ? 'EditView' : $view);
+            case 'SAVE':
+                $view = ($_REQUEST['action'] === 'EditView') ? 'EditView' : (($view === 'EditView') ? 'EditView' : $view);
                 $output = '{if $bean->aclAccess("save")}<input title="{$APP.LBL_SAVE_BUTTON_TITLE}" accessKey="{$APP.LBL_SAVE_BUTTON_KEY}" class="button primary" onclick="'.$js_form.' {if $isDuplicate}_form.return_id.value=\'\'; {/if}_form.action.value=\'Save\'; if(check_form(\'' . $formName . '\'))SUGAR.ajaxUI.submitForm(_form);return false;" type="submit" name="button" value="{$APP.LBL_SAVE_BUTTON_LABEL}" id="'.$type.$location.'">{/if} ';
             break;
 
-            case "SUBPANELSAVE":
-                if ($view == 'QuickCreate' || (isset($_REQUEST['target_action']) && strtolower($_REQUEST['target_action']) == 'quickcreate')) {
+            case 'SUBPANELSAVE':
+                if ($view === 'QuickCreate' || (isset($_REQUEST['target_action']) && strtolower($_REQUEST['target_action']) === 'quickcreate')) {
                     $view =  "form_SubpanelQuickCreate_{$module}";
                 }
 
@@ -439,45 +441,45 @@ function smarty_function_sugar_button($params, &$smarty)
                 /* END - SECURITY GROUPS */
 
             break;
-            case "SUBPANELCANCEL":
+            case 'SUBPANELCANCEL':
                 $output = '<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" class="button" onclick="return SUGAR.subpanelUtils.cancelCreate($(this).attr(\'id\'));return false;" type="submit" name="' . $params['module'] . '_subpanel_cancel_button" id="' . $params['module'] . '_subpanel_cancel_button" value="{$APP.LBL_CANCEL_BUTTON_LABEL}"> ';
 
             break;
-            case "SUBPANELFULLFORM":
+            case 'SUBPANELFULLFORM':
                 $output = '<input title="{$APP.LBL_FULL_FORM_BUTTON_TITLE}" class="button" onclick="'.$js_form.' disableOnUnloadEditView(_form); _form.return_action.value=\'DetailView\'; _form.action.value=\'EditView\'; if(typeof(_form.to_pdf)!=\'undefined\') _form.to_pdf.value=\'0\';" type="submit" name="' . $params['module'] . '_subpanel_full_form_button" id="' . $params['module'] . '_subpanel_full_form_button" value="{$APP.LBL_FULL_FORM_BUTTON_LABEL}"> ';
                 $output .= '<input type="hidden" name="full_form" value="full_form">';
             break;
-            case "DCMENUCANCEL":
+            case 'DCMENUCANCEL':
                 $output = '<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" accessKey="{$APP.LBL_CANCEL_BUTTON_KEY}" class="button" onclick="javascript:lastLoadedMenu=undefined;DCMenu.closeOverlay();return false;" type="submit" name="' . $params['module'] . '_dcmenu_cancel_button" id="' . $params['module'] . '_dcmenu_cancel_button" value="{$APP.LBL_CANCEL_BUTTON_LABEL}"> ';
             break;
-            case "DCMENUSAVE":
-                            if ($view == 'QuickCreate') {
+            case 'DCMENUSAVE':
+                            if ($view === 'QuickCreate') {
                                 $view = "form_DCQuickCreate_{$module}";
-                            } elseif ($view == 'EditView') {
+                            } elseif ($view === 'EditView') {
                                 $view = "form_DCEditView_{$module}";
                             }
                 $output = '{if $bean->aclAccess("save")}<input title="{$APP.LBL_SAVE_BUTTON_TITLE}" accessKey="{$APP.LBL_SAVE_BUTTON_KEY}" class="button primary" onclick="'.$js_form.' _form.action.value=\'Save\';if(check_form(\''.$view.'\'))return DCMenu.save(_form.id, \'' . $params['module'] . '_subpanel_save_button\');return false;" type="submit" name="' . $params['module'] . '_dcmenu_save_button" id="' . $params['module'] . '_dcmenu_save_button" value="{$APP.LBL_SAVE_BUTTON_LABEL}">{/if} ';
             break;
-            case "DCMENUFULLFORM":
+            case 'DCMENUFULLFORM':
                 $output = '<input title="{$APP.LBL_FULL_FORM_BUTTON_TITLE}" accessKey="{$APP.LBL_FULL_FORM_BUTTON_KEY}" class="button" onclick="'.$js_form.' disableOnUnloadEditView(_form); _form.return_action.value=\'DetailView\'; _form.action.value=\'EditView\'; _form.return_module.value=\'' . $params['module'] . '\';_form.return_id.value=_form.record.value;if(typeof(_form.to_pdf)!=\'undefined\') _form.to_pdf.value=\'0\';SUGAR.ajaxUI.submitForm(_form,null,true);DCMenu.closeOverlay();" type="button" name="' . $params['module'] . '_subpanel_full_form_button" id="' . $params['module'] . '_subpanel_full_form_button" value="{$APP.LBL_FULL_FORM_BUTTON_LABEL}"> ';
                 $output .= '<input type="hidden" name="full_form" value="full_form">';
                 $output .= '<input type="hidden" name="is_admin" value="">';
             break;
-            case "POPUPSAVE":
-                $view = ($view == 'QuickCreate') ? "form_QuickCreate_{$module}" : $view;
+            case 'POPUPSAVE':
+                $view = ($view === 'QuickCreate') ? "form_QuickCreate_{$module}" : $view;
                 $output = '{if $bean->aclAccess("save")}<input title="{$APP.LBL_SAVE_BUTTON_TITLE}" accessKey="{$APP.LBL_SAVE_BUTTON_KEY}" '
                      . 'class="button primary" onclick="'.$js_form.' _form.action.value=\'Popup\';'
                      . 'return check_form(\''.$view.'\')" type="submit" name="' . $params['module']
                      . '_popupcreate_save_button" id="' . $params['module']
                      . '_popupcreate_save_button" value="{$APP.LBL_SAVE_BUTTON_LABEL}">{/if} ';
             break;
-            case "POPUPCANCEL":
+            case 'POPUPCANCEL':
                 $output = '<input title="{$APP.LBL_CANCEL_BUTTON_TITLE}" accessKey="{$APP.LBL_CANCEL_BUTTON_KEY}" '
                      . 'class="button" onclick="toggleDisplay(\'addform\');return false;" '
                      . 'name="' . $params['module'] . '_popup_cancel_button" type="submit"'
                      . 'id="' . $params['module'] . '_popup_cancel_button" value="{$APP.LBL_CANCEL_BUTTON_LABEL}"> ';
             break;
-            case "AUDIT":
+            case 'AUDIT':
                 $popup_request_data = array(
                     'call_back_function' => 'set_return',
                     'form_name' => 'EditView',
@@ -555,24 +557,25 @@ function replaceFormClick(&$dom_tree = array(), $js_form = '', &$hidden_field_ex
     $set_submit = false;
     $is_hidden_field = false;
     //if the code is wrapped with the form element, it will escape the operation for JS replacement
-    if (isset($dom_tree['tag']) && $dom_tree['tag'] == 'form') {
+    if (isset($dom_tree['tag']) && $dom_tree['tag'] === 'form') {
         return false;
     }
 
-    if (isset($dom_tree['type']) && $dom_tree['type'] == 'hidden') {
+    if (isset($dom_tree['type']) && $dom_tree['type'] === 'hidden') {
         $is_hidden_field = true;
     }
 
     //Replace the JS syntax where the sugar_button contains the event handler for this.form
     if (isset($dom_tree['onclick'])) {
-        if (strpos($dom_tree['onclick'], "this.form") !== false) {
-            $dom_tree['onclick'] = str_replace("this.form", "_form", $dom_tree['onclick']);
-            if (substr($dom_tree['onclick'], -1) != ';') {
-                $dom_tree['onclick'] .= ";";
+        if (str_contains($dom_tree['onclick'], 'this.form')) {
+            $dom_tree['onclick'] = str_replace('this.form', '_form', $dom_tree['onclick']);
+            if (!str_ends_with($dom_tree['onclick'], ';')) {
+                $dom_tree['onclick'] .= ';';
             }
             //Onclick handler contains returning a variable, for example it prompts a confirm message.
-            if (strpos($dom_tree['onclick'], "return ") !== false) {
-                $dom_tree['onclick'] = ' var _onclick=(function(){ldelim}' . $dom_tree['onclick'] . "{rdelim}()); if(_onclick!==false) ";
+            if (str_contains($dom_tree['onclick'], 'return ')) {
+                $dom_tree['onclick'] =
+                    ' var _onclick=(function(){ldelim}' . $dom_tree['onclick'] . '{rdelim}()); if(_onclick!==false) ';
             }
             $dom_tree['onclick'] = $js_form.$dom_tree['onclick']."window.location.href='index.php?' + (new URLSearchParams(new FormData(_form)).toString());";
 
@@ -588,10 +591,10 @@ function replaceFormClick(&$dom_tree = array(), $js_form = '', &$hidden_field_ex
     }
 
     if ($set_submit && isset($dom_tree['type'])) {
-        $dom_tree['type'] = "button";
+        $dom_tree['type'] = 'button';
         $set_submit = false;
     }
-    if ($is_hidden_field && isset($dom_tree['tag']) && $dom_tree['tag'] == 'input') {
+    if ($is_hidden_field && isset($dom_tree['tag']) && $dom_tree['tag'] === 'input') {
         $hidden_field_exists = true;
         $is_hidden_field = false;
     }
@@ -609,20 +612,20 @@ function extractHiddenInputs(&$dom_tree = array())
         'hidden'
     );
     //all hidden fields in the form elements must NOT attach in the original form
-    if (isset($dom_tree['tag']) && $dom_tree['tag'] == 'form') {
+    if (isset($dom_tree['tag']) && $dom_tree['tag'] === 'form') {
         $dom_tree = array();
     }
     foreach ($dom_tree as $key => $sub_tree) {
-        if (is_numeric($key) && isset($sub_tree['tag']) && $sub_tree['tag'] == 'input') {
-            if (!isset($sub_tree['type']) || in_array($sub_tree['type'], $allow_types) === false) {
+        if (is_numeric($key) && isset($sub_tree['tag']) && $sub_tree['tag'] === 'input') {
+            if (!isset($sub_tree['type']) || in_array($sub_tree['type'], $allow_types, true) === false) {
                 unset($dom_tree[$key]);
             }
         } elseif (is_array($sub_tree)) {
             extractHiddenInputs($dom_tree[$key]);
         }
     }
-    if (isset($dom_tree['tag']) && $dom_tree['tag'] == 'input') {
-        if (!isset($dom_tree['type']) || in_array($dom_tree['type'], $allow_types) === false) {
+    if (isset($dom_tree['tag']) && $dom_tree['tag'] === 'input') {
+        if (!isset($dom_tree['type']) || in_array($dom_tree['type'], $allow_types, true) === false) {
             $dom_tree = array();
         }
     }

@@ -504,7 +504,7 @@ class EditViewMerge
                 $field['loc']['panel'] = $this->defaultPanel;
             }
 
-            if ($field['loc']['source'] == 'new') {
+            if ($field['loc']['source'] === 'new') {
                 if ($this->bestMatch) {
                     //for best match as long as the column is filled let's keep walking down till we can fill it
                     $row = end(array_keys($this->customData[$this->module][$this->viewDefs][$this->panelName][$field['loc']['panel']]));
@@ -709,7 +709,7 @@ class EditViewMerge
                     if (is_string($field_name)) {
                         // We need to replace all instances of the fake uploadfile and filename field that has custom code with the real filename field
                         if (!empty($col['customCode'])) {
-                            if ($field_name == 'uploadfile') {
+                            if ($field_name === 'uploadfile') {
                                 $replaceField = false;
                                 if (!empty($col['customCode'])) {
                                     $replaceField = true;
@@ -725,7 +725,7 @@ class EditViewMerge
                                     $col['name'] = 'filename';
                                 }
                             } else {
-                                if ($field_name == 'filename') {
+                                if ($field_name === 'filename') {
                                     $col = 'filename';
                                 }
                             }

@@ -53,7 +53,7 @@ if (!isset($_REQUEST['campaign_id']) || !$_REQUEST['campaign_id']) {
     unset($_SESSION['campaignWizard'][$campaign_id]['defaultSelectedMarketingId']);
 } else {
     $campaign_id = $db->quote($_REQUEST['campaign_id']);
-    if ($list = BeanFactory::getBean('EmailMarketing')->get_full_list("", "campaign_id = '{$campaign_id}'")) {
+    if ($list = BeanFactory::getBean('EmailMarketing')->get_full_list('', "campaign_id = '{$campaign_id}'")) {
         foreach ($list as $elem) {
             $results['data'][] = array(
                 'id' => $elem->id,
@@ -75,7 +75,7 @@ if ($selectedId) {
     unset($_SESSION['campaignWizard'][$campaign_id]['defaultSelectedMarketingId']);
 }
 
-if (isset($_REQUEST['func']) && $_REQUEST['func'] == 'createEmailMarketing') {
+if (isset($_REQUEST['func']) && $_REQUEST['func'] === 'createEmailMarketing') {
     unset($_SESSION['campaignWizard'][$campaign_id]['defaultSelectedMarketingId']);
     $results['selectedId'] = null;
 }

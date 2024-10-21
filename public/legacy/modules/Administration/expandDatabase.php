@@ -43,9 +43,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 $db = DBManagerFactory::getInstance();
 if (!$db->supports('fix:expandDatabase')) {
-    echo "<BR>";
-    echo "<p>".$mod_strings['ERR_NOT_IMPLEMENTED']."</p>";
-    echo "<BR>";
+    echo '<BR>';
+    echo '<p>' . $mod_strings['ERR_NOT_IMPLEMENTED']. '</p>';
+    echo '<BR>';
     sugar_die('');
 }
 global $current_user,$beanFiles;
@@ -124,12 +124,12 @@ if (is_admin($current_user) || isset($from_sync_client)) {
             }
 
             if ($export) {
-                header("Content-Disposition: attachment; filename=expandSugarDB.sql");
+                header('Content-Disposition: attachment; filename=expandSugarDB.sql');
                 header("Content-Type: text/sql; charset={$app_strings['LBL_CHARSET']}");
-                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-                header("Last-Modified: " . TimeDate::httpTime());
-                header("Cache-Control: post-check=0, pre-check=0", false);
-                header("Content-Length: ".strlen($theAlterQueries));
+                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+                header('Last-Modified: ' . TimeDate::httpTime());
+                header('Cache-Control: post-check=0, pre-check=0', false);
+                header('Content-Length: ' .strlen($theAlterQueries));
                 echo $theAlterQueries;
                 die();
             } else {
@@ -142,18 +142,18 @@ if (is_admin($current_user) || isset($from_sync_client)) {
 
     if (empty($_REQUEST['repair_silent']) && empty($_REQUEST['do_action'])) {
         if (!file_exists('restoreExpand.sql')) {
-            echo "	<b>{$mod_strings['LBL_REPAIR_ACTION']}</b><br>
-				<form name='repairdb'>
-					<input type='hidden' name='action' value='expandDatabase'>
-					<input type='hidden' name='module' value='Administration'>
+            echo "    <b>{$mod_strings['LBL_REPAIR_ACTION']}</b><br>
+                <form name='repairdb'>
+                    <input type='hidden' name='action' value='expandDatabase'>
+                    <input type='hidden' name='module' value='Administration'>
 
-					<select name='do_action'>
-							<option value='display'>".$mod_strings['LBL_REPAIR_DISPLAYSQL']."
-							<option value='export'>".$mod_strings['LBL_REPAIR_EXPORTSQL']."
-							<option value='execute'>".$mod_strings['LBL_REPAIR_EXECUTESQL']."
-					</select><input type='submit' class='button' value='".$mod_strings['LBL_GO']."'>
-				</form><br><br>
-				".$mod_strings['LBL_EXPAND_DATABASE_TEXT'];
+                    <select name='do_action'>
+                            <option value='display'>".$mod_strings['LBL_REPAIR_DISPLAYSQL']."
+                            <option value='export'>".$mod_strings['LBL_REPAIR_EXPORTSQL']."
+                            <option value='execute'>".$mod_strings['LBL_REPAIR_EXECUTESQL']."
+                    </select><input type='submit' class='button' value='".$mod_strings['LBL_GO']."'>
+                </form><br><br>
+                ".$mod_strings['LBL_EXPAND_DATABASE_TEXT'];
         } else {
             echo "<b>{$mod_strings['LBL_EXPAND_DATABASE_FINISHED_ERROR']}</b><br>";
         } //if-else

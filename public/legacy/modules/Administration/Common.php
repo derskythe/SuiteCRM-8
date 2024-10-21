@@ -50,20 +50,23 @@ require_once('include/utils/array_utils.php');
 /**
  * @return bool
  * @desc Creates the include language directory under the custom directory.
+ * @throws Exception
  */
 function create_include_lang_dir()
 {
-    if (!is_dir("custom/include/language")) {
-        return sugar_mkdir("custom/include/language", null, true);
+    if (!is_dir('custom/include/language')) {
+        return sugar_mkdir('custom/include/language', null, true);
     }
 
     return true;
 }
 
 /**
- * @return bool
  * @param module string
+ *
  * @desc Creates the module's language directory under the custom directory.
+ * @return bool
+ * @throws Exception
  */
 function create_module_lang_dir($module)
 {
@@ -528,7 +531,7 @@ function replace_or_add_dropdown_type(
 
         if ($new_contents == $file_contents) {
             // replace failed, append to end of file
-            $new_contents = str_replace("?>", '', (string) $file_contents);
+            $new_contents = str_replace('?>', '', (string) $file_contents);
             $new_contents .= "\n$new_entry\n?>";
         }
     }
@@ -563,7 +566,7 @@ function replace_or_add_app_string(
 
         if ($new_contents == $file_contents) {
             // replace failed, append to end of file
-            $new_contents = str_replace("?>", '', (string) $file_contents);
+            $new_contents = str_replace('?>', '', (string) $file_contents);
             $new_contents .= "\n$new_entry\n?>";
         }
     }
@@ -587,7 +590,7 @@ function dropdown_duplicate_check($dropdown_type, &$file_contents)
             $new_contents = preg_replace($pattern, '', (string) $file_contents);
 
             // Append the new entry.
-            $new_contents = str_replace("?>", '', $new_contents);
+            $new_contents = str_replace('?>', '', $new_contents);
             $new_contents .= "\n$new_entry\n?>";
             return $new_contents;
         }
@@ -657,7 +660,7 @@ function app_string_duplicate_check($name, &$file_contents)
             $new_contents = preg_replace($pattern, '', (string) $file_contents);
 
             // Append the new entry.
-            $new_contents = str_replace("?>", '', $new_contents);
+            $new_contents = str_replace('?>', '', $new_contents);
             $new_contents .= "\n$new_entry\n?>";
             return $new_contents;
         }

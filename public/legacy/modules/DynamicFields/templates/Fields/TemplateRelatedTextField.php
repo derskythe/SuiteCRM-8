@@ -87,9 +87,9 @@ class TemplateRelatedTextField extends TemplateText
     {
         $searchable=array();
         $def = $this->bean->field_name_map[$this->name];
-        if (!empty($def['id_name']) && in_array($def['id_name'], $searchable)) {
+        if (!empty($def['id_name']) && in_array($def['id_name'], $searchable, true)) {
             $name = $def['id_name'];
-            return "<select size='3' name='{$name}[]' tabindex='1' multiple='multiple'>{".strtoupper($name). "_FILTER}</select>";
+            return "<select size='3' name='{$name}[]' tabindex='1' multiple='multiple'>{".strtoupper($name). '_FILTER}</select>';
         }
         //return 'NOT AVAILABLE';
         return $this->get_html_edit();
@@ -100,13 +100,13 @@ class TemplateRelatedTextField extends TemplateText
         $searchable=array();
         $def = $this->bean->field_name_map[$this->name];
         $returnXTPL = array();
-        if (!empty($def['id_name']) && in_array($def['id_name'], $searchable)) {
+        if (!empty($def['id_name']) && in_array($def['id_name'], $searchable, true)) {
             $name = $def['id_name'];
             $team_list = '';
             foreach (get_team_array() as $id=>$team) {
                 $selected = '';
 
-                if (!empty($_REQUEST[$name]) && is_array($_REQUEST[$name]) && in_array($id, $_REQUEST[$name])) {
+                if (!empty($_REQUEST[$name]) && is_array($_REQUEST[$name]) && in_array($id, $_REQUEST[$name], true)) {
                     $selected = 'selected';
                 }
                 $team_list .= "<option  $selected value='$id'>$team</option>";
@@ -210,7 +210,7 @@ class TemplateRelatedTextField extends TemplateText
         $def['ext2'] = $this->ext2;
         $def['module'] = $def['ext2'];
         //Special case for documents, which use a document_name rather than name
-        if ($def['module'] == "Documents") {
+        if ($def['module'] === 'Documents') {
             $def['rname'] = 'document_name';
         } else {
             $def['rname'] = 'name';
@@ -226,6 +226,8 @@ class TemplateRelatedTextField extends TemplateText
      * Delete field
      *
      * @param DynamicField $df
+     *
+     * @throws Exception
      */
     public function delete($df)
     {
@@ -276,7 +278,7 @@ class TemplateRelatedTextField extends TemplateText
         if (!$df->fieldExists($this->name)) {
             $id = new TemplateId();
             $id->len = 36;
-            $id->label = strtoupper("LBL_{$this->name}_".BeanFactory::getBeanName($this->ext2)."_ID");
+            $id->label = strtoupper("LBL_{$this->name}_".BeanFactory::getBeanName($this->ext2). '_ID');
             $id->vname = $id->label;
             $this->saveIdLabel($id->label, $df);
 
@@ -338,16 +340,16 @@ class TemplateRelatedTextField extends TemplateText
 
     public function get_db_add_alter_table($table)
     {
-        return "";
+        return '';
     }
 
     public function get_db_delete_alter_table($table)
     {
-        return "";
+        return '';
     }
 
     public function get_db_modify_alter_table($table)
     {
-        return "";
+        return '';
     }
 }

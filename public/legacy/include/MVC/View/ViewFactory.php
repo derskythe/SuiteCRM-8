@@ -123,7 +123,7 @@ class ViewFactory
     /**
      * Load the view_<view>_config.php file which holds options used by the view.
      */
-    public static function _loadConfig(&$view, $type)
+    public static function _loadConfig($view, $type)
     {
         $view_config_custom = array();
         $view_config_module = array();
@@ -131,7 +131,7 @@ class ViewFactory
         $view_config_root = array();
         $view_config_app = array();
         $config_file_name = 'view.'.$type.'.config.php';
-        $view_config = sugar_cache_retrieve("VIEW_CONFIG_FILE_".$view->module."_TYPE_".$type);
+        $view_config = sugar_cache_retrieve('VIEW_CONFIG_FILE_' . $view->module . '_TYPE_' . $type);
         if (!$view_config) {
             if (file_exists('custom/modules/'.$view->module.'/views/'.$config_file_name)) {
                 require_once('custom/modules/'.$view->module.'/views/'.$config_file_name);
@@ -189,14 +189,14 @@ class ViewFactory
                 $view_config['req_params'] = array_merge($view_config['req_params'], $view_config_custom['req_params']);
             }
 
-            sugar_cache_put("VIEW_CONFIG_FILE_".$view->module."_TYPE_".$type, $view_config);
+            sugar_cache_put('VIEW_CONFIG_FILE_' . $view->module . '_TYPE_' . $type, $view_config);
         }
         $action = strtolower($view->action);
         $config = null;
         if (!empty($view_config['req_params'])) {
             //try the params first
             foreach ($view_config['req_params'] as $key => $value) {
-                if (!empty($_REQUEST[$key]) && $_REQUEST[$key] == "false") {
+                if (!empty($_REQUEST[$key]) && $_REQUEST[$key] === 'false') {
                     $_REQUEST[$key] = false;
                 }
                 if (!empty($_REQUEST[$key])) {
@@ -230,7 +230,7 @@ class ViewFactory
      *
      * @return a valid SugarView
      */
-    public static function _buildFromFile($file, &$bean, $view_object_map, $type, $module)
+    public static function _buildFromFile($file, $bean, $view_object_map, $type, $module)
     {
         require_once($file);
         //try ModuleViewType first then try ViewType if that fails then use SugarView

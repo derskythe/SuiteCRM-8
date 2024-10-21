@@ -47,7 +47,7 @@ class CalendarViewQuickEdit extends SugarView
     public $ev;
     protected $editable;
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->bean = $this->view_object_map['currentBean'];
 
@@ -58,9 +58,13 @@ class CalendarViewQuickEdit extends SugarView
         }
     }
 
+    /**
+     * @throws SmartyException
+     * @throws DateMalformedStringException
+     */
     public function display()
     {
-        require_once("modules/Calendar/CalendarUtils.php");
+        require_once('modules/Calendar/CalendarUtils.php');
 
         $module = $this->view_object_map['currentModule'];
 
@@ -82,10 +86,10 @@ class CalendarViewQuickEdit extends SugarView
         $tpl = $this->getCustomFilePathIfExists('include/EditView/EditView.tpl');
 
         $this->ev = new EditView();
-        $this->ev->view = "QuickCreate";
+        $this->ev->view = 'QuickCreate';
         $this->ev->ss = new Sugar_Smarty();
-        $this->ev->formName = "CalendarEditView";
-	     //Fix #9781 Meetings and Calls quick edit via Calender does not populate correct reminders
+        $this->ev->formName = 'CalendarEditView';
+         //Fix #9781 Meetings and Calls quick edit via Calender does not populate correct reminders
         //Fetch Reminders Data for existing Calls or Meetings and assign to smarty template
         if (!empty($this->bean->id)) {
             $this->ev->ss->assign('remindersData', Reminder::loadRemindersData($module, $this->bean->id, false));
@@ -94,9 +98,9 @@ class CalendarViewQuickEdit extends SugarView
             $this->ev->ss->assign('remindersDisabled', json_encode(false));
         }
         $this->ev->setup($module, $this->bean, $source, $tpl);
-        $this->ev->defs['templateMeta']['form']['headerTpl'] = "modules/Calendar/tpls/editHeader.tpl";
-        $this->ev->defs['templateMeta']['form']['footerTpl'] = "modules/Calendar/tpls/empty.tpl";
-        $this->ev->process(false, "CalendarEditView");
+        $this->ev->defs['templateMeta']['form']['headerTpl'] = 'modules/Calendar/tpls/editHeader.tpl';
+        $this->ev->defs['templateMeta']['form']['footerTpl'] = 'modules/Calendar/tpls/empty.tpl';
+        $this->ev->process(false, 'CalendarEditView');
 
         if (!empty($this->bean->id)) {
             require_once('include/json_config.php');
@@ -105,7 +109,7 @@ class CalendarViewQuickEdit extends SugarView
             $json_config = new json_config();
             $GRjavascript = $json_config->getFocusData($module, $this->bean->id);
         } else {
-            $GRjavascript = "";
+            $GRjavascript = '';
         }
 
         $json_arr = array(
@@ -118,7 +122,7 @@ class CalendarViewQuickEdit extends SugarView
         );
 
         if ($repeat_arr = CalendarUtils::get_sendback_repeat_data($this->bean)) {
-            $json_arr = array_merge($json_arr, array("repeat" => $repeat_arr));
+            $json_arr = array_merge($json_arr, array( 'repeat' => $repeat_arr));
         }
 
         ob_clean();

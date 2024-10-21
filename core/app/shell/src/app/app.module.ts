@@ -76,49 +76,49 @@ export const initializeApp = (appInitService: AppInit) => (): Promise<any> => ap
 
 @NgModule({
     declarations: [
-        AppComponent,
+    AppComponent,
     ],
     imports: [
-        BrowserModule,
-        HttpClientModule,
-        HttpClientXsrfModule,
-        AppRoutingModule,
-        FooterUiModule,
-        NavbarUiModule,
-        MessageUiModule,
-        ClassicViewUiModule,
-        ListModule,
-        RecordModule,
-        CreateRecordModule,
-        InstallViewModule,
-        TableModule,
-        ModuleTitleModule,
-        ListHeaderModule,
-        ListContainerModule,
-        ColumnChooserModule,
-        AngularSvgIconModule.forRoot(),
-        ImageModule,
-        BrowserAnimationsModule,
-        NgbModule,
-        FullPageSpinnerModule,
-        MessageModalModule,
-        RecordListModalModule,
-        ApolloModule,
-        SidebarComponent
+    BrowserModule,
+    HttpClientModule,
+    HttpClientXsrfModule,
+    AppRoutingModule,
+    FooterUiModule,
+    NavbarUiModule,
+    MessageUiModule,
+    ClassicViewUiModule,
+    ListModule,
+    RecordModule,
+    CreateRecordModule,
+    InstallViewModule,
+    TableModule,
+    ModuleTitleModule,
+    ListHeaderModule,
+    ListContainerModule,
+    ColumnChooserModule,
+    AngularSvgIconModule.forRoot(),
+    ImageModule,
+    BrowserAnimationsModule,
+    NgbModule,
+    FullPageSpinnerModule,
+    MessageModalModule,
+    RecordListModalModule,
+    ApolloModule,
+    SidebarComponent
     ],
     providers: [
-        {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-        {provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy},
-        AppInit,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeApp,
-            multi: true,
-            deps: [AppInit]
-        }
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+    {provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy},
+    AppInit,
+    {
+    provide: APP_INITIALIZER,
+    useFactory: initializeApp,
+    multi: true,
+    deps: [AppInit]
+    }
     ],
     bootstrap: [AppComponent]
-})
+    })
 export class AppModule {
     constructor(apollo: Apollo, httpLink: HttpLink, protected auth: AuthService, protected appStore: AppStateStore, protected baseRoute: BaseRouteService) {
 
@@ -159,12 +159,10 @@ export class AppModule {
             return forward(operation);
         });
 
-        const afterware = new ApolloLink((operation, forward) => {
-            return forward(operation).map(response => {
-                appStore.removeActiveRequest();
-                return response;
-            });
-        });
+        const afterware = new ApolloLink((operation, forward) => forward(operation).map(response => {
+            appStore.removeActiveRequest();
+            return response;
+        }));
 
         apollo.create({
             defaultOptions,

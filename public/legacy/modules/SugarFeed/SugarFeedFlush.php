@@ -48,6 +48,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class SugarFeedFlush
 {
+    /**
+     * @throws DateMalformedStringException
+     */
     public function flushStaleEntries($bean, $event, $arguments)
     {
         $admin = BeanFactory::newBean('Administration');
@@ -64,8 +67,8 @@ class SugarFeedFlush
 
             $tmpTime = time();
             $tmpSF = BeanFactory::newBean('SugarFeed');
-            $flushBefore = $timedate->asDbDate($timedate->getNow()->modify("-14 days")->setTime(0, 0));
-            $db->query("DELETE FROM ".$tmpSF->table_name." WHERE date_entered < '".$db->quote($flushBefore)."'");
+            $flushBefore = $timedate->asDbDate($timedate->getNow()->modify('-14 days')->setTime(0, 0));
+            $db->query('DELETE FROM ' .$tmpSF->table_name." WHERE date_entered < '".$db->quote($flushBefore)."'");
             $admin->saveSetting('sugarfeed', 'flushdate', $currDate);
             // Flush the cache
             $admin->retrieveSettings(false, true);

@@ -58,14 +58,14 @@ class ViewSearchView extends ViewListView
             $this->editLayout = $_REQUEST['searchlayout'];
         }
     }
-    
+
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
@@ -73,10 +73,13 @@ class ViewSearchView extends ViewListView
     }
 
     // DO NOT REMOVE - overrides parent ViewEdit preDisplay() which attempts to load a bean for a non-existent module
-    public function preDisplay()
+    public function preDisplay() : void
     {
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display(
         $preview = false
         ) {
@@ -91,10 +94,12 @@ class ViewSearchView extends ViewListView
         $smarty->assign('helpDefault', 'modify') ;
 
         if ($preview) {
-            echo $smarty->fetch("modules/ModuleBuilder/tpls/Preview/listView.tpl") ;
+            echo $smarty->fetch('modules/ModuleBuilder/tpls/Preview/listView.tpl') ;
         } else {
             $ajax = $this->constructAjax() ;
-            $ajax->addSection('center', translate($this->title), $smarty->fetch("modules/ModuleBuilder/tpls/listView.tpl")) ;
+            $ajax->addSection('center', translate($this->title), $smarty->fetch(
+                'modules/ModuleBuilder/tpls/listView.tpl'
+            )) ;
             echo $ajax->getJavascript() ;
         }
     }

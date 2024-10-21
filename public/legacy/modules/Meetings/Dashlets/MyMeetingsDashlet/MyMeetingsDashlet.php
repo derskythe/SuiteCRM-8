@@ -87,7 +87,7 @@ class MyMeetingsDashlet extends DashletGeneric
 
 
 
-    public function process($lvsParams = array(), $id = null)
+    public function process($lvsParams = array(), $id = null) : mixed
     {
         global $current_language, $app_list_strings, $current_user;
         $mod_strings = return_module_language($current_language, 'Meetings');
@@ -142,23 +142,23 @@ class MyMeetingsDashlet extends DashletGeneric
                 if ($this->lvs->data['data'][$rowNum]['ACCEPT_STATUS'] == '') {
                     //if no status has been set, then do not show accept options
                     $this->lvs->data['data'][$rowNum]['SET_ACCEPT_LINKS'] = "<div id=\"accept".$this->id."\" class=\"acceptMeeting\"></div>";
-                } elseif ($this->lvs->data['data'][$rowNum]['ACCEPT_STATUS'] == 'none') {
+                } elseif ($this->lvs->data['data'][$rowNum]['ACCEPT_STATUS'] === 'none') {
                     $this->lvs->data['data'][$rowNum]['SET_ACCEPT_LINKS'] = "<div id=\"accept".$this->id."\" class=\"acceptMeeting\"><a title=\"".
                         $app_list_strings['dom_meeting_accept_options']['accept'].
-                        "\" href=\"javascript:SUGAR.util.retrieveAndFill('index.php?module=Activities&to_pdf=1&action=SetAcceptStatus&id=".$this->id."&object_type=Meeting&object_id=".$this->lvs->data['data'][$rowNum]['ID'] . "&accept_status=accept', null, null, SUGAR.mySugar.retrieveDashlet, '{$this->id}');\">".
-                        SugarThemeRegistry::current()->getImage("accept_inline", "border='0'", null, null, '.gif', $app_list_strings['dom_meeting_accept_options']['accept']).
+                        "\" href=\"javascript:SUGAR.util.retrieveAndFill('index.php?module=Activities&to_pdf=1&action=SetAcceptStatus&id=".$this->id. '&object_type=Meeting&object_id=' . $this->lvs->data['data'][$rowNum]['ID'] . "&accept_status=accept', null, null, SUGAR.mySugar.retrieveDashlet, '{$this->id}');\">".
+                        SugarThemeRegistry::current()->getImage('accept_inline', "border='0'", null, null, '.gif', $app_list_strings['dom_meeting_accept_options']['accept']).
                         "</a>&nbsp;<a title=\"".$app_list_strings['dom_meeting_accept_options']['tentative'].
-                        "\" href=\"javascript:SUGAR.util.retrieveAndFill('index.php?module=Activities&to_pdf=1&action=SetAcceptStatus&id=".$this->id."&object_type=Meeting&object_id=".$this->lvs->data['data'][$rowNum]['ID'] . "&accept_status=tentative', null, null, SUGAR.mySugar.retrieveDashlet, '{$this->id}');\">".
-                        SugarThemeRegistry::current()->getImage("tentative_inline", "border='0'", null, null, '.gif', $app_list_strings['dom_meeting_accept_options']['tentative']).
+                        "\" href=\"javascript:SUGAR.util.retrieveAndFill('index.php?module=Activities&to_pdf=1&action=SetAcceptStatus&id=".$this->id. '&object_type=Meeting&object_id=' . $this->lvs->data['data'][$rowNum]['ID'] . "&accept_status=tentative', null, null, SUGAR.mySugar.retrieveDashlet, '{$this->id}');\">".
+                        SugarThemeRegistry::current()->getImage('tentative_inline', "border='0'", null, null, '.gif', $app_list_strings['dom_meeting_accept_options']['tentative']).
                         "</a>&nbsp;<a title=\"".$app_list_strings['dom_meeting_accept_options']['decline'].
-                        "\" href=\"javascript:SUGAR.util.retrieveAndFill('index.php?module=Activities&to_pdf=1&action=SetAcceptStatus&id=".$this->id."&object_type=Meeting&object_id=".$this->lvs->data['data'][$rowNum]['ID'] . "&accept_status=decline', null, null, SUGAR.mySugar.retrieveDashlet, '{$this->id}');\">".
-                        SugarThemeRegistry::current()->getImage("decline_inline", "border='0'", null, null, '.gif', $app_list_strings['dom_meeting_accept_options']['decline'])."</a></div>";
+                        "\" href=\"javascript:SUGAR.util.retrieveAndFill('index.php?module=Activities&to_pdf=1&action=SetAcceptStatus&id=".$this->id. '&object_type=Meeting&object_id=' . $this->lvs->data['data'][$rowNum]['ID'] . "&accept_status=decline', null, null, SUGAR.mySugar.retrieveDashlet, '{$this->id}');\">".
+                        SugarThemeRegistry::current()->getImage('decline_inline', "border='0'", null, null, '.gif', $app_list_strings['dom_meeting_accept_options']['decline']). '</a></div>';
                 } else {
                     $this->lvs->data['data'][$rowNum]['SET_ACCEPT_LINKS'] = $app_list_strings['dom_meeting_accept_status'][$this->lvs->data['data'][$rowNum]['ACCEPT_STATUS']];
                 }
             }
         }
-        $this->displayColumns[]= "set_accept_links";
+        $this->displayColumns[]= 'set_accept_links';
     }
     /**
      * Displays the javascript for the dashlet

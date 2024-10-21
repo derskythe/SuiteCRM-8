@@ -64,45 +64,45 @@ if (isset($_REQUEST['record']) && $_REQUEST['record'] && isset($_REQUEST['parent
     }
 }
 
-if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-    $focus->id = "";
+if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
+    $focus->id = '';
 }
 global $theme;
 
 
 
-$GLOBALS['log']->info("EmailMarketing Edit View");
+$GLOBALS['log']->info('EmailMarketing Edit View');
 $xtpl=new XTemplate('modules/EmailMarketing/EditView.html');
 if (!ACLController::checkAccess('EmailTemplates', 'edit', true)) {
     unset($mod_strings['LBL_CREATE_EMAIL_TEMPLATE']);
     unset($mod_strings['LBL_EDIT_EMAIL_TEMPLATE']);
 }
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
-$xtpl->assign("THEME", (string)SugarThemeRegistry::current());
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
+$xtpl->assign('THEME', (string)SugarThemeRegistry::current());
 // Unimplemented until jscalendar language files are fixed
 // $xtpl->assign("CALENDAR_LANG", ((empty($cal_codes[$current_language])) ? $cal_codes[$default_language] : $cal_codes[$current_language]));
-$xtpl->assign("CALENDAR_LANG", "en");
-$xtpl->assign("USER_DATEFORMAT", '('. $timedate->get_user_date_format().')');
-$xtpl->assign("CALENDAR_DATEFORMAT", $timedate->get_cal_date_format());
+$xtpl->assign('CALENDAR_LANG', 'en');
+$xtpl->assign('USER_DATEFORMAT', '('. $timedate->get_user_date_format().')');
+$xtpl->assign('CALENDAR_DATEFORMAT', $timedate->get_cal_date_format());
 $time_ampm = $timedate->AMPMMenu('', $focus->time_start);
-$xtpl->assign("TIME_MERIDIEM", $time_ampm);
+$xtpl->assign('TIME_MERIDIEM', $time_ampm);
 
 if (isset($_REQUEST['return_module'])) {
-    $xtpl->assign("RETURN_MODULE", $_REQUEST['return_module']);
+    $xtpl->assign('RETURN_MODULE', $_REQUEST['return_module']);
 } else {
-    $xtpl->assign("RETURN_MODULE", 'Campaigns');
+    $xtpl->assign('RETURN_MODULE', 'Campaigns');
 }
 if (isset($_REQUEST['return_action'])) {
-    $xtpl->assign("RETURN_ACTION", $_REQUEST['return_action']);
+    $xtpl->assign('RETURN_ACTION', $_REQUEST['return_action']);
 } else {
-    $xtpl->assign("RETURN_ACTION", 'DetailView');
+    $xtpl->assign('RETURN_ACTION', 'DetailView');
 }
 if (isset($_REQUEST['return_id'])) {
-    $xtpl->assign("RETURN_ID", $_REQUEST['return_id']);
+    $xtpl->assign('RETURN_ID', $_REQUEST['return_id']);
 } else {
     if (!empty($focus->campaign_id)) {
-        $xtpl->assign("RETURN_ID", $focus->campaign_id);
+        $xtpl->assign('RETURN_ID', $focus->campaign_id);
     }
 }
 
@@ -111,7 +111,7 @@ if ($focus->campaign_id) {
 } else {
     $campaign_id=$_REQUEST['campaign_id'];
 }
-$xtpl->assign("CAMPAIGN_ID", $campaign_id);
+$xtpl->assign('CAMPAIGN_ID', $campaign_id);
 
 if (empty($time_ampm) || empty($focus->time_start)) {
     $time_start = $focus->time_start;
@@ -119,29 +119,29 @@ if (empty($time_ampm) || empty($focus->time_start)) {
     $split = $timedate->splitTime($focus->time_start, $timedate->get_time_format());
     $time_start = $split['h'].$timedate->timeSeparator().$split['m'];
 }
-$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("JAVASCRIPT", get_set_focus_js().get_validate_record_js());
-$xtpl->assign("DATE_ENTERED", $focus->date_entered);
-$xtpl->assign("DATE_MODIFIED", $focus->date_modified);
-$xtpl->assign("ID", $focus->id);
-$xtpl->assign("NAME", $focus->name);
-$xtpl->assign("FROM_NAME", $focus->from_name);
-$xtpl->assign("FROM_ADDR", $focus->from_addr);
+$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('JAVASCRIPT', get_set_focus_js().get_validate_record_js());
+$xtpl->assign('DATE_ENTERED', $focus->date_entered);
+$xtpl->assign('DATE_MODIFIED', $focus->date_modified);
+$xtpl->assign('ID', $focus->id);
+$xtpl->assign('NAME', $focus->name);
+$xtpl->assign('FROM_NAME', $focus->from_name);
+$xtpl->assign('FROM_ADDR', $focus->from_addr);
 isValidEmailAddress($focus->from_addr);
-$xtpl->assign("REPLY_NAME", $focus->reply_to_name);
-$xtpl->assign("REPLY_ADDR", $focus->reply_to_addr);
-$xtpl->assign("DATE_START", $focus->date_start);
-$xtpl->assign("TIME_START", $time_start);
-$xtpl->assign("TIME_FORMAT", '('. $timedate->get_user_time_format().')');
+$xtpl->assign('REPLY_NAME', $focus->reply_to_name);
+$xtpl->assign('REPLY_ADDR', $focus->reply_to_addr);
+$xtpl->assign('DATE_START', $focus->date_start);
+$xtpl->assign('TIME_START', $time_start);
+$xtpl->assign('TIME_FORMAT', '('. $timedate->get_user_time_format().')');
 
 $email_templates_arr = get_bean_select_array(true, 'EmailTemplate', 'name', "(type IS NULL OR type='' OR type='campaign')", 'name');
 if ($focus->template_id) {
-    $xtpl->assign("TEMPLATE_ID", $focus->template_id);
-    $xtpl->assign("EMAIL_TEMPLATE_OPTIONS", get_select_options_with_id($email_templates_arr, $focus->template_id));
-    $xtpl->assign("EDIT_TEMPLATE", "visibility:inline");
+    $xtpl->assign('TEMPLATE_ID', $focus->template_id);
+    $xtpl->assign('EMAIL_TEMPLATE_OPTIONS', get_select_options_with_id($email_templates_arr, $focus->template_id));
+    $xtpl->assign('EDIT_TEMPLATE', 'visibility:inline');
 } else {
-    $xtpl->assign("EMAIL_TEMPLATE_OPTIONS", get_select_options_with_id($email_templates_arr, ""));
-    $xtpl->assign("EDIT_TEMPLATE", "visibility:hidden");
+    $xtpl->assign('EMAIL_TEMPLATE_OPTIONS', get_select_options_with_id($email_templates_arr, ''));
+    $xtpl->assign('EDIT_TEMPLATE', 'visibility:hidden');
 }
 
 //include campaign utils..
@@ -158,7 +158,7 @@ $params = array();
 $params[] = "<a href='index.php?module=Campaigns&action=index'>{$mod_strings['LNK_CAMPAIGN_LIST']}</a>";
 $params[] = "<a href='index.php?module=Campaigns&action=DetailView&record={$campaign_id}'>{$campaign_name}</a>";
 if (empty($focus->id)) {
-    $params[] = $GLOBALS['app_strings']['LBL_CREATE_BUTTON_LABEL']." ".$mod_strings['LBL_MODULE_NAME'];
+    $params[] = $GLOBALS['app_strings']['LBL_CREATE_BUTTON_LABEL']. ' ' . $mod_strings['LBL_MODULE_NAME'];
 } else {
     $params[] = "<a href='index.php?module={$focus->module_dir}&action=DetailView&record={$focus->id}'>{$focus->name}</a>";
     $params[] = $GLOBALS['app_strings']['LBL_EDIT_BUTTON_LABEL'];
@@ -168,8 +168,8 @@ echo getClassicModuleTitle($focus->module_dir, $params, true);
 $scope_options=get_message_scope_dom($campaign_id, $campaign_name, $focus->db);
 $prospectlists=array();
 if (isset($focus->all_prospect_lists) && $focus->all_prospect_lists==1) {
-    $xtpl->assign("ALL_PROSPECT_LISTS_CHECKED", "checked");
-    $xtpl->assign("MESSAGE_FOR_DISABLED", "disabled");
+    $xtpl->assign('ALL_PROSPECT_LISTS_CHECKED', 'checked');
+    $xtpl->assign('MESSAGE_FOR_DISABLED', 'disabled');
 } else {
     //get select prospect list.
     if (!empty($focus->id)) {
@@ -183,7 +183,7 @@ if (empty($prospectlists)) {
 if (empty($scope_options)) {
     $scope_options=array();
 }
-$xtpl->assign("SCOPE_OPTIONS", get_select_options_with_id($scope_options, $prospectlists));
+$xtpl->assign('SCOPE_OPTIONS', get_select_options_with_id($scope_options, $prospectlists));
 
 $emails=array();
 $mailboxes=get_campaign_mailboxes($emails);
@@ -209,31 +209,31 @@ foreach ($mailboxes_with_from_name as $id=>$name) {
         $default_email_address=$emails[$id];
     }
 }
-$xtpl->assign("FROM_EMAILS", $from_emails);
-$xtpl->assign("DEFAULT_FROM_EMAIL", $default_email_address);
+$xtpl->assign('FROM_EMAILS', $from_emails);
+$xtpl->assign('DEFAULT_FROM_EMAIL', $default_email_address);
 
 if (empty($focus->inbound_email_id)) {
-    $xtpl->assign("MAILBOXES", get_select_options_with_id($mailboxes, ''));
+    $xtpl->assign('MAILBOXES', get_select_options_with_id($mailboxes, ''));
 } else {
-    $xtpl->assign("MAILBOXES", get_select_options_with_id($mailboxes, $focus->inbound_email_id));
+    $xtpl->assign('MAILBOXES', get_select_options_with_id($mailboxes, $focus->inbound_email_id));
 }
 
-$xtpl->assign("STATUS_OPTIONS", get_select_options_with_id($app_list_strings['email_marketing_status_dom'], $focus->status));
+$xtpl->assign('STATUS_OPTIONS', get_select_options_with_id($app_list_strings['email_marketing_status_dom'], $focus->status));
 
 //pass in info to populate from/reply address info
 require_once('modules/Campaigns/utils.php');
 $json = getJSONobj();
 $IEStoredOptions = get_campaign_mailboxes_with_stored_options();
 $IEStoredOptionsJSON = (!empty($IEStoredOptions)) ? $json->encode($IEStoredOptions, false) : 'new Object()';
-$xtpl->assign("IEStoredOptions", $IEStoredOptionsJSON);
+$xtpl->assign('IEStoredOptions', $IEStoredOptionsJSON);
 
 
 function getOutboundEmailAccountOptions()
 {
     global $mod_strings;
-    //	$ret = array(
-    //		0 => $mod_strings['LBL_OUTBOUND_EMAIL_ACCOUNT_DEFAULT'],
-    //	);
+    //    $ret = array(
+    //        0 => $mod_strings['LBL_OUTBOUND_EMAIL_ACCOUNT_DEFAULT'],
+    //    );
     $ret = [];
     $oeaList = BeanFactory::getBean('OutboundEmailAccounts')->get_full_list();
     foreach ($oeaList as $oea) {
@@ -256,8 +256,8 @@ $outboundEmailAccountSelected = getOutboundEmailAccountSelected($focus);
 $outboundEmailAccountOptionsHTML = get_select_options_with_id($outboundEmailAccountOptions, $outboundEmailAccountSelected ? $outboundEmailAccountSelected : '');
 $xtpl->assign('outboundEmailAccountOptionsHTML', $outboundEmailAccountOptionsHTML);
 
-$xtpl->parse("main");
-$xtpl->out("main");
+$xtpl->parse('main');
+$xtpl->out('main');
 
 
 

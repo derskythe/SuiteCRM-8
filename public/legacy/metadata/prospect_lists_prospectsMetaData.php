@@ -77,7 +77,7 @@ $dictionary['prospect_lists_prospects'] = array(
             'default' => '0'
         ),
     ),
-    
+
     'indices' => array(
         array(
             'name' => 'prospect_lists_prospectspk',
@@ -95,15 +95,15 @@ $dictionary['prospect_lists_prospects'] = array(
         array(
             'name' => 'idx_plp_rel_id',
             'type' => 'alternate_key',
-            'fields' => array(	'related_id',
+            'fields' => array(    'related_id',
                                 'related_type',
                                 'prospect_list_id'
                         )
         ),
     ),
-    
+
     'relationships' => array(
-        'prospect_list_contacts' => array(	'lhs_module'=> 'ProspectLists',
+        'prospect_list_contacts' => array(    'lhs_module'=> 'ProspectLists',
                                             'lhs_table'=> 'prospect_lists',
                                             'lhs_key' => 'id',
                                             'rhs_module'=> 'Contacts',
@@ -117,7 +117,7 @@ $dictionary['prospect_lists_prospects'] = array(
                                             'relationship_role_column_value'=>'Contacts'
                                     ),
 
-        'prospect_list_prospects' =>array(	'lhs_module'=> 'ProspectLists',
+        'prospect_list_prospects' =>array(    'lhs_module'=> 'ProspectLists',
                                             'lhs_table'=> 'prospect_lists',
                                             'lhs_key' => 'id',
                                             'rhs_module'=> 'Prospects',
@@ -131,7 +131,7 @@ $dictionary['prospect_lists_prospects'] = array(
                                             'relationship_role_column_value'=>'Prospects'
                                     ),
 
-        'prospect_list_leads' =>array(	'lhs_module'=> 'ProspectLists',
+        'prospect_list_leads' =>array(    'lhs_module'=> 'ProspectLists',
                                         'lhs_table'=> 'prospect_lists',
                                         'lhs_key' => 'id',
                                         'rhs_module'=> 'Leads',
@@ -145,7 +145,7 @@ $dictionary['prospect_lists_prospects'] = array(
                                         'relationship_role_column_value'=>'Leads',
                                 ),
 
-        'prospect_list_users' =>array(	'lhs_module'=> 'ProspectLists',
+        'prospect_list_users' =>array(    'lhs_module'=> 'ProspectLists',
                                         'lhs_table'=> 'prospect_lists',
                                         'lhs_key' => 'id',
                                         'rhs_module'=> 'Users',
@@ -159,7 +159,7 @@ $dictionary['prospect_lists_prospects'] = array(
                                         'relationship_role_column_value'=>'Users',
                                 ),
 
-        'prospect_list_accounts' =>array(	'lhs_module'=> 'ProspectLists',
+        'prospect_list_accounts' =>array(    'lhs_module'=> 'ProspectLists',
                                             'lhs_table'=> 'prospect_lists',
                                             'lhs_key' => 'id',
                                             'rhs_module'=> 'Accounts',
@@ -173,5 +173,5 @@ $dictionary['prospect_lists_prospects'] = array(
                                             'relationship_role_column_value'=>'Accounts',
                                 )
     )
-    
+
 );

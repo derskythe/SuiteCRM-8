@@ -95,16 +95,16 @@ require_once('include/SugarHtml/SugarHtml.php');
 function smarty_function_sugar_menu($params, &$smarty)
 {
     $root_options = array(
-        "id" => array_key_exists('id', $params) ? $params['id'] : ""
+        'id' => array_key_exists('id', $params) ? $params['id'] : ''
     );
     if(array_key_exists('htmlOptions', $params)) {
         foreach($params['htmlOptions'] as $attr => $value) {
             $root_options[$attr] = $value;
         }
     }
-    $output = SugarHtml::createOpenTag("ul", $root_options);
+    $output = SugarHtml::createOpenTag('ul', $root_options);
     foreach($params['items'] as $item) {
-        if(strpos($item['html'], "</") === 0) {
+        if (str_starts_with($item['html'], '</')) {
             $output .= $item['html'];
             continue;
         }
@@ -116,8 +116,8 @@ function smarty_function_sugar_menu($params, &$smarty)
                 'htmlOptions' => !empty($params['submenuHtmlOptions']) ? $params['submenuHtmlOptions'] : (!empty($item['submenuHtmlOptions']) ? $item['submenuHtmlOptions'] : array())
             ), $smarty);
         }
-        $output .= SugarHtml::createCloseTag("li");
+        $output .= SugarHtml::createCloseTag('li');
     }
-    $output .= SugarHtml::createCloseTag("ul");
+    $output .= SugarHtml::createCloseTag('ul');
     return $output;
 }

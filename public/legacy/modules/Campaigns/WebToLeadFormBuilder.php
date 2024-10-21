@@ -214,7 +214,11 @@ HTML;
         $html = '';
         foreach ($appListStringsFieldOptions as $field_option_key => $field_option) {
             if ($field_option != null) {
-                if (!empty($lead->$fieldName) && in_array($field_option_key, unencodeMultienum($lead->$fieldName))) {
+                if (!empty($lead->$fieldName) && in_array(
+                        $field_option_key,
+                        unencodeMultienum($lead->$fieldName),
+                        true
+                    )) {
                     $_checked = ' checked';
                 } else {
                     $_checked = '';
@@ -266,13 +270,13 @@ HTML;
      */
     private static function getFieldCharsHTML($fieldName, $fieldLabel, $fieldRequired, $webRequiredSymbol)
     {
-        $isRequired = $fieldName == 'last_name' || $fieldRequired;
+        $isRequired = $fieldName === 'last_name' || $fieldRequired;
         $_required = $isRequired ? ' required' : '';
         $html = self::getFieldLabelHTML($fieldLabel, $isRequired, $webRequiredSymbol);
-        $_type = $fieldName == 'email1' || $fieldName == 'email2' ? 'email' : 'text';
+        $_type = $fieldName === 'email1' || $fieldName === 'email2' ? 'email' : 'text';
         $html .= "<input id=\"$fieldName\" name=\"$fieldName\" type=\"$_type\"$_required>";
 
-        if ($_type == 'email') {
+        if ($_type === 'email') {
             $html .= self::getOptInCheckboxHTML($fieldName);
         }
 
@@ -323,7 +327,9 @@ HTML;
     /**
      *
      * @param string $fieldName
+     *
      * @return string
+     * @throws SmartyException
      */
     private static function getOptInCheckboxHTML($fieldName)
     {
@@ -387,7 +393,7 @@ HTML;
     {
         $field_vname= preg_replace('/:$/', '', (string) translate($lead->field_defs[$colsField]['vname'], $lead->module_dir));
         $field_name= $colsField;
-        $field_label = $field_vname .": ";
+        $field_label = $field_vname . ': ';
         if (isset($lead->field_defs[$colsField]['custom_type']) && $lead->field_defs[$colsField]['custom_type'] != null) {
             $field_type= $lead->field_defs[$colsField]['custom_type'];
         } else {
@@ -395,7 +401,7 @@ HTML;
         }
 
         //bug: 47574 - make sure, that webtolead_email1 field has same required attribute as email1 field
-        if ($colsField == 'webtolead_email1' && isset($lead->field_defs['email1']) && isset($lead->field_defs['email1']['required'])) {
+        if ($colsField === 'webtolead_email1' && isset($lead->field_defs['email1']) && isset($lead->field_defs['email1']['required'])) {
             $lead->field_defs['webtolead_email1']['required'] = $lead->field_defs['email1']['required'];
         }
 
@@ -403,17 +409,17 @@ HTML;
         if (isset($lead->field_defs[$colsField]['required']) && $lead->field_defs[$colsField]['required'] != null
             && $lead->field_defs[$colsField]['required'] != 0) {
             $field_required = $lead->field_defs[$colsField]['required'];
-            if (! in_array($lead->field_defs[$colsField]['name'], $requiredFields)) {
+            if (!in_array($lead->field_defs[$colsField]['name'], $requiredFields, true)) {
                 array_push($requiredFields, $lead->field_defs[$colsField]['name']);
             }
         }
-        if ($lead->field_defs[$colsField]['name']=='last_name') {
-            if (! in_array($lead->field_defs[$colsField]['name'], $requiredFields)) {
+        if ($lead->field_defs[$colsField]['name'] === 'last_name') {
+            if (!in_array($lead->field_defs[$colsField]['name'], $requiredFields, true)) {
                 array_push($requiredFields, $lead->field_defs[$colsField]['name']);
             }
         }
         $field_options = null;
-        if ($field_type=='multienum' || $field_type=='enum' || $field_type=='radioenum') {
+        if ($field_type === 'multienum' || $field_type === 'enum' || $field_type === 'radioenum') {
             $field_options= $lead->field_defs[$colsField]['options'];
         }
         return array($field_name, $field_label, $field_type, $field_required, $field_options);
@@ -468,28 +474,28 @@ HTML;
                     if (isset($lead->field_defs[$colsFields[$j]]) && $lead->field_defs[$colsFields[$j]] != null) {
                         list($field_name, $field_label, $field_type, $field_required, $field_options) = self::getArrayOfFieldInfo($lead, $colsFields[$j], $required_fields);
 
-                        if ($field_type == 'multienum' || $field_type == 'enum' || $field_type == 'radioenum') {
+                        if ($field_type === 'multienum' || $field_type === 'enum' || $field_type === 'radioenum') {
                             $colHtml .= self::getFieldEnumHTML($lead, $field_name, $appListStrings[$field_options], $field_required, $field_label, $webRequiredSymbol, $colsFields[$j]);
                             $foundField = true;
-                        } elseif ($field_type == 'bool') {
+                        } elseif ($field_type === 'bool') {
                             $colHtml .= self::getFieldBoolHTML($field_name, $field_required, $field_label, $webRequiredSymbol);
                             $foundField = true;
-                            if (!in_array($lead->field_defs[$colsFields[$j]]['name'], $bool_fields)) {
+                            if (!in_array($lead->field_defs[$colsFields[$j]]['name'], $bool_fields, true)) {
                                 array_push($bool_fields, $lead->field_defs[$colsFields[$j]]['name']);
                             }
-                        } elseif ($field_type == 'date') {
+                        } elseif ($field_type === 'date') {
                             $colHtml .= self::getFieldDateHTML($field_name, $field_required, $field_label, $webRequiredSymbol);
                             $foundField = true;
-                        } elseif ($field_type == 'varchar' || $field_type == 'name' || $field_type == 'phone' || $field_type == 'currency' || $field_type == 'url' || $field_type == 'int') {
+                        } elseif ($field_type === 'varchar' || $field_type === 'name' || $field_type === 'phone' || $field_type === 'currency' || $field_type === 'url' || $field_type === 'int') {
                             $colHtml .= self::getFieldCharsHTML($field_name, $field_label, $field_required, $webRequiredSymbol);
                             $foundField = true;
-                        } elseif ($field_type == 'text') {
+                        } elseif ($field_type === 'text') {
                             $colHtml .= self::getFieldTextHTML($field_name, $field_label, $field_required && false, $webRequiredSymbol);
                             $foundField = true;
-                        } elseif ($field_type == 'relate' && $field_name == 'account_name') {
+                        } elseif ($field_type === 'relate' && $field_name === 'account_name') {
                             $colHtml .= self::getFieldRelateHTML($field_name, $field_label, $field_required && false, $webRequiredSymbol);
                             $foundField = true;
-                        } elseif ($field_type == 'email') {
+                        } elseif ($field_type === 'email') {
                             $colHtml .= self::getFieldEmailHTML();
                             $foundField = true;
                         } else {

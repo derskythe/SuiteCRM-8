@@ -49,12 +49,16 @@ class SugarFieldImage extends SugarFieldFile
     public function getListViewSmarty($parentFieldArray, $vardef, $displayParams, $col)
     {
         if (isset($displayParams['module']) && !empty($displayParams['module'])) {
-            $this->ss->assign("module", $displayParams['module']);
+            $this->ss->assign('module', $displayParams['module']);
         } else {
-            $this->ss->assign("module", $_REQUEST['module']);
+            $this->ss->assign('module', $_REQUEST['module']);
         }
         return parent::getListViewSmarty($parentFieldArray, $vardef, $displayParams, $col);
     }
+
+    /**
+     * @throws Exception
+     */
     public function save(&$bean, $params, $field, $vardef, $prefix = '')
     {
         $fakeDisplayParams = array();
@@ -65,7 +69,7 @@ class SugarFieldImage extends SugarFieldFile
         //remove file
         if (isset($_REQUEST['remove_file_' . $field]) && $params['remove_file_' . $field] == 1) {
             $upload_file->unlink_file($bean->$field);
-            $bean->$field = "";
+            $bean->$field = '';
         }
 
         $move = false;
@@ -75,10 +79,10 @@ class SugarFieldImage extends SugarFieldFile
                 $move = true;
             } else {
                 //not valid image.
-                $GLOBALS['log']->fatal("Image Field : Not a Valid Image.");
+                $GLOBALS['log']->fatal('Image Field : Not a Valid Image.');
                 $temp = $vardef['vname'];
                 $temp = translate($temp, $bean->module_name);
-                SugarApplication::appendErrorMessage($temp . " Field :  Not a valid image format.");
+                SugarApplication::appendErrorMessage($temp . ' Field :  Not a valid image format.');
             }
         }
 

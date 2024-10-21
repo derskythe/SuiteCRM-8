@@ -70,6 +70,7 @@ class PDFView extends AbstractView
     }
 
     /**
+     * @throws \SmartyException
      * @see SugarView::display()
      */
     public function display(): void

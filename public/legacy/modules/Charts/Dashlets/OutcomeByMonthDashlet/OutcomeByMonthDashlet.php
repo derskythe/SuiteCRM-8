@@ -61,6 +61,7 @@ class OutcomeByMonthDashlet extends DashletGenericChart
     protected $_seedName = 'Opportunities';
 
     /**
+     * @throws DateMalformedStringException
      * @see DashletGenericChart::__construct()
      */
     public function __construct(
@@ -74,7 +75,7 @@ class OutcomeByMonthDashlet extends DashletGenericChart
         }
 
         if (empty($options['obm_date_end'])) {
-            $options['obm_date_end'] = $timedate->asDbDate($timedate->getNow()->modify("+6 months"));
+            $options['obm_date_end'] = $timedate->asDbDate($timedate->getNow()->modify('+6 months'));
         }
 
         parent::__construct($id, $options);
@@ -93,9 +94,10 @@ class OutcomeByMonthDashlet extends DashletGenericChart
     }
 
     /**
+     * @throws SmartyException
      * @see DashletGenericChart::display()
      */
-    public function display()
+    public function display() : string
     {
         $currency_symbol = $GLOBALS['sugar_config']['default_currency_symbol'];
         if ($GLOBALS['current_user']->getPreference('currency')) {
@@ -244,18 +246,18 @@ EOD;
      */
     protected function constructQuery()
     {
-        $query = "SELECT sales_stage,".
-            DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'"))." as m, ".
-            "sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ";
-        $query .= " WHERE opportunities.date_closed >= ".DBManagerFactory::getInstance()->convert("'".$this->obm_date_start."'", 'date') .
-            " AND opportunities.date_closed <= ".DBManagerFactory::getInstance()->convert("'".$this->obm_date_end."'", 'date') .
-            " AND opportunities.deleted=0";
+        $query = 'SELECT sales_stage,' .
+            DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'")). ' as m, ' .
+            'sum(amount_usdollar/1000) as total, count(*) as opp_count FROM opportunities ';
+        $query .= ' WHERE opportunities.date_closed >= ' .DBManagerFactory::getInstance()->convert("'".$this->obm_date_start."'", 'date') .
+            ' AND opportunities.date_closed <= ' .DBManagerFactory::getInstance()->convert("'".$this->obm_date_end."'", 'date') .
+            ' AND opportunities.deleted=0';
         if (isset($this->obm_ids) && count($this->obm_ids) > 0) {
             $query .= " AND opportunities.assigned_user_id IN ('" . implode("','", $this->obm_ids) . "')";
         }
-        $query .= " GROUP BY sales_stage,".
+        $query .= ' GROUP BY sales_stage,' .
             DBManagerFactory::getInstance()->convert('opportunities.date_closed', 'date_format', array("'%Y-%m'"), array("'YYYY-MM'")) .
-            " ORDER BY m";
+            ' ORDER BY m';
 
         return $query;
     }
@@ -271,18 +273,18 @@ EOD;
         $chart['tooltips']= array();
 
         foreach ($data as $i) {
-            $key = $i["m"];
-            $stage = $i["sales_stage"];
-            $stage_dom_option = $i["sales_stage_dom_option"];
-            if (!in_array($key, $chart['labels'])) {
+            $key = $i['m'];
+            $stage = $i['sales_stage'];
+            $stage_dom_option = $i['sales_stage_dom_option'];
+            if (!in_array($key, $chart['labels'], true)) {
                 $chart['labels'][] = $key;
                 $chart['data'][] = array();
             }
-            if (!in_array($stage, $chart['key'])) {
+            if (!in_array($stage, $chart['key'], true)) {
                 $chart['key'][] = $stage;
             }
 
-            $formattedFloat = (float)number_format((float)$i["total"], 2, '.', '');
+            $formattedFloat = (float)number_format((float) $i['total'], 2, '.', '');
             $chart['data'][count($chart['data'])-1][] = $formattedFloat;
             $chart['tooltips'][]="<div><input type='hidden' class='stage' value='$stage_dom_option'><input type='hidden' class='date' value='$key'></div>".$stage.'('.$currency_symbol.$formattedFloat.$thousands_symbol.') '.$key;
         }

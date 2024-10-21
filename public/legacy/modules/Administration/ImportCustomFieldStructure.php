@@ -51,8 +51,8 @@ if (empty($_FILES)) {
 <br>
 <br>
 <form enctype="multipart/form-data" action="index.php" method="POST">
-   	<input type='hidden' name='module' value='Administration'>
-   	<input type='hidden' name='action' value='ImportCustomFieldStructure'>
+       <input type='hidden' name='module' value='Administration'>
+       <input type='hidden' name='action' value='ImportCustomFieldStructure'>
    {$mod_strings['LBL_IMPORT_CUSTOM_FIELDS_STRUCT']}: <input name="sugfile" type="file" />
     <input type="submit" value="{$mod_strings['LBL_ICF_IMPORT_S']}" class='button'/>
 </form>
@@ -64,7 +64,7 @@ EOQ;
     $lines = file($_FILES['sugfile']['tmp_name']);
     $cur = array();
     foreach ($lines as $line) {
-        if (trim($line) == 'DONE') {
+        if (trim($line) === 'DONE') {
             $fmd->new_with_id = true;
             echo $mod_strings['LBL_IMPORT_CUSTOM_FIELDS_ADDING'] . ':' . $fmd->custom_module . '-' .
                  $fmd->name . '<br>';

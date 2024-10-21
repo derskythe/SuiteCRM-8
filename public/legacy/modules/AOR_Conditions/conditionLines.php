@@ -35,18 +35,18 @@ function display_condition_lines($focus, $field, $value, $view)
     }
     $html .= '<script src="cache/jsLanguage/AOR_Conditions/'. $GLOBALS['current_language'] . '.js"></script>';
 
-    if ($view == 'EditView') {
+    if ($view === 'EditView') {
         $html .= '<script src="modules/AOR_Conditions/conditionLines.js"></script>';
         $html .= "<table border='0' cellspacing='4' width='100%' id='aor_conditionLines'></table>";
 
         $html .= "<div style='padding-top: 10px; padding-bottom:10px;'>";
         $html .= "<input type=\"button\" tabindex=\"116\" class=\"button\" value=\"".$mod_strings['LBL_ADD_CONDITION']."\" id=\"btn_ConditionLine\" onclick=\"insertConditionLine()\" disabled/>";
-        $html .= "</div>";
+        $html .= '</div>';
 
 
         if (isset($focus->report_module) && $focus->report_module != '') {
-            require_once("modules/AOW_WorkFlow/aow_utils.php");
-            $html .= "<script>";
+            require_once('modules/AOW_WorkFlow/aow_utils.php');
+            $html .= '<script>';
             $html .= "report_module = \"".$focus->report_module."\";";
             $html .= "document.getElementById('btn_ConditionLine').disabled = '';";
             if ($focus->id != '') {
@@ -58,24 +58,24 @@ function display_condition_lines($focus, $field, $value, $view)
                     $condition_name->retrieve($row['id']);
                     $condition_name->module_path = unserialize(base64_decode($condition_name->module_path));
                     $html .= "report_fields = \"".trim(preg_replace('/\s+/', ' ', (string) getModuleFields(getRelatedModule($focus->report_module, $condition_name->module_path[0]))))."\";";
-                    if ($condition_name->value_type == 'Date') {
+                    if ($condition_name->value_type === 'Date') {
                         $condition_name->value = unserialize(base64_decode($condition_name->value));
                     }
                     $condition_item = json_encode($condition_name->toArray());
-                    $html .= "loadConditionLine(".$condition_item.");";
+                    $html .= 'loadConditionLine(' .$condition_item. ');';
                 }
             }
             $html .= "report_fields = \"".trim(preg_replace('/\s+/', ' ', (string) getModuleFields($focus->report_module)))."\";";
-            $html .= "</script>";
+            $html .= '</script>';
         }
-    } elseif ($view == 'DetailView') {
+    } elseif ($view === 'DetailView') {
         $html .= '<script src="modules/AOR_Conditions/conditionLines.js"></script>';
         $html .= "<table border='0' cellspacing='0' width='100%' id='aor_conditionLines'></table>";
 
 
         if (isset($focus->report_module) && $focus->report_module != '') {
-            require_once("modules/AOW_WorkFlow/aow_utils.php");
-            $html .= "<script>";
+            require_once('modules/AOW_WorkFlow/aow_utils.php');
+            $html .= '<script>';
             $html .= "report_fields = \"".trim(preg_replace('/\s+/', ' ', (string) getModuleFields($focus->report_module)))."\";";
             $html .= "report_module = \"".$focus->report_module."\";";
             $sql = "SELECT id FROM aor_conditions WHERE aor_report_id = '".$focus->id."' AND deleted = 0 ORDER BY condition_order ASC";
@@ -85,13 +85,13 @@ function display_condition_lines($focus, $field, $value, $view)
                 $condition_name = BeanFactory::newBean('AOR_Conditions');
                 $condition_name->retrieve($row['id']);
                 $condition_name->module_path = unserialize(base64_decode($condition_name->module_path));
-                if ($condition_name->value_type == 'Date') {
+                if ($condition_name->value_type === 'Date') {
                     $condition_name->value = unserialize(base64_decode($condition_name->value));
                 }
                 $condition_item = json_encode($condition_name->toArray());
-                $html .= "loadConditionLine(".$condition_item.");";
+                $html .= 'loadConditionLine(' .$condition_item. ');';
             }
-            $html .= "</script>";
+            $html .= '</script>';
         }
     }
     return $html;

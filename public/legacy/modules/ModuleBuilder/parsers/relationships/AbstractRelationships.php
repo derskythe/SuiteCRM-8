@@ -98,7 +98,7 @@ class AbstractRelationships
 
         foreach ($browser->modules as $moduleName => $module) {
             // do not include the submodules of Activities as already have the parent...
-            if (! $includeActivitiesSubmodules && in_array($module->module, self::$activities)) {
+            if (!$includeActivitiesSubmodules && in_array($module->module, self::$activities, true)) {
                 continue ;
             }
             $providedSubpanels = $module->getProvidedSubpanels();
@@ -161,7 +161,7 @@ class AbstractRelationships
         require_once 'modules/ModuleBuilder/parsers/relationships/AbstractRelationship.php' ;
         foreach (AbstractRelationship::$definitionKeys as $key) {
             if (! empty($_REQUEST [ $key ])) {
-                $definition [ $key ] = ($key == 'relationship_type') ? AbstractRelationship::parseRelationshipType($_REQUEST [ $key ]) : $_REQUEST [ $key ] ;
+                $definition [ $key ] = ($key === 'relationship_type') ? AbstractRelationship::parseRelationshipType($_REQUEST [$key ]) : $_REQUEST [$key ] ;
             }
         }
 
@@ -200,7 +200,7 @@ class AbstractRelationships
      */
     protected function _load($basepath)
     {
-        $GLOBALS [ 'log' ]->info(get_class($this) . ": loading relationships from " . $basepath . '/relationships.php') ;
+        $GLOBALS [ 'log' ]->info(get_class($this) . ': loading relationships from ' . $basepath . '/relationships.php') ;
         $objects = array( ) ;
         if (file_exists($basepath . '/relationships.php')) {
             include($basepath . '/relationships.php') ;
@@ -227,7 +227,7 @@ class AbstractRelationships
      */
     protected function _save($relationships, $basepath)
     {
-        $GLOBALS [ 'log' ]->info(get_class($this) . ": saving relationships to " . $basepath . '/relationships.php') ;
+        $GLOBALS [ 'log' ]->info(get_class($this) . ': saving relationships to ' . $basepath . '/relationships.php') ;
         $header = file_get_contents('modules/ModuleBuilder/MB/header.php') ;
 
         $definitions = array( ) ;
@@ -256,7 +256,7 @@ class AbstractRelationships
     {
         $relationships = [];
         $db = DBManagerFactory::getInstance() ;
-        $query = "SELECT * FROM relationships WHERE deleted = 0" ;
+        $query = 'SELECT * FROM relationships WHERE deleted = 0';
         $result = $db->query($query) ;
         while ($row = $db->fetchByAssoc($result)) {
             // set this relationship to readonly
@@ -295,16 +295,16 @@ class AbstractRelationships
         }
 
         while (isset($allRelationships [ $name ])) {
-            $name = $basename . "_" . ( string ) ($suffix ++) ;
+            $name = $basename . '_' . ( string ) ($suffix ++) ;
         }
 
         // bug33522 - if our relationship basename is in the special cases
-        if (in_array($name, $this->specialCaseBaseNames)) {
+        if (in_array($name, $this->specialCaseBaseNames, true)) {
             //add a _1 (or _suffix#) and check to see if it already exists
-            $name = $name . "_" . ( string ) ($suffix ++);
+            $name = $name . '_' . ( string ) ($suffix ++);
             while (isset($allRelationships [ $name ])) {
                 // if it does exist, strip off the _1 previously added and try again
-                $name = substr($name, 0, -2) . "_" . ( string ) ($suffix ++);
+                $name = substr($name, 0, -2) . '_' . ( string ) ($suffix ++);
             }
         }
 
@@ -392,7 +392,7 @@ class AbstractRelationships
             //Check for app strings
             $GLOBALS [ 'log' ]->debug(get_class($this) . "->saveLabels(): saving the following to {$filename}"
                                       . print_r($definition, true)) ;
-            if ($definition['module'] == 'application') {
+            if ($definition['module'] === 'application') {
                 $app_list_strings[$definition [ 'system_label' ]] = $definition [ 'display_label' ];
                 foreach ($app_list_strings as $key => $val) {
                     $out .= override_value_to_string_recursive2('app_list_strings', $key, $val);
@@ -465,10 +465,10 @@ class AbstractRelationships
         foreach ($subpanelDefinitions as $moduleName => $definitions) {
             $filename = "$basepath/layoutdefs/{$relationshipName}_{$moduleName}.php" ;
             $subpanelVarname = 'layout_defs["' . $moduleName . '"]["subpanel_setup"]';
-            $out = "";
+            $out = '';
             foreach ($definitions as $definition) {
                 $GLOBALS [ 'log' ]->debug(get_class($this) . "->saveSubpanelDefinitions(): saving the following to {$filename}" . print_r($definition, true)) ;
-                if (empty($definition ['get_subpanel_data']) || $definition ['subpanel_name'] == 'history' || $definition ['subpanel_name'] == 'activities') {
+                if (empty($definition ['get_subpanel_data']) || $definition ['subpanel_name'] === 'history' || $definition ['subpanel_name'] === 'activities') {
                     $definition ['get_subpanel_data'] = $definition ['subpanel_name'];
                 }
                 $out .= override_value_to_string($subpanelVarname, strtolower($definition [ 'get_subpanel_data' ]), $definition) . "\n";
@@ -499,7 +499,7 @@ class AbstractRelationships
     {
         $installDefs = [];
         mkdir_recursive("$basepath/vardefs/") ;
-        $GLOBALS [ 'log' ]->debug(get_class($this) . "->saveVardefs(): vardefs =" . print_r($vardefs, true)) ;
+        $GLOBALS [ 'log' ]->debug(get_class($this) . '->saveVardefs(): vardefs =' . print_r($vardefs, true)) ;
 
         foreach ($vardefs as $moduleName => $definitions) {
             // find this module's Object name - the object name, not the module name, is used as the key in the vardefs...
@@ -534,7 +534,7 @@ class AbstractRelationships
             ) ;
         }
 
-        $GLOBALS [ 'log' ]->debug(get_class($this) . "->saveVardefs(): installDefs =" . print_r($installDefs, true)) ;
+        $GLOBALS [ 'log' ]->debug(get_class($this) . '->saveVardefs(): installDefs =' . print_r($installDefs, true)) ;
 
         return $installDefs ;
     }

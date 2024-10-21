@@ -49,7 +49,7 @@
  * */
 
 require_once('include/MVC/View/SugarView.php');
-require_once("include/JSON.php");
+require_once('include/JSON.php');
 
 #[\AllowDynamicProperties]
 class ContactsViewRetrieveEmail extends SugarView
@@ -59,7 +59,7 @@ class ContactsViewRetrieveEmail extends SugarView
         parent::__construct();
     }
 
-    public function process()
+    public function process() : void
     {
         $this->display();
     }

@@ -1132,23 +1132,38 @@ $app_strings = array(
     'LBL_TOUR_SKIP' => 'Skip',
     'LBL_TOUR_BACK' => 'Back',
     'LBL_TOUR_TAKE_TOUR' => 'Take the tour',
-    'LBL_MOREDETAIL' => 'More Detail', /*for 508 compliance fix*/
-    'LBL_EDIT_INLINE' => 'Edit Inline', /*for 508 compliance fix*/
-    'LBL_VIEW_INLINE' => 'View', /*for 508 compliance fix*/
-    'LBL_BASIC_SEARCH' => 'Filter', /*for 508 compliance fix*/
-    'LBL_Blank' => ' ', /*for 508 compliance fix*/
-    'LBL_ID_FF_ADD' => 'Add', /*for 508 compliance fix*/
-    'LBL_ID_FF_ADD_EMAIL' => 'Add Email Address', /*for 508 compliance fix*/
-    'LBL_HIDE_SHOW' => 'Hide/Show', /*for 508 compliance fix*/
-    'LBL_DELETE_INLINE' => 'Delete', /*for 508 compliance fix*/
-    'LBL_ID_FF_CLEAR' => 'Clear', /*for 508 compliance fix*/
-    'LBL_ID_FF_VCARD' => 'vCard', /*for 508 compliance fix*/
-    'LBL_ID_FF_REMOVE' => 'Remove', /*for 508 compliance fix*/
-    'LBL_ID_FF_REMOVE_EMAIL' => 'Remove Email Address', /*for 508 compliance fix*/
+    'LBL_MOREDETAIL'          => 'More Detail',
+    /*for 508 compliance fix*/
+    'LBL_EDIT_INLINE'         => 'Edit Inline',
+    /*for 508 compliance fix*/
+    'LBL_VIEW_INLINE'         => 'View',
+    /*for 508 compliance fix*/
+    'LBL_BASIC_SEARCH'        => 'Filter',
+    /*for 508 compliance fix*/
+    'LBL_Blank'               => ' ',
+    /*for 508 compliance fix*/
+    'LBL_ID_FF_ADD'           => 'Add',
+    /*for 508 compliance fix*/
+    'LBL_ID_FF_ADD_EMAIL'     => 'Add Email Address',
+    /*for 508 compliance fix*/
+    'LBL_HIDE_SHOW'           => 'Hide/Show',
+    /*for 508 compliance fix*/
+    'LBL_DELETE_INLINE'       => 'Delete',
+    /*for 508 compliance fix*/
+    'LBL_ID_FF_CLEAR'         => 'Clear',
+    /*for 508 compliance fix*/
+    'LBL_ID_FF_VCARD'         => 'vCard',
+    /*for 508 compliance fix*/
+    'LBL_ID_FF_REMOVE'        => 'Remove',
+    /*for 508 compliance fix*/
+    'LBL_ID_FF_REMOVE_EMAIL'  => 'Remove Email Address',
+    /*for 508 compliance fix*/
     'LBL_ID_FF_OPT_OUT' => 'Opt Out',
     'LBL_ID_FF_INVALID' => 'Make Invalid',
-    'LBL_ADD' => 'Add', /*for 508 compliance fix*/
-    'LBL_COMPANY_LOGO' => 'Company logo', /*for 508 compliance fix*/
+    'LBL_ADD'                 => 'Add',
+    /*for 508 compliance fix*/
+    'LBL_COMPANY_LOGO'        => 'Company logo',
+    /*for 508 compliance fix*/
     'LBL_CONNECTORS_POPUPS' => 'Connectors Popups',
     'LBL_CLOSEINLINE' => 'Close',
     'LBL_VIEWINLINE' => 'View',
@@ -1983,7 +1998,7 @@ $app_strings = array(
     'LBL_REMOVE_DASHLET_CONFIRM' => 'Are you sure you want to remove this SuiteCRM Dashlet?',
     'LBL_REMOVING_DASHLET' => 'Removing SuiteCRM Dashlet...',
     'LBL_REMOVED_DASHLET' => 'SuiteCRM Dashlet Removed',
-    'LBL_MAX_DASHLET_COLUMNS' => "Maximum of %s columns can be displayed.",
+    'LBL_MAX_DASHLET_COLUMNS' => 'Maximum of %s columns can be displayed.',
     'LBL_RETRIEVING_XML_DATA' => "There was a problem retrieving the XML data:\n",
 
     // MySugar Menu Options
@@ -2271,7 +2286,7 @@ $app_strings = array(
     'ERR_OPT_IN_RELATION_INCORRECT' => 'Opt In requires the email to be related to Account/Contact/Lead/Target',
 
     'LBL_SECURITYGROUP_NONINHERITABLE' => 'Non-Inheritable Group',
-    'LBL_PRIMARY_GROUP' => "Primary Group",
+    'LBL_PRIMARY_GROUP'       => 'Primary Group',
 
     // footer
     'LBL_SUITE_TOP' => 'Back to top',
@@ -3674,7 +3689,8 @@ $app_list_strings['collection_temp_list'] = array(
 
 $app_list_strings['moduleList']['TemplateEditor'] = 'Template Part Editor';
 $app_strings['LBL_CONFIRM_CANCEL_INLINE_EDITING'] = "You have clicked away from the field you were editing without saving it. Click ok if you're happy to lose your change, or cancel if you would like to continue editing";
-$app_strings['LBL_LOADING_ERROR_INLINE_EDITING'] = "There was an error loading the field. Your session may have timed out. Please log in again to fix this";
+$app_strings['LBL_LOADING_ERROR_INLINE_EDITING'] =
+    'There was an error loading the field. Your session may have timed out. Please log in again to fix this';
 
 $app_list_strings['moduleList']['AOBH_BusinessHours'] = 'Business Hours';
 $app_list_strings['business_hours_list']['0'] = '12am';
@@ -3874,12 +3890,13 @@ $app_strings['LBL_VALIDATION_ERROR_FLOAT_FORMAT'] = "Invalid float format. Expec
 $app_strings['LBL_VALIDATION_ERROR_DATE_FORMAT'] = "Invalid date format. Expected: '{{context.expected}}'";
 $app_strings['LBL_VALIDATION_ERROR_DATETIME_FORMAT'] = "Invalid datetime format. Expected: '{{context.expected}}'";
 $app_strings['LBL_VALIDATION_ERROR_EMAIL_FORMAT'] = "Invalid email format. Expected: '{{context.expected}}'";
-$app_strings['LBL_VALIDATION_ERROR_PHONE_FORMAT'] = "Invalid phone format.";
+$app_strings['LBL_VALIDATION_ERROR_PHONE_FORMAT'] = 'Invalid phone format.';
 $app_strings['LBL_VALIDATION_ERROR_MIN'] = "Invalid value. Value must greater or equal to '{{context.min}}'";
 $app_strings['LBL_VALIDATION_ERROR_MAX'] = "Invalid value. Value must smaller or equal to '{{context.max}}'";
-$app_strings['LBL_MULTIPLE_PRIMARY_EMAIL_VALIDATION_ERROR'] = "Only one Valid Email Address should be marked as primary";
-$app_strings['LBL_DUPLICATE_EMAIL_VALIDATION_ERROR'] = "Duplicate email addresses are not allowed";
-$app_strings['LBL_NO_PRIMARY_EMAIL_VALIDATION_ERROR'] = "One Valid Email Address should be marked as primary";
+$app_strings['LBL_MULTIPLE_PRIMARY_EMAIL_VALIDATION_ERROR'] =
+    'Only one Valid Email Address should be marked as primary';
+$app_strings['LBL_DUPLICATE_EMAIL_VALIDATION_ERROR'] = 'Duplicate email addresses are not allowed';
+$app_strings['LBL_NO_PRIMARY_EMAIL_VALIDATION_ERROR'] = 'One Valid Email Address should be marked as primary';
 $app_strings['LBL_VALIDATION_ERRORS'] = 'There are validation errors, unable to perform action.';
 $app_strings['LBL_LOADING_IN_PROGRESS'] = 'The calculation is currently in progress, please wait a few moments before trying again.';
 $app_strings['LBL_TYPE_TO_SEARCH'] = 'Type to search...';
@@ -3918,9 +3935,10 @@ $app_strings['AOS_Invoices'] = 'Invoices';
 $app_strings['LBL_PHOTO'] = 'Photo';
 $app_strings['LBL_CASE_UPDATES'] = 'Case Updates';
 $app_strings['LBL_CASE_UPDATE_SUBMITTED'] = 'Case Update Submitted';
-$app_strings['LBL_SUMMARY_DEFAULT'] = "{{fields.name.value}}";
-$app_strings['LBL_SUMMARY_PERSON'] = "{{fields.salutation.value}} {{fields.first_name.value}} {{fields.last_name.value}}";
-$app_strings['LBL_SUMMARY_DOCUMENT'] = "{{fields.document_name.value}}";
+$app_strings['LBL_SUMMARY_DEFAULT'] = '{{fields.name.value}}';
+$app_strings['LBL_SUMMARY_PERSON'] =
+    '{{fields.salutation.value}} {{fields.first_name.value}} {{fields.last_name.value}}';
+$app_strings['LBL_SUMMARY_DOCUMENT'] = '{{fields.document_name.value}}';
 $app_strings['LBL_CREATE'] = 'Create';
 $app_strings['LBL_CLEAR_FILTER'] = 'Clear Filter';
 $app_strings['LBL_QUICK_FILTERS'] = 'Quick Filters';
@@ -3966,7 +3984,7 @@ $app_strings['LBL_ADD_CONTACTS_TO_TARGET_LIST_SUCCESS'] = 'Contacts added to tar
 $app_strings['LBL_ADD_CONTACTS_TO_TARGET_LIST_FAILED'] = 'There was an error adding contacts to target list.';
 $app_strings['LBL_CHANGED_TO_TEXT'] = 'changed to';
 $app_strings['LBL_RECORD_CHANGED'] = 'Record Updated';
-$app_strings['LBL_CREATE'] = "Create";
+$app_strings['LBL_CREATE'] = 'Create';
 $app_strings['LBL_USE_ADVANCED_SEARCH'] = 'Use Advanced Search';
 $app_strings['LBL_USE_BASIC_SEARCH'] = 'Use Basic Search';
 $app_strings['LBL_NO_MODULE_SELECTED'] = 'No module selected';
@@ -3998,7 +4016,7 @@ $app_strings['LBL_INBOUND_ACCOUNT'] = 'Inbound Account';
 $app_strings['LBL_SYSTEM_ACCOUNT'] = 'System Account';
 $app_strings['LBL_FROM_SYSTEM'] = 'Send From System';
 $app_strings['LBL_SIGNATURE'] = 'Signature';
-$app_strings['LBL_NEW_NOTIFICATION'] = "You have {{context.unread}} new notifications";
+$app_strings['LBL_NEW_NOTIFICATION'] = 'You have {{context.unread}} new notifications';
 $app_strings['LBL_NOTIFICATION_ITEM_DATE'] = 'Due: {{fields.date_start.value}}';
 $app_strings['LBL_NOTIFICATION_ITEM_DATE_ENTERED'] = 'Notified: {{fields.snooze.value}}';
 $app_strings['LBL_QUICK_ACTIONS'] = 'Quick Actions';

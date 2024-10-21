@@ -87,7 +87,7 @@ class TemplateBoolean extends TemplateField
         if (!empty($_REQUEST[$this->name])) {
             $returnXTPL = array();
 
-            if ($_REQUEST[$this->name] == '1' || $_REQUEST[$this->name] == 'on' || $_REQUEST[$this->name] == 'yes') {
+            if ($_REQUEST[$this->name] == '1' || $_REQUEST[$this->name] === 'on' || $_REQUEST[$this->name] === 'yes') {
                 $returnXTPL[$this->name . '_checked'] = 'checked';
                 $returnXTPL[$this->name] = 'checked';
             }

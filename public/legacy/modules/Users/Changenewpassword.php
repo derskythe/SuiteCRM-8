@@ -63,10 +63,10 @@ if (getRecaptchaChallengeField() !== false) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PASSWORD GENERATED LINK CHECK USING
+////    PASSWORD GENERATED LINK CHECK USING
 ////
 //// This script :  - check the link expiration
-////			   - send the filled form to authenticate.php after changing the password in the database
+////               - send the filled form to authenticate.php after changing the password in the database
 $redirect = true;
 $errors = '';
 if (!empty($_REQUEST['guid']) && !empty($_REQUEST['key'])) {
@@ -139,7 +139,7 @@ if (!empty($_REQUEST['guid']) && !empty($_REQUEST['key'])) {
             }
         } else {
             $query2 = "UPDATE users_password_link SET deleted='1' where id='" . $db->quote($_REQUEST['guid']) . "'";
-            DBManagerFactory::getInstance()->query($query2, true, "Error setting link");
+            DBManagerFactory::getInstance()->query($query2, true, 'Error setting link');
         }
     }
 }
@@ -149,7 +149,7 @@ if ($redirect === true) {
     exit();
 }
 
-////	PASSWORD GENERATED LINK CHECK USING
+////    PASSWORD GENERATED LINK CHECK USING
 ///////////////////////////////////////////////////////////////////////////////
 
 require_once('include/MVC/View/SugarView.php');
@@ -162,16 +162,16 @@ $sugar_smarty = new Sugar_Smarty();
 $pwd_settings = $GLOBALS['sugar_config']['passwordsetting'];
 
 $sugar_smarty->assign('sugar_md', getWebPath('include/images/sugar_md_open.png'));
-$sugar_smarty->assign("MOD", $mod_strings);
-$sugar_smarty->assign("CAPTCHA", displayRecaptcha());
-$sugar_smarty->assign("IS_ADMIN", '1');
-$sugar_smarty->assign("ENTRY_POINT", 'Changenewpassword');
+$sugar_smarty->assign('MOD', $mod_strings);
+$sugar_smarty->assign('CAPTCHA', displayRecaptcha());
+$sugar_smarty->assign('IS_ADMIN', '1');
+$sugar_smarty->assign('ENTRY_POINT', 'Changenewpassword');
 $sugar_smarty->assign('return_action', 'login');
-$sugar_smarty->assign("APP", $app_strings);
-$sugar_smarty->assign("INSTRUCTION", $app_strings['NTC_LOGIN_MESSAGE']);
-$sugar_smarty->assign("ERRORS", $errors);
+$sugar_smarty->assign('APP', $app_strings);
+$sugar_smarty->assign('INSTRUCTION', $app_strings['NTC_LOGIN_MESSAGE']);
+$sugar_smarty->assign('ERRORS', $errors);
 $sugar_smarty->assign(
-    "USERNAME_FIELD",
+    'USERNAME_FIELD',
     '<td scope="row" width="30%">' . $mod_strings['LBL_USER_NAME'] . ':</td><td width="70%"><input type="text" size="20" tabindex="1" id="user_name" name="user_name"  value=""></td>'
 );
 $sugar_smarty->assign('PWDSETTINGS', $GLOBALS['sugar_config']['passwordsetting']);
@@ -185,10 +185,10 @@ $sugar_smarty->assign('SUBMIT_BUTTON', '<input title="' . $mod_strings['LBL_GENE
     . 'type="button" tabindex="3" id="reset_password" name="Reset Password" value="' . $mod_strings['LBL_GENERATE_PASSWORD_BUTTON_LABEL'] . '" /><br>&nbsp');
 
 if (!empty($_REQUEST['guid'])) {
-    $sugar_smarty->assign("GUID", $_REQUEST['guid']);
+    $sugar_smarty->assign('GUID', $_REQUEST['guid']);
 }
 if (!empty($_REQUEST['key'])) {
-    $sugar_smarty->assign("KEY", $_REQUEST['key']);
+    $sugar_smarty->assign('KEY', $_REQUEST['key']);
 }
 
 $sugar_smarty->display(get_custom_file_if_exists('modules/Users/Changenewpassword.tpl'));

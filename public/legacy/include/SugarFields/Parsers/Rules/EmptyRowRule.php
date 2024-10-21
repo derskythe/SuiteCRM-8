@@ -41,7 +41,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 /**
  * EmptyRowRule.php
  *
@@ -61,13 +60,14 @@ class EmptyRowRule extends BaseRule
     }
 
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
-        foreach ($panels as $name=>$panel) {
-            foreach ($panel as $rowCount=>$row) {
+        parent::parsePanels($panels, $view);
+        foreach ($panels as $name => $panel) {
+            foreach ($panel as $rowCount => $row) {
                 $emptyCount = 0;
 
-                foreach ($row as $key=>$column) {
+                foreach ($row as $key => $column) {
                     if (is_array($column) && (!isset($column['name']) || empty($column['name']))) {
                         $emptyCount++;
                     } else {
@@ -83,7 +83,7 @@ class EmptyRowRule extends BaseRule
                     continue;
                 } else {
                     if (count($row) > 2) {
-                        foreach ($row as $key=>$column) {
+                        foreach ($row as $key => $column) {
                             if (empty($column) || $column == '') {
                                 unset($panels[$name][$rowCount][$key]);
                             }
@@ -93,6 +93,6 @@ class EmptyRowRule extends BaseRule
             } //foreach
         } //foreach
 
-   return $panels;
+        return $panels;
     }
 }

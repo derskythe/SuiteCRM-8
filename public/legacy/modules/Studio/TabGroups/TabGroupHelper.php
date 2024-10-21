@@ -137,7 +137,7 @@ class TabGroupHelper
         write_array_to_file("GLOBALS['tabStructure']", $tabGroups, $newFile);
         $GLOBALS['tabStructure'] = $tabGroups;
 
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('rebuild_all');
     }
 }

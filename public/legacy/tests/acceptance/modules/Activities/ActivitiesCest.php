@@ -63,7 +63,7 @@ class ActivitiesCest
         // Create call
         $this->fakeData->seed($this->fakeDataSeed);
         $callName = 'Test_'. $this->fakeData->company();
-        $calls->createCallRelateModule($callName, $account_name, "Account");
+        $calls->createCallRelateModule($callName, $account_name, 'Account');
 
         // Navigate to the Account's Detail View and confirm the due date contains data
         $I->visitPage('Accounts', 'index');

@@ -87,11 +87,11 @@ class ConnectorFactory
     {
         $dir = str_replace('_', '/', $class);
 
-        if (strpos($dir, '..') !== false) {
+        if (str_contains($dir, '..')) {
             return;
         }
 
-        $parts = explode("/", $dir);
+        $parts = explode('/', $dir);
         $file = $parts[count($parts)-1] . '.php';
         if (file_exists("custom/modules/Connectors/connectors/{$type}/{$dir}/$file")) {
             require_once("custom/modules/Connectors/connectors/{$type}/{$dir}/$file");

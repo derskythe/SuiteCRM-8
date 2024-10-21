@@ -33,13 +33,13 @@ class AOR_ReportsViewEdit extends ViewEdit
         parent::__construct();
     }
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $app_list_strings;
         echo "<style type='text/css'>";
         //readfile('modules/AOR_Reports/css/edit.css');
         readfile('modules/AOR_Reports/js/jqtree/jqtree.css');
-        echo "</style>";
+        echo '</style>';
         if (!is_file('cache/jsLanguage/AOR_Fields/' . $GLOBALS['current_language'] . '.js')) {
             require_once('include/language/jsLanguage.php');
             jsLanguage::createModuleStringsCache('AOR_Fields', $GLOBALS['current_language']);
@@ -52,20 +52,20 @@ class AOR_ReportsViewEdit extends ViewEdit
         }
         echo '<script src="cache/jsLanguage/AOR_Conditions/'. $GLOBALS['current_language'] . '.js"></script>';
 
-        echo "<script>";
+        echo '<script>';
         echo "sort_by_values = \"".trim(preg_replace('/\s+/', ' ', (string) get_select_options_with_id($app_list_strings['aor_sort_operator'], '')))."\";";
         echo "total_values = \"".trim(preg_replace('/\s+/', ' ', (string) get_select_options_with_id($app_list_strings['aor_total_options'], '')))."\";";
         echo "format_values = \"".trim(preg_replace('/\s+/', ' ', (string) get_select_options_with_id($app_list_strings['aor_format_options'], '')))."\";";
-        echo "</script>";
+        echo '</script>';
 
         $fields = $this->getFieldLines();
-        echo "<script>var fieldLines = ".json_encode($fields)."</script>";
+        echo '<script>var fieldLines = ' .json_encode($fields). '</script>';
 
         $conditions = $this->getConditionLines();
-        echo "<script>var conditionLines = ".json_encode($conditions)."</script>";
+        echo '<script>var conditionLines = ' .json_encode($conditions). '</script>';
 
         $charts = $this->getChartLines();
-        echo "<script>var chartLines = ".json_encode($charts).";</script>";
+        echo '<script>var chartLines = ' .json_encode($charts). ';</script>';
 
         parent::preDisplay();
     }
@@ -82,9 +82,9 @@ class AOR_ReportsViewEdit extends ViewEdit
             $condition_name = BeanFactory::newBean('AOR_Conditions');
             $condition_name->retrieve($row['id']);
             if (!$condition_name->parenthesis) {
-                $condition_name->module_path = implode(":", unserialize(base64_decode($condition_name->module_path)));
+                $condition_name->module_path = implode(':', unserialize(base64_decode($condition_name->module_path)));
             }
-            if ($condition_name->value_type == 'Date') {
+            if ($condition_name->value_type === 'Date') {
                 $condition_name->value = unserialize(base64_decode($condition_name->value));
             }
             $condition_item = $condition_name->toArray();
@@ -115,7 +115,7 @@ class AOR_ReportsViewEdit extends ViewEdit
         while ($row = $this->bean->db->fetchByAssoc($result)) {
             $field_name = BeanFactory::newBean('AOR_Fields');
             $field_name->retrieve($row['id']);
-            $field_name->module_path = implode(":", unserialize(base64_decode($field_name->module_path)));
+            $field_name->module_path = implode(':', unserialize(base64_decode($field_name->module_path)));
             $arr = $field_name->toArray();
 
 

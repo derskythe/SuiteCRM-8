@@ -67,12 +67,14 @@ class DatabaseStore implements Store
         foreach ($metrics as $name=>$metric) {
             if (!empty($monitor->$name)) {
                 $columns[] = $name;
-                if ($metrics[$name]->_type == 'int') {
+                if ($metrics[$name]->_type === 'int') {
                     $values[] = (int)$monitor->$name;
-                } elseif ($metrics[$name]->_type == 'double') {
+                } elseif ($metrics[$name]->_type === 'double') {
                     $values[] = (float)$monitor->$name;
-                } elseif ($metrics[$name]->_type == 'datetime') {
-                    $values[] = DBManagerFactory::getInstance()->convert(DBManagerFactory::getInstance()->quoted($monitor->$name), "datetime");
+                } elseif ($metrics[$name]->_type === 'datetime') {
+                    $values[] = DBManagerFactory::getInstance()->convert(DBManagerFactory::getInstance()->quoted($monitor->$name),
+                                                                         'datetime'
+                    );
                 } else {
                     $values[] = DBManagerFactory::getInstance()->quoted($monitor->$name);
                 }
@@ -89,7 +91,7 @@ class DatabaseStore implements Store
             $values[] = $id;
         }
 
-        $query = "INSERT INTO $monitor->table_name (" .implode(",", $columns). " ) VALUES ( ". implode(",", $values). ')';
+        $query = "INSERT INTO $monitor->table_name (" .implode(',', $columns). ' ) VALUES ( ' . implode(',', $values). ')';
         DBManagerFactory::getInstance()->query($query);
     }
 }

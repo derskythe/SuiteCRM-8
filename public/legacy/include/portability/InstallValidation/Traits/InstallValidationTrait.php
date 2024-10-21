@@ -51,8 +51,9 @@ trait InstallValidationTrait
 
     public function iisVersion(): void
     {
-        $server_software = $_SERVER["SERVER_SOFTWARE"] ?? '';
-        if (strpos($server_software, 'Microsoft-IIS') !== false && preg_match_all("/^.*\/(\d+\.?\d*)$/",
+        $server_software = $_SERVER['SERVER_SOFTWARE'] ?? '';
+        if (str_contains($server_software, 'Microsoft-IIS') && preg_match_all(
+                '/^.*\/(\d+\.?\d*)$/',
                 $server_software, $out)) {
             $iis_version = $out[1][0];
 
@@ -178,6 +179,9 @@ trait InstallValidationTrait
         $this->setData($status, $value, $data);
     }
 
+    /**
+     * @throws Exception
+     */
     public function writableDir($dirname)
     {
         $writable = false;
@@ -217,15 +221,15 @@ trait InstallValidationTrait
     {
         $memory_limit = ini_get('memory_limit');
         if (empty($memory_limit)) {
-            $memory_limit = "-1";
+            $memory_limit = '-1';
         }
         if (!defined('SUGARCRM_MIN_MEM')) {
             define('SUGARCRM_MIN_MEM', 64 * 1024 * 1024);
         }
 
-        if ($memory_limit == "") {
+        if ($memory_limit == '') {
             $this->setData('success', 'LBL_CHECKSYS_MEM_OK');
-        } elseif ($memory_limit == "-1") {
+        } elseif ($memory_limit == '-1') {
             $this->setData('success', 'LBL_CHECKSYS_MEM_UNLIMITED');
         } else {
             preg_match('/^\s*([0-9.]+)\s*([KMGTPE])B?\s*$/i', $memory_limit, $matches);
@@ -253,6 +257,9 @@ trait InstallValidationTrait
         }
     }
 
+    /**
+     * @throws ImapHandlerException
+     */
     public function imapCheck(): void
     {
         $value = '';

@@ -56,34 +56,34 @@ resetUwSession();
 
 $uwMain =<<<eoq
 <table cellpadding="3" cellspacing="0" border="0">
-	<tr>
-		<td align="left">
-			<p>
-			{$mod_strings['LBL_UW_CANCEL_DESC']}
-			</p>
-		</td>
-	</tr>
-	<tr>
-		<th align="left">
-			<input	title		= "{$mod_strings['LBL_BUTTON_RESTART']}"
-					class		= "button"
-					onclick		= "window.location.href ='{$sugar_config['site_url']}/index.php?module=UpgradeWizard&action=index';"
-					type		= "submit"
-					value		= "  {$mod_strings['LBL_BUTTON_RESTART']}  "
-					id			= "restart_button" >
-		</th>
-	</tr>
+    <tr>
+        <td align="left">
+            <p>
+            {$mod_strings['LBL_UW_CANCEL_DESC']}
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <th align="left">
+            <input    title        = "{$mod_strings['LBL_BUTTON_RESTART']}"
+                    class        = "button"
+                    onclick        = "window.location.href ='{$sugar_config['site_url']}/index.php?module=UpgradeWizard&action=index';"
+                    type        = "submit"
+                    value        = "  {$mod_strings['LBL_BUTTON_RESTART']}  "
+                    id            = "restart_button" >
+        </th>
+    </tr>
 </table>
 eoq;
 
 
-$showBack		= false;
-$showCancel		= false;
-$showRecheck	= false;
-$showNext		= false;
+$showBack        = false;
+$showCancel        = false;
+$showRecheck    = false;
+$showNext        = false;
 $showExit       = true;
 
-$stepBack		= $_REQUEST['step'] - 1;
-$stepNext		= $_REQUEST['step'] + 1;
-$stepCancel		= -1;
-$stepRecheck	= $_REQUEST['step'];
+$stepBack        = $_REQUEST['step'] - 1;
+$stepNext        = $_REQUEST['step'] + 1;
+$stepCancel        = -1;
+$stepRecheck    = $_REQUEST['step'];

@@ -66,7 +66,7 @@ class vCard
         $contact->retrieve($contactid);
         // cn: bug 8504 - CF/LB break Outlook's vCard import
         $bad = array("\n", "\r");
-        $good = array("=0A", "=0D");
+        $good = array( '=0A', '=0D' );
         $encoding = '';
         if (strpos((string) $contact->primary_address_street, "\n") || strpos((string) $contact->primary_address_street, "\r")) {
             $contact->primary_address_street = str_replace($bad, $good, (string) $contact->primary_address_street);
@@ -93,11 +93,11 @@ class vCard
 
     public function setTitle($title)
     {
-        $this->setProperty("TITLE", $title);
+        $this->setProperty('TITLE', $title);
     }
     public function setORG($org, $dep)
     {
-        $this->setProperty("ORG", "$org;$dep");
+        $this->setProperty('ORG', "$org;$dep");
     }
     public function setAddress($address, $city, $state, $postal, $country, $type, $encoding='')
     {
@@ -121,7 +121,7 @@ class vCard
 
     public function setPhoneNumber($number, $type)
     {
-        if ($type != 'FAX') {
+        if ($type !== 'FAX') {
             $this->setProperty("TEL;$type", $number);
         } else {
             $this->setProperty("TEL;WORK;$type", $number);
@@ -167,21 +167,24 @@ class vCard
         $content = $this->toString();
         if (!defined('SUITE_PHPUNIT_RUNNER')) {
             header("Content-Disposition: attachment; filename={$this->name}.vcf");
-            header("Content-Type: text/x-vcard; charset=".$locale->getExportCharset());
-            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-            header("Last-Modified: " . TimeDate::httpTime());
-            header("Cache-Control: max-age=0");
-            header("Pragma: public");
+            header('Content-Type: text/x-vcard; charset=' . $locale->getExportCharset());
+            header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+            header('Last-Modified: ' . TimeDate::httpTime());
+            header('Cache-Control: max-age=0');
+            header('Pragma: public');
             //bug45856 IIS Doesn't like this to be set and it causes the vCard to not get saved
             $serverSoftvare = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null;
             if (preg_match('/iis/i', (string) $serverSoftvare) === 0) {
-                header("Content-Length: ".strlen((string) $content));
+                header('Content-Length: ' . strlen((string) $content));
             }
         }
 
         print $locale->translateCharset($content, 'UTF-8', $locale->getExportCharset());
     }
 
+    /**
+     * @throws Exception
+     */
     public function importVCard($filename, $module = 'Contacts')
     {
         global $current_user;
@@ -200,7 +203,7 @@ class vCard
             $locale = new Localization();
             $encoding = false;
             //detect charset
-            if (preg_match("/CHARSET=([A-Z]+([A-Z0-9]-?)*):/", $line, $matches)) {
+            if (preg_match('/CHARSET=([A-Z]+([A-Z0-9]-?)*):/', $line, $matches)) {
                 //found charset hint in vcard
                 $encoding = $matches[1];
             } else {
@@ -238,7 +241,7 @@ class vCard
                     $key = strtr($key, ',', ';');
                     $keys = explode(';', $key);
 
-                    if (($keys[0] ?? '') == 'TEL') {
+                    if (($keys[0] ?? '') === 'TEL') {
                         if (substr_count($key, 'WORK') > 0) {
                             if (substr_count($key, 'FAX') > 0) {
                                 if (!isset($bean->phone_fax)) {
@@ -274,7 +277,7 @@ class vCard
                         }
                     }
 
-                    if (($keys[0] ?? '') == 'N') {
+                    if (($keys[0] ?? '') === 'N') {
                         if (count($values) > 0) {
                             $bean->last_name = $values[0];
                         }
@@ -286,16 +289,16 @@ class vCard
                         }
                     }
 
-                    if (($keys[0] ?? '') == 'FN') {
+                    if (($keys[0] ?? '') === 'FN') {
                         $fullname = $value;
                     }
                 }
 
-                if (($keys[0] ?? '') == 'ADR') {
+                if (($keys[0] ?? '') === 'ADR') {
                     if (substr_count((string) $key, 'WORK') > 0 && (substr_count((string) $key, 'POSTAL') > 0|| substr_count((string) $key, 'PARCEL') == 0)) {
                         if (!isset($bean->primary_address_street) && (is_countable($values) ? count($values) : 0) > 2) {
                             $textBreaks = array("\n", "\r");
-                            $vcardBreaks = array("=0A", "=0D");
+                            $vcardBreaks = array( '=0A', '=0D' );
                             $bean->primary_address_street = str_replace($vcardBreaks, $textBreaks, $values[2]);
                         }
                         if (!isset($bean->primary_address_city) && (is_countable($values) ? count($values) : 0) > 3) {
@@ -313,10 +316,10 @@ class vCard
                     }
                 }
 
-                if (($keys[0] ?? '') == 'TITLE') {
+                if (($keys[0] ?? '') === 'TITLE') {
                     $bean->title = $value;
                 }
-                if (($keys[0] ?? '') == 'EMAIL') {
+                if (($keys[0] ?? '') === 'EMAIL') {
                     $field = 'email' . $email_suffix;
                     if (!isset($bean->$field)) {
                         $bean->$field = $value;
@@ -327,11 +330,11 @@ class vCard
                     $email_suffix++;
                 }
 
-                if (($keys[0] ?? '') == 'ORG') {
+                if (($keys[0] ?? '') === 'ORG') {
                     $GLOBALS['log']->debug('I found a company name');
                     if (!empty($value)) {
                         $GLOBALS['log']->debug('I found a company name (fer real)');
-                        if (is_a($bean, "Contact") || is_a($bean, "Lead")) {
+                        if (is_a($bean, 'Contact') || is_a($bean, 'Lead')) {
                             $GLOBALS['log']->debug('And Im dealing with a person!');
                             $accountBean = BeanFactory::getBean('Accounts');
                             // It's a contact, we better try and match up an account
@@ -350,19 +353,22 @@ class vCard
                                 if (file_exists('custom/include/vCardTrimStrings.php')) {
                                     require_once('custom/include/vCardTrimStrings.php');
                                 }
-                                $short_company_name = trim(preg_replace(array_keys($vCardTrimStrings), $vCardTrimStrings, $full_company_name), " ,.");
+                                $short_company_name = trim(
+                                    preg_replace(array_keys($vCardTrimStrings), $vCardTrimStrings, $full_company_name),
+                                    ' ,.'
+                                );
 
                                 $GLOBALS['log']->debug('Trying an extended search for: ' . $short_company_name);
                                 $result = $accountBean->retrieve_by_string_fields(array('name' => $short_company_name, 'deleted' => 0));
                             }
 
-                            if (is_a($bean, "Lead") || ! isset($result->id)) {
+                            if (is_a($bean, 'Lead') || !isset($result->id)) {
                                 // We could not find a parent account, or this is a lead so only copy the name, no linking
                                 $GLOBALS['log']->debug("Did not find a matching company ($full_company_name)");
                                 $bean->account_id = '';
                                 $bean->account_name = $full_company_name;
                             } else {
-                                $GLOBALS['log']->debug("Found a matching company: " . $result->name);
+                                $GLOBALS['log']->debug('Found a matching company: ' . $result->name);
                                 $bean->account_id = $result->id;
                                 $bean->account_name = $result->name;
                             }
@@ -387,7 +393,7 @@ class vCard
             }
         }
 
-        if (is_a($bean, "Contact") && empty($bean->account_id) && !empty($bean->account_name)) {
+        if (is_a($bean, 'Contact') && empty($bean->account_id) && !empty($bean->account_name)) {
             $GLOBALS['log']->debug("Look ma! I'm creating a new account: " . $bean->account_name);
             // We need to create a new account
             $accountBean = BeanFactory::getBean('Accounts');

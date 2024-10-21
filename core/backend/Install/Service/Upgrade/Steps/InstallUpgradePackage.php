@@ -84,6 +84,7 @@ class InstallUpgradePackage implements UpgradeStepInterface
 
     /**
      * @inheritDoc
+     * @throws \JsonException
      */
     public function execute(array &$context): Feedback
     {

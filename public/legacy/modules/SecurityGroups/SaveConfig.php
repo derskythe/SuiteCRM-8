@@ -90,14 +90,14 @@ if (!empty($_REQUEST['remove_default_id'])) {
     if (!isset($cfg->config['addAjaxBannedModules'])) {
         $cfg->config['addAjaxBannedModules'] = array();
     }
-    if (!in_array('SecurityGroups', $cfg->config['addAjaxBannedModules'])) {
+    if (!in_array('SecurityGroups', $cfg->config['addAjaxBannedModules'], true)) {
         $cfg->config['addAjaxBannedModules'][] = 'SecurityGroups';
     }
 
     $cfg->handleOverride();
 }
 
-require_once "include/portability/Services/Cache/CacheManager.php";
+require_once 'include/portability/Services/Cache/CacheManager.php';
 (new CacheManager())->markAsNeedsUpdate('app-metadata-system-configs');
 
 header("Location: index.php?action={$_POST['return_action']}&module={$_POST['return_module']}");

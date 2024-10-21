@@ -49,12 +49,12 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class OAuthKey extends Basic
 {
-    public $module_dir = 'OAuthKeys';
-    public $object_name = 'OAuthKey';
-    public $table_name = 'oauth_consumer';
+    public string $module_dir = 'OAuthKeys';
+    public string $object_name = 'OAuthKey';
+    public string $table_name = 'oauth_consumer';
     public $c_key;
     public $c_secret;
-    public $name;
+    public string $name;
     public $disable_row_level_security = true;
 
     public static $keys_cache = array();
@@ -66,7 +66,7 @@ class OAuthKey extends Basic
      */
     public function getByKey($key)
     {
-        $this->retrieve_by_string_fields(array("c_key" => $key));
+        $this->retrieve_by_string_fields(array( 'c_key' => $key));
         if (empty($this->id)) {
             return false;
         }
@@ -88,7 +88,7 @@ class OAuthKey extends Basic
         $k = new self();
         if ($k->getByKey($key)) {
             self::$keys_cache[$key] = $k;
-            BeanFactory::registerBean("OAuthKeys", $k);
+            BeanFactory::registerBean('OAuthKeys', $k);
             return $k;
         }
         return false;

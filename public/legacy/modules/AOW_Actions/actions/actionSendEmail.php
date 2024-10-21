@@ -57,7 +57,7 @@ class actionSendEmail extends actionBase
         global $app_list_strings;
         $email_templates_arr = get_bean_select_array(true, 'EmailTemplate', 'name', '', 'name');
 
-        if (!in_array($bean->module_dir, getEmailableModules())) {
+        if (!in_array($bean->module_dir, getEmailableModules(), true)) {
             unset($app_list_strings['aow_email_type_list']['Record Email']);
         }
         $targetOptions = getRelatedEmailableFields($bean->module_dir);
@@ -66,7 +66,7 @@ class actionSendEmail extends actionBase
         }
 
         $html = '<input type="hidden" name="aow_email_type_list" id="aow_email_type_list" value="'.get_select_options_with_id($app_list_strings['aow_email_type_list'], '').'">
-				  <input type="hidden" name="aow_email_to_list" id="aow_email_to_list" value="'.get_select_options_with_id($app_list_strings['aow_email_to_list'], '').'">';
+                  <input type="hidden" name="aow_email_to_list" id="aow_email_to_list" value="'.get_select_options_with_id($app_list_strings['aow_email_to_list'], '').'">';
 
         $checked = '';
         if (isset($params['individual_email']) && $params['individual_email']) {
@@ -74,10 +74,10 @@ class actionSendEmail extends actionBase
         }
 
         $html .= "<table border='0' cellpadding='0' cellspacing='0' width='100%' data-workflow-action='send-email'>";
-        $html .= "<tr>";
+        $html .= '<tr>';
         $html .= '<td id="relate_label" scope="row" valign="top"><label>' . translate(
-            "LBL_INDIVIDUAL_EMAILS",
-            "AOW_Actions"
+                'LBL_INDIVIDUAL_EMAILS',
+                'AOW_Actions'
         ) . ':</label>';
         $html .= '</td>';
         $html .= "<td valign='top'>";
@@ -90,24 +90,24 @@ class actionSendEmail extends actionBase
         }
         $hidden = "style='visibility: hidden;'";
         if ($params['email_template'] != '') {
-            $hidden = "";
+            $hidden = '';
         }
 
         $html .= '<td id="name_label" scope="row" valign="top"><label>' . translate(
-            "LBL_EMAIL_TEMPLATE",
-            "AOW_Actions"
+                'LBL_EMAIL_TEMPLATE',
+                'AOW_Actions'
         ) . ':<span class="required">*</span></label></td>';
         $html .= "<td valign='top'>";
-        $html .= "<select name='aow_actions_param[".$line."][email_template]' id='aow_actions_param_email_template".$line."' onchange='show_edit_template_link(this,".$line.");' >".get_select_options_with_id($email_templates_arr, $params['email_template'])."</select>";
+        $html .= "<select name='aow_actions_param[".$line."][email_template]' id='aow_actions_param_email_template".$line."' onchange='show_edit_template_link(this,".$line.");' >".get_select_options_with_id($email_templates_arr, $params['email_template']). '</select>';
 
-        $html .= "&nbsp;<a href='javascript:open_email_template_form(".$line.")' >".translate('LBL_CREATE_EMAIL_TEMPLATE', 'AOW_Actions')."</a>";
-        $html .= "&nbsp;<span name='edit_template' id='aow_actions_edit_template_link".$line."' $hidden><a href='javascript:edit_email_template_form(".$line.")' >".translate('LBL_EDIT_EMAIL_TEMPLATE', 'AOW_Actions')."</a></span>";
-        $html .= "</td>";
-        $html .= "</tr>";
-        $html .= "<tr>";
+        $html .= "&nbsp;<a href='javascript:open_email_template_form(".$line.")' >".translate('LBL_CREATE_EMAIL_TEMPLATE', 'AOW_Actions'). '</a>';
+        $html .= "&nbsp;<span name='edit_template' id='aow_actions_edit_template_link".$line."' $hidden><a href='javascript:edit_email_template_form(".$line.")' >".translate('LBL_EDIT_EMAIL_TEMPLATE', 'AOW_Actions'). '</a></span>';
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
         $html .= '<td id="name_label" scope="row" valign="top"><label>' . translate(
-            "LBL_EMAIL",
-            "AOW_Actions"
+                'LBL_EMAIL',
+                'AOW_Actions'
         ) . ':<span class="required">*</span></label></td>';
         $html .= '<td valign="top" scope="row">';
 
@@ -116,8 +116,8 @@ class actionSendEmail extends actionBase
         </button>';
         $html .= '<table id="emailLine'.$line.'_table" width="100%" class="email-line"></table>';
         $html .= '</td>';
-        $html .= "</tr>";
-        $html .= "</table>";
+        $html .= '</tr>';
+        $html .= '</table>';
 
         $html .= "<script id ='aow_script".$line."'>";
 
@@ -147,7 +147,7 @@ class actionSendEmail extends actionBase
                 $html .= "load_emailline('".$line."','".$params['email_to_type'][$key]."','".$params['email_target_type'][$key]."','".$params['email'][$key]."');";
             }
         }
-        $html .= "</script>";
+        $html .= '</script>';
 
         return $html;
     }
@@ -249,13 +249,13 @@ class actionSendEmail extends actionBase
                         $emailTarget = $params['email'][$key];
                         $relatedFields = array_merge($bean->get_related_fields(), $bean->get_linked_fields());
                         $field = $relatedFields[$emailTarget];
-                        if ($field['type'] == 'relate') {
+                        if ($field['type'] === 'relate') {
                             $linkedBeans = array();
                             $idName = $field['id_name'];
                             $id = $bean->$idName;
                             $linkedBeans[] = BeanFactory::getBean($field['module'], $id);
                         } else {
-                            if ($field['type'] == 'link') {
+                            if ($field['type'] === 'link') {
                                 $relField = $field['name'];
                                 if (isset($field['module']) && $field['module'] != '') {
                                     $rel_module = $field['module'];
@@ -403,21 +403,21 @@ class actionSendEmail extends actionBase
         $object_arr[$bean->module_dir] = $bean->id;
 
         foreach ($bean->field_defs as $bean_arr) {
-            if ($bean_arr['type'] == 'relate') {
-                if (isset($bean_arr['module']) &&  $bean_arr['module'] != '' && isset($bean_arr['id_name']) &&  $bean_arr['id_name'] != '' && $bean_arr['module'] != 'EmailAddress') {
+            if ($bean_arr['type'] === 'relate') {
+                if (isset($bean_arr['module']) &&  $bean_arr['module'] != '' && isset($bean_arr['id_name']) &&  $bean_arr['id_name'] != '' && $bean_arr['module'] !== 'EmailAddress') {
                     $idName = $bean_arr['id_name'];
-                    if (isset($bean->field_defs[$idName]) && ($bean->field_defs[$idName]['source'] ?? '') != 'non-db') {
+                    if (isset($bean->field_defs[$idName]) && ($bean->field_defs[$idName]['source'] ?? '') !== 'non-db') {
                         if (!isset($object_arr[$bean_arr['module']])) {
                             $object_arr[$bean_arr['module']] = $bean->$idName;
                         }
                     }
                 }
             } else {
-                if ($bean_arr['type'] == 'link') {
+                if ($bean_arr['type'] === 'link') {
                     if (!isset($bean_arr['module']) || $bean_arr['module'] == '') {
                         $bean_arr['module'] = getRelatedModule($bean->module_dir, $bean_arr['name']);
                     }
-                    if (isset($bean_arr['module']) &&  $bean_arr['module'] != ''&& !isset($object_arr[$bean_arr['module']])&& $bean_arr['module'] != 'EmailAddress') {
+                    if (isset($bean_arr['module']) &&  $bean_arr['module'] != ''&& !isset($object_arr[$bean_arr['module']])&& $bean_arr['module'] !== 'EmailAddress') {
                         $linkedBeans = $bean->get_linked_beans($bean_arr['name'], $bean_arr['module'], array(), 0, 1);
                         if ($linkedBeans) {
                             $linkedBean = $linkedBeans[0];
@@ -440,9 +440,9 @@ class actionSendEmail extends actionBase
             $parsedSiteUrl['port'] = 80;
         }
 
-        $port		= ($parsedSiteUrl['port'] != 80) ? ":".$parsedSiteUrl['port'] : '';
-        $path		= !empty($parsedSiteUrl['path']) ? $parsedSiteUrl['path'] : "";
-        $cleanUrl	= "{$parsedSiteUrl['scheme']}://{$host}{$port}{$path}";
+        $port        = ($parsedSiteUrl['port'] != 80) ? ':' . $parsedSiteUrl['port'] : '';
+        $path        = !empty($parsedSiteUrl['path']) ? $parsedSiteUrl['path'] : '';
+        $cleanUrl    = "{$parsedSiteUrl['scheme']}://{$host}{$port}{$path}";
 
         $url =  $cleanUrl."/index.php?module={$bean->module_dir}&action=DetailView&record={$bean->id}";
 
@@ -474,6 +474,9 @@ class actionSendEmail extends actionBase
         return $attachments;
     }
 
+    /**
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
     public function sendEmail($emailTo, $emailSubject, $emailBody, $altemailBody, SugarBean $relatedBean = null, $emailCc = array(), $emailBcc = array(), $attachments = array())
     {
         require_once('modules/Emails/Email.php');

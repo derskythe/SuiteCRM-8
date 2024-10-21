@@ -53,7 +53,7 @@ class ViewListTest extends SuitePHPUnitFrameworkTestCase
 {
     public function testlistViewProcess(): void
     {
-        $query = "SELECT * FROM email_addresses";
+        $query = 'SELECT * FROM email_addresses';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -75,9 +75,9 @@ class ViewListTest extends SuitePHPUnitFrameworkTestCase
         self::assertGreaterThan(0, strlen($renderedContent));
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addresses");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addresses');
         foreach ($tableEmailAddresses as $row) {
-            $query = "INSERT email_addresses INTO (";
+            $query = 'INSERT email_addresses INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";
@@ -176,7 +176,7 @@ class ViewListTest extends SuitePHPUnitFrameworkTestCase
 
     public function testdisplay(): void
     {
-        $query = "SELECT * FROM email_addresses";
+        $query = 'SELECT * FROM email_addresses';
         $resource = DBManagerFactory::getInstance()->query($query);
         $rows = [];
         while ($row = $resource->fetch_assoc()) {
@@ -208,9 +208,9 @@ class ViewListTest extends SuitePHPUnitFrameworkTestCase
         self::assertGreaterThan(0, strlen($renderedContent2));
 
 
-        DBManagerFactory::getInstance()->query("DELETE FROM email_addresses");
+        DBManagerFactory::getInstance()->query('DELETE FROM email_addresses');
         foreach ($tableEmailAddresses as $row) {
-            $query = "INSERT email_addresses INTO (";
+            $query = 'INSERT email_addresses INTO (';
             $query .= (implode(',', array_keys($row)) . ') VALUES (');
             foreach ($row as $value) {
                 $quoteds[] = "'$value'";

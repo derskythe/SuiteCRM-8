@@ -83,7 +83,7 @@ $dictionary['email_addresses'] = array(
             'vname'         => 'LBL_OPT_OUT',
             'audited' => true,
         ),
-        
+
         'confirm_opt_in' => array(
             'name'            => 'confirm_opt_in',
             'type'            => 'enum',
@@ -105,20 +105,20 @@ $dictionary['email_addresses'] = array(
             'type' => 'datetime',
             'vname' => 'LBL_CONFIRM_OPT_IN_SENT_DATE',
         ),
-        
+
         'confirm_opt_in_fail_date' => array(
             'name' => 'confirm_opt_in_fail_date',
             'type' => 'datetime',
             'vname' => 'LBL_CONFIRM_OPT_IN_FAIL_DATE',
         ),
-        
+
         'confirm_opt_in_token' => [
             'name' => 'confirm_opt_in_token',
             'type' => 'varchar',
             'len' => 255,
             'vname' => 'LBL_CONFIRM_OPT_IN_TOKEN',
         ],
-        
+
         'date_created' => array(
             'name'            => 'date_created',
             'type'            => 'datetime',
@@ -156,8 +156,8 @@ $dictionary['email_addresses'] = array(
 );
 
 // hack for installer
-if (file_exists("cache/modules/EmailAddresses/EmailAddressvardefs.php")) {
-    include("cache/modules/EmailAddresses/EmailAddressvardefs.php");
+if (file_exists('cache/modules/EmailAddresses/EmailAddressvardefs.php')) {
+    include('cache/modules/EmailAddresses/EmailAddressvardefs.php');
 } else {
     $dictionary['EmailAddress'] = $dictionary['email_addresses'];
 }

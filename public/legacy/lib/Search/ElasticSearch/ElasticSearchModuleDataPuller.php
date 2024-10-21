@@ -54,44 +54,44 @@ use SugarBean;
 #[\AllowDynamicProperties]
 class ElasticSearchModuleDataPuller
 {
-    /** 
+    /**
      * The source module
-     * 
-     * @var string 
+     *
+     * @var string
      */
     protected $module;
 
-    /** 
+    /**
      * The Sugarbean seed
-     * 
-     * @var SugarBean 
+     *
+     * @var SugarBean
      */
     protected $seed;
 
-    /** 
+    /**
      * Whether this is a differential run or not
-     * 
-     * @var bool 
+     *
+     * @var bool
      */
     protected $isDifferential;
 
-    /** 
+    /**
      * Whether to pull Deleted records
-     *  
+     *
      * @var int *
      */
     protected $showDeleted = 0;
 
-    /** 
+    /**
      * The pagination offset
-     *  
+     *
      * @var int *
      */
     protected $offset = 0;
 
-    /** 
+    /**
      * The size of batches pulled from the database.
-     *  
+     *
      * @var int *
      */
     protected $batchSize = 1000;
@@ -115,8 +115,8 @@ class ElasticSearchModuleDataPuller
     {
         $this->module = $module;
         $this->seed = BeanFactory::getBean($module);
-        $this->isDifferential = $isDifferential;  
-        $this->logger = $logger;   
+        $this->isDifferential = $isDifferential;
+        $this->logger = $logger;
 
     }
 
@@ -133,7 +133,7 @@ class ElasticSearchModuleDataPuller
     }
 
     /**
-     * Set the ShowDeleted flag. 
+     * Set the ShowDeleted flag.
      * Set to 1 to return deleted records in the results
      *
      * @param int $showDeleted
@@ -146,7 +146,7 @@ class ElasticSearchModuleDataPuller
     }
 
     /**
-     * Set whether this run should be differential 
+     * Set whether this run should be differential
      * This influences whether the where clause is used
      *
      * @param bool $isDifferential
@@ -181,13 +181,13 @@ class ElasticSearchModuleDataPuller
     protected function generateWhere()
     {
         if($this->isDifferential && empty($this->lastIndexTime)){
-            throw new RuntimeException("A differential search must have a lastIndexTime to filter off of");
+            throw new RuntimeException('A differential search must have a lastIndexTime to filter off of');
         }
 
         if($this->isDifferential){
             $tableName = $this->seed->table_name;
             $lastIndexTime = $this->lastIndexTime;
-            return "$tableName.date_modified > '$lastIndexTime' OR $tableName.date_entered > '$lastIndexTime'";    
+            return "$tableName.date_modified > '$lastIndexTime' OR $tableName.date_entered > '$lastIndexTime'";
         }
 
         return '';

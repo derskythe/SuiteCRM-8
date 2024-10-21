@@ -100,7 +100,7 @@ class InstallLayout
             }
             $out .= "<option label=\"$value\" value=\"$key\"$selected>$value</option>";
         }
-        $out .= "</select>";
+        $out .= '</select>';
         return $out;
     }
 
@@ -264,7 +264,7 @@ EOQ;
           <h3>{$mod_strings['LBL_SYSOPTS_DB']}</h3>";
 
         foreach ($drivers as $type => $driver) {
-            $oci = ($type == "oci8")?"":'none'; // hack for special oracle message
+            $oci = ($type === 'oci8')? '' :'none'; // hack for special oracle message
             $out_dbtypesel.=<<<EOQ
                 <input type="radio" class="checkbox" name="setup_db_type" id="setup_db_type" value="$type" {$checked[$type]} onclick="onDBTypeClick(this);//document.getElementById('ociMsg').style.display='$oci'"/>{$mod_strings[$driver->label]}<br>
 EOQ;
@@ -306,8 +306,8 @@ EOQ2;
                     } else {
                         $sessval = '';
                     }
-                    if (!empty($value["type"])) {
-                        $type = $value["type"];
+                    if (!empty($value['type'])) {
+                        $type = $value['type'];
                     } else {
                         $type = '';
                     }
@@ -316,7 +316,7 @@ EOQ2;
 
 FORM;
                     //if the type is password, set a hidden field to capture the value.  This is so that we can properly encode special characters, which is a limitation with password fields
-                    if ($type=='password') {
+                    if ($type === 'password') {
                         $form .= "</div><div class=\"install_block\"><label>{$mod_strings['LBL_DBCONF_TITLE_PSWD_INFO_LABEL']}</label><span>&nbsp;</span><input type='$type' name='{$name}_entry' id='{$name}_entry' value='".urldecode($sessval)."'><input type='hidden' name='$name' id='$name' value='".urldecode($sessval)."'></div><div class=\"install_block\">";
                     } else {
                         $form .= "<input type='$type' name='$name' id='$name' value='$sessval'>";
@@ -330,7 +330,7 @@ FORM;
                     $form .= "<input name=\"$name\" id=\"$name\" value=\"\" type=\"hidden\">\n";
                 }
             }
-            $form .= "</div>";
+            $form .= '</div>';
         }
 
         $out2 .= $form;
@@ -341,7 +341,7 @@ FORM;
 
 
         //if we are installing in custom mode, include the following html
-        if ($db->supports("create_user")) {
+        if ($db->supports('create_user')) {
             // create / set db user dropdown
             $auto_select = '';
             $provide_select = '';
@@ -349,25 +349,25 @@ FORM;
             $same_select = '';
             if (isset($_SESSION['dbUSRData'])) {
 //    if($_SESSION['dbUSRData']=='auto')    {$auto_select ='selected';}
-                if ($_SESSION['dbUSRData'] == 'provide') {
+                if ($_SESSION['dbUSRData'] === 'provide') {
                     $provide_select = 'selected';
                 }
-                if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) && strtolower($_SESSION['install_type']) == 'custom') {
-                    if ($_SESSION['dbUSRData'] == 'create') {
+                if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) && strtolower($_SESSION['install_type']) === 'custom') {
+                    if ($_SESSION['dbUSRData'] === 'create') {
                         $create_select = 'selected';
                     }
                 }
-                if ($_SESSION['dbUSRData'] == 'same') {
+                if ($_SESSION['dbUSRData'] === 'same') {
                     $same_select = 'selected';
                 }
             } else {
                 $same_select = 'selected';
             }
             $dbUSRDD = "<select name='dbUSRData' id='dbUSRData' onchange='toggleDBUser();'>";
-            $dbUSRDD .= "<option value='provide' $provide_select>" . $mod_strings['LBL_DBCONFIG_PROVIDE_DD'] . "</option>";
-            $dbUSRDD .= "<option value='create' $create_select>" . $mod_strings['LBL_DBCONFIG_CREATE_DD'] . "</option>";
-            $dbUSRDD .= "<option value='same' $same_select>" . $mod_strings['LBL_DBCONFIG_SAME_DD'] . "</option>";
-            $dbUSRDD .= "</select><br>&nbsp;";
+            $dbUSRDD .= "<option value='provide' $provide_select>" . $mod_strings['LBL_DBCONFIG_PROVIDE_DD'] . '</option>';
+            $dbUSRDD .= "<option value='create' $create_select>" . $mod_strings['LBL_DBCONFIG_CREATE_DD'] . '</option>';
+            $dbUSRDD .= "<option value='same' $same_select>" . $mod_strings['LBL_DBCONFIG_SAME_DD'] . '</option>';
+            $dbUSRDD .= '</select><br>&nbsp;';
 
 
             $setup_db_sugarsales_password = urldecode($_SESSION['setup_db_sugarsales_password']);
@@ -427,7 +427,7 @@ EOQ2;
                     <h3>{$mod_strings['LBL_SITECFG_TITLE2']}<div class="tooltip-toggle"><em> i </em><div class="tooltip">{$mod_strings['LBL_SITECFG_PASSWORD_MSG']}</div></div></h3>
 EOQ;
         //hide this in typical mode
-        if (!empty($_SESSION['install_type']) && strtolower($_SESSION['install_type'])=='custom') {
+        if (!empty($_SESSION['install_type']) && strtolower($_SESSION['install_type']) === 'custom') {
             $out .=<<<EOQ
 <div class='install_block'>
     {$mod_strings['LBL_SITECFG_URL_MSG']}
@@ -441,7 +441,7 @@ EOQ;
 </div>
 EOQ;
             $db = getDbConnection();
-            if ($db->supports("collation")) {
+            if ($db->supports('collation')) {
                 $collationOptions = $db->getCollationList();
             }
             if (!empty($collationOptions)) {
@@ -530,8 +530,8 @@ EOQ;
 
 
         //demo data select
-        $demoDD = "<select name='demoData' id='demoData' class='select'><option value='no' >".$mod_strings['LBL_NO']."</option><option value='yes'>".$mod_strings['LBL_YES']."</option>";
-        $demoDD .= "</select>";
+        $demoDD = "<select name='demoData' id='demoData' class='select'><option value='no' >".$mod_strings['LBL_NO']."</option><option value='yes'>".$mod_strings['LBL_YES']. '</option>';
+        $demoDD .= '</select>';
 
         $out .=<<<EOQ3
         </div>
@@ -561,7 +561,7 @@ EOQ3;
         // ------------------------->
         $scenarioSelection = "<p class='ibmsg'>{$mod_strings['LBL_WIZARD_SCENARIO_EMPTY']}</p>";
         if (isset($_SESSION['installation_scenarios']) && !empty($_SESSION['installation_scenarios'])) {
-            $scenarioSelection = "";
+            $scenarioSelection = '';
             foreach ($_SESSION['installation_scenarios'] as $scenario) {
                 $key = $scenario['key'];
                 $description = $scenario['description'];
@@ -1149,9 +1149,9 @@ EOQ;
    <tr><td></td>
        <td style="text-align : right;"></td>
        <td align="left">
-	       <div><div style="width:200px;float:left">{$mod_strings['LBL_SITECFG_SESSION_PATH']} <span class="required">*</span></div>
-	               <input type="text" name="setup_site_session_path" size='40' value="{$_SESSION['setup_site_session_path']}" /></td>
-	       </div>
+           <div><div style="width:200px;float:left">{$mod_strings['LBL_SITECFG_SESSION_PATH']} <span class="required">*</span></div>
+                   <input type="text" name="setup_site_session_path" size='40' value="{$_SESSION['setup_site_session_path']}" /></td>
+           </div>
        </td>
    </tr>
    </tbody>
@@ -1182,9 +1182,9 @@ EOQ;
    <tr><td></td>
        <td style="text-align : right;"></td>
        <td align="left">
-	       <div><div style="width:200px;float:left">{$mod_strings['LBL_SITECFG_APP_ID']} <span class="required">*</span></div>
-	               <input type="text" name="setup_site_guid" size='30' value="{$_SESSION['setup_site_guid']}" />
-	       </div>
+           <div><div style="width:200px;float:left">{$mod_strings['LBL_SITECFG_APP_ID']} <span class="required">*</span></div>
+                   <input type="text" name="setup_site_guid" size='30' value="{$_SESSION['setup_site_guid']}" />
+           </div>
        </td>
    </tr>
    </tbody>
@@ -1194,7 +1194,7 @@ EOQ;
 </table>
 </div>
 EOQ;
-        $out .= "</div>";
+        $out .= '</div>';
 
         // --------------------------
         //  Advanced Database Configuration
@@ -1205,10 +1205,10 @@ EOQ;
         $collationCB = "<select name='setup_db_collation' id='setup_db_collation' class='select' onChange='document.getElementById(\"setup_db_charset\").value = document.getElementById(\"setup_db_collation\").value.split(\"_\")[0];'>";
         $charset = "<select name='setup_db_charset' id='setup_db_charset' class='select'>";
 
-        if (isset($collations) && isset($_SESSION['setup_db_type']) && $_SESSION['setup_db_type'] == "mysql") {
+        if (isset($collations) && isset($_SESSION['setup_db_type']) && $_SESSION['setup_db_type'] === 'mysql') {
                 foreach ($collations['mysql'] as $collation) {
-                    $collationCB .= "<option value='" . $collation['name'] . "' >" . $collation['name'] . "</option>";
-                    $charset .= "<option value='" . $collation['charset'] . "' >" . $collation['charset'] . "</option>";
+                    $collationCB .= "<option value='" . $collation['name'] . "' >" . $collation['name'] . '</option>';
+                    $charset .= "<option value='" . $collation['charset'] . "' >" . $collation['charset'] . '</option>';
                 }
         }
 
@@ -1220,16 +1220,16 @@ EOQ;
           <h3 onclick="$(this).next().toggle();" class="toggler">&raquo; {$mod_strings['LBL_DBCONF_ADV_DB_CFG_TITLE']}</h3>
           <div class="form_section" style="display: none;">
             <!-- smtp settings -->
-	    <br>
+        <br>
             <!--
             <p>{$mod_strings['LBL_WIZARD_SMTP_DESC']}</p>
             -->
 
-	    <!-- smtp types toggler buttons -->
+        <!-- smtp types toggler buttons -->
 
-	    <p style="display: inline;">
+        <p style="display: inline;">
 
-	    <div>
+        <div>
                 <div class="formrow">
                     <label>{$mod_strings['LBL_DBCONF_COLLATION']}</label>
                     {$collationCB}
@@ -1677,9 +1677,9 @@ EOQ;
                             }
                             postData += "&setup_db_host_name="+document.installForm.setup_db_host_name.value;
                             postData += "&setup_db_admin_user_name="+document.installForm.setup_db_admin_user_name.value;
-			    postData += "&setup_db_admin_password="+encodeURIComponent(document.installForm.setup_db_admin_password.value);
+                postData += "&setup_db_admin_password="+encodeURIComponent(document.installForm.setup_db_admin_password.value);
                             postData += "&setup_db_collation="+document.installForm.setup_db_collation.value;
-			    postData += "&setup_db_charset="+document.installForm.setup_db_charset.value;
+                postData += "&setup_db_charset="+document.installForm.setup_db_charset.value;
 
                             if(typeof(document.installForm.setup_db_sugarsales_user) != 'undefined'){
                                 postData += "&setup_db_sugarsales_user="+document.installForm.setup_db_sugarsales_user.value;
@@ -1931,7 +1931,7 @@ if(!isset($_SESSION['setup_db_charset']) || $_SESSION['setup_db_charset'] ==''){
 //----------------- siteConfig_a.php Site Config & admin user
 
 
-if (is_file("config.php")) {
+if (is_file('config.php')) {
     if (!empty($sugar_config['default_theme'])) {
         $_SESSION['site_default_theme'] = $sugar_config['default_theme'];
     }
@@ -1973,8 +1973,8 @@ if (is_file("config.php")) {
             $language_values[] = $value;
         }
 
-        $_SESSION['language_keys'] = urlencode(implode(",", $language_keys));
-        $_SESSION['language_values'] = urlencode(implode(",", $language_values));
+        $_SESSION['language_keys'] = urlencode(implode(',', $language_keys));
+        $_SESSION['language_values'] = urlencode(implode(',', $language_values));
     }
 }
 
@@ -1984,7 +1984,7 @@ if (isset($installation_scenarios)) {
     $_SESSION['installation_scenarios'] = $installation_scenarios;
 }
 
-////	errors
+////    errors
 $errors = '';
 if (isset($validation_errors) && is_array($validation_errors)) {
     if (count($validation_errors) > 0) {
@@ -1998,7 +1998,7 @@ if (isset($validation_errors) && is_array($validation_errors)) {
 }
 
 
-////	ternaries
+////    ternaries
 $sugarUpdates = (isset($_SESSION['setup_site_sugarbeet']) && !empty($_SESSION['setup_site_sugarbeet'])) ? 'checked="checked"' : '';
 $siteSecurity = (isset($_SESSION['setup_site_defaults']) && !empty($_SESSION['setup_site_defaults'])) ? 'checked="checked"' : '';
 
@@ -2027,4 +2027,4 @@ $installConfigLayout->show(get_defined_vars());
 // restore display errors
 // DisplayErrors::restore();
 
-// TODO--low: add Name Format 	[default_locale_name_format]	[Dr. David Livingstone]	-- ???
+// TODO--low: add Name Format     [default_locale_name_format]    [Dr. David Livingstone]    -- ???

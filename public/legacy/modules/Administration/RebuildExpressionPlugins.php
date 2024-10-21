@@ -43,5 +43,5 @@
 global $current_user;
 
 if (is_admin($current_user)) {
-    require_once("include/Expressions/updatecache.php");
+    require_once('include/Expressions/updatecache.php');
 }

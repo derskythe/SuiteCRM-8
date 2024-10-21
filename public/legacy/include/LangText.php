@@ -45,6 +45,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
+use LoggerTemplate;
+
 /**
  * LangText
  *
@@ -57,7 +59,7 @@ class LangText
     /**
      * string
      */
-    public const LOG_LEVEL = 'fatal';
+    public const LOG_LEVEL = LoggerTemplate::DEFAULT_LOG_LEVEL;
 
     /**
      * integer
@@ -161,12 +163,14 @@ class LangText
 
     /**
      *
-     * @global array $app_strings
-     * @global array $mod_strings
-     * @global array $app_list_strings
      * @param string $module
      * @param string $lang
+     *
      * @return string
+     * @throws ErrorMessageException
+     * @global array $mod_strings
+     * @global array $app_list_strings
+     * @global array $app_strings
      */
     protected function resolveText($module = null, $lang = null)
     {
@@ -186,10 +190,11 @@ class LangText
 
     /**
      *
+     * @return string
+     * @throws ErrorMessageException
+     * @global array $app_list_strings
      * @global array $app_strings
      * @global array $mod_strings
-     * @global array $app_list_strings
-     * @return string
      */
     protected function resolveTextByGlobals()
     {
@@ -310,6 +315,7 @@ class LangText
     /**
      *
      * @return string
+     * @throws ErrorMessageException
      */
     public function __toString()
     {

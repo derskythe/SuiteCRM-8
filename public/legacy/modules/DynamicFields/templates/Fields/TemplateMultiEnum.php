@@ -54,7 +54,7 @@ class TemplateMultiEnum extends TemplateEnum
         $this->prepare();
         $xtpl_var = strtoupper($this->name);
         // MFH BUG#13645
-        return "<input type='hidden' name='". $this->name. "' value='0'><select name='". $this->name . "[]' size='5' title='{" . $xtpl_var ."_HELP}' MULTIPLE=true>{OPTIONS_".$xtpl_var. "}</select>";
+        return "<input type='hidden' name='". $this->name. "' value='0'><select name='". $this->name . "[]' size='5' title='{" . $xtpl_var ."_HELP}' MULTIPLE=true>{OPTIONS_".$xtpl_var. '}</select>';
     }
 
     public function get_xtpl_edit()
@@ -127,7 +127,7 @@ class TemplateMultiEnum extends TemplateEnum
         if (!empty($this->ext4)) {
             // turn off error reporting in case we are unpacking a value that hasn't been packed...
             // this is kludgy, but unserialize doesn't throw exceptions correctly
-            if ($this->ext4[0] == 'a' && $this->ext4[1] == ':') {
+            if ($this->ext4[0] === 'a' && $this->ext4[1] === ':') {
                 $unpacked = @unserialize($this->ext4) ;
             } else {
                 $unpacked = false;

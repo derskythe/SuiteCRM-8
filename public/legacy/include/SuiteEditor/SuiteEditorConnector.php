@@ -66,9 +66,9 @@ class SuiteEditorConnector
             'textareaId' => 'body_text',
             'elementId' => 'email_template_editor',
             'width' => $width,
-            'clickHandler' => "function(e){
+            'clickHandler' => 'function(e){
                 onClickTemplateBody();
-            }",
+            }',
             'tinyMCESetup' => "{
                 setup: function(editor) {
                     editor.on('focus', function(e){

@@ -55,7 +55,7 @@ $file_access_control_map = array(
                 'backups',
                 'updater',
             ),
-            'links'	=> array(
+            'links'    => array(
                 'update',
                 'backup_management',
                 'upgrade_wizard',

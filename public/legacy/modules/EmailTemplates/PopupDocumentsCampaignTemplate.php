@@ -56,11 +56,11 @@ class DocumentPopupPicker extends Popup_Picker
         $where = '';
         if (isset($_REQUEST['query'])) {
             $where_clauses = array();
-            append_where_clause($where_clauses, "document_name", "documents.document_name");
-            append_where_clause($where_clauses, "category_id", "documents.category_id");
-            append_where_clause($where_clauses, "subcategory_id", "documents.subcategory_id");
-            append_where_clause($where_clauses, "template_type", "documents.template_type");
-            append_where_clause($where_clauses, "is_template", "documents.is_template");
+            append_where_clause($where_clauses, 'document_name', 'documents.document_name');
+            append_where_clause($where_clauses, 'category_id', 'documents.category_id');
+            append_where_clause($where_clauses, 'subcategory_id', 'documents.subcategory_id');
+            append_where_clause($where_clauses, 'template_type', 'documents.template_type');
+            append_where_clause($where_clauses, 'is_template', 'documents.is_template');
 
             $where = generate_where_statement($where_clauses);
         }
@@ -123,10 +123,10 @@ if (isset($_REQUEST['target'])) {
 
 $form->assign('DOCUMENT_REVISION_ID', $document_revision_id);
 
-$form->assign("CATEGORY_OPTIONS", get_select_options_with_id($app_list_strings['document_category_dom'], $category_id));
-$form->assign("SUB_CATEGORY_OPTIONS", get_select_options_with_id($app_list_strings['document_subcategory_dom'], $subcategory_id));
-$form->assign("IS_TEMPLATE_OPTIONS", get_select_options_with_id($app_list_strings['checkbox_dom'], $is_template));
-$form->assign("TEMPLATE_TYPE_OPTIONS", get_select_options_with_id($app_list_strings['document_template_type_dom'], $template_type));
+$form->assign('CATEGORY_OPTIONS', get_select_options_with_id($app_list_strings['document_category_dom'], $category_id));
+$form->assign('SUB_CATEGORY_OPTIONS', get_select_options_with_id($app_list_strings['document_subcategory_dom'], $subcategory_id));
+$form->assign('IS_TEMPLATE_OPTIONS', get_select_options_with_id($app_list_strings['checkbox_dom'], $is_template));
+$form->assign('TEMPLATE_TYPE_OPTIONS', get_select_options_with_id($app_list_strings['document_template_type_dom'], $template_type));
 
 $currentSortingDirection = '';
 if (!empty($_REQUEST['EmailTemplates_DOCUMENT_order_by_direction'])) {
@@ -150,7 +150,7 @@ if($currentSortingField === 'document_name') {
 }
 
 $sortImage = SugarThemeRegistry::current()->getImage('sort' . $sortImageSuffix . '.svg');
-$form->assign("DOCUMENT_SORT_ICON", $sortImage);
+$form->assign('DOCUMENT_SORT_ICON', $sortImage);
 
 ob_start();
 insert_popup_header($theme);
@@ -180,7 +180,7 @@ ob_start();
 $ListView->processListView($seed_bean, 'main', 'DOCUMENT');
 $output_html .= ob_get_contents();
 ob_end_clean();
-        
+
 $output_html .= insert_popup_footer();
 
 

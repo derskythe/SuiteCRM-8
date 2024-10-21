@@ -57,8 +57,8 @@ $viewdefs[$module_name]['QuickCreate'] = array(
             array('label' => '10', 'field' => '30')
         ),
         'javascript' => '{sugar_getscript file="include/javascript/popup_parent_helper.js"}
-	{sugar_getscript file="cache/include/javascript/sugar_grp_jsolait.js"}
-	{sugar_getscript file="modules/Documents/documents.js"}',
+    {sugar_getscript file="cache/include/javascript/sugar_grp_jsolait.js"}
+    {sugar_getscript file="modules/Documents/documents.js"}',
     ),
     'panels' => array(
         'default' => array(
@@ -71,11 +71,11 @@ $viewdefs[$module_name]['QuickCreate'] = array(
                 array(
                     'name' => 'uploadfile',
                     'customCode' => '{if $fields.id.value!=""}
-            				{assign var="type" value="hidden"}
-            		 		{else}
-            		 		{assign var="type" value="file"}
-            		  		{/if}
-            		  		<input name="uploadfile" type = {$type} size="30" maxlength="" onchange="setvalue(this);" value="{$fields.filename.value}">{$fields.filename.value}',
+                            {assign var="type" value="hidden"}
+                             {else}
+                             {assign var="type" value="file"}
+                              {/if}
+                              <input name="uploadfile" type = {$type} size="30" maxlength="" onchange="setvalue(this);" value="{$fields.filename.value}">{$fields.filename.value}',
                     'displayParams' => array('required' => true),
                 ),
             ),

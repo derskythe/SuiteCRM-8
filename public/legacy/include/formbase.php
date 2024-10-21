@@ -103,10 +103,10 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
     $isOwner = $focus->isOwner($current_user->id);
     $relatedFields = array();
     foreach ($focus->field_defs as $field => $def) {
-        if (empty($def['type']) || $def['type'] != 'relate') {
+        if (empty($def['type']) || $def['type'] !== 'relate') {
             continue;
         }
-        if (empty($def['source']) || $def['source'] != 'non-db') {
+        if (empty($def['source']) || $def['source'] !== 'non-db') {
             continue;
         }
         if (empty($def['id_name']) || $def['id_name'] == $field) {
@@ -116,7 +116,7 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
     }
 
     foreach ($focus->field_defs as $field=>$def) {
-        if ($field == 'id' && !empty($focus->id)) {
+        if ($field === 'id' && !empty($focus->id)) {
             // Don't try and overwrite the ID
             continue;
         }
@@ -132,34 +132,34 @@ function populateFromPost($prefix, &$focus, $skipRetrieve = false, $checkACL = f
 
         /*
                 if(isset($_POST[$prefix.$field])) {
-        			if(is_array($_POST[$prefix.$field]) && !empty($focus->field_defs[$field]['isMultiSelect'])) {
-        				if($_POST[$prefix.$field][0] === '' && !empty($_POST[$prefix.$field][1]) ) {
-        					unset($_POST[$prefix.$field][0]);
-        				}
-        				$_POST[$prefix.$field] = encodeMultienumValue($_POST[$prefix.$field]);
-        			}
+                    if(is_array($_POST[$prefix.$field]) && !empty($focus->field_defs[$field]['isMultiSelect'])) {
+                        if($_POST[$prefix.$field][0] === '' && !empty($_POST[$prefix.$field][1]) ) {
+                            unset($_POST[$prefix.$field][0]);
+                        }
+                        $_POST[$prefix.$field] = encodeMultienumValue($_POST[$prefix.$field]);
+                    }
 
-        			$focus->$field = $_POST[$prefix.$field];
-        			/*
-        			 * overrides the passed value for booleans.
-        			 * this will be fully deprecated when the change to binary booleans is complete.
-        			 /
-        			if(isset($focus->field_defs[$prefix.$field]) && $focus->field_defs[$prefix.$field]['type'] == 'bool' && isset($focus->field_defs[$prefix.$field]['options'])) {
-        				$opts = explode("|", $focus->field_defs[$prefix.$field]['options']);
-        				$bool = $_POST[$prefix.$field];
+                    $focus->$field = $_POST[$prefix.$field];
+                    /*
+                     * overrides the passed value for booleans.
+                     * this will be fully deprecated when the change to binary booleans is complete.
+                     /
+                    if(isset($focus->field_defs[$prefix.$field]) && $focus->field_defs[$prefix.$field]['type'] == 'bool' && isset($focus->field_defs[$prefix.$field]['options'])) {
+                        $opts = explode("|", $focus->field_defs[$prefix.$field]['options']);
+                        $bool = $_POST[$prefix.$field];
 
-        				if(is_int($bool) || ($bool === "0" || $bool === "1" || $bool === "2")) {
-        					// 1=on, 2=off
-        					$selection = ($_POST[$prefix.$field] == "0") ? 1 : 0;
-        				} elseif(is_bool($_POST[$prefix.$field])) {
-        					// true=on, false=off
-        					$selection = ($_POST[$prefix.$field]) ? 0 : 1;
-        				}
-        				$focus->$field = $opts[$selection];
-        			}
-        		} else if(!empty($focus->field_defs[$field]['isMultiSelect']) && !isset($_POST[$prefix.$field]) && isset($_POST[$prefix.$field . '_multiselect'])) {
-        			$focus->$field = '';
-        		}
+                        if(is_int($bool) || ($bool === "0" || $bool === "1" || $bool === "2")) {
+                            // 1=on, 2=off
+                            $selection = ($_POST[$prefix.$field] == "0") ? 1 : 0;
+                        } elseif(is_bool($_POST[$prefix.$field])) {
+                            // true=on, false=off
+                            $selection = ($_POST[$prefix.$field]) ? 0 : 1;
+                        }
+                        $focus->$field = $opts[$selection];
+                    }
+                } else if(!empty($focus->field_defs[$field]['isMultiSelect']) && !isset($_POST[$prefix.$field]) && isset($_POST[$prefix.$field . '_multiselect'])) {
+                    $focus->$field = '';
+                }
         */
     }
 
@@ -243,8 +243,8 @@ function getAnyToForm($ignore='', $usePostAsAuthority = false)
 
 function handleRedirect($return_id='', $return_module='', $additionalFlags = false)
 {
-    if (isset($_REQUEST['return_url']) && $_REQUEST['return_url'] != "") {
-        header("Location: ". $_REQUEST['return_url']);
+    if (isset($_REQUEST['return_url']) && $_REQUEST['return_url'] != '') {
+        header('Location: ' . $_REQUEST['return_url']);
         exit;
     }
 
@@ -257,18 +257,18 @@ function handleRedirect($return_id='', $return_module='', $additionalFlags = fal
 function buildRedirectURL($return_id='', $return_module='')
 {
     $status = '';
-    if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != "") {
+    if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != '') {
         $return_module = $_REQUEST['return_module'];
     } else {
         $return_module = $return_module;
     }
-    if (isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != "") {
+    if (isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != '') {
 
        //if we are doing a "Close and Create New"
         if (isCloseAndCreateNewPressed()) {
-            $return_action = "EditView";
-            $isDuplicate = "true";
-            $status = "";
+            $return_action = 'EditView';
+            $isDuplicate = 'true';
+            $status = '';
 
             // Meeting Integration
             if (isset($_REQUEST['meetingIntegrationFlag']) && $_REQUEST['meetingIntegrationFlag'] == 1) {
@@ -278,15 +278,15 @@ function buildRedirectURL($return_id='', $return_module='')
         }
         // if we create a new record "Save", we want to redirect to the DetailView
         else {
-            if (isset($_REQUEST['action']) && $_REQUEST['action'] == "Save"
-            && $_REQUEST['return_module'] != 'Activities'
-            && $_REQUEST['return_module'] != 'Home'
-            && $_REQUEST['return_module'] != 'Forecasts'
-            && $_REQUEST['return_module'] != 'Calendar'
-            && $_REQUEST['return_module'] != 'MailMerge'
+            if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Save'
+            && $_REQUEST['return_module'] !== 'Activities'
+            && $_REQUEST['return_module'] !== 'Home'
+            && $_REQUEST['return_module'] !== 'Forecasts'
+            && $_REQUEST['return_module'] !== 'Calendar'
+            && $_REQUEST['return_module'] !== 'MailMerge'
             ) {
                 $return_action = 'DetailView';
-            } elseif ($_REQUEST['return_module'] == 'Activities' || $_REQUEST['return_module'] == 'Calendar') {
+            } elseif ($_REQUEST['return_module'] === 'Activities' || $_REQUEST['return_module'] === 'Calendar') {
                 $return_module = $_REQUEST['module'];
                 $return_action = $_REQUEST['return_action'];
             // wp: return action needs to be set for one-click close in task list
@@ -296,14 +296,14 @@ function buildRedirectURL($return_id='', $return_module='')
             }
         }
     } else {
-        $return_action = "DetailView";
+        $return_action = 'DetailView';
     }
 
-    if (isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != "") {
+    if (isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != '') {
         $return_id = $_REQUEST['return_id'];
     }
 
-    $add = "";
+    $add = '';
     if (isset($additionalFlags) && !empty($additionalFlags)) {
         foreach ($additionalFlags as $k => $v) {
             $add .= "&{$k}={$v}";
@@ -313,7 +313,7 @@ function buildRedirectURL($return_id='', $return_module='')
     if (!isset($isDuplicate) || !$isDuplicate) {
         $url="index.php?action=$return_action&module=$return_module&record=$return_id&return_module=$return_module&return_action=$return_action{$add}";
         if (isset($_REQUEST['offset']) && empty($_REQUEST['duplicateSave'])) {
-            $url .= "&offset=".$_REQUEST['offset'];
+            $url .= '&offset=' . $_REQUEST['offset'];
         }
         if (!empty($_REQUEST['ajax_load'])) {
             $ajax_ret = array(
@@ -365,9 +365,9 @@ function getLikeForEachWord($fieldname, $value, $minsize=4)
 function isCloseAndCreateNewPressed()
 {
     return isset($_REQUEST['action']) &&
-           $_REQUEST['action'] == "Save" &&
+        $_REQUEST['action'] === 'Save' &&
            isset($_REQUEST['isSaveAndNew']) &&
-           $_REQUEST['isSaveAndNew'] == 'true';
+           $_REQUEST['isSaveAndNew'] === 'true';
 }
 
 
@@ -388,7 +388,7 @@ function add_prospects_to_prospect_list($parent_id, $child_id)
     $relationship = '';
     foreach ($focus->get_linked_fields() as $field => $def) {
         if ($focus->load_relationship($field)) {
-            if ($focus->$field->getRelatedModuleName() == 'ProspectLists') {
+            if ($focus->$field->getRelatedModuleName() === 'ProspectLists') {
                 $relationship = $field;
                 break;
             }
@@ -417,9 +417,9 @@ function add_to_prospect_list($query_panel, $parent_module, $parent_type, $paren
 
     $allowed_module = true;
 
-	if (!is_admin($GLOBALS['current_user'])) {
+    if (!is_admin($GLOBALS['current_user'])) {
         $allowed_module = ACLController::checkModuleAllowed($parent_module, ACLAction::getUserActions($GLOBALS['current_user']->id, false));
-	}
+    }
 
     $parent_types = explode(' ', $parent_type);
     $disabled_types = ACLController::disabledModuleList($parent_types, false, 'list');
@@ -459,7 +459,7 @@ function add_to_prospect_list($query_panel, $parent_module, $parent_type, $paren
     }
 
     // bugfix #57850  filter prospect list based on marketing_id (if it's present)
-    if (isset($_REQUEST['marketing_id']) && $_REQUEST['marketing_id'] != 'all') {
+    if (isset($_REQUEST['marketing_id']) && $_REQUEST['marketing_id'] !== 'all') {
         $thisPanel->_instance_properties['function_parameters']['EMAIL_MARKETING_ID_VALUE'] = $_REQUEST['marketing_id'];
     }
 
@@ -467,7 +467,7 @@ function add_to_prospect_list($query_panel, $parent_module, $parent_type, $paren
 
     if (!empty($result['list'])) {
         foreach ($result['list'] as $object) {
-            if ($link_type != 'default') {
+            if ($link_type !== 'default') {
                 $relationship_attribute=strtolower($object->$link_attribute);
             }
             $GLOBALS['log']->debug('add_prospects_to_prospect_list:relationship_attribute:'.$relationship_attribute);
@@ -487,13 +487,13 @@ function save_from_report($report_id, $parent_id, $module_name, $relationship_at
     global $beanFiles;
     global $beanList;
 
-    $GLOBALS['log']->debug("Save2: Linking with report output");
-    $GLOBALS['log']->debug("Save2:Report ID=".$report_id);
-    $GLOBALS['log']->debug("Save2:Parent ID=".$parent_id);
-    $GLOBALS['log']->debug("Save2:Module Name=".$module_name);
-    $GLOBALS['log']->debug("Save2:Relationship Attribute Name=".$relationship_attr_name);
+    $GLOBALS['log']->debug('Save2: Linking with report output');
+    $GLOBALS['log']->debug('Save2:Report ID=' . $report_id);
+    $GLOBALS['log']->debug('Save2:Parent ID=' . $parent_id);
+    $GLOBALS['log']->debug('Save2:Module Name=' . $module_name);
+    $GLOBALS['log']->debug('Save2:Relationship Attribute Name=' . $relationship_attr_name);
 
-    $GLOBALS['log']->debug("Save2:Bean Name=" . $module_name);
+    $GLOBALS['log']->debug('Save2:Bean Name=' . $module_name);
     $focus = BeanFactory::newBean($module_name);
 
     $focus->retrieve($parent_id);
@@ -502,7 +502,7 @@ function save_from_report($report_id, $parent_id, $module_name, $relationship_at
     //fetch report definition.
     global $current_language, $report_modules, $modules_report;
 
-    $mod_strings = return_module_language($current_language, "Reports");
+    $mod_strings = return_module_language($current_language, 'Reports');
 
 
     $saved = new SavedReport();
@@ -515,7 +515,7 @@ function save_from_report($report_id, $parent_id, $module_name, $relationship_at
     $report->run_query();
 
     $sql = $report->query_list[0];
-    $GLOBALS['log']->debug("Save2:Report Query=".$sql);
+    $GLOBALS['log']->debug('Save2:Report Query=' . $sql);
     $result = $report->db->query($sql);
 
     $reportBean = BeanFactory::newBean($saved->module);

@@ -46,27 +46,27 @@ if (empty($_REQUEST)) {
 }
 
 $yui_path = array(
-    "2.9.0" => "include/javascript/yui",
-    "2_9_0" => "include/javascript/yui",
-    "3.3.0" => "include/javascript/yui3",
-    "3_3_0" => "include/javascript/yui3"
+    '2.9.0' => 'include/javascript/yui',
+    '2_9_0' => 'include/javascript/yui',
+    '3.3.0' => 'include/javascript/yui3',
+    '3_3_0' => 'include/javascript/yui3'
 );
 $types = array(
-    "js" => "application/javascript",
-    "css" => "text/css",
+    'js'  => 'application/javascript',
+    'css' => 'text/css',
 );
-$out = "";
+$out = '';
 
-$contentType = "";
-$allpath = "";
+$contentType = '';
+$allpath = '';
 
 foreach ($_REQUEST as $param => $val) {
     //No backtracking in the path
-    if (strpos($param, "..") !== false) {
+    if (str_contains($param, '..')) {
         continue;
     }
 
-    $version = explode("/", $param);
+    $version = explode('/', $param);
     $version = $version[0];
     if (empty($yui_path[$version])) {
         continue;
@@ -74,7 +74,7 @@ foreach ($_REQUEST as $param => $val) {
 
     $path = $yui_path[$version] . substr($param, strlen($version));
 
-    $extension = substr($path, strrpos($path, "_") + 1);
+    $extension = substr($path, strrpos($path, '_') + 1);
 
     //Only allowed file extensions
     if (empty($types[$extension])) {
@@ -85,10 +85,10 @@ foreach ($_REQUEST as $param => $val) {
         $contentType = $types[$extension];
     }
     //Put together the final filepath
-    $path = substr($path, 0, strrpos($path, "_")) . "." . $extension;
+    $path = substr($path, 0, strrpos($path, '_')) . '.' . $extension;
     $contents = '';
     if (is_file($path)) {
-        $out .= "/*" . $path . "*/\n";
+        $out .= '/*' . $path . "*/\n";
         $contents =  file_get_contents($path);
         $out .= $contents . "\n";
     }
@@ -99,8 +99,8 @@ foreach ($_REQUEST as $param => $val) {
 $etag = '"'.md5($allpath).'"';
 
 // try to use the content cached locally if it's the same as we have here.
-header("Cache-Control: private");
-header("Pragma: dummy=bogus");
+header('Cache-Control: private');
+header('Pragma: dummy=bogus');
 header("Etag: $etag");
 header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + 2592000));
 header("Content-Type: $contentType");

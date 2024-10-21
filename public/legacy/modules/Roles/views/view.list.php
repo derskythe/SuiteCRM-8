@@ -46,7 +46,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class RolesViewList extends ViewList
 {
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->lv = new ListViewSmarty();
         $this->lv->showMassupdateFields = false;

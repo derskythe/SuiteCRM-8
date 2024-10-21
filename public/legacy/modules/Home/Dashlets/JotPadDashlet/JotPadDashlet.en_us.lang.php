@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-$defaultText = "";
+$defaultText = '';
 $dashletStrings['JotPadDashlet'] = array(
     'LBL_TITLE' => 'JotPad',
     'LBL_DESCRIPTION' => 'A dashlet to keep your notes',

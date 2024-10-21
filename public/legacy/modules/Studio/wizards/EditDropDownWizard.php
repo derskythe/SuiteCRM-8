@@ -65,7 +65,7 @@ class EditDropDownWizard extends StudioWizard
     }
     public function options()
     {
-        //		return array('EditDropdown'=>$GLOBALS['mod_strings']['LBL_SW_EDIT_DROPDOWNS'], 'CreateDropdown'=>$GLOBALS['mod_strings']['LBL_ED_CREATE_DROPDOWN'] );
+        //        return array('EditDropdown'=>$GLOBALS['mod_strings']['LBL_SW_EDIT_DROPDOWNS'], 'CreateDropdown'=>$GLOBALS['mod_strings']['LBL_ED_CREATE_DROPDOWN'] );
     }
 
     public function process($option)
@@ -84,7 +84,7 @@ class EditDropDownWizard extends StudioWizard
         }
     }
 
-    public function display()
+    public function display($error = '')
     {
         // override the parent display - don't display any wizard stuff
     }

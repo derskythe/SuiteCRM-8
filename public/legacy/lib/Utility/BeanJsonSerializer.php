@@ -121,7 +121,7 @@ class BeanJsonSerializer
 
         // does a number of checks and validation to standardise the format of fields, especially adding nesting of values
         foreach ($keys as $key) {
-            if (in_array($key, $this->mapper->getBlacklist())) {
+            if (in_array($key, $this->mapper->getBlacklist(), true)) {
                 continue;
             }
 

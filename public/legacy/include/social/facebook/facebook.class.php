@@ -1,5 +1,5 @@
 <?php
-require_once("include/social/facebook/facebook_sdk/src/facebook.php");
+require_once('include/social/facebook/facebook_sdk/src/facebook.php');
 
 
 class facebook_helper{
@@ -7,7 +7,7 @@ class facebook_helper{
     var $facebook;
 
     function __construct() {
-        require_once("custom/modules/Connectors/connectors/sources/ext/rest/facebook/config.php");
+        require_once('custom/modules/Connectors/connectors/sources/ext/rest/facebook/config.php');
 
         $fb_config = array(
             'appId' => $config['properties']['appid'],
@@ -27,7 +27,9 @@ class facebook_helper{
     function get_my_newsfeed(){
         return $this->facebook->api('me/home'); //get my news feed
     }
-    function get_other_newsfeed($user, $limit = "100"){
+
+    function get_other_newsfeed($user, $limit = '100')
+    {
         return $this->facebook->api('/' . $user . '/feed?limit=' . $limit);
     }
     function get_login_url($url){
@@ -48,16 +50,16 @@ class facebook_helper{
 
     function process_feed($story){
         switch($story['type']){
-            case "status":
+            case 'status':
                 return $this->status($story);
                 break;
-            case "photo":
+            case 'photo':
                 return $this->photo_status($story);
                 break;
-            case "link":
+            case 'link':
                 return $this->link_type($story);
                 break;
-            case "video":
+            case 'video':
                 return $this->video_type($story);
                 break;
         }
@@ -72,7 +74,7 @@ class facebook_helper{
         $string .= '<img src=https://graph.facebook.com/' . $story['to']['id'] . '/picture>';
         $string .= '<p>' .$story['story'] .'</p>';
         $string .= '<p>' .$story['message'] .'</p>';
-        $string .= "</div>";
+        $string .= '</div>';
         return $string;
     }
 
@@ -83,7 +85,7 @@ class facebook_helper{
         $string .= "<div style=' margin: 0 auto; background-color: #F7F7F7; height:160px; width:389px; ; border:1px solid #cccccc'>";
         $string .= '<div style="padding: 3px; width: 100%;">' .$story['from']['name'] . '</div>';
 
-        if($story['status_type'] == 'approved_friend'){
+        if($story['status_type'] === 'approved_friend'){
             $string .= '<img src=https://graph.facebook.com/' . $story['story_tags']['0']['0']['id']. '/picture>';
             $string .= '<img src=https://graph.facebook.com/' . $story['story_tags']['18']['0']['id']. '/picture>';
         }else{
@@ -96,7 +98,7 @@ class facebook_helper{
 
         $string .= '<p>' .$story['story'] .'</p>';
         $string .= '<p>' .$story['message'] .'</p>';
-        $string .= "</div>";
+        $string .= '</div>';
 
         return $string;
 
@@ -109,7 +111,7 @@ class facebook_helper{
         $string .= '<a style="padding: 5px; float:left;" href="' . $story['link'] . '"><img style=float:left; src="' . $story['picture'] . '"/></a>';
         $string .= '<a  href="' . $story['link'] . '">' .$story['description'] .'</a>';
         $string .= '<p>' . $story['caption'] . '</p>';
-        $string .= "</div>";
+        $string .= '</div>';
         return $string;
 
 
@@ -124,7 +126,7 @@ class facebook_helper{
         $string .= '<a style="padding: 5px; float:left;" href="' . $story['link'] . '"><img style=float:left; src="' . $story['picture'] . '"/></a>';
         $string .= '<a  href="' . $story['link'] . '">' .$story['description'] .'</a>';
         $string .= '<p>' . $story['caption'] . '</p>';
-        $string .= "</div>";
+        $string .= '</div>';
         return $string;
     }
 
@@ -137,7 +139,7 @@ class facebook_helper{
                $value = $story['data']['0']['name'];
                break;
            }
-            if($field == 'to'){
+            if($field === 'to'){
                 $value = $story['data']['0']['name'];
 
                 break;

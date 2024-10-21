@@ -66,9 +66,9 @@ class TabController
     public function get_system_tabs()
     {
         global $moduleList;
-    
+
         static $system_tabs_result = null;
-    
+
         // if the value is not already cached, then retrieve it.
         if (empty($system_tabs_result) || !self::$isCacheValid) {
             $administration = BeanFactory::newBean('Administration');
@@ -82,7 +82,7 @@ class TabController
                     $tabs = unserialize($tabs);
                     //Ensure modules saved in the prefences exist.
                     foreach ($tabs as $id => $tab) {
-                        if (!in_array($tab, $moduleList)) {
+                        if (!in_array($tab, $moduleList, true)) {
                             unset($tabs[$id]);
                         }
                     }
@@ -97,7 +97,7 @@ class TabController
             }
             self::$isCacheValid = true;
         }
-        
+
         return $system_tabs_result;
     }
 
@@ -109,7 +109,7 @@ class TabController
         foreach ($tabs as $tab) {
             unset($unsetTabs[$tab]);
         }
-    
+
         $should_hide_iframes = !file_exists('modules/iFrames/iFrame.php');
         if ($should_hide_iframes) {
             if (isset($unsetTabs['iFrames'])) {
@@ -140,7 +140,7 @@ class TabController
         $administration = BeanFactory::newBean('Administration');
         $administration->retrieveSettings('MySettings');
         if (isset($administration->settings) && isset($administration->settings['MySettings_disable_useredit'])) {
-            if ($administration->settings['MySettings_disable_useredit'] == 'yes') {
+            if ($administration->settings['MySettings_disable_useredit'] === 'yes') {
                 return false;
             }
         }
@@ -188,12 +188,12 @@ class TabController
         $tabs = $user->getPreference($type .'_tabs');
         if (!empty($tabs)) {
             $tabs = self::get_key_array($tabs);
-            if ($type == 'display') {
+            if ($type === 'display') {
                 $tabs['Home'] =  'Home';
             }
             return $tabs;
         } else {
-            if ($type == 'display') {
+            if ($type === 'display') {
                 return $system_tabs;
             } else {
                 return array();
@@ -215,9 +215,9 @@ class TabController
     public function get_old_user_tabs($user)
     {
         $system_tabs = $this->get_system_tabs();
-    
+
         $tabs = $user->getPreference('tabs');
-    
+
         if (!empty($tabs)) {
             $tabs = self::get_key_array($tabs);
             $tabs['Home'] =  'Home';
@@ -240,7 +240,7 @@ class TabController
         foreach ($tabs as $tab) {
             unset($system_tabs[$tab]);
         }
-    
+
         return array($tabs,$system_tabs);
     }
 
@@ -250,7 +250,7 @@ class TabController
         $hide_tabs = $this->get_user_tabs($user, 'hide');
         $remove_tabs = $this->get_user_tabs($user, 'remove');
         $system_tabs = $this->get_system_tabs();
-    
+
         // remove access to tabs that roles do not give them permission to
 
         foreach ($system_tabs as $key=>$value) {
@@ -276,7 +276,7 @@ class TabController
                 unset($hide_tabs[$key]);
             }
         }
-        
+
         // remove tabs from user if admin has removed specific tabs
         foreach ($remove_tabs as $key=>$value) {
             if (isset($display_tabs[$key])) {

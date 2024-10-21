@@ -48,8 +48,6 @@ class AccountsViewDetail extends ViewDetail
     }
 
 
-
-
     /**
      * display
      * Override the display method to support customization for the buttons that display
@@ -57,6 +55,9 @@ class AccountsViewDetail extends ViewDetail
      * The custom_code_billing and custom_code_shipping Smarty variables are found in
      * include/SugarFields/Fields/Address/DetailView.tpl (default).  If it's a English U.S.
      * locale then it'll use file include/SugarFields/Fields/Address/en_us.DetailView.tpl.
+     *
+     * @throws Exception
+     * @throws Exception
      */
     public function display()
     {
@@ -69,7 +70,7 @@ class AccountsViewDetail extends ViewDetail
         formLetter::DVPopupHtml('Accounts');
 
         $this->dv->process();
-        
+
         if (ACLController::checkAccess('Contacts', 'edit', true)) {
             $push_billing = $this->generatePushCode('billing');
             $push_shipping = $this->generatePushCode('shipping');
@@ -78,8 +79,8 @@ class AccountsViewDetail extends ViewDetail
             $push_shipping = '';
         }
 
-        $this->ss->assign("custom_code_billing", $push_billing);
-        $this->ss->assign("custom_code_shipping", $push_shipping);
+        $this->ss->assign('custom_code_billing', $push_billing);
+        $this->ss->assign('custom_code_shipping', $push_shipping);
 
         if (empty($this->bean->id)) {
             global $app_strings;

@@ -72,7 +72,7 @@ if (isset($_SESSION['setup_db_port_num']) && !empty($_SESSION['setup_db_port_num
 $db = getInstallDbInstance();
 
 ///////////////////////////////////////////////////////////////////////////////
-////	BEGIN PAGE OUTPUT
+////    BEGIN PAGE OUTPUT
 
 $langHeader = get_language_header();
 
@@ -134,8 +134,8 @@ foreach ($config_params as $group => $gdata) {
             } else {
                 $sessval = '';
             }
-            if (!empty($value["type"])) {
-                $type = $value["type"];
+            if (!empty($value['type'])) {
+                $type = $value['type'];
             } else {
                 $type = '';
             }
@@ -144,7 +144,7 @@ foreach ($config_params as $group => $gdata) {
 
 FORM;
             //if the type is password, set a hidden field to capture the value.  This is so that we can properly encode special characters, which is a limitation with password fields
-            if ($type=='password') {
+            if ($type === 'password') {
                 $form .= "<input type='$type' name='{$name}_entry' id='{$name}_entry' value='".urldecode($sessval)."'><input type='hidden' name='$name' id='$name' value='".urldecode($sessval)."'>";
             } else {
                 $form .= "<input type='$type' name='$name' id='$name' value='$sessval'>";
@@ -158,13 +158,13 @@ FORM;
             $form .= "<input name=\"$name\" id=\"$name\" value=\"\" type=\"hidden\">\n";
         }
     }
-    $form .= "</div>";
+    $form .= '</div>';
 }
 
 $out2 .= $form;
 
 //if we are installing in custom mode, include the following html
-if ($db->supports("create_user")) {
+if ($db->supports('create_user')) {
     // create / set db user dropdown
     $auto_select = '';
     $provide_select ='';
@@ -172,25 +172,25 @@ if ($db->supports("create_user")) {
     $same_select = '';
     if (isset($_SESSION['dbUSRData'])) {
 //    if($_SESSION['dbUSRData']=='auto')    {$auto_select ='selected';}
-        if ($_SESSION['dbUSRData']=='provide') {
+        if ($_SESSION['dbUSRData'] === 'provide') {
             $provide_select ='selected';
         }
-        if (isset($_SESSION['install_type'])  && !empty($_SESSION['install_type'])  && strtolower($_SESSION['install_type'])=='custom') {
-            if ($_SESSION['dbUSRData']=='create') {
+        if (isset($_SESSION['install_type'])  && !empty($_SESSION['install_type'])  && strtolower($_SESSION['install_type']) === 'custom') {
+            if ($_SESSION['dbUSRData'] === 'create') {
                 $create_select ='selected';
             }
         }
-        if ($_SESSION['dbUSRData']=='same') {
+        if ($_SESSION['dbUSRData'] === 'same') {
             $same_select ='selected';
         }
     } else {
         $same_select ='selected';
     }
     $dbUSRDD   = "<select name='dbUSRData' id='dbUSRData' onchange='toggleDBUser();'>";
-    $dbUSRDD  .= "<option value='provide' $provide_select>".$mod_strings['LBL_DBCONFIG_PROVIDE_DD']."</option>";
-    $dbUSRDD  .= "<option value='create' $create_select>".$mod_strings['LBL_DBCONFIG_CREATE_DD']."</option>";
-    $dbUSRDD  .= "<option value='same' $same_select>".$mod_strings['LBL_DBCONFIG_SAME_DD']."</option>";
-    $dbUSRDD  .= "</select><br>&nbsp;";
+    $dbUSRDD  .= "<option value='provide' $provide_select>".$mod_strings['LBL_DBCONFIG_PROVIDE_DD']. '</option>';
+    $dbUSRDD  .= "<option value='create' $create_select>".$mod_strings['LBL_DBCONFIG_CREATE_DD']. '</option>';
+    $dbUSRDD  .= "<option value='same' $same_select>".$mod_strings['LBL_DBCONFIG_SAME_DD']. '</option>';
+    $dbUSRDD  .= '</select><br>&nbsp;';
 
 
 
@@ -219,8 +219,8 @@ if ($db->supports("create_user")) {
 EOQ2;
 }
 
-$demoDD = "<select name='demoData' id='demoData' class='select'><option value='no' >".$mod_strings['LBL_NO']."</option><option value='yes'>".$mod_strings['LBL_YES']."</option>";
-$demoDD .= "</select>";
+$demoDD = "<select name='demoData' id='demoData' class='select'><option value='no' >".$mod_strings['LBL_NO']."</option><option value='yes'>".$mod_strings['LBL_YES']. '</option>';
+$demoDD .= '</select>';
 
 
 $out3 =<<<EOQ3
@@ -443,7 +443,7 @@ function confirm_drop_tables(yes_no){
 
 EOQ5;
 
-////	END PAGE OUTPUT
+////    END PAGE OUTPUT
 ///////////////////////////////////////////////////////////////////////////////
 
 echo $out;

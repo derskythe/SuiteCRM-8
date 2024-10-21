@@ -45,11 +45,11 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 $subpanel_layout = array(
     'top_buttons' => array(
-//		array('widget_class' => 'SubPanelTopCreateButton'),
-//		array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Contacts'),
+//        array('widget_class' => 'SubPanelTopCreateButton'),
+//        array('widget_class' => 'SubPanelTopSelectButton', 'popup_module' => 'Contacts'),
     ),
 
-//	'where' => '',
+//    'where' => '',
 
     'list_fields' => array(
         'name'=>array(
@@ -74,12 +74,12 @@ $subpanel_layout = array(
         'product_discount'=>array(
             'vname' => 'LBL_PRODUCT_DISCOUNT',
         ),
-//		'product_discount_amount'=>array(
-//			'vname' => 'LBL_PRODUCT_DISCOUNT_AMOUNT',
-//		),
-//		'product_cost_price'=>array(
-//			'vname' => 'LBL_PRODUCT_COST_PRICE',
-//		),
+//        'product_discount_amount'=>array(
+//            'vname' => 'LBL_PRODUCT_DISCOUNT_AMOUNT',
+//        ),
+//        'product_cost_price'=>array(
+//            'vname' => 'LBL_PRODUCT_COST_PRICE',
+//        ),
         'product_unit_price'=>array(
             'vname' => 'LBL_ACCOUNT_PRODUCT_SALE_PRICE',
         ),
@@ -88,19 +88,19 @@ $subpanel_layout = array(
         ),
 
 
-//		'date_modified'=>array(
-//			'vname' => 'LBL_DATE_MODIFIED',
-//			//'width' => '45%',
-//		),
-//		'edit_button'=>array(
-//			'widget_class' => 'SubPanelEditButton',
-//			'module' => $module_name,
-//			'width' => '4%',
-//		),
-//		'remove_button'=>array(
-//			'widget_class' => 'SubPanelRemoveButton',
-//			'module' => $module_name,
-//			'width' => '5%',
-//		),
+//        'date_modified'=>array(
+//            'vname' => 'LBL_DATE_MODIFIED',
+//            //'width' => '45%',
+//        ),
+//        'edit_button'=>array(
+//            'widget_class' => 'SubPanelEditButton',
+//            'module' => $module_name,
+//            'width' => '4%',
+//        ),
+//        'remove_button'=>array(
+//            'widget_class' => 'SubPanelRemoveButton',
+//            'module' => $module_name,
+//            'width' => '5%',
+//        ),
     ),
 );

@@ -27,7 +27,7 @@ class EmailTemplateTest extends SuitePHPUnitFrameworkTestCase
         foreach ($related as $bean) {
             $bean->name = 'foobar';
 
-            $result = (new EmailTemplateParser($emailTemplate, $campaign, $bean, "", ""))->parseVariables();
+            $result = (new EmailTemplateParser($emailTemplate, $campaign, $bean, '', ''))->parseVariables();
             self::assertEquals('<h1>Hello foobar</h1>', from_html($result['body_html']));
             self::assertEquals('Hello foobar', $result['body']);
             self::assertEquals('Hello foobar', $result['subject']);
@@ -45,7 +45,7 @@ class EmailTemplateTest extends SuitePHPUnitFrameworkTestCase
         $bean->last_name = 'bar';
         $bean->fill_in_additional_detail_fields();
 
-        $result = (new EmailTemplateParser($emailTemplate, $campaign, $bean, "", ""))->parseVariables();
+        $result = (new EmailTemplateParser($emailTemplate, $campaign, $bean, '', ''))->parseVariables();
         self::assertEquals('Hello foo bar', $result['body']);
     }
 
@@ -214,13 +214,13 @@ class EmailTemplateTest extends SuitePHPUnitFrameworkTestCase
         $emailTemplate = BeanFactory::newBean('EmailTemplates');
         $emailTemplate->body_html = htmlentities('&#60;a&#62;<b>');
         $emailTemplate->fill_in_additional_detail_fields();
-        self::assertEquals("<a>", $emailTemplate->body);
+        self::assertEquals('<a>', $emailTemplate->body);
 
         // invalid html
         $emailTemplate = BeanFactory::newBean('EmailTemplates');
         $emailTemplate->body_html = htmlentities('foo<bar');
         $emailTemplate->fill_in_additional_detail_fields();
-        self::assertEquals("foo", $emailTemplate->body);
+        self::assertEquals('foo', $emailTemplate->body);
 
         // variables
         $emailTemplate = BeanFactory::newBean('EmailTemplates');
@@ -236,7 +236,7 @@ class EmailTemplateTest extends SuitePHPUnitFrameworkTestCase
 
         // decoding latin-1 html
         $emailTemplate = BeanFactory::newBean('EmailTemplates');
-        $emailTemplate->body_html = htmlentities('<meta charset="ISO-8859-1">' . "\xe4", ENT_QUOTES, "ISO-8859-1");
+        $emailTemplate->body_html = htmlentities('<meta charset="ISO-8859-1">' . "\xe4", ENT_QUOTES, 'ISO-8859-1');
         $emailTemplate->fill_in_additional_detail_fields();
         self::assertEquals("\xc3\xa4", $emailTemplate->body);
     }
@@ -385,7 +385,7 @@ class EmailTemplateTest extends SuitePHPUnitFrameworkTestCase
         $actual = $emailTemplate->_parseUserValues($repl_arr, $user);
         $this->assertSame($expected, $actual);
         */
-        self::markTestIncomplete("Different values for php5 and php7");
+        self::markTestIncomplete('Different values for php5 and php7');
     }
 
     public function testparse_template_bean(): void

@@ -70,17 +70,22 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
 
     /**
      * Constructor
-     * @param string $view The view type, that is, editview, searchview etc
-     * @param string $moduleName The name of the module to which this listview belongs
+     *
+     * @param string $view        The view type, that is, editview, searchview etc
+     * @param string $moduleName  The name of the module to which this listview belongs
      * @param string $packageName If not empty, the name of the package to which this listview belongs
+     *
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function __construct($view, $moduleName, $packageName = '')
     {
-        $GLOBALS ['log']->debug(get_class($this) . ": __construct()");
+        $GLOBALS ['log']->debug(get_class($this) . ': __construct()');
 
         // BEGIN ASSERTIONS
         $views = array(MB_LISTVIEW, MB_DASHLET, MB_DASHLETSEARCH, MB_POPUPLIST, MB_POPUPSEARCH);
-        if (!in_array($view, $views)) {
+        if (!in_array($view, $views, true)) {
             sugar_die("ListLayoutMetaDataParser: View $view is not supported");
         }
         // END ASSERTIONS
@@ -151,7 +156,7 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
         foreach ($this->_viewdefs as $key => $def) {
             // add in the default fields from the listviewdefs but hide fields disabled in the listviewdefs.
             if (!empty($def ['default']) && (!isset($def['enabled']) || $def['enabled'] != false)
-                && (!isset($def ['studio']) || ($def ['studio'] !== false && $def ['studio'] != "false"))
+                && (!isset($def ['studio']) || ($def ['studio'] !== false && $def ['studio'] !== 'false'))
             ) {
                 if (isset($this->_fielddefs [$key])) {
                     $defaultFields [$key] = self::_trimFieldDefs($this->_fielddefs [$key]);
@@ -176,7 +181,7 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
         $additionalFields = array();
         foreach ($this->_viewdefs as $key => $def) {
             //#25322
-            if (strtolower($key) == 'email_opt_out') {
+            if (strtolower($key) === 'email_opt_out') {
                 continue;
             }
 
@@ -229,15 +234,15 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
                 $view = !empty($_REQUEST['view']) ? $_REQUEST['view'] : $this->view;
 
                 // fix for removing email1 field from studio popup searchview - bug 42902
-                if ($view == 'popupsearch' && $key == 'email1') {
+                if ($view === 'popupsearch' && $key === 'email1') {
                     return false;
                 } //end bug 42902
 
-                if (!empty($view) && isset($def['studio'][$view]) && ($def['studio'][$view] !== false && (string)$def['studio'][$view] != 'false' && (string)$def['studio'][$view] != 'hidden')) {
+                if (!empty($view) && isset($def['studio'][$view]) && ($def['studio'][$view] !== false && (string)$def['studio'][$view] !== 'false' && (string) $def['studio'][$view] !== 'hidden')) {
                     return true;
                 }
 
-                if (isset($def['studio']['listview']) && ($def['studio']['listview'] !== false && (string)$def['studio']['listview'] != 'false' && (string)$def['studio']['listview'] != 'hidden')) {
+                if (isset($def['studio']['listview']) && ($def['studio']['listview'] !== false && (string)$def['studio']['listview'] !== 'false' && (string) $def['studio']['listview'] !== 'hidden')) {
                     return true;
                 }
 
@@ -246,7 +251,7 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
                 }
             } else {
                 if (is_string($def['studio'])) {
-                    return $def['studio'] != 'false' && $def['studio'] != 'hidden';
+                    return $def['studio'] !== 'false' && $def['studio'] !== 'hidden';
                 } else {
                     if (is_bool($def['studio'])) {
                         return $def['studio'];
@@ -257,18 +262,18 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
 
         //Bug 32520. We need to dissalow currency_id fields on list views.
         //This should be removed once array based studio definitions are in.
-        if (isset($def['type']) && $def['type'] == "id" && $def['name'] == 'currency_id') {
+        if (isset($def['type']) && $def['type'] === 'id' && $def['name'] === 'currency_id') {
             return false;
         }
 
         //Check fields types
-        if (isset($def['dbType']) && $def['dbType'] == "id") {
+        if (isset($def['dbType']) && $def['dbType'] === 'id') {
             return false;
         }
 
         if (isset($def['type'])) {
-            if ($def['type'] == 'html' || ($def['type'] == 'parent' && !$this->allowParent)
-                || $def['type'] == "id" || $def['type'] == "link" || $def['type'] == 'image'
+            if ($def['type'] === 'html' || ($def['type'] === 'parent' && !$this->allowParent)
+                || $def['type'] === 'id' || $def['type'] === 'link' || $def['type'] === 'image'
             ) {
                 return false;
             }
@@ -290,7 +295,7 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
      */
     protected function _populateFromRequest()
     {
-        $GLOBALS ['log']->debug(get_class($this) . "->populateFromRequest() - fielddefs = " . print_r(
+        $GLOBALS ['log']->debug(get_class($this) . '->populateFromRequest() - fielddefs = ' . print_r(
             $this->_fielddefs,
             true
         ));
@@ -309,11 +314,11 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
             if (isset($def['studio']) && (
                 (
                         is_array($def['studio']) && isset($def['studio']['listview']) &&
-                        ($def['studio']['listview'] === false || strtolower($def['studio']['listview']) == 'false'
-                            || strtolower($def['studio']['listview']) == 'required')
+                        ($def['studio']['listview'] === false || strtolower($def['studio']['listview']) === 'false'
+                            || strtolower($def['studio']['listview']) === 'required')
                     )
                     || (!is_array($def['studio']) &&
-                        ($def ['studio'] === false || strtolower($def['studio']) == 'false' || strtolower($def['studio']) == 'required'))
+                        ($def ['studio'] === false || strtolower($def['studio']) === 'false' || strtolower($def['studio']) === 'required'))
                 )
             ) {
                 $newViewdefs [$key] = $def;
@@ -355,18 +360,18 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
 
                 if (isset($_REQUEST [strtolower($fieldname) . 'width'])) {
                     $width = substr((string) $_REQUEST [$fieldname . 'width'], 6, 3);
-                    if (strpos($width, "%") != false) {
+                    if (strpos($width, '%') != false) {
                         $width = substr($width, 0, 2);
                     }
                     if (!($width < 101 && $width > 0)) {
                         $width = 10;
                     }
-                    $newViewdefs [$fieldname] ['width'] = $width . "%";
+                    $newViewdefs [$fieldname] ['width'] = $width . '%';
                 } else {
                     if (isset($this->_viewdefs [$fieldname] ['width'])) {
                         $newViewdefs [$fieldname] ['width'] = $this->_viewdefs [$fieldname] ['width'];
                     } else {
-                        $newViewdefs [$fieldname] ['width'] = "10%";
+                        $newViewdefs [$fieldname] ['width'] = '10%';
                     }
                 }
 
@@ -403,7 +408,7 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
 
         // fixing bug #25640: Value of "Relate" custom field is not displayed as a link in list view
         // we should set additional params such as 'link' and 'id' to be stored in custom listviewdefs.php
-        if (isset($fieldDefs['type']) && $fieldDefs['type'] == 'relate') {
+        if (isset($fieldDefs['type']) && $fieldDefs['type'] === 'relate') {
             $viewDefs['id'] = strtoupper($fieldDefs['id_name']);
             $viewDefs['link'] = true;
         }
@@ -414,11 +419,11 @@ class ListLayoutMetaDataParser extends AbstractMetaDataParser implements MetaDat
         }
 
         // Bug 23728 - Make adding a currency type field default to setting the 'currency_format' to true
-        if (isset($fieldDefs['type']) && $fieldDefs['type'] == 'currency') {
+        if (isset($fieldDefs['type']) && $fieldDefs['type'] === 'currency') {
             $viewDefs['currency_format'] = true;
         }
 
-        if ($fieldDefs['type'] == 'parent') {
+        if ($fieldDefs['type'] === 'parent') {
             $viewDefs['link'] = true;
             $viewDefs['sortable'] = false;
             $viewDefs['ACLTag'] = 'PARENT';
