@@ -27,8 +27,84 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="refactor: Add return type hints to display() methods">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quick.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quick.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ACLRoles/views/view.classic.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ACLRoles/views/view.classic.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/views/view.ganttchart.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/views/view.ganttchart.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOK_KnowledgeBase/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOK_KnowledgeBase/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOK_KnowledgeBase/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOK_KnowledgeBase/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Contracts/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Contracts/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Invoices/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Invoices/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Invoices/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Invoices/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_PDF_Templates/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_PDF_Templates/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_PDF_Templates/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_PDF_Templates/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Product_Categories/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Product_Categories/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Products/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Products/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Quotes/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Quotes/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Quotes/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Quotes/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOW_Processed/views/view.list.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOW_Processed/views/view.list.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Accounts/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Accounts/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Activities/views/view.list.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Activities/views/view.list.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Bugs/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Bugs/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Bugs/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Bugs/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Calls/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Calls/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Campaigns/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Campaigns/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Cases/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Cases/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Configurator/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Configurator/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.displayproperties.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.displayproperties.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.mappingproperties.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.mappingproperties.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.searchproperties.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.searchproperties.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.sourceproperties.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Connectors/views/view.sourceproperties.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Contacts/views/view.closecontactaddresspopup.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Contacts/views/view.closecontactaddresspopup.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Contacts/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Contacts/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Contacts/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Contacts/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Documents/Document.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Documents/Document.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Documents/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Documents/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Documents/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Documents/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/EAPM/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/EAPM/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/EAPM/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/EAPM/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/EmailTemplates/views/view.classic.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/EmailTemplates/views/view.classic.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Emails/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Emails/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Emails/views/view.detailnonimported.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Emails/views/view.detailnonimported.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Employees/Employee.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Employees/Employee.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Employees/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Employees/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Employees/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Employees/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/FP_events/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/FP_events/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/FP_events/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/FP_events/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/AOPInboundEmail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/AOPInboundEmail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Leads/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Leads/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Meetings/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Meetings/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.dashlet.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.dashlet.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.labels.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.labels.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.popupview.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.popupview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.searchview.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ModuleBuilder/views/view.searchview.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Notes/Note.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Notes/Note.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OAuth2Clients/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OAuth2Clients/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OAuth2Clients/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OAuth2Clients/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Opportunities/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Opportunities/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Opportunities/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Opportunities/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.ganttchart.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.ganttchart.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.templatesdetail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.templatesdetail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.templatesedit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Project/views/view.templatesedit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ProjectTask/views/view.list.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ProjectTask/views/view.list.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Prospects/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Prospects/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Schedulers/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Schedulers/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Schedulers/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Schedulers/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Schedulers/views/view.list.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Schedulers/views/view.list.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Tasks/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Tasks/views/view.edit.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Users/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Users/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Users/views/view.detail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Users/views/view.detail.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Users/views/view.edit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Users/views/view.edit.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -973,15 +1049,7 @@
       <option name="project" value="LOCAL" />
       <updated>1729675603023</updated>
     </task>
-    <task id="LOCAL-00047" summary="refactor: Add return type hints to display() methods">
-      <option name="closed" value="true" />
-      <created>1729680902462</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1729680902462</updated>
-    </task>
-    <option name="localTasksCounter" value="48" />
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
