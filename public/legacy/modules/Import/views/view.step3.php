@@ -69,7 +69,7 @@ class ImportViewStep3 extends ImportView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings, $current_user, $sugar_config, $app_list_strings, $locale;
 

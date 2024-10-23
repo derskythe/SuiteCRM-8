@@ -15,7 +15,7 @@ class Jjwg_MapsViewMap_Display extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         // Limit URI query string parameters. Used to avoid URL length errors.
         $valid_names = array('action', 'module', 'entryPoint', 'submit', 'cron', 'geocoding_process', 'process_trigger', 'distance', 'unit_type', 'record', 'related_id', 'related_module', 'quick_address', 'display_module', 'list_id', 'uid', 'current_post');

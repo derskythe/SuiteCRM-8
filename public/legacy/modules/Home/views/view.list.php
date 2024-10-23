@@ -41,19 +41,21 @@
 #[\AllowDynamicProperties]
 class HomeViewList extends ViewList
 {
-    public function ActivitiesViewList()
-    {
-        $this->__construct();
-    }
 
-    public function display()
+    /**
+     * @return void
+     */
+    public function display() : void
     {
         global $mod_strings, $export_module, $current_language, $theme, $current_user, $dashletData, $sugar_flavor;
         $this->processMaxPostErrors();
         include('modules/Home/index.php');
     }
 
-    public function processMaxPostErrors()
+    /**
+     * @return void
+     */
+    public function processMaxPostErrors() : void
     {
         if ($this->checkPostMaxSizeError()) {
             $this->errors[] = $GLOBALS['app_strings']['UPLOAD_ERROR_HOME_TEXT'];
@@ -61,16 +63,16 @@ class HomeViewList extends ViewList
 
             $maxPostSize = ini_get('post_max_size');
             if (stripos($maxPostSize, 'k')) {
-                $maxPostSize = (int) $maxPostSize * pow(2, 10);
+                $maxPostSize = (int) $maxPostSize * (2 ** 10);
             } elseif (stripos($maxPostSize, 'm')) {
-                $maxPostSize = (int) $maxPostSize * pow(2, 20);
+                $maxPostSize = (int) $maxPostSize * (2 ** 20);
             }
 
             $maxUploadSize = ini_get('upload_max_filesize');
             if (stripos($maxUploadSize, 'k')) {
-                $maxUploadSize = (int) $maxUploadSize * pow(2, 10);
+                $maxUploadSize = (int) $maxUploadSize * (2 ** 10);
             } elseif (stripos($maxUploadSize, 'm')) {
-                $maxUploadSize = (int) $maxUploadSize * pow(2, 20);
+                $maxUploadSize = (int) $maxUploadSize * (2 ** 20);
             }
 
             $max_size = min($maxPostSize, $maxUploadSize);

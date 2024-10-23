@@ -80,7 +80,7 @@ class ViewConvertLead extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if (!empty($_REQUEST['handle']) && $_REQUEST['handle'] === 'save') {
             return $this->handleSave();

@@ -311,7 +311,7 @@ class SugarView
      * [OVERRIDE] - This method is meant to overridden in a subclass. This method
      * will handle the actual display logic of the view.
      */
-    public function display()
+    public function display() : void
     {
     }
 

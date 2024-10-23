@@ -80,7 +80,7 @@
             $this->disable_row_level_security = true;
         }
 
-        public function get_summary_text()
+        public function get_summary_text() : string
         {
             return '';
         }
@@ -90,7 +90,7 @@
         {
         }
 
-        public function fill_in_additional_detail_fields()
+        public function fill_in_additional_detail_fields() : void
         {
         }
 

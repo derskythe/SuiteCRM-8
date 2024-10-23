@@ -98,7 +98,7 @@ class ViewEdit extends SugarView
     /**
      * @inheritdoc
      */
-    public function display()
+    public function display() : void
     {
         $this->ev->process();
         echo $this->ev->display($this->showTitle);

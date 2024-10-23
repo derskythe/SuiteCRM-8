@@ -40,23 +40,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Bug is used to store customer information.
 #[\AllowDynamicProperties]
 class Bug extends SugarBean
@@ -90,7 +73,7 @@ class Bug extends SugarBean
     public $meeting_id;
     public $call_id;
     public $email_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $type;
 
     //BEGIN Additional fields being added to Bugs
@@ -110,16 +93,29 @@ class Bug extends SugarBean
     public string $object_name = 'Bug';
 
     // This is used to retrieve related fields from form posts.
-    public array $additional_column_fields = array( 'assigned_user_name', 'assigned_user_id', 'case_id', 'account_id', 'contact_id', 'task_id', 'note_id', 'meeting_id', 'call_id', 'email_id');
+    public array $additional_column_fields = array( 'assigned_user_name',
+                                                    'assigned_user_id',
+                                                    'case_id',
+                                                    'account_id',
+                                                    'contact_id',
+                                                    'task_id',
+                                                    'note_id',
+                                                    'meeting_id',
+                                                    'call_id',
+                                                    'email_id' );
 
-    public array $relationship_fields = array( 'case_id' =>'cases', 'account_id' => 'accounts', 'contact_id' =>'contacts',
-                                               'task_id' =>'tasks', 'note_id' =>'notes', 'meeting_id' =>'meetings',
-                                               'call_id' =>'calls', 'email_id' =>'emails');
+    public array $relationship_fields = array( 'case_id'    => 'cases',
+                                               'account_id' => 'accounts',
+                                               'contact_id' => 'contacts',
+                                               'task_id'    => 'tasks',
+                                               'note_id'    => 'notes',
+                                               'meeting_id' => 'meetings',
+                                               'call_id'    => 'calls',
+                                               'email_id'   => 'emails' );
 
     public function __construct()
     {
         parent::__construct();
-
 
         $this->setupCustomFields('Bugs');
 
@@ -129,17 +125,7 @@ class Bug extends SugarBean
     }
 
 
-
     public bool $new_schema = true;
-
-
-
-
-
-    public function get_summary_text()
-    {
-        return (string)$this->name;
-    }
 
     public function create_list_query($order_by, $where, $show_deleted = 0)
     {
@@ -157,7 +143,6 @@ class Bug extends SugarBean
         $query .= $custom_join['select'];
         $query .= ' FROM bugs ';
 
-
         $query .= '                LEFT JOIN releases ON bugs.found_in_release=releases.id
                                 LEFT JOIN users
                                 ON bugs.assigned_user_id=users.id';
@@ -172,11 +157,10 @@ class Bug extends SugarBean
             }
         }
 
-
         if ($where != '') {
-            $query .= "where $where AND ".$where_auto;
+            $query .= "where $where AND " . $where_auto;
         } else {
-            $query .= 'where ' .$where_auto;
+            $query .= 'where ' . $where_auto;
         }
         if (substr_count((string) $order_by, '.') > 0) {
             $query .= " ORDER BY $order_by";
@@ -187,11 +171,13 @@ class Bug extends SugarBean
                 $query .= ' ORDER BY bugs.name';
             }
         }
+
         return $query;
     }
 
     public function create_export_query(string $order_by, string $where) : array|string
     {
+        global $relate_link_join;
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
         $query = 'SELECT
@@ -199,21 +185,21 @@ class Bug extends SugarBean
                                 r1.name found_in_release_name,
                                 r2.name fixed_in_release_name,
                                 users.user_name assigned_user_name';
-        $query .=  $custom_join['select'];
+        $query .= $custom_join['select'];
         $query .= ' FROM bugs ';
         $query .= '                LEFT JOIN releases r1 ON bugs.found_in_release = r1.id
                                 LEFT JOIN releases r2 ON bugs.fixed_in_release = r2.id
                                 LEFT JOIN users
                                 ON bugs.assigned_user_id=users.id';
-        $query .=  $custom_join['join'];
+        $query .= $custom_join['join'];
         $query .= '';
         $where_auto = '  bugs.deleted=0
                 ';
 
         if ($where != '') {
-            $query .= " where $where AND ".$where_auto;
+            $query .= " where $where AND " . $where_auto;
         } else {
-            $query .= ' where ' .$where_auto;
+            $query .= ' where ' . $where_auto;
         }
 
         if ($order_by != '') {
@@ -224,6 +210,7 @@ class Bug extends SugarBean
 
         return $query;
     }
+
     public function fill_in_additional_list_fields()
     {
         parent::fill_in_additional_list_fields();
@@ -233,9 +220,8 @@ class Bug extends SugarBean
 //       $this->set_fixed_in_release();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
-
         /*
         // Fill in the assigned_user_name
         $this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
@@ -248,7 +234,7 @@ class Bug extends SugarBean
     }
 
 
-    public function set_release()
+    public function set_release() : void
     {
         static $releases;
 
@@ -257,16 +243,18 @@ class Bug extends SugarBean
         }
         if (isset($releases[$this->found_in_release])) {
             $this->release_name = $releases[$this->found_in_release];
+
             return;
         }
 
-        $query = "SELECT r1.name from releases r1, $this->table_name i1 where r1.id = i1.found_in_release and i1.id = '$this->id' and i1.deleted=0 and r1.deleted=0";
+        $query =
+            "SELECT r1.name from releases r1, $this->table_name i1 where r1.id = i1.found_in_release and i1.id = '$this->id' and i1.deleted=0 and r1.deleted=0";
         $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
 
         // Get the id and the name.
         $row = $this->db->fetchByAssoc($result);
 
-        if ($row != null) {
+        if ($row !== null) {
             $this->release_name = $row['name'];
         } else {
             $this->release_name = '';
@@ -276,7 +264,7 @@ class Bug extends SugarBean
     }
 
 
-    public function set_fixed_in_release()
+    public function set_fixed_in_release() : void
     {
         static $releases;
 
@@ -285,18 +273,18 @@ class Bug extends SugarBean
         }
         if (isset($releases[$this->fixed_in_release])) {
             $this->fixed_in_release_name = $releases[$this->fixed_in_release];
+
             return;
         }
 
-        $query = "SELECT r1.name from releases r1, $this->table_name i1 where r1.id = i1.fixed_in_release and i1.id = '$this->id' and i1.deleted=0 and r1.deleted=0";
+        $query =
+            "SELECT r1.name from releases r1, $this->table_name i1 where r1.id = i1.fixed_in_release and i1.id = '$this->id' and i1.deleted=0 and r1.deleted=0";
         $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
 
         // Get the id and the name.
         $row = $this->db->fetchByAssoc($result);
 
-
-
-        if ($row != null) {
+        if ($row !== null) {
             $this->fixed_in_release_name = $row['name'];
         } else {
             $this->fixed_in_release_name = '';
@@ -306,7 +294,7 @@ class Bug extends SugarBean
     }
 
 
-    public function get_list_view_data()
+    public function get_list_view_data() : array
     {
         global $current_language;
         $the_array = parent::get_list_view_data();
@@ -317,37 +305,40 @@ class Bug extends SugarBean
 
         // The new listview code only fetches columns that we're displaying and not all
         // the columns so we need these checks.
-        $the_array['NAME'] = (($this->name == '') ? '<em>blank</em>' : $this->name);
-        $the_array['PRIORITY'] = empty($this->priority)? ''
-            : (!isset($app_list_strings[$this->field_name_map['priority']['options']][$this->priority]) ? $this->priority : $app_list_strings[$this->field_name_map['priority']['options']][$this->priority]);
-        $the_array['STATUS'] = empty($this->status)? ''
-            : (!isset($app_list_strings[$this->field_name_map['status']['options']][$this->status]) ? $this->status : $app_list_strings[$this->field_name_map['status']['options']][$this->status]);
-        $the_array['TYPE'] = empty($this->type)? ''
-            : (!isset($app_list_strings[$this->field_name_map['type']['options']][$this->type]) ? $this->type : $app_list_strings[$this->field_name_map['type']['options']][$this->type]);
+        $the_array['NAME'] = (($this->name === '') ? '<em>blank</em>' : $this->name);
+        $the_array['PRIORITY'] = empty($this->priority)
+            ? ''
+            : ($app_list_strings[$this->field_name_map['priority']['options']][$this->priority] ?? $this->priority);
+        $the_array['STATUS'] = empty($this->status)
+            ? ''
+            : ($app_list_strings[$this->field_name_map['status']['options']][$this->status] ?? $this->status);
+        $the_array['TYPE'] = empty($this->type)
+            ? ''
+            : ($app_list_strings[$this->field_name_map['type']['options']][$this->type] ?? $this->type);
 
-        $the_array['RELEASE']= $this->release_name;
+        $the_array['RELEASE'] = $this->release_name;
         $the_array['BUG_NUMBER'] = $this->bug_number;
-        $the_array['ENCODED_NAME']=$this->name;
+        $the_array['ENCODED_NAME'] = $this->name;
 
-        return  $the_array;
+        return $the_array;
     }
 
     /**
-        builds a generic search based on the query string using or
-        do not include any $this-> because this is called on without having the class instantiated
-    */
-    public function build_generic_where_clause($the_query_string)
+     * builds a generic search based on the query string using or
+     * do not include any $this-> because this is called on without having the class instantiated
+     */
+    public function build_generic_where_clause(string $the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);
-        array_push($where_clauses, "bugs.name like '$the_query_string%'");
+        $where_clauses[] = "bugs.name like '$the_query_string%'";
         if (is_numeric($the_query_string)) {
-            array_push($where_clauses, "bugs.bug_number like '$the_query_string%'");
+            $where_clauses[] = "bugs.bug_number like '$the_query_string%'";
         }
 
         $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != '') {
+            if ($the_where !== '') {
                 $the_where .= ' or ';
             }
             $the_where .= $clause;
@@ -371,15 +362,17 @@ class Bug extends SugarBean
         $xtpl->assign('BUG_DESCRIPTION', nl2br($bug->description));
         $xtpl->assign('BUG_WORK_LOG', $bug->work_log);
         $xtpl->assign('BUG_BUG_NUMBER', $bug->bug_number);
+
         return $xtpl;
     }
 
-    public function bean_implements($interface) : bool
+    public function bean_implements(string $interface) : bool
     {
-        switch ($interface) {
-            case 'ACL':return true;
+        if ($interface === 'ACL') {
+            return true;
         }
-        return false;
+
+        return parent::bean_implements($interface);
     }
 
     public function save($check_notify = false)
@@ -395,5 +388,6 @@ function getReleaseDropDown()
         $seedRelease = BeanFactory::newBean('Releases');
         $releases = $seedRelease->get_releases(true, 'Active');
     }
+
     return $releases;
 }

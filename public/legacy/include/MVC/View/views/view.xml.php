@@ -50,7 +50,7 @@ class ViewXML extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         echo 'Not implemented';
     }

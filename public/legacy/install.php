@@ -147,7 +147,7 @@ global $installer_defaults;
 
 ///////////////////////////////////////////////////////////////////////////////
 ////    INSTALLER LANGUAGE
-function getSupportedInstallLanguages()
+function getSupportedInstallLanguages() : array
 {
     $supportedLanguages = array(
         'en_us' => 'English (US)',
@@ -173,7 +173,7 @@ $supportedLanguages = getSupportedInstallLanguages();
 global $default_lang;
 $default_lang = 'en_us';
 if (!isset($_POST['language']) && (!isset($_SESSION['language']) && empty($_SESSION['language']))) {
-    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         $lang = parseAcceptLanguage();
         if (isset($supportedLanguages[$lang])) {
             $_POST['language'] = $lang;
@@ -188,7 +188,7 @@ if (isset($_POST['language'])) {
 }
 
 global $current_language;
-$current_language = isset($_SESSION['language']) ? $_SESSION['language'] : $default_lang;
+$current_language = $_SESSION['language'] ?? $default_lang;
 
 if (file_exists("install/language/{$current_language}.lang.php")) {
     require_once("install/language/{$current_language}.lang.php");
@@ -213,7 +213,7 @@ $app_list_strings = return_app_list_strings_language($current_language);
 global $help_url;
 $help_url = get_help_button_url();
 
-if (isset($sugar_config['installer_locked']) && $sugar_config['installer_locked'] == true) {
+if (isset($sugar_config['installer_locked']) && $sugar_config['installer_locked']) {
     if (!empty($_POST['current_step']) && $_POST['current_step'] === '3' && !empty($_POST['goto']) && $_POST['goto'] === $mod_strings['LBL_NEXT']) {
         session_unset();
         $the_file = 'complete_install.php';
@@ -228,7 +228,8 @@ if (isset($sugar_config['installer_locked']) && $sugar_config['installer_locked'
             </pre>
             <p>{$mod_strings['LBL_DISABLED_DESCRIPTION_2']}</p>
 
-            <p>{$mod_strings['LBL_DISABLED_HELP_1']} <a href="{$mod_strings['LBL_DISABLED_HELP_LNK']}" target="_blank">{$mod_strings['LBL_DISABLED_HELP_2']}</a>.</p>
+            <p>{$mod_strings['LBL_DISABLED_HELP_1']}
+            <a href="{$mod_strings['LBL_DISABLED_HELP_LNK']}" target="_blank">{$mod_strings['LBL_DISABLED_HELP_2']}</a>.</p>
 EOQ;
 
     }
@@ -250,7 +251,7 @@ if (isset($_REQUEST['page']) && $_REQUEST['page'] === 'licensePrint') {
     exit();
 }
 
-if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == '1') {
+if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] === '1') {
     //if this is a system check, then just run the check and return,
     //this is an ajax call and there is no need for further processing
 
@@ -319,12 +320,12 @@ if (isset($_REQUEST['sugar_body_only']) && $_REQUEST['sugar_body_only'] == '1') 
 
 
         $result['filepath'] = $filepath;
-        $result['errors'] = $errors ? $errors : false;
+        $result['errors'] = $errors ? : false;
 
         // TODO--low: validate file size & image width/height and save, show status result to client js
 
         if (isset($_REQUEST['callback']) && $_REQUEST['callback'] === 'uploadLogoCallback') {
-            echo '<script>window.top.window.uploadLogoCallback(' . json_encode($result) . ');</script>';
+            echo '<script>window.top.window.uploadLogoCallback(' . json_encode($result, JSON_THROW_ON_ERROR) . ');</script>';
         }
 
         return;
@@ -426,7 +427,7 @@ $workflow[] = 'installConfig.php';
 //$workflow[] = 'dbConfig_b.php';
 
 //define web root, which will be used as default for site_url
-if ($_SERVER['SERVER_PORT'] == '80') {
+if ($_SERVER['SERVER_PORT'] === '80') {
     $web_root = $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
 } else {
     $web_root = $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['PHP_SELF'];
@@ -436,7 +437,7 @@ $web_root = "http://$web_root";
 
 if (!isset($_SESSION['oc_install']) || $_SESSION['oc_install'] == false) {
     //$workflow[] = 'siteConfig_a.php';
-    if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) &&
+    if (!empty($_SESSION['install_type']) &&
         $_SESSION['install_type'] === 'custom') {
         $workflow[] = 'siteConfig_b.php';
     }
@@ -451,35 +452,35 @@ if (empty($sugar_config['cache_dir']) && !empty($_SESSION['cache_dir'])) {
 }
 
 // set the form's php var to the loaded config's var else default to sane settings
-if (!isset($_SESSION['setup_site_url']) || empty($_SESSION['setup_site_url'])) {
-    if (isset($sugar_config['site_url']) && !empty($sugar_config['site_url'])) {
+if (empty($_SESSION['setup_site_url'])) {
+    if (!empty($sugar_config['site_url'])) {
         $_SESSION['setup_site_url'] = $sugar_config['site_url'];
     } else {
         $_SESSION['setup_site_url'] = $web_root;
     }
 }
 
-if (!isset($_SESSION['setup_system_name']) || empty($_SESSION['setup_system_name'])) {
+if (empty($_SESSION['setup_system_name'])) {
     $_SESSION['setup_system_name'] = 'SugarCRM';
 }
-if (!isset($_SESSION['setup_site_session_path']) || empty($_SESSION['setup_site_session_path'])) {
-    $_SESSION['setup_site_session_path'] = (isset($sugar_config['session_dir'])) ? $sugar_config['session_dir'] : '';
+if (empty($_SESSION['setup_site_session_path'])) {
+    $_SESSION['setup_site_session_path'] = $sugar_config['session_dir'] ?? '';
 }
-if (!isset($_SESSION['setup_site_log_dir']) || empty($_SESSION['setup_site_log_dir'])) {
-    $_SESSION['setup_site_log_dir'] = (isset($sugar_config['log_dir'])) ? $sugar_config['log_dir'] : '.';
+if (empty($_SESSION['setup_site_log_dir'])) {
+    $_SESSION['setup_site_log_dir'] = $sugar_config['log_dir'] ?? '.';
 }
-if (!isset($_SESSION['setup_site_guid']) || empty($_SESSION['setup_site_guid'])) {
-    $_SESSION['setup_site_guid'] = (isset($sugar_config['unique_key'])) ? $sugar_config['unique_key'] : '';
+if (empty($_SESSION['setup_site_guid'])) {
+    $_SESSION['setup_site_guid'] = $sugar_config['unique_key'] ?? '';
 }
-if (!isset($_SESSION['cache_dir']) || empty($_SESSION['cache_dir'])) {
-    $_SESSION['cache_dir'] = isset($sugar_config['cache_dir']) ? $sugar_config['cache_dir'] : 'cache/';
+if (empty($_SESSION['cache_dir'])) {
+    $_SESSION['cache_dir'] = $sugar_config['cache_dir'] ?? 'cache/';
 }
 
 //$workflow[] = 'confirmSettings.php';
 $workflow[] = 'performSetup.php';
 
-if (!isset($_SESSION['oc_install']) || $_SESSION['oc_install'] == false) {
-    if (isset($_SESSION['install_type']) && !empty($_SESSION['install_type']) && $_SESSION['install_type'] === 'custom') {
+if (!isset($_SESSION['oc_install']) || !$_SESSION['oc_install']) {
+    if (!empty($_SESSION['install_type']) && $_SESSION['install_type'] === 'custom') {
         //$workflow[] = 'download_patches.php';
         $workflow[] = 'download_modules.php';
     }
@@ -512,7 +513,7 @@ if (!empty($_REQUEST['goto'])) {
             break;
     }
 } // Add check here to see if a silent install config file exists; if so then launch silent installer
-elseif (is_file('config_si.php') && empty($sugar_config['installer_locked'])) {
+elseif (empty($sugar_config['installer_locked']) && is_file('config_si.php')) {
     $langHeader = get_language_header();
 
     echo <<<EOHTML
@@ -557,11 +558,11 @@ EOHTML;
 
 $exclude_files = array('complete_install.php', 'register.php', 'download_modules.php');
 
-if (isset($next_step) && isset($workflow[$next_step]) && !in_array(
+if (isset($next_step, $workflow[$next_step]) && !in_array(
         $workflow[$next_step],
         $exclude_files,
         true
-    ) && isset($sugar_config['installer_locked']) && $sugar_config['installer_locked'] == true) {
+    ) && isset($sugar_config['installer_locked']) && $sugar_config['installer_locked']) {
     $the_file = 'installDisabled.php';
     $disabled_title = $mod_strings['LBL_DISABLED_DESCRIPTION'];
     $disabled_title_2 = $mod_strings['LBL_DISABLED_TITLE_2'];
@@ -634,7 +635,8 @@ EOQ;
                 //validation is now done through ajax call to checkDBSettings.php
                 if (isset($_REQUEST['setup_db_drop_tables'])) {
                     $_SESSION['setup_db_drop_tables'] = $_REQUEST['setup_db_drop_tables'];
-                    if ($_SESSION['setup_db_drop_tables'] === true || $_SESSION['setup_db_drop_tables'] === 'true') {
+                    if ($_SESSION['setup_db_drop_tables'] === true ||
+                        $_SESSION['setup_db_drop_tables'] === 'true') {
                         $_SESSION['setup_db_create_database'] = false;
                     }
                 }
@@ -659,7 +661,8 @@ EOQ;
                 $_SESSION['siteConfig_submitted'] = true;
 
                 $validation_errors = validate_siteConfig('a');
-                if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0 || $_REQUEST['goto'] === 'resend') {
+                if ((is_countable($validation_errors) ? count($validation_errors) : 0) > 0
+                    || $_REQUEST['goto'] === 'resend') {
                     $next_step--;
                 }
                 //break;
@@ -702,9 +705,9 @@ EOQ;
         }
     }
 
-    if ($next_step == 9999) {
+    if ($next_step === 9999) {
         $the_file = 'SilentInstall';
-    } elseif ($next_step == 9191) {
+    } elseif ($next_step === 9191) {
         $_SESSION['oc_server_url'] = $_REQUEST['oc_server_url'];
         $_SESSION['oc_username'] = $_REQUEST['oc_username'];
         $_SESSION['oc_password'] = $_REQUEST['oc_password'];
@@ -740,7 +743,7 @@ EOQ;
             if (is_readable('config.php') && (filesize('config.php') > 0)) {
                 include_once('config.php');
 
-                if (!isset($sugar_config['installer_locked']) || $sugar_config['installer_locked'] == true) {
+                if (!isset($sugar_config['installer_locked']) || $sugar_config['installer_locked']) {
                     $the_file = 'installDisabled.php';
                     $disabled_title = $mod_strings['LBL_DISABLED_DESCRIPTION'];
                     $disabled_title_2 = $mod_strings['LBL_DISABLED_TITLE_2'];
@@ -755,7 +758,8 @@ EOQ;
 EOQ;
                     //if this is an offline client installation but the conversion did not succeed,
                     //then try to convert again
-                    if (isset($sugar_config['disc_client']) && $sugar_config['disc_client'] == true && isset($sugar_config['oc_converted']) && $sugar_config['oc_converted'] == false) {
+                    if (isset($sugar_config['disc_client'], $sugar_config['oc_converted'])
+                        && $sugar_config['disc_client'] && !$sugar_config['oc_converted']) {
                         header('Location: index.php?entryPoint=oc_convert&first_time=true');
                         exit();
                     }

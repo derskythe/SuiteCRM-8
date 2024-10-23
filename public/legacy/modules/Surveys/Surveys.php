@@ -69,7 +69,7 @@ class Surveys extends Basic
     public $modified_user_link;
 
     /** @var  string $assigned_user_name */
-    public $assigned_user_name;
+    public string $assigned_user_name;
 
     /** @var  string $assigned_user_link */
     public $assigned_user_link;

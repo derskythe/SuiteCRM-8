@@ -99,7 +99,7 @@ class Employee extends Person
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $locale;
         $query =

@@ -15,7 +15,7 @@ class Jjwg_MapsViewConfig extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
 
         // Language Arrays

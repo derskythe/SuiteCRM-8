@@ -57,7 +57,7 @@ class EmailsViewSaveDraftEmail extends ViewAjax
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         global $app_strings;
         $response = array();

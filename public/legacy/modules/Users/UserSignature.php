@@ -78,7 +78,7 @@ class UserSignature extends SugarBean
     /**
      * returns the bean name - overrides SugarBean's
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -114,7 +114,7 @@ class UserSignature extends SugarBean
     /**
      * Override's SugarBean's
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
     }
 } // end class definition

@@ -86,7 +86,7 @@ class ViewListView extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display($preview = false)
+    public function display($preview = false) : void
     {
         $packageName = (! empty($_REQUEST [ 'view_package' ])) ? $_REQUEST [ 'view_package' ] : null ;
         $subpanelName = (! empty($_REQUEST [ 'subpanel' ])) ? $_REQUEST [ 'subpanel' ] : null ;

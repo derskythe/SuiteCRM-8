@@ -79,7 +79,7 @@ class ViewRelationship extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $selected_lang = (!empty($_REQUEST['relationship_lang'])?$_REQUEST['relationship_lang']:$_SESSION['authenticated_user_language']);
         $this->smarty = new Sugar_Smarty() ;

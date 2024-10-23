@@ -91,7 +91,7 @@ class MergeRecord extends SugarBean
      * @param bool $deleted
      * @return SugarBean|void
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'Step2') {
             $this->load_merge_bean($this->merge_bean, false, $id);
@@ -174,7 +174,7 @@ class MergeRecord extends SugarBean
         $this->merge_bean->fill_in_additional_list_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         $this->merge_bean->fill_in_additional_detail_fields();
     }
@@ -182,7 +182,7 @@ class MergeRecord extends SugarBean
     /**
      * @return string
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->merge_bean->get_summary_text();
     }
@@ -201,7 +201,7 @@ class MergeRecord extends SugarBean
      * @param $the_query_string
      * @return string
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         return $this->merge_bean->build_generic_where_clause($the_query_string);
     }

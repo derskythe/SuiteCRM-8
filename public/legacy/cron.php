@@ -47,7 +47,7 @@ chdir(__DIR__);
 
 require_once('include/entryPoint.php');
 
-$sapi_type = php_sapi_name();
+$sapi_type = PHP_SAPI;
 if (!str_starts_with($sapi_type, 'cli')) {
     sugar_die('cron.php is CLI only.');
 }
@@ -57,7 +57,7 @@ if (!is_windows()) {
     $cronUser = getRunningUser();
     global $sugar_config;
 
-    if ($cronUser == '') {
+    if ($cronUser === '') {
         $GLOBALS['log']->warning('cron.php: can\'t determine running user. No cron user checks will occur.');
     } elseif (array_key_exists('cron', $sugar_config) && array_key_exists('allowed_cron_users', $sugar_config['cron'])) {
         if (!in_array($cronUser, $sugar_config['cron']['allowed_cron_users'], true)) {

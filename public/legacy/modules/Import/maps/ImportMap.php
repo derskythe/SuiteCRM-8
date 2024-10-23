@@ -176,7 +176,7 @@ class ImportMap extends SugarBean
     /**
      * @see SugarBean::retrieve()
      */
-    public function retrieve($id = -1, $encode=true, $deleted=true)
+    public function retrieve($id = -1, $encode=true, $deleted=true) : ?SugarBean
     {
         $returnVal = parent::retrieve($id, $encode, $deleted);
 

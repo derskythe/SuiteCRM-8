@@ -54,15 +54,16 @@ if (file_exists(__DIR__ . '/../../modules/ACLActions/actiondefs.override.php')) 
 #[\AllowDynamicProperties]
 class ACLAction extends SugarBean
 {
-    public string $module_dir = 'ACLActions';
-    public string $object_name = 'ACLAction';
-    public string $table_name = 'acl_actions';
-    public bool $new_schema = true;
-    public bool $disable_custom_fields = true;
-
     public function __construct()
     {
         parent::__construct();
+        $this->db = DBManagerFactory::getInstance();
+
+        $this->module_dir = 'ACLActions';
+        $this->object_name = 'ACLAction';
+        $this->table_name = 'acl_actions';
+        $this->new_schema = true;
+        $this->disable_custom_fields = true;
     }
 
     /**
@@ -70,15 +71,16 @@ class ACLAction extends SugarBean
      * Adds all default actions for a category/type
      *
      * @param STRING $category - the category (e.g module name - Accounts, Contacts)
-     * @param STRING $type - the type (e.g. 'module', 'field')
+     * @param STRING $type     - the type (e.g. 'module', 'field')
+     *
      * @throws Exception
      */
-    public static function addActions($category, $type = 'module')
+    public static function addActions(string $category, string $type = 'module') : void
     {
         global $ACLActions;
         $db = DBManagerFactory::getInstance();
 
-        if(empty($db->database)){
+        if (empty($db->database)) {
             return;
         }
 
@@ -121,10 +123,11 @@ class ACLAction extends SugarBean
      * Removes all default actions for a category/type
      *
      * @param STRING $category - the category (e.g module name - Accounts, Contacts)
-     * @param STRING $type - the type (e.g. 'module', 'field')
+     * @param STRING $type     - the type (e.g. 'module', 'field')
+     *
      * @throws Exception
      */
-    public static function removeActions($category, $type = 'module')
+    public static function removeActions(string $category, string $type = 'module')
     {
         global $ACLActions;
         $db = DBManagerFactory::getInstance();
@@ -162,10 +165,12 @@ class ACLAction extends SugarBean
      *
      * returns the color associated with an access level
      * these colors exist in the definitions in modules/ACLActions/actiondefs.php
+     *
      * @param INT $access - the access level you want the color for
+     *
      * @return the color either name or hex representation or false if the level does not exist
      */
-    protected static function AccessColor($access)
+    protected static function AccessColor(int $access) : string|bool
     {
         global $ACLActionAccessLevels;
         if (isset($ACLActionAccessLevels[$access])) {
@@ -180,10 +185,12 @@ class ACLAction extends SugarBean
      *
      * returns the translated name  associated with an access level
      * these label definitions  exist in the definitions in modules/ACLActions/actiondefs.php
+     *
      * @param INT $access - the access level you want the color for
-     * @return the translated access level name or false if the level does not exist
+     *
+     * @return string|bool the translated access level name or false if the level does not exist
      */
-    public static function AccessName($access)
+    public static function AccessName(int $access) : bool|string
     {
         global $ACLActionAccessLevels;
         if (isset($ACLActionAccessLevels[$access])) {
@@ -198,10 +205,12 @@ class ACLAction extends SugarBean
      *
      * returns the label  associated with an access level
      * these label definitions  exist in the definitions in modules/ACLActions/actiondefs.php
+     *
      * @param INT $access - the access level you want the color for
-     * @return the access level label or false if the level does not exist
+     *
+     * @return string - the access level label or false if the level does not exist
      */
-    protected static function AccessLabel($access)
+    protected static function AccessLabel(int $access) : string
     {
         global $ACLActionAccessLevels;
         if (isset($ACLActionAccessLevels[$access])) {
@@ -216,9 +225,10 @@ class ACLAction extends SugarBean
     /**
      * static getAccessOptions()
      * this is used for building select boxes
+     *
      * @return array containing  access levels (ints) as keys and access names as values
      */
-    protected static function getAccessOptions($action, $type = 'module')
+    protected static function getAccessOptions(string $action, string $type = 'module') : array
     {
         global $ACLActions;
         $options = [];
@@ -239,9 +249,10 @@ class ACLAction extends SugarBean
      *
      * @param string $type
      * @param string $action
+     *
      * @return array
      */
-    public static function getDefaultActions($type = 'module', $action = '')
+    public static function getDefaultActions(string $type = 'module', string $action = '') : array
     {
         $query = 'SELECT * FROM acl_actions WHERE deleted=0 ';
         if (!empty($type)) {
@@ -268,15 +279,23 @@ class ACLAction extends SugarBean
     /**
      * static getUserActions($user_id,$refresh=false, $category='', $action='')
      * returns a list of user actions
-     * @param GUID $user_id
+     *
+     * @param string $user_id GUID
      * @param bool $refresh
      * @param string $category
      * @param string $type
      * @param string $action
+     *
      * @return array of ACLActionsArray
      */
 
-    public static function getUserActions($user_id, $refresh = false, $category = '', $type = '', $action = '')
+    public static function getUserActions(
+        string $user_id,
+        bool   $refresh = false,
+        string $category = '',
+        string $type = '',
+        string $action = ''
+    ) : array
     {
         //check in the session if we already have it loaded
         if (!$refresh && !empty($_SESSION['ACL'][$user_id])) {
@@ -288,7 +307,8 @@ class ACLAction extends SugarBean
                         if (empty($type)) {
                             return $_SESSION['ACL'][$user_id][$category];
                         }
-                        return isset($_SESSION['ACL'][$user_id][$category][$type]) ? $_SESSION['ACL'][$user_id][$category][$type] : null;
+
+                        return $_SESSION['ACL'][$user_id][$category][$type] ?? array();
                     } else {
                         if (!empty($type) && isset($_SESSION['ACL'][$user_id][$category][$type][$action])) {
                             return $_SESSION['ACL'][$user_id][$category][$type][$action];
@@ -299,11 +319,13 @@ class ACLAction extends SugarBean
                     if (isset($_SESSION['ACL'][$user_id][$category][$type])) {
                         $aclCatType = $_SESSION['ACL'][$user_id][$category][$type];
                     } else {
-                        LoggerManager::getLogger()->warn('ACL Category Type is not set for user action');
+                        LoggerManager::getLogger()?->warn('ACL Category Type is not set for user action');
                     }
 
                     return $aclCatType;
-                } elseif (!empty($type) && isset($_SESSION['ACL'][$user_id][$category][$type][$action])) {
+                }
+
+                if (!empty($type) && isset($_SESSION['ACL'][$user_id][$category][$type][$action])) {
                     return $_SESSION['ACL'][$user_id][$category][$type][$action];
                 }
             }
@@ -356,24 +378,25 @@ class ACLAction extends SugarBean
         /* BEGIN - SECURITY GROUPS */
         global $sugar_config;
         $has_user_role = false; //used for user_role_precedence
-        $has_role = false; //used to determine if default actions can be ignored. If a user has a defined role don't use the defaults
+        $has_role =
+            false; //used to determine if default actions can be ignored. If a user has a defined role don't use the defaults
         /* END - SECURITY GROUPS */
         while ($row = $db->fetchByAssoc($result, false)) {
             /* BEGIN - SECURITY GROUPS */
-            if ($has_user_role == false && $row['user_role'] == 1) {
+            if (!$has_user_role && $row['user_role'] === 1) {
                 $has_user_role = true;
             }
-            if ($has_role == false && ($row['user_role'] == 1 || $row['user_role'] ==0)) {
+            if (!$has_role && ($row['user_role'] === 1 || $row['user_role'] === 0)) {
                 $has_role = true;
             }
             //if user roles should take precedence over group roles and we have a user role
             //break when we get to processing the group roles
-            if ($has_user_role == true && $row['user_role'] == 0
+            if ($has_user_role && $row['user_role'] === 0
                 && isset($sugar_config['securitysuite_user_role_precedence'])
-                && $sugar_config['securitysuite_user_role_precedence'] == true) {
+                && $sugar_config['securitysuite_user_role_precedence']) {
                 break;
             }
-            if ($row['user_role'] == -1 && $has_role == true) {
+            if ($row['user_role'] === -1 && $has_role) {
                 break; //no need for default actions when a role is assigned to the user or user's group already
             }
             /* END - SECURITY GROUPS */
@@ -391,7 +414,7 @@ class ACLAction extends SugarBean
                 || (
                     /* BEGIN - SECURITY GROUPS - additive security*/
                     (
-                        (isset($sugar_config['securitysuite_additive']) && $sugar_config['securitysuite_additive'] == true
+                        (isset($sugar_config['securitysuite_additive']) && $sugar_config['securitysuite_additive']
                             && $selected_actions[$acl->category][$acl->acltype][$acl->name]['aclaccess'] < $acl->aclaccess)
                         ||
                         ((!isset($sugar_config['securitysuite_additive']) || $sugar_config['securitysuite_additive'] == false)
@@ -419,10 +442,11 @@ class ACLAction extends SugarBean
             $_SESSION['ACL'][$user_id] = $selected_actions;
         } elseif (empty($action) && !empty($category)) {
             if (!empty($type)) {
-                $selectedActionCategoryType = isset($selected_actions[$category][$type]) ? $selected_actions[$category][$type] : null;
+                $selectedActionCategoryType =
+                    $selected_actions[$category][$type] ?? null;
                 $_SESSION['ACL'][$user_id][$category][$type] = $selectedActionCategoryType;
             }
-            $selectedActionCategory = isset($selected_actions[$category]) ? $selected_actions[$category] : null;
+            $selectedActionCategory = $selected_actions[$category] ?? null;
             $_SESSION['ACL'][$user_id][$category] = $selectedActionCategory;
         } elseif (!empty($action) && !empty($category) && !empty($type) && isset($selected_actions[$category][$action])) {
             $_SESSION['ACL'][$user_id][$category][$type][$action] = $selected_actions[$category][$action];
@@ -434,7 +458,13 @@ class ACLAction extends SugarBean
         return $selected_actions;
     }
 
-    private static function langCompare($a, $b)
+    /**
+     * @param string $a
+     * @param string $b
+     *
+     * @return int
+     */
+    private static function langCompare(string $a, string $b) : int
     {
         global $app_list_strings;
         // Fallback to array key if translation is empty
@@ -451,16 +481,24 @@ class ACLAction extends SugarBean
      * (static/ non-static)function hasAccess($is_owner= false , $access = 0)
      * checks if a user has access to this acl if the user is an owner it will check if owners have access
      *
-     * This function may either be used statically or not. If used staticlly a user must pass in an access level not equal to zero
+     * This function may either be used statically or not. If used staticlly a user must pass in an access level not
+     * equal to zero
+     *
      * @param boolean $is_owner
      * @param int $access
+     *
      * @return true or false
      */
     /* BEGIN - SECURITY GROUPS */
     /**
      * static function hasAccess($is_owner=false, $access = 0){
      */
-    public static function hasAccess($is_owner = false, $in_group = false, $access = 0, ACLAction $action = null)
+    public static function hasAccess(
+        bool      $is_owner = false,
+        bool      $in_group = false,
+        int       $access = 0,
+        ACLAction $action = null
+    ) : bool
     {
         /**
          * if($access != 0 && $access == ACL_ALLOW_ALL || ($is_owner && $access == ACL_ALLOW_OWNER))return true;
@@ -470,17 +508,17 @@ class ACLAction extends SugarBean
          * return true;
          * }
          */
-        if ($access != 0 && (
-                $access == ACL_ALLOW_ALL
-                || ($is_owner && ($access == ACL_ALLOW_OWNER || $access == ACL_ALLOW_GROUP))  //if owner that's better than in group so count it...better way to clean this up?
-                || ($in_group && $access == ACL_ALLOW_GROUP) //need to pass if in group with access somehow
+        if ($access !== 0 && (
+                $access === ACL_ALLOW_ALL
+                || ($is_owner && ($access === ACL_ALLOW_OWNER || $access === ACL_ALLOW_GROUP))  //if owner that's better than in group so count it...better way to clean this up?
+                || ($in_group && $access === ACL_ALLOW_GROUP) //need to pass if in group with access somehow
             )) {
             return true;
         }
         if (!is_null($action) && isset($action->aclaccess)) {
-            if ($action->aclaccess == ACL_ALLOW_ALL
-                || ($is_owner && $action->aclaccess == ($access == ACL_ALLOW_OWNER || $access == ACL_ALLOW_GROUP))
-                || ($in_group && $access == ACL_ALLOW_GROUP) //need to pass if in group with access somehow
+            if ($action->aclaccess === ACL_ALLOW_ALL
+                || ($is_owner && $action->aclaccess === ($access === ACL_ALLOW_OWNER || $access === ACL_ALLOW_GROUP))
+                || ($in_group && $access === ACL_ALLOW_GROUP) //need to pass if in group with access somehow
             ) {
                 return true;
             }
@@ -494,53 +532,53 @@ class ACLAction extends SugarBean
     /**
      * STATIC function userNeedsSecurityGroup($user_id, $category, $action,$type='module')
      * checks if a user should have ownership to do an action
+     *
      * @param string $user_id GUID
      * @param string $category
      * @param string $action
      * @param string $type
+     *
      * @return bool
      */
-    public static function userNeedsSecurityGroup($user_id, $category, $action, $type = 'module')
+    public static function userNeedsSecurityGroup(
+        string $user_id,
+        string $category,
+        string $action,
+        string $type = 'module'
+    ) : bool
     {
         // Check if we don't have it set in the cache if not lets reload the cache.
-
-        if (empty($_SESSION['ACL'][$user_id][$category][$type][$action])) {
-            self::getUserActions($user_id, false);
-        }
-
-        if (!empty($_SESSION['ACL'][$user_id][$category][$type][$action])) {
-            // Requires loose comparison.
-            return $_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess'] == ACL_ALLOW_GROUP;
-        }
-
-        return false;
+        return self::userNeedsOwnership($user_id, $category, $action, $type);
     }
     /* END - SECURITY GROUPS */
-
 
     /* BEGIN - SECURITY GROUPS - added $in_group */
 
     /**
      * static function userHasAccess($user_id, $category, $action, $is_owner = false)
      *
-     * @param GUID $user_id the user id who you want to check access for
+     * @param string $user_id  GUID  the user id who you want to check access for
      * @param string $category the category you would like to check access for
-     * @param string $action the action of that category you would like to check access for
+     * @param string $action   the action of that category you would like to check access for
      * @param string $type
      * @param bool $is_owner
      * @param bool $in_group
+     *
      * @return bool
      */
     public static function userHasAccess(
-        $user_id,
-        $category,
-        $action,
-        $type = 'module',
-        $is_owner = false,
-        $in_group = false
-    ) {
+        string $user_id,
+        string $category,
+        string $action,
+        string $type = 'module',
+        bool   $is_owner = false,
+        bool   $in_group = false
+    ) : bool
+    {
         global $current_user;
-        if ($current_user->isAdminForModule($category) && !isset($_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess'])) {
+        if (!isset($_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess']) && $current_user->isAdminForModule(
+                $category
+            )) {
             return true;
         }
         //check if we don't have it set in the cache if not lets reload the cache
@@ -555,8 +593,11 @@ class ACLAction extends SugarBean
             /**
              * return ACLAction::hasAccess($is_owner, $_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess']);
              */
-            return self::hasAccess($is_owner, $in_group,
-                $_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess']);
+            return self::hasAccess(
+                $is_owner,
+                $in_group,
+                $_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess']
+            );
         }
 
         return false;
@@ -566,13 +607,19 @@ class ACLAction extends SugarBean
      * function getUserAccessLevel($user_id, $category, $action,$type='module')
      * returns the access level for a given category and action
      *
-     * @param GUID $user_id
+     * @param string $user_id GUID
      * @param string $category
      * @param string $action
      * @param string $type
+     *
      * @return int (ACCESS LEVEL)
      */
-    public static function getUserAccessLevel($user_id, $category, $action, $type = 'module')
+    public static function getUserAccessLevel(
+        string $user_id,
+        string $category,
+        string $action,
+        string $type = 'module'
+    ) : int
     {
         if (empty($_SESSION['ACL'][$user_id][$category][$type][$action])) {
             self::getUserActions($user_id, false);
@@ -585,6 +632,8 @@ class ACLAction extends SugarBean
 
             return $_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess'];
         }
+
+        return 0;
     }
 
     /**
@@ -595,9 +644,15 @@ class ACLAction extends SugarBean
      * @param string $category
      * @param string $action
      * @param string $type
+     *
      * @return bool
      */
-    public static function userNeedsOwnership($user_id, $category, $action, $type = 'module')
+    public static function userNeedsOwnership(
+        string $user_id,
+        string $category,
+        string $action,
+        string $type = 'module'
+    ) : bool
     {
         //check if we don't have it set in the cache if not lets reload the cache
 
@@ -605,22 +660,24 @@ class ACLAction extends SugarBean
             self::getUserActions($user_id, false);
         }
 
-
         if (!empty($_SESSION['ACL'][$user_id][$category][$type][$action])) {
             // Requires loose type casting
             return $_SESSION['ACL'][$user_id][$category][$type][$action]['aclaccess'] == ACL_ALLOW_OWNER;
         }
+
         return false;
     }
+
     /**
      *
      * static pass by ref setupCategoriesMatrix(&$categories)
      * takes in an array of categories and modifes them adding display information
      *
      * @param unknown_type $categories
+     *
      * @return array
      */
-    public static function setupCategoriesMatrix(&$categories)
+    public static function setupCategoriesMatrix(array &$categories) : array
     {
         global $ACLActions, $current_user;
         $names = [];
@@ -643,7 +700,9 @@ class ACLAction extends SugarBean
                         if (isset($categories[$cat_name]['module']['access']['aclaccess'])) {
                             $catModAccACL = $categories[$cat_name]['module']['access']['aclaccess'];
                         } else {
-                            LoggerManager::getLogger()->warn('Categories / category name: [' . $cat_name . '] / module / access / aclaccess is not set for ACLAction::setupCategoriesMatrix()');
+                            LoggerManager::getLogger()->warn(
+                                'Categories / category name: [' . $cat_name . '] / module / access / aclaccess is not set for ACLAction::setupCategoriesMatrix()'
+                            );
                         }
 
                         // Requires loose comparison
@@ -657,18 +716,26 @@ class ACLAction extends SugarBean
                     if (isset($action['aclaccess'])) {
                         $actionAclAccess = $action['aclaccess'];
                     } else {
-                        LoggerManager::getLogger()->warn('ACL Action access is not set for ACLAction::setupCategoriesMatrix()');
+                        LoggerManager::getLogger()->warn(
+                            'ACL Action access is not set for ACLAction::setupCategoriesMatrix()'
+                        );
                     }
 
-                    $categories[$cat_name][$type_name][$act_name]['accessName'] = ACLAction::AccessName($actionAclAccess);
-                    $categories[$cat_name][$type_name][$act_name]['accessLabel'] = ACLAction::AccessLabel($actionAclAccess);
+                    $categories[$cat_name][$type_name][$act_name]['accessName'] =
+                        ACLAction::AccessName($actionAclAccess);
+                    $categories[$cat_name][$type_name][$act_name]['accessLabel'] =
+                        ACLAction::AccessLabel($actionAclAccess);
 
                     if ($cat_name === 'Users' && $act_name === 'admin') {
-                        $categories[$cat_name][$type_name][$act_name]['accessOptions'][ACL_ALLOW_DEFAULT] = ACLAction::AccessName(ACL_ALLOW_DEFAULT);;
-                        $categories[$cat_name][$type_name][$act_name]['accessOptions'][ACL_ALLOW_DEV] = ACLAction::AccessName(ACL_ALLOW_DEV);;
+                        $categories[$cat_name][$type_name][$act_name]['accessOptions'][ACL_ALLOW_DEFAULT] =
+                            ACLAction::AccessName(ACL_ALLOW_DEFAULT);;
+                        $categories[$cat_name][$type_name][$act_name]['accessOptions'][ACL_ALLOW_DEV] =
+                            ACLAction::AccessName(ACL_ALLOW_DEV);;
                     } else {
-                        $categories[$cat_name][$type_name][$act_name]['accessOptions'] = ACLAction::getAccessOptions($act_name,
-                            $type_name);
+                        $categories[$cat_name][$type_name][$act_name]['accessOptions'] = ACLAction::getAccessOptions(
+                            $act_name,
+                            $type_name
+                        );
                     }
                 }
             }
@@ -691,11 +758,12 @@ class ACLAction extends SugarBean
      * @param bool $dbOnly
      * @param bool $stringOnly
      * @param bool $upperKeys
+     *
      * @return array of fields with id, name, access and category
      */
-    public function toArray($dbOnly = false, $stringOnly = false, $upperKeys = false)
+    public function toArray(bool $dbOnly = false, bool $stringOnly = false, bool $upperKeys = false) : array
     {
-        $array_fields = ['id', 'aclaccess'];
+        $array_fields = [ 'id', 'aclaccess' ];
         $arr = [];
         foreach ($array_fields as $field) {
             $thisField = null;
@@ -712,24 +780,11 @@ class ACLAction extends SugarBean
     }
 
     /**
-     * function fromArray($arr)
-     * converts an array into an acl mapping name value pairs into files
-     *
-     * @param array $arr
-     */
-    public function fromArray($arr)
-    {
-        foreach ($arr as $name => $value) {
-            $this->$name = $value;
-        }
-    }
-
-    /**
      * function clearSessionCache()
      * clears the session variable storing the cache information for acls
      *
      */
-    public function clearSessionCache()
+    public function clearSessionCache() : void
     {
         if (isset($_SESSION['ACL'])) {
             unset($_SESSION['ACL']);

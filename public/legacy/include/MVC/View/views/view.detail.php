@@ -62,7 +62,7 @@ class ViewDetail extends SugarView
      * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if (empty($this->bean->id)) {
             sugar_die($GLOBALS['app_strings']['ERROR_NO_RECORD']);

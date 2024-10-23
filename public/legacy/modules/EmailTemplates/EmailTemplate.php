@@ -55,7 +55,7 @@ class EmailTemplate extends SugarBean
     public string $created_by_name;
     public string $modified_by_name;
     public string $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public string $name;
     public $published;
     public string $description;
@@ -271,7 +271,7 @@ class EmailTemplate extends SugarBean
         return $ret;
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -289,7 +289,7 @@ class EmailTemplate extends SugarBean
     /**
      * @throws \Html2Text\Html2TextException
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         if (empty($this->body) && !empty($this->body_html)) {
             global $sugar_config;
@@ -313,7 +313,7 @@ class EmailTemplate extends SugarBean
         $this->fill_in_additional_parent_fields();
     }
 
-    public function fill_in_additional_parent_fields()
+    public function fill_in_additional_parent_fields() : void
     {
     }
 
@@ -884,7 +884,7 @@ class EmailTemplate extends SugarBean
     /**
      * @throws Exception
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $ret = parent::retrieve($id, $encode, $deleted);
         $this->repairMozaikClears();

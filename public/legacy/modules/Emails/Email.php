@@ -151,7 +151,7 @@ class Email extends Basic
     /**
      * @var string $parent_name
      */
-    public $parent_name;
+    public string $parent_name;
 
     // legacy
     /**
@@ -446,7 +446,7 @@ class Email extends Basic
      *
      * @var string
      */
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public const NO_ERROR               = 0;
     public const ERR_NOT_STORED_AS_SENT = 1;
     public const ERR_NO_IE              = 2;
@@ -1851,7 +1851,7 @@ class Email extends Basic
 
     ///////////////////////////////////////////////////////////////////////////
     ////    RETRIEVERS
-    public function retrieve($id = -1, $encoded = true, $deleted = true)
+    public function retrieve($id = -1, $encoded = true, $deleted = true) : ?SugarBean
     {
         // cn: bug 11915, return SugarBean's retrieve() call bean instead of $this
         $email = parent::retrieve($id, $encoded, $deleted);
@@ -3574,7 +3574,7 @@ class Email extends Basic
      * @global $mod_strings
      * fill_in_additional_detail_fields
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $app_list_strings;
 
@@ -4139,7 +4139,7 @@ class Email extends Basic
     /**
      * @return string
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }

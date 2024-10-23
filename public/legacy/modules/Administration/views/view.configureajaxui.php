@@ -74,7 +74,7 @@ class ViewConfigureAjaxUI extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $sugar_config, $moduleList;
         //create array of subpanels to show, used to create Drag and Drop widget

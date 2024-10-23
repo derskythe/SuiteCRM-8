@@ -64,7 +64,7 @@ class jjwg_Areas extends jjwg_Areas_sugar
     /**
      * Retrieve object by id
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         parent::retrieve($id, $encode, $deleted);
 

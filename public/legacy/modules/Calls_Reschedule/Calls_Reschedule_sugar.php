@@ -68,7 +68,7 @@ class Calls_Reschedule_sugar extends Basic
     public $created_by_link;
     public $modified_user_link;
     public string $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $reason;
     public $call_id_c;

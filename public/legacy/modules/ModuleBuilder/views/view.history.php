@@ -61,7 +61,7 @@ class ViewHistory extends SugarView
            );
     }
 
-    public function display()
+    public function display() : void
     {
         $this->layout = strtolower($_REQUEST [ 'view' ]) ;
 

@@ -378,7 +378,7 @@ class InboundEmail extends SugarBean
      * @param bool $deleted
      * @return object Bean
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $ret = parent::retrieve($id, $encode, $deleted);
         // If I-E bean exist
@@ -6942,7 +6942,7 @@ class InboundEmail extends SugarBean
     /**
      * returns the bean name - overrides SugarBean's
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -7070,7 +7070,7 @@ class InboundEmail extends SugarBean
     /**
      * Override's SugarBean's
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         $this->calculateType();
         $this->calculateDefault();

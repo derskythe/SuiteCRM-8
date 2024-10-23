@@ -203,7 +203,7 @@ class Document extends File
         return parent:: save($check_notify);
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string) $this->document_name;
     }

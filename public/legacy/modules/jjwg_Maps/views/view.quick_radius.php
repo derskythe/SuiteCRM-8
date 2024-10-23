@@ -15,7 +15,7 @@ class Jjwg_MapsViewQuick_Radius extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         if (!isset($_REQUEST['quick_address'])) {
             $_REQUEST['quick_address'] = '';

@@ -48,9 +48,17 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class ConnectorFactory
 {
-    public static $source_map = array();
+    /**
+     * @var array
+     */
+    public static array $source_map = array();
 
-    public static function getInstance($source_name)
+    /**
+     * @param string $source_name
+     *
+     * @return component|null
+     */
+    public static function getInstance(string $source_name) : ?component
     {
         if (empty(self::$source_map[$source_name])) {
             require_once('include/connectors/sources/SourceFactory.php');
@@ -72,18 +80,22 @@ class ConnectorFactory
     /**
      * Split the class name by _ and go through the class name
      * which represents the inheritance structure to load up all required parents.
+     *
      * @param string $class the root class we want to load.
+     * @param string $type
      */
-    public static function load($class, $type)
+    public static function load(string $class, string $type) : void
     {
         self::loadClass($class, $type);
     }
 
     /**
      * include a source class file.
+     *
      * @param string $class a class file to include.
+     * @param string $type
      */
-    public static function loadClass($class, $type)
+    public static function loadClass(string $class, string $type) : void
     {
         $dir = str_replace('_', '/', $class);
 
@@ -98,10 +110,8 @@ class ConnectorFactory
         } else {
             if (file_exists("modules/Connectors/connectors/{$type}/{$dir}/$file")) {
                 require_once("modules/Connectors/connectors/{$type}/{$dir}/$file");
-            } else {
-                if (file_exists("connectors/{$type}/{$dir}/$file")) {
-                    require_once("connectors/{$type}/{$dir}/$file");
-                }
+            } else if (file_exists("connectors/{$type}/{$dir}/$file")) {
+                require_once("connectors/{$type}/{$dir}/$file");
             }
         }
     }

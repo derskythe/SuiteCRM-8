@@ -104,7 +104,7 @@ class AdministrationViewThemesettings extends SugarView
      * @throws SmartyException
      * @throws Exception
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings, $current_user;
 

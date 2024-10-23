@@ -66,7 +66,7 @@ class ImportViewStep4 extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $sugar_config;
 

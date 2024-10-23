@@ -15,7 +15,7 @@ class Jjwg_MapsViewGeocoded_Counts extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         echo '<div class="moduleTitle"><h2>'.$GLOBALS['mod_strings']['LBL_GEOCODED_COUNTS'].'</h2><div class="clear"></div></div>';
         echo '<div class="clear"></div>';

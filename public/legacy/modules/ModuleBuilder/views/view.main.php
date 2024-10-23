@@ -67,7 +67,7 @@ class ViewMain extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $app_strings, $current_user, $mod_strings, $theme;
 

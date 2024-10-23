@@ -78,7 +78,7 @@ class Opportunity extends SugarBean
     public $call_id;
     public $email_id;
     public $email1 = '';
-    public $assigned_user_name;
+    public string $assigned_user_name;
 
     public string $table_name = 'opportunities';
     public $rel_account_table = 'accounts_opportunities';
@@ -113,7 +113,7 @@ class Opportunity extends SugarBean
 
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -211,7 +211,7 @@ class Opportunity extends SugarBean
         }
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
 
@@ -329,7 +329,7 @@ class Opportunity extends SugarBean
         builds a generic search based on the query string using or
         do not include any $this-> because this is called on without having the class instantiated
     */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);

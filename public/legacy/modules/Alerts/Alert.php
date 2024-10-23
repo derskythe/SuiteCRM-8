@@ -47,7 +47,7 @@ class Alert extends Basic
     public $disable_row_level_security = true ; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $is_read;
     public $snooze;

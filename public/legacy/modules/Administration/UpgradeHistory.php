@@ -299,7 +299,7 @@ class UpgradeHistory extends SugarBean
         }//rof
         return $not_found;
     }
-    public function retrieve($id = -1, $encode=true, $deleted=true)
+    public function retrieve($id = -1, $encode=true, $deleted=true) : ?SugarBean
     {
         return parent::retrieve($id, $encode, false);  //ignore the deleted filter. the table does not have the deleted column in it.
     }

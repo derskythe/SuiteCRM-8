@@ -388,8 +388,10 @@ class ViewList extends SugarView
 
     /**
      * Display View
+     *
+     * @throws Exception
      */
-    public function display()
+    public function display() : void
     {
         if (!$this->bean || !$this->bean->ACLAccess('list')) {
             ACLController::displayNoAccess();

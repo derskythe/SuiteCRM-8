@@ -60,7 +60,7 @@ class ViewRelationships extends SugarView
            );
     }
 
-    public function display()
+    public function display() : void
     {
         $moduleName = ! empty($_REQUEST [ 'view_module' ]) ? $_REQUEST [ 'view_module' ] : $_REQUEST [ 'edit_module' ] ;
         $smarty = new Sugar_Smarty() ;

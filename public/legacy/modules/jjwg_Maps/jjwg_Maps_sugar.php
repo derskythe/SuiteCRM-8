@@ -22,12 +22,12 @@ class jjwg_Maps_sugar extends Basic
     public $created_by_link;
     public $modified_user_link;
     public string $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $distance;
     public $unit_type;
     public $module_type;
-    public $parent_name;
+    public string $parent_name;
     public $parent_type;
     public $parent_id;
 

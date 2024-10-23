@@ -71,11 +71,11 @@ class Task extends SugarBean
     public $parent_id;
     public $contact_id;
 
-    public $parent_name;
+    public string $parent_name;
     public $contact_name;
     public $contact_phone;
     public $contact_email;
-    public $assigned_user_name;
+    public string $assigned_user_name;
 
     //bug 28138 todo
     //    var $default_task_name_values = array('Assemble catalogs', 'Make travel arrangements', 'Send a letter', 'Send contract', 'Send fax', 'Send a follow-up letter', 'Send literature', 'Send proposal', 'Send quote', 'Call to schedule meeting', 'Setup evaluation', 'Get demo feedback', 'Arrange introduction', 'Escalate support request', 'Close out support request', 'Ship product', 'Arrange reference call', 'Schedule training', 'Send local user group information', 'Add to mailing list');
@@ -108,7 +108,7 @@ class Task extends SugarBean
         return parent::save($check_notify);
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -149,7 +149,7 @@ class Task extends SugarBean
         return $query;
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         global $app_strings;
@@ -176,7 +176,7 @@ class Task extends SugarBean
         $this->fill_in_additional_parent_fields();
     }
 
-    public function fill_in_additional_parent_fields()
+    public function fill_in_additional_parent_fields() : void
     {
         $this->parent_name = '';
         global $app_strings, $beanFiles, $beanList, $locale;

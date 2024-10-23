@@ -130,46 +130,46 @@ class TimeDate
      * Current time
      * @var SugarDateTime
      */
-    protected $now;
+    protected SugarDateTime $now;
 
     /**
      * The current user
      *
      * @var User
      */
-    protected $user;
+    protected ?User $user;
 
     /**
      * Current user's ID
      *
      * @var string
      */
-    protected $current_user_id;
+    protected string $current_user_id;
     /**
      * Current user's TZ
      * @var DateTimeZone
      */
-    protected $current_user_tz;
+    protected DateTimeZone $current_user_tz;
 
     /**
      * Separator for current user time format
      *
      * @var string
      */
-    protected $time_separator;
+    protected string $time_separator;
 
     /**
      * Always consider user TZ to be GMT and date format DB format - for SOAP etc.
      *
      * @var bool
      */
-    protected $always_db = false;
+    protected bool $always_db = false;
 
     /**
      * Global instance of TimeDate
      * @var TimeDate
      */
-    protected static $timedate;
+    protected static TimeDate $timedate;
 
     /**
      * Allow returning cached now() value
@@ -178,7 +178,7 @@ class TimeDate
      * Also, current user's timezone is cached.
      * @var bool
      */
-    public $allow_cache = true;
+    public bool $allow_cache = true;
 
     /**
      * Create TimeDate handler
@@ -902,7 +902,7 @@ class TimeDate
      * @param User|null $user
      * @return SugarDateTime
      */
-    public function fromString($date, User $user = null)
+    public function fromString(string $date, User $user = null) : ?SugarDateTime
     {
         try {
             return new SugarDateTime($date, $this->_getUserTZ($user));
@@ -919,7 +919,7 @@ class TimeDate
      * @param interger|string $ts
      * @return SugarDateTime
      */
-    public function fromTimestamp($ts)
+    public function fromTimestamp(string $ts) : ?SugarDateTime
     {
         return new SugarDateTime("@$ts");
     }

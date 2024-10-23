@@ -79,14 +79,14 @@ class Meeting extends SugarBean
     public $email_reminder_sent;
     public $required;
     public $accept_status;
-    public $parent_name;
+    public string $parent_name;
     public $contact_name;
     public $contact_phone;
     public $contact_email;
     public $account_id;
     public $opportunity_id;
     public $case_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $outlook_id;
     public $sequence;
     public $syncing = false;
@@ -349,7 +349,7 @@ class Meeting extends SugarBean
         }
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -395,7 +395,7 @@ class Meeting extends SugarBean
     /**
      * @throws DateMalformedStringException
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $locale;
         // Fill in the assigned_user_name

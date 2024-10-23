@@ -62,7 +62,7 @@ class AOR_Field extends Basic
     public $created_by_link;
     public $modified_user_link;
     public $field_order;
-    public $field;
+    public string $field;
     public $display;
     public $label;
     public $field_function;

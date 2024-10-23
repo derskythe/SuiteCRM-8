@@ -1552,7 +1552,7 @@ class User extends Person implements EmailInterface
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         // jmorais@dri Bug #56269
         parent::fill_in_additional_detail_fields();

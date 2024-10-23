@@ -99,8 +99,8 @@ class Account extends Company implements EmailInterface
     public $call_id;
     public $email_id;
     public $member_id;
-    public $parent_name;
-    public $assigned_user_name;
+    public string $parent_name;
+    public string $assigned_user_name;
     public $account_id = '';
     public $account_name = '';
     public $bug_id = '';
@@ -161,7 +161,7 @@ class Account extends Company implements EmailInterface
         }
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -211,7 +211,7 @@ class Account extends Company implements EmailInterface
         //    $this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
 
@@ -268,7 +268,7 @@ class Account extends Company implements EmailInterface
      * builds a generic search based on the query string using or
      * do not include any $this-> because this is called on without having the class instantiated
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);

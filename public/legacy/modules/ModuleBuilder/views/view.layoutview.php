@@ -92,7 +92,7 @@ class ViewLayoutView extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display($preview = false)
+    public function display($preview = false) : void
     {
         global $mod_strings ;
         $parser = ParserFactory::getParser($this->editLayout, $this->editModule, $this->package);

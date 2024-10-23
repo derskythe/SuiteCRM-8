@@ -60,7 +60,7 @@ class ImportViewUndo extends ImportView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $current_user, $current_language;
 

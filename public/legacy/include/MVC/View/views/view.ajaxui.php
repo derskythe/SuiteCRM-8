@@ -59,7 +59,7 @@ class ViewAjaxUI extends SugarView
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         $user = $GLOBALS['current_user'];
         $etag = $user->id . $user->getETagSeed('mainMenuETag');

@@ -60,7 +60,7 @@ class ViewEditFields extends ViewAjax
         $this->fields = $link->_get_link_table_definition($rel, 'fields');
     }
 
-    public function display()
+    public function display() : void
     {
 
         //echo "<pre>".print_r($this->fields, true)."</pre>";

@@ -15,7 +15,7 @@ class Jjwg_MapsViewQuick_Radius_Display extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         $url = 'index.php?module='.$GLOBALS['currentModule'].'&action=map_markers';
         foreach (array_keys($_REQUEST) as $key) {

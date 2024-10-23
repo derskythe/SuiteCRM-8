@@ -53,7 +53,7 @@ require_once('include/MVC/View/SugarView.php');
 #[\AllowDynamicProperties]
 class HomeViewAdditionaldetailsretrieve extends SugarView
 {
-    public function display()
+    public function display() : void
     {
         global $beanList, $beanFiles, $current_user, $app_strings, $app_list_strings;
 

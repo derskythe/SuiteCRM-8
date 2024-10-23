@@ -46,7 +46,7 @@ class HomeViewTour extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $sugar_flavor;
         global $current_user;

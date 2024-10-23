@@ -83,7 +83,7 @@ class Role extends SugarBean
 
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }

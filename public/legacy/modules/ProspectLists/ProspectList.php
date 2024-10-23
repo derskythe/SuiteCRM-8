@@ -73,7 +73,7 @@ class ProspectList extends SugarBean
     public string $description;
 
     // These are related
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $prospect_id;
     public $contact_id;
     public $lead_id;
@@ -106,7 +106,7 @@ class ProspectList extends SugarBean
 
     public bool $new_schema = true;
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -357,7 +357,7 @@ FROM prospect_lists_prospects plp
     {
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         $this->entry_count = $this->get_entry_count();
@@ -394,7 +394,7 @@ FROM prospect_lists_prospects plp
         builds a generic search based on the query string using or
         do not include any $this-> because this is called on without having the class instantiated
     */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);

@@ -93,7 +93,7 @@ class Person extends Basic
      * @see parent::retrieve()
      *
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $ret_val = parent::retrieve($id, $encode, $deleted);
         $this->_create_proper_name_field();
@@ -216,7 +216,7 @@ class Person extends Basic
     /**
      * @see parent::get_summary_text()
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         $this->_create_proper_name_field();
 

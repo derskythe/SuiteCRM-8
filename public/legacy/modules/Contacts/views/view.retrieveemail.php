@@ -64,7 +64,7 @@ class ContactsViewRetrieveEmail extends SugarView
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         $data = array();
         $data['target'] = $_REQUEST['target'];

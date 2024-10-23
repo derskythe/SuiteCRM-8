@@ -65,7 +65,7 @@ class AlertsViewDefault extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $this->ss->assign('Flash', $this->view_object_map['Flash']);
         $this->ss->assign('Results', $this->view_object_map['Results']);

@@ -65,7 +65,7 @@ class ImportViewConfirm extends ImportView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings, $current_user;
         global $sugar_config, $locale;

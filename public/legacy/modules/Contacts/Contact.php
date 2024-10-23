@@ -99,7 +99,7 @@ class Contact extends Person implements EmailInterface
     public $meeting_id;
     public $call_id;
     public $email_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $accept_status;
     public $accept_status_id;
     public $accept_status_name;
@@ -379,7 +379,7 @@ class Contact extends Person implements EmailInterface
         }
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         if (empty($this->id)) {
@@ -503,7 +503,7 @@ class Contact extends Person implements EmailInterface
      * builds a generic search based on the query string using or
      * do not include any $this-> because this is called on without having the class instantiated
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);

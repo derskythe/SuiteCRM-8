@@ -81,14 +81,14 @@ class Call extends SugarBean
     public string $created_by;
     public string $created_by_name;
     public string $modified_by_name;
-    public $parent_name;
+    public string $parent_name;
     public $contact_name;
     public $contact_phone;
     public $contact_email;
     public $account_id;
     public $opportunity_id;
     public $case_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $note_id;
     public $outlook_id;
     public $update_vcal = true;
@@ -298,11 +298,6 @@ class Call extends SugarBean
     }
 
 
-    public function get_summary_text()
-    {
-        return (string)$this->name;
-    }
-
     public function create_list_query($order_by, $where, $show_deleted=0)
     {
         $custom_join = $this->getCustomJoin();
@@ -406,7 +401,7 @@ class Call extends SugarBean
 
 
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $locale;
         parent::fill_in_additional_detail_fields();

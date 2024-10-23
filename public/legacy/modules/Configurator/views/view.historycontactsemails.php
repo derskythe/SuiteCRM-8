@@ -74,7 +74,7 @@ class ConfiguratorViewHistoryContactsEmails extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $modules = array();
         foreach ($GLOBALS['beanList'] as $moduleName => $objectName) {

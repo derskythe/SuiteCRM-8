@@ -59,7 +59,7 @@ class SecurityGroupUserRelationship extends SugarBean
 
 
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         if (isset($this->securitygroup_id) && $this->securitygroup_id != '') {
             $query = "SELECT name from securitygroups where id='$this->securitygroup_id' AND deleted=0";

@@ -58,7 +58,7 @@ class Project extends SugarBean
 
 
     // related information
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public string $modified_by_name;
     public string $created_by_name;
 
@@ -117,7 +117,7 @@ class Project extends SugarBean
     /**
      *
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
 
@@ -220,7 +220,7 @@ class Project extends SugarBean
     /**
      *
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -228,7 +228,7 @@ class Project extends SugarBean
     /**
      *
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);

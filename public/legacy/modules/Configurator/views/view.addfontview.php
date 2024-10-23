@@ -62,7 +62,7 @@ class ConfiguratorViewAddFontView extends SugarView
      * @throws SmartyException
      * @throws Exception
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_list_strings, $app_strings, $current_user;
         if (!is_admin($current_user)) {

@@ -54,7 +54,7 @@ require_once('include/EditView/EditView2.php');
          parent::__construct();
      }
 
-     public function display()
+     public function display() : void
      {
          global $beanList, $beanFiles;
          if ($this->action === 'AjaxFormSave') {

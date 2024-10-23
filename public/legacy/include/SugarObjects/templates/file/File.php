@@ -88,7 +88,7 @@ class File extends Basic
     /**
      * @see SugarBean::fill_in_additional_detail_fields()
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $app_list_strings;
         global $img_name;
@@ -130,7 +130,7 @@ class File extends Basic
      *
      * @return SugarBean
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $ret_val = parent::retrieve($id, $encode, $deleted);
 

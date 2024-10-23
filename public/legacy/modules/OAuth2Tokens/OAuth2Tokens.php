@@ -116,7 +116,7 @@ class OAuth2Tokens extends SugarBean
     /**
      * @see SugarBean::get_summary_text()
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return substr((string) $this->id, 0, 10) . '...';
     }

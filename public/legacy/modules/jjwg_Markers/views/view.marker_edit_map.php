@@ -15,7 +15,7 @@ class Jjwg_MarkersViewMarker_Edit_Map extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
 
     // Users local settings for decimal separator and number grouping separator

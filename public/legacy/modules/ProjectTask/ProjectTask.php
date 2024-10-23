@@ -64,8 +64,8 @@ class ProjectTask extends SugarBean
     public bool $importable = true;
 
     // related information
-    public $assigned_user_name;
-    public $parent_name;
+    public string $assigned_user_name;
+    public string $parent_name;
     public $depends_on_name;
     public $email_id;
 
@@ -139,7 +139,7 @@ class ProjectTask extends SugarBean
     /*
      *
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -201,7 +201,7 @@ class ProjectTask extends SugarBean
     /*
      *
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);

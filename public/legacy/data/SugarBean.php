@@ -96,7 +96,8 @@ class SugarBean implements Stringable
      * @var string $id
      */
     public string $id = '';
-
+    protected string $last_parent_id = '';
+    protected string $parent_name = '';
     /**
      * When creating a bean, you can specify a value in the id column as
      * long as that value is unique.  During save, if the system finds an
@@ -456,6 +457,9 @@ class SugarBean implements Stringable
      * @var array $updated_fields
      */
     public array $updated_fields = [];
+    protected string $field_name = '';
+    protected string $assigned_user_name = '';
+    protected string $field = '';
 
     /**
      * SugarBean constructor.
@@ -567,7 +571,7 @@ class SugarBean implements Stringable
      *
      * @return bool
      */
-    public function bean_implements($interface) : bool
+    public function bean_implements(string $interface) : bool
     {
         return false;
     }
@@ -586,7 +590,8 @@ class SugarBean implements Stringable
             return;
         }
         foreach ($this->field_defs as $field => $value) {
-            if ((isset($value['default']) || !empty($value['display_default'])) && ($force || empty($this->$field))) {
+            if ((isset($value['default']) || !empty($value['display_default']))
+                && ($force || empty($this->$field))) {
                 if (!isset($value['type'])) {
                     $GLOBALS['log']->warn('Undefined index: type');
                     $type = null;
@@ -2995,7 +3000,7 @@ class SugarBean implements Stringable
      *
      * @return array of fields with id, name, access and category
      */
-    public function toArray($dbOnly = false, $stringOnly = false, $upperKeys = false)
+    public function toArray(bool $dbOnly = false, bool $stringOnly = false, bool $upperKeys = false) : array
     {
         static $cache = array();
         $arr = array();
@@ -3590,14 +3595,14 @@ class SugarBean implements Stringable
                 $is_verified = false;
 
                 //first check the user settings
-                if (!empty($oe->mail_smtpserver)) {
+                if (!empty($oe->getArrayCopy()['mail_smtpserver'])) {
                     $is_verified = true;
                 }
 
                 //if still not verified, check against the system settings
                 if (!$is_verified) {
                     $oe = $oe->getSystemMailerSettings();
-                    if (!empty($oe->mail_smtpserver)) {
+                    if (!empty($oe->getArrayCopy()['mail_smtpserver'])) {
                         $is_verified = true;
                     }
                 }
@@ -3748,9 +3753,9 @@ class SugarBean implements Stringable
      *
      * @return string
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
-        return 'Base Implementation.  Should be overridden.';
+        return $this->name;
     }
 
     /**
@@ -4855,7 +4860,7 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve(int $id = -1, bool $encode = true, bool $deleted = true) : ?SugarBean
     {
         $custom_logic_arguments = [];
         $custom_logic_arguments['id'] = $id;
@@ -4913,8 +4918,8 @@ class SugarBean implements Stringable
         // save related fields values for audit
         foreach ($this->get_related_fields() as $rel_field_name) {
             $field_name = $rel_field_name['name'];
-            if (!empty($this->$field_name)) {
-                $this->fetched_rel_row[$rel_field_name['name']] = $this->$field_name;
+            if (!empty($this->field_name)) {
+                $this->fetched_rel_row[$rel_field_name['name']] = $this->field_name;
             } else {
                 $this->fetched_rel_row[$rel_field_name['name']] = '';
             }
@@ -5168,7 +5173,7 @@ class SugarBean implements Stringable
      *
      * @return string
      */
-    public function decrypt_after_retrieve($value) : string
+    public function decrypt_after_retrieve(string $value) : string
     {
         if (empty($value)) {
             return $value;
@@ -5185,7 +5190,7 @@ class SugarBean implements Stringable
      * account for instance.  This method is only used for populating extra fields
      * in the detail form
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         if (!empty($this->field_defs['assigned_user_name']) && !empty($this->assigned_user_id)) {
             $this->assigned_user_name = get_assigned_user_name($this->assigned_user_id);
@@ -5208,10 +5213,10 @@ class SugarBean implements Stringable
      *
      * @return bool
      */
-    public function fill_in_additional_parent_fields()
+    public function fill_in_additional_parent_fields() : void
     {
         if (!empty($this->parent_id) && !empty($this->last_parent_id) && $this->last_parent_id === $this->parent_id) {
-            return false;
+            return;
         }
         $this->parent_name = '';
 
@@ -5235,8 +5240,6 @@ class SugarBean implements Stringable
                 $this->parent_name = $this->parent_document_name;
             }
         }
-
-        return true;
     }
 
     /**
@@ -5683,7 +5686,7 @@ class SugarBean implements Stringable
      *
      * @return bool
      */
-    public function haveFiles()
+    public function haveFiles() : bool
     {
         $return = false;
         if ($this->bean_implements('FILE')
@@ -5709,7 +5712,7 @@ class SugarBean implements Stringable
      *
      * @return array
      */
-    public function getFiles()
+    public function getFiles() : array
     {
         $files = array();
         foreach ($this->getFilesFields() as $field) {
@@ -5728,14 +5731,14 @@ class SugarBean implements Stringable
      *
      * @return array
      */
-    public function getFilesFields($resetCache = false)
+    public function getFilesFields(bool $resetCache = false) : array
     {
         if (isset(static::$fileFields[$this->module_name]) && !$resetCache) {
             return static::$fileFields[$this->module_name];
         }
 
         static::$fileFields = array();
-        if ($this->bean_implements('FILE') || $this instanceof File) {
+        if ($this instanceof File || $this->bean_implements('FILE')) {
             static::$fileFields[$this->module_name][] = 'id';
         }
         foreach ($this->field_defs as $fieldName => $fieldDef) {
@@ -5753,7 +5756,7 @@ class SugarBean implements Stringable
      *
      * @return bool|string
      */
-    public function deleteFileDirectory()
+    public function deleteFileDirectory() : bool
     {
         if (empty($this->id)) {
             return false;
@@ -6202,10 +6205,10 @@ class SugarBean implements Stringable
      *
      * @param array $arr
      */
-    public function fromArray($arr)
+    public function fromArray(array $arr)
     {
         foreach ($arr as $name => $value) {
-            $this->$name = $value;
+            $this->set($name, $value);
         }
     }
 
@@ -6233,7 +6236,7 @@ class SugarBean implements Stringable
      *
      * @param $value
      */
-    public function build_generic_where_clause($value)
+    public function build_generic_where_clause(string $value) : string
     {
     }
 

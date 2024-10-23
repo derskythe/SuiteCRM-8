@@ -74,7 +74,7 @@ class ViewModifyProperties extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings;
 

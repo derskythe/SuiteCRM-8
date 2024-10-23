@@ -58,7 +58,7 @@ class ViewExportcustomizations extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $modules = [];
         $custom = [];

@@ -69,7 +69,7 @@ class aCase extends Basic
     public $meeting_id;
     public $call_id;
     public $email_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $account_name1;
 
     public string $table_name = 'cases';
@@ -126,7 +126,7 @@ class aCase extends Basic
     /**
      * @return string
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string) $this->name;
     }
@@ -188,7 +188,7 @@ class aCase extends Basic
         $this->contacts->add($contact_id, array( 'contact_role' => $default ));
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         // Fill in the assigned_user_name
@@ -288,7 +288,7 @@ class aCase extends Basic
      *
      * @return string|void
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);

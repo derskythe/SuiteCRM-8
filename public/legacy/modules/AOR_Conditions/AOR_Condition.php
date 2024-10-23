@@ -63,7 +63,7 @@ class AOR_Condition extends Basic
     public $modified_user_link;
     public $aor_report_id;
     public $condition_order;
-    public $field;
+    public string $field;
     public $logic_op;
     public $parenthesis;
     public $operator;

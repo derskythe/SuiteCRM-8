@@ -96,7 +96,7 @@ class ContactOpportunityRelationship extends SugarBean
 
 
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $locale;
         if (isset($this->contact_id) && $this->contact_id != '') {

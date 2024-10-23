@@ -56,7 +56,7 @@ class ViewImportvcardsave extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $redirect = "index.php?action=Importvcard&module={$_REQUEST['module']}";
 

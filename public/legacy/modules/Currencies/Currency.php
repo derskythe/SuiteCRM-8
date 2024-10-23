@@ -203,7 +203,7 @@ class Currency extends SugarBean
         return '';
     }
 
-    public function retrieve($id = -99, $encode = true, $deleted = true)
+    public function retrieve($id = -99, $encode = true, $deleted = true) : ?SugarBean
     {
         if ($id == '-99') {
             $this->name =     $this->getDefaultCurrencyName();

@@ -47,7 +47,7 @@ class SugarModule
 
     protected string $_moduleName;
 
-    public static function get($moduleName)
+    public static function get($moduleName) : mixed
     {
         if (!isset(self::$_instances[$moduleName])) {
             self::$_instances[$moduleName] = new SugarModule($moduleName);
@@ -56,6 +56,9 @@ class SugarModule
         return self::$_instances[$moduleName];
     }
 
+    /**
+     * @param string $moduleName
+     */
     public function __construct(string $moduleName)
     {
         $this->_moduleName = $moduleName;
@@ -68,9 +71,9 @@ class SugarModule
      *
      * @return bool
      */
-    public function moduleImplements($template)
+    public function moduleImplements(string $template) : bool
     {
-        $focus = self::loadBean();
+        $focus = $this->loadBean();
 
         if (!$focus) {
             return false;
@@ -84,7 +87,7 @@ class SugarModule
      *
      * @return object
      */
-    public function loadBean($beanList = null, $beanFiles = null, bool $returnObject = true)
+    public function loadBean($beanList = null, $beanFiles = null, bool $returnObject = true) : bool|object
     {
         // Populate these reference arrays
         if (empty($beanList)) {

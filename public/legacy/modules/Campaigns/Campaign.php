@@ -79,7 +79,7 @@ class Campaign extends SugarBean
     public $impressions;
 
     // These are related
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $note_id;
 
     // module name definitions and table relations
@@ -131,12 +131,6 @@ class Campaign extends SugarBean
             }
             $listTmpl->assign('ASSIGNED_USER_NAME', $fullName);
         }
-    }
-
-
-    public function get_summary_text()
-    {
-        return $this->name;
     }
 
     public function create_export_query(string $order_by, string $where) : array|string
@@ -194,7 +188,7 @@ class Campaign extends SugarBean
         parent::fill_in_additional_list_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         //format numbers.
@@ -231,7 +225,7 @@ class Campaign extends SugarBean
         builds a generic search based on the query string using or
         do not include any $this-> because this is called on without having the class instantiated
     */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);

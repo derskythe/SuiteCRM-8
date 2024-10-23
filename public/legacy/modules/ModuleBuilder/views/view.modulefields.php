@@ -62,7 +62,7 @@ class ViewModulefields extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $titleLBL = [];
         $smarty = new Sugar_Smarty();

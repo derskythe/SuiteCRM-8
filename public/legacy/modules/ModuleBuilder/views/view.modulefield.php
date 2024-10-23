@@ -57,7 +57,7 @@ class ViewModulefield extends SugarView
            );
     }
 
-    public function display()
+    public function display() : void
     {
         $ac = $this->fetch();
         echo $ac->getJavascript();

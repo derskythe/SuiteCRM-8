@@ -63,7 +63,7 @@ class ContactsViewContactAddressPopup extends SugarView
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         $this->renderJavascript();
         $popup = new Popup_Picker();

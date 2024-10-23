@@ -129,7 +129,7 @@ class CampaignTracker extends SugarBean
 
     /* This method should return the summary text which is used to build the bread crumb navigation*/
     /* Generally from this method you would return value of a field that is required and is of type string*/
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->tracker_name;
     }
@@ -140,7 +140,7 @@ class CampaignTracker extends SugarBean
     * join and team filter. If you are implementing this function do not forget to consider the additional conditions.
     */
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $sugar_config;
 

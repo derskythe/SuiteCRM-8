@@ -57,7 +57,7 @@ class ViewFavorites extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $favorites = new SugarFavorites();
         $favorites_max_viewed = (!empty($GLOBALS['sugar_config']['favorites_max_viewed']))? $GLOBALS['sugar_config']['favorites_max_viewed'] : 10;

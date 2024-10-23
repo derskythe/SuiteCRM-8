@@ -1017,7 +1017,7 @@ class Scheduler extends SugarBean
     /**
      * function overrides the one in SugarBean.php
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     { }
 
     /**
@@ -1042,7 +1042,7 @@ class Scheduler extends SugarBean
     /**
      * returns the bean name - overrides SugarBean's
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }

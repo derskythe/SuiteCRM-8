@@ -70,7 +70,7 @@ class ViewAdminwizard extends SugarView
      * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $current_user, $mod_strings, $app_list_strings, $sugar_config, $locale, $sugar_version;
 

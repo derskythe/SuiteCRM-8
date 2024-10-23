@@ -65,7 +65,7 @@ class AlertsViewDefault extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $this->ss->assign('json', $this->ss->get_config_vars());
         echo $this->ss->fetch('modules/Alerts/templates/json.tpl');

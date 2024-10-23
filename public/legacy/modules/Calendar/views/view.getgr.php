@@ -48,7 +48,7 @@ class CalendarViewGetGR extends SugarView
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         $errorLevelStored = error_reporting();
         error_reporting(0);

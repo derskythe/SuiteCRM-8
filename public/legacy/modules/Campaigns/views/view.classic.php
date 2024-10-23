@@ -56,7 +56,7 @@ class CampaignsViewClassic extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         // Call SugarController::getActionFilename to handle case sensitive file names
         $file = SugarController::getActionFilename($this->action);

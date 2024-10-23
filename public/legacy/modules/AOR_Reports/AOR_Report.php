@@ -67,7 +67,7 @@ class AOR_Report extends Basic
     public $created_by_link;
     public $modified_user_link;
     public string $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $report_module;
 
@@ -135,7 +135,7 @@ class AOR_Report extends Basic
         return $result;
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         $this->load_report_beans();

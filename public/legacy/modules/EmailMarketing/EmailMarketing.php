@@ -105,7 +105,7 @@ class EmailMarketing extends SugarBean
         return parent::save($check_notify);
     }
 
-    public function retrieve($id = -1, $encode=true, $deleted=true)
+    public function retrieve($id = -1, $encode=true, $deleted=true) : ?SugarBean
     {
         parent::retrieve($id, $encode, $deleted);
 
@@ -119,7 +119,7 @@ class EmailMarketing extends SugarBean
         return $this;
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }

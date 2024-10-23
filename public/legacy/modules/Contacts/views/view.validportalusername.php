@@ -69,7 +69,7 @@ class ContactsViewValidPortalUsername extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if (!empty($_REQUEST['portal_name'])) {
             $portalUsername = $this->bean->db->quote($_REQUEST['portal_name']);

@@ -65,7 +65,7 @@ class ExternalOAuthConnection extends Basic
     /**
      * @inheritDoc
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $result = parent::retrieve($id, $encode, $deleted);
 

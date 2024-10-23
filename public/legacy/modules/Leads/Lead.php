@@ -95,7 +95,7 @@ class Lead extends Person implements EmailInterface
     public $meeting_id;
     public $call_id;
     public $email_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $campaign_id;
     public $campaign_name;
     public $alt_address_street_2;
@@ -296,7 +296,7 @@ class Lead extends Person implements EmailInterface
         $this->get_account();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         //Fill in the assigned_user_name
         //if(!empty($this->status))
@@ -368,7 +368,7 @@ class Lead extends Person implements EmailInterface
      * builds a generic search based on the query string using or
      * do not include any $this-> because this is called on without having the class instantiated
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);

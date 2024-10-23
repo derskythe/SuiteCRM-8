@@ -150,12 +150,12 @@ class DocumentRevision extends SugarBean
 
         return $saveRet;
     }
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->filename;
     }
 
-    public function retrieve($id = -1, $encode=false, $deleted=true)
+    public function retrieve($id = -1, $encode=false, $deleted=true) : ?SugarBean
     {
         $ret = parent::retrieve($id, $encode, $deleted);
 
@@ -176,7 +176,7 @@ class DocumentRevision extends SugarBean
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $theme;
         global $current_language;

@@ -71,7 +71,7 @@ class ViewResetmodule extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $moduleName = $this->module = $_REQUEST['view_module'];
         if (isset($_REQUEST['handle']) && $_REQUEST['handle'] === 'execute') {

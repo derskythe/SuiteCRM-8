@@ -42,11 +42,11 @@
 class ViewNoaccess extends SugarView
 {
     public $type = 'noaccess';
-    
+
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         echo '<p class="error">Warning: You do not have permission to access this module.</p>';
     }

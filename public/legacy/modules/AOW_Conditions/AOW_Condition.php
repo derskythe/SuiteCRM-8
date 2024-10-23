@@ -64,7 +64,7 @@ class AOW_Condition extends Basic
     public $aow_workflow_id;
     public $condition_order;
     public $module_path;
-    public $field;
+    public string $field;
     public $operator;
     public $value;
     public $value_type;

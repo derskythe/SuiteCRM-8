@@ -15,7 +15,7 @@ class Jjwg_MarkersViewMarker_Detail_Map extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         $custom_markers_dir = 'themes/default/images/jjwg_Markers/'; ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

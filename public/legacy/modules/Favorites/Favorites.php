@@ -49,7 +49,7 @@ class Favorites extends Basic
     public $disable_row_level_security = true;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $parent_id;
     public $parent_type;

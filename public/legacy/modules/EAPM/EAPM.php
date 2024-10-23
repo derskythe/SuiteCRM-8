@@ -50,7 +50,7 @@ class EAPM extends Basic
     public $type;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $password;
     public $url;
@@ -225,7 +225,7 @@ class EAPM extends Basic
         }
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         $this->fillInName();
         parent::fill_in_additional_detail_fields();

@@ -48,7 +48,7 @@ class CalendarViewGetGRUsers extends SugarView
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         $users_arr = array();
         require_once('modules/Users/User.php');

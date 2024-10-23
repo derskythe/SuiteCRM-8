@@ -50,7 +50,7 @@ class ViewHtml extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
     }
 }

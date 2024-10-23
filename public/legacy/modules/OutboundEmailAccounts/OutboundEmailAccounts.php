@@ -125,7 +125,7 @@ class OutboundEmailAccounts extends OutboundEmailAccounts_sugar
     /**
      * @inheritDoc
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $results = parent::retrieve($id, $encode, $deleted);
 

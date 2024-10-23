@@ -69,7 +69,7 @@ class DocumentsViewExtdoc extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings;
 

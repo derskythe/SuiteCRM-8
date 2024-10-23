@@ -59,7 +59,7 @@ class Note extends File
     public $contact_id;
     public $portal_flag;
 
-    public $parent_name;
+    public string $parent_name;
     public $contact_name;
     public $contact_phone;
     public $contact_email;
@@ -174,7 +174,7 @@ class Note extends File
     }
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }

@@ -56,7 +56,7 @@ class SavedSearch extends SugarBean
     public string $date_entered;
     public string $date_modified;
     public string $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public string $modified_by_name;
     public string $name;
     public string $description;

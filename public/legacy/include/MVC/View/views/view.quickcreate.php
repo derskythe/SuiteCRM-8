@@ -119,7 +119,7 @@ class ViewQuickcreate extends ViewAjax
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $view = (!empty($_REQUEST['target_view']))?$_REQUEST['target_view']: 'QuickCreate';
         $module = $_REQUEST['module'];

@@ -60,7 +60,7 @@ class ContactsViewMailMergePopup extends SugarView
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         $popup = new Popup_Picker();
         echo $popup->process_page_for_merge();
