@@ -44,7 +44,6 @@
 namespace App\Install\Service;
 
 use JsonException;
-use Monolog\Logger;
 use Twig\Environment;
 use AllowDynamicProperties;
 use Twig\Error\SyntaxError;
@@ -101,9 +100,9 @@ class InstallPreChecks
      * @param LoggerInterface $log
      */
     public function __construct(
+        LoggerInterface $log,
         string          $projectDir,
-        string          $legacyDir,
-        LoggerInterface $log
+        string          $legacyDir
     )
     {
         $this->log = $log;

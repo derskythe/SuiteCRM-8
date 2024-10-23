@@ -111,7 +111,7 @@ abstract class LegacyHandler
             $this->projectDir = $projectDir;
         }
         if($legacyDir === '' || !is_dir($legacyDir)) {
-            $this->legacyDir = realpath($this->projectDir . 'public/legacy');
+            $this->legacyDir = realpath($this->projectDir . '/public/legacy');
         } else {
             $this->legacyDir = $legacyDir;
         }

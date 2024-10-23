@@ -9,6 +9,7 @@ x-logging:
 
 services:
   suitecrm-app-php:
+    image: ghcr.io/derskythe/suitecrm-8:latest
     container_name: suitecrm-app-php
     hostname: suitecrm-app-php
     restart: unless-stopped
@@ -80,7 +81,7 @@ services:
         published: 443
         protocol: tcp
     tty: true
-    cpus: 2
+    cpus: 0.5
     mem_limit: 1500Mb
     logging: *default-logging
 

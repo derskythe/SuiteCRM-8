@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b31f86eab412071a441cc72eaf9efef8",
+    "content-hash": "196baf8ad2f606f9d29e5acd99dc1821",
     "packages": [
         {
             "name": "api-platform/core",
@@ -863,12 +863,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "c204fe1dca1d2949544b3e2b443942e2a0f00c6b"
+                "reference": "b87a89f1da3865a25b1341104281a09818b77e12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c204fe1dca1d2949544b3e2b443942e2a0f00c6b",
-                "reference": "c204fe1dca1d2949544b3e2b443942e2a0f00c6b",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/b87a89f1da3865a25b1341104281a09818b77e12",
+                "reference": "b87a89f1da3865a25b1341104281a09818b77e12",
                 "shasum": ""
             },
             "require": {
@@ -968,7 +968,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-11T11:56:10+00:00"
+            "time": "2024-10-21T11:05:27+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -1868,12 +1868,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/sql-formatter.git",
-                "reference": "a08a5ed10ed3ffde4f124098770646eaefdcb597"
+                "reference": "b784cbde727cf806721451dde40eff4fec3bbe86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/sql-formatter/zipball/a08a5ed10ed3ffde4f124098770646eaefdcb597",
-                "reference": "a08a5ed10ed3ffde4f124098770646eaefdcb597",
+                "url": "https://api.github.com/repos/doctrine/sql-formatter/zipball/b784cbde727cf806721451dde40eff4fec3bbe86",
+                "reference": "b784cbde727cf806721451dde40eff4fec3bbe86",
                 "shasum": ""
             },
             "require": {
@@ -1915,9 +1915,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/sql-formatter/issues",
-                "source": "https://github.com/doctrine/sql-formatter/tree/1.5.x"
+                "source": "https://github.com/doctrine/sql-formatter/tree/1.5.1"
             },
-            "time": "2024-10-14T15:56:37+00:00"
+            "time": "2024-10-21T18:21:57+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -7912,12 +7912,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/intl.git",
-                "reference": "6375b48347b5681fc9caa9444d87dd6342713a04"
+                "reference": "e9fbfa4a20c01f8cc9cbbd59f5faa63f85fe644c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/intl/zipball/6375b48347b5681fc9caa9444d87dd6342713a04",
-                "reference": "6375b48347b5681fc9caa9444d87dd6342713a04",
+                "url": "https://api.github.com/repos/symfony/intl/zipball/e9fbfa4a20c01f8cc9cbbd59f5faa63f85fe644c",
+                "reference": "e9fbfa4a20c01f8cc9cbbd59f5faa63f85fe644c",
                 "shasum": ""
             },
             "require": {
@@ -7987,7 +7987,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-09T08:40:40+00:00"
+            "time": "2024-10-22T10:03:31+00:00"
         },
         {
             "name": "symfony/ldap",
@@ -9979,12 +9979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/security-core.git",
-                "reference": "adc254fa3d6957c89233525e510fa29c14df12fe"
+                "reference": "adb9648bb91e44d04117a06cc3fb82bb7659050e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/security-core/zipball/adc254fa3d6957c89233525e510fa29c14df12fe",
-                "reference": "adc254fa3d6957c89233525e510fa29c14df12fe",
+                "url": "https://api.github.com/repos/symfony/security-core/zipball/adb9648bb91e44d04117a06cc3fb82bb7659050e",
+                "reference": "adb9648bb91e44d04117a06cc3fb82bb7659050e",
                 "shasum": ""
             },
             "require": {
@@ -10057,7 +10057,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-09T08:40:40+00:00"
+            "time": "2024-10-22T11:11:42+00:00"
         },
         {
             "name": "symfony/security-csrf",
@@ -10918,12 +10918,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/validator.git",
-                "reference": "e7a766fece8b6702d7bd1bec72325d003109429f"
+                "reference": "cde18b6318e7e46a6ce8fa848d5db75cf16b293e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/validator/zipball/e7a766fece8b6702d7bd1bec72325d003109429f",
-                "reference": "e7a766fece8b6702d7bd1bec72325d003109429f",
+                "url": "https://api.github.com/repos/symfony/validator/zipball/cde18b6318e7e46a6ce8fa848d5db75cf16b293e",
+                "reference": "cde18b6318e7e46a6ce8fa848d5db75cf16b293e",
                 "shasum": ""
             },
             "require": {
@@ -11007,7 +11007,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-09T08:40:40+00:00"
+            "time": "2024-10-22T11:11:42+00:00"
         },
         {
             "name": "symfony/var-dumper",
@@ -11598,12 +11598,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "bcceaa3468e2108dcd237dfed82dc5c8a820aa3b"
+                "reference": "af4090757b6ba8094683c10a2f5255035a3e5e5f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/bcceaa3468e2108dcd237dfed82dc5c8a820aa3b",
-                "reference": "bcceaa3468e2108dcd237dfed82dc5c8a820aa3b",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/af4090757b6ba8094683c10a2f5255035a3e5e5f",
+                "reference": "af4090757b6ba8094683c10a2f5255035a3e5e5f",
                 "shasum": ""
             },
             "require": {
@@ -11670,7 +11670,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-20T19:48:23+00:00"
+            "time": "2024-10-22T09:03:01+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -17676,27 +17676,27 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "7.2.x-dev",
+            "version": "6.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "3363287c2b4bfe3bb93bf4eb4509e294c7f551e0"
+                "reference": "e6377bea5b114f70de6332fe935e160da5014ce8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/3363287c2b4bfe3bb93bf4eb4509e294c7f551e0",
-                "reference": "3363287c2b4bfe3bb93bf4eb4509e294c7f551e0",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/e6377bea5b114f70de6332fe935e160da5014ce8",
+                "reference": "e6377bea5b114f70de6332fe935e160da5014ce8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5"
+                "php": ">=7.1.3"
             },
             "conflict": {
                 "phpunit/phpunit": "<7.5|9.1.2"
             },
             "require-dev": {
                 "symfony/deprecation-contracts": "^2.5|^3.0",
-                "symfony/error-handler": "^5.4|^6.4|^7.0",
+                "symfony/error-handler": "^5.4|^6.0|^7.0",
                 "symfony/polyfill-php81": "^1.27"
             },
             "bin": [
@@ -17738,7 +17738,7 @@
             "description": "Provides utilities for PHPUnit, especially user deprecation notices management",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/phpunit-bridge/tree/7.2"
+                "source": "https://github.com/symfony/phpunit-bridge/tree/6.4"
             },
             "funding": [
                 {
@@ -17754,7 +17754,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-25T14:21:43+00:00"
+            "time": "2024-09-25T14:18:03+00:00"
         },
         {
             "name": "symfony/web-profiler-bundle",
@@ -17948,7 +17948,8 @@
         "ext-fileinfo": "*",
         "ext-exif": "*",
         "ext-mbstring": "*",
-        "ext-simplexml": "*"
+        "ext-simplexml": "*",
+        "ext-zend-opcache": "*"
     },
     "platform-dev": {},
     "platform-overrides": {

@@ -134,7 +134,7 @@ class InstallHandler extends LegacyHandler
      * @return Feedback
      * @throws \Throwable
      */
-    public function installLegacy() : Feedback
+    public function installLegacy() : \Feedback
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -180,7 +180,7 @@ class InstallHandler extends LegacyHandler
      * @return Feedback
      * @throws \Throwable
      */
-    public function runSystemCheck(array $context) : Feedback
+    public function runSystemCheck(array $context) : \Feedback
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -223,7 +223,7 @@ class InstallHandler extends LegacyHandler
      * @return Feedback
      * @throws \JsonException
      */
-    public function runCheckRouteAccess(array $inputArray) : FeedBack
+    public function runCheckRouteAccess(array $inputArray) : \FeedBack
     {
         $results = [];
         $url = $inputArray['site_host'];
@@ -236,9 +236,9 @@ class InstallHandler extends LegacyHandler
 
         require_once($this->projectDir . 'core/backend/Install/Service/InstallPreChecks.php');
         $installChecks = new InstallPreChecks(
+            $log,
             $this->projectDir,
-            $this->legacyDir,
-            $log
+            $this->legacyDir
         );
 
         $results[] = $installChecks->checkMainPage($url);

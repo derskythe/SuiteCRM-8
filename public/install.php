@@ -42,9 +42,25 @@ use App\Install\Service\InstallPreChecks;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 
-require __DIR__ . '/../config/bootstrap.php';
-require __DIR__ . '/../vendor/autoload.php';
-$log = new Logger('install.log');
-$log->pushHandler(new StreamHandler('../logs/install.log', Logger::DEBUG));
-(new InstallPreChecks($log))->setupTwigTemplate();
+$projectDir = realpath(__DIR__ . '/../');
+$legacyDir = realpath($projectDir . '/public/legacy');
 
+require $projectDir . '/config/bootstrap.php';
+require $projectDir . '/vendor/autoload.php';
+$log = new Logger('install.log');
+$log->pushHandler(new StreamHandler($projectDir . '/logs/install.log', Logger::DEBUG));
+try {
+    (new InstallPreChecks($log, $projectDir, $legacyDir))->setupTwigTemplate();
+} catch (Exception $e) {
+    $log->fatal(
+        $e->getMessage(),
+        [
+            'exception' => $e->getMessage(),
+            'trace'     => $e->getTraceAsString(),
+            'module'    => __CLASS__,
+            'method'    => __FUNCTION__,
+            'line'      => __LINE__
+        ]
+    );
+    throw new $e;
+}

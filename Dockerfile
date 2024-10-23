@@ -194,9 +194,9 @@ RUN composer update --no-progress  \
     && composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress --ansi
 
 # Copy sources from context and from build_angular layer
-COPY --from=build_angular /src/app/public/dist ./public/dist
-COPY --from=build_angular /src/app/public/extensions ./public/extensions
-COPY --from=build_angular /src/app/dist ./dist
+COPY --from=build_angular /src/app/public/dist ./public
+COPY --from=build_angular /src/app/public/extensions ./public
+COPY --from=build_angular /src/app/dist .
 
 # Run Composer
 RUN set -eux; \
@@ -221,3 +221,5 @@ RUN set -eux; \
       /var/cache/debconf/config.dat-old \
     ; \
     sync
+
+EXPOSE 8080

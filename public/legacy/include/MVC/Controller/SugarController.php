@@ -202,7 +202,6 @@ class SugarController
         $this->hasAccess = true;
     }
 
-
     /**
      * Called from SugarApplication and is meant to perform the setup operations
      * on the controller.
@@ -297,18 +296,21 @@ class SugarController
      */
     public function loadBean()
     {
-        if (!empty($GLOBALS['beanList'][$this->module])) {
-            $class = $GLOBALS['beanList'][$this->module];
-            if (!empty($GLOBALS['beanFiles'][$class])) {
-                require_once($GLOBALS['beanFiles'][$class]);
-                $this->bean = new $class();
-                if (!empty($this->record)) {
-                    $this->bean->retrieve($this->record);
-                    if ($this->bean) {
-                        $GLOBALS['FOCUS'] = $this->bean;
-                    }
-                }
-            }
+        if (empty($GLOBALS['beanList'][$this->module])) {
+            return;
+        }
+        $class = $GLOBALS['beanList'][$this->module];
+        if (empty($GLOBALS['beanFiles'][$class])) {
+            return;
+        }
+        require_once($GLOBALS['beanFiles'][$class]);
+        $this->bean = new $class();
+        if (empty($this->record)) {
+            return;
+        }
+        $this->bean->retrieve($this->record);
+        if ($this->bean) {
+            $GLOBALS['FOCUS'] = $this->bean;
         }
     }
 

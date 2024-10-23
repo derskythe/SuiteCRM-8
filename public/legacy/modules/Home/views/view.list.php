@@ -38,14 +38,12 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-
 #[\AllowDynamicProperties]
 class HomeViewList extends ViewList
 {
     public function ActivitiesViewList()
     {
-        parent::__construct();
+        $this->__construct();
     }
 
     public function display()
@@ -77,12 +75,14 @@ class HomeViewList extends ViewList
 
             $max_size = min($maxPostSize, $maxUploadSize);
             if ($contentLength > $max_size) {
-                $errMessage = string_format($GLOBALS['app_strings']['UPLOAD_MAXIMUM_EXCEEDED'], array($contentLength,  $max_size));
+                $errMessage =
+                    string_format($GLOBALS['app_strings']['UPLOAD_MAXIMUM_EXCEEDED'], array( $contentLength, $max_size )
+                    );
             } else {
-                $errMessage =$GLOBALS['app_strings']['UPLOAD_REQUEST_ERROR'];
+                $errMessage = $GLOBALS['app_strings']['UPLOAD_REQUEST_ERROR'];
             }
 
-            $this->errors[] = '* '.$errMessage;
+            $this->errors[] = '* ' . $errMessage;
             $this->displayErrors();
         }
     }
