@@ -41,7 +41,7 @@ use UnlinkService;
 class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'record-unlink';
+    protected const PROCESS_TYPE          = 'record-unlink';
 
     /**
      * @var LoggerInterface
@@ -55,6 +55,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
 
     /**
      * UnlinkRelationHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -63,21 +64,24 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
-    ) {
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -85,7 +89,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -93,7 +97,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -101,7 +105,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -109,7 +113,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $payload = $options['payload'] ?? [];
@@ -118,7 +122,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
         $relateModuleId = $payload['relateRecordId'] ?? '';
 
         $acls = [
-            $baseModule => [
+            $baseModule   => [
                 [
                     'action' => 'view',
                     'record' => $payload['baseRecordId'] ?? ''
@@ -139,7 +143,7 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
             $acls[$relateModule] = [
                 [
                     'action' => 'view',
-                    'record' =>  $relateModuleId ?? ''
+                    'record' => $relateModuleId ?? ''
                 ]
             ];
         }
@@ -153,7 +157,8 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
      */
     public function configure(
         Process $process
-    ): void {
+    ) : void
+    {
         //This process is synchronous
         //We aren't going to store a record on db
         //thus we will use process type as the id
@@ -166,16 +171,17 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
      */
     public function validate(
         Process $process
-    ): void {
+    ) : void
+    {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
 
-        ['payload' => $payload] = $process->getOptions();
+        [ 'payload' => $payload ] = $process->getOptions();
         [
-            'baseModule' => $baseModule,
-            'baseRecordId' => $baseRecordId,
-            'linkField' => $linkField,
+            'baseModule'     => $baseModule,
+            'baseRecordId'   => $baseRecordId,
+            'linkField'      => $linkField,
             'relateRecordId' => $relateRecordId
         ] = $payload;
 
@@ -194,11 +200,11 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
         /* @noinspection PhpIncludeInspection */
         require_once 'include/portability/Services/Relationships/UnlinkService.php';
 
-        ['payload' => $payload] = $process->getOptions();
+        [ 'payload' => $payload ] = $process->getOptions();
         [
-            'baseModule' => $baseModule,
-            'baseRecordId' => $baseRecordId,
-            'linkField' => $linkField,
+            'baseModule'     => $baseModule,
+            'baseRecordId'   => $baseRecordId,
+            'linkField'      => $linkField,
             'relateRecordId' => $relateRecordId
         ] = $payload;
         $baseModule = $this->moduleNameMapper->toLegacy($baseModule);
@@ -214,11 +220,11 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
 
         if (!empty($result['message'])) {
             $process->setMessages([
-                $result['message']
-            ]);
+                                      $result['message']
+                                  ]);
         }
 
-        $process->setData(['reload' => true]);
+        $process->setData([ 'reload' => true ]);
 
         $this->close();
     }

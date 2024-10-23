@@ -27,6 +27,7 @@
 
 namespace App\Data\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Data\Service\RecordMarkAsReadServiceInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -45,6 +46,7 @@ class RecordMarkAsReadHandler extends LegacyHandler implements RecordMarkAsReadS
 
     /**
      * RecordDeletionHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -54,23 +56,32 @@ class RecordMarkAsReadHandler extends LegacyHandler implements RecordMarkAsReadS
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
     )
     {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -78,7 +89,7 @@ class RecordMarkAsReadHandler extends LegacyHandler implements RecordMarkAsReadS
     /**
      * @inheritDoc
      */
-    public function markRecordsAsRead(string $moduleName, array $ids = []): bool
+    public function markRecordsAsRead(string $moduleName, array $ids = []) : bool
     {
         $this->init();
         $this->startLegacyApp();
@@ -101,9 +112,10 @@ class RecordMarkAsReadHandler extends LegacyHandler implements RecordMarkAsReadS
     /**
      * @param string $moduleName
      * @param string $id
+     *
      * @return bool
      */
-    protected function setIsRead(string $moduleName, string $id): bool
+    protected function setIsRead(string $moduleName, string $id) : bool
     {
 
         $bean = BeanFactory::newBean($moduleName);

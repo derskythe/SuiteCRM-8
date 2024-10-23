@@ -24,6 +24,7 @@
  * feasible for technical reasons, the Appropriate Legal Notices must display
  * the words "Supercharged by SuiteCRM".
  */
+
 namespace App\Process\LegacyHandler;
 
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -32,12 +33,17 @@ class PortalUserActivator extends LegacyHandler
 {
     public const PROCESS_TYPE = 'portal-user-activator';
 
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
 
-    public function switchPortalUserStatus(string $contact_id, string $failLabel, string $successLabel, bool $activate): string
+    public function switchPortalUserStatus(
+        string $contact_id,
+        string $failLabel,
+        string $successLabel,
+        bool   $activate
+    ) : string
     {
         $this->init();
 
@@ -50,7 +56,6 @@ class PortalUserActivator extends LegacyHandler
         if (!isAOPEnabled()) {
             return $mod_strings['LBL_AOP_DISABLED'];
         }
-
 
         $contact = \BeanFactory::getBean('Contacts', $contact_id);
 
@@ -70,7 +75,7 @@ class PortalUserActivator extends LegacyHandler
             $decodedResponse = json_decode($apiResponse);
 
             if (empty($decodedResponse) || !$decodedResponse->success) {
-                $msg = $decodedResponse->error ?: $mod_strings[$failLabel];
+                $msg = $decodedResponse->error ? : $mod_strings[$failLabel];
             } else {
                 $msg = $mod_strings[$successLabel];
                 $contact->portal_account_disabled = !$activate;

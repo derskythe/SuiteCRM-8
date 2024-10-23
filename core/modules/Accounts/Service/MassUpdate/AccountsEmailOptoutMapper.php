@@ -34,7 +34,7 @@ class AccountsEmailOptoutMapper extends EmailOptoutMapper
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return 'accounts-email-optout-mapper';
     }
@@ -42,7 +42,7 @@ class AccountsEmailOptoutMapper extends EmailOptoutMapper
     /**
      * @inheritDoc
      */
-    public function getModule(): string
+    public function getModule() : string
     {
         return 'accounts';
     }

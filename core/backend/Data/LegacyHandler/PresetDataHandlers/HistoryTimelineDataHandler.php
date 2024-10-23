@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Data\LegacyHandler\PresetDataHandlers;
 
 use App\Data\LegacyHandler\ListData;
@@ -44,7 +43,8 @@ use SugarBean;
 use Symfony\Component\HttpFoundation\RequestStack;
 use User;
 
-class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements PresetListDataHandlerInterface, LoggerAwareInterface
+class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements PresetListDataHandlerInterface,
+                                                                             LoggerAwareInterface
 {
     use StatisticsHandlingTrait;
 
@@ -66,6 +66,7 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
 
     /**
      * HistoryTimelineDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -75,18 +76,28 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session,
-        RecordMapper $recordMapper,
-        FieldDefinitionsProviderInterface $fieldDefinitionProvider
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState,
-            $moduleNameMapper, $session);
+        string                            $projectDir,
+        string                            $legacyDir,
+        string                            $legacySessionName,
+        string                            $defaultSessionName,
+        LegacyScopeState                  $legacyScopeState,
+        ModuleNameMapperInterface         $moduleNameMapper,
+        RequestStack                      $session,
+        RecordMapper                      $recordMapper,
+        FieldDefinitionsProviderInterface $fieldDefinitionProvider,
+        LoggerInterface                   $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $moduleNameMapper,
+            $session,
+            $logger
+        );
         $this->recordMapper = $recordMapper;
         $this->fieldDefinitionProvider = $fieldDefinitionProvider;
     }
@@ -94,7 +105,7 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -102,7 +113,7 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
     /**
      * @inheritDoc
      */
-    public function getType(): string
+    public function getType() : string
     {
         return 'history-timeline';
     }
@@ -112,11 +123,12 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
      */
     public function fetch(
         string $module,
-        array $criteria = [],
-        int $offset = -1,
-        int $limit = -1,
-        array $sort = []
-    ): ListData {
+        array  $criteria = [],
+        int    $offset = -1,
+        int    $limit = -1,
+        array  $sort = []
+    ) : ListData
+    {
         $this->init();
         $this->startLegacyApp();
         global $current_language, $app_strings;
@@ -147,98 +159,98 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
 
         $unionQueryColumns =
             [
-                'tasks' => [
-                    "name" => [],
-                    "status" => [],
+                'tasks'        => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [],
-                    "date_due" => [
-                        "alias" => 'date_end',
+                    "date_entered"  => [],
+                    "date_due"      => [
+                        "alias"   => 'date_end',
                         "sort_by" => 'date_end'
                     ]
                 ],
                 'tasks_parent' => [
-                    "name" => [],
-                    "status" => [],
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [],
-                    "date_due" => [
-                        "alias" => 'date_end',
+                    "date_entered"  => [],
+                    "date_due"      => [
+                        "alias"   => 'date_end',
                         "sort_by" => 'date_end'
                     ]
                 ],
-                'meetings' => [
-                    "name" => [],
-                    "status" => [],
+                'meetings'     => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [],
-                    "date_end" => [],
+                    "date_entered"  => [],
+                    "date_end"      => [],
                 ],
-                'oldmeetings' => [
-                    "name" => [],
-                    "status" => [],
+                'oldmeetings'  => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [],
-                    "date_end" => [],
+                    "date_entered"  => [],
+                    "date_end"      => [],
                 ],
-                'calls' => [
-                    "name" => [],
-                    "status" => [],
+                'calls'        => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [],
-                    "date_end" => [],
+                    "date_entered"  => [],
+                    "date_end"      => [],
                 ],
-                'oldcalls' => [
-                    "name" => [],
-                    "status" => [],
+                'oldcalls'     => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [],
-                    "date_end" => [],
+                    "date_entered"  => [],
+                    "date_end"      => [],
                 ],
-                'notes' => [
-                    "name" => [],
-                    "status" => [],
+                'notes'        => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [],
-                    "date_entered" => [
+                    "date_entered"  => [
 
-                        "alias" => 'date_end',
+                        "alias"   => 'date_end',
                         "sort_by" => 'date_end'
                     ],
-                    "date_due" => [],
+                    "date_due"      => [],
                 ],
-                'emails' => [
-                    "name" => [],
-                    "status" => [],
+                'emails'       => [
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [
-                        "alias" => 'date_end',
+                        "alias"   => 'date_end',
                         "sort_by" => 'date_end'
                     ],
-                    "date_entered" => [],
-                    "date_due" => [],
+                    "date_entered"  => [],
+                    "date_due"      => [],
                 ],
                 'linkedemails' => [
-                    "name" => [],
-                    "status" => [],
+                    "name"          => [],
+                    "status"        => [],
                     "date_modified" => [
-                        "alias" => 'date_end',
+                        "alias"   => 'date_end',
                         "sort_by" => 'date_end'
                     ],
-                    "date_entered" => [],
-                    "date_due" => [],
+                    "date_entered"  => [],
+                    "date_due"      => [],
                 ],
             ];
 
         $panelToModuleName = [
-            'tasks' => 'Tasks',
+            'tasks'        => 'Tasks',
             'tasks_parent' => 'Tasks',
-            'meetings' => 'Meetings',
-            'oldmeetings' => 'Meetings',
-            'calls' => 'Calls',
-            'oldcalls' => 'Calls',
-            'notes' => 'Notes',
-            'emails' => 'Emails',
+            'meetings'     => 'Meetings',
+            'oldmeetings'  => 'Meetings',
+            'calls'        => 'Calls',
+            'oldcalls'     => 'Calls',
+            'notes'        => 'Notes',
+            'emails'       => 'Emails',
             'linkedemails' => 'Emails',
-            'audit' => 'audit'
+            'audit'        => 'audit'
         ];
 
         /* @noinspection PhpIncludeInspection */
@@ -269,6 +281,7 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
             $timelineEntryData->setOffsets([]);
             $timelineEntryData->setOrdering([]);
             $timelineEntryData->setRecords($this->recordMapper->mapRecords([]));
+
             return $timelineEntryData;
         }
 
@@ -310,7 +323,7 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
                         $auditFieldValue = $user->user_name ?? '';
                     }
 
-                    $auditDescription .= implode(" ", [$auditedFieldLabelKey, $auditFieldValue, '<br/>']);
+                    $auditDescription .= implode(" ", [ $auditedFieldLabelKey, $auditFieldValue, '<br/>' ]);
 
                     $listData[$key]['description'] = $auditDescription;
                     $listData[$key]['name'] = $app_strings['LBL_RECORD_CHANGED'];
@@ -319,7 +332,8 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
 
             /** @var User $user */
             $user = BeanFactory::getBean('Users', $record['assigned_user_id']);
-            $listData[$key]['assigned_user_name']['user_name'] = showFullName() ? $user->full_name : ($user->user_name ?? '');
+            $listData[$key]['assigned_user_name']['user_name'] =
+                showFullName() ? $user->full_name : ($user->user_name ?? '');
             $listData[$key]['assigned_user_name']['user_id'] = $record['assigned_user_id'];
             $listData[$key]['module_name'] = $panelToModuleName[$listData[$key]['panel_name']];
         }
@@ -328,17 +342,21 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
         $timelineEntryData->setOffsets($listData['offsets'] ?? []);
         $timelineEntryData->setOrdering($listData['ordering'] ?? []);
         $timelineEntryData->setRecords($this->recordMapper->mapRecords($listData ?? []));
+
         return $timelineEntryData;
     }
 
     /**
      * get audit data grouped by date created and created by
+     *
      * @param SugarBean $bean
+     *
      * @return string
      */
     protected function queryAuditInfo(
         SugarBean $bean
-    ): string {
+    ) : string
+    {
         $parts = [];
 
         $parts['select'] = "SELECT max(id),
@@ -366,7 +384,7 @@ class HistoryTimelineDataHandler extends SubpanelDataQueryHandler implements Pre
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

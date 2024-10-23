@@ -25,10 +25,10 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\ViewDefinitions\LegacyHandler;
 
 use ACLController;
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Service\ActionAvailabilityChecker\ActionAvailabilityChecker;
@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class SidebarWidgetDefinitionProvider
+ *
  * @package App\Service
  */
 class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinitionProviderInterface
@@ -53,6 +54,7 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
 
     /**
      * SidebarWidgetDefinitionProvider constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -62,21 +64,24 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
      * @param ActionAvailabilityChecker $actionChecker
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ActionAvailabilityChecker $actionChecker
-    ) {
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ActionAvailabilityChecker $actionChecker,
+        LoggerInterface $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->actionChecker = $actionChecker;
     }
@@ -84,7 +89,7 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -92,12 +97,13 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
     /**
      * @inheritDoc
      */
-    public function getTopWidgets(array $config, string $module, array $moduleDefaults = []): array
+    public function getTopWidgets(array $config, string $module, array $moduleDefaults = []) : array
     {
-        $widget = $config['modules'][$module]['widget'] ?? $moduleDefaults['widget'] ?? $config['default']['widget'] ?? [];
+        $widget =
+            $config['modules'][$module]['widget'] ?? $moduleDefaults['widget'] ?? $config['default']['widget'] ?? [];
         $widget['refreshOn'] = $widget['refreshOn'] ?? 'data-update';
 
-        $displayedWidgets = $this->filterAccessibleWidgets([$widget]);
+        $displayedWidgets = $this->filterAccessibleWidgets([ $widget ]);
 
         if (empty($displayedWidgets)) {
             return [];
@@ -109,7 +115,7 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
     /**
      * @inheritDoc
      */
-    public function getSidebarWidgets(array $config, string $module, array $moduleDefaults = []): array
+    public function getSidebarWidgets(array $config, string $module, array $moduleDefaults = []) : array
     {
         return $this->parseEntries($config, $module, $moduleDefaults);
     }
@@ -117,7 +123,7 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
     /**
      * {@inheritDoc}
      */
-    public function getBottomWidgets(array $config, string $module, array $moduleDefaults = []): array
+    public function getBottomWidgets(array $config, string $module, array $moduleDefaults = []) : array
     {
         return $this->parseEntries($config, $module, $moduleDefaults);
     }
@@ -126,9 +132,10 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
      * @param array $config
      * @param string $module
      * @param array $moduleDefaults
+     *
      * @return array
      */
-    protected function parseEntries(array $config, string $module, array $moduleDefaults): array
+    protected function parseEntries(array $config, string $module, array $moduleDefaults) : array
     {
         $config['modules'][$module] = $config['modules'][$module] ?? [];
         $config['modules'][$module]['widgets'] = $config['modules'][$module]['widgets'] ?? [];
@@ -154,9 +161,10 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
      * Filter to get list of accessible widgets
      *
      * @param array $widgets
+     *
      * @return array
      */
-    protected function filterAccessibleWidgets(array $widgets): array
+    protected function filterAccessibleWidgets(array $widgets) : array
     {
         $accessibleWidgets = [];
 
@@ -175,9 +183,10 @@ class WidgetDefinitionProvider extends LegacyHandler implements WidgetDefinition
      * Check acls for widgets
      *
      * @param array $widget
+     *
      * @return bool
      */
-    protected function checkWidgetACLs(array &$widget): bool
+    protected function checkWidgetACLs(array &$widget) : bool
     {
         $widgetAcls = $widget['acls'] ?? [];
 

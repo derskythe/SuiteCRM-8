@@ -76,7 +76,8 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
         ModuleNameMapperInterface $moduleNameMapper,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -84,7 +85,8 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->validator = $validator;

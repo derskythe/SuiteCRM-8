@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Tasks\Statistics;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Statistics\DateTimeStatisticsHandlingTrait;
 use App\Statistics\Entity\Statistic;
@@ -43,6 +43,7 @@ use Task;
 
 /**
  * Class DaysUntilDueTask
+ *
  * @package App\Legacy\Statistics
  */
 class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterface
@@ -50,7 +51,7 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
     use DateTimeStatisticsHandlingTrait;
 
     public const HANDLER_KEY = 'days-until-due-task';
-    public const KEY = 'days-until-due-task';
+    public const KEY         = 'days-until-due-task';
 
     /**
      * @var ModuleNameMapperInterface
@@ -59,6 +60,7 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
 
     /**
      * ListDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -68,22 +70,32 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        RequestStack              $session,
+        LoggerInterface $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -91,7 +103,7 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -100,14 +112,13 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
      * @inheritDoc
      * @throws Exception
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
-
 
         $legacyModuleName = $this->moduleNameMapper->toLegacy($module);
 
@@ -129,18 +140,20 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
         $timestamp = $dateTime->getTimestamp();
         $dateComp = $dateFormatService->toDBDateTime($timestamp);
 
-
         $statistic = $this->getDateDiffStatistic(self::KEY, $dateDue, $dateComp);
 
         if ($completed !== 'Completed') {
             if ($dbTime > $dateTime) {
-                $this->addMetadata($statistic, ['labelKey' => 'LBL_DAYS_UNTIL_DUE_TASK', 'endLabelKey' => 'LBL_STAT_DAYS']);
+                $this->addMetadata(
+                    $statistic,
+                    [ 'labelKey' => 'LBL_DAYS_UNTIL_DUE_TASK', 'endLabelKey' => 'LBL_STAT_DAYS' ]
+                );
             } else {
-                $this->addMetadata($statistic, ['labelKey' => 'LBL_DAYS_OVERDUE', 'endLabelKey' => 'LBL_STAT_DAYS']);
+                $this->addMetadata($statistic, [ 'labelKey' => 'LBL_DAYS_OVERDUE', 'endLabelKey' => 'LBL_STAT_DAYS' ]);
             }
         } else {
             $statistic = $this->getBlankResponse(self::KEY);
-            $this->addMetadata($statistic, ['labelKey' => '', 'endLabelKey' => 'LBL_TASK_COMPLETED']);
+            $this->addMetadata($statistic, [ 'labelKey' => '', 'endLabelKey' => 'LBL_TASK_COMPLETED' ]);
         }
 
         $this->close();
@@ -150,9 +163,10 @@ class DaysUntilDueTask extends LegacyHandler implements StatisticsProviderInterf
 
     /**
      * @param string $id
+     *
      * @return Task
      */
-    protected function getTask(string $id): Task
+    protected function getTask(string $id) : Task
     {
         /** @var Task $task */
         $task = BeanFactory::getBean('Tasks', $id);

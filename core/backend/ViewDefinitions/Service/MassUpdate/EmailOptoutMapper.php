@@ -27,6 +27,7 @@
 
 namespace App\ViewDefinitions\Service\MassUpdate;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\ViewDefinitions\Service\FieldAliasMapper;
@@ -45,6 +46,7 @@ abstract class EmailOptoutMapper extends LegacyHandler implements MassUpdateDefi
 
     /**
      * EmailOptoutMapper constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -54,21 +56,24 @@ abstract class EmailOptoutMapper extends LegacyHandler implements MassUpdateDefi
      * @param FieldAliasMapper $fieldAliasMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
+        string           $projectDir,
+        string           $legacyDir,
+        string           $legacySessionName,
+        string           $defaultSessionName,
         LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        FieldAliasMapper $fieldAliasMapper
-    ) {
+        RequestStack     $session,
+        FieldAliasMapper $fieldAliasMapper,
+        LoggerInterface  $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->fieldAliasMapper = $fieldAliasMapper;
     }
@@ -76,7 +81,7 @@ abstract class EmailOptoutMapper extends LegacyHandler implements MassUpdateDefi
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'email-optout';
     }
@@ -84,25 +89,25 @@ abstract class EmailOptoutMapper extends LegacyHandler implements MassUpdateDefi
     /**
      * @inheritDoc
      */
-    public function map(string $module, array &$fields, array $vardefs): void
+    public function map(string $module, array &$fields, array $vardefs) : void
     {
         $this->init();
 
-        if (!in_array($module, ['contacts', 'accounts', 'leads', 'prospects'])) {
+        if (!in_array($module, [ 'contacts', 'accounts', 'leads', 'prospects' ])) {
             return;
         }
 
         $fields[] = $this->buildField(
             [
-                'name' => 'optout_primary',
+                'name'  => 'optout_primary',
                 'label' => 'LBL_OPT_OUT_FLAG_PRIMARY'
             ],
             'optout_primary',
             [
                 'optout_primary' => [
-                    'name' => 'optout_primary',
+                    'name'  => 'optout_primary',
                     'vname' => 'LBL_OPT_OUT_FLAG_PRIMARY',
-                    'type' => 'bool',
+                    'type'  => 'bool',
                 ]
             ],
             $this->fieldAliasMapper
@@ -113,14 +118,14 @@ abstract class EmailOptoutMapper extends LegacyHandler implements MassUpdateDefi
         if ($configurator->isConfirmOptInEnabled() || $configurator->isOptInEnabled()) {
             $fields[] = $this->buildField(
                 [
-                    'name' => 'optin_primary',
+                    'name'  => 'optin_primary',
                     'label' => 'LBL_OPT_IN_FLAG_PRIMARY'
                 ],
                 'optout_primary',
                 [
-                    'name' => 'optin_primary',
+                    'name'  => 'optin_primary',
                     'vname' => 'LBL_OPT_IN_FLAG_PRIMARY',
-                    'type' => 'bool',
+                    'type'  => 'bool',
                 ],
                 $this->fieldAliasMapper
             );

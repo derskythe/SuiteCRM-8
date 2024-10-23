@@ -123,7 +123,7 @@ function portal_login($portal_auth, $user_name, $application_name)
 /*
 this validates the session and starts the session;
 */
-function portal_validate_authenticated($session_id)
+function portal_validate_authenticated(string $session_id) : bool
 {
     $old_error_reporting = error_reporting();
     error_reporting(0);

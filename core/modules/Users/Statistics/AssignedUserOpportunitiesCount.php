@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Users\Statistics;
 
 use App\Data\LegacyHandler\PreparedStatementHandler;
@@ -44,7 +43,8 @@ use Psr\Log\LoggerInterface;
 use SugarBean;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements StatisticsProviderInterface, LoggerAwareInterface
+class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements StatisticsProviderInterface,
+                                                                                 LoggerAwareInterface
 {
     use StatisticsHandlingTrait;
     use SecurityFiltersTrait;
@@ -63,6 +63,7 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
 
     /**
      * LeadDaysOpen constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -73,24 +74,34 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        PreparedStatementHandler $preparedStatementHandler,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState,
-            $moduleNameMapper, $session);
+        PreparedStatementHandler  $preparedStatementHandler,
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $moduleNameMapper,
+            $session,
+            $logger
+        );
         $this->queryHandler = $preparedStatementHandler;
     }
 
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -98,9 +109,9 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->closeAndReturnEmpty();
@@ -152,7 +163,7 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
     /**
      * @return Statistic
      */
-    protected function closeAndReturnEmpty(): Statistic
+    protected function closeAndReturnEmpty() : Statistic
     {
         $statistic = $this->getEmptyResponse(self::KEY);
         $this->close();
@@ -162,9 +173,10 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
 
     /**
      * @param $id
+     *
      * @return Opportunity|null
      */
-    protected function getOpportunity($id): ?Opportunity
+    protected function getOpportunity($id) : ?Opportunity
     {
         /** @var Opportunity $bean */
         $bean = BeanFactory::getBean('Opportunities', $id);
@@ -178,9 +190,10 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
 
     /**
      * @param Opportunity|null $bean
+     *
      * @return array|String[]
      */
-    protected function getQuerySalesStages(?Opportunity $bean): array
+    protected function getQuerySalesStages(?Opportunity $bean) : array
     {
         if ($bean === null) {
             return [];
@@ -200,15 +213,15 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
     /**
      * @return String[]
      */
-    protected function getClosedSalesStages(): array
+    protected function getClosedSalesStages() : array
     {
-        return ['Closed Won', 'Closed Lost'];
+        return [ 'Closed Won', 'Closed Lost' ];
     }
 
     /**
      * @return String[]
      */
-    protected function getOpenSalesStages(): array
+    protected function getOpenSalesStages() : array
     {
         return [
             'Prospecting',
@@ -226,6 +239,7 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
      * @param SugarBean $bean
      * @param string $id
      * @param array $statuses
+     *
      * @return mixed|false
      * @throws DBALException
      */
@@ -247,7 +261,6 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
             $statusClause = ' AND T2.sales_stage IN ' . "('" . implode("','", $statuses) . "')";
         }
 
-
         $queryString = "
             SELECT (
                 SELECT COUNT(*)
@@ -267,7 +280,7 @@ class AssignedUserOpportunitiesCount extends SubpanelDataQueryHandler implements
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

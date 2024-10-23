@@ -94,6 +94,7 @@ abstract class LegacyHandler
      * @param string $defaultSessionName
      * @param LegacyScopeState $legacyScopeState
      * @param RequestStack $requestStack
+     * @param LoggerInterface $logger
      */
     public function __construct(
         string           $projectDir,
@@ -159,8 +160,8 @@ abstract class LegacyHandler
             }
 
             // Load in legacy
-            require_once $this->legacyDir.'include/MVC/preDispatch.php';
-            require_once $this->legacyDir.'include/entryPoint.php';
+            require_once $this->legacyDir.'/include/MVC/preDispatch.php';
+            require_once $this->legacyDir.'/include/entryPoint.php';
 
             $this->state->setLegacyBootstrapped(true);
 
@@ -254,7 +255,7 @@ abstract class LegacyHandler
         }
 
         try {
-            require_once $this->legacyDir.'include/MVC/SugarApplication.php';
+            require_once $this->legacyDir.'/include/MVC/SugarApplication.php';
 
             global $sugar_config;
 
@@ -388,7 +389,7 @@ abstract class LegacyHandler
             return;
         }
 
-        require_once $this->legacyDir.'include/MVC/SugarApplication.php';
+        require_once $this->legacyDir.'/include/MVC/SugarApplication.php';
 
         $app = new SugarApplication();
         $app->startSession();

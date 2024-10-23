@@ -2,6 +2,7 @@
 
 namespace App\Module\LegacyHandler\Favorites;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\FavoriteProviderInterface;
@@ -39,7 +40,8 @@ class FavoritesHandler extends LegacyHandler implements FavoriteProviderInterfac
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -47,7 +49,8 @@ class FavoritesHandler extends LegacyHandler implements FavoriteProviderInterfac
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }

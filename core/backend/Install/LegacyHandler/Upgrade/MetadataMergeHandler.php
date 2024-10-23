@@ -27,6 +27,7 @@
 
 namespace App\Install\LegacyHandler\Upgrade;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Model\Feedback;
@@ -67,7 +68,8 @@ class MetadataMergeHandler extends LegacyHandler
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
         string $upgradePackageDir,
-        UpgradePackageHandler $packageHandler
+        UpgradePackageHandler $packageHandler,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -75,7 +77,8 @@ class MetadataMergeHandler extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
 
         $this->upgradePackageDir = $upgradePackageDir;

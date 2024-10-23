@@ -76,7 +76,8 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
         LegacyScopeState $legacyScopeState,
         RequestStack $requestStack,
         ModuleNameMapperInterface $moduleNameMapper,
-        PortalUserActivator $portalUserActivator
+        PortalUserActivator $portalUserActivator,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -84,7 +85,8 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $requestStack
+            $requestStack,
+            $logger
         );
         $this->portalUserActivator = $portalUserActivator;
         $this->moduleNameMapper = $moduleNameMapper;

@@ -38,7 +38,7 @@ class PostUpgradeHandler extends LegacyHandler
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -46,7 +46,7 @@ class PostUpgradeHandler extends LegacyHandler
     /**
      * @return Feedback
      */
-    public function run(): Feedback
+    public function run() : Feedback
     {
         $this->init();
 

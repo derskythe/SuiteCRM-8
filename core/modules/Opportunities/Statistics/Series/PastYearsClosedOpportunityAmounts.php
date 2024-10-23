@@ -45,7 +45,7 @@ class PastYearsClosedOpportunityAmounts extends SubpanelDataQueryHandler impleme
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -53,9 +53,9 @@ class PastYearsClosedOpportunityAmounts extends SubpanelDataQueryHandler impleme
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         $subpanel = 'opportunities';
 
         if (empty($module) || empty($id)) {
@@ -81,11 +81,12 @@ class PastYearsClosedOpportunityAmounts extends SubpanelDataQueryHandler impleme
         $endYear = $yearsList[$years - 1];
         $endYearDateString = $nextYear . '-01-01';
 
-        $statusesList = ['Closed Won', 'Closed Lost'];
+        $statusesList = [ 'Closed Won', 'Closed Lost' ];
         $statuses = implode("' , '", $statusesList);
 
         $parts = $queries[0];
-        $parts['select'] = 'SELECT SUM(opportunities.amount_usdollar) as amount_by_year, EXTRACT(YEAR FROM opportunities.date_closed) as year, opportunities.sales_stage as sales_stage ';
+        $parts['select'] =
+            'SELECT SUM(opportunities.amount_usdollar) as amount_by_year, EXTRACT(YEAR FROM opportunities.date_closed) as year, opportunities.sales_stage as sales_stage ';
         $parts['where'] .= ' AND opportunities.date_closed is not null ';
         $parts['where'] .= ' AND opportunities.amount_usdollar is not null ';
         $parts['where'] .= ' AND opportunities.sales_stage is not null ';
@@ -103,9 +104,7 @@ class PastYearsClosedOpportunityAmounts extends SubpanelDataQueryHandler impleme
         $nameField = 'year';
         $valueField = 'amount_by_year';
 
-
         $series = $this->buildMultiSeries($result, $groupingField, $nameField, $valueField, $yearsList);
-
 
         $chartOptions = new ChartOptions();
         $chartOptions->legend = false;
@@ -123,10 +122,11 @@ class PastYearsClosedOpportunityAmounts extends SubpanelDataQueryHandler impleme
 
     /**
      * @param int $years
+     *
      * @return string[]
      * @throws Exception
      */
-    protected function getPastYearsList(int $years): array
+    protected function getPastYearsList(int $years) : array
     {
         $yearsList = [];
         for ($i = 0; $i < $years; $i++) {
@@ -142,7 +142,7 @@ class PastYearsClosedOpportunityAmounts extends SubpanelDataQueryHandler impleme
      * @return int
      * @throws Exception
      */
-    protected function getNextYear(): string
+    protected function getNextYear() : string
     {
         $now = new DateTime();
         $now->ADD(new DateInterval('P1Y'));

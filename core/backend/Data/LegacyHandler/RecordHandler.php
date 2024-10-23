@@ -29,6 +29,7 @@ namespace App\Data\LegacyHandler;
 
 use ApiBeanMapper;
 use App\Data\Entity\Record;
+use Psr\Log\LoggerInterface;
 use App\Data\Service\RecordProviderInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -86,7 +87,8 @@ class RecordHandler extends LegacyHandler implements RecordProviderInterface
         ModuleNameMapperInterface $moduleNameMapper,
         RequestStack $session,
         AclManagerInterface $aclHandler,
-        FavoriteProviderInterface $favorites
+        FavoriteProviderInterface $favorites,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -94,7 +96,8 @@ class RecordHandler extends LegacyHandler implements RecordProviderInterface
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->acl = $aclHandler;

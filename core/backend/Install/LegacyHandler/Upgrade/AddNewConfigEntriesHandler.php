@@ -27,6 +27,7 @@
 
 namespace App\Install\LegacyHandler\Upgrade;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Model\Feedback;
@@ -60,7 +61,8 @@ class AddNewConfigEntriesHandler extends LegacyHandler
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        SystemConfigHandler $configHandler
+        SystemConfigHandler $configHandler,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -68,7 +70,8 @@ class AddNewConfigEntriesHandler extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->configHandler = $configHandler;
     }

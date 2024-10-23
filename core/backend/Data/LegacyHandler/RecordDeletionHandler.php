@@ -27,6 +27,7 @@
 
 namespace App\Data\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleNameMapperInterface;
@@ -37,6 +38,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ListViewHandler
+ *
  * @package App\Legacy
  */
 class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServiceInterface
@@ -55,6 +57,7 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
 
     /**
      * RecordDeletionHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -64,17 +67,26 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
      * @param RecordListProviderInterface $listViewProvider
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        ModuleNameMapperInterface $moduleNameMapper,
+        string                      $projectDir,
+        string                      $legacyDir,
+        string                      $legacySessionName,
+        string                      $defaultSessionName,
+        LegacyScopeState            $legacyScopeState,
+        ModuleNameMapperInterface   $moduleNameMapper,
         RecordListProviderInterface $listViewProvider,
-        RequestStack $session
+        RequestStack                $session,
+        LoggerInterface             $logger
     )
     {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->listViewProvider = $listViewProvider;
     }
@@ -82,7 +94,7 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -92,9 +104,10 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
      *
      * @param string $moduleName
      * @param string $id
+     *
      * @return bool
      */
-    public function deleteRecord(string $moduleName, string $id): bool
+    public function deleteRecord(string $moduleName, string $id) : bool
     {
         $this->init();
         $this->startLegacyApp();
@@ -112,9 +125,10 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
     /**
      * @param string $moduleName
      * @param string $id
+     *
      * @return bool
      */
-    protected function delete(string $moduleName, string $id): bool
+    protected function delete(string $moduleName, string $id) : bool
     {
         // NOTE: Do not use BeanFactory::getBean($moduleName, $id) with mark_deleted
         // may cause errors when there are related records.
@@ -134,9 +148,10 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
      *
      * @param string $moduleName
      * @param array $ids
+     *
      * @return bool
      */
-    public function deleteRecords(string $moduleName, array $ids = []): bool
+    public function deleteRecords(string $moduleName, array $ids = []) : bool
     {
         $this->init();
         $this->startLegacyApp();
@@ -157,13 +172,15 @@ class RecordDeletionHandler extends LegacyHandler implements RecordDeletionServi
      * @param string $moduleName
      * @param array $criteria
      * @param array $sort
+     *
      * @return bool
      */
     public function deleteRecordsFromCriteria(
         string $moduleName,
-        array $criteria,
-        array $sort
-    ): bool {
+        array  $criteria,
+        array  $sort
+    ) : bool
+    {
         $this->init();
         $this->startLegacyApp();
 

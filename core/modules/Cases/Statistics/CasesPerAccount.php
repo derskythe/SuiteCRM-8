@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Cases\Statistics;
 
 use aCase;
@@ -51,20 +50,22 @@ class CasesPerAccount extends SubpanelDataQueryHandler implements StatisticsProv
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
 
     /**
      * @inheritDoc
+     *
      * @param array $query
+     *
      * @return Statistic
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         $subpanel = 'cases';
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
@@ -98,9 +99,10 @@ class CasesPerAccount extends SubpanelDataQueryHandler implements StatisticsProv
 
     /**
      * @param string $id
+     *
      * @return aCase|null
      */
-    protected function getCase(string $id): ?aCase
+    protected function getCase(string $id) : ?aCase
     {
         /** @var aCase $case */
         $case = BeanFactory::getBean('Cases', $id);
@@ -115,7 +117,7 @@ class CasesPerAccount extends SubpanelDataQueryHandler implements StatisticsProv
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

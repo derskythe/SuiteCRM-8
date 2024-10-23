@@ -27,6 +27,7 @@
 
 namespace App\Data\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Data\Service\RecordSnoozeServiceInterface;
@@ -35,6 +36,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ListViewHandler
+ *
  * @package App\Legacy
  */
 class RecordSnoozeHandler extends LegacyHandler implements RecordSnoozeServiceInterface
@@ -43,6 +45,7 @@ class RecordSnoozeHandler extends LegacyHandler implements RecordSnoozeServiceIn
 
     /**
      * RecordDeletionHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -50,21 +53,30 @@ class RecordSnoozeHandler extends LegacyHandler implements RecordSnoozeServiceIn
      * @param LegacyScopeState $legacyScopeState
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
+        string           $projectDir,
+        string           $legacyDir,
+        string           $legacySessionName,
+        string           $defaultSessionName,
         LegacyScopeState $legacyScopeState,
-        RequestStack $session
+        RequestStack     $session,
+        LoggerInterface  $logger
     )
     {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -74,9 +86,10 @@ class RecordSnoozeHandler extends LegacyHandler implements RecordSnoozeServiceIn
      *
      * @param string $moduleName
      * @param string $id
+     *
      * @return bool
      */
-    public function snoozeRecord(string $moduleName, string $id): bool
+    public function snoozeRecord(string $moduleName, string $id) : bool
     {
         $this->init();
         $this->startLegacyApp();
@@ -94,9 +107,10 @@ class RecordSnoozeHandler extends LegacyHandler implements RecordSnoozeServiceIn
     /**
      * @param string $moduleName
      * @param string $id
+     *
      * @return bool
      */
-    protected function snooze(string $moduleName, string $id): bool
+    protected function snooze(string $moduleName, string $id) : bool
     {
 
         $bean = BeanFactory::newBean($moduleName);

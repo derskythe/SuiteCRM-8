@@ -27,6 +27,7 @@
 
 namespace App\Authentication\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Install\Service\InstallationUtilsTrait;
@@ -72,7 +73,8 @@ class Authentication extends LegacyHandler
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
         array $systemSettings,
-        UserHandler $userHandler
+        UserHandler $userHandler,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -80,7 +82,8 @@ class Authentication extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->systemSettings = $systemSettings;
         $this->userHandler = $userHandler;

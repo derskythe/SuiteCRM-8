@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Opportunities\Statistics\Subpanels;
 
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
@@ -42,7 +41,7 @@ class SubpanelOpportunitiesTotal extends SubpanelDataQueryHandler implements Sta
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -50,11 +49,11 @@ class SubpanelOpportunitiesTotal extends SubpanelDataQueryHandler implements Sta
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
 
         $subpanel = 'opportunities';
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
@@ -74,8 +73,8 @@ class SubpanelOpportunitiesTotal extends SubpanelDataQueryHandler implements Sta
         $result = $this->fetchRow($dbQuery);
 
         $statistic = $this->buildCurrencyResult($result);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_OPPORTUNITIES_TOTAL_SUM_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_OPPORTUNITIES_TOTAL_SUM']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_OPPORTUNITIES_TOTAL_SUM_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_OPPORTUNITIES_TOTAL_SUM' ]);
         $this->close();
 
         return $statistic;

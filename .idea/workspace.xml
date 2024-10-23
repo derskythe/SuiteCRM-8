@@ -16,7 +16,7 @@
   </component>
   <component name="AnalysisUIOptions">
     <option name="ANALYZE_TEST_SOURCES" value="false" />
-    <option name="SCOPE_TYPE" value="8" />
+    <option name="SCOPE_TYPE" value="3" />
     <option name="CUSTOM_SCOPE_NAME" value="Project Files" />
   </component>
   <component name="AngularSettings">
@@ -26,32 +26,113 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="refactor: Add return type hints to display() methods">
+    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="refactor: Improve view handling and display methods">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Authentication/LegacyHandler/Authentication.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Authentication/LegacyHandler/Authentication.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Authentication/LegacyHandler/UserHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Authentication/LegacyHandler/UserHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/AlertHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/AlertHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/MassUpdateHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/MassUpdateHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/PresetDataHandlers/HistoryTimelineDataHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/PresetDataHandlers/HistoryTimelineDataHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/PresetDataHandlers/SubpanelDataHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/PresetDataHandlers/SubpanelDataHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/PresetDataHandlers/SubpanelDataQueryHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/PresetDataHandlers/SubpanelDataQueryHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordDeletionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordDeletionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordListHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordListHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordMarkAsReadHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordMarkAsReadHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordSnoozeHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Data/LegacyHandler/RecordSnoozeHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/DateTime/LegacyHandler/DateTimeHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/DateTime/LegacyHandler/DateTimeHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/AclHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/AclHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionAvailabilityChecker/Checkers/AuditActionChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionAvailabilityChecker/Checkers/AuditActionChecker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionAvailabilityChecker/Checkers/DuplicateMergeActionChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionAvailabilityChecker/Checkers/DuplicateMergeActionChecker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionAvailabilityChecker/Checkers/PortalUserActionChecker.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionAvailabilityChecker/Checkers/PortalUserActionChecker.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionNameMapperHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/ActionNameMapperHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/CacheManagerHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/CacheManagerHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/DefaultLegacyHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/DefaultLegacyHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/LegacyHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Engine/LegacyHandler/LegacyHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/FieldDefinitionsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/FieldDefinitionsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/LegacyDisableNumFormatFieldDefinitionMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/LegacyDisableNumFormatFieldDefinitionMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/LegacyInlineEditFieldDefinitionMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/LegacyInlineEditFieldDefinitionMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/LinkFieldDefinitionMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/FieldDefinitions/LegacyHandler/LinkFieldDefinitionMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/InstallHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/InstallHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/Upgrade/AddNewConfigEntriesHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/Upgrade/AddNewConfigEntriesHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/Upgrade/MetadataMergeHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/Upgrade/MetadataMergeHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/Upgrade/PostUpgradeHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Install/LegacyHandler/Upgrade/PostUpgradeHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/AppListStringsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/AppListStringsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/AppStringsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/AppStringsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/ModStringsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/ModStringsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/SetSessionLanguage.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Languages/LegacyHandler/SetSessionLanguage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/Favorites/FavoritesHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/Favorites/FavoritesHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/Favorites/UpdateFavorite.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/Favorites/UpdateFavorite.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/ModuleNameMapperHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/ModuleNameMapperHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/ModuleRegistryHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/ModuleRegistryHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/RecentlyViewed/AddRecentlyViewed.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/RecentlyViewed/AddRecentlyViewed.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/RecentlyViewed/RecentlyViewedHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Module/LegacyHandler/RecentlyViewed/RecentlyViewedHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Navbar/LegacyHandler/NavbarHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Navbar/LegacyHandler/NavbarHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/ACL/UserACLHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/ACL/UserACLHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/AddContactsToTargetListBulkActionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/AddContactsToTargetListBulkActionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/AddRecordsToTargetListBulkActionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/AddRecordsToTargetListBulkActionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/CreatePortalUserActionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/CreatePortalUserActionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/DisablePortalUserActionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/DisablePortalUserActionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/EnablePortalUserActionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/EnablePortalUserActionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/LinkRelationHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/LinkRelationHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/PortalUserActivator.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/PortalUserActivator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/ResetPasswordHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/ResetPasswordHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/UnlinkRelationHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/LegacyHandler/UnlinkRelationHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/Service/FieldDefault/DateFieldDefaultCalculation.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/Service/FieldDefault/DateFieldDefaultCalculation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Process/Service/RecordThreadListActions/MarkAsReadRecordThreadListAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Process/Service/RecordThreadListActions/MarkAsReadRecordThreadListAction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Routes/LegacyHandler/ClassicViewRoutingExclusionsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Routes/LegacyHandler/ClassicViewRoutingExclusionsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Routes/LegacyHandler/RouteConverterHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Routes/LegacyHandler/RouteConverterHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/Statistics/LegacyHandler/SubpanelDefault.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/Statistics/LegacyHandler/SubpanelDefault.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/SystemConfig/LegacyHandler/SystemConfigHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/SystemConfig/LegacyHandler/SystemConfigHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/UserPreferences/LegacyHandler/SaveUiPreferences.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/UserPreferences/LegacyHandler/SaveUiPreferences.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/UserPreferences/LegacyHandler/SetUserLanguage.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/UserPreferences/LegacyHandler/SetUserLanguage.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/UserPreferences/LegacyHandler/UserPreferenceHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/UserPreferences/LegacyHandler/UserPreferenceHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/AdminPanelDefinitionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/AdminPanelDefinitionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/ListViewDefinitionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/ListViewDefinitionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/RecordViewDefinitionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/RecordViewDefinitionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/SubPanelDefinitionHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/SubPanelDefinitionHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/ViewDefinitionsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/ViewDefinitionsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/WidgetDefinitionProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/LegacyHandler/WidgetDefinitionProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/backend/ViewDefinitions/Service/MassUpdate/EmailOptoutMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/backend/ViewDefinitions/Service/MassUpdate/EmailOptoutMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Accounts/Service/MassUpdate/AccountsEmailOptoutMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Accounts/Service/MassUpdate/AccountsEmailOptoutMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Accounts/Statistics/Series/AccountsNewByMonth.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Accounts/Statistics/Series/AccountsNewByMonth.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Activities/Statistics/Subpanels/SubPanelActivitiesNextDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Activities/Statistics/Subpanels/SubPanelActivitiesNextDate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Campaigns/Statistics/Subpanels/SubPanelCampaignsLastReceived.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Campaigns/Statistics/Subpanels/SubPanelCampaignsLastReceived.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Cases/Statistics/CaseAccountGetDateEntered.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Cases/Statistics/CaseAccountGetDateEntered.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Cases/Statistics/CaseDaysOpen.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Cases/Statistics/CaseDaysOpen.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Cases/Statistics/CasesPerAccount.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Cases/Statistics/CasesPerAccount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Cases/Statistics/Subpanels/SubPanelCasesCount.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Cases/Statistics/Subpanels/SubPanelCasesCount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Contacts/Service/MassUpdate/ContactsEmailOptoutMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Contacts/Service/MassUpdate/ContactsEmailOptoutMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Contacts/Statistics/ContactLastTouchPoint.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Contacts/Statistics/ContactLastTouchPoint.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Contracts/Statistics/Subpanels/SubPanelContractsRenewalDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Contracts/Statistics/Subpanels/SubPanelContractsRenewalDate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Events/Statistics/Subpanels/SubPanelEventsLastDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Events/Statistics/Subpanels/SubPanelEventsLastDate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/History/Statistics/Subpanels/SubPanelHistoryLastDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/History/Statistics/Subpanels/SubPanelHistoryLastDate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Invoices/Statistics/Subpanels/SubPanelInvoicesTotal.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Invoices/Statistics/Subpanels/SubPanelInvoicesTotal.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Leads/Service/MassUpdate/LeadsEmailOptoutMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Leads/Service/MassUpdate/LeadsEmailOptoutMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Leads/Statistics/LeadDaysOpen.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Leads/Statistics/LeadDaysOpen.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Leads/Statistics/Series/LeadsByStatusCount.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Leads/Statistics/Series/LeadsByStatusCount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/OpportunitySalesStageTimeSpan.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/OpportunitySalesStageTimeSpan.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/OpportunitySizeAnalysis.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/OpportunitySizeAnalysis.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/Series/OpportunitiesBySalesStagePipeline.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/Series/OpportunitiesBySalesStagePipeline.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/Series/PastYearsClosedOpportunityAmounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/Series/PastYearsClosedOpportunityAmounts.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/Subpanels/SubpanelOpportunitiesTotal.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/Subpanels/SubpanelOpportunitiesTotal.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/WonOpportunityAmountByYear.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Opportunities/Statistics/WonOpportunityAmountByYear.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Prospects/Service/MassUpdate/ProspectsEmailOptoutMapper.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Prospects/Service/MassUpdate/ProspectsEmailOptoutMapper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Quotes/Statistics/Subpanels/SubPanelQuotesTotal.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Quotes/Statistics/Subpanels/SubPanelQuotesTotal.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Tasks/Statistics/DaysUntilDueTask.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Tasks/Statistics/DaysUntilDueTask.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Tasks/Statistics/Subpanels/SubPanelTasksHistoryCount.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Tasks/Statistics/Subpanels/SubPanelTasksHistoryCount.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/modules/Users/Statistics/AssignedUserOpportunitiesCount.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/modules/Users/Statistics/AssignedUserOpportunitiesCount.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/EditView/SubpanelQuickCreate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/EditView/SubpanelQuickCreate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/EditView/SubpanelQuickEdit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/EditView/SubpanelQuickEdit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/Controller/ControllerFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/Controller/ControllerFactory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/Controller/SugarController.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/Controller/SugarController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/SugarView.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/SugarView.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.favorites.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.favorites.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.metadata.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.metadata.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.popup.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.popup.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quick.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quick.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quickcreate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quickcreate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quickedit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.quickedit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.serialized.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.serialized.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.sugarpdf.config.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.sugarpdf.config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.sugarpdf.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.sugarpdf.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.vcard.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.vcard.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.xml.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.xml.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarSQLValidate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarSQLValidate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/formbase.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/formbase.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/globalControlLinks.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/globalControlLinks.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Emails/EmailUIAjax.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Emails/EmailUIAjax.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Releases/Popup_picker.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Releases/Popup_picker.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/SchedulersJobs/SchedulersJob.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/SchedulersJobs/SchedulersJob.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/install/populateSeedData.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install/populateSeedData.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/service/core/SoapHelperWebService.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/service/core/SoapHelperWebService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/service/v3/SugarWebServiceUtilv3.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/service/v3/SugarWebServiceUtilv3.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/service/v3_1/SugarWebServiceUtilv3_1.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/service/v3_1/SugarWebServiceUtilv3_1.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/service/v4/SugarWebServiceUtilv4.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/service/v4/SugarWebServiceUtilv4.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/soap/SoapHelperFunctions.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/soap/SoapHelperFunctions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/soap/SoapPortalHelper.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/soap/SoapPortalHelper.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/legacy/soap/SoapPortalUsers.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/soap/SoapPortalUsers.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/unit/core/legacy/ViewDefinitionsHandlerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/unit/core/legacy/ViewDefinitionsHandlerTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -439,10 +520,9 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="npm.build-dev">
+  <component name="RunManager" selected="Docker.Dockerfile">
     <configuration name="Tests (common)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/common/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/common" />
       <node-interpreter value="project" />
       <envs />
@@ -450,7 +530,6 @@
     </configuration>
     <configuration name="Tests (core)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/core/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/core" />
       <node-interpreter value="project" />
       <envs />
@@ -458,7 +537,6 @@
     </configuration>
     <configuration name="Tests (defaultExt)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/extensions/defaultExt/app/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/extensions/defaultExt" />
       <node-interpreter value="project" />
       <envs />
@@ -466,7 +544,6 @@
     </configuration>
     <configuration name="Tests (shell)" type="JavaScriptTestRunnerKarma">
       <config-file value="$PROJECT_DIR$/core/app/shell/karma.conf.js" />
-      <karma-package-dir value="$PROJECT_DIR$/node_modules/@angular/cli" />
       <working-directory value="$PROJECT_DIR$/core/app/shell" />
       <node-interpreter value="project" />
       <envs />
@@ -500,7 +577,6 @@
     <configuration name="Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
       <deployment type="dockerfile">
         <settings>
-          <option name="buildOnly" value="true" />
           <option name="sourceFilePath" value="Dockerfile" />
         </settings>
       </deployment>
@@ -547,8 +623,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.build-dev" />
         <item itemvalue="Docker.Dockerfile" />
+        <item itemvalue="npm.build-dev" />
       </list>
     </recent_temporary>
   </component>
@@ -629,6 +705,7 @@
       <workItem from="1729342928020" duration="12663000" />
       <workItem from="1729368813716" duration="52458000" />
       <workItem from="1729529467433" duration="3808000" />
+      <workItem from="1729708972643" duration="7421000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Add IntelliJ IDEA project configuration files&#10;&#10;Included various configuration files to set up IntelliJ IDEA project environment.&#10;* Implement .gitignore for IDEA-specific files.&#10;* Define project encodings, Git blame settings, and JavaScript library mappings.&#10;* Configure PHP tools, PHPUnit settings, and SQL dialect mappings.&#10;* Add module definitions and source folder configurations.">
       <option name="closed" value="true" />
@@ -998,7 +1075,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729675603023</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="refactor: Improve view handling and display methods">
+      <option name="closed" value="true" />
+      <created>1729685072390</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1729685072390</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1056,7 +1141,6 @@
     <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`.&#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support.&#10;* Renamed build workflow file and updated paths for consistency." />
     <MESSAGE value="fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`.&#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support.&#10;* Renamed build workflow file and updated paths for consistency.&#10;&#10;fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`.&#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support.&#10;&#10;fix(Dockerfile): update dependency for PostgreSQL development&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to correct the dependency.&#10;* Ensures compatibility and resolves potential build issues.&#10;* Enhances the stability of Docker image builds.&#10;&#10;fix: update workflow to use main docker build action&#10;&#10;Removed the 'try-legacy' suffix from docker-build-n-push.yml reference.&#10;* Ensures the main Docker build and push action is utilized.&#10;* Enhances consistency across workflow configurations.&#10;&#10;fix: correct path in build-image workflow&#10;&#10;Fixed the relative path for the docker-build-n-push workflow in the build-image.yaml.&#10;* Changed the `uses` path to use the correct relative path format.&#10;* Ensured the build procedure points to the correct workflow file.&#10;&#10;feat: Add GitHub Actions workflows for Docker builds&#10;&#10;Introduce new GitHub Actions workflows and update configurations.&#10;&#10;* Added build-image.yaml for managing Docker image builds on push, release, or workflow dispatch.&#10;* Introduced reusable docker-build-n-push.yml for Docker image building and pushing.&#10;* Updated .idea configuration to reflect new tasks and change lists.&#10;* Added PostgreSQL development library to Dockerfile.&#10;* Included pdo extension in Dockerfile.&#10;&#10;feat: Add GitHub Actions workflows for building Docker images&#10;&#10;Introduce new GitHub Actions workflows and update configurations.&#10;&#10;* Added build-image.yaml for managing Docker image builds on push, release, or workflow dispatch.&#10;* Introduced reusable docker-build-n-push.yml for Docker image building and pushing.&#10;* Updated .idea configuration to reflect new tasks and change lists." />
     <MESSAGE value="fix(Dockerfile): update dependencies and configurations&#10;&#10;Added libbz2-dev, zlib1g-dev, and libxml2-dev to address missing dependencies.&#10;Updates include configuring GD for PNG support and adding libxml, simplexml, and removing .phpize-deps post-install.&#10;```" />
     <MESSAGE value="fix(Dockerfile): update dependencies and configurations&#10;&#10;Added libbz2-dev, zlib1g-dev, and libxml2-dev to address missing dependencies.&#10;Updates include configuring GD for PNG support and adding libxml, simplexml, and removing .phpize-deps post-install.&#10;Also reintroduced mcrypt and added libedit for enhanced functionality." />
@@ -1081,7 +1165,8 @@
     <MESSAGE value="feat: add dev container setup and improve exception handling&#10;&#10;Introduce new dev container configuration for PHP and MariaDB.&#10;&#10;* Added .devcontainer configuration files: Dockerfile, docker-compose.yml, and devcontainer.json.&#10;* Improved exception handling in the `install.php` during `InstallPreChecks`.&#10;* Reduced CPU limit in `docker-compose.yaml` to optimize resource usage." />
     <MESSAGE value="refactor: display" />
     <MESSAGE value="refactor: Add return type hints to display() methods" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: Add return type hints to display() methods" />
+    <MESSAGE value="refactor: Improve view handling and display methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: Improve view handling and display methods" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1103,6 +1188,15 @@
             <option name="methodName" value="valid" />
           </properties>
           <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php-line-method">
+          <url>file://$PROJECT_DIR$/core/backend/Engine/LegacyHandler/LegacyHandler.php</url>
+          <line>98</line>
+          <properties>
+            <option name="className" value="\App\Engine\LegacyHandler\LegacyHandler" />
+            <option name="methodName" value="__construct" />
+          </properties>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/public/legacy/include/EditView/SubpanelQuickCreate.php</url>

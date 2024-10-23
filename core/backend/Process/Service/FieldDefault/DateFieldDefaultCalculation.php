@@ -35,12 +35,12 @@ use App\Process\Service\ProcessHandlerInterface;
 class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandlerInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options are not defined';
-    protected const PROCESS_TYPE = 'calculate-date-default';
+    protected const PROCESS_TYPE          = 'calculate-date-default';
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -48,7 +48,7 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -56,7 +56,7 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -64,7 +64,7 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         return [];
     }
@@ -72,7 +72,7 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -84,7 +84,7 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -113,12 +113,11 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
         $datetimeService = new \DateTimeService();
         $defaultDate = $datetimeService->getDefaultDate($displayDefault) ?? '';
 
-
         $this->close();
 
         $process->setStatus('success');
         $process->setMessages([]);
-        $process->setData(['value' => $defaultDate]);
+        $process->setData([ 'value' => $defaultDate ]);
     }
 
 }

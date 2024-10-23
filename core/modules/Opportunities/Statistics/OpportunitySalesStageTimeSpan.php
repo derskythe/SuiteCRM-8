@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Opportunities\Statistics;
 
+use Psr\Log\LoggerInterface;
 use App\Data\LegacyHandler\AuditQueryingTrait;
 use App\Statistics\DateTimeStatisticsHandlingTrait;
 use App\Statistics\Entity\Statistic;
@@ -49,7 +49,7 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
     use AuditQueryingTrait;
 
     public const HANDLER_KEY = 'opportunity-sales-stage-time-span';
-    public const KEY = 'opportunity-sales-stage-time-span';
+    public const KEY         = 'opportunity-sales-stage-time-span';
 
     /**
      * @var ModuleNameMapperInterface
@@ -63,6 +63,7 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
 
     /**
      * ListDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -73,16 +74,26 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        EntityManagerInterface $entityManager,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        EntityManagerInterface    $entityManager,
+        RequestStack              $session,
+        LoggerInterface $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->entityManager = $entityManager;
     }
@@ -90,7 +101,7 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -98,7 +109,7 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -107,9 +118,9 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
      * @inheritDoc
      * @throws Exception
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
@@ -134,7 +145,7 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
 
             $statistic = $this->getDateDiffStatistic(self::KEY, $opp->date_entered, $end);
 
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_DAYS_OPEN_FOR']);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_DAYS_OPEN_FOR' ]);
 
         } else {
 
@@ -145,7 +156,7 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
             }
 
             $statistic = $this->getDateDiffStatistic(self::KEY, $start);
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_DAYS_IN_SALE_STAGE']);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_DAYS_IN_SALE_STAGE' ]);
         }
 
         $this->close();
@@ -155,9 +166,10 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
 
     /**
      * @param $id
+     *
      * @return Opportunity
      */
-    protected function getOpportunity($id): Opportunity
+    protected function getOpportunity($id) : Opportunity
     {
         /** @var Opportunity $opp */
         $opp = BeanFactory::getBean('Opportunities', $id);
@@ -167,19 +179,21 @@ class OpportunitySalesStageTimeSpan extends LegacyHandler implements StatisticsP
 
     /**
      * @param SugarBean $bean
+     *
      * @return array
      * @throws DBALException
      */
-    protected function getAuditInfo(SugarBean $bean): array
+    protected function getAuditInfo(SugarBean $bean) : array
     {
         return $this->queryAuditInfo($this->entityManager, $bean, 'sales_stage', [], 'after_value_string');
     }
 
     /**
      * @param Opportunity $opp
+     *
      * @return bool
      */
-    protected function inClosedStatus(Opportunity $opp): bool
+    protected function inClosedStatus(Opportunity $opp) : bool
     {
         return $opp->sales_stage === 'Closed Won' || $opp->sales_stage === 'Closed Lost';
     }

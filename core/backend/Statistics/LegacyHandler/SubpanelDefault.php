@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Statistics\LegacyHandler;
 
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
@@ -49,7 +48,7 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -57,12 +56,12 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
 
         $subpanel = $query['params']['subpanel'] ?? $query['key'];
 
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -73,7 +72,7 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
         $queries = $this->getQueries($module, $id, $subpanel);
 
         if (empty($queries)) {
-            $this->logger->error('default-statistic: No queries found.', ['query' => $query]);
+            $this->logger->error('default-statistic: No queries found.', [ 'query' => $query ]);
 
             return $this->getErrorResponse(self::KEY);
         }
@@ -91,8 +90,8 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
         $result = $this->fetchRow($dbQuery);
         $statistic = $this->buildSingleValueResponse(self::KEY, 'int', $result);
 
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_DEFAULT_TOTAL_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_DEFAULT_TOTAL']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_DEFAULT_TOTAL_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_DEFAULT_TOTAL' ]);
         $this->close();
 
         return $statistic;

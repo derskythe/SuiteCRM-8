@@ -38,7 +38,7 @@ use Psr\Log\LoggerInterface;
 class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'save-ui-user-preferences';
+    protected const PROCESS_TYPE          = 'save-ui-user-preferences';
 
     /**
      * @var LoggerInterface
@@ -48,7 +48,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -56,7 +56,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -64,7 +64,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -72,7 +72,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         return [];
     }
@@ -80,7 +80,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -92,7 +92,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -109,7 +109,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
 
         global $current_user;
 
-        ['preferences' => $preferences] = $process->getOptions();
+        [ 'preferences' => $preferences ] = $process->getOptions();
 
         if (empty($preferences)) {
             $process->setStatus('success');
@@ -126,7 +126,7 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
             $current_user->savePreferencesToDB();
         } catch (Exception $e) {
             $process->setStatus('failure');
-            $this->logger->error('Error saving ui user preferences', ['exception' => $e]);
+            $this->logger->error('Error saving ui user preferences', [ 'exception' => $e ]);
         }
 
         $this->close();

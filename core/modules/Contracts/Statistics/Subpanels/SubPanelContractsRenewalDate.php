@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Contracts\Statistics\Subpanels;
 
 use App\Statistics\Entity\Statistic;
@@ -35,6 +34,7 @@ use App\Statistics\StatisticsHandlingTrait;
 
 /**
  * Class SubPanelContractsRenewalDate
+ *
  * @package App\Legacy\Statistics
  */
 class SubPanelContractsRenewalDate extends SubpanelDataQueryHandler implements StatisticsProviderInterface
@@ -46,7 +46,7 @@ class SubPanelContractsRenewalDate extends SubpanelDataQueryHandler implements S
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -54,11 +54,11 @@ class SubPanelContractsRenewalDate extends SubpanelDataQueryHandler implements S
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         $subpanel = $query['key'];
 
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -87,15 +87,15 @@ class SubPanelContractsRenewalDate extends SubpanelDataQueryHandler implements S
         if (empty($result)) {
             $statistic = $this->getEmptyResponse(self::KEY);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_CONTRACT_RENEWAL_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_CONTRACT_RENEWAL']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_CONTRACT_RENEWAL_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_CONTRACT_RENEWAL' ]);
 
             return $statistic;
         }
 
-        $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $result['end_date']]);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_CONTRACT_RENEWAL_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_CONTRACT_RENEWAL']);
+        $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $result['end_date'] ]);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_CONTRACT_RENEWAL_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_CONTRACT_RENEWAL' ]);
         $this->close();
 
         return $statistic;

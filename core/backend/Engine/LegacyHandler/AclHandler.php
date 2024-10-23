@@ -28,6 +28,7 @@
 namespace App\Engine\LegacyHandler;
 
 use ACLController;
+use Psr\Log\LoggerInterface;
 use App\Engine\Service\AclManagerInterface;
 use App\Module\Service\ModuleNameMapperInterface;
 use BeanFactory;
@@ -45,6 +46,7 @@ class AclHandler extends LegacyHandler implements AclManagerInterface
 
     /**
      * AclHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -52,6 +54,7 @@ class AclHandler extends LegacyHandler implements AclManagerInterface
      * @param LegacyScopeState $legacyScopeState
      * @param ModuleNameMapperInterface $moduleNameMapper
      * @param RequestStack $session
+     * @param LoggerInterface $logger
      */
     public function __construct(
         string $projectDir,
@@ -60,7 +63,8 @@ class AclHandler extends LegacyHandler implements AclManagerInterface
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session
+        RequestStack $session,
+        LoggerInterface $logger
     )
     {
         parent::__construct(
@@ -69,7 +73,8 @@ class AclHandler extends LegacyHandler implements AclManagerInterface
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }

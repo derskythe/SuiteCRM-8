@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Cases\Statistics;
 
 use App\Statistics\Entity\Statistic;
@@ -38,6 +37,7 @@ use Exception;
 
 /**
  * Class CaseAccountGetDateEntered
+ *
  * @package App\Legacy\Statistics
  */
 class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProviderInterface
@@ -46,13 +46,12 @@ class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProvi
     use StatisticsHandlingTrait;
 
     public const HANDLER_KEY = 'get-account-date-entered';
-    public const KEY = 'get-account-date-entered';
+    public const KEY         = 'get-account-date-entered';
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
-
+    public function getHandlerKey() : string
 
     {
         return self::HANDLER_KEY;
@@ -61,8 +60,7 @@ class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProvi
     /**
      * @inheritDoc
      */
-    public function getKey(): string
-
+    public function getKey() : string
 
     {
         return self::KEY;
@@ -72,9 +70,9 @@ class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProvi
      * @inheritDoc
      * @throws Exception
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -84,7 +82,7 @@ class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProvi
         $module = 'Accounts';
         $moduleDateEntered = $this->getAccountDateEntered($accountId, $module);
         $date = (new DateTime($moduleDateEntered))->format("Y");
-        $statistic = $this->buildSingleValueResponse(self::KEY, 'varchar', ["value" => $date]);
+        $statistic = $this->buildSingleValueResponse(self::KEY, 'varchar', [ "value" => $date ]);
         $this->close();
 
         return $statistic;
@@ -92,10 +90,11 @@ class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProvi
 
     /**
      * @param string $id
+     *
      * @return string
      * @noinspection PhpPossiblePolymorphicInvocationInspection
      */
-    protected function getAccountId(string $id): string
+    protected function getAccountId(string $id) : string
     {
         $case = BeanFactory::getBean('Cases', $id);
         if (!$case->account_id) {
@@ -108,9 +107,10 @@ class CaseAccountGetDateEntered extends LegacyHandler implements StatisticsProvi
     /**
      * @param string $accountId
      * @param string $module
+     *
      * @return string
      */
-    protected function getAccountDateEntered(string $accountId, string $module): string
+    protected function getAccountDateEntered(string $accountId, string $module) : string
     {
         return BeanFactory::getBean($module, $accountId)->date_entered;
     }

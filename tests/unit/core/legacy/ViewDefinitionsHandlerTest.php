@@ -89,13 +89,24 @@ final class ViewDefinitionsHandlerTest extends Unit
 
         $legacyScope = $this->tester->getLegacyScope();
 
+        /** @var LoggerInterface $logger */
+        $logger = $this->make(
+            Logger::class,
+            [
+                'warning' => static function (
+                    string $module
+                ): void {
+                }
+            ]
+        );
         $moduleNameMapper = new ModuleNameMapperHandler(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScope,
-            $session
+            $session,
+            $logger
         );
 
         $groupedFieldTypesMap = [
@@ -211,7 +222,8 @@ final class ViewDefinitionsHandlerTest extends Unit
             $legacySessionName,
             $defaultSessionName,
             $legacyScope,
-            $session
+            $session,
+            $logger
         );
 
         $lineActionDefinitionProvider = new LineActionDefinitionProvider(
@@ -219,7 +231,8 @@ final class ViewDefinitionsHandlerTest extends Unit
             $aclManager,
             $fieldDefinitionsHandler,
             $moduleNameMapper,
-            $appListStrings
+            $appListStrings,
+            $logger
         );
 
         /** @var FilterDefinitionProviderInterface $filterDefinitionHandler */
@@ -244,16 +257,6 @@ final class ViewDefinitionsHandlerTest extends Unit
             ]
         );
 
-        /** @var LoggerInterface $logger */
-        $logger = $this->make(
-            Logger::class,
-            [
-                'warning' => static function (
-                    string $module
-                ): void {
-                }
-            ]
-        );
 
         /** @var AclManagerInterface $aclManager */
         $aclManager = $this->make(

@@ -39,21 +39,21 @@
  */
 
 if (!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    die('Not A Valid Entry Point');
 }
-
 
 /**
  * Retrieve field data for a provided SugarBean.
  *
  * @param SugarBean $value -- The bean to retrieve the field information for.
+ *
  * @return Array -- 'field'=>   'name' -- the name of the field
  *                              'type' -- the data type of the field
  *                              'label' -- the translation key for the label of the field
  *                              'required' -- Is the field required?
  *                              'options' -- Possible values for a drop down field
  */
-function get_field_list($value, $translate = true)
+function get_field_list(mixed $value, bool $translate = true) : array
 {
     $list = array();
 
@@ -84,82 +84,111 @@ function get_field_list($value, $translate = true)
                 $options_ret[] = get_name_value('type', $var['dbType']);
             }
 
-            $entry = array();
-            $entry['name'] = $var['name'];
-            $entry['type'] = $var['type'];
-            if ($translate) {
-                $entry['label'] = isset($var['vname']) ? translate($var['vname'], $value->module_dir) : $var['name'];
-            } else {
-                $entry['label'] = isset($var['vname']) ? $var['vname'] : $var['name'];
-            }
-            $entry['required'] = $required;
-            $entry['options'] = $options_ret;
-            if (isset($var['default'])) {
-                $entry['default_value'] = $var['default'];
-            }
-
-            $list[$var['name']] = $entry;
+            $list[$var['name']] = create_entry($var, $translate, $value, $required);
         } //foreach
     } //if
 
     if (isset($value->module_dir) && $value->module_dir === 'Bugs') {
-        $seedRelease = BeanFactory::newBean('Releases');
-        $options = $seedRelease->get_releases(true, 'Active');
-        $options_ret = array();
-        foreach ($options as $name => $value) {
-            $options_ret[] = array('name' => $name, 'value' => $value);
-        }
-        if (isset($list['fixed_in_release'])) {
-            $list['fixed_in_release']['type'] = 'enum';
-            $list['fixed_in_release']['options'] = $options_ret;
-        }
-        if (isset($list['release'])) {
-            $list['release']['type'] = 'enum';
-            $list['release']['options'] = $options_ret;
-        }
-        if (isset($list['release_name'])) {
-            $list['release_name']['type'] = 'enum';
-            $list['release_name']['options'] = $options_ret;
-        }
+        [ $value, $list ] = check_dirs($value, $list);
     }
     if (isset($value->module_dir) && $value->module_dir === 'Emails') {
-        $fields = array('from_addr_name', 'reply_to_addr', 'to_addrs_names', 'cc_addrs_names', 'bcc_addrs_names');
+        $fields = array( 'from_addr_name',
+                         'reply_to_addr',
+                         'to_addrs_names',
+                         'cc_addrs_names',
+                         'bcc_addrs_names' );
         foreach ($fields as $field) {
             $var = $value->field_defs[$field];
-
-            $required = 0;
-            $entry = array();
-            $entry['name'] = $var['name'];
-            $entry['type'] = $var['type'];
-            if ($translate) {
-                $entry['label'] = isset($var['vname']) ? translate($var['vname'], $value->module_dir) : $var['name'];
-            } else {
-                $entry['label'] = isset($var['vname']) ? $var['vname'] : $var['name'];
-            }
-            $entry['required'] = $required;
-            $entry['options'] = array();
-            if (isset($var['default'])) {
-                $entry['default_value'] = $var['default'];
-            }
-
+            $entry = create_entry($var, $translate, $value, 0);
             $list[$var['name']] = $entry;
         }
     }
 
-    if (isset($value->assigned_user_name) && isset($list['assigned_user_id'])) {
-        $list['assigned_user_name'] = $list['assigned_user_id'];
-        $list['assigned_user_name']['name'] = 'assigned_user_name';
+    return set_assigned_user_name($value, $list);
+}
+
+/**
+ * @param mixed $var
+ * @param bool $translate
+ * @param mixed $value
+ * @param int $required
+ *
+ * @return array
+ */
+function create_entry(mixed $var, bool $translate, mixed $value, int $required) : array
+{
+    $entry = array();
+    $entry['name'] = $var['name'];
+    $entry['type'] = $var['type'];
+    if ($translate) {
+        $entry['label'] = isset($var['vname'])
+            ? translate($var['vname'], $value->module_dir)
+            : $var['name'];
+    } else {
+        $entry['label'] = $var['vname'] ?? $var['name'];
     }
-    if (isset($list['modified_user_id'])) {
-        $list['modified_by_name'] = $list['modified_user_id'];
-        $list['modified_by_name']['name'] = 'modified_by_name';
-    }
-    if (isset($list['created_by'])) {
-        $list['created_by_name'] = $list['created_by'];
-        $list['created_by_name']['name'] = 'created_by_name';
+    $entry['required'] = $required;
+    $entry['options'] = array();
+    if (isset($var['default'])) {
+        $entry['default_value'] = $var['default'];
     }
 
-    return $list;
+    return $entry;
+}
+
+/**
+ * @param $subpanel_setup
+ * @param array $beanList
+ * @param array $results
+ *
+ * @return array
+ */
+function populateLayoutDefs($subpanel_setup, array $beanList, array $results) : array
+{
+    foreach ($subpanel_setup as $subpanel => $subpaneldefs) {
+        $moduleToCheck = $subpaneldefs['module'];
+        if (!isset($beanList[$moduleToCheck])) {
+            continue;
+        }
+        $class_name = $beanList[$moduleToCheck];
+        $bean = new $class_name();
+        if ($bean->ACLAccess('list')) {
+            $results[$subpanel] = $subpaneldefs;
+        }
+    }
+
+    return $results;
+}
+
+/**
+ * @param mixed $value
+ * @param array $list
+ *
+ * @return array
+ */
+function check_dirs(mixed $value, array $list) : array
+{
+    require_once(__DIR__ . '/../modules/Releases/Release.php');
+    $seedRelease = BeanFactory::newBean('Releases');
+    $options = $seedRelease->get_releases(true, 'Active');
+    $options_ret = array();
+    foreach ($options as $name => $value) {
+        $options_ret[] = array( 'name' => $name, 'value' => $value );
+    }
+    if (isset($list['fixed_in_release'])) {
+        $list['fixed_in_release']['type'] = 'enum';
+        $list['fixed_in_release']['options'] = $options_ret;
+    }
+    if (isset($list['release'])) {
+        $list['release']['type'] = 'enum';
+        $list['release']['options'] = $options_ret;
+    }
+    if (isset($list['release_name'])) {
+        $list['release_name']['type'] = 'enum';
+        $list['release_name']['options'] = $options_ret;
+    }
+
+    return array( $value, $list );
 }
 
 function new_get_field_list($value, $translate = true)
@@ -201,53 +230,43 @@ function new_get_field_list($value, $translate = true)
             $entry['name'] = $var['name'];
             $entry['type'] = $var['type'];
             if ($var['type'] === 'link') {
-                $entry['relationship'] = (isset($var['relationship']) ? $var['relationship'] : '');
-                $entry['module'] = (isset($var['module']) ? $var['module'] : '');
-                $entry['bean_name'] = (isset($var['bean_name']) ? $var['bean_name'] : '');
+                $entry['relationship'] = ($var['relationship'] ?? '');
+                $entry['module'] = ($var['module'] ?? '');
+                $entry['bean_name'] = ($var['bean_name'] ?? '');
                 $link_fields[$var['name']] = $entry;
             } else {
-                if ($translate) {
-                    $entry['label'] = isset($var['vname']) ? translate(
-                        $var['vname'],
-                        $value->module_dir
-                    ) : $var['name'];
-                } else {
-                    $entry['label'] = isset($var['vname']) ? $var['vname'] : $var['name'];
-                }
-                $entry['required'] = $required;
-                $entry['options'] = $options_ret;
-                if (isset($var['default'])) {
-                    $entry['default_value'] = $var['default'];
-                }
+                $entry = create_entry($var, $translate, $value, $required);
                 $module_fields[$var['name']] = $entry;
             } // else
         } //foreach
     } //if
 
     if ($value->module_dir === 'Bugs') {
-        $seedRelease = BeanFactory::newBean('Releases');
-        $options = $seedRelease->get_releases(true, 'Active');
-        $options_ret = array();
-        foreach ($options as $name => $value) {
-            $options_ret[] = array('name' => $name, 'value' => $value);
-        }
-        if (isset($module_fields['fixed_in_release'])) {
-            $module_fields['fixed_in_release']['type'] = 'enum';
-            $module_fields['fixed_in_release']['options'] = $options_ret;
-        }
-        if (isset($module_fields['release'])) {
-            $module_fields['release']['type'] = 'enum';
-            $module_fields['release']['options'] = $options_ret;
-        }
-        if (isset($module_fields['release_name'])) {
-            $module_fields['release_name']['type'] = 'enum';
-            $module_fields['release_name']['options'] = $options_ret;
-        }
+        [ $value, $module_fields ] = check_dirs($value, $module_fields);
     }
 
-    if (isset($value->assigned_user_name) && isset($module_fields['assigned_user_id'])) {
+    $module_fields = set_assigned_user_name($value, $module_fields);
+
+    return array( 'module_fields' => $module_fields, 'link_fields' => $link_fields );
+}
+
+/**
+ * @param mixed $value
+ * @param mixed $module_fields
+ *
+ * @return mixed
+ */
+function set_assigned_user_name(mixed $value, mixed $module_fields, bool $add_team = false) : mixed
+{
+    if (isset($value->assigned_user_name, $module_fields['assigned_user_id'])) {
         $module_fields['assigned_user_name'] = $module_fields['assigned_user_id'];
         $module_fields['assigned_user_name']['name'] = 'assigned_user_name';
+    }
+    if ($add_team) {
+        if (isset($value->assigned_name, $module_fields['team_id'])) {
+            $module_fields['team_name'] = $module_fields['team_id'];
+            $module_fields['team_name']['name'] = 'team_name';
+        }
     }
     if (isset($module_fields['modified_user_id'])) {
         $module_fields['modified_by_name'] = $module_fields['modified_user_id'];
@@ -258,7 +277,7 @@ function new_get_field_list($value, $translate = true)
         $module_fields['created_by_name']['name'] = 'created_by_name';
     }
 
-    return array('module_fields' => $module_fields, 'link_fields' => $link_fields);
+    return $module_fields;
 } // fn
 
 function setFaultObject($errorObject)
@@ -279,7 +298,8 @@ function checkSessionAndModuleAccess(
     $access_level,
     $module_access_level_error_key,
     $errorObject
-) {
+)
+{
     if (!validate_authenticated($session)) {
         $errorObject->set_error('invalid_login');
         setFaultObject($errorObject);
@@ -307,7 +327,7 @@ function checkSessionAndModuleAccess(
     return true;
 } // fn
 
-function checkACLAccess($bean, $viewType, $errorObject, $error_key)
+function checkACLAccess(SugarBean $bean, string $viewType, mixed $errorObject, string $error_key) : bool
 {
     if (!$bean->ACLAccess($viewType)) {
         $errorObject->set_error($error_key);
@@ -321,7 +341,7 @@ function checkACLAccess($bean, $viewType, $errorObject, $error_key)
 
 function get_name_value($field, $value)
 {
-    return array('name' => $field, 'value' => $value);
+    return array( 'name' => $field, 'value' => $value );
 }
 
 function get_user_module_list($user)
@@ -378,9 +398,9 @@ function check_modules_access($user, $module_name, $action = 'write')
 
             return false;
         } elseif ($action === 'write' && strcmp(
-            strtolower($module_name),
-            'users'
-        ) == 0 && !$user->isAdminForModule($module_name)
+                strtolower($module_name),
+                'users'
+            ) == 0 && !$user->isAdminForModule($module_name)
         ) {
             //rrs bug: 46000 - If the client is trying to write to the Users module and is not an admin then we need to stop them
             return false;
@@ -423,7 +443,7 @@ function get_name_value_list($value, $returnDomValue = false)
                 } elseif (strcmp($type, 'enum') == 0 && !empty($var['options']) && $returnDomValue) {
                     $val = $app_list_strings[$var['options']][$val];
                 } elseif (strcmp($type, 'currency') == 0) {
-                    $params = array('currency_symbol' => false);
+                    $params = array( 'currency_symbol' => false );
                     $val = currency_format_number($val, $params);
                 }
 
@@ -496,7 +516,6 @@ function get_name_value_list_for_fields($value, $fields)
     return $list;
 } // fn
 
-
 function array_get_name_value_list($array)
 {
     $list = array();
@@ -546,8 +565,8 @@ function name_value_lists_get_array($list)
 function array_get_return_value($array, $module)
 {
     return array(
-        'id' => $array['id'],
-        'module_name' => $module,
+        'id'              => $array['id'],
+        'module_name'     => $module,
         'name_value_list' => array_get_name_value_list($array)
     );
 }
@@ -562,8 +581,8 @@ function get_return_value_for_fields($value, $module, $fields)
     $value = clean_sensitive_data($value->field_defs, $value);
 
     return array(
-        'id' => $value->id,
-        'module_name' => $module,
+        'id'              => $value->id,
+        'module_name'     => $module,
         'name_value_list' => get_name_value_list_for_fields($value, $fields)
     );
 }
@@ -605,8 +624,9 @@ function getRelationshipResults($bean, $link_field_name, $link_module_fields)
             $list[] = $row;
         }
 
-        return array('rows' => $list, 'fields_set_on_rows' => $filterFields);
+        return array( 'rows' => $list, 'fields_set_on_rows' => $filterFields );
     }
+
     return false;
     // else
 } // fn
@@ -626,7 +646,9 @@ function get_return_value_for_link_fields($bean, $module, $link_name_to_value_fi
 
     $link_output = array();
     foreach ($link_name_to_value_fields_array as $link_name_value_fields) {
-        if (!is_array($link_name_value_fields) || !isset($link_name_value_fields['name']) || !isset($link_name_value_fields['value'])) {
+        if (!is_array(
+                $link_name_value_fields
+            ) || !isset($link_name_value_fields['name']) || !isset($link_name_value_fields['value'])) {
             continue;
         }
         $link_field_name = $link_name_value_fields['name'];
@@ -634,7 +656,7 @@ function get_return_value_for_link_fields($bean, $module, $link_name_to_value_fi
         if (is_array($link_module_fields) && !empty($link_module_fields)) {
             $result = getRelationshipResults($bean, $link_field_name, $link_module_fields);
             if (!$result) {
-                $link_output[] = array('name' => $link_field_name, 'records' => array());
+                $link_output[] = array( 'name' => $link_field_name, 'records' => array() );
                 continue;
             }
             $list = $result['rows'];
@@ -653,7 +675,7 @@ function get_return_value_for_link_fields($bean, $module, $link_name_to_value_fi
                     } // foreach
                     $rowArray[] = $nameValueArray;
                 } // foreach
-                $link_output[] = array('name' => $link_field_name, 'records' => $rowArray);
+                $link_output[] = array( 'name' => $link_field_name, 'records' => $rowArray );
             } // if
         } // if
     } // foreach
@@ -663,10 +685,13 @@ function get_return_value_for_link_fields($bean, $module, $link_name_to_value_fi
 
 /**
  *
- * @param String $module_name -- The name of the module that the primary record is from.  This name should be the name the module was developed under (changing a tab name is studio does not affect the name that should be passed into this method).
- * @param String $module_id -- The ID of the bean in the specified module
+ * @param String $module_name     -- The name of the module that the primary record is from.  This name should be the
+ *                                name the module was developed under (changing a tab name is studio does not affect
+ *                                the name that should be passed into this method).
+ * @param String $module_id       -- The ID of the bean in the specified module
  * @param String $link_field_name - The relationship name for which to create relationships.
- * @param Array $related_ids -- The array of ids for which we want to create relationships
+ * @param Array $related_ids      -- The array of ids for which we want to create relationships
+ *
  * @return true on success, false on failure
  */
 function new_handle_set_relationship($module_name, $module_id, $link_field_name, $related_ids)
@@ -693,6 +718,7 @@ function new_handle_set_relationship($module_name, $module_id, $link_field_name,
 
         return true;
     }
+
     return false;
 }
 
@@ -774,7 +800,10 @@ function new_handle_set_entries($module_name, $name_value_lists, $select_fields 
                             //have an object with this outlook_id, if we do
                             //then we can set the id, otherwise this is a new object
                             $order_by = '';
-                            $query = $seed->table_name . ".outlook_id = '" . DBManagerFactory::getInstance()->quote($seed->outlook_id) . "'";
+                            $query =
+                                $seed->table_name . ".outlook_id = '" . DBManagerFactory::getInstance()->quote(
+                                    $seed->outlook_id
+                                ) . "'";
                             $response = $seed->get_list($order_by, $query, 0, -1, -1, 0);
                             $list = $response['list'];
                             if ((is_countable($list) ? count($list) : 0) > 0) {
@@ -817,9 +846,10 @@ function new_handle_set_entries($module_name, $name_value_lists, $select_fields 
             'name_value_lists' => $ret_values,
         );
     }
+
     return array(
-            'ids' => $ids,
-        );
+        'ids' => $ids,
+    );
 }
 
 function get_return_value($value, $module, $returnDomValue = false)
@@ -832,12 +862,11 @@ function get_return_value($value, $module, $returnDomValue = false)
     $value = clean_sensitive_data($value->field_defs, $value);
 
     return array(
-        'id' => $value->id,
-        'module_name' => $module,
+        'id'              => $value->id,
+        'module_name'     => $module,
         'name_value_list' => get_name_value_list($value, $returnDomValue)
     );
 }
-
 
 function get_encoded_Value($value)
 {
@@ -867,55 +896,56 @@ function get_name_value_xml($val, $module_name)
     return $xml;
 }
 
-function new_get_return_module_fields($value, $module, $translate = true)
+function new_get_return_module_fields(mixed $value, string $module, bool $translate = true) : array
 {
     global $module_name;
     $module_name = $module;
     $result = new_get_field_list($value, $translate);
 
     return array(
-        'module_name' => $module,
+        'module_name'   => $module,
         'module_fields' => $result['module_fields'],
-        'link_fields' => $result['link_fields'],
+        'link_fields'   => $result['link_fields'],
     );
 }
 
-function get_return_module_fields($value, $module, $error, $translate = true)
+function get_return_module_fields(mixed $value, string $module, string $error, bool $translate = true) : array
 {
     global $module_name;
     $module_name = $module;
 
     return array(
-        'module_name' => $module,
+        'module_name'   => $module,
         'module_fields' => get_field_list($value, $translate),
-        'error' => get_name_value_list($value)
+        'error'         => get_name_value_list($value)
     );
 }
 
-function get_return_error_value($error_num, $error_name, $error_description)
+function get_return_error_value(int $error_num, string $error_name, string $error_description) : array
 {
     return array(
-        'number' => $error_num,
-        'name' => $error_name,
+        'number'      => $error_num,
+        'name'        => $error_name,
         'description' => $error_description
     );
 }
 
-function filter_field_list(&$field_list, $select_fields, $module_name)
+function filter_field_list(array &$field_list, array $select_fields, string $module_name) : array
 {
     return filter_return_list($field_list, $select_fields, $module_name);
 }
 
-
 /**
  * Filter the results of a list query.  Limit the fields returned.
  *
- * @param Array $output_list -- The array of list data
- * @param Array $select_fields -- The list of fields that should be returned.  If this array is specified, only the fields in the array will be returned.
- * @param String $module_name -- The name of the module this being worked on
- * @return The filtered array of list data.
+ * @param Array $output_list   -- The array of list data
+ * @param Array $select_fields -- The list of fields that should be returned.  If this array is specified, only the
+ *                             fields in the array will be returned.
+ * @param String $module_name  -- The name of the module this being worked on
+ *
+ * @return array The filtered array of list data.
  */
-function filter_return_list(&$output_list, $select_fields, $module_name)
+function filter_return_list(array &$output_list, array $select_fields, string $module_name) : array
 {
     $output_listCount = count($output_list);
     for ($sug = 0; $sug < $output_listCount; $sug++) {
@@ -923,17 +953,23 @@ function filter_return_list(&$output_list, $select_fields, $module_name)
             global $invalid_contact_fields;
             if (is_array($invalid_contact_fields)) {
                 foreach ($invalid_contact_fields as $name => $val) {
-                    unset($output_list[$sug]['field_list'][$name]);
-                    unset($output_list[$sug]['name_value_list'][$name]);
+                    unset(
+                        $output_list[$sug]['field_list'][$name],
+                        $output_list[$sug]['name_value_list'][$name]
+                    );
                 }
             }
         }
 
-        if (!empty($output_list[$sug]['name_value_list']) && is_array($output_list[$sug]['name_value_list']) && !empty($select_fields) && is_array($select_fields)) {
+        if (!empty($output_list[$sug]['name_value_list']) && is_array(
+                $output_list[$sug]['name_value_list']
+            ) && !empty($select_fields) && is_array($select_fields)) {
             foreach ($output_list[$sug]['name_value_list'] as $name => $value) {
                 if (!in_array($value['name'], $select_fields, true)) {
-                    unset($output_list[$sug]['name_value_list'][$name]);
-                    unset($output_list[$sug]['field_list'][$name]);
+                    unset(
+                        $output_list[$sug]['name_value_list'][$name],
+                        $output_list[$sug]['field_list'][$name]
+                    );
                 }
             }
         }
@@ -942,7 +978,7 @@ function filter_return_list(&$output_list, $select_fields, $module_name)
     return $output_list;
 }
 
-function login_success()
+function login_success() : void
 {
     global $current_language, $sugar_config, $app_strings, $app_list_strings;
     $current_language = $sugar_config['default_language'];
@@ -950,18 +986,17 @@ function login_success()
     $app_list_strings = return_app_list_strings_language($current_language);
 }
 
-
 /*
  *    Given an account_name, either create the account or assign to a contact.
  */
 /**
  * @throws Exception
  */
-function add_create_account($seed)
+function add_create_account(User $seed) : void
 {
     global $current_user;
-    $account_name = $seed->account_name;
-    $account_id = $seed->account_id;
+    $account_name = $seed->get('account_name');
+    $account_id = $seed->get('account_id');
     $assigned_user_id = $current_user->id;
 
     // check if it already exists
@@ -970,14 +1005,14 @@ function add_create_account($seed)
         $class = get_class($seed);
         $temp = new $class();
         $temp->retrieve($seed->id);
-        if ((!isset($account_name) || $account_name == '')) {
+        if ((!isset($account_name) || $account_name === '')) {
             return;
         }
         if (!isset($seed->accounts)) {
             $seed->load_relationship('accounts');
         }
 
-        if ($seed->account_name == '' && isset($temp->account_id)) {
+        if ($seed->account_name === '' && isset($temp->account_id)) {
             $seed->accounts->delete($seed->id, $temp->account_id);
 
             return;
@@ -1017,11 +1052,11 @@ function add_create_account($seed)
             $focus->save();
         }
 
-        if ($seed->accounts != null && $temp->account_id != null && $temp->account_id != $focus->id) {
+        if ($seed->accounts !== null && $temp->account_id !== null && $temp->account_id !== $focus->id) {
             $seed->accounts->delete($seed->id, $temp->account_id);
         }
 
-        if (isset($focus->id) && $focus->id != '') {
+        if (isset($focus->id) && $focus->id !== '') {
             $seed->account_id = $focus->id;
         }
     }
@@ -1049,22 +1084,24 @@ function check_for_duplicate_contacts($seed)
         foreach ($contacts as $contact) {
             if (!empty($trimmed_last) && strcmp($trimmed_last, $contact->last_name) == 0) {
                 if ((!empty($trimmed_email) || !empty($trimmed_email2)) && (strcmp(
-                    $trimmed_email,
-                    $contact->email1
-                    ) == 0 || strcmp(
-                        $trimmed_email,
-                        $contact->email2
-                                ) == 0 || strcmp(
-                                    $trimmed_email2,
-                                    $contact->email
-                                ) == 0 || strcmp($trimmed_email2, $contact->email2) == 0)
-                    ) {
+                            $trimmed_email,
+                            $contact->email1
+                        ) == 0 || strcmp(
+                            $trimmed_email,
+                            $contact->email2
+                        ) == 0 || strcmp(
+                            $trimmed_email2,
+                            $contact->email
+                        ) == 0 || strcmp($trimmed_email2, $contact->email2) == 0)
+                ) {
                     //bug: 39234 - check if the account names are the same
                     //if the incoming contact's account_name is empty OR it is not empty and is the same
                     //as an existing contact's account name, then find the match.
                     $contact->load_relationship('accounts');
                     if (empty($seed->account_name) || strcmp($seed->account_name, $contact->account_name) == 0) {
-                        $GLOBALS['log']->info('End: SoapHelperWebServices->check_for_duplicate_contacts - duplicate found ' . $contact->id);
+                        $GLOBALS['log']->info(
+                            'End: SoapHelperWebServices->check_for_duplicate_contacts - duplicate found ' . $contact->id
+                        );
 
                         return $contact->id;
                     }
@@ -1115,9 +1152,13 @@ function is_server_version_greater($left, $right)
     } elseif ($left[0] < $right[0]) {
         return true;
     }
+
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function getFile($zip_file, $file_in_zip)
 {
     $base_upgrade_dir = sugar_cached('/upgrades');
@@ -1170,6 +1211,7 @@ if (!function_exists('get_encoded')) {
             $buffer = $string;
             $key = substr(md5($key), 0, 24);
             $iv = 'password';
+
             return openssl_decrypt(pack('H*', $buffer), 'des-ede3-cbc', $key, OPENSSL_NO_PADDING, $iv);
         }
     }
@@ -1183,15 +1225,14 @@ function canViewPath($path, $base)
     return 0 !== strncmp($path, $base, strlen($base));
 }
 
-
 /**
  * apply_values
  *
  * This function applies the given values to the bean object.  If it is a first time sync
  * then empty values will not be copied over.
  *
- * @param Mixed $seed Object representing SugarBean instance
- * @param Array $dataValues Array of fields/values to set on the SugarBean instance
+ * @param Mixed $seed        Object representing SugarBean instance
+ * @param Array $dataValues  Array of fields/values to set on the SugarBean instance
  * @param boolean $firstSync Boolean indicating whether or not this is a first time sync
  */
 function apply_values($seed, $dataValues, $firstSync)

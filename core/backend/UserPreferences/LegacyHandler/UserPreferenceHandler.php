@@ -27,6 +27,7 @@
 
 namespace App\UserPreferences\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Core\Exception\ItemNotFoundException;
 use App\UserPreferences\Entity\UserPreference;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -40,7 +41,7 @@ use User;
 class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProviderInterface
 {
     protected const MSG_USER_PREFERENCE_NOT_FOUND = 'Not able to find user preference key: ';
-    public const HANDLER_KEY = 'user-preferences';
+    public const    HANDLER_KEY                   = 'user-preferences';
 
     /**
      * @var array
@@ -59,6 +60,7 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * UserPreferenceHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -69,17 +71,27 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
      * @param array $userPreferencesKeyMap
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        array $exposedUserPreferences,
+        string                 $projectDir,
+        string                 $legacyDir,
+        string                 $legacySessionName,
+        string                 $defaultSessionName,
+        LegacyScopeState       $legacyScopeState,
+        array                  $exposedUserPreferences,
         UserPreferencesMappers $mappers,
-        array $userPreferencesKeyMap,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        array                  $userPreferencesKeyMap,
+        RequestStack           $session,
+        LoggerInterface $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
 
         $this->exposedUserPreferences = $exposedUserPreferences;
         $this->mappers = $mappers;
@@ -89,16 +101,17 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get all exposed user preferences
+     *
      * @return array
      */
-    public function getAllUserPreferences(): array
+    public function getAllUserPreferences() : array
     {
         $this->init();
 
@@ -120,10 +133,12 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Load user preference with given $key
+     *
      * @param string $category
+     *
      * @return UserPreference|null
      */
-    protected function loadUserPreferenceCategory(string $category = 'global'): ?UserPreference
+    protected function loadUserPreferenceCategory(string $category = 'global') : ?UserPreference
     {
         $currentUser = $this->getCurrentUser();
 
@@ -163,9 +178,10 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Get currently logged in user
+     *
      * @return User
      */
-    protected function getCurrentUser(): User
+    protected function getCurrentUser() : User
     {
         global $current_user;
 
@@ -178,8 +194,10 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Load user preference with given $key
+     *
      * @param string $key
      * @param string $category
+     *
      * @return mixed|null
      */
     protected function loadUserPreference(string $key, string $category = 'global')
@@ -216,11 +234,13 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Filter to retrieve only exposed items
+     *
      * @param array $allItems
      * @param array $exposed
+     *
      * @return array
      */
-    protected function filterItems(array $allItems, array $exposed): array
+    protected function filterItems(array $allItems, array $exposed) : array
     {
         $filteredItems = [];
 
@@ -256,8 +276,10 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Map user preference value if mapper defined
+     *
      * @param string $key
      * @param $preference
+     *
      * @return mixed
      */
     protected function mapValue(string $key, $preference)
@@ -272,7 +294,9 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Map user preference key if mapper defined
+     *
      * @param string $key
+     *
      * @return mixed
      */
     protected function mapKey(string $key)
@@ -286,10 +310,12 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Get user preference
+     *
      * @param string $key
+     *
      * @return UserPreference|null
      */
-    public function getUserPreference(string $key): ?UserPreference
+    public function getUserPreference(string $key) : ?UserPreference
     {
         $this->init();
 

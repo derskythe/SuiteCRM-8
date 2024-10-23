@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Events\Statistics\Subpanels;
 
 use App\Statistics\DateTimeStatisticsHandlingTrait;
@@ -35,6 +34,7 @@ use App\Statistics\Service\StatisticsProviderInterface;
 
 /**
  * Class SubPanelEventsLastDate
+ *
  * @package App\Legacy\Statistics
  */
 class SubPanelEventsLastDate extends SubpanelDataQueryHandler implements StatisticsProviderInterface
@@ -46,7 +46,7 @@ class SubPanelEventsLastDate extends SubpanelDataQueryHandler implements Statist
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -54,9 +54,9 @@ class SubPanelEventsLastDate extends SubpanelDataQueryHandler implements Statist
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
@@ -106,7 +106,6 @@ class SubPanelEventsLastDate extends SubpanelDataQueryHandler implements Statist
             $other = $this->fetchRow($innerQuery);
         }
 
-
         $date = [];
         $positions = [];
         $i = 0;
@@ -127,8 +126,8 @@ class SubPanelEventsLastDate extends SubpanelDataQueryHandler implements Statist
         if (empty($date)) {
             $statistic = $this->getEmptyResponse(self::KEY);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_EVENTS_LAST_DATE_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_EVENTS_LAST_DATE']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_EVENTS_LAST_DATE_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_EVENTS_LAST_DATE' ]);
 
             return $statistic;
         }
@@ -136,18 +135,17 @@ class SubPanelEventsLastDate extends SubpanelDataQueryHandler implements Statist
         $dateValue = $date[0];
 
         if ('leads_date_end' === $positions[$dateValue]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $dateValue]);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $dateValue ]);
         } elseif ('contacts_date_end' === $positions[$dateValue]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $dateValue]);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $dateValue ]);
         } elseif ('date_end' === $positions[$dateValue]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $dateValue]);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $dateValue ]);
         } else {
             $statistic = $this->getEmptyResponse(self::KEY);
         }
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_EVENTS_LAST_DATE_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_EVENTS_LAST_DATE']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_EVENTS_LAST_DATE_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_EVENTS_LAST_DATE' ]);
         $this->close();
-
 
         return $statistic;
     }

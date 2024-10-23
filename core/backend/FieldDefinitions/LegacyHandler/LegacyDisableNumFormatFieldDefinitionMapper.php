@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\FieldDefinitions\LegacyHandler;
 
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -37,12 +36,12 @@ class LegacyDisableNumFormatFieldDefinitionMapper extends LegacyHandler implemen
     /**
      * @inheritDoc
      */
-    public function getModule(): string
+    public function getModule() : string
     {
         return 'default';
     }
 
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return $this->getKey();
     }
@@ -51,16 +50,17 @@ class LegacyDisableNumFormatFieldDefinitionMapper extends LegacyHandler implemen
      * @inheritDoc
      */
 
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'legacy-disable-num-format-fields';
     }
 
     /**
      * @inheritDoc
+     *
      * @param FieldDefinition $definition
      */
-    public function map(FieldDefinition $definition): void
+    public function map(FieldDefinition $definition) : void
     {
         $this->init();
 

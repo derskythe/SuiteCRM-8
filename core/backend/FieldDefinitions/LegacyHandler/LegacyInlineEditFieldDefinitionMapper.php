@@ -29,6 +29,7 @@
 namespace App\FieldDefinitions\LegacyHandler;
 
 use ACLController;
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\FieldDefinitions\Entity\FieldDefinition;
@@ -61,7 +62,8 @@ class LegacyInlineEditFieldDefinitionMapper extends LegacyHandler implements Fie
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session
+        RequestStack $session,
+        LoggerInterface $logger
     )
     {
         parent::__construct(
@@ -70,7 +72,8 @@ class LegacyInlineEditFieldDefinitionMapper extends LegacyHandler implements Fie
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }

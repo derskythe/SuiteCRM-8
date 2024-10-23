@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Quotes\Statistics\Subpanels;
 
 use App\Statistics\Entity\Statistic;
@@ -43,7 +42,7 @@ class SubPanelQuotesTotal extends SubpanelDataQueryHandler implements Statistics
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -51,9 +50,9 @@ class SubPanelQuotesTotal extends SubpanelDataQueryHandler implements Statistics
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         $subpanel = $query['key'] ?? '';
 
         $subpanelName = $query['params']['subpanel'] ?? '';
@@ -64,7 +63,6 @@ class SubPanelQuotesTotal extends SubpanelDataQueryHandler implements Statistics
         if (empty($module) || empty($id) || empty($subpanel)) {
             return $this->getEmptyResponse(self::KEY);
         }
-
 
         $this->init();
         $this->startLegacyApp();
@@ -79,25 +77,26 @@ class SubPanelQuotesTotal extends SubpanelDataQueryHandler implements Statistics
         $parts = $queries[0];
         $parts['select'] = 'SELECT q.`expiration`';
         $parts['from'] = ' FROM aos_quotes as q ';
-        $parts['where'] = " WHERE q.`expiration` >= '$dateNow' AND q.deleted = 0  AND (q.billing_account_id = '$relateId' OR q.billing_contact_id = '$relateId') ";
+        $parts['where'] =
+            " WHERE q.`expiration` >= '$dateNow' AND q.deleted = 0  AND (q.billing_account_id = '$relateId' OR q.billing_contact_id = '$relateId') ";
         $parts['order_by'] = ' ORDER BY q.expiration ASC LIMIT 1 ';
         $innerQuery = $this->joinQueryParts($parts);
         $result = $this->fetchRow($innerQuery);
 
         if (empty($result)) {
             $empty = $app_strings['LBL_NONE_OUTSTANDING'];
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'string', ['value' => $empty]);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'string', [ 'value' => $empty ]);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_QUOTES_EXPIRY_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_QUOTES_EXPIRY']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_QUOTES_EXPIRY_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_QUOTES_EXPIRY' ]);
 
             return $statistic;
         }
 
         $date = $result['expiration'];
-        $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $date]);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_QUOTES_EXPIRY_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_QUOTES_EXPIRY']);
+        $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $date ]);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_QUOTES_EXPIRY_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_QUOTES_EXPIRY' ]);
 
         return $statistic;
     }

@@ -27,6 +27,7 @@
 
 namespace App\Engine\LegacyHandler\ActionAvailabilityChecker\Checkers;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Service\ActionAvailabilityChecker\ActionAvailabilityCheckerInterface;
@@ -44,6 +45,7 @@ class AuditActionChecker extends LegacyHandler implements ActionAvailabilityChec
 
     /**
      * AuditActionChecker constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -53,23 +55,32 @@ class AuditActionChecker extends LegacyHandler implements ActionAvailabilityChec
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
     )
     {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return 'audit-availability-checker';
     }
@@ -79,7 +90,7 @@ class AuditActionChecker extends LegacyHandler implements ActionAvailabilityChec
      *
      * @return string
      */
-    public function getType(): string
+    public function getType() : string
     {
         return 'audited';
     }
@@ -90,9 +101,10 @@ class AuditActionChecker extends LegacyHandler implements ActionAvailabilityChec
      * @param string $module - the active module
      * @param array|null $entry
      * @param array|null $context
+     *
      * @return bool
      */
-    public function checkAvailability(string $module, ?array $entry = [], ?array $context = []): bool
+    public function checkAvailability(string $module, ?array $entry = [], ?array $context = []) : bool
     {
         $this->init();
         $bean = BeanFactory::newBean($this->moduleNameMapper->toLegacy($module));

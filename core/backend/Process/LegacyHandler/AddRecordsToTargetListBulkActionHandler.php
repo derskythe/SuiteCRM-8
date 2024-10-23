@@ -70,7 +70,8 @@ class AddRecordsToTargetListBulkActionHandler extends LegacyHandler implements P
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
     )
     {
         parent::__construct(
@@ -79,7 +80,7 @@ class AddRecordsToTargetListBulkActionHandler extends LegacyHandler implements P
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,$logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }

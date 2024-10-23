@@ -27,6 +27,7 @@
 
 namespace App\Module\LegacyHandler\Favorites;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -64,7 +65,8 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -72,7 +74,8 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }

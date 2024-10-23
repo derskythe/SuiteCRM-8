@@ -35,6 +35,7 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
     public const HANDLER_KEY = 'action-name-mapper';
     /**
      * Lazy initialized mapper
+     *
      * @var ActionNameMapper
      */
     protected $mapper;
@@ -42,7 +43,7 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -50,7 +51,7 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
     /**
      * @inheritDoc
      */
-    public function toFrontend(string $action): string
+    public function toFrontend(string $action) : string
     {
         $this->init();
 
@@ -65,9 +66,10 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
 
     /**
      * Get mapper. Initialize it if needed
+     *
      * @return ActionNameMapper
      */
-    protected function getMapper(): ActionNameMapper
+    protected function getMapper() : ActionNameMapper
     {
         if ($this->mapper !== null) {
             return $this->mapper;
@@ -84,7 +86,7 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
     /**
      * @inheritDoc
      */
-    public function toLegacy(string $action): string
+    public function toLegacy(string $action) : string
     {
         $this->init();
 
@@ -100,7 +102,7 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
     /**
      * @inheritDoc
      */
-    public function isValidAction(?string $action): bool
+    public function isValidAction(?string $action) : bool
     {
         $this->init();
 
@@ -116,7 +118,7 @@ class ActionNameMapperHandler extends LegacyHandler implements ActionNameMapperI
     /**
      * @inheritDoc
      */
-    public function getMap(): array
+    public function getMap() : array
     {
         $this->init();
 

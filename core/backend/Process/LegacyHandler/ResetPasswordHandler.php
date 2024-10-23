@@ -25,9 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Process\LegacyHandler;
-
 
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -42,7 +40,7 @@ use ResetPassword;
 class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'recover-password';
+    protected const PROCESS_TYPE          = 'recover-password';
 
     /**
      * @var LoggerInterface
@@ -52,7 +50,7 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -60,7 +58,7 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -68,7 +66,7 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return '';
     }
@@ -76,7 +74,7 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         return [];
     }
@@ -85,7 +83,7 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -97,13 +95,13 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
 
-        ['username' => $username, 'useremail' => $useremail] = $process->getOptions();
+        [ 'username' => $username, 'useremail' => $useremail ] = $process->getOptions();
 
         if (empty($username) || empty($useremail)) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -122,23 +120,23 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
 
         $service = new ResetPassword();
 
-        ['username' => $username, 'useremail' => $useremail] = $process->getOptions();
+        [ 'username' => $username, 'useremail' => $useremail ] = $process->getOptions();
 
         $process->setStatus('success');
         $process->setMessages([
-            'LBL_RECOVER_PASSWORD_SUCCESS'
-        ]);
+                                  'LBL_RECOVER_PASSWORD_SUCCESS'
+                              ]);
 
         try {
             $service->sendResetLink($username, $useremail);
         } catch (BadFunctionCallException|\InvalidArgumentException $e) {
             //logged by suite 7
         } catch (Exception $unknownException) {
-            $this->logger->error($unknownException->getMessage(), ['exception' => $unknownException]);
+            $this->logger->error($unknownException->getMessage(), [ 'exception' => $unknownException ]);
             $process->setStatus('error');
             $process->setMessages([
-                'ERR_AJAX_LOAD_FAILURE'
-            ]);
+                                      'ERR_AJAX_LOAD_FAILURE'
+                                  ]);
         }
 
         $this->close();

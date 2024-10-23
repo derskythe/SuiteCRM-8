@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Cases\Statistics\Subpanels;
 
 use App\Statistics\Entity\Statistic;
@@ -42,7 +41,7 @@ class SubPanelCasesCount extends SubpanelDataQueryHandler implements StatisticsP
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -50,10 +49,10 @@ class SubPanelCasesCount extends SubpanelDataQueryHandler implements StatisticsP
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         $subpanel = 'cases';
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -69,8 +68,8 @@ class SubPanelCasesCount extends SubpanelDataQueryHandler implements StatisticsP
         $dbQuery = $this->joinQueryParts($parts);
         $result = $this->fetchRow($dbQuery);
         $statistic = $this->buildSingleValueResponse(self::KEY, 'int', $result);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_OPEN_CASES_COUNT_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_OPEN_CASES_COUNT']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_OPEN_CASES_COUNT_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_OPEN_CASES_COUNT' ]);
         $this->close();
 
         return $statistic;

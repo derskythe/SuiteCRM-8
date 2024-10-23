@@ -27,6 +27,7 @@
 
 namespace App\Data\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Data\Service\AlertProviderInterface;
 use App\Data\Service\RecordDeletionServiceInterface;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -71,7 +72,8 @@ class AlertHandler extends RecordHandler implements AlertProviderInterface
         RequestStack $session,
         AclManagerInterface $aclHandler,
         FavoriteProviderInterface $favorites,
-        RecordDeletionServiceInterface $recordDeletionProvider
+        RecordDeletionServiceInterface $recordDeletionProvider,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -82,7 +84,8 @@ class AlertHandler extends RecordHandler implements AlertProviderInterface
             $moduleNameMapper,
             $session,
             $aclHandler,
-            $favorites
+            $favorites,
+            $logger
         );
         $this->recordDeletionProvider = $recordDeletionProvider;
     }

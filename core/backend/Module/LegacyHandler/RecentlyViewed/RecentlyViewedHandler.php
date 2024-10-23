@@ -27,6 +27,7 @@
 
 namespace App\Module\LegacyHandler\RecentlyViewed;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleNameMapperInterface;
@@ -35,6 +36,7 @@ use TrackerManagerPort;
 
 /**
  * Class RecentlyViewedHandler
+ *
  * @package App\Module\LegacyHandler\RecentlyViewed
  */
 class RecentlyViewedHandler extends LegacyHandler
@@ -52,6 +54,7 @@ class RecentlyViewedHandler extends LegacyHandler
 
     /**
      * LegacyHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -62,22 +65,25 @@ class RecentlyViewedHandler extends LegacyHandler
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        array $uiConfigs,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
-    ) {
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        array                     $uiConfigs,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->uiConfigs = $uiConfigs;
@@ -86,16 +92,17 @@ class RecentlyViewedHandler extends LegacyHandler
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * @param string $module
+     *
      * @return array
      */
-    public function getModuleTrackers(string $module): ?array
+    public function getModuleTrackers(string $module) : ?array
     {
         $this->init();
         $this->startLegacyApp();
@@ -107,7 +114,7 @@ class RecentlyViewedHandler extends LegacyHandler
 
         $trackerManager = new TrackerManagerPort();
 
-        $result = $trackerManager->getModule([$legacyModule]);
+        $result = $trackerManager->getModule([ $legacyModule ]);
 
         $this->close();
 
@@ -117,7 +124,7 @@ class RecentlyViewedHandler extends LegacyHandler
     /**
      * @return array
      */
-    public function getGlobalTrackers(array $modules): ?array
+    public function getGlobalTrackers(array $modules) : ?array
     {
         $this->init();
         $this->startLegacyApp();
@@ -127,7 +134,7 @@ class RecentlyViewedHandler extends LegacyHandler
 
         $trackerManager = new TrackerManagerPort();
 
-        $historyViewedLimit =  $this->uiConfigs['global_recently_viewed'] ?? 10;
+        $historyViewedLimit = $this->uiConfigs['global_recently_viewed'] ?? 10;
 
         $result = $trackerManager->getModule($modules, $historyViewedLimit);
 

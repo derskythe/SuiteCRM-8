@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Contacts\Statistics;
 
+use Psr\Log\LoggerInterface;
 use App\Statistics\DateTimeStatisticsHandlingTrait;
 use App\Statistics\Entity\Statistic;
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class ContactLastTouchPoint
+ *
  * @package App\Legacy\Statistics
  */
 class ContactLastTouchPoint extends SubpanelDataQueryHandler implements StatisticsProviderInterface
@@ -45,7 +46,7 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
     use DateTimeStatisticsHandlingTrait;
 
     public const HANDLER_KEY = 'contact-last-touchpoint';
-    public const KEY = 'contact-last-touchpoint';
+    public const KEY         = 'contact-last-touchpoint';
 
     /**
      * @var ModuleNameMapperInterface
@@ -54,6 +55,7 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
 
     /**
      * ListDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -63,14 +65,16 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session
-    ) {
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
@@ -78,7 +82,8 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
             $defaultSessionName,
             $legacyScopeState,
             $moduleNameMapper,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -86,7 +91,7 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -94,7 +99,7 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -102,9 +107,9 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         $subpanel = 'history';
         if (empty($module) || empty($id)) {
             return $this->buildNoInteractionResponse();
@@ -117,7 +122,6 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
         $this->startLegacyApp();
         $queries = $this->getQueries($module, $id, $subpanel);
 
-
         $parts = $queries[2];
         $parts['select'] = 'SELECT meetings.`date_end` AS `meetings_date_end`';
         $parts['order_by'] = ' ORDER BY `meetings_date_end` DESC LIMIT 1';
@@ -129,7 +133,6 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
         $parts['order_by'] = ' ORDER BY calls.`date_end` DESC LIMIT 1';
         $innerQuery = $this->joinQueryParts($parts);
         $callsResult = $this->fetchRow($innerQuery);
-
 
         $parts = $queries[4];
         $parts['select'] = 'SELECT  emails.`date_sent_received` ';
@@ -172,17 +175,17 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
         $max = max($date);
 
         if ('meetings_date_end' === $positions[$max]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', ["value" => $max]);
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_LAST_MEETING']);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', [ "value" => $max ]);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_LAST_MEETING' ]);
         } elseif ('date_end' === $positions[$max]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', ["value" => $max]);
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_LAST_CALL']);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', [ "value" => $max ]);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_LAST_CALL' ]);
         } elseif ('date_sent_received' === $positions[$max]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', ["value" => $max]);
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_LAST_EMAIL']);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', [ "value" => $max ]);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_LAST_EMAIL' ]);
         } elseif ('emails_date_sent' === $positions[$max]) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', ["value" => $max]);
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_LAST_EMAIL']);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'datetime', [ "value" => $max ]);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_LAST_EMAIL' ]);
         } else {
             return $this->buildNoInteractionResponse();
         }
@@ -192,9 +195,11 @@ class ContactLastTouchPoint extends SubpanelDataQueryHandler implements Statisti
         return $statistic;
     }
 
-    public function buildNoInteractionResponse(): Statistic {
+    public function buildNoInteractionResponse() : Statistic
+    {
         $statistic = $this->getEmptyResponse(self::KEY);
-        $this->addMetadata($statistic, ['labelKey' => 'LBL_NO_INTERACTION']);
+        $this->addMetadata($statistic, [ 'labelKey' => 'LBL_NO_INTERACTION' ]);
+
         return $statistic;
     }
 

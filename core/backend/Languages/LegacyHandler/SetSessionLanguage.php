@@ -27,6 +27,7 @@
 
 namespace App\Languages\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Authentication\LegacyHandler\UserHandler;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -63,7 +64,8 @@ class SetSessionLanguage extends LegacyHandler implements ProcessHandlerInterfac
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        UserHandler $userHandler
+        UserHandler $userHandler,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -71,7 +73,8 @@ class SetSessionLanguage extends LegacyHandler implements ProcessHandlerInterfac
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->userHandler = $userHandler;
     }

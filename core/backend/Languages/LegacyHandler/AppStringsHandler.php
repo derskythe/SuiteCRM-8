@@ -27,7 +27,8 @@
 
 namespace App\Languages\LegacyHandler;
 
-use ApiPlatform\Core\Exception\ItemNotFoundException;
+use Psr\Log\LoggerInterface;
+use ApiPlatform\Exception\ItemNotFoundException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Install\LegacyHandler\InstallHandler;
@@ -80,7 +81,8 @@ class AppStringsHandler extends LegacyHandler
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        InstallHandler $installHandler
+        InstallHandler $installHandler,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -88,7 +90,8 @@ class AppStringsHandler extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
 
         $this->installHandler = $installHandler;

@@ -8,21 +8,32 @@ ARG APT_FLAGS_COMMON="-qq -y"
 ARG APT_FLAGS_PERSISTENT="${APT_FLAGS_COMMON} --no-install-recommends"
 ARG WORK_DIR="/src/app"
 
+ENV TZ="${TZ}" \
+    TERM="${TERM}" \
+    WORK_DIR="${WORK_DIR}" \
+    DEBIAN_FRONTEND=noninteractive
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 WORKDIR ${WORK_DIR}
 
-RUN apt-get update ${APT_FLAGS_COMMON} && apt-get install ${APT_FLAGS_PERSISTENT} \
+RUN apt-get update ${APT_FLAGS_COMMON} &&  \
+    apt-get upgrade ${APT_FLAGS_COMMON} &&  \
+    apt-get install ${APT_FLAGS_PERSISTENT} \
       bash \
       git
 
 COPY . .
 
-RUN yarn global add @angular/cli; \
-    yarn install;                 \
-    npm run build-dev;            \
-    npm run build-dev:defaultExt  \
-    ;
+RUN yarn global add @angular/cli;                                        \
+    yarn install;                                                        \
+    npm run build-dev;                                                   \
+    npm run build-dev:defaultExt;                                        \
+    mkdir publish;                                                       \
+    mkdir publish/public;                                                \
+    mv -f "${WORK_DIR}/public/dist" "${WORK_DIR}/publish/public";        \
+    mv -f "${WORK_DIR}/public/extensions" "${WORK_DIR}/publish/public";  \
+    mv -f "${WORK_DIR}/dist" "${WORK_DIR}/publish";
 
 FROM php:8.2.24-apache-bookworm AS base
 # Prepare PHP and Apache
@@ -180,23 +191,25 @@ FROM install AS final
 ARG TZ="Asia/Baku"
 ARG APP_ENV="dev"
 ARG XDEBUG_MODE="off"
+ARG STABILITY="dev"
 ENV APP_ENV=${APP_ENV} \
     XDEBUG_MODE=${XDEBUG_MODE} \
     TZ=${TZ} \
     COMPOSER_ALLOW_SUPERUSER=1 \
-    WORK_DIR="${WORK_DIR}"
+    WORK_DIR="${WORK_DIR}" \
+    STABILITY="${STABILITY}"
 
 WORKDIR "${WORK_DIR}"
 
 COPY . .
 
-RUN composer update --no-progress  \
-    && composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress --ansi
+RUN composer update --no-progress &&  \
+    composer install --no-cache --prefer-dist --no-autoloader --no-scripts --no-progress --ansi
 
 # Copy sources from context and from build_angular layer
-COPY --from=build_angular /src/app/public/dist ./public
-COPY --from=build_angular /src/app/public/extensions ./public
-COPY --from=build_angular /src/app/dist .
+COPY --from=build_angular /src/app/publish/* .
+#COPY --from=build_angular "/src/app/public/extensions" "./public"
+#COPY --from=build_angular "/src/app/dist" "."
 
 # Run Composer
 RUN set -eux; \
@@ -204,7 +217,7 @@ RUN set -eux; \
     composer dump-env dev; \
     composer run-script post-install-cmd; \
     true && \
-    chmod +x ./bin/console; \
+    chmod +x ./bin/console && \
     find ${WORK_DIR} -type d -not -perm 2755 -exec chmod 2755 {} \; && \
     find ${WORK_DIR} -type f -not -perm 0644 -exec chmod 0644 {} \; && \
     find ${WORK_DIR} ! -user ${APACHE_RUN_USER} -exec chown --no-dereference ${APACHE_RUN_USER}:${APACHE_RUN_USER} {} \; && \

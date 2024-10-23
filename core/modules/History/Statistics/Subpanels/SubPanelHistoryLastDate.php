@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\History\Statistics\Subpanels;
 
 use App\Statistics\DateTimeStatisticsHandlingTrait;
@@ -34,9 +33,9 @@ use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
 use App\Statistics\Service\StatisticsProviderInterface;
 use DBManagerFactory;
 
-
 /**
  * Class SubPanelHistoryLastDate
+ *
  * @package App\Legacy\Statistics
  */
 class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements StatisticsProviderInterface
@@ -48,7 +47,7 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -56,11 +55,11 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         $subpanel = $query['key'];
 
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id) || empty($subpanel)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -69,7 +68,6 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
         if (!empty($subpanelName)) {
             $subpanel = $subpanelName;
         }
-
 
         $this->init();
         $this->startLegacyApp();
@@ -87,15 +85,15 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
         if (empty($max)) {
             $statistic = $this->getEmptyResponse(self::KEY);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_HISTORY_LAST_DATE_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_HISTORY_LAST_DATE']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_HISTORY_LAST_DATE_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_HISTORY_LAST_DATE' ]);
 
             return $statistic;
         }
 
         $statistic = $this->buildStatistic($max);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_HISTORY_LAST_DATE_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_HISTORY_LAST_DATE']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_HISTORY_LAST_DATE_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_HISTORY_LAST_DATE' ]);
         $this->close();
 
         return $statistic;
@@ -103,12 +101,13 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
 
     /**
      * @param string $max
+     *
      * @return Statistic
      */
-    protected function buildStatistic(string $max): Statistic
+    protected function buildStatistic(string $max) : Statistic
     {
         if (!empty($max)) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $max]);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $max ]);
         } else {
             $statistic = $this->getEmptyResponse(self::KEY);
         }
@@ -118,9 +117,10 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
 
     /**
      * @param array $result
+     *
      * @return string
      */
-    protected function calculateSmallestDate(array $result): string
+    protected function calculateSmallestDate(array $result) : string
     {
         foreach ($result as $key => $value) {
             if (!empty($value)) {
@@ -139,9 +139,10 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
      * @param $queries
      * @param  $dateNow
      * @param string $id
+     *
      * @return array
      */
-    protected function calculateQueryResult($queries, $dateNow, string $id): array
+    protected function calculateQueryResult($queries, $dateNow, string $id) : array
     {
         $result = [];
         for ($i = 0; $i <= 3; $i++) {
@@ -170,7 +171,10 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
             if ($tableName === 'meetings' || $tableName === 'calls') {
                 $db = DBManagerFactory::getInstance();
                 $parts['select'] = "SELECT " . $tableName . ".`date_end` AS `" . $tableName . "_date_end`";
-                $where = "" . $tableName . ".`date_end` <= '$dateNow' AND " . $tableName . ".parent_id = '" . $db->quote($id). "' ";
+                $where =
+                    "" . $tableName . ".`date_end` <= '$dateNow' AND " . $tableName . ".parent_id = '" . $db->quote(
+                        $id
+                    ) . "' ";
                 if (!empty($parts['where'])) {
                     $where = " AND " . $where;
                 }
@@ -180,7 +184,6 @@ class SubPanelHistoryLastDate extends SubpanelDataQueryHandler implements Statis
                 $result[$i] = $this->fetchRow($innerQuery);
             }
         }
-
 
         return $result;
     }

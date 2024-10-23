@@ -54,24 +54,22 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         }
 
         $view = strtolower($view);
-        switch (strtolower($type)) {
-            case 'default':
-            default:
-                if ($view === 'subpanel') {
-                    $results = $this->get_subpanel_defs($moduleName, $type);
+        {
+            if ($view === 'subpanel') {
+                $results = $this->get_subpanel_defs($moduleName, $type);
+            } else {
+                $v = new SugarView(null, array());
+                $v->module = $moduleName;
+                $v->type = $view;
+                $fullView = ucfirst($view) . 'View';
+                $metadataFile = $v->getMetaDataFile();
+                require_once($metadataFile);
+                if ($view === 'list') {
+                    $results = $listViewDefs[$moduleName];
                 } else {
-                    $v = new SugarView(null, array());
-                    $v->module = $moduleName;
-                    $v->type = $view;
-                    $fullView = ucfirst($view) . 'View';
-                    $metadataFile = $v->getMetaDataFile();
-                    require_once($metadataFile);
-                    if ($view === 'list') {
-                        $results = $listViewDefs[$moduleName];
-                    } else {
-                        $results = $viewdefs[$moduleName][$fullView];
-                    }
+                    $results = $viewdefs[$moduleName][$fullView];
                 }
+            }
         }
 
         //Add field level acls.
@@ -225,43 +223,25 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
                 $entry = array();
                 $entry['name'] = $var['name'];
                 $entry['type'] = $var['type'];
-                $entry['group'] = isset($var['group']) ? $var['group'] : '';
-                $entry['id_name'] = isset($var['id_name']) ? $var['id_name'] : '';
+                $entry['group'] = $var['group'] ?? '';
+                $entry['id_name'] = $var['id_name'] ?? '';
                 if (isset($var['parentenum'])) {
                     $entry['parentenum'] = $var['parentenum'];
                 }
 
                 if ($var['type'] === 'link') {
-                    $entry['relationship'] = (isset($var['relationship']) ? $var['relationship'] : '');
-                    $entry['module'] = (isset($var['module']) ? $var['module'] : '');
-                    $entry['bean_name'] = (isset($var['bean_name']) ? $var['bean_name'] : '');
+                    $entry['relationship'] = ($var['relationship'] ?? '');
+                    $entry['module'] = ($var['module'] ?? '');
+                    $entry['bean_name'] = ($var['bean_name'] ?? '');
                     $link_fields[$var['name']] = $entry;
                 } else {
-                    if ($translate) {
-                        $entry['label'] = isset($var['vname']) ? translate($var['vname'], $value->module_dir) : $var['name'];
-                    } else {
-                        $entry['label'] = isset($var['vname']) ? $var['vname'] : $var['name'];
-                    }
-                    $entry['required'] = $required;
-                    $entry['options'] = $options_ret;
-                    $entry['related_module'] = (isset($var['id_name']) && isset($var['module'])) ? $var['module'] : '';
-                    $entry['calculated'] =  (isset($var['calculated']) && $var['calculated']) ? true : false;
-                    $entry['len'] =  isset($var['len']) ? $var['len'] : '';
-
-                    if (isset($var['default'])) {
-                        $entry['default_value'] = $var['default'];
-                    }
-                    if ($var['type'] === 'parent' && isset($var['type_name'])) {
-                        $entry['type_name'] = $var['type_name'];
-                    }
-
-                    $module_fields[$var['name']] = $entry;
+                    $module_fields[$var['name']] = create_entry($var, $translate, $value, $required);
                 } // else
             } //foreach
         } //if
 
         if ($value->module_dir === 'Meetings' || $value->module_dir === 'Calls') {
-            if (isset($module_fields['duration_minutes']) && isset($GLOBALS['app_list_strings']['duration_intervals'])) {
+            if (isset($module_fields['duration_minutes'], $GLOBALS['app_list_strings']['duration_intervals'])) {
                 $options_dom = $GLOBALS['app_list_strings']['duration_intervals'];
                 $options_ret = array();
                 foreach ($options_dom as $key=>$oneOption) {
@@ -273,52 +253,14 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         }
 
         if ($value->module_dir === 'Bugs') {
-            require_once('modules/Releases/Release.php');
-            $seedRelease = BeanFactory::newBean('Releases');
-            $options = $seedRelease->get_releases(true, 'Active');
-            $options_ret = array();
-            foreach ($options as $name=>$value) {
-                $options_ret[] =  array('name'=> $name , 'value'=>$value);
-            }
-            if (isset($module_fields['fixed_in_release'])) {
-                $module_fields['fixed_in_release']['type'] = 'enum';
-                $module_fields['fixed_in_release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['found_in_release'])) {
-                $module_fields['found_in_release']['type'] = 'enum';
-                $module_fields['found_in_release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['release'])) {
-                $module_fields['release']['type'] = 'enum';
-                $module_fields['release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['release_name'])) {
-                $module_fields['release_name']['type'] = 'enum';
-                $module_fields['release_name']['options'] = $options_ret;
-            }
+            [ $value, $module_fields ] = check_dirs($value, $module_fields);
         }
 
-        if (isset($value->assigned_user_name) && isset($module_fields['assigned_user_id'])) {
-            $module_fields['assigned_user_name'] = $module_fields['assigned_user_id'];
-            $module_fields['assigned_user_name']['name'] = 'assigned_user_name';
-        }
-        if (isset($value->assigned_name) && isset($module_fields['team_id'])) {
-            $module_fields['team_name'] = $module_fields['team_id'];
-            $module_fields['team_name']['name'] = 'team_name';
-        }
-        if (isset($module_fields['modified_user_id'])) {
-            $module_fields['modified_by_name'] = $module_fields['modified_user_id'];
-            $module_fields['modified_by_name']['name'] = 'modified_by_name';
-        }
-        if (isset($module_fields['created_by'])) {
-            $module_fields['created_by_name'] = $module_fields['created_by'];
-            $module_fields['created_by_name']['name'] = 'created_by_name';
-        }
+        $module_fields = set_assigned_user_name($value, $module_fields, true);
 
         $GLOBALS['log']->info('End: SoapHelperWebServices->get_field_list');
         return array('module_fields' => $module_fields, 'link_fields' => $link_fields);
     }
-
 
     public function new_handle_set_entries($module_name, $name_value_lists, $select_fields = false)
     {
@@ -532,7 +474,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
      */
     public function get_subpanel_defs($module, $type)
     {
-        global $beanList, $beanFiles;
+        global $beanList, $beanFiles, $layout_defs;
         $results = array();
         switch ($type) {
             case 'wireless':
@@ -560,18 +502,6 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         }
 
         //Filter results for permissions
-        foreach ($layout_defs[$module]['subpanel_setup'] as $subpanel => $subpaneldefs) {
-            $moduleToCheck = $subpaneldefs['module'];
-            if (!isset($beanList[$moduleToCheck])) {
-                continue;
-            }
-            $class_name = $beanList[$moduleToCheck];
-            $bean = new $class_name();
-            if ($bean->ACLAccess('list')) {
-                $results[$subpanel] = $subpaneldefs;
-            }
-        }
-
-        return $results;
+        return populateLayoutDefs($layout_defs[$module]['subpanel_setup'], $beanList, $results);
     }
 }

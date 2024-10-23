@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Leads\Statistics;
 
+use Psr\Log\LoggerInterface;
 use App\Statistics\DateTimeStatisticsHandlingTrait;
 use App\Statistics\Entity\Statistic;
 use App\Data\LegacyHandler\AuditQueryingTrait;
@@ -49,7 +49,7 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     use AuditQueryingTrait;
 
     public const HANDLER_KEY = 'lead-days-open';
-    public const KEY = 'lead-days-open';
+    public const KEY         = 'lead-days-open';
 
     /**
      * @var ModuleNameMapperInterface
@@ -62,6 +62,7 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
     /**
      * ListDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -72,16 +73,26 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        EntityManagerInterface $entityManager,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        EntityManagerInterface    $entityManager,
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->entityManager = $entityManager;
     }
@@ -89,7 +100,7 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -97,7 +108,7 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -106,9 +117,9 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
      * @inheritDoc
      * @throws Exception
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
@@ -125,7 +136,6 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
         $lead = $this->getLead($id);
         $rows = $this->getAuditInfo($lead);
-
 
         $start = $lead->date_entered;
 
@@ -151,9 +161,10 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
     /**
      * @param string $id
+     *
      * @return Lead
      */
-    protected function getLead(string $id): Lead
+    protected function getLead(string $id) : Lead
     {
         /** @var Lead $lead */
         $lead = BeanFactory::getBean('Leads', $id);
@@ -163,10 +174,11 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
     /**
      * @param SugarBean $bean
+     *
      * @return array
      * @throws DBALException
      */
-    protected function getAuditInfo(SugarBean $bean): array
+    protected function getAuditInfo(SugarBean $bean) : array
     {
         return $this->queryAuditInfo($this->entityManager, $bean, 'status');
     }
@@ -174,16 +186,17 @@ class LeadDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     /**
      * @return string
      */
-    protected function getRecycledStatus(): string
+    protected function getRecycledStatus() : string
     {
         return 'Recycled';
     }
 
     /**
      * @param Lead $lead
+     *
      * @return bool
      */
-    protected function inClosedStatus(Lead $lead): bool
+    protected function inClosedStatus(Lead $lead) : bool
     {
         return $lead->status === 'Converted' || $lead->status === 'Dead';
     }

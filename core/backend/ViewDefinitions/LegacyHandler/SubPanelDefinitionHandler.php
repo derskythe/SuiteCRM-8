@@ -28,6 +28,7 @@
 
 namespace App\ViewDefinitions\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\FieldDefinitions\Service\FieldDefinitionsProviderInterface;
@@ -104,7 +105,8 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
         SubpanelTopActionDefinitionProviderInterface $subpanelTopActionDefinitionProvider,
         SubpanelLineActionDefinitionProviderInterface $subpanelLineActionDefinitionProvider,
         FieldAliasMapper $fieldAliasMapper,
-        RequestStack $session
+        RequestStack $session,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -112,7 +114,8 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->fieldDefinitionProvider = $fieldDefinitionProvider;

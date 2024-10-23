@@ -6757,4 +6757,14 @@ class SugarBean
             $this->name = $value;
         }
     }
+
+    public function set(string $name, $value) : void
+    {
+        $this->__set($name, $value);
+    }
+
+    public function get(string $name) : mixed
+    {
+        return $this->__get($name);
+    }
 }
