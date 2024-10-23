@@ -224,7 +224,7 @@ class Document extends File
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $current_language, $timedate, $locale, $sugar_config;
 

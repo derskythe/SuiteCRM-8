@@ -25,7 +25,7 @@
 require_once 'modules/InboundEmail/InboundEmail.php';
 require_once 'include/clean.php';
 #[\AllowDynamicProperties]
-class AOPInboundEmail extends InboundEmail
+abstract class AOPInboundEmail extends InboundEmail
 {
     public $job_name = 'function::pollMonitoredInboxesAOP';
 

@@ -61,7 +61,7 @@ class AOK_KnowledgeBaseViewEdit extends ViewEdit
         $this->bean->user_id_c = $current_user->id;
     }
 
-    public function display()
+    public function display() : void
     {
         parent::display();
         $this->displayTMCE();

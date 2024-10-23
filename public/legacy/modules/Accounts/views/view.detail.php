@@ -59,7 +59,7 @@ class AccountsViewDetail extends ViewDetail
      * @throws Exception
      * @throws Exception
      */
-    public function display()
+    public function display() : void
     {
         if (empty($this->bean->id)) {
             global $app_strings;

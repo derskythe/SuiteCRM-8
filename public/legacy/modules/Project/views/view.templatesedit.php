@@ -59,7 +59,7 @@ class ProjectViewTemplatesEdit extends ViewEdit
         return $crumbs;
     }
 
-    public function display()
+    public function display() : void
     {
         $this->bean->is_template = 1;
         $this->ev->ss->assign('is_template', 1);

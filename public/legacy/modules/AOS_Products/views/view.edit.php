@@ -15,7 +15,7 @@ class AOS_ProductsViewEdit extends ViewEdit
 
 
 
-    public function display()
+    public function display() : void
     {
         global $app_strings,$sugar_config;
 

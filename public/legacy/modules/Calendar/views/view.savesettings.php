@@ -53,7 +53,7 @@ class CalendarViewSaveSettings extends SugarView
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         global $current_user;
 

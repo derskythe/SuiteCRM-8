@@ -82,7 +82,8 @@ class ViewSearchView extends ViewListView
      */
     public function display(
         $preview = false
-        ) {
+        ) : void
+    {
         $packageName = (isset($_REQUEST [ 'view_package' ])) ? $_REQUEST [ 'view_package' ] : '' ;
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser($this->editLayout, $this->editModule, $packageName) ;

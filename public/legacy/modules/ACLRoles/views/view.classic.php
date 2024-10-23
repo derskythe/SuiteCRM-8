@@ -18,7 +18,7 @@ class ACLRolesViewClassic extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         $this->dv->process();
 

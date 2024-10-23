@@ -35,7 +35,7 @@ class AOW_ProcessedViewList extends ViewList
 
 
 
-    public function Display()
+    public function Display() : void
     {
         $this->lv->quickViewLinks = false;
         parent::Display();

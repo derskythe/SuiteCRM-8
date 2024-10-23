@@ -64,7 +64,7 @@ class ViewMappingProperties extends ViewList
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         require_once('include/connectors/utils/ConnectorUtils.php');
         require_once('include/connectors/sources/SourceFactory.php');

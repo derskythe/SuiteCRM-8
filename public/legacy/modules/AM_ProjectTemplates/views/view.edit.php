@@ -52,7 +52,7 @@ class AM_ProjectTemplatesViewEdit extends ViewEdit
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         global $json;
 

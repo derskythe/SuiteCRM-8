@@ -53,7 +53,7 @@ class AOK_KnowledgeBaseViewDetail extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         $this->setDecodeHTML();
         parent::display();

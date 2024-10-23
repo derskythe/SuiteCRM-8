@@ -68,7 +68,7 @@ class MeetingsViewEdit extends ViewEdit
      * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $json;
         $json = getJSONobj();

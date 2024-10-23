@@ -74,7 +74,7 @@ class CampaignsViewDetail extends ViewDetail
         $this->options['show_subpanels'] = false;
     }
 
-    public function display()
+    public function display() : void
     {
         global $app_list_strings;
         $this->ss->assign('APP_LIST', $app_list_strings);

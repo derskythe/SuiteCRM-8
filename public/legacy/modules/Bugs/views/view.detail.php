@@ -55,7 +55,7 @@ class BugsViewDetail extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         $admin = BeanFactory::newBean('Administration');
         $admin->retrieveSettings();

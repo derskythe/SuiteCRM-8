@@ -55,7 +55,7 @@ class ProspectsViewDetail extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         if (isset($this->bean->lead_id) && !empty($this->bean->lead_id)) {
 

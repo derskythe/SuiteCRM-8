@@ -48,7 +48,7 @@ class InboundEmailViewDetail extends ViewDetail
     /**
      * @inheritdoc
      */
-    public function display()
+    public function display() : void
     {
         global $current_user;
         $this->dv->ss->assign('is_admin', is_admin($current_user));

@@ -49,7 +49,7 @@ class InboundEmailViewEdit extends ViewEdit
     /**
      * @inheritdoc
      */
-    public function display()
+    public function display() : void
     {
         global $current_user;
 

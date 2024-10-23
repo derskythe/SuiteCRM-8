@@ -56,7 +56,7 @@ class EmailTemplatesViewClassic extends ViewClassic
     {
     }
 
-    public function display()
+    public function display() : void
     {
         /* BEGIN - SECURITY GROUPS - The whole file is custom but the purpose is the following code */
         //turn on normal display of subpanels

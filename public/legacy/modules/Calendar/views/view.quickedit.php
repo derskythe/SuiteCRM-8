@@ -62,7 +62,7 @@ class CalendarViewQuickEdit extends SugarView
      * @throws SmartyException
      * @throws DateMalformedStringException
      */
-    public function display()
+    public function display() : void
     {
         require_once('modules/Calendar/CalendarUtils.php');
 

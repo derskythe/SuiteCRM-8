@@ -65,7 +65,7 @@ class ProjectTaskViewList extends ViewList
      * @throws SmartyException
      * @throws JsonException
      */
-    public function display()
+    public function display() : void
     {
         $metafiles = [];
         $searchdefs = [];

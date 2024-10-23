@@ -34,7 +34,7 @@ EOF;
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $timedate;
         parent::display();

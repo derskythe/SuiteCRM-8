@@ -86,7 +86,7 @@ class UsersViewEdit extends ViewEdit
         return $metadataFile;
     }
 
-    public function display()
+    public function display() : void
     {
         global $current_user, $app_list_strings, $mod_strings;
 

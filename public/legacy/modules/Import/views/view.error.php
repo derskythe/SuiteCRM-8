@@ -98,7 +98,7 @@ class ImportViewError extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $module = $_REQUEST['import_module'] ?? '';
         if (!empty($module) && !isAllowedModuleName($module)) {

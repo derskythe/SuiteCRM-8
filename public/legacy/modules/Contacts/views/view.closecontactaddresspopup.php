@@ -48,7 +48,7 @@ class ContactsViewCloseContactAddressPopup extends ViewList
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         if (isset($_REQUEST['close_window'])) {
             echo '<script>window.close();</script>';

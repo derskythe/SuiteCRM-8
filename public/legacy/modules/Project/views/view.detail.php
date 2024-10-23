@@ -58,7 +58,7 @@ class ProjectViewDetail extends ViewDetail
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $beanFiles;
         require_once($beanFiles['Project']);

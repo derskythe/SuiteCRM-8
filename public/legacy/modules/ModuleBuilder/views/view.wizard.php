@@ -80,7 +80,7 @@ class ModuleBuilderViewWizard extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $this->ajax = new AjaxCompose() ;
         $smarty = new Sugar_Smarty() ;

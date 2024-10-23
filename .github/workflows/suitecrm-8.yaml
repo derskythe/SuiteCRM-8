@@ -9,6 +9,12 @@ on:
       - docker-compose.yaml
       - composer.json
       - package.json
+      - angular.json
+      - config/**
+      - core/**
+      - extensions/**
+      - public/**
+      - src/**
   release:
     types:
       - created

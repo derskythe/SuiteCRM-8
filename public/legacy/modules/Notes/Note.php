@@ -232,7 +232,7 @@ class Note extends File
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         //TODO:  Seems odd we need to clear out these values so that list views don't show the previous rows value if current value is blank

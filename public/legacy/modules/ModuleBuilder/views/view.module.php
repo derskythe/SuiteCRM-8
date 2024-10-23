@@ -61,7 +61,7 @@ class ViewModule extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $translated_type = [];
         global $mod_strings, $current_language;

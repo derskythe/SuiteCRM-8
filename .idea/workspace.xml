@@ -26,104 +26,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="feat: add dev container setup and improve exception handling&#10;&#10;Introduce new dev container configuration for PHP and MariaDB.&#10;&#10;* Added .devcontainer configuration files: Dockerfile, docker-compose.yml, and devcontainer.json.&#10;* Improved exception handling in the `install.php` during `InstallPreChecks`.&#10;* Reduced CPU limit in `docker-compose.yaml` to optimize resource usage.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/HandleAjaxCall.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/HandleAjaxCall.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/SugarSecurity.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/SugarSecurity.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/cron.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/cron.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/data/BeanFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/BeanFactory.php" afterDir="false" />
+    <list default="true" id="ac14fe41-33b9-4e7e-b958-4344aaf330b7" name="Changes" comment="refactor: Add return type hints to display() methods">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/suitecrm-8.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/data/SugarBean.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/download.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/download.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/export.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/export.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/SugarModule.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/SugarModule.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/SugarView.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/SugarView.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.list.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/MVC/View/views/view.list.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarObjects/templates/basic/Basic.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarObjects/templates/basic/Basic.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarObjects/templates/file/File.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarObjects/templates/file/File.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/SugarObjects/templates/person/Person.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/SugarObjects/templates/person/Person.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/Sugar_Smarty.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/Sugar_Smarty.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/TimeDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/TimeDate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/connectors/ConnectorFactory.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/connectors/ConnectorFactory.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/include/connectors/component.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/include/connectors/component.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/install.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/install.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/maintenance.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/metadata/project_users_1MetaData.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/metadata/project_users_1MetaData.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/metadata/securitygroups_acl_rolesMetaData.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/metadata/securitygroups_acl_rolesMetaData.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ACLActions/ACLAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ACLActions/ACLAction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ACLActions/Menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ACLActions/Menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ACLActions/vardefs.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ACLActions/vardefs.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ACLRoles/ACLRole.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ACLRoles/ACLRole.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/AM_ProjectTemplates_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AM_ProjectTemplates/AM_ProjectTemplates_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AM_TaskTemplates/AM_TaskTemplates_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AM_TaskTemplates/AM_TaskTemplates_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOBH_BusinessHours/AOBH_BusinessHours.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOBH_BusinessHours/AOBH_BusinessHours.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOK_KnowledgeBase/AOK_KnowledgeBase_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOK_KnowledgeBase/AOK_KnowledgeBase_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOK_Knowledge_Base_Categories/AOK_Knowledge_Base_Categories_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOK_Knowledge_Base_Categories/AOK_Knowledge_Base_Categories_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOP_Case_Events/AOP_Case_Events.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOP_Case_Events/AOP_Case_Events.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOP_Case_Updates/AOP_Case_Updates.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOP_Case_Updates/AOP_Case_Updates.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOR_Conditions/AOR_Condition.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOR_Conditions/AOR_Condition.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOR_Fields/AOR_Field.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOR_Fields/AOR_Field.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOR_Reports/AOR_Report.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOR_Reports/AOR_Report.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Contracts/AOS_Contracts_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Contracts/AOS_Contracts_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Invoices/AOS_Invoices_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Invoices/AOS_Invoices_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_PDF_Templates/AOS_PDF_Templates_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_PDF_Templates/AOS_PDF_Templates_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Product_Categories/AOS_Product_Categories_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Product_Categories/AOS_Product_Categories_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Products/AOS_Products_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Products/AOS_Products_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Products_Quotes/AOS_Products_Quotes_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Products_Quotes/AOS_Products_Quotes_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOS_Quotes/AOS_Quotes_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOS_Quotes/AOS_Quotes_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOW_Conditions/AOW_Condition.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOW_Conditions/AOW_Condition.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/AOW_WorkFlow/AOW_WorkFlow.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/AOW_WorkFlow/AOW_WorkFlow.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Accounts/Account.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Accounts/Account.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Alerts/Alert.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Alerts/Alert.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Audit/Audit.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Audit/Audit.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Bugs/Bug.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Bugs/Bug.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Calls/Call.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Calls/Call.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Calls_Reschedule/Calls_Reschedule_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Calls_Reschedule/Calls_Reschedule_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/CampaignTrackers/CampaignTracker.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/CampaignTrackers/CampaignTracker.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Campaigns/Campaign.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Campaigns/Campaign.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Cases/Case.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Cases/Case.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Contacts/Contact.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Contacts/Contact.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Contacts/ContactOpportunityRelationship.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Contacts/ContactOpportunityRelationship.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Currencies/Currency.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Currencies/Currency.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Delegates/metadata/subpaneldefs.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Delegates/metadata/subpaneldefs.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/DocumentRevisions/DocumentRevision.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/DocumentRevisions/DocumentRevision.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Documents/Document.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Documents/Document.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/DynamicFields/FieldsMetaData.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/DynamicFields/FieldsMetaData.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/EAPM/EAPM.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/EAPM/EAPM.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/EmailMarketing/EmailMarketing.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/EmailMarketing/EmailMarketing.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/EmailTemplates/EmailTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/EmailTemplates/EmailTemplate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Emails/Email.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Emails/Email.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Employees/Employee.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Employees/Employee.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ExternalOAuthConnection/ExternalOAuthConnection.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ExternalOAuthConnection/ExternalOAuthConnection.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ExternalOAuthProvider/ExternalOAuthProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ExternalOAuthProvider/ExternalOAuthProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/FP_Event_Locations/FP_Event_Locations_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/FP_Event_Locations/FP_Event_Locations_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/FP_events/FP_events_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/FP_events/FP_events_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Favorites/Favorites.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Favorites/Favorites.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Home/views/view.list.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Home/views/view.list.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Import/CsvAutoDetect.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Import/CsvAutoDetect.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Import/ImportCacheFiles.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Import/ImportCacheFiles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Import/ImportFieldSanitize.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Import/ImportFieldSanitize.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Import/maps/ImportMap.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Import/maps/ImportMap.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/InboundEmail.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/InboundEmail/InboundEmail.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Leads/Lead.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Leads/Lead.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Meetings/Meeting.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Meetings/Meeting.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/MergeRecords/MergeRecord.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/MergeRecords/MergeRecord.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Notes/Note.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Notes/Note.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OAuth2Clients/OAuth2Clients.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OAuth2Clients/OAuth2Clients.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OAuth2Tokens/OAuth2Tokens.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OAuth2Tokens/OAuth2Tokens.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Opportunities/Opportunity.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Opportunities/Opportunity.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/OutboundEmailAccounts.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/OutboundEmailAccounts.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/OutboundEmailAccounts_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/OutboundEmailAccounts/OutboundEmailAccounts_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Project/Project.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Project/Project.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ProjectTask/ProjectTask.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ProjectTask/ProjectTask.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/ProspectLists/ProspectList.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/ProspectLists/ProspectList.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Prospects/Prospect.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Prospects/Prospect.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/Releases/Release.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/Releases/Release.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/TableDictionary.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/TableDictionary.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/jjwg_Address_Cache/jjwg_Address_Cache_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/jjwg_Address_Cache/jjwg_Address_Cache_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/jjwg_Areas/jjwg_Areas.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/jjwg_Areas/jjwg_Areas.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/jjwg_Areas/jjwg_Areas_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/jjwg_Areas/jjwg_Areas_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/jjwg_Maps/jjwg_Maps_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/jjwg_Maps/jjwg_Maps_sugar.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/legacy/modules/jjwg_Markers/jjwg_Markers_sugar.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/legacy/modules/jjwg_Markers/jjwg_Markers_sugar.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -1052,7 +957,31 @@
       <option name="project" value="LOCAL" />
       <updated>1729656829985</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="refactor: display">
+      <option name="closed" value="true" />
+      <created>1729675560660</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1729675560660</updated>
+    </task>
+    <task id="LOCAL-00046" summary="refactor: Add return type hints to display() methods">
+      <option name="closed" value="true" />
+      <created>1729675603023</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1729675603023</updated>
+    </task>
+    <task id="LOCAL-00047" summary="refactor: Add return type hints to display() methods">
+      <option name="closed" value="true" />
+      <created>1729680902462</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1729680902462</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1110,8 +1039,6 @@
     <option name="CHECK_LOCALLY_CHANGED_CONFLICTS_IN_BACKGROUND" value="true" />
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="fix(Dockerfile): update dependency for PostgreSQL development&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to correct the dependency.&#10;* Ensures compatibility and resolves potential build issues.&#10;* Enhances the stability of Docker image builds." />
-    <MESSAGE value="fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`. &#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support" />
     <MESSAGE value="fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`.&#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support.&#10;* Renamed build workflow file and updated paths for consistency." />
     <MESSAGE value="fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`.&#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support.&#10;* Renamed build workflow file and updated paths for consistency.&#10;&#10;fix(Dockerfile): update PostgreSQL dependency&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to resolve build issues and added `unixodbc-dev`.&#10;* Ensures compatibility and enhances stability.&#10;* Configured pdo_odbc with unixODBC for improved database support.&#10;&#10;fix(Dockerfile): update dependency for PostgreSQL development&#10;&#10;Replaced `postgresql-dev` with `libpq-dev` to correct the dependency.&#10;* Ensures compatibility and resolves potential build issues.&#10;* Enhances the stability of Docker image builds.&#10;&#10;fix: update workflow to use main docker build action&#10;&#10;Removed the 'try-legacy' suffix from docker-build-n-push.yml reference.&#10;* Ensures the main Docker build and push action is utilized.&#10;* Enhances consistency across workflow configurations.&#10;&#10;fix: correct path in build-image workflow&#10;&#10;Fixed the relative path for the docker-build-n-push workflow in the build-image.yaml.&#10;* Changed the `uses` path to use the correct relative path format.&#10;* Ensured the build procedure points to the correct workflow file.&#10;&#10;feat: Add GitHub Actions workflows for Docker builds&#10;&#10;Introduce new GitHub Actions workflows and update configurations.&#10;&#10;* Added build-image.yaml for managing Docker image builds on push, release, or workflow dispatch.&#10;* Introduced reusable docker-build-n-push.yml for Docker image building and pushing.&#10;* Updated .idea configuration to reflect new tasks and change lists.&#10;* Added PostgreSQL development library to Dockerfile.&#10;* Included pdo extension in Dockerfile.&#10;&#10;feat: Add GitHub Actions workflows for building Docker images&#10;&#10;Introduce new GitHub Actions workflows and update configurations.&#10;&#10;* Added build-image.yaml for managing Docker image builds on push, release, or workflow dispatch.&#10;* Introduced reusable docker-build-n-push.yml for Docker image building and pushing.&#10;* Updated .idea configuration to reflect new tasks and change lists." />
     <MESSAGE value="fix(Dockerfile): update dependencies and configurations&#10;&#10;Added libbz2-dev, zlib1g-dev, and libxml2-dev to address missing dependencies.&#10;Updates include configuring GD for PNG support and adding libxml, simplexml, and removing .phpize-deps post-install.&#10;```" />
@@ -1135,7 +1062,9 @@
     <MESSAGE value="chore: Capitalize workflow name for SuiteCRM-8" />
     <MESSAGE value="chore(Dockerfile): streamline dependencies&#10;&#10;Remove unused libraries to reduce image size and build time.&#10;* Removed libghc-postgresql-simple-dev, libghc-postgresql-libpq-dev, libghc-persistent-postgresql-dev, unixodbc-dev, libbz2-dev, libaspell15, libarchive13, aspell-en, spellutils, libmpfr-dev, libgmpxx4ldbl, libjansson-dev." />
     <MESSAGE value="feat: add dev container setup and improve exception handling&#10;&#10;Introduce new dev container configuration for PHP and MariaDB.&#10;&#10;* Added .devcontainer configuration files: Dockerfile, docker-compose.yml, and devcontainer.json.&#10;* Improved exception handling in the `install.php` during `InstallPreChecks`.&#10;* Reduced CPU limit in `docker-compose.yaml` to optimize resource usage." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add dev container setup and improve exception handling&#10;&#10;Introduce new dev container configuration for PHP and MariaDB.&#10;&#10;* Added .devcontainer configuration files: Dockerfile, docker-compose.yml, and devcontainer.json.&#10;* Improved exception handling in the `install.php` during `InstallPreChecks`.&#10;* Reduced CPU limit in `docker-compose.yaml` to optimize resource usage." />
+    <MESSAGE value="refactor: display" />
+    <MESSAGE value="refactor: Add return type hints to display() methods" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: Add return type hints to display() methods" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

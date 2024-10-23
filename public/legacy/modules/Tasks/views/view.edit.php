@@ -63,7 +63,7 @@ class TasksViewEdit extends ViewEdit
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if ($this->ev->isDuplicate) {
             $this->bean->status = $this->bean->getDefaultStatus();
