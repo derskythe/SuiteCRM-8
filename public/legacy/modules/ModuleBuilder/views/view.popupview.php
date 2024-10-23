@@ -93,7 +93,8 @@ class ViewPopupview extends ViewListView
      */
     public function display(
         $preview = false
-        ) {
+        ) : void
+    {
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser($this->editLayout, $this->editModule, $this->editPackage) ;
 

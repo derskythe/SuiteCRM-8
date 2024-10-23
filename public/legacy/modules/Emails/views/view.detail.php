@@ -72,7 +72,7 @@ class EmailsViewDetail extends ViewDetail
     /**
      * display view
      */
-    public function display()
+    public function display() : void
     {
         switch ($this->bean->status) {
             case 'unread':

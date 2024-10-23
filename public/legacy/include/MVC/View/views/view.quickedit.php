@@ -123,7 +123,7 @@ class ViewQuickedit extends ViewAjax
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if (($this->bean instanceof SugarBean) && !$this->bean->ACLAccess('edit')) {
             $no_defs_js = '<script>SUGAR.ajaxUI.loadContent("index.php?module=' . $this->bean->module_dir . '&action=Noaccess&record=' . $this->bean->id.'")</script>';

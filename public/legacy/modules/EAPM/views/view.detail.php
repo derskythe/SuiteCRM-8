@@ -103,7 +103,7 @@ class EAPMViewDetail extends ViewDetail
         return parent::getModuleTitleIconPath('Users');
     }
 
-    public function display()
+    public function display() : void
     {
         $this->bean->password = empty($this->bean->password) ? '' : EAPM::$passwordPlaceholder;
         $this->ss->assign('return_id', $this->_returnId);

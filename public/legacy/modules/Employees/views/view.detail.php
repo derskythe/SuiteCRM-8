@@ -110,7 +110,7 @@ EOHTML;
         return $theTitle;
     }
 
-    public function display()
+    public function display() : void
     {
         if (is_admin($GLOBALS['current_user']) || $_REQUEST['record'] == $GLOBALS['current_user']->id) {
             $this->ss->assign('DISPLAY_EDIT', true);

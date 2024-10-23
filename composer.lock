@@ -1771,12 +1771,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "eadad5a443eb736860bc1ac68449084f37e1f39d"
+                "reference": "0ba24bf10dbf91a83c9cd5ccf7d7c85564716d99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/eadad5a443eb736860bc1ac68449084f37e1f39d",
-                "reference": "eadad5a443eb736860bc1ac68449084f37e1f39d",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/0ba24bf10dbf91a83c9cd5ccf7d7c85564716d99",
+                "reference": "0ba24bf10dbf91a83c9cd5ccf7d7c85564716d99",
                 "shasum": ""
             },
             "require": {
@@ -1790,12 +1790,11 @@
             "require-dev": {
                 "doctrine/coding-standard": "^12",
                 "doctrine/common": "^3.0",
-                "phpstan/phpstan": "1.11.1",
+                "phpstan/phpstan": "1.12.7",
                 "phpstan/phpstan-phpunit": "^1",
                 "phpstan/phpstan-strict-rules": "^1.1",
                 "phpunit/phpunit": "^8.5.38 || ^9.5",
-                "symfony/cache": "^4.4 || ^5.4 || ^6.0",
-                "vimeo/psalm": "4.30.0 || 5.24.0"
+                "symfony/cache": "^4.4 || ^5.4 || ^6.0 || ^7.0"
             },
             "type": "library",
             "autoload": {
@@ -1860,7 +1859,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-19T11:50:05+00:00"
+            "time": "2024-10-23T06:52:35+00:00"
         },
         {
             "name": "doctrine/sql-formatter",

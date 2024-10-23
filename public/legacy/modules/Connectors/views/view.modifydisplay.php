@@ -75,7 +75,7 @@ class ViewModifyDisplay extends SugarView
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         require_once('include/connectors/utils/ConnectorUtils.php');
         $connectors = ConnectorUtils::getConnectors(true);

@@ -700,10 +700,10 @@ class SugarBean implements Stringable
      * Every module that has relationships defined with other modules, has this meta data cached.  The cache is
      * stores in 2 locations: relationships table and file system. This method clears the cache from both locations.
      *
-     * @param string $key module whose meta cache is to be cleared.
-     * @param string $db database handle.
-     * @param string $tablename table name
-     * @param array $dictionary vardef for the module
+     * @param string $key        module whose meta cache is to be cleared.
+     * @param string $db         database handle.
+     * @param string $tablename  table name
+     * @param array $dictionary  vardef for the module
      * @param string $module_dir name of subdirectory where module is installed.
      *
      * @static
@@ -835,7 +835,7 @@ class SugarBean implements Stringable
                         }
 
                         $column_list = implode(',', array_keys($toInsert));
-                        $value_list = "'" . implode('\',\'', array_values($toInsert)) . '\'';
+                        $value_list = '\'' . implode('\',\'', array_values($toInsert)) . '\'';
 
                         //create the record. todo add error check.
                         $insert_string = 'INSERT into relationships (' . $column_list . ') ' .
@@ -859,9 +859,9 @@ class SugarBean implements Stringable
      * It constructs union queries for activities subpanel.
      *
      * @param SugarBean $parentbean constructing queries for link attributes in this bean
-     * @param string $order_by Optional, order by clause
-     * @param string $sort_order Optional, sort order
-     * @param string $where Optional, additional where clause
+     * @param string $order_by      Optional, order by clause
+     * @param string $sort_order    Optional, sort order
+     * @param string $where         Optional, additional where clause
      * @param int $row_offset
      * @param int $limit
      * @param int $max
@@ -1271,7 +1271,7 @@ class SugarBean implements Stringable
                                     continue;
                                 }
                                 $list_fields[$field] = [
-                                    'name' => $field,
+                                    'name'       => $field,
                                     'query_only' => true,
                                 ];
                             }
@@ -1366,11 +1366,11 @@ class SugarBean implements Stringable
      * Internal function, do not override.
      *
      * @param object $parent_bean
-     * @param string $query query to be processed.
+     * @param string $query           query to be processed.
      * @param int $row_offset
-     * @param int $limit optional, default -1
-     * @param int $max_per_page Optional, default -1
-     * @param string $where Custom where clause.
+     * @param int $limit              optional, default -1
+     * @param int $max_per_page       Optional, default -1
+     * @param string $where           Custom where clause.
      * @param aSubPanel $subpanel_def definition of sub-panel to be processed
      * @param string $query_row_count
      * @param array $secondary_queries
@@ -1580,10 +1580,10 @@ class SugarBean implements Stringable
                             $post_retrieve[$current_bean->parent_type] = array();
                         }
                         $post_retrieve[$current_bean->parent_type][] = array(
-                            'child_id' => $current_bean->id,
-                            'parent_id' => $current_bean->parent_id,
+                            'child_id'    => $current_bean->id,
+                            'parent_id'   => $current_bean->parent_id,
                             'parent_type' => $current_bean->parent_type,
-                            'type' => 'parent'
+                            'type'        => 'parent'
                         );
                     }
                     if (!isset($current_bean->id)) {
@@ -1653,7 +1653,7 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      *
-     * @param string $query valid select  query
+     * @param string $query        valid select  query
      * @param bool $is_count_query Optional, Default false, set to true if passed query is a count query.
      *
      * @return int count of rows found
@@ -2221,12 +2221,12 @@ class SugarBean implements Stringable
      * with each bean representing a contact record.
      * Method will load the relationship if not done so already.
      *
-     * @param string $field_name relationship to be loaded.
-     * @param string $bean_name class name of the related bean.legacy
-     * @param string $order_by , Optional, default empty.
-     * @param int $begin_index Optional, default 0, unused.
-     * @param int $end_index Optional, default -1
-     * @param int $deleted Optional, Default 0, 0  adds deleted=0 filter, 1  adds deleted=1 filter.
+     * @param string $field_name     relationship to be loaded.
+     * @param string $bean_name      class name of the related bean.legacy
+     * @param string $order_by       , Optional, default empty.
+     * @param int $begin_index       Optional, default 0, unused.
+     * @param int $end_index         Optional, default -1
+     * @param int $deleted           Optional, Default 0, 0  adds deleted=0 filter, 1  adds deleted=1 filter.
      * @param string $optional_where , Optional, default empty.
      *
      * @return SugarBean[]
@@ -2794,10 +2794,10 @@ class SugarBean implements Stringable
                                 $this->$field = '';
                                 break;
                             }
-                        if (!preg_match(
-                            '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/',
-                            (string) $this->$field
-                        )) {
+                            if (!preg_match(
+                                '/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/',
+                                (string) $this->$field
+                            )) {
                                 $this->$field = $timedate->to_db($this->$field);
                                 $reformatted = true;
                             }
@@ -2963,7 +2963,7 @@ class SugarBean implements Stringable
     /**
      * Performs a check if the record has been modified since the specified date
      *
-     * @param Datetime $date Datetime for verification
+     * @param Datetime $date           Datetime for verification
      * @param string $modified_user_id User modified by
      *
      * @return bool
@@ -3032,7 +3032,7 @@ class SugarBean implements Stringable
      * This should be overridden in subclasses that have something to save.
      *
      * @param bool $is_update true if this save is an update.
-     * @param array $exclude a way to exclude relationships
+     * @param array $exclude  a way to exclude relationships
      */
     public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
@@ -3103,8 +3103,8 @@ class SugarBean implements Stringable
      * TODO: remove this mechanism and replace with mechanism exclusively based on the vardefs
      *
      * @param string|bool $new_rel_id String of the ID to add
-     * @param string $new_rel_link Relationship Name
-     * @param array $exclude any relationship's to exclude
+     * @param string $new_rel_link    Relationship Name
+     * @param array $exclude          any relationship's to exclude
      *
      * @return string|bool               Return the new_rel_id if it was not used.  False if it was used.
      * @api
@@ -3726,9 +3726,9 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      *
-     * @param string $user_id - String value of the user that is viewing the record.
+     * @param string $user_id        - String value of the user that is viewing the record.
      * @param string $current_module - String value of the module being processed.
-     * @param string $current_view - String value of the current view
+     * @param string $current_view   - String value of the current view
      *
      * @throws Exception
      * @throws Exception
@@ -3778,10 +3778,10 @@ class SugarBean implements Stringable
      * hopping back and forth through pages of data.  It only retrieves what is on the current page.
      *
      * @param string $order_by
-     * @param string $where Additional where clause
-     * @param int $row_offset Optional,default 0, starting row number
-     * @param int $limit Optional, default -1
-     * @param int $max Optional, default -1
+     * @param string $where     Additional where clause
+     * @param int $row_offset   Optional,default 0, starting row number
+     * @param int $limit        Optional, default -1
+     * @param int $max          Optional, default -1
      * @param int $show_deleted Optional, default 0, if set to 1 system will show deleted records.
      * @param bool $singleSelect
      * @param array $select_fields
@@ -3899,11 +3899,11 @@ class SugarBean implements Stringable
      *
      * Override this function to return a custom query.
      *
-     * @param string $order_by custom order by clause
-     * @param string $where custom where clause
-     * @param array $filter Optional
-     * @param array $params Optional     *
-     * @param int $show_deleted Optional, default 0, show deleted records is set to 1.
+     * @param string $order_by   custom order by clause
+     * @param string $where      custom where clause
+     * @param array $filter      Optional
+     * @param array $params      Optional     *
+     * @param int $show_deleted  Optional, default 0, show deleted records is set to 1.
      * @param string $join_type
      * @param bool $return_array Optional, default false, response as array
      * @param object $parentbean creating a subquery for this bean.
@@ -4447,8 +4447,8 @@ class SugarBean implements Stringable
     /**
      * Prefixes column names with this bean's table name.
      *
-     * @param string $order_by Order by clause to be processed
-     * @param SugarBean $submodule name of the module this order by clause is for
+     * @param string $order_by          Order by clause to be processed
+     * @param SugarBean $submodule      name of the module this order by clause is for
      * @param bool $suppress_table_name Whether table name should be suppressed
      *
      * @return string Processed order by clause
@@ -4529,11 +4529,11 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      *
-     * @param string $query select query to be processed.
-     * @param int $row_offset starting position
-     * @param int $limit Optional, default -1
+     * @param string $query     select query to be processed.
+     * @param int $row_offset   starting position
+     * @param int $limit        Optional, default -1
      * @param int $max_per_page Optional, default -1
-     * @param string $where Optional, additional filter criteria.
+     * @param string $where     Optional, additional filter criteria.
      *
      * @return array Fetched data
      */
@@ -4746,11 +4746,11 @@ class SugarBean implements Stringable
      * and limit argument to the sql query.
      *
      * @param string $order_by
-     * @param string $where Additional where clause
+     * @param string $where     Additional where clause
      * @param int $offset
-     * @param int $row_offset Optional,default 0, starting row number
-     * @param int $limit Optional, default -1
-     * @param int $max Optional, default -1
+     * @param int $row_offset   Optional,default 0, starting row number
+     * @param int $limit        Optional, default -1
+     * @param int $max          Optional, default -1
      * @param int $show_deleted Optional, default 0, if set to 1 system will show deleted records.
      *
      * @return array Fetched data.
@@ -4789,12 +4789,12 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      *
-     * @param string $query query to be processed.
+     * @param string $query     query to be processed.
      * @param int $row_offset
-     * @param int $limit optional, default -1
+     * @param int $limit        optional, default -1
      * @param int $max_per_page Optional, default -1
-     * @param string $where Custom where clause.
-     * @param int $offset Optional, default 0
+     * @param string $where     Custom where clause.
+     * @param int $offset       Optional, default 0
      *
      * @return array Fetched data.
      *
@@ -4967,11 +4967,15 @@ class SugarBean implements Stringable
      *
      * @return array
      */
-    public function getCustomJoin(bool $expandedList = false, bool $includeRelates = false, bool &$where = false) : array
+    public function getCustomJoin(
+        bool $expandedList = false,
+        bool $includeRelates = false,
+        bool &$where = false
+    ) : array
     {
         $result = array(
             'select' => '',
-            'join' => ''
+            'join'   => ''
         );
         if (isset($this->custom_fields)) {
             $result = $this->custom_fields->getJOIN($expandedList, $includeRelates, $where);
@@ -5226,10 +5230,10 @@ class SugarBean implements Stringable
                 $this->parent_type,
                 $this->parent_id,
                 array(
-                    'name'      => 'parent_name',
+                    'name'          => 'parent_name',
                     'document_name' => 'parent_document_name',
-                    'first_name' => 'parent_first_name',
-                    'last_name' => 'parent_last_name' )
+                    'first_name'    => 'parent_first_name',
+                    'last_name'     => 'parent_last_name' )
             );
             if (!empty($this->parent_first_name) || !empty($this->parent_last_name)) {
                 $this->parent_name = $GLOBALS['locale']->getLocaleFormattedName(
@@ -5423,8 +5427,8 @@ class SugarBean implements Stringable
      *
      * @param object $child_seed
      * @param string $related_field_name relation to fetch data for
-     * @param string $order_by Optional, default empty
-     * @param string $where Optional, additional where clause
+     * @param string $order_by           Optional, default empty
+     * @param string $where              Optional, additional where clause
      * @param int $row_offset
      * @param int $limit
      * @param int $max
@@ -5488,8 +5492,8 @@ class SugarBean implements Stringable
     /**
      * Returns a full (ie non-paged) list of the current object type.
      *
-     * @param string $order_by the order by SQL parameter. defaults to ""
-     * @param string $where where clause. defaults to ""
+     * @param string $order_by  the order by SQL parameter. defaults to ""
+     * @param string $where     where clause. defaults to ""
      * @param bool $check_dates . defaults to false
      * @param int $show_deleted show deleted records. defaults to 0
      *
@@ -5511,7 +5515,7 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      *
-     * @param string $query query to be processed.
+     * @param string $query    query to be processed.
      * @param bool $check_date Optional, default false. if set to true date time values are processed.
      *
      * @return null|array Fetched data.
@@ -5842,8 +5846,8 @@ class SugarBean implements Stringable
          */
         $db = DBManagerFactory::getInstance();
         $record = array(
-            'bean_id' => $db->quoted($this->id),
-            'module' => $db->quoted($this->module_name),
+            'bean_id'       => $db->quoted($this->id),
+            'module'        => $db->quoted($this->module_name),
             'date_modified' => $db->convert($db->quoted(date('Y-m-d H:i:s')), 'datetime')
         );
         $recordDB = $db->fetchOne(
@@ -5869,10 +5873,10 @@ class SugarBean implements Stringable
      * from the resulting ids from the query.
      * It is currently used for building sub-panel arrays.
      *
-     * @param string $query - the query that should be executed to build the list
+     * @param string $query    - the query that should be executed to build the list
      * @param object $template - The object that should be used to copy the records.
-     * @param int $row_offset Optional, default 0
-     * @param int $limit Optional, default -1
+     * @param int $row_offset  Optional, default 0
+     * @param int $limit       Optional, default -1
      *
      * @return array
      */
@@ -5919,7 +5923,7 @@ class SugarBean implements Stringable
      * It is currently used for building sub-panel arrays. It supports an additional
      * where clause that is executed as a filter on the results
      *
-     * @param string $query - the query that should be executed to build the list
+     * @param string $query    - the query that should be executed to build the list
      * @param object $template - The object that should be used to copy the records.
      * @param string $where
      * @param string $in
@@ -6026,8 +6030,8 @@ class SugarBean implements Stringable
      *
      * Internal function, do not override.
      *
-     * @param string $query - the query that should be executed to build the list
-     * @param object $template - The object that should be used to copy the records
+     * @param string $query     - the query that should be executed to build the list
+     * @param object $template  - The object that should be used to copy the records
      * @param array $field_list List of  fields.
      *
      * @return array
@@ -6135,8 +6139,8 @@ class SugarBean implements Stringable
      * Internal function, do not override.
      *
      * @param array $fields_array @fields_array  array of name value pairs used to construct query.
-     * @param bool $encode Optional, default true, encode fetched data.
-     * @param bool $deleted Optional, default true, if set to false deleted filter will not be added.
+     * @param bool $encode        Optional, default true, encode fetched data.
+     * @param bool $deleted       Optional, default true, if set to false deleted filter will not be added.
      *
      * @return object Instance of this bean with fetched data.
      */
@@ -6174,7 +6178,7 @@ class SugarBean implements Stringable
      * Construct where clause from a list of name-value pairs.
      *
      * @param array $fields_array Name/value pairs for column checks
-     * @param bool $deleted Optional, default true, if set to false deleted filter will not be added.
+     * @param bool $deleted       Optional, default true, if set to false deleted filter will not be added.
      *
      * @return string The WHERE clause
      */
@@ -6238,6 +6242,7 @@ class SugarBean implements Stringable
      */
     public function build_generic_where_clause(string $value) : string
     {
+        return '';
     }
 
     /**
@@ -6310,12 +6315,12 @@ class SugarBean implements Stringable
         $where = '';
 
         // make sure there is a date modified
-        $date_modified = $this->db->convert("'" . $GLOBALS['timedate']->nowDb() . "'", 'datetime');
+        $date_modified = $this->db->convert('\'' . $GLOBALS['timedate']->nowDb() . '\'', 'datetime');
 
         $row = null;
         if ($check_duplicates) {
-            $query = "SELECT * FROM $table ";
-            $where = "WHERE deleted = '0'  ";
+            $query = 'SELECT * FROM ' . $table . ' ';
+            $where = 'WHERE deleted = \'0\'  ';
             foreach ($relate_values as $name => $value) {
                 $where .= " AND $name = '$value' ";
             }
@@ -6329,9 +6334,15 @@ class SugarBean implements Stringable
             if (isset($data_values)) {
                 $relate_values = array_merge($relate_values, $data_values);
             }
-            $query = "INSERT INTO $table (id, " . implode(',', array_keys($relate_values)) . ', date_modified) ' .
-                'VALUES (\'' . create_guid() . '\', ' . '\'' .
-                implode('\', \'', $relate_values) . '\', ' . $date_modified . ')';
+            $query =
+                sprintf(
+                    'INSERT INTO %s (id, %s, date_modified) VALUES (\'%s\', \'%s\', %s)',
+                    $table,
+                    implode(',', array_keys($relate_values)),
+                    create_guid(),
+                    implode('\', \'', $relate_values),
+                    $date_modified
+                );
 
             $this->db->query($query, false, 'Creating Relationship:' . $query);
         } elseif ($do_update) {
@@ -6339,7 +6350,13 @@ class SugarBean implements Stringable
             foreach ($data_values as $key => $value) {
                 $conds[] = $key . '=\'' . $this->db->quote($value) . '\'';
             }
-            $query = "UPDATE $table SET " . implode(',', $conds) . ',date_modified=' . $date_modified . ' ' . $where;
+            $query = sprintf(
+                'UPDATE %s SET %s,date_modified=%s %s',
+                $table,
+                implode(',', $conds),
+                $date_modified,
+                $where
+            );
             $this->db->query($query, false, 'Updating Relationship:' . $query);
         }
     }
@@ -6353,7 +6370,7 @@ class SugarBean implements Stringable
      */
     public function retrieve_relationships($table, $values, $select_id)
     {
-        $query = "SELECT $select_id FROM $table WHERE deleted = 0  ";
+        $query = sprintf('SELECT %s FROM %s WHERE deleted = 0  ', $select_id, $table);
         foreach ($values as $name => $value) {
             $query .= " AND $name = '$value' ";
         }
@@ -6376,7 +6393,7 @@ class SugarBean implements Stringable
                 include_once('custom/modules/' . $this->module_dir . '/Ext/Layoutdefs/layoutdefs.ext.php');
             }
             if (empty($layout_defs[get_class($this)])) {
-                echo "\$layout_defs[" . get_class($this) . ']; does not exist';
+                echo '$layout_defs[' . get_class($this) . ']; does not exist';
             }
 
             $this->layout_def = $layout_defs[get_class($this)];
@@ -6570,7 +6587,7 @@ class SugarBean implements Stringable
      * their tablename.  This qualification is a requirement for sql server support.
      *
      * @param string $order_by original order by from the query
-     * @param string $qualify prefix for columns in the order by list.
+     * @param string $qualify  prefix for columns in the order by list.
      *
      * @return string prefixed
      *
@@ -6700,11 +6717,6 @@ class SugarBean implements Stringable
         $this->createdAuditRecords = true;
     }
 
-    public function __toString() : string
-    {
-        return sprintf('ID: %s, Name: %s, ModuleName: %s', $this->id, $this->name, $this->module_name);
-    }
-
     /**
      * @param string $name
      *
@@ -6715,6 +6727,7 @@ class SugarBean implements Stringable
         if (isset($this->$name)) {
             return true;
         }
+
         return false;
     }
 
@@ -6725,9 +6738,10 @@ class SugarBean implements Stringable
      */
     public function __get(string $name)
     {
-        if(isset($this->$name)) {
+        if (isset($this->$name)) {
             return $this->$name;
         }
+
         return null;
     }
 
@@ -6739,10 +6753,8 @@ class SugarBean implements Stringable
      */
     public function __set(string $name, $value) : void
     {
-        if(isset($this->name)) {
+        if (isset($this->name)) {
             $this->name = $value;
         }
     }
-
-
 }

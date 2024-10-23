@@ -86,7 +86,7 @@ class Employee extends Person
     }
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         $this->_create_proper_name_field();
 

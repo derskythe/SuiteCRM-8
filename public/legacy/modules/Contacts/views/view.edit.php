@@ -59,7 +59,7 @@ class ContactsViewEdit extends ViewEdit
      * We are overridding the display method to manipulate the sectionPanels.
      * If portal is not enabled then don't show the Portal Information panel.
      */
-    public function display()
+    public function display() : void
     {
         $this->ev->process();
         if (!empty($_REQUEST['contact_name']) && !empty($_REQUEST['contact_id'])

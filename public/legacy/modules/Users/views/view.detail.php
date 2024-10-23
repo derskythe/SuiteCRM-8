@@ -208,7 +208,7 @@ class UsersViewDetail extends ViewDetail
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         if ($this->bean->portal_only == 1 || $this->bean->is_group == 1) {
             $this->options['show_subpanels'] = false;

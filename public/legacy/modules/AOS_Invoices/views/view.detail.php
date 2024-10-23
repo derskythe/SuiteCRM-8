@@ -15,7 +15,7 @@ class AOS_InvoicesViewDetail extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         $this->populateInvoiceTemplates();
         $this->displayPopupHtml();

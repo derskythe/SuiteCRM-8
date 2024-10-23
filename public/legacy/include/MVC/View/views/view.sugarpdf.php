@@ -98,7 +98,7 @@ class ViewSugarpdf extends SugarView
         }
     }
 
-    public function display()
+    public function display() : void
     {
         $this->sugarpdfBean->process();
         $this->sugarpdfBean->Output($this->sugarpdfBean->fileName, 'I');

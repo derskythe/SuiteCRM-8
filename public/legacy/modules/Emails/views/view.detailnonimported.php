@@ -87,7 +87,7 @@ class EmailsViewDetailNonImported extends ViewDetail
     /**
      * Display View
      */
-    public function display()
+    public function display() : void
     {
         $this->dv->process();
         echo $this->dv->display();

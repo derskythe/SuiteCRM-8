@@ -64,7 +64,7 @@ class ViewDisplayProperties extends ViewList
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         require_once('include/connectors/utils/ConnectorUtils.php');
         $source = $_REQUEST['source_id'];

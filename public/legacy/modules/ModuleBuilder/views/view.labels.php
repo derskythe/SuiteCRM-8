@@ -67,7 +67,7 @@ class ViewLabels extends ViewModulefields
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $translatedEditModule = '';
         $editModule = $_REQUEST['view_module'];

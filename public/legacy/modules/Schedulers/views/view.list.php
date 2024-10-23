@@ -46,7 +46,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class SchedulersViewList extends ViewList
 {
-    public function display()
+    public function display() : void
     {
         parent::display();
         if (!isset($this->options['show_all']) || !($this->options['show_all'] === false)) {

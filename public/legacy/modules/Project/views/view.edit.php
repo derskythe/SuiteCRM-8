@@ -52,7 +52,7 @@ class ProjectViewEdit extends ViewEdit
 
 
 
-    public function display()
+    public function display() : void
     {
         global $json;
 

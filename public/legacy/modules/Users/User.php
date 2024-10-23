@@ -1146,12 +1146,6 @@ class User extends Person implements EmailInterface
         return false;
     }
 
-    public function get_summary_text()
-    {
-        //$this->_create_proper_name_field();
-        return $this->name;
-    }
-
     /**
      * @param string $user_name         - Must be non null and at least 2 characters
      * @param string $username_password - Must be non null and at least 1 character.
@@ -1164,9 +1158,8 @@ class User extends Person implements EmailInterface
     {
         // encrypt the password.
         $salt = substr((string) $this->user_name, 0, 2);
-        $encrypted_password = crypt($username_password, $salt);
 
-        return $encrypted_password;
+        return crypt($username_password, $salt);
     }
 
     /**
@@ -1198,7 +1191,7 @@ class User extends Person implements EmailInterface
      *
      * @return User|SugarBean|null null if no User found
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $ret = parent::retrieve($id, $encode, $deleted);
         if ($ret && isset($_SESSION) && $_SESSION !== null) {
@@ -1766,7 +1759,7 @@ class User extends Person implements EmailInterface
             throw new RuntimeException('Not authorized');
         }
 
-        include('modules/Users/field_arrays.php');
+        include(__DIR__.'/../../modules/Users/field_arrays.php');
 
         $cols = '';
         foreach ($fields_array['User']['export_fields'] as $field) {
@@ -1778,7 +1771,7 @@ class User extends Person implements EmailInterface
 
         $where_auto = ' users.deleted = 0';
 
-        if ($where != '') {
+        if ($where !== '') {
             $query .= " WHERE $where AND " . $where_auto;
         } else {
             $query .= ' WHERE ' . $where_auto;
@@ -1790,7 +1783,7 @@ class User extends Person implements EmailInterface
             $query .= ' AND users.is_admin=0';
         }
 
-        if ($order_by != '') {
+        if ($order_by !== '') {
             $query .= " ORDER BY $order_by";
         } else {
             $query .= ' ORDER BY users.user_name';
@@ -1819,7 +1812,9 @@ class User extends Person implements EmailInterface
         // First, get the list of IDs.
         $query = "SELECT call_id as id from calls_users where user_id='$this->id' AND deleted=0";
 
-        return $this->build_related_list($query, BeanFactory::newBean('Calls'));
+        $template = BeanFactory::newBean('Calls');
+
+        return $this->build_related_list($query, $template);
     }
 
     /**
@@ -2598,7 +2593,9 @@ class User extends Person implements EmailInterface
     public function afterImportSave() : bool
     {
         if (
-            $this->user_hash == false && !$this->is_group && !$this->portal_only && isset($GLOBALS['sugar_config']['passwordsetting']['SystemGeneratedPasswordON']) && $GLOBALS['sugar_config']['passwordsetting']['SystemGeneratedPasswordON']
+            !$this->user_hash && !$this->is_group && !$this->portal_only
+            && isset($GLOBALS['sugar_config']['passwordsetting']['SystemGeneratedPasswordON'])
+            && $GLOBALS['sugar_config']['passwordsetting']['SystemGeneratedPasswordON']
         ) {
             $backUpPost = $_POST;
             $_POST = array(
@@ -2611,6 +2608,8 @@ class User extends Person implements EmailInterface
 
             return $result == true;
         }
+
+        return false;
     }
 
     /**

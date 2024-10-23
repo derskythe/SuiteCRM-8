@@ -65,7 +65,7 @@ class ViewPopup extends SugarView
      * @throws Exception
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $popupMeta, $mod_strings;
 

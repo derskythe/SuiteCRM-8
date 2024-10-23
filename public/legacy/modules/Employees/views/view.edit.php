@@ -55,7 +55,7 @@ class EmployeesViewEdit extends ViewEdit
 
 
 
-    public function display()
+    public function display() : void
     {
         if (is_admin($GLOBALS['current_user'])) {
             $json = getJSONobj();

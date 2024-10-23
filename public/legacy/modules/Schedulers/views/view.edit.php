@@ -73,7 +73,7 @@ class SchedulersViewEdit extends ViewEdit
     }
 
 
-    public function display()
+    public function display() : void
     {
         global $mod_strings;
         global $app_list_strings;

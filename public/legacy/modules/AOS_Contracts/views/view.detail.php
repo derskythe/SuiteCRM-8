@@ -15,7 +15,7 @@ class AOS_ContractsViewDetail extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         $this->populateContractTemplates();
         $this->displayPopupHtml();

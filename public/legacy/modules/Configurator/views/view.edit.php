@@ -106,7 +106,7 @@ class ConfiguratorViewEdit extends ViewEdit
      * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $current_user, $mod_strings, $app_strings, $app_list_strings, $sugar_config, $locale;
 

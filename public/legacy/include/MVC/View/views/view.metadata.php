@@ -87,7 +87,7 @@ class ViewMetadata extends SugarView
         echo '</pre>';
     }
 
-    public function display()
+    public function display() : void
     {
         $do = !empty($_REQUEST['do'])?$_REQUEST['do']:'';
         echo "<form method='post'>";

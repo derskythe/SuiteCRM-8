@@ -69,7 +69,7 @@ class CalendarViewCreateInvitee extends SugarView
         }
     }
 
-    public function display()
+    public function display() : void
     {
         $sendbackArr = array(
             'module' => $this->bean->object_name,

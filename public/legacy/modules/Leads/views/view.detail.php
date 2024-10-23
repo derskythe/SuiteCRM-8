@@ -45,7 +45,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class LeadsViewDetail extends ViewDetail
 {
-    public function display()
+    public function display() : void
     {
         global $sugar_config;
 

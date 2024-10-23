@@ -71,7 +71,7 @@ class ViewWizard extends SugarView
      * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $current_user, $locale, $sugar_config, $app_list_strings, $sugar_version;
 

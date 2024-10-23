@@ -12,7 +12,7 @@ class AOS_PDF_TemplatesViewEdit extends ViewEdit
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         $this->setFields();
         parent::display();

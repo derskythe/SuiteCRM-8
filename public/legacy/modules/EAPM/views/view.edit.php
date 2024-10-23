@@ -115,7 +115,7 @@ class EAPMViewEdit extends ViewEdit
         return parent::getModuleTitleIconPath('Users');
     }
 
-    public function display()
+    public function display() : void
     {
         $this->bean->password = empty($this->bean->password) ? '' : EAPM::$passwordPlaceholder;
 

@@ -58,7 +58,7 @@ class ProjectViewTemplatesDetail extends ViewDetail
            );
     }
 
-    public function display()
+    public function display() : void
     {
         global $beanFiles;
         require_once($beanFiles['Project']);

@@ -64,7 +64,7 @@ class ViewQuick extends ViewDetail
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         $this->dv->showVCRControl = false;
         $this->dv->th->ss->assign('hideHeader', true);

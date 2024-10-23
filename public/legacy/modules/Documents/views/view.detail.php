@@ -59,7 +59,7 @@ class DocumentsViewDetail extends ViewDetail
         return $params;
     }
 
-    public function display()
+    public function display() : void
     {
         //check to see if the file field is empty.  This should not occur and would only happen when an error has ocurred during upload, or from db manipulation of record.
         if (empty($this->bean->filename)) {

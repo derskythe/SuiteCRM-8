@@ -63,7 +63,7 @@ class OpportunitiesViewEdit extends ViewEdit
 
 
 
-    public function display()
+    public function display() : void
     {
         global $app_list_strings;
         $json = getJSONobj();

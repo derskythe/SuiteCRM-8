@@ -58,7 +58,7 @@ class ViewHome extends SugarView
     /**
      * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $current_user;
         global $mod_strings;

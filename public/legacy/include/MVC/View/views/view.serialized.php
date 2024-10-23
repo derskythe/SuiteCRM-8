@@ -50,7 +50,7 @@ class ViewSerialized extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         ob_clean();
         echo serialize($this->bean->toArray());
