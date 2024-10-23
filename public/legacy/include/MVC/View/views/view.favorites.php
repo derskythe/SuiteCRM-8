@@ -56,6 +56,7 @@ class ViewFavorites extends SugarView
 
     /**
      * @throws SmartyException
+     * @throws \Smarty\Exception
      */
     public function display() : void
     {

@@ -6351,7 +6351,7 @@ class SugarBean
                 $conds[] = $key . '=\'' . $this->db->quote($value) . '\'';
             }
             $query = sprintf(
-                'UPDATE %s SET %s,date_modified=%s %s',
+                'UPDATE %s SET %s, date_modified=%s %s',
                 $table,
                 implode(',', $conds),
                 $date_modified,

@@ -137,6 +137,7 @@ class SugarView
      * @var array
      */
     private array $settings = [];
+    protected bool $_isDCForm = false;
 
     /**
      * SugarView constructor.
@@ -1803,6 +1804,52 @@ class SugarView
     }
 
     /**
+     * @return void
+     */
+    public function preDisplayUndefinedRecord() : void
+    {
+        if (!empty($_REQUEST['source_module']) && $_REQUEST['source_module'] !== 'undefined' && !empty($_REQUEST['record'])) {
+            $this->bean = loadBean($_REQUEST['source_module']);
+            if ($this->bean instanceof SugarBean
+                && $this->bean->object_name !== 'EmailMan') {
+                $this->bean->retrieve($_REQUEST['record']);
+                if (!empty($this->bean->id)) {
+                    $_REQUEST['parent_id'] = $this->bean->id;
+                }
+                if (!empty($this->bean->module_dir)) {
+                    $_REQUEST['parent_type'] = $this->bean->module_dir;
+                }
+                if (!empty($this->bean->name)) {
+                    $_REQUEST['parent_name'] = $this->bean->name;
+                }
+                if (!empty($this->bean->id)) {
+                    $_REQUEST['return_id'] = $this->bean->id;
+                }
+                if (!empty($this->bean->module_dir)) {
+                    $_REQUEST['return_module'] = $this->bean->module_dir;
+                }
+
+                //Now preload any related fields
+                if (isset($_REQUEST['module'])) {
+                    $target_bean = loadBean($_REQUEST['module']);
+                    foreach ($target_bean->field_defs as $fields) {
+                        if (isset($fields['module'], $fields['rname']) && $fields['type'] === 'relate' && $fields['module'] === $_REQUEST['source_module']) {
+                            $rel_name = $fields['rname'];
+                            if (isset($this->bean->$rel_name)) {
+                                $_REQUEST[$fields['name']] = $this->bean->$rel_name;
+                            }
+                            if (!empty($_REQUEST['record']) && !empty($fields['id_name'])) {
+                                $_REQUEST[$fields['id_name']] = $_REQUEST['record'];
+                            }
+                        }
+                    }
+                }
+            }
+            $this->_isDCForm = true;
+        }
+    }
+
+    /**
      * getHelpText
      *
      * This is a protected function that returns the help text portion.  It is called from getModuleTitle.
@@ -1970,6 +2017,25 @@ class SugarView
         $this->settings[$scope] = $this->mergeDeepArray($data);
 
         return $ret;
+    }
+
+    protected function getModuleViewDefsSourceFile(&$module, &$view) : string
+    {
+        $base = 'modules/' . $module . '/metadata/';
+        $source = 'custom/' . $base . strtolower($view) . 'defs.php';
+        if (!file_exists($source)) {
+            $source = $base . strtolower($view) . 'defs.php';
+            if (!file_exists($source)) {
+                //if our view does not exist default to EditView
+                $this->viewType = 'EditView';
+                $source = 'custom/' . $base . 'editviewdefs.php';
+                if (!file_exists($source)) {
+                    $source = $base . 'editviewdefs.php';
+                }
+            }
+        }
+
+        return $source;
     }
 
     /**

@@ -41,24 +41,24 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-
 require_once('include/Sugarpdf/SugarpdfFactory.php');
 
 class ViewSugarpdf extends SugarView
 {
-    public $type ='sugarpdf';
+    public $type = 'sugarpdf';
     /**
      * It is set by the "sugarpdf" request parameter and it is use by SugarpdfFactory to load the good sugarpdf class.
+     *
      * @var String
      */
-    public $sugarpdf='default';
+    public $sugarpdf = 'default';
     /**
      * The sugarpdf object (Include the TCPDF object).
      * The atributs of this object are destroy in the output method.
+     *
      * @var Sugarpdf object
      */
-    public $sugarpdfBean=null;
+    public $sugarpdfBean = null;
 
 
     public function __construct()
@@ -76,16 +76,17 @@ class ViewSugarpdf extends SugarView
                 LoggerManager::getLogger()->warn('Undefined index: record');
             }
 
-            header('Location:index.php?module='.(isset($_REQUEST['module']) ? $_REQUEST['module'] : null).'&action=DetailView&record='.(isset($_REQUEST['record']) ? $_REQUEST['record'] : null));
+            header(
+                'Location:index.php?module=' . ($_REQUEST['module'] ?? null) . '&action=DetailView&record=' . ($_REQUEST['record'] ?? null)
+            );
         }
     }
 
 
-
-
     public function preDisplay() : void
     {
-        $this->sugarpdfBean = SugarpdfFactory::loadSugarpdf($this->sugarpdf, $this->module, $this->bean, $this->view_object_map);
+        $this->sugarpdfBean =
+            SugarpdfFactory::loadSugarpdf($this->sugarpdf, $this->module, $this->bean, $this->view_object_map);
 
         // ACL control
         if (!empty($this->bean) && !$this->bean->ACLAccess($this->sugarpdfBean->aclAction)) {

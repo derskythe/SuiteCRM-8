@@ -429,7 +429,7 @@ class SugarController
             $this->target_module
         );
         $GLOBALS['current_view'] = $view;
-        if (!empty($this->bean) && !$this->bean->ACLAccess($view->type) && $view->type !== 'list') {
+        if (($view !== null && $view->type !== null && $view->type !== 'list') && !empty($this->bean) && !$this->bean->ACLAccess($view->type)) {
             ACLController::displayNoAccess(true);
             sugar_cleanup(true);
         }

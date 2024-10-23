@@ -48,7 +48,7 @@ require_once('include/MVC/View/views/view.detail.php');
 
 class ViewQuick extends ViewDetail
 {
-    public $type ='detail';
+    public $type = 'detail';
 
     public function __construct()
     {
@@ -63,6 +63,8 @@ class ViewQuick extends ViewDetail
 
     /**
      * @throws SmartyException
+     * @throws JsonException
+     * @throws Exception
      */
     public function display() : void
     {
@@ -74,6 +76,8 @@ class ViewQuick extends ViewDetail
         }
         $this->dv->process();
         ob_clean();
-        echo json_encode(array('title'=> $this->bean->name, 'url'=>'index.php?module=' . $this->bean->module_dir . '&action=DetailView&record=' . $this->bean->id ,'html'=> $this->dv->display(false)));
+        echo json_encode(array( 'title' => $this->bean->name,
+                                'url'   => 'index.php?module=' . $this->bean->module_dir . '&action=DetailView&record=' . $this->bean->id,
+                                'html'  => $this->dv->display(false) ), JSON_THROW_ON_ERROR);
     }
 }

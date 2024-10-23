@@ -45,7 +45,7 @@ class ViewPopup extends SugarView
     /**
      * @var string
      */
-    public $type ='list';
+    public $type = 'list';
     /**
      * @var array
      */
@@ -115,28 +115,41 @@ class ViewPopup extends SugarView
                 require_once($popupMeta['searchdefs']);
             }
         } else {
-            if (empty($searchdefs) && file_exists('custom/modules/'.$this->module.'/metadata/searchdefs.php')) {
-                require_once('custom/modules/'.$this->module.'/metadata/searchdefs.php');
+            if (empty($searchdefs) && file_exists('custom/modules/' . $this->module . '/metadata/searchdefs.php')) {
+                require_once('custom/modules/' . $this->module . '/metadata/searchdefs.php');
             } else {
-                if (empty($searchdefs) && file_exists('modules/'.$this->module.'/metadata/searchdefs.php')) {
-                    require_once('modules/'.$this->module.'/metadata/searchdefs.php');
+                if (empty($searchdefs) && file_exists('modules/' . $this->module . '/metadata/searchdefs.php')) {
+                    require_once('modules/' . $this->module . '/metadata/searchdefs.php');
                 }
             }
         }
 
         //if you click the pagination button, it will populate the search criteria here
-        if (!empty($this->bean) && isset($_REQUEST[$this->module.'2_'.strtoupper($this->bean->object_name).'_offset'])) {
+        if (!empty($this->bean) && isset(
+                $_REQUEST[$this->module . '2_' . strtoupper(
+                    $this->bean->object_name
+                ) . '_offset']
+            )) {
             if (!empty($_REQUEST['current_query_by_page'])) {
-                $blockVariables = array('mass', 'uid', 'massupdate', 'delete', 'merge', 'selectCount',
-                    'sortOrder', 'orderBy', 'request_data', 'current_query_by_page');
-                $current_query_by_page = json_decode(html_entity_decode($_REQUEST['current_query_by_page']), true);
-                foreach ($current_query_by_page as $search_key=>$search_value) {
-                    if ($search_key != $this->module.'2_'.strtoupper($this->bean->object_name).'_offset'
+                $blockVariables = array( 'mass',
+                                         'uid',
+                                         'massupdate',
+                                         'delete',
+                                         'merge',
+                                         'selectCount',
+                                         'sortOrder',
+                                         'orderBy',
+                                         'request_data',
+                                         'current_query_by_page' );
+                $current_query_by_page =
+                    json_decode(html_entity_decode($_REQUEST['current_query_by_page']), true, 512, JSON_THROW_ON_ERROR);
+                foreach ($current_query_by_page as $search_key => $search_value) {
+                    if ($search_key !== $this->module . '2_' . strtoupper($this->bean->object_name) . '_offset'
                         && !in_array($search_key, $blockVariables, true)) {
                         if (!is_array($search_value)) {
                             $_REQUEST[$search_key] = securexss($search_value);
                         } else {
-                            foreach ($search_value as $key=>&$val) {
+                            foreach ($search_value as $key => $val) {
                                 $val = securexss($val);
                             }
                             $_REQUEST[$search_key] = $search_value;

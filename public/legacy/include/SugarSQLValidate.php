@@ -89,7 +89,7 @@ class SugarSQLValidate
         }
         // verify SELECT didn't change
         if ((is_countable($parsed['SELECT']) ? count($parsed['SELECT'])
-                : 0) != 1 || $parsed['SELECT'][0] !== array( 'expr_type' => 'colref',
+                : 0) !== 1 || $parsed['SELECT'][0] !== array( 'expr_type' => 'colref',
                                                              'alias'     => '`dummy`',
                                                              'base_expr' => 'dummy',
                                                              'sub_tree'  => false )) {
@@ -98,7 +98,7 @@ class SugarSQLValidate
         }
         // verify FROM didn't change
         if ((is_countable($parsed['FROM']) ? count($parsed['FROM'])
-                : 0) != 1 || $parsed['FROM'][0] !== array( 'table'      => 'dummytable',
+                : 0) !== 1 || $parsed['FROM'][0] !== array( 'table'      => 'dummytable',
                                                            'alias'      => 'dummytable',
                                                            'join_type'  => 'JOIN',
                                                            'ref_type'   => '',

@@ -71,19 +71,6 @@ class SubpanelQuickCreate
         $source = $this->getModuleViewDefsSourceFile($module, $this->viewType);
 
         // locate the best viewdefs to use: 1. custom/module/quickcreatedefs.php 2. module/quickcreatedefs.php 3. custom/module/editviewdefs.php 4. module/editviewdefs.php
-        $base = 'modules/' . $module . '/metadata/';
-        $source = 'custom/' . $base . strtolower($view) . 'defs.php';
-        if (!file_exists($source)) {
-            $source = $base . strtolower($view) . 'defs.php';
-            if (!file_exists($source)) {
-                //if our view does not exist default to EditView
-                $view = 'EditView';
-                $source = 'custom/' . $base . 'editviewdefs.php';
-                if (!file_exists($source)) {
-                    $source = $base . 'editviewdefs.php';
-                }
-            }
-        }
 
         $this->ev = $this->getEditView();
         $this->ev->view = $this->viewType;

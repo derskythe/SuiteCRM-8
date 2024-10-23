@@ -80,8 +80,6 @@ class SubpanelQuickEdit
         $this->ev->ss = new Sugar_Smarty();
         $_REQUEST['return_action'] = 'SubPanelViewer';
 
-
-
         //retrieve bean if id or record is passed in
         if (isset($_REQUEST['record']) || isset($_REQUEST['id'])) {
             global $beanList;
