@@ -27,6 +27,7 @@
 
 namespace App\Statistics\LegacyHandler;
 
+use Throwable;
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
 use App\Statistics\Entity\Statistic;
 use App\Statistics\Service\StatisticsProviderInterface;
@@ -34,7 +35,8 @@ use App\Statistics\StatisticsHandlingTrait;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
-class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProviderInterface, LoggerAwareInterface
+class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProviderInterface,
+                                                                  LoggerAwareInterface
 {
     use StatisticsHandlingTrait;
 
@@ -43,7 +45,7 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @inheritDoc
@@ -55,11 +57,11 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function getData(array $query) : Statistic
     {
-
-        $subpanel = $query['params']['subpanel'] ?? $query['key'];
+        $sub_panel = $query['params']['subpanel'] ?? $query['key'];
 
         [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
@@ -69,7 +71,7 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
         $this->init();
         $this->startLegacyApp();
 
-        $queries = $this->getQueries($module, $id, $subpanel);
+        $queries = $this->getQueries($module, $id, $sub_panel);
 
         if (empty($queries)) {
             $this->logger->error('default-statistic: No queries found.', [ 'query' => $query ]);

@@ -37,14 +37,14 @@ use App\Languages\LegacyHandler\ModStringsHandler;
  */
 final class ModStringsStateProvider implements ProviderInterface
 {
-
     /**
      * @var ModStringsHandler
      */
-    private $modStringsHandler;
+    private ModStringsHandler $modStringsHandler;
 
     /**
      * ModStringsStateProvider constructor.
+     *
      * @param ModStringsHandler $modStringsHandler
      */
     public function __construct(ModStringsHandler $modStringsHandler)
@@ -54,12 +54,18 @@ final class ModStringsStateProvider implements ProviderInterface
 
     /**
      * Get mod strings for given language id
+     *
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
+     *
      * @return ModStrings|null
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?ModStrings
+    public function provide(
+        Operation $operation,
+        array     $uriVariables = [],
+        array     $context = []
+    ) : ?ModStrings
     {
         return $this->modStringsHandler->getModStrings($uriVariables['id'] ?? '');
     }

@@ -54,7 +54,7 @@ class AppListStringsHandler extends LegacyHandler implements AppListStringsProvi
     public function getAppListStrings(string $language) : ?AppListStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         $this->init();

@@ -32,15 +32,16 @@ use Psr\Log\LoggerInterface;
 
 trait AppLoggingTrait
 {
-    abstract public function getLogger(): LoggerInterface;
+    abstract public function getLogger() : LoggerInterface;
 
     /**
      * @param string $message
      * @param string $level
      * @param array $context
+     *
      * @return void
      */
-    protected function log(string $message, string $level = 'info', array $context = []): void
+    protected function log(string $message, string $level = 'info', array $context = []) : void
     {
         $className = get_class($this);
         try {
@@ -59,13 +60,35 @@ trait AppLoggingTrait
      *
      * @return void
      */
-    protected function logArray(string $message, array $contents, string $level = 'info', array $context = []): void
+    protected function logArray(
+        string $message,
+        array  $contents,
+        string $level = 'info',
+        array  $context = []
+    ) : void
     {
         $className = get_class($this);
         try {
-            $this->getLogger()->$level("$className | " . $message . " | " . json_encode($contents, JSON_THROW_ON_ERROR),
-                $context);
+            $this->getLogger()->$level(
+                sprintf(
+                    '%s | %s | %s',
+                    $className,
+                    $message,
+                    json_encode($contents, JSON_THROW_ON_ERROR)
+                ),
+                $context
+            );
         } catch (Exception $e) {
+            trigger_error(
+                sprintf(
+                    '%s\\nFile: %s\\nLine: %s\\StackTrace: %s',
+                    $e->getMessage(),
+                    $e->getFile(),
+                    $e->getLine(),
+                    $e->getTraceAsString()
+                ),
+                E_USER_ERROR
+            );
         }
     }
 

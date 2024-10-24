@@ -42,10 +42,16 @@ class AddNewConfigEntriesHandler extends LegacyHandler
     /**
      * @var SystemConfigHandler
      */
-    protected $configHandler;
+    protected SystemConfigHandler $configHandler;
+
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
 
     /**
      * AddNewConfigEntriesHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -53,17 +59,19 @@ class AddNewConfigEntriesHandler extends LegacyHandler
      * @param LegacyScopeState $legacyScopeState
      * @param RequestStack $session
      * @param SystemConfigHandler $configHandler
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
+        string              $projectDir,
+        string              $legacyDir,
+        string              $legacySessionName,
+        string              $defaultSessionName,
+        LegacyScopeState    $legacyScopeState,
+        RequestStack        $session,
         SystemConfigHandler $configHandler,
-        LoggerInterface $logger
-    ) {
+        LoggerInterface     $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
@@ -74,12 +82,13 @@ class AddNewConfigEntriesHandler extends LegacyHandler
             $logger
         );
         $this->configHandler = $configHandler;
+        $this->logger = $logger;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -87,7 +96,7 @@ class AddNewConfigEntriesHandler extends LegacyHandler
     /**
      * @return Feedback
      */
-    public function run(): Feedback
+    public function run() : Feedback
     {
         $this->init();
 
@@ -95,13 +104,27 @@ class AddNewConfigEntriesHandler extends LegacyHandler
 
         $feedback = new Feedback();
         $feedback->setSuccess(false);
-        $feedback->setMessages(['Unable to add new entries to config']);
+        $feedback->setMessages([ 'Unable to add new entries to config' ]);
 
         try {
             $defaults = get_sugar_config_defaults();
         } catch (Exception $exception) {
-            $feedback->setDebug(['Exception occurred when trying to load config defaults']);
-            $feedback->setMessages(['Exception occurred when trying to load config defaults']);
+            $this->logger->error($exception->getMessage(), [
+                $exception->getMessage(),
+                $exception->getTraceAsString(),
+                $exception->getCode(),
+                $exception->getFile(),
+                $exception->getLine(),
+                $exception->getPrevious()
+            ]);
+            $feedback->setDebug([ 'Exception occurred when trying to load config defaults',
+                                  $exception->getMessage(),
+                                  $exception->getTraceAsString(),
+                                  $exception->getCode(),
+                                  $exception->getFile(),
+                                  $exception->getLine(),
+                                  $exception->getPrevious() ]);
+            $feedback->setMessages([ 'Exception occurred when trying to load config defaults' ]);
             $this->close();
 
             return $feedback;
@@ -112,17 +135,15 @@ class AddNewConfigEntriesHandler extends LegacyHandler
         $updateFeedback = null;
 
         if (empty($newEntries)) {
-
             $feedback->setSuccess(true);
-            $feedback->setMessages(['No new entries to add to the config file']);
-
+            $feedback->setMessages([ 'No new entries to add to the config file' ]);
         } else {
             $newConfig = array_merge($sugar_config, $newEntries);
             $updateFeedback = $this->configHandler->updateSystemConfig($newConfig);
 
             if ($updateFeedback->isSuccess()) {
                 $feedback->setSuccess(true);
-                $feedback->setMessages(['Added new config entries to config file']);
+                $feedback->setMessages([ 'Added new config entries to config file' ]);
             }
         }
 
@@ -142,9 +163,10 @@ class AddNewConfigEntriesHandler extends LegacyHandler
      * @param array $defaults
      * @param array $config
      * @param Feedback $feedback
+     *
      * @return array
      */
-    protected function getNewEntries(array $defaults, array $config, Feedback $feedback): array
+    protected function getNewEntries(array $defaults, array $config, Feedback $feedback) : array
     {
         $newEntries = [];
         foreach ($defaults as $key => $default) {

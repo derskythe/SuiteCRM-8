@@ -47,7 +47,7 @@ class SetupLegacyMigrationCommand extends BaseStepExecutorCommand
     /**
      * @inheritdoc
      */
-    protected $suppressWarnings = true;
+    protected bool $suppressWarnings = true;
 
     /**
      * SetupLegacyMigrationCommand constructor.

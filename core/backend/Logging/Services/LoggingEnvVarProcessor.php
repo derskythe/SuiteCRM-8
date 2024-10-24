@@ -31,16 +31,23 @@ use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
 class LoggingEnvVarProcessor implements EnvVarProcessorInterface
 {
-
     protected string $projectDir;
 
     public function __construct(
         string $projectDir = ''
-    ) {
+    )
+    {
         $this->projectDir = $projectDir;
     }
 
-    public function getEnv(string $prefix, string $name, \Closure $getEnv): string
+    /**
+     * @param string $prefix
+     * @param string $name
+     * @param \Closure $getEnv
+     *
+     * @return string
+     */
+    public function getEnv(string $prefix, string $name, \Closure $getEnv) : string
     {
         $env = $getEnv($name);
 
@@ -52,7 +59,7 @@ class LoggingEnvVarProcessor implements EnvVarProcessorInterface
             return $env;
         }
 
-        $baseDir = __DIR__. '../../../../../';
+        $baseDir = __DIR__ . '/../../../../../';
 
         if (!empty($this->projectDir)) {
             $baseDir = $this->projectDir . '/';
@@ -61,7 +68,7 @@ class LoggingEnvVarProcessor implements EnvVarProcessorInterface
         return $baseDir . $env;
     }
 
-    public static function getProvidedTypes(): array
+    public static function getProvidedTypes() : array
     {
         return [
             'env.logs' => 'string',

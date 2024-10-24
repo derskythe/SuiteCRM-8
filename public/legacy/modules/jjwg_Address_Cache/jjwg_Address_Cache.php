@@ -19,8 +19,10 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
 
     /**
      * Constructor
+     *
+     * @throws Exception
      */
-    public function __construct($init=true)
+    public function __construct($init = true)
     {
         parent::__construct();
         // Admin Config Setting
@@ -43,6 +45,7 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
 
     /**
      * Get the Address Info from the Address Cache Module
+     *
      * @param $aInfo array of geocode info (lng, lat, status, address)
      */
     public function getAddressCacheInfo($aInfo = array())
@@ -57,13 +60,13 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
 
             $address = $aInfoAddress;
         } else {
-            $address = (string)$aInfo;
+            $address = (string) $aInfo;
         }
 
         if (!empty($this->settings['address_cache_get_enabled']) && !empty($address)) {
             $query = 'SELECT ' . $this->table_name . '.* FROM ' . $this->table_name . ' WHERE ' .
-                    $this->table_name . '.deleted = 0 AND ' .
-                    $this->table_name . ".name='" . $this->db->quote($address) . "'";
+                $this->table_name . '.deleted = 0 AND ' .
+                $this->table_name . ".name='" . $this->db->quote($address) . "'";
             //var_dump($query);
             $cache_result = $this->db->limitQuery($query, 0, 1);
 
@@ -72,7 +75,7 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
 
                 // Note: In the jjwg_Address_Cache module the 'name' field is used for the 'address'
                 if (!empty($address_cache['name']) && !($address_cache['lng'] == 0 && $address_cache['lat'] == 0) &&
-                        $this->is_valid_lng($address_cache['lng']) && $this->is_valid_lat($address_cache['lat'])) {
+                    $this->is_valid_lng($address_cache['lng']) && $this->is_valid_lat($address_cache['lat'])) {
                     $aInfo['address'] = $address_cache['name'];
                     $aInfo['lat'] = $address_cache['lat'];
                     $aInfo['lng'] = $address_cache['lng'];
@@ -82,6 +85,7 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
                 }
             }
         }
+
         return false;
     }
 
@@ -107,7 +111,7 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
 
             if (empty($address_cache)) {
                 if (!empty($aInfo['address']) && !($aInfo['lng'] == 0 && $aInfo['lat'] == 0) &&
-                        $this->is_valid_lng($aInfo['lng']) && $this->is_valid_lat($aInfo['lat'])) {
+                    $this->is_valid_lng($aInfo['lng']) && $this->is_valid_lat($aInfo['lat'])) {
 
                     // Note: The modules 'name' field is used for the 'address'
                     // 'status' is not saved in the cache table.
@@ -119,10 +123,12 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
                     $cache->description = '';
                     $cache->assigned_user_id = $GLOBALS['current_user']->id;
                     $cache->save(false);
+
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -144,6 +150,7 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
     /**
      *
      * Check for valid longitude
+     *
      * @param $lng float
      */
     public function is_valid_lng($lng)
@@ -154,6 +161,7 @@ class jjwg_Address_Cache extends jjwg_Address_Cache_sugar
     /**
      *
      * Check for valid latitude
+     *
      * @param $lat float
      */
     public function is_valid_lat($lat)

@@ -36,10 +36,11 @@ class UserPreferencesMappers
     /**
      * @var UserPreferencesMapperInterface[]
      */
-    protected $registry = [];
+    protected array $registry = [];
 
     /**
      * UserPreferencesMappers constructor.
+     *
      * @param iterable $handlers
      */
     public function __construct(iterable $handlers)
@@ -47,23 +48,21 @@ class UserPreferencesMappers
         /**
          * @var UserPreferencesMapperInterface[]
          */
-        $handlers = iterator_to_array($handlers);
-
         foreach ($handlers as $handler) {
             $type = $handler->getKey();
             $this->registry[$type] = $handler;
         }
-
     }
 
     /**
      * Get the mapper for the given key
+     *
      * @param string $userPreferenceKey
+     *
      * @return UserPreferencesMapperInterface
      */
-    public function get(string $userPreferenceKey): UserPreferencesMapperInterface
+    public function get(string $userPreferenceKey) : UserPreferencesMapperInterface
     {
-
         if (empty($this->registry[$userPreferenceKey])) {
             throw new ItemNotFoundException(self::MSG_HANDLER_NOT_FOUND);
         }
@@ -73,10 +72,12 @@ class UserPreferencesMappers
 
     /**
      * Has mapper for the given key
+     *
      * @param string $userPreferenceKey
+     *
      * @return bool
      */
-    public function hasMapper(string $userPreferenceKey): bool
+    public function hasMapper(string $userPreferenceKey) : bool
     {
         if (empty($this->registry[$userPreferenceKey])) {
             return false;

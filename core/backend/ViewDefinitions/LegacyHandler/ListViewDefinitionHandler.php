@@ -48,7 +48,7 @@ class ListViewDefinitionHandler extends LegacyHandler
     /**
      * @var array
      */
-    protected $listViewColumnInterface = [
+    protected array $listViewColumnInterface = [
         'name'     => '',
         'width'    => '',
         'label'    => '',
@@ -64,42 +64,42 @@ class ListViewDefinitionHandler extends LegacyHandler
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var BulkActionDefinitionProviderInterface
      */
-    private $bulkActionDefinitionProvider;
+    private BulkActionDefinitionProviderInterface $bulkActionDefinitionProvider;
 
     /**
      * @var WidgetDefinitionProviderInterface
      */
-    private $widgetDefinitionProvider;
+    private WidgetDefinitionProviderInterface $widgetDefinitionProvider;
 
     /**
      * @var LineActionDefinitionProviderInterface
      */
-    private $lineActionDefinitionProvider;
+    private LineActionDefinitionProviderInterface $lineActionDefinitionProvider;
 
     /**
      * @var TableActionDefinitionProviderInterface
      */
-    private $tableActionDefinitionProvider;
+    private TableActionDefinitionProviderInterface $tableActionDefinitionProvider;
 
     /**
      * @var FilterDefinitionProviderInterface
      */
-    private $filterDefinitionProvider;
+    private FilterDefinitionProviderInterface $filterDefinitionProvider;
 
     /**
      * @var array
      */
-    private $listViewSidebarWidgets;
+    private array $listViewSidebarWidgets;
 
     /**
      * @var FieldAliasMapper
      */
-    private $fieldAliasMapper;
+    private FieldAliasMapper $fieldAliasMapper;
 
     /**
      * RecordViewDefinitionHandler constructor.

@@ -43,9 +43,9 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * Lazy initialized mapper
      *
-     * @var ModuleNameMapper
+     * @var ?ModuleNameMapper
      */
-    protected $mapper;
+    protected ?ModuleNameMapper $mapper;
 
     /**
      * @inheritDoc
@@ -82,8 +82,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
             return $this->mapper;
         }
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/ModuleNameMapper.php';
+        require_once $this->legacyDir.'/include/portability/ModuleNameMapper.php';
 
         $this->mapper = new ModuleNameMapper();
 

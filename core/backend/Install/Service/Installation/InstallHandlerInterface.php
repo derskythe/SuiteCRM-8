@@ -32,6 +32,7 @@ use App\Engine\Service\ProcessSteps\ProcessStepExecutorInterface;
 /**
  * Interface InstallHandlerInterface
  * Used to allow extensibility
+ *
  * @package App\Install\Service\Istallation
  */
 interface InstallHandlerInterface extends ProcessStepExecutorInterface

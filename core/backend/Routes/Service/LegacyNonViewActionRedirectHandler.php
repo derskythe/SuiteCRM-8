@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Routes\Service;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -39,18 +38,19 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
     /**
      * @var RouteConverterInterface
      */
-    private $routeConverter;
+    private RouteConverterInterface $routeConverter;
     /**
      * @var RouterInterface
      */
-    private $router;
+    private RouterInterface $router;
     /**
      * @var array
      */
-    private $legacyEntrypointFiles;
+    private array $legacyEntrypointFiles;
 
     /**
      * LegacyNonViewActionRedirectHandler constructor.
+     *
      * @param RouteConverterInterface $routeConverter
      * @param RouterInterface $router
      * @param String $legacyPath
@@ -58,10 +58,11 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
      */
     public function __construct(
         RouteConverterInterface $routeConverter,
-        RouterInterface $router,
-        string $legacyPath,
-        array $legacyEntrypointFiles
-    ) {
+        RouterInterface         $router,
+        string                  $legacyPath,
+        array                   $legacyEntrypointFiles
+    )
+    {
         parent::__construct($legacyPath);
         $this->routeConverter = $routeConverter;
         $this->router = $router;
@@ -72,9 +73,10 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
      * Check if the given $request is a non view api request
      *
      * @param Request $request
+     *
      * @return bool
      */
-    public function isMatch(Request $request): bool
+    public function isMatch(Request $request) : bool
     {
         if ($this->routeConverter->isLegacyViewRoute($request)) {
             return false;
@@ -87,7 +89,7 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
         $isRegistered = true;
         try {
             $this->router->matchRequest($request);
-        } catch (NoConfigurationException | ResourceNotFoundException | MethodNotAllowedException $e) {
+        } catch (NoConfigurationException|ResourceNotFoundException|MethodNotAllowedException $e) {
             $isRegistered = false;
         }
 
@@ -98,11 +100,12 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
      * Check if is legacy entry point file
      *
      * @param Request $request
+     *
      * @return bool
      */
-    public function isLegacyEntryPointFile(Request $request): bool
+    public function isLegacyEntryPointFile(Request $request) : bool
     {
-        if (strpos($request->getPathInfo(), 'index.php') !== false) {
+        if (str_contains($request->getPathInfo(), 'index.php')) {
             return false;
         }
 
@@ -117,16 +120,17 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
      * Get include file
      *
      * @param Request $request
+     *
      * @return array
      */
-    public function getEntrypointIncludeFile(Request $request): array
+    public function getEntrypointIncludeFile(Request $request) : array
     {
         $includeFile = [
             'access' => false
         ];
 
         foreach ($this->legacyEntrypointFiles as $key => $config) {
-            if (strpos($request->getPathInfo(), '/' . $key) !== false) {
+            if (str_contains($request->getPathInfo(), '/' . $key)) {
                 $includeFile = $config;
                 $includeFile['access'] = true;
                 break;
@@ -140,18 +144,12 @@ class LegacyNonViewActionRedirectHandler extends LegacyRedirectHandler
      * Check if is legacy entry point
      *
      * @param Request $request
+     *
      * @return bool
      */
-    public function isLegacyEntryPoint(Request $request): bool
+    public function isLegacyEntryPoint(Request $request) : bool
     {
-        $isEntryPoint = false;
-
-        if (strpos($request->getUri(), '/index.php') !== false &&
-            strpos($request->getUri(), 'entryPoint=') !== false
-        ) {
-            $isEntryPoint = true;
-        }
-
-        return $isEntryPoint;
+        return str_contains($request->getUri(), '/index.php') &&
+            str_contains($request->getUri(), 'entryPoint=');
     }
 }

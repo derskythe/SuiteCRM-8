@@ -37,14 +37,6 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20200608135040 extends AbstractMigration
 {
     /**
-     * @return string
-     */
-    public function getDescription(): string
-    {
-        return '';
-    }
-
-    /**
      * @param Schema $schema
      * @throws DBALException
      */
@@ -60,4 +52,3 @@ final class Version20200608135040 extends AbstractMigration
     {
     }
 }
-

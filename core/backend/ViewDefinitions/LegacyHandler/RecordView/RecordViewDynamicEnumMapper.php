@@ -33,14 +33,6 @@ use App\ViewDefinitions\LegacyHandler\ViewDefinitionMapperInterface;
 
 class RecordViewDynamicEnumMapper implements ViewDefinitionMapperInterface
 {
-
-    /**
-     * RecordViewReadOnlyMapper constructor.
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * @inheritDoc
      */

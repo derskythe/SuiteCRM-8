@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -35,12 +35,12 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 final class Version20230309192124 extends BaseMigration implements ContainerAwareInterface
 {
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return '';
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->container->get('entity_manager');
@@ -56,11 +56,11 @@ final class Version20230309192124 extends BaseMigration implements ContainerAwar
         $this->addStartDate($entityManager);
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 
-    public function addStartDate(EntityManagerInterface $entityManager): void
+    public function addStartDate(EntityManagerInterface $entityManager) : void
     {
 
         $urls = [];
@@ -73,29 +73,31 @@ final class Version20230309192124 extends BaseMigration implements ContainerAwar
 
         $rows = $result->fetchAllAssociative();
 
-        if (empty($rows)){
+        if (empty($rows)) {
             $this->log('Could not fetch all Alert records');
+
             return;
         }
 
         foreach ($rows as $row) {
-            if (!isset($row['url_redirect'])){
+            if (!isset($row['url_redirect'])) {
                 continue;
             }
 
             $urls[] = $row['url_redirect'];
         }
 
-        if (!isset($urls)){
+        if (!isset($urls)) {
             $this->log('Alerts do not have an associated url.');
+
             return;
         }
 
-        foreach($urls as $url) {
+        foreach ($urls as $url) {
 
             $splitUrl = explode('&', $url);
 
-            foreach($splitUrl as $split) {
+            foreach ($splitUrl as $split) {
 
                 if (str_contains($split, 'module')) {
                     $module = explode('=', $split)[1];
@@ -107,22 +109,22 @@ final class Version20230309192124 extends BaseMigration implements ContainerAwar
             }
 
             if (empty($id) || empty($module)) {
-                $this->log("Unable to find ID or Module");
+                $this->log('Unable to find ID or Module');
+
                 return;
             }
 
-            $stmt = $entityManager->getConnection()->prepare('SELECT * FROM ' .  strtolower($module) . ' WHERE id=:id');
+            $stmt = $entityManager->getConnection()->prepare('SELECT * FROM ' . strtolower($module) . ' WHERE id=:id');
 
             if (empty($stmt)) {
                 continue;
             }
 
-
-            $result = $stmt->executeQuery(['id' => $id]);
+            $result = $stmt->executeQuery([ 'id' => $id ]);
 
             $row = $result->fetchAllAssociative();
 
-            if (empty($row)){
+            if (empty($row)) {
                 $this->log('Unable to find records with the ID' . $id);
                 continue;
             }
@@ -132,17 +134,18 @@ final class Version20230309192124 extends BaseMigration implements ContainerAwar
                 continue;
             }
 
-            $stmt = $entityManager->getConnection()->prepare('UPDATE alerts SET `date_start` = :date_start WHERE `url_redirect` = :url');
+            $stmt =
+                $entityManager->getConnection()->prepare(
+                    'UPDATE alerts SET `date_start` = :date_start WHERE `url_redirect` = :url'
+                );
 
-            if (empty($stmt)){
+            if (empty($stmt)) {
                 continue;
             }
 
-            $stmt->executeQuery(['date_start' => $row[0]['date_start'], 'url' => $url]);
+            $stmt->executeQuery([ 'date_start' => $row[0]['date_start'], 'url' => $url ]);
         }
     }
-
-
 
 
 }

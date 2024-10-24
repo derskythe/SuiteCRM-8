@@ -46,7 +46,7 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * LegacyHandler constructor.
@@ -158,8 +158,9 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      * @throws Exception
+     * @throws \Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $this->init();
         $this->startLegacyApp();
@@ -181,8 +182,7 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
         $process->setStatus('success');
         $process->setMessages([]);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Favorites/FavoritesManagerPort.php';
+        require_once $this->legacyDir.'/include/portability/Services/Favorites/FavoritesManagerPort.php';
 
         $favoritesManager = new FavoritesManagerPort();
 

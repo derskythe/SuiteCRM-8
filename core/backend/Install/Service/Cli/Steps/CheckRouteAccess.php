@@ -61,13 +61,14 @@ class CheckRouteAccess implements CliStepInterface {
         return self::POSITION;
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function execute(array &$context): Feedback
     {
         $inputs = $this->getInputs($context);
 
-        $inputsValid = $this->validateInputs($inputs);
-
-        if (!$inputsValid) {
+        if (!$this->validateInputs($inputs)) {
             return (new Feedback())->setSuccess(false)->setMessages(['Missing inputs']);
         }
 

@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -38,27 +38,17 @@ final class Version20240513131551 extends BaseMigration implements ContainerAwar
 {
     use EnvHandlingMigrationTrait;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $upgradeLogger;
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return 'Add log level and log filename configs to .env';
     }
 
-    public function isTransactional(): bool
+    public function isTransactional() : bool
     {
         return false;
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
         $envFile = $this->getProjectDir() . "/.env";
 
@@ -72,25 +62,26 @@ final class Version20240513131551 extends BaseMigration implements ContainerAwar
 
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 
     /**
      * Check and add missing log config
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addLogConfig(&$envContents, string $envFile): void
+    protected function addLogConfig(&$envContents, string $envFile) : void
     {
         $properties = [
-            'MAIN_LOG_LEVEL' => 'warning',
-            'DEPRECATION_LOG_LEVEL' => 'error',
-            'SECURITY_LOG_LEVEL' => 'error',
-            '#LOG_DIR' => "'my_log_dir' # When not set defaults to logs/current-env/, e.g: logs/prod/. Can also set absolute path, e.g. '/path-to-suitecrm/my_log_dir'",
-            '#MAIN_LOG_FILE_NAME' => 'my_main.log # when not set defaults to prod.log or dev.log',
+            'MAIN_LOG_LEVEL'             => 'warning',
+            'DEPRECATION_LOG_LEVEL'      => 'error',
+            'SECURITY_LOG_LEVEL'         => 'error',
+            '#LOG_DIR'                   => "'my_log_dir' # When not set defaults to logs/current-env/, e.g: logs/prod/. Can also set absolute path, e.g. '/path-to-suitecrm/my_log_dir'",
+            '#MAIN_LOG_FILE_NAME'        => 'my_main.log # when not set defaults to prod.log or dev.log',
             '#DEPRECATION_LOG_FILE_NAME' => 'my_deprecation.log # when not set defaults to prod.deprecation.log or dev.deprecation.log',
-            '#SECURITY_LOG_FILE_NAME' => 'my_security.log # when not set defaults to prod.security.log or dev.security.log'
+            '#SECURITY_LOG_FILE_NAME'    => 'my_security.log # when not set defaults to prod.security.log or dev.security.log'
         ];
 
         $wrapperStart = '###> logs ###';

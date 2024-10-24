@@ -35,7 +35,7 @@ use App\Process\Service\ProcessHandlerInterface;
 class ConvertLeadAction implements ProcessHandlerInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options are not defined';
-    protected const PROCESS_TYPE = 'record-convert-lead';
+    protected const PROCESS_TYPE          = 'record-convert-lead';
 
     /**
      * @var ModuleNameMapperInterface
@@ -44,6 +44,7 @@ class ConvertLeadAction implements ProcessHandlerInterface
 
     /**
      * MergeRecordsBulkAction constructor.
+     *
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(ModuleNameMapperInterface $moduleNameMapper)
@@ -54,7 +55,7 @@ class ConvertLeadAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -62,7 +63,7 @@ class ConvertLeadAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -70,7 +71,7 @@ class ConvertLeadAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
@@ -90,7 +91,7 @@ class ConvertLeadAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -102,7 +103,7 @@ class ConvertLeadAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -122,14 +123,14 @@ class ConvertLeadAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $options = $process->getOptions();
 
         $responseData = [
             'handler' => 'redirect',
-            'params' => [
-                'route' => $options['module'] . '/convert-lead/' . $options['id'],
+            'params'  => [
+                'route'       => $options['module'] . '/convert-lead/' . $options['id'],
                 'queryParams' => [
                 ]
             ]

@@ -57,13 +57,13 @@ class DefaultModuleConfigMapper implements SystemConfigMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(SystemConfig $config): void
+    public function map(SystemConfig $systemConfig): void
     {
-        if (empty($config->getValue())) {
+        if (empty($systemConfig->getValue())) {
             return;
         }
 
-        $frontendName = $this->moduleNameMapper->toFrontEnd($config->getValue());
-        $config->setValue($frontendName);
+        $frontendName = $this->moduleNameMapper->toFrontEnd($systemConfig->getValue());
+        $systemConfig->setValue($frontendName);
     }
 }

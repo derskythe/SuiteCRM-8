@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -13,19 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20231108164138  extends BaseMigration implements ContainerAwareInterface
+final class Version20231108164138 extends BaseMigration implements ContainerAwareInterface
 {
     use EnvHandlingMigrationTrait;
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $upgradeLogger;
 
     public function getDescription() : string
     {
@@ -41,6 +31,7 @@ final class Version20231108164138  extends BaseMigration implements ContainerAwa
             unset($systemConfigs['allowed_preview'][$key]);
             $systemConfigsHandler->updateSystemConfig($systemConfigs);
             $this->log('Removed PDF from allowed_preview inside config file.');
+
             return;
         }
 

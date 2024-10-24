@@ -45,7 +45,7 @@ class SetSessionLanguage extends LegacyHandler implements ProcessHandlerInterfac
     /**
      * @var UserHandler
      */
-    private $userHandler;
+    private UserHandler $userHandler;
 
     /**
      * LegacyHandler constructor.
@@ -137,7 +137,7 @@ class SetSessionLanguage extends LegacyHandler implements ProcessHandlerInterfac
      * @inheritDoc
      * @throws Exception
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         ['language' => $language] = $process->getOptions();
 

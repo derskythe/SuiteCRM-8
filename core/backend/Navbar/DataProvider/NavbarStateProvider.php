@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Navbar\DataProvider;
 
 use ApiPlatform\Metadata\Operation;
@@ -39,15 +38,16 @@ final class NavbarStateProvider implements ProviderInterface
     /**
      * @var NavigationProviderInterface
      */
-    private $navigationService;
+    private NavigationProviderInterface $navigationService;
 
     /**
      * @var Security
      */
-    private $security;
+    private Security $security;
 
     /**
      * NavbarStateProvider constructor.
+     *
      * @param NavigationProviderInterface $navigationService
      * @param Security $security
      */
@@ -59,12 +59,14 @@ final class NavbarStateProvider implements ProviderInterface
 
     /**
      * Get navbar
+     *
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
+     *
      * @return Navbar|null
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?Navbar
+    public function provide(Operation $operation, array $uriVariables = [], array $context = []) : ?Navbar
     {
         $navbar = $this->navigationService->getNavbar();
         $user = $this->security->getUser();

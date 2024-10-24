@@ -27,6 +27,8 @@
 
 namespace App\Install\LegacyHandler;
 
+use Throwable;
+use InstallValidation;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Model\Feedback;
@@ -57,7 +59,7 @@ class InstallHandler extends LegacyHandler
     /**
      * @var LoggerInterface
      */
-    private LoggerInterface $logger;
+    private LoggerInterface $local_logger;
 
     protected AppSecretGenerator $appSecretGenerator;
 
@@ -101,7 +103,7 @@ class InstallHandler extends LegacyHandler
             $requestStack,
             $logger
         );
-        $this->logger = $logger;
+        $this->local_logger = $logger;
         $this->appSecretGenerator = $appSecretGenerator;
     }
 
@@ -132,9 +134,9 @@ class InstallHandler extends LegacyHandler
 
     /**
      * @return Feedback
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function installLegacy() : \Feedback
+    public function installLegacy() : Feedback
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -145,7 +147,7 @@ class InstallHandler extends LegacyHandler
         $feedback = new Feedback();
 
         if (!is_file('config_si.php')) {
-            $this->logger->error('config_si.php is required for CLI Install.');
+            $this->local_logger->error('config_si.php is required for CLI Install.');
 
             return $feedback->setSuccess(false)->setMessages([ 'config_si.php is required for CLI Install.' ]);
         }
@@ -178,9 +180,9 @@ class InstallHandler extends LegacyHandler
      * @param array $context
      *
      * @return Feedback
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function runSystemCheck(array $context) : \Feedback
+    public function runSystemCheck(array $context) : Feedback
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -193,7 +195,7 @@ class InstallHandler extends LegacyHandler
         /* @noinspection PhpIncludeInspection */
         require_once $this->legacyDir . '/include/portability/InstallValidation/InstallValidation.php';
 
-        $validator = (new \InstallValidation())->validate($context);
+        $validator = (new InstallValidation())->validate($context);
         $result = $validator->result();
 
         $feedback = new Feedback();
@@ -223,7 +225,7 @@ class InstallHandler extends LegacyHandler
      * @return Feedback
      * @throws \JsonException
      */
-    public function runCheckRouteAccess(array $inputArray) : \FeedBack
+    public function runCheckRouteAccess(array $inputArray) : Feedback
     {
         $results = [];
         $url = $inputArray['site_host'];
@@ -334,7 +336,7 @@ class InstallHandler extends LegacyHandler
 
             return true;
         } catch (IOExceptionInterface $exception) {
-            $this->logger->error(
+            $this->local_logger->error(
                 'An error occurred while creating your silent install config at ' .
                 $exception->getPath()
             );
@@ -372,8 +374,8 @@ class InstallHandler extends LegacyHandler
                 $inputArray['db_username'],
                 $inputArray['db_password']
             );
-            $this->logger->critical($message);
-            $this->logger->critical($e->getMessage(), $e->getTrace());
+            $this->local_logger->critical($message);
+            $this->local_logger->critical($e->getMessage(), $e->getTrace());
 
             return false;
         }
@@ -405,7 +407,7 @@ class InstallHandler extends LegacyHandler
             $dbName
         );
         $content .= 'APP_SECRET=' . $this->appSecretGenerator->generate();
-        $this->logger->info('Generated randomly generated APP_SECRET for .env.local');
+        $this->local_logger->info('Generated randomly generated APP_SECRET for .env.local');
 
         $filesystem = new Filesystem();
         try {
@@ -417,7 +419,7 @@ class InstallHandler extends LegacyHandler
 
             return true;
         } catch (IOExceptionInterface $exception) {
-            $this->logger->error(
+            $this->local_logger->error(
                 'An error occurred while creating the Database Env config at ' . $exception->getPath()
             );
 
@@ -434,7 +436,7 @@ class InstallHandler extends LegacyHandler
     {
         $filesystem = new Filesystem();
 
-        $this->logger->error('A SuiteCRM Instance is already been installed. Stopping ');
+        $this->local_logger->error('A SuiteCRM Instance is already been installed. Stopping ');
 
         return $filesystem->exists('.env.local');
     }

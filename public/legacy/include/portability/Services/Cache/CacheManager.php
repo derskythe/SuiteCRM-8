@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * SuiteCRM is a customer relationship management program developed by SalesAgility Ltd.
  * Copyright (C) 2023 SalesAgility Ltd.
@@ -29,9 +28,7 @@
 
 class CacheManager
 {
-
-
-    public function markAsNeedsUpdate($key): void
+    public function markAsNeedsUpdate(string $key) : void
     {
         global $db;
 
@@ -46,7 +43,7 @@ class CacheManager
         $db->query($query, true);
     }
 
-    public function checkIfCacheTableExists(): bool
+    public function checkIfCacheTableExists() : bool
     {
         global $db;
 
@@ -57,10 +54,7 @@ class CacheManager
         $query = 'CREATE TABLE cache_rebuild (cache_key varchar(255), rebuild boolean)';
         $result = $db->query($query, true);
 
-        if ($result !== null) {
-            return true;
-        }
-        return false;
+        return $result !== null;
     }
 
 }

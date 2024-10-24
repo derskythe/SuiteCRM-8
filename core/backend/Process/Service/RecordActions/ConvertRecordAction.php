@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Process\Service\RecordActions;
 
 use ApiPlatform\Core\Exception\InvalidArgumentException;
@@ -36,7 +35,7 @@ use App\Process\Service\ProcessHandlerInterface;
 class ConvertRecordAction implements ProcessHandlerInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options are not defined';
-    protected const PROCESS_TYPE = 'record-convert';
+    protected const PROCESS_TYPE          = 'record-convert';
 
     /**
      * @var ModuleNameMapperInterface
@@ -45,6 +44,7 @@ class ConvertRecordAction implements ProcessHandlerInterface
 
     /**
      * MergeRecordsBulkAction constructor.
+     *
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(ModuleNameMapperInterface $moduleNameMapper)
@@ -55,7 +55,7 @@ class ConvertRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -63,7 +63,7 @@ class ConvertRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -71,14 +71,14 @@ class ConvertRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
         $convertModule = $options['params']['convertModule'] ?? '';
 
         return [
-            $module => [
+            $module        => [
                 [
                     'action' => 'view',
                     'record' => $options['id'] ?? ''
@@ -95,7 +95,7 @@ class ConvertRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -107,7 +107,7 @@ class ConvertRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -123,7 +123,7 @@ class ConvertRecordAction implements ProcessHandlerInterface
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
 
-        if(empty($options['params']['convertModule'])) {
+        if (empty($options['params']['convertModule'])) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
     }
@@ -131,15 +131,15 @@ class ConvertRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $options = $process->getOptions();
         $responseData = [
             'handler' => 'redirect',
-            'params' => [
-                'route' => $options['params']['convertModule'] . '/convert/' . $options['id'],
+            'params'  => [
+                'route'       => $options['params']['convertModule'] . '/convert/' . $options['id'],
                 'queryParams' => [
-                    'isConvert' => true,
+                    'isConvert'     => true,
                     'convertModule' => $options['module'],
                     'return_module' => $options['params']['convertModule'],
                     'return_action' => 'record',

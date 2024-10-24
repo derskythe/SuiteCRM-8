@@ -173,7 +173,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $options = $process->getOptions();
 

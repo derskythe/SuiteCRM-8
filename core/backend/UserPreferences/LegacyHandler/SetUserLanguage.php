@@ -137,7 +137,7 @@ class SetUserLanguage extends LegacyHandler implements ProcessHandlerInterface
      * @inheritDoc
      * @throws Exception
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         ['language' => $language] = $process->getOptions();
 

@@ -46,7 +46,7 @@ class UpgradeCommand extends BaseStepExecutorCommand
     /**
      * @inheritdoc
      */
-    protected $suppressWarnings = true;
+    protected bool $suppressWarnings = true;
 
     /**
      * @var UpgradeHandlerInterface

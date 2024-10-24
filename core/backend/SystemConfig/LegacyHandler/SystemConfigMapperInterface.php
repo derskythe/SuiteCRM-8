@@ -33,14 +33,17 @@ interface SystemConfigMapperInterface
 {
     /**
      * Get the System Config Key
+     *
      * @return string
      */
-    public function getKey(): string;
+    public function getKey() : string;
 
     /**
      * Map value
+     *
      * @param SystemConfig $systemConfig
-     * @return mixed
+     *
+     * @return void
      */
-    public function map(SystemConfig $systemConfig): void;
+    public function map(SystemConfig $systemConfig) : void;
 }

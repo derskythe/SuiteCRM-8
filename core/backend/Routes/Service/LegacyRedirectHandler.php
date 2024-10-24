@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Routes\Service;
 
 use InvalidArgumentException;
@@ -36,10 +35,11 @@ class LegacyRedirectHandler
     /**
      * @var String
      */
-    protected $legacyPath;
+    protected string $legacyPath;
 
     /**
      * LegacyRedirectHandler constructor.
+     *
      * @param String $legacyPath
      */
     public function __construct(string $legacyPath)
@@ -51,9 +51,10 @@ class LegacyRedirectHandler
      * Convert given $request route
      *
      * @param Request $request
+     *
      * @return string
      */
-    public function convert(Request $request): string
+    public function convert(Request $request) : string
     {
 
         if (null !== $queryString = $request->getQueryString()) {
@@ -68,8 +69,12 @@ class LegacyRedirectHandler
             return $baseUrl;
         }
 
-        if (strpos($baseUrl, '.php') !== false) {
-            $baseUrl = str_replace($request->getBasePath(), $request->getBasePath() . $this->legacyPath, $baseUrl);
+        if (str_contains($baseUrl, '.php')) {
+            $baseUrl = str_replace(
+                $request->getBasePath(),
+                $request->getBasePath() . $this->legacyPath,
+                $baseUrl
+            );
         } else {
             $baseUrl .= $this->legacyPath . '/index.php';
         }
@@ -81,25 +86,24 @@ class LegacyRedirectHandler
      * Convert given $request route
      *
      * @param Request $request
+     *
      * @return array
      */
-    public function getIncludeFile(Request $request): array
+    public function getIncludeFile(Request $request) : array
     {
-        $baseUrl = $request->getPathInfo();
+        $baseUrl = substr($request->getPathInfo(), 1);
 
-        $baseUrl = substr($baseUrl, 1);
-
-        if (strpos($baseUrl, '../') !== false) {
+        if (str_contains($baseUrl, '../')) {
             throw new InvalidArgumentException('invalid path');
         }
 
-        if (strpos($baseUrl, '.php') === false) {
+        if (!str_contains($baseUrl, '.php')) {
             $baseUrl .= 'index.php';
         }
 
         return [
-            'dir' => '',
-            'file' => $baseUrl,
+            'dir'    => '',
+            'file'   => $baseUrl,
             'access' => true
         ];
     }
@@ -109,9 +113,10 @@ class LegacyRedirectHandler
      *
      * @param Request $request
      * @param array $paths
+     *
      * @return bool
      */
-    protected function inPathList(Request $request, array $paths): bool
+    protected function inPathList(Request $request, array $paths) : bool
     {
         if (empty($request->getPathInfo()) || $request->getPathInfo() === '/') {
             return false;
@@ -131,10 +136,11 @@ class LegacyRedirectHandler
      *
      * @param Request $request
      * @param $path
+     *
      * @return bool
      */
-    protected function inPath(Request $request, $path): bool
+    protected function inPath(Request $request, $path) : bool
     {
-        return strpos($request->getPathInfo(), '/' . $path) === 0;
+        return str_starts_with($request->getPathInfo(), '/' . $path);
     }
 }

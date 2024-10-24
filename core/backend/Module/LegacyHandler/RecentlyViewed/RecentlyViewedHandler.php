@@ -27,6 +27,7 @@
 
 namespace App\Module\LegacyHandler\RecentlyViewed;
 
+use Throwable;
 use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -46,11 +47,11 @@ class RecentlyViewedHandler extends LegacyHandler
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
     /**
      * @var array
      */
-    private $uiConfigs;
+    private array $uiConfigs;
 
     /**
      * LegacyHandler constructor.
@@ -73,7 +74,7 @@ class RecentlyViewedHandler extends LegacyHandler
         LegacyScopeState          $legacyScopeState,
         RequestStack              $session,
         ModuleNameMapperInterface $moduleNameMapper,
-        LoggerInterface $logger
+        LoggerInterface           $logger
     )
     {
         parent::__construct(
@@ -100,7 +101,8 @@ class RecentlyViewedHandler extends LegacyHandler
     /**
      * @param string $module
      *
-     * @return array
+     * @return array|null
+     * @throws Throwable
      */
     public function getModuleTrackers(string $module) : ?array
     {
@@ -109,8 +111,7 @@ class RecentlyViewedHandler extends LegacyHandler
 
         $legacyModule = $this->moduleNameMapper->toLegacy($module);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Trackers/TrackerManagerPort.php';
+        require_once $this->legacyDir . '/include/portability/Services/Trackers/TrackerManagerPort.php';
 
         $trackerManager = new TrackerManagerPort();
 
@@ -122,15 +123,17 @@ class RecentlyViewedHandler extends LegacyHandler
     }
 
     /**
-     * @return array
+     * @param array $modules
+     *
+     * @return array|null
+     * @throws Throwable
      */
     public function getGlobalTrackers(array $modules) : ?array
     {
         $this->init();
         $this->startLegacyApp();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Trackers/TrackerManagerPort.php';
+        require_once $this->legacyDir . '/include/portability/Services/Trackers/TrackerManagerPort.php';
 
         $trackerManager = new TrackerManagerPort();
 
@@ -140,7 +143,7 @@ class RecentlyViewedHandler extends LegacyHandler
 
         $this->close();
 
-        return $result ?? [];
+        return $result;
     }
 
 }

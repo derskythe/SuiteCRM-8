@@ -36,34 +36,30 @@ class SystemConfigMappers
     /**
      * @var SystemConfigMapperInterface[]
      */
-    protected $registry = [];
+    protected array $registry = [];
 
     /**
      * SystemConfigMappers constructor.
-     * @param iterable $handlers
+     *
+     * @param SystemConfigMapperInterface[] $handlers
      */
     public function __construct(iterable $handlers)
     {
-        /**
-         * @var SystemConfigMapperInterface[]
-         */
-        $handlers = iterator_to_array($handlers);
-
         foreach ($handlers as $handler) {
             $type = $handler->getKey();
             $this->registry[$type] = $handler;
         }
-
     }
 
     /**
      * Get the mapper for the given key
+     *
      * @param string $systemConfigKey
+     *
      * @return SystemConfigMapperInterface
      */
-    public function get(string $systemConfigKey): SystemConfigMapperInterface
+    public function get(string $systemConfigKey) : SystemConfigMapperInterface
     {
-
         if (empty($this->registry[$systemConfigKey])) {
             throw new ItemNotFoundException(self::MSG_HANDLER_NOT_FOUND);
         }
@@ -73,10 +69,12 @@ class SystemConfigMappers
 
     /**
      * Has mapper for the given key
+     *
      * @param string $systemConfigKey
+     *
      * @return bool
      */
-    public function hasMapper(string $systemConfigKey): bool
+    public function hasMapper(string $systemConfigKey) : bool
     {
         if (empty($this->registry[$systemConfigKey])) {
             return false;

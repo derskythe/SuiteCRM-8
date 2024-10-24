@@ -28,7 +28,7 @@
 namespace App\Languages\LegacyHandler;
 
 use Psr\Log\LoggerInterface;
-use ApiPlatform\Core\Exception\ItemNotFoundException;
+use ApiPlatform\Exception\ItemNotFoundException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Languages\Entity\ModStrings;
@@ -41,7 +41,7 @@ class ModStringsHandler extends LegacyHandler
     protected const MSG_LANGUAGE_NOT_FOUND = 'Not able to get language: ';
     public const    HANDLER_KEY            = 'mod-strings';
 
-    protected static $extraModules = [
+    protected static array $extraModules = [
         'SecurityGroups',
         'Bugs',
         'History',
@@ -51,12 +51,12 @@ class ModStringsHandler extends LegacyHandler
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var ModuleRegistryInterface
      */
-    private $moduleRegistry;
+    private ModuleRegistryInterface $moduleRegistry;
 
     /**
      * SystemConfigHandler constructor.
@@ -113,7 +113,7 @@ class ModStringsHandler extends LegacyHandler
     public function getModStrings(string $language) : ?ModStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         $this->init();
@@ -159,15 +159,13 @@ class ModStringsHandler extends LegacyHandler
      */
     protected function removeEndingColon(array $stringArray) : array
     {
-        $stringArray = array_map(static function ($label) {
+        return array_map(static function ($label) {
             if (is_string($label)) {
                 return preg_replace('/:$/', '', $label);
             }
 
             return $label;
         }, $stringArray);
-
-        return $stringArray;
     }
 
     protected function decodeLabels(array $moduleStrings) : array

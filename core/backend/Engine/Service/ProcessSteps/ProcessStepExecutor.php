@@ -38,29 +38,30 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @var ProcessStepInterface[]
      */
-    protected $steps;
+    protected array $steps;
 
     /**
      * @var ProcessStepInterface[][]
      */
-    protected $orderedSteps;
+    protected array $orderedSteps;
 
     /**
      * Run all steps in order
+     *
      * @param array $context
+     *
      * @return MultiFeedback feedback
      */
-    public function runAll(array $context): MultiFeedback
+    public function runAll(array $context) : MultiFeedback
     {
         $result = new MultiFeedback();
         $result->setSuccess(true);
 
-        $context = $context ?? [];
         $context['stepsFeedback'] = [];
 
         foreach ($this->orderedSteps as $positionSteps) {
@@ -87,15 +88,15 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
     /**
      * @param string $stepKey
      * @param array $context
+     *
      * @return Feedback feedback
      */
-    public function run(string $stepKey, array $context): Feedback
+    public function run(string $stepKey, array $context) : Feedback
     {
         if (empty($this->steps[$stepKey])) {
-            throw new BadMethodCallException("$stepKey not found");
+            throw new BadMethodCallException($stepKey . ' not found');
         }
 
-        $context = $context ?? [];
         $context['stepsFeedback'] = [];
 
         return $this->steps[$stepKey]->run($context);
@@ -103,10 +104,12 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
 
     /**
      * Has position
+     *
      * @param int $position
+     *
      * @return bool
      */
-    public function hasPosition(int $position): bool
+    public function hasPosition(int $position) : bool
     {
         $positionSteps = $this->orderedSteps[$position] ?? [];
         if (empty($positionSteps)) {
@@ -118,11 +121,13 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
 
     /**
      * Get Alerts
+     *
      * @param int $position
      * @param array $context
+     *
      * @return ProcessStepAlert[]
      */
-    public function getAlerts(int $position, array $context): array
+    public function getAlerts(int $position, array $context) : array
     {
         $positionSteps = $this->orderedSteps[$position] ?? [];
         if (empty($positionSteps)) {
@@ -143,24 +148,24 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
 
     /**
      * Run next
+     *
      * @param int $position
      * @param array $context
+     *
      * @return MultiFeedback
      */
-    public function runPosition(int $position, array $context): MultiFeedback
+    public function runPosition(int $position, array $context) : MultiFeedback
     {
         $positionSteps = $this->orderedSteps[$position] ?? [];
 
+        $result = new MultiFeedback();
         if (empty($positionSteps)) {
-            $result = new MultiFeedback();
             $result->setSuccess(false);
 
             return $result;
         }
 
-        $result = new MultiFeedback();
         $result->setSuccess(true);
-        $context = $context ?? [];
         $context['stepsFeedback'] = [];
 
         foreach ($positionSteps as $step) {
@@ -168,7 +173,7 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
 
             $context['stepsFeedback'][$step->getKey()] = $feedback;
 
-            if ($feedback->isSuccess() === false) {
+            if (!$feedback->isSuccess()) {
                 $result->setSuccess(false);
                 break;
             }
@@ -181,10 +186,12 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
 
     /**
      * Get position keys
+     *
      * @param int $position
+     *
      * @return string[]
      */
-    public function getPositionKeys(int $position): array
+    public function getPositionKeys(int $position) : array
     {
         $positionSteps = $this->orderedSteps[$position] ?? [];
         if (empty($positionSteps)) {
@@ -196,41 +203,29 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
 
     /**
      * @param iterable $handlers
+     * @param iterable $extraSteps
      * @param LoggerInterface $logger
      */
-    protected function initSteps(iterable $handlers, iterable $extraSteps, LoggerInterface $logger): void
+    protected function initSteps(iterable $handlers, iterable $extraSteps, LoggerInterface $logger) : void
     {
         /**
          * @var $ordered ProcessStepInterface[][]
          */
         $ordered = [];
 
+        $this->logger = $logger;
+
         /**
          * @var $handlers ProcessStepInterface[]
          */
         foreach ($handlers as $step) {
             $key = $step->getKey() ?? '';
-            $order = $step->getOrder() ?? count($this->orderedSteps);
-
-            $step->setLogger($logger);
-
-            $positionSteps = $ordered[$order] ?? [];
-            $positionSteps[$key] = $step;
-            $ordered[$order] = $positionSteps;
-
-            $this->steps[$key] = $step;
+            $ordered = $this->handleStep($step, $ordered, $key);
         }
 
-        foreach ($extraSteps as $extraStep){
+        foreach ($extraSteps as $extraStep) {
             $key = $extraStep->getKey();
-            $order = $extraStep->getOrder() ?? count($this->orderedSteps);
-
-            $extraStep->setLogger($logger);
-            $positionSteps = $ordered[$order] ?? [];
-            $positionSteps[$key] = $extraStep;
-            $ordered[$order] = $positionSteps;
-
-            $this->steps[$key] = $extraStep;
+            $ordered = $this->handleStep($extraStep, $ordered, $key);
         }
 
         ksort($ordered, SORT_NUMERIC);
@@ -240,5 +235,31 @@ abstract class ProcessStepExecutor implements ProcessStepExecutorInterface
         foreach ($ordered as $item) {
             $this->orderedSteps[] = $item;
         }
+    }
+
+    /**
+     * @param ProcessStepInterface $step
+     * @param array $ordered
+     * @param string $key
+     *
+     * @return array
+     */
+    private function handleStep(
+        ProcessStepInterface $step,
+        array                $ordered,
+        string               $key
+    ) : array
+    {
+        $order = $step->getOrder() ?? count($this->orderedSteps);
+
+        $step->setLogger($this->logger);
+
+        $positionSteps = $ordered[$order] ?? [];
+        $positionSteps[$key] = $step;
+        $ordered[$order] = $positionSteps;
+
+        $this->steps[$key] = $step;
+
+        return $ordered;
     }
 }

@@ -49,17 +49,17 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
     /**
      * Lazy initialized mapper
      *
      * @var RouteConverter
      */
-    protected $converter;
+    protected ?RouteConverter $converter;
     /**
      * @var ActionNameMapperInterface
      */
-    private $actionNameMapper;
+    private ActionNameMapperInterface $actionNameMapper;
 
     /**
      * SystemConfigHandler constructor.
@@ -217,8 +217,7 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
             return $this->converter;
         }
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/RouteConverter.php';
+        require_once $this->legacyDir . '/include/portability/RouteConverter.php';
 
         $this->converter = new RouteConverter();
 
@@ -234,7 +233,7 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      */
     public function parseUri(string $uri) : array
     {
-        if (strpos($uri, '/#/') !== false) {
+        if (str_contains($uri, '/#/')) {
             $anchor = parse_url($uri, PHP_URL_FRAGMENT);
             $query = parse_url($uri, PHP_URL_QUERY);
             parse_str($query, $params);
@@ -257,15 +256,18 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
             throw new InvalidArgumentException('No module defined');
         }
 
-        $queryParams = [];
-
         $converter = $this->getConverter();
 
-        $route = $converter->convert($module, $action, $record, $queryParams);
-
         $result = [
-            'route'  => $route,
-            'params' => $converter->excludeParams($request->query->all(), [ 'module', 'action', 'record' ]),
+            'route'  => $converter->convert($module, $action, $record, []),
+            'params' => $converter->excludeParams(
+                $request->query->all(),
+                [
+                    'module',
+                    'action',
+                    'record'
+                ]
+            ),
             'module' => $module
         ];
 

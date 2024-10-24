@@ -27,6 +27,7 @@
 
 namespace App\Engine\LegacyHandler;
 
+use Throwable;
 use Psr\Log\LoggerInterface;
 use App\Install\Service\InstallationUtilsTrait;
 use BeanFactory;
@@ -106,12 +107,12 @@ abstract class LegacyHandler
         LoggerInterface  $logger
     )
     {
-        if($projectDir === '' || !is_dir($projectDir)) {
+        if ($projectDir === '' || !is_dir($projectDir)) {
             $this->projectDir = realpath(__DIR__ . '/../../../../');
         } else {
             $this->projectDir = $projectDir;
         }
-        if($legacyDir === '' || !is_dir($legacyDir)) {
+        if ($legacyDir === '' || !is_dir($legacyDir)) {
             $this->legacyDir = realpath($this->projectDir . '/public/legacy');
         } else {
             $this->legacyDir = $legacyDir;
@@ -140,7 +141,7 @@ abstract class LegacyHandler
      * Bootstraps legacy suite
      *
      * @return bool
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function runLegacyEntryPoint() : bool
     {
@@ -160,23 +161,40 @@ abstract class LegacyHandler
             }
 
             // Load in legacy
-            require_once $this->legacyDir.'/include/MVC/preDispatch.php';
-            require_once $this->legacyDir.'/include/entryPoint.php';
+            require_once $this->legacyDir . '/include/MVC/preDispatch.php';
+            require_once $this->legacyDir . '/include/entryPoint.php';
 
             $this->state->setLegacyBootstrapped(true);
 
             return true;
         } catch (\Throwable $e) {
-            $this->logger->error(self::MSG_RUN_LEGACY_BOOTSTRAP_FAILED, [
-                                                                          'exception' => $e->getMessage(),
-                                                                          'trace'     => $e->getTraceAsString(),
-                                                                          'module'    => __CLASS__,
-                                                                          'method'    => __FUNCTION__,
-                                                                          'line'      => __LINE__
-                                                                      ]
+            $this->logger->error(
+                self::MSG_RUN_LEGACY_BOOTSTRAP_FAILED,
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
             );
             throw $e;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getLegacyDir() : string
+    {
+        return $this->legacyDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProjectDir() : string
+    {
+        return $this->projectDir;
     }
 
     /**
@@ -215,12 +233,14 @@ abstract class LegacyHandler
                 $_SESSION[$key] = $value;
             }
         } catch (\Throwable $e) {
-            $this->logger->error(self::MSG_SWITCH_SESSION_FAILED, [
-                                                                    'exception' => $e->getMessage(),
-                                                                    'trace'     => $e->getTraceAsString(),
-                                                                    'module'    => __CLASS__,
-                                                                    'method'    => __FUNCTION__,
-                                                                    'line'      => __LINE__ ]
+            $this->logger->error(
+                self::MSG_SWITCH_SESSION_FAILED,
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
             );
             throw $e;
         }
@@ -255,7 +275,7 @@ abstract class LegacyHandler
         }
 
         try {
-            require_once $this->legacyDir.'/include/MVC/SugarApplication.php';
+            require_once $this->legacyDir . '/include/MVC/SugarApplication.php';
 
             global $sugar_config;
 
@@ -292,12 +312,14 @@ abstract class LegacyHandler
 
             $this->state->setLegacyStarted(true);
         } catch (\Throwable $e) {
-            $this->logger->error(self::MSG_LEGACY_BOOTSTRAP_FAILED, [
-                                                                      'exception' => $e->getMessage(),
-                                                                      'trace'     => $e->getTraceAsString(),
-                                                                      'module'    => __CLASS__,
-                                                                      'method'    => __FUNCTION__,
-                                                                      'line'      => __LINE__ ]
+            $this->logger->error(
+                self::MSG_LEGACY_BOOTSTRAP_FAILED,
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
             );
             throw $e;
         }
@@ -321,9 +343,8 @@ abstract class LegacyHandler
                 [
                     'exception' => $e->getMessage(),
                     'trace'     => $e->getTraceAsString(),
-                    'module'    => __CLASS__,
-                    'method'    => __FUNCTION__,
-                    'line'      => __LINE__
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
                 ]
             );
         }
@@ -389,7 +410,7 @@ abstract class LegacyHandler
             return;
         }
 
-        require_once $this->legacyDir.'/include/MVC/SugarApplication.php';
+        require_once $this->legacyDir . '/include/MVC/SugarApplication.php';
 
         $app = new SugarApplication();
         $app->startSession();

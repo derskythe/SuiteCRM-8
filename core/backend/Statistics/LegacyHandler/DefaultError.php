@@ -40,7 +40,7 @@ class DefaultError implements StatisticsProviderInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -48,7 +48,7 @@ class DefaultError implements StatisticsProviderInterface
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         return $this->getErrorResponse(self::KEY);
     }

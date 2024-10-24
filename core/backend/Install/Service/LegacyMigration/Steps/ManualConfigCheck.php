@@ -37,6 +37,7 @@ use App\Install\Service\LegacyMigration\LegacyMigrationStepInterface;
 
 /**
  * Class ManualConfigCheck
+ *
  * @package App\Install\Service\LegacyMigration\Steps;
  */
 class ManualConfigCheck implements LegacyMigrationStepInterface
@@ -45,15 +46,16 @@ class ManualConfigCheck implements LegacyMigrationStepInterface
     use InstallStepTrait;
 
     public const HANDLER_KEY = 'manual-config-check';
-    public const POSITION = 350;
+    public const POSITION    = 350;
 
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * ManualConfigCheck constructor.
+     *
      * @param InstallHandler $handler
      */
     public function __construct(InstallHandler $handler)
@@ -65,7 +67,7 @@ class ManualConfigCheck implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -73,17 +75,19 @@ class ManualConfigCheck implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getOrder(): int
+    public function getOrder() : int
     {
         return self::POSITION;
     }
 
     /**
      * Get Alert
+     *
      * @param array $context
+     *
      * @return ProcessStepAlert
      */
-    public function getAlert(array &$context): ProcessStepAlert
+    public function getAlert(array &$context) : ProcessStepAlert
     {
         $alert = new ProcessStepAlert();
         $alert->setTile('Manually Check legacy config');
@@ -96,7 +100,9 @@ class ManualConfigCheck implements LegacyMigrationStepInterface
         $config = $this->handler->loadLegacyConfig();
 
         if (!empty($config['session_dir'] ?? null)) {
-            $messages[] = '- session_dir: Set this to blank for the migration. (ie: \'\'). Once the migration has been completed, this can be re-configured. See SuiteCRM 8 Session documentation for more information.';
+            $messages[] = '- session_dir: Set this to blank for the migration. (ie: \'\').
+            Once the migration has been completed, this can be re-configured.
+            See SuiteCRM 8 Session documentation for more information.';
         }
 
         $alert->setMessages($messages);
@@ -107,27 +113,23 @@ class ManualConfigCheck implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function execute(array &$context): Feedback
+    public function execute(array &$context) : Feedback
     {
         $config = $this->handler->loadLegacyConfig();
         $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Manual config check done']);
 
         if ($config === null) {
             $feedback->setSuccess(false);
-            $feedback->setMessages(['Legacy config not found. Stopping migration process']);
+            $feedback->setMessages([ 'Legacy config not found. Stopping migration process' ]);
             $feedback->setStatusCode(InstallStatus::VALIDATION_FAILED);
-
-            return $feedback;
-        }
-
-        if (isset($config['session_dir']) && !empty($config['session_dir'])) {
+        } else if (!empty($config['session_dir'])) {
             $feedback->setSuccess(false);
-            $feedback->setMessages(['session_dir entry in config not set to \'\'. Aborting.']);
+            $feedback->setMessages([ 'session_dir entry in config not set to \'\'. Aborting.' ]);
             $feedback->setStatusCode(InstallStatus::VALIDATION_FAILED);
-
             return $feedback;
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages([ 'Manual config check done' ]);
         }
 
         return $feedback;

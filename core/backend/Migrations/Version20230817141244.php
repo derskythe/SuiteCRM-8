@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -45,15 +45,17 @@ final class Version20230817141244 extends BaseMigration implements ContainerAwar
     public function up(Schema $schema) : void
     {
         if (file_exists($this->getProjectDir() . '/extensions/default')) {
-            $defaultExtensionReplacedMessage = "Default extension under 'extensions/default' has been replace with 'defaultExt'. If you have any customizations in 'extensions/default' please move them to 'defaultExt' and remove 'extensions/default'.";
+            $defaultExtensionReplacedMessage =
+                "Default extension under 'extensions/default' has been replace with 'defaultExt'. If you have any customizations in 'extensions/default' please move them to 'defaultExt' and remove 'extensions/default'.";
             $this->log($defaultExtensionReplacedMessage);
             $output = new ConsoleOutput();
-            $output->writeln("<comment>Warning! $defaultExtensionReplacedMessage</comment>") ;
+            $output->writeln("<comment>Warning! $defaultExtensionReplacedMessage</comment>");
         }
 
         $defaultExtensionPath = $this->getProjectDir() . '/extensions/defaultExt';
         if (file_exists($defaultExtensionPath)) {
             $this->log('DefaultExt extension already exists, skipping.');
+
             return;
         }
 
@@ -61,12 +63,14 @@ final class Version20230817141244 extends BaseMigration implements ContainerAwar
 
         if (!file_exists($versionFile)) {
             $this->log('Version file does not exist, skipping.');
+
             return;
         }
 
         $version = trim(file_get_contents($versionFile) ?? '');
         if (empty($version)) {
             $this->log('Empty version, skipping.');
+
             return;
         }
 
@@ -78,6 +82,7 @@ final class Version20230817141244 extends BaseMigration implements ContainerAwar
 
         if (!file_exists($defaultExtensionPackage)) {
             $this->log('Default extension does not exist on the extracted upgrade package, skipping.');
+
             return;
         }
 

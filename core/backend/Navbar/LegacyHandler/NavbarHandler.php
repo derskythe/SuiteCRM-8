@@ -49,37 +49,37 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var RouteConverterInterface
      */
-    protected $routeConverter;
+    protected RouteConverterInterface $routeConverter;
 
     /**
      * @var array
      */
-    protected $menuItemMap;
+    protected array $menuItemMap;
 
     /**
      * @var ModuleRegistryInterface
      */
-    protected $moduleRegistry;
+    protected ModuleRegistryInterface $moduleRegistry;
 
     /**
      * @var array
      */
-    protected $moduleRouting;
+    protected array $moduleRouting;
 
     /**
      * @var array
      */
-    protected $navbarAdministrationOverrides;
+    protected array $navbarAdministrationOverrides;
 
     /**
      * @var array
      */
-    protected $quickActionsConfig;
+    protected array $quickActionsConfig;
 
     /**
      * SystemConfigHandler constructor.
@@ -235,8 +235,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     {
         $output = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/GroupedTabs/GroupedTabStructure.php';
+        require_once $this->legacyDir . '/include/GroupedTabs/GroupedTabStructure.php';
 
         $modules = get_val_array($displayModules);
         $groupedTabStructure = $this->getTabStructure($modules);
@@ -251,11 +250,9 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             }
 
             $output[] = [
-
                 'name'     => $mainTab,
                 'labelKey' => $mainTab,
                 'modules'  => array_values($submoduleArray)
-
             ];
         }
 
@@ -313,7 +310,11 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
      *
      * @return array
      */
-    protected function buildSubModule(SugarView $sugarView, string $legacyModule, string $frontendModule) : array
+    protected function buildSubModule(
+        SugarView $sugarView,
+        string    $legacyModule,
+        string    $frontendModule
+    ) : array
     {
         $subMenu = [];
         $legacyMenuItems = $sugarView->getMenu($legacyModule) ?? [];
@@ -324,7 +325,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             $admin_mod_strings = return_module_language($current_language, 'Administration') ?? [];
 
             $admin_group_header = [];
-            require 'modules/Administration/metadata/adminpaneldefs.php';
+            require $this->legacyDir.'/modules/Administration/metadata/adminpaneldefs.php';
 
             $admin_group_header = $admin_group_header ?? [];
 
@@ -332,7 +333,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             foreach ($admin_group_header as $adminEntry) {
 
                 $administration_menu[] = [
-                    "",
+                    '',
                     $admin_mod_strings[$adminEntry[0] ?? ''] ?? '',
                     'View',
                     'Administration',
@@ -408,7 +409,6 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
      */
     protected function setLinks(array $legacyArray) : array
     {
-
         if (empty($legacyArray)) {
             return [];
         }
@@ -566,8 +566,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     {
         $global_control_links = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require 'include/globalControlLinks.php';
+        require $this->legacyDir.'/include/globalControlLinks.php';
 
         return $global_control_links;
     }

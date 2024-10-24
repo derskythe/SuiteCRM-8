@@ -42,7 +42,7 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
     /**
      * @var array
      */
-    private $frontendExcludedModules;
+    private array $frontendExcludedModules;
 
     /**
      * SystemConfigHandler constructor.
@@ -56,14 +56,14 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
+        string           $projectDir,
+        string           $legacyDir,
+        string           $legacySessionName,
+        string           $defaultSessionName,
         LegacyScopeState $legacyScopeState,
-        array $frontendExcludedModules,
-        RequestStack $session,
-        LoggerInterface $logger
+        array            $frontendExcludedModules,
+        RequestStack     $session,
+        LoggerInterface  $logger
     )
     {
         parent::__construct(
@@ -148,9 +148,11 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
         return $modules;
     }
 
+    /**
+     * @return array
+     */
     public function getModuleList() : array
     {
-
         $this->init();
 
         global $moduleList;
@@ -169,8 +171,7 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
      */
     protected function getFilterAccessibleModules() : array
     {
-        /* @noinspection PhpIncludeInspection */
-        require_once("modules/MySettings/TabController.php");
+        require_once($this->legacyDir . '/modules/MySettings/TabController.php');
         $controller = new \TabController();
         $tabs = $controller->get_tabs_system();
 

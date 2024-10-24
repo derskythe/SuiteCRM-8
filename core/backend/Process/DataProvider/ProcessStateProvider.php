@@ -36,12 +36,18 @@ class ProcessStateProvider implements ProviderInterface
 {
     /**
      * Get Process
+     *
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
+     *
      * @return array|Process|null
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): array|Process|null
+    public function provide(
+        Operation $operation,
+        array     $uriVariables = [],
+        array     $context = []
+    ) : array|Process|null
     {
         if ($operation instanceof CollectionOperationInterface) {
             return [];

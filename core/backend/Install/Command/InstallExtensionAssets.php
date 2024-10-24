@@ -38,12 +38,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class InstallExtensionAssets extends Command
 {
     /**
-     * @var ExtensionAssetCopy
+     * @var ExtensionAssetCopyInterface
      */
-    protected $copy;
+    protected ExtensionAssetCopyInterface $copy;
 
     /**
      * InstallExtensionAssets constructor.
+     *
      * @param ExtensionAssetCopyInterface $copy
      * @param string|null $name
      */
@@ -53,18 +54,14 @@ class InstallExtensionAssets extends Command
         $this->copy = $copy;
     }
 
-    protected function configure(): void
-    {
-    }
-
     /**
      * @inheritDoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->copy->copyAssets();
 
-        return 0;
+        return parent::execute($input, $output);
     }
 
 }

@@ -27,6 +27,7 @@
 
 namespace App\Install\Service\LegacyMigration\Steps;
 
+use Throwable;
 use App\Engine\Model\Feedback;
 use App\Engine\Model\ProcessStepTrait;
 use App\Install\LegacyHandler\InstallHandler;
@@ -48,7 +49,7 @@ class ChangeTheme implements LegacyMigrationStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * ChangeTheme constructor.
@@ -77,6 +78,7 @@ class ChangeTheme implements LegacyMigrationStepInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function execute(array &$context): Feedback
     {
@@ -84,8 +86,7 @@ class ChangeTheme implements LegacyMigrationStepInterface
 
         $this->handler->initLegacy();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/utils/file_utils.php';
+        require_once $this->handler->getLegacyDir().'include/utils/file_utils.php';
 
         $config['default_theme'] = 'suite8';
 

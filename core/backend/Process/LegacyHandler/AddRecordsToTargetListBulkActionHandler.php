@@ -174,12 +174,11 @@ class AddRecordsToTargetListBulkActionHandler extends LegacyHandler implements P
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Relationships/AddRecordsToTargetListService.php';
+        require_once $this->legacyDir.'/include/portability/Services/Relationships/AddRecordsToTargetListService.php';
 
         $options = $process->getOptions();
         [

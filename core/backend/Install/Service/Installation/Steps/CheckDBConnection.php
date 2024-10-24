@@ -49,7 +49,7 @@ class CheckDBConnection implements InstallStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * CheckPermissions constructor.
@@ -82,17 +82,13 @@ class CheckDBConnection implements InstallStepInterface
     public function execute(array &$context): Feedback
     {
         $inputs = $this->getInputs($context);
-
-        $inputsValid = $this->validateInputs($inputs);
-
-        if (!$inputsValid) {
-            return (new Feedback())->setSuccess(false)->setMessages(['Missing inputs']);
-        }
-
-        $isConnectionOk = $this->handler->checkDBConnection($inputs);
         $feedback = new Feedback();
 
-        if ($isConnectionOk === false) {
+        if (!$this->validateInputs($inputs)) {
+            return $feedback->setSuccess(false)->setMessages(['Missing inputs']);
+        }
+
+        if (!$this->handler->checkDBConnection($inputs)) {
             $feedback->setSuccess(false);
             $feedback->setStatusCode(InstallStatus::DB_CREDENTIALS_NOT_OK);
             $feedback->setMessages(['Could not connect to db']);

@@ -63,19 +63,19 @@ class ErrorMessage
 
     protected string $level;
 
-    protected bool $throw;
+    protected bool $to_throw;
 
     public function __construct(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true)
     {
         $this->setState($message, $code, $level, $throw);
     }
 
-    public function setState(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true): void
+    public function setState(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $to_throw = true): void
     {
         $this->message = $message;
         $this->code = $code;
         $this->level = $level;
-        $this->throw = $throw;
+        $this->to_throw = $to_throw;
     }
 
     /**
@@ -92,7 +92,7 @@ class ErrorMessage
                 trigger_error("Can't log message: {$this->message}");
             }
         }
-        if ($this->throw) {
+        if ($this->to_throw) {
             throw new ErrorMessageException($this->message, $this->code);
         }
     }
@@ -103,10 +103,10 @@ class ErrorMessage
     public static function handler(
         string $message,
         string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL,
-        bool $throw = true,
-        int $code = self::DEFAULT_CODE): void
+        bool   $to_throw = true,
+        int    $code = self::DEFAULT_CODE): void
     {
-        $errorMessage = new ErrorMessage($message, $code, $level, $throw);
+        $errorMessage = new ErrorMessage($message, $code, $level, $to_throw);
         $errorMessage->handle();
     }
 

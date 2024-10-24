@@ -42,17 +42,17 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'record-select';
+    protected const PROCESS_TYPE          = 'record-select';
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var ValidatorInterface
@@ -61,6 +61,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
 
     /**
      * LinkRelationHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -69,16 +70,17 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
         ModuleNameMapperInterface $moduleNameMapper,
-        ValidatorInterface $validator,
-        LoggerInterface $logger
-    ) {
+        ValidatorInterface        $validator,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
@@ -95,7 +97,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -103,7 +105,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -111,7 +113,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -119,7 +121,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $baseModule = $options['module'] ?? '';
@@ -129,7 +131,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
         $relateRecordIds = $payload['relateRecordIds'] ?? [];
 
         return [
-            $baseModule => [
+            $baseModule   => [
                 [
                     'action' => 'view',
                     'record' => $baseModuleId
@@ -138,7 +140,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
             $relateModule => [
                 [
                     'action' => 'view',
-                    'ids' => $relateRecordIds
+                    'ids'    => $relateRecordIds
                 ]
             ]
         ];
@@ -147,7 +149,7 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -159,21 +161,22 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
 
-        ['payload' => $payload] = $process->getOptions();
+        [ 'payload' => $payload ] = $process->getOptions();
         [
-            'baseModule' => $baseModule,
-            'baseRecordId' => $baseRecordId,
-            'linkField' => $linkField,
+            'baseModule'      => $baseModule,
+            'baseRecordId'    => $baseRecordId,
+            'linkField'       => $linkField,
             'relateRecordIds' => $relateRecordIds
         ] = $payload;
 
-        if (empty($payload) || empty($baseModule) || empty($baseRecordId) || empty($linkField) || empty($relateRecordIds)) {
+        if (empty($payload) || empty($baseModule) || empty($baseRecordId) || empty($linkField) ||
+            empty($relateRecordIds)) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
     }
@@ -181,25 +184,29 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Relationships/LinkService.php';
+        require_once $this->legacyDir.'/include/portability/Services/Relationships/LinkService.php';
 
-        ['payload' => $payload] = $process->getOptions();
+        [ 'payload' => $payload ] = $process->getOptions();
         [
-            'baseModule' => $baseModule,
-            'baseRecordId' => $baseRecordId,
-            'linkField' => $linkField,
+            'baseModule'      => $baseModule,
+            'baseRecordId'    => $baseRecordId,
+            'linkField'       => $linkField,
             'relateRecordIds' => $relateRecordIds
         ] = $payload;
         $baseModule = $this->moduleNameMapper->toLegacy($baseModule);
 
         $service = new LinkService();
 
-        $result = $service->run($baseModule, $baseRecordId, $linkField, $relateRecordIds);
+        $result = $service->run(
+            $baseModule,
+            $baseRecordId,
+            $linkField,
+            $relateRecordIds
+        );
 
         $process->setStatus('success');
         if ($result['success'] !== true) {
@@ -207,12 +214,14 @@ class LinkRelationHandler extends LegacyHandler implements ProcessHandlerInterfa
         }
 
         if (!empty($result['message'])) {
-            $process->setMessages([
-                $result['message']
-            ]);
+            $process->setMessages(
+                [
+                    $result['message']
+                ]
+            );
         }
 
-        $process->setData(['reload' => true]);
+        $process->setData([ 'reload' => true ]);
 
         $this->close();
     }

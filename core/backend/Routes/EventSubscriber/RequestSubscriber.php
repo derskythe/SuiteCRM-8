@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Routes\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -38,7 +37,7 @@ class RequestSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
 
-    private $requestStack;
+    private RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {
@@ -51,11 +50,11 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest']
+            KernelEvents::REQUEST => [ 'onKernelRequest' ]
         ];
     }
 
-    public function onKernelRequest(RequestEvent $event): void
+    public function onKernelRequest(RequestEvent $event) : void
     {
         $request = $event->getRequest();
         if (!$event->isMainRequest() || $request->isXmlHttpRequest()) {

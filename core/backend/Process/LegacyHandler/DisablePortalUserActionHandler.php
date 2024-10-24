@@ -27,7 +27,7 @@
 
 namespace App\Process\LegacyHandler;
 
-use ApiPlatform\Core\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleNameMapperInterface;
@@ -40,25 +40,26 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'record-disable-portal-user';
+    protected const PROCESS_TYPE          = 'record-disable-portal-user';
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var PortalUserActivator
      */
-    protected $portalUserActivator;
+    protected PortalUserActivator $portalUserActivator;
 
     /**
      * DisablePortalUserActionHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -69,16 +70,17 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
      * @param PortalUserActivator $portalUserActivator
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $requestStack,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $requestStack,
         ModuleNameMapperInterface $moduleNameMapper,
-        PortalUserActivator $portalUserActivator,
-        LoggerInterface $logger
-    ) {
+        PortalUserActivator       $portalUserActivator,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
@@ -90,12 +92,13 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
         );
         $this->portalUserActivator = $portalUserActivator;
         $this->moduleNameMapper = $moduleNameMapper;
+        $this->logger = $logger;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -103,7 +106,7 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -111,7 +114,7 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -119,11 +122,10 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
-
 
         return [
             $module => [
@@ -139,7 +141,7 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         $process->setId(self::PROCESS_TYPE);
@@ -149,15 +151,17 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
+            $this->logger->error(self::MSG_OPTIONS_NOT_FOUND);
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
 
         $options = $process->getOptions();
 
         if (empty($options['id'])) {
+            $this->logger->error(self::MSG_OPTIONS_NOT_FOUND);
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
     }
@@ -166,25 +170,28 @@ class DisablePortalUserActionHandler extends LegacyHandler implements ProcessHan
      * @inheritDoc
      * @throws \JsonException
      */
-    public function run(Process $process): void
+    public function run(Process $process) : void
     {
         $this->init();
 
         $options = $process->getOptions();
 
-        $msg = $this->portalUserActivator->switchPortalUserStatus($options['id'], 'LBL_DISABLE_PORTAL_USER_FAILED', 'LBL_DISABLE_PORTAL_USER_SUCCESS', false);
-        $process->setMessages([$msg]);
-        $process->setData(['reload' => true]);
+        $msg = $this->portalUserActivator->switchPortalUserStatus(
+            $options['id'],
+            'LBL_DISABLE_PORTAL_USER_FAILED',
+            'LBL_DISABLE_PORTAL_USER_SUCCESS',
+            false
+        );
+        $process->setMessages([ $msg ]);
+        $process->setData([ 'reload' => true ]);
         $this->close();
     }
 
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }
-
-
 }

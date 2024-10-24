@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\SystemConfig\LegacyHandler;
 
 use App\SystemConfig\Entity\SystemConfig;
@@ -35,7 +34,7 @@ class RecordPaginationConfigMapper implements SystemConfigMapperInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'enable_record_pagination';
     }
@@ -43,23 +42,25 @@ class RecordPaginationConfigMapper implements SystemConfigMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(SystemConfig $config): void
+    public function map(SystemConfig $systemConfig) : void
     {
-        $isRecordPaginationEnabled = $config->getValue();
+        $isRecordPaginationEnabled = $systemConfig->getValue();
         if ($isRecordPaginationEnabled === null) {
-            $config->setValue(true);
+            $systemConfig->setValue(true);
+
             return;
         }
 
-        if ($isRecordPaginationEnabled === "" || is_array($isRecordPaginationEnabled)) {
-            $config->setValue(false);
+        if ($isRecordPaginationEnabled === '') {
+            $systemConfig->setValue(false);
+
             return;
         }
 
         if ($isRecordPaginationEnabled) {
-            $config->setValue(isTrue($isRecordPaginationEnabled));
+            $systemConfig->setValue(isTrue($isRecordPaginationEnabled));
         } else {
-            $config->setValue(false);
+            $systemConfig->setValue(false);
         }
     }
 }

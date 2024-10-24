@@ -44,7 +44,7 @@ class SearchDefsEnumToRelateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'search-defs-enum-to-relate-mapper';
     }
@@ -52,7 +52,7 @@ class SearchDefsEnumToRelateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function getModule(): string
+    public function getModule() : string
     {
         return 'default';
     }
@@ -60,7 +60,7 @@ class SearchDefsEnumToRelateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition): void
+    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition) : void
     {
         $search = $definition->getSearch() ?? [];
         $layout = $search['layout'] ?? [];
@@ -74,8 +74,6 @@ class SearchDefsEnumToRelateTypeMapper implements ViewDefinitionMapperInterface
 
         $mapped = [];
         foreach ($advanced as $fieldKey => $field) {
-
-
             if (empty($field['function'])) {
                 $mapped[$fieldKey] = $field;
 
@@ -102,25 +100,25 @@ class SearchDefsEnumToRelateTypeMapper implements ViewDefinitionMapperInterface
 
             $field['type'] = 'grouped-field';
             $field['name'] .= '-group';
-            $field['fieldDefinition']['layout'] = ['assigned_user_name'];
+            $field['fieldDefinition']['layout'] = [ 'assigned_user_name' ];
             $field['fieldDefinition']['display'] = 'inline';
             $field['fieldDefinition']['type'] = 'grouped-field';
             $field['fieldDefinition']['groupKey'] = 'assigned_user';
 
             $field['fieldDefinition']['groupFields'] = [
-                'assigned_user_id' => array_merge($vardefs['assigned_user_id'] ?? [], [
-                    'name' => 'assigned_user_id',
-                    'type' => 'id',
+                'assigned_user_id'   => array_merge($vardefs['assigned_user_id'] ?? [], [
+                    'name'      => 'assigned_user_id',
+                    'type'      => 'id',
                     'showLabel' => [],
-                    'display' => 'none',
-                    'group' => 'assigned_user'
+                    'display'   => 'none',
+                    'group'     => 'assigned_user'
                 ]),
                 'assigned_user_name' => array_merge($vardefs['assigned_user_name'] ?? [], [
-                    'name' => 'assigned_user_name',
-                    'type' => 'relate',
-                    'showLabel' => ['*'],
-                    'display' => 'inline',
-                    'group' => 'assigned_user'
+                    'name'      => 'assigned_user_name',
+                    'type'      => 'relate',
+                    'showLabel' => [ '*' ],
+                    'display'   => 'inline',
+                    'group'     => 'assigned_user'
                 ]),
             ];
 
@@ -136,9 +134,10 @@ class SearchDefsEnumToRelateTypeMapper implements ViewDefinitionMapperInterface
      *
      * @param string $group
      * @param array|null $vardefs
+     *
      * @return array
      */
-    protected function getGroupedFieldDefinitions(string $group, ?array $vardefs): array
+    protected function getGroupedFieldDefinitions(string $group, ?array $vardefs) : array
     {
         $definitions = [];
         foreach ($vardefs as $vardef) {

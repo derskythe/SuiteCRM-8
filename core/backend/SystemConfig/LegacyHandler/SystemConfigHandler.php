@@ -51,31 +51,32 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     /**
      * @var array
      */
-    protected $exposedSystemConfigs = [];
+    protected array $exposedSystemConfigs = [];
 
     /**
      * @var array
      */
-    protected $injectedSystemConfigs = [];
+    protected array $injectedSystemConfigs = [];
 
     /**
      * @var SystemConfigMappers
      */
-    private $mappers;
+    private SystemConfigMappers $mappers;
 
     /**
      * @var array
      */
-    private $systemConfigKeyMap;
+    private array $systemConfigKeyMap;
 
     /**
      * @var CurrencyHandler
      */
-    private $currencyHandler;
+    private CurrencyHandler $currencyHandler;
     /**
      * @var InstallHandler
      */
-    private $installHandler;
+    private InstallHandler $installHandler;
+    private LoggerInterface $logger;
 
     /**
      * SystemConfigHandler constructor.
@@ -138,17 +139,17 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
         array                               $subpanelViewActionLimits,
         array                               $listViewLineActionsLimits,
         array                               $listViewUrlQueryFilterMapping,
-        array                               $uiConfigs,
-        array                               $notificationsConfigs,
-        array                               $notificationsReloadActions,
-        array                               $globalRecentlyViewedReloadActions,
+        ?array                              $uiConfigs,
+        ?array                              $notificationsConfigs,
+        ?array                              $notificationsReloadActions,
+        ?array                              $globalRecentlyViewedReloadActions,
         array                               $extensions,
-        array                               $logoutConfig,
-        array                               $sessionExpiredConfig,
-        array                               $recordViewConvertIgnore,
+        ?array                              $logoutConfig,
+        ?array                              $sessionExpiredConfig,
+        ?array                              $recordViewConvertIgnore,
         RequestStack                        $session,
         NavigationProviderInterface         $navigation,
-        LoggerInterface $logger
+        LoggerInterface                     $logger
     )
     {
         parent::__construct(
@@ -160,6 +161,7 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
             $session,
             $logger
         );
+        $this->logger = $logger;
         $this->exposedSystemConfigs = $exposedSystemConfigs;
 
         $this->injectedSystemConfigs['module_name_map'] = $moduleNameMapper->getLegacyToFrontendMap();
@@ -177,13 +179,17 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
         $this->injectedSystemConfigs['subpanelview_actions_limits'] = $subpanelViewActionLimits;
         $this->injectedSystemConfigs['listview_line_actions_limits'] = $listViewLineActionsLimits;
         $this->injectedSystemConfigs['listview_url_query_filter_mapping'] = $listViewUrlQueryFilterMapping;
-        $this->injectedSystemConfigs['ui'] = $uiConfigs ?? [];
-        $this->injectedSystemConfigs['ui']['notifications'] = $notificationsConfigs ?? [];
-        $this->injectedSystemConfigs['ui']['notifications_reload_actions'] = $notificationsReloadActions ?? [];
+        $this->injectedSystemConfigs['ui'] = $uiConfigs
+            ?? [];
+        $this->injectedSystemConfigs['ui']['notifications'] = $notificationsConfigs
+            ?? [];
+        $this->injectedSystemConfigs['ui']['notifications_reload_actions'] = $notificationsReloadActions
+            ?? [];
         $this->injectedSystemConfigs['ui']['global_recently_viewed_reload_actions'] =
             $globalRecentlyViewedReloadActions ?? [];
         $this->injectedSystemConfigs['list_max_entries_per_record_thread'] =
-            $uiConfigs['list_max_entries_per_record_thread'] ?? null;
+            $uiConfigs['list_max_entries_per_record_thread']
+            ?? null;
         $this->injectedSystemConfigs['extensions'] = $extensions;
 
         $logoutConfig = $logoutConfig ?? [];
@@ -229,7 +235,17 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
         try {
             $defaults = get_sugar_config_defaults();
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
+
             return null;
         }
 
@@ -249,8 +265,7 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/System/Config/ConfigHandler.php';
+        require_once $this->legacyDir . '/include/portability/System/Config/ConfigHandler.php';
 
         $feedback = new Feedback();
 
@@ -262,10 +277,19 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
         try {
             $handler->updateConfig($config);
 
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
             $feedback->setSuccess(false);
             $feedback->setMessages([ 'Unable to update config' ]);
-            $feedback->setDebug([ $exception->getMessage(), $exception->getTraceAsString() ]);
+            $feedback->setDebug([ $e->getMessage(), $e->getTraceAsString() ]);
         }
 
         $this->close();
@@ -306,15 +330,29 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
      */
     public function getAllInstallConfigs() : array
     {
-        $this->installHandler->initLegacy();
+        try {
+            $this->installHandler->initLegacy();
 
-        $this->loadInstallConfig();
+            $this->loadInstallConfig();
 
-        $configs = $this->loadSystemConfigs();
+            $configs = $this->loadSystemConfigs();
 
-        $this->installHandler->closeLegacy();
+            $this->installHandler->closeLegacy();
 
-        return $configs;
+            return $configs;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
+
+            throw $e;
+        }
     }
 
     /**
@@ -354,7 +392,9 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
         }
 
         if (!isset($this->exposedSystemConfigs[$configKey])) {
-            throw new ItemNotFoundException(self::MSG_CONFIG_NOT_FOUND . "'$configKey'");
+            $message = self::MSG_CONFIG_NOT_FOUND . '\'' . $configKey . '\'';
+            $this->logger->error($message);
+            throw new ItemNotFoundException($message);
         }
 
         $config = new SystemConfig();
@@ -378,7 +418,10 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
             $items = $sugar_config[$configKey];
 
             if (is_array($this->exposedSystemConfigs[$configKey])) {
-                $items = $this->filterItems($sugar_config[$configKey], $this->exposedSystemConfigs[$configKey]);
+                $items = $this->filterItems(
+                    $sugar_config[$configKey],
+                    $this->exposedSystemConfigs[$configKey]
+                );
             }
 
             $config->setItems($items);
@@ -401,22 +444,21 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
      */
     protected function filterItems(array $allItems, array $exposed) : array
     {
-        $items = [];
-
         if (empty($exposed)) {
-            return $items;
+            return [];
         }
 
+        $items = [];
         foreach ($allItems as $configKey => $configValue) {
             if (!isset($exposed[$configKey])) {
                 continue;
             }
 
-            if (is_array($allItems[$configKey])) {
-                $subItems = $allItems[$configKey];
+            if (is_array($configValue)) {
+                $subItems = $configValue;
 
                 if (is_array($exposed[$configKey])) {
-                    $subItems = $this->filterItems($allItems[$configKey], $exposed[$configKey]);
+                    $subItems = $this->filterItems($configValue, $exposed[$configKey]);
                 }
 
                 $items[$configKey] = $subItems;
@@ -503,19 +545,32 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
      */
     public function getInstallConfig(string $configKey) : ?SystemConfig
     {
+        try {
+            $this->installHandler->initLegacy();
 
-        $this->installHandler->initLegacy();
+            $this->loadInstallConfig();
 
-        $this->loadInstallConfig();
+            $config = $this->loadSystemConfig($configKey);
 
-        $config = $this->loadSystemConfig($configKey);
+            $this->mapConfigValues($config);
+            $this->mapKey($config);
 
-        $this->mapConfigValues($config);
-        $this->mapKey($config);
+            $this->installHandler->closeLegacy();
 
-        $this->installHandler->closeLegacy();
+            return $config;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
 
-        return $config;
+            throw $e;
+        }
     }
 
     /**

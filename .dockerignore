@@ -34,7 +34,6 @@
 *.sass.map
 *.scss.map
 
-
 ### Node template
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -231,12 +230,6 @@ $RECYCLE.BIN/
 
 ### Angular template
 ## Angular ##
-# compiled output
-.angular/
-dist/
-app/**/*.js
-app/**/*.js.map
-
 # dependencies
 bower_components/
 
@@ -246,9 +239,6 @@ bower_components/
 # misc
 .sass-cache/
 connect.lock/
-libpeerconnection.log/
-npm-debug.log
-testem.log
 
 # e2e
 e2e/*.js
@@ -383,7 +373,10 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
-logs/*
+libpeerconnection.log/
+npm-debug.log
+testem.log
+logs/**
 !logs/.gitkeep
 
 # Managed by Composer
@@ -395,6 +388,11 @@ public/legacy/cache/
 .parcel-cache
 composer.lock
 package-lock.json
+!public/legacy/include/portability/Services/Cache/**
+!public/legacy/include/SugarCache/**
+!public/legacy/modules/jjwg_Address_Cache/**
+!core/backend/Install/Service/Cache/
+!core/backend/Install/Service/Cache/CacheBridge.php
 !composer.json
 !package.json
 
@@ -503,7 +501,9 @@ public/legacy/config_override.php
 public/legacy/config_si.php
 public/legacy/custom/modules/logic_hooks.php
 public/legacy/install/status.json
-public/dist
+.angular/
+dist/
+public/dist/
 public/bundles
 public/extensions
 

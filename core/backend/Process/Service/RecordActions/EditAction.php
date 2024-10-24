@@ -141,7 +141,7 @@ class EditAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $options = $process->getOptions();
 

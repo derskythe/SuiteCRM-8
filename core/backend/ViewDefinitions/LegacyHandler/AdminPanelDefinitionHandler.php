@@ -47,12 +47,12 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var RouteConverterInterface
      */
-    private $routeConverter;
+    private RouteConverterInterface $routeConverter;
 
     /**
      * AdminPanelDefinitionsHandler constructor.
@@ -107,8 +107,7 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
         $this->init();
         $admin_group_header = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require 'modules/Administration/metadata/adminpaneldefs.php';
+        require $this->legacyDir.'/modules/Administration/metadata/adminpaneldefs.php';
         $admin_group_header = $admin_group_header ?? [];
         $adminPanelMap = [];
         foreach ($admin_group_header as $adminEntry) {
@@ -145,7 +144,7 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
      *
      * @return array
      */
-    protected function buildAdminMenuGroup($linkGroup) : array
+    protected function buildAdminMenuGroup(array $linkGroup) : array
     {
         $mappedLinkGroup = [];
         foreach ($linkGroup as $linkKey => $link) {
@@ -161,7 +160,7 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
      *
      * @return array
      */
-    protected function buildAdminMenuLink($link) : array
+    protected function buildAdminMenuLink(array $link) : array
     {
         $path = $this->routeConverter->convertUri($link[3]);
         $path = str_replace('./#/', '/', $path);

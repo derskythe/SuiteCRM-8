@@ -32,6 +32,7 @@ use App\Engine\Service\ProcessSteps\ProcessStepExecutorInterface;
 /**
  * Interface LegacyMigrationHandlerInterface
  * Used to allow extensibility
+ *
  * @package App\Install\Service\LegacyMigration
  */
 interface LegacyMigrationHandlerInterface extends ProcessStepExecutorInterface

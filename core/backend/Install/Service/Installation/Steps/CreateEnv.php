@@ -49,7 +49,7 @@ class CreateEnv implements InstallStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * CreateEnv constructor.
@@ -82,23 +82,19 @@ class CreateEnv implements InstallStepInterface
     public function execute(array &$context): Feedback
     {
         $inputs = $this->getInputs($context);
+        $feedback = new Feedback();
 
-        $inputsValid = $this->validateInputs($inputs);
-
-        if (!$inputsValid) {
-            return (new Feedback())->setSuccess(false)->setMessages(['Missing inputs']);
+        if (!$this->validateInputs($inputs)) {
+            return $feedback->setSuccess(false)->setMessages(['Missing inputs']);
         }
 
-        $result = $this->handler->createEnv($inputs);
-
-        $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Created .env.local', 'Added randomly generated APP_SECRET']);
-
-        if ($result === false) {
+        if (!$this->handler->createEnv($inputs)) {
             $feedback->setSuccess(false);
             $feedback->setMessages(['Could not create .env.local']);
             $feedback->setStatusCode(InstallStatus::FAILED);
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages(['Created .env.local', 'Added randomly generated APP_SECRET']);
         }
 
         return $feedback;

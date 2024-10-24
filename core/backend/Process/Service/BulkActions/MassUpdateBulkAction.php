@@ -140,7 +140,7 @@ class MassUpdateBulkAction implements ProcessHandlerInterface, LoggerAwareInterf
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $options = $process->getOptions();
         $attributes = $options['payload']['panelRecord']['attributes'] ?? [];

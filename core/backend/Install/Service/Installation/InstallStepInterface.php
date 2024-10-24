@@ -32,6 +32,7 @@ use App\Engine\Model\ProcessStepInterface;
 /**
  * Interface InstallStepInterface
  * Used to auto-configure upgrade steps
+ *
  * @package App\Install\Service\Installation
  */
 interface InstallStepInterface extends ProcessStepInterface

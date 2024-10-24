@@ -55,7 +55,6 @@ use LoggerTemplate;
 #[\AllowDynamicProperties]
 class LangText
 {
-
     /**
      * string
      */
@@ -80,43 +79,43 @@ class LangText
      *
      * @var string
      */
-    protected $key;
+    protected ?string $key;
 
     /**
      *
      * @var array
      */
-    protected $args;
+    protected ?array $args;
 
     /**
      *
      * @var integer
      */
-    protected $use;
+    protected int $use;
 
     /**
      *
      * @var boolean
      */
-    protected $log;
+    protected bool $log;
 
     /**
      *
      * @var boolean
      */
-    protected $throw;
+    protected bool $to_throw;
 
     /**
      *
      * @var string
      */
-    protected $module;
+    protected ?string $module;
 
     /**
      *
      * @var string
      */
-    protected $lang;
+    protected ?string $lang;
 
     /**
      *
@@ -125,46 +124,60 @@ class LangText
      * @param integer $use
      * @param boolean $log
      * @param boolean $throw
-     * @param string $module
-     * @param string $lang
+     * @param string|null $module
+     * @param string|null $lang
      */
-    public function __construct($key = null, $args = null, $use = self::USING_ALL_STRINGS, $log = true, $throw = true, $module = null, $lang = null)
+    public function __construct(
+        string $key = null,
+        array  $args = null,
+        int    $use = self::USING_ALL_STRINGS,
+        bool   $log = true,
+        bool   $throw = true,
+        string $module = null,
+        string $lang = null
+    )
     {
         $this->key = $key;
         $this->args = $args;
         $this->use = $use;
         $this->log = $log;
-        $this->throw = $throw;
+        $this->to_throw = $throw;
         $this->module = $module;
         $this->lang = $lang;
     }
 
     /**
      *
-     * @global array $app_strings
-     * @global array $mod_strings
      * @param string|null $key
      * @param array|null $args
      * @param integer|null $use
-     * @param string $module
-     * @param string $lang
+     * @param string|null $module
+     * @param string|null $lang
+     *
      * @return string
      * @throws ErrorMessageException
+     * @global array $mod_strings
+     * @global array $app_strings
      */
-    public function getText($key = null, $args = null, $use = null, $module = null, $lang = null)
+    public function getText(
+        string $key = null,
+        array  $args = null,
+        int    $use = null,
+        string $module = null,
+        string $lang = null
+    ) : string
     { // TODO: rename the methode to LangText::translate()
 
         $this->selfUpdate($key, $args, $use);
         $textResolved = $this->resolveText($module, $lang);
-        $text = $this->replaceArgs($textResolved);
 
-        return $text;
+        return $this->replaceArgs($textResolved);
     }
 
     /**
      *
-     * @param string $module
-     * @param string $lang
+     * @param string|null $module
+     * @param string|null $lang
      *
      * @return string
      * @throws ErrorMessageException
@@ -172,14 +185,18 @@ class LangText
      * @global array $app_list_strings
      * @global array $app_strings
      */
-    protected function resolveText($module = null, $lang = null)
+    protected function resolveText(string $module = null, string $lang = null) : ?string
     {
         $textFromGlobals = $this->resolveTextByGlobals();
         $text = $this->updateTextByModuleLang($textFromGlobals, $module, $lang);
 
         if (!$text) {
             if ($this->log) {
-                ErrorMessage::handler('A language key does not found: [' . $this->key . ']', self::LOG_LEVEL, $this->throw);
+                ErrorMessage::handler(
+                    'A language key does not found: [' . $this->key . ']',
+                    self::LOG_LEVEL,
+                    $this->to_throw
+                );
             } else {
                 $text = $this->key;
             }
@@ -196,7 +213,7 @@ class LangText
      * @global array $app_strings
      * @global array $mod_strings
      */
-    protected function resolveTextByGlobals()
+    protected function resolveTextByGlobals() : ?string
     {
         $text = '';
         // TODO: app_strings and mod_strings could be in separated methods
@@ -224,6 +241,7 @@ class LangText
                 ErrorMessage::drop('Unknown use case for translation: ' . $this->use);
                 break;
         }
+
         return $text;
     }
 
@@ -232,40 +250,44 @@ class LangText
      * @param array $texts
      * @param string $key
      * @param string|null $default
+     *
      * @return string
      */
-    protected function resolveTextByGlobal($texts, $key, $default = null)
+    protected function resolveTextByGlobal(array $texts, string $key, string $default = null) : ?string
     {
-        $text = isset($texts[$key]) && $texts[$key] ? $texts[$key] : $default;
-        return $text;
+        return isset($texts[$key]) && $texts[$key] ? $texts[$key] : $default;
     }
 
     /**
      *
      * @param string $text
-     * @param string $module
-     * @param string $lang
+     * @param string|null $module
+     * @param string|null $lang
+     *
      * @return string
      */
-    protected function updateTextByModuleLang($text, $module = null, $lang = null)
+    protected function updateTextByModuleLang(string $text, string $module = null, string $lang = null) : ?string
     {
         $moduleLang = $this->getModuleLang($module, $lang);
         if (!$text && $moduleLang) {
             $text = isset($moduleLang[$this->key]) && $moduleLang[$this->key] ? $moduleLang[$this->key] : null;
         }
+
         return $text;
     }
 
     /**
      *
      * @param string $text
+     *
      * @return string
      */
-    protected function replaceArgs($text)
+    protected function replaceArgs(string $text) : string
     {
         foreach ((array) $this->args as $name => $value) {
             $text = str_replace('{' . $name . '}', $value, $text);
         }
+
         return $text;
     }
 
@@ -275,7 +297,7 @@ class LangText
      * @param array|null $args
      * @param integer|null $use
      */
-    protected function selfUpdate($key = null, $args = null, $use = null)
+    protected function selfUpdate(string $key = null, array $args = null, int $use = null) : void
     {
         if (!is_null($key)) {
             $this->key = $key;
@@ -292,19 +314,20 @@ class LangText
 
     /**
      *
-     * @param string $module
-     * @param string $lang
+     * @param string|null $module
+     * @param string|null $lang
+     *
      * @return array|null
      */
-    protected function getModuleLang($module = null, $lang = null)
+    protected function getModuleLang(string $module = null, string $lang = null) : ?array
     {
         $moduleLang = null;
 
-        $moduleName = $module ? $module : $this->module;
+        $moduleName = $module ? : $this->module;
 
         if ($moduleName) {
             // retrieve translation for specified module
-            $lang = $lang ? $lang : ($this->lang ? $this->lang : $GLOBALS['current_language']);
+            $lang = $lang ? : ($this->lang ? : $GLOBALS['current_language']);
             include_once __DIR__ . '/SugarObjects/LanguageManager.php';
             $moduleLang = \LanguageManager::loadModuleLanguage($moduleName, $lang);
         }
@@ -319,8 +342,7 @@ class LangText
      */
     public function __toString()
     {
-        $text = $this->getText();
-        return $text;
+        return $this->getText();
     }
 
     /**
@@ -329,15 +351,24 @@ class LangText
      * @param array|null $args
      * @param boolean|null $log
      * @param boolean $throw
-     * @param string $module
-     * @param string $lang
+     * @param string|null $module
+     * @param string|null $lang
+     *
      * @return string
      * @throws ErrorMessageException
      */
-    public static function get($key, $args = null, $use = self::USING_ALL_STRINGS, $log = true, $throw = true, $module = null, $lang = null)
+    public static function get(
+        string $key,
+        array  $args = null,
+        int    $use = self::USING_ALL_STRINGS,
+        bool   $log = true,
+        bool   $throw = true,
+        string $module = null,
+        string $lang = null
+    ) : string
     {
         $text = new LangText($key, $args, $use, $log, $throw, $module, $lang);
-        $translated = $text->getText();
-        return $translated;
+
+        return $text->getText();
     }
 }

@@ -43,7 +43,7 @@
 
 namespace App\Install\Service;
 
-use JsonException;
+use Throwable;
 use Twig\Environment;
 use AllowDynamicProperties;
 use Twig\Error\SyntaxError;
@@ -135,7 +135,7 @@ class InstallPreChecks
      * @throws SyntaxError
      * @throws RuntimeError
      * @throws LoaderError
-     * @throws JsonException
+     * @throws Throwable
      */
     public function setupTwigTemplate() : void
     {
@@ -153,11 +153,13 @@ class InstallPreChecks
         }
 
         if (($sugar_config['installer_locked'] ?? false) === true && file_exists(
-                $this->legacyDir . 'legacy/config.php'
+                $this->legacyDir . '/legacy/config.php'
             )) {
-            $loader = new FilesystemLoader($this->projectDir . 'core/backend/Install/Resources');
+            $loader = new FilesystemLoader($this->projectDir . '/core/backend/Install/Resources');
             $twig = new Environment($loader);
-            $template = $twig->load('installer_locked.html.twig');
+            $template = $twig->load(
+                $this->projectDir . '/core/backend/Install/Resources/installer_locked.html.twig'
+            );
             echo $template->render([
                                        'cssFile'     => $cssFile,
                                        'mod_strings' => $this->modStrings
@@ -167,9 +169,11 @@ class InstallPreChecks
         }
 
         $path = realpath('./');
-        $loader = new FilesystemLoader($this->projectDir . 'core/backend/Install/Resources');
+        $loader = new FilesystemLoader($this->projectDir . '/core/backend/Install/Resources');
         $twig = new Environment($loader);
-        $template = $twig->load('install-prechecks.html.twig');
+        $template = $twig->load(
+            $this->projectDir . '/core/backend/Install/Resources/install-prechecks.html.twig'
+        );
 
         $this->requiredInstallChecks();
         $this->optionalInstallChecks();
@@ -208,10 +212,6 @@ class InstallPreChecks
     }
 
     /**
-     * @param string $sys_php_version
-     * @param string $min_php_version
-     * @param string $rec_php_version
-     *
      * @return int
      */
     private function checkPhpVersion() : int
@@ -268,7 +268,8 @@ class InstallPreChecks
         ];
         if (empty($baseUrl)) {
             $baseUrl =
-                ($_SERVER['REQUEST_SCHEME'] ?? 'https') . '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['BASE'] ?? '');
+                ($_SERVER['REQUEST_SCHEME'] ?? 'https') . '://' . $_SERVER['HTTP_HOST'] .
+                ($_SERVER['BASE'] ?? '');
         }
         $baseUrl = rtrim($baseUrl, '/');
         $baseUrl .= '/';
@@ -312,13 +313,27 @@ class InstallPreChecks
         if (!str_contains($result, '<title>SuiteCRM</title>')) {
             $error = $this->modStrings['LBL_NOT_A_VALID_SUITECRM_PAGE'] ?? '';
 
-            return $this->outputError($streamVerboseHandle, $error, $logFile, $checkFile, $baseUrl, $result);
+            return $this->outputError(
+                $streamVerboseHandle,
+                $error,
+                $logFile,
+                $checkFile,
+                $baseUrl,
+                $result
+            );
         }
 
         if (empty($headers['set-cookie'])) {
             $error = $this->modStrings['LBL_NOT_COOKIE_OR_TOKEN'] ?? '';
 
-            return $this->outputError($streamVerboseHandle, $error, $logFile, $checkFile, $baseUrl, $result);
+            return $this->outputError(
+                $streamVerboseHandle,
+                $error,
+                $logFile,
+                $checkFile,
+                $baseUrl,
+                $result
+            );
         }
 
         foreach ($headers['set-cookie'] as $cookie) {
@@ -368,7 +383,8 @@ class InstallPreChecks
 
         file_put_contents($logFile, stream_get_contents($streamVerboseHandle), FILE_APPEND);
         rewind($streamVerboseHandle);
-        if (stream_get_contents($streamVerboseHandle) !== false && !empty(stream_get_contents($streamVerboseHandle))) {
+        if (stream_get_contents($streamVerboseHandle) !== false &&
+            !empty(stream_get_contents($streamVerboseHandle))) {
             $this->log->error(stream_get_contents($streamVerboseHandle));
             $output['errors'][] = stream_get_contents($streamVerboseHandle);
         }
@@ -401,7 +417,7 @@ class InstallPreChecks
      * @param string $baseUrl
      *
      * @return array
-     * @throws JsonException
+     * @throws Throwable
      */
     public function checkGraphQlAPI(string $baseUrl = '') : array
     {
@@ -422,7 +438,8 @@ class InstallPreChecks
 
         if (empty($baseUrl)) {
             $baseUrl =
-                ($_SERVER['REQUEST_SCHEME'] ?? 'https') . '://' . $_SERVER['HTTP_HOST'] . ($_SERVER['BASE'] ?? '');
+                ($_SERVER['REQUEST_SCHEME'] ?? 'https') . '://' . $_SERVER['HTTP_HOST'] .
+                ($_SERVER['BASE'] ?? '');
         }
         $baseUrl = rtrim($baseUrl, '/');
         $baseUrl .= '/';
@@ -462,7 +479,14 @@ class InstallPreChecks
         if (curl_errno($ch)) {
             $error = 'cURL error (' . curl_errno($ch) . '): ' . curl_error($ch);
 
-            return $this->outputError($streamVerboseHandle, $error, $logFile, $checkFile, $apiUrl, $result);
+            return $this->outputError(
+                $streamVerboseHandle,
+                $error,
+                $logFile,
+                $checkFile,
+                $apiUrl,
+                $result
+            );
         }
 
         $resultJson = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
@@ -470,13 +494,27 @@ class InstallPreChecks
         if (empty($resultJson)) {
             $error = $this->modStrings['LBL_CURL_JSON_ERROR'] ?? '';
 
-            return $this->outputError($streamVerboseHandle, $error, $logFile, $checkFile, $apiUrl, $result);
+            return $this->outputError(
+                $streamVerboseHandle,
+                $error,
+                $logFile,
+                $checkFile,
+                $apiUrl,
+                $result
+            );
         }
 
         if (empty($resultJson['data']['systemConfigs'])) {
             $error = $this->modStrings['LBL_UNABLE_TO_FIND_SYSTEM_CONFIGS'] ?? '';
 
-            return $this->outputError($streamVerboseHandle, $error, $logFile, $checkFile, $apiUrl, $result);
+            return $this->outputError(
+                $streamVerboseHandle,
+                $error,
+                $logFile,
+                $checkFile,
+                $apiUrl,
+                $result
+            );
         }
 
         if (file_exists($checkFile)) {
@@ -587,7 +625,7 @@ class InstallPreChecks
     }
 
     /**
-     * @param $labels
+     * @param array $labels
      *
      * @return array
      */
@@ -612,8 +650,10 @@ class InstallPreChecks
 
         if ((int) $memoryLimit < (int) constant('SUGARCRM_MIN_MEM')) {
             $minMemoryInMegs = constant('SUGARCRM_MIN_MEM') / (1024 * 1024);
-            $error =
-                $this->modStrings['LBL_PHP_MEM_1'] . $memoryLimit . $this->modStrings['LBL_PHP_MEM_2'] . $minMemoryInMegs . $this->modStrings['LBL_PHP_MEM_3'];
+            $error = $this->modStrings['LBL_PHP_MEM_1'] . $memoryLimit .
+                $this->modStrings['LBL_PHP_MEM_2'] .
+                $minMemoryInMegs .
+                $this->modStrings['LBL_PHP_MEM_3'];
             $results['errors'][] = $this->modStrings['LBL_CHECK_FAILED'] . $error;
 
             return $results;
@@ -642,7 +682,7 @@ class InstallPreChecks
         ];
 
         if ($this->getSuhosinStatus() === true || (str_contains(ini_get('suhosin.perdir'), 'e')
-                && !str_contains((string) $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS'))) {
+                && !str_contains($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS'))) {
             $this->log->info('Sushosin allows use of Upload');
             $results['result'] = $this->modStrings['LBL_CHECKSYS_OK'];
 
@@ -666,11 +706,14 @@ class InstallPreChecks
 
         $configuration = ini_get_all('suhosin', false);
 
-        if ($configuration['suhosin.simulation']) {
+        if (array_key_exists('suhosin.simulation', $configuration) &&
+            $configuration['suhosin.simulation']) {
             return true;
         }
 
-        $streams = $configuration['suhosin.executor.include.whitelist'];
+        $streams = array_key_exists('suhosin.executor.include.whitelist', $configuration)
+            ? $configuration['suhosin.executor.include.whitelist']
+            : '';
 
         if ($streams !== '') {
             $streams = explode(',', $streams);
@@ -692,7 +735,10 @@ class InstallPreChecks
             return false;
         }
 
-        $streams = $configuration['suhosin.executor.include.blacklist'];
+        $streams = array_key_exists('suhosin.executor.include.blacklist', $configuration)
+            ? $configuration['suhosin.executor.include.blacklist']
+            : '';
+
         if ($streams !== '') {
             $streams = explode(',', $streams);
             foreach ($streams as $stream) {
@@ -795,7 +841,7 @@ class InstallPreChecks
 
         $fileList = '';
 
-        foreach ($cacheFiles as $key => $item) {
+        foreach ($cacheFiles as $item) {
 
             $checkName = $item['message_id'] === '' ? $item['path'] : $item['message_id'];
             $this->log->info('Checking if ' . $checkName . ' is writable');
@@ -1062,7 +1108,8 @@ class InstallPreChecks
         if (!($uploadMaxFileSizeBytes >= constant('SUGARCRM_MIN_UPLOAD_MAX_FILESIZE_BYTES'))) {
             $this->log->error($this->modStrings['ERR_UPLOAD_MAX_FILESIZE']);
             $results['errors'][] =
-                $this->modStrings['LBL_CHECK_FAILED'] . $this->modStrings['ERR_UPLOAD_MAX_FILESIZE'] . '. Currently yours is: ' . $uploadMaxFileSize;
+                $this->modStrings['LBL_CHECK_FAILED'] . $this->modStrings['ERR_UPLOAD_MAX_FILESIZE'] .
+                '. Currently yours is: ' . $uploadMaxFileSize;
 
             return $results;
         }
@@ -1209,7 +1256,7 @@ class InstallPreChecks
 
     /**
      * @return void
-     * @throws JsonException
+     * @throws Throwable
      */
     private function optionalInstallChecks() : void
     {

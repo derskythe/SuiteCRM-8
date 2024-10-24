@@ -38,16 +38,6 @@ final class Version20221003150202 extends BaseMigration implements ContainerAwar
 {
     use EnvHandlingMigrationTrait;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $upgradeLogger;
-
     public function getDescription(): string
     {
         return 'Add default SAML auto create option to .env';

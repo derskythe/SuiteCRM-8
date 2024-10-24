@@ -83,7 +83,7 @@ class RecordViewCurrencyFieldMapper implements ViewDefinitionMapperInterface
             return;
         }
 
-        $typesConfig = $this->getConfig($definition->getId() ?? 'default');
+        $typesConfig = $this->getConfig($definition->getId() ?? $this->getModule());
 
         if (empty($typesConfig)) {
             return;

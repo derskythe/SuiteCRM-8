@@ -27,6 +27,7 @@
 
 namespace App\Process\LegacyHandler;
 
+use Throwable;
 use AddContactsToTargetListService;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -47,12 +48,12 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * LinkRelationHandler constructor.
@@ -180,14 +181,14 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
         $this->startLegacyApp();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Relationships/AddContactsToTargetListService.php';
+        require_once $this->legacyDir . '/include/portability/Services/Relationships/AddContactsToTargetListService.php';
 
         $options = $process->getOptions();
         [

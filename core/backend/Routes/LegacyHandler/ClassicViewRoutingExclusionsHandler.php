@@ -39,7 +39,7 @@ class ClassicViewRoutingExclusionsHandler extends LegacyHandler
      *
      * @var ClassicViewRoutingExclusionsManager
      */
-    protected $manager;
+    protected ?ClassicViewRoutingExclusionsManager $manager;
 
     /**
      * @inheritDoc
@@ -78,8 +78,7 @@ class ClassicViewRoutingExclusionsHandler extends LegacyHandler
             return $this->manager;
         }
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/ClassicViewRoutingExclusionsManager.php';
+        require_once $this->legacyDir.'/include/portability/ClassicViewRoutingExclusionsManager.php';
 
         $this->manager = new ClassicViewRoutingExclusionsManager();
 

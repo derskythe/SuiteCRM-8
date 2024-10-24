@@ -128,7 +128,7 @@ class DeleteRecordAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $result = $this->deleteRecord($process);
 

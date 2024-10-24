@@ -111,12 +111,11 @@ class ResetPasswordHandler extends LegacyHandler implements ProcessHandlerInterf
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'modules/Users/services/ResetPassword.php';
+        require_once $this->legacyDir.'/modules/Users/services/ResetPassword.php';
 
         $service = new ResetPassword();
 

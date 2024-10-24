@@ -37,14 +37,14 @@ use App\Languages\LegacyHandler\AppStringsHandler;
  */
 final class AppStringsStateProvider implements ProviderInterface
 {
-
     /**
      * @var AppStringsHandler
      */
-    private $appStringsHandler;
+    private AppStringsHandler $appStringsHandler;
 
     /**
      * AppStringsStateProvider constructor.
+     *
      * @param AppStringsHandler $appStringsHandler
      */
     public function __construct(AppStringsHandler $appStringsHandler)
@@ -54,12 +54,18 @@ final class AppStringsStateProvider implements ProviderInterface
 
     /**
      * Get app strings for given language id
+     *
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
+     *
      * @return AppStrings|null
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?AppStrings
+    public function provide(
+        Operation $operation,
+        array     $uriVariables = [],
+        array     $context = []
+    ) : ?AppStrings
     {
         return $this->appStringsHandler->getAppStrings($uriVariables['id'] ?? '');
     }

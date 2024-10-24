@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -38,27 +38,17 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
 {
     use EnvHandlingMigrationTrait;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $upgradeLogger;
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return 'Add SAML and LDAP settings to .env';
     }
 
-    public function isTransactional(): bool
+    public function isTransactional() : bool
     {
         return false;
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
         $envFile = $this->getProjectDir() . "/.env";
 
@@ -81,10 +71,11 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
 
     /**
      * Check and add missing auth type
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addAuthType(&$envContents, string $envFile): void
+    protected function addAuthType(&$envContents, string $envFile) : void
     {
         $properties = [
             'AUTH_TYPE' => 'native'
@@ -107,21 +98,22 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
 
     /**
      * Check and add missing ldap configs
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addBaseLdapConfig(&$envContents, string $envFile): void
+    protected function addBaseLdapConfig(&$envContents, string $envFile) : void
     {
         $properties = [
-            'LDAP_HOST' => "''",
-            'LDAP_PORT' => '389',
-            'LDAP_ENCRYPTION' => "'tls'",
+            'LDAP_HOST'             => "''",
+            'LDAP_PORT'             => '389',
+            'LDAP_ENCRYPTION'       => "'tls'",
             'LDAP_PROTOCOL_VERSION' => '3',
-            'LDAP_REFERRALS' => 'false',
-            'LDAP_DN_STRING' => "''",
-            'LDAP_QUERY_STRING' => "''",
-            'LDAP_SEARCH_DN' => "''",
-            'LDAP_SEARCH_PASSWORD' => "''"
+            'LDAP_REFERRALS'        => 'false',
+            'LDAP_DN_STRING'        => "''",
+            'LDAP_QUERY_STRING'     => "''",
+            'LDAP_SEARCH_DN'        => "''",
+            'LDAP_SEARCH_PASSWORD'  => "''"
         ];
         $wrapperStart = '###> LDAP CONFIG ###';
         $wrapperEnd = '###< LDAP CONFIG ###';
@@ -140,19 +132,20 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
 
     /**
      * check and add missing ldap auto create configs
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addLdapAutoCreateConfig(&$envContents, string $envFile): void
+    protected function addLdapAutoCreateConfig(&$envContents, string $envFile) : void
     {
         $properties = [
-            'LDAP_AUTO_CREATE' => "disabled",
-            'LDAP_PROVIDER_BASE_DN' => "''",
-            'LDAP_PROVIDER_SEARCH_DN' => "''",
+            'LDAP_AUTO_CREATE'              => "disabled",
+            'LDAP_PROVIDER_BASE_DN'         => "''",
+            'LDAP_PROVIDER_SEARCH_DN'       => "''",
             'LDAP_PROVIDER_SEARCH_PASSWORD' => "''",
-            'LDAP_PROVIDER_DEFAULT_ROLES' => "ROLE_USER",
-            'LDAP_PROVIDER_UID_KEY' => "''",
-            'LDAP_PROVIDER_FILTER' => "''"
+            'LDAP_PROVIDER_DEFAULT_ROLES'   => "ROLE_USER",
+            'LDAP_PROVIDER_UID_KEY'         => "''",
+            'LDAP_PROVIDER_FILTER'          => "''"
         ];
         $wrapperStart = '###> LDAP AUTO CREATE CONFIG ###';
         $wrapperEnd = '###< LDAP AUTO CREATE CONFIG ##';
@@ -171,13 +164,14 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
 
     /**
      * Check and add missing saml config
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addSamlConfig(&$envContents, string $envFile): void
+    protected function addSamlConfig(&$envContents, string $envFile) : void
     {
         $properties = [
-            'SAML_USERNAME_ATTRIBUTE' => "uid",
+            'SAML_USERNAME_ATTRIBUTE'          => "uid",
             'SAML_USE_ATTRIBUTE_FRIENDLY_NAME' => "true"
         ];
         $wrapperStart = '###> SAML CONFIG ###';
@@ -197,10 +191,11 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
 
     /**
      * Check and add missing login throttling config
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addLoginThrottlingConfig(&$envContents, string $envFile): void
+    protected function addLoginThrottlingConfig(&$envContents, string $envFile) : void
     {
         $properties = [
             'LOGIN_THROTTLING_MAX_ATTEMPTS' => '5'
@@ -220,7 +215,7 @@ final class Version20220912082608 extends BaseMigration implements ContainerAwar
         $this->log('LOGIN_THROTTLING_MAX_ATTEMPTS already in .env, skipping.');
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 }

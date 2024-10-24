@@ -31,5 +31,4 @@ use App\Engine\Model\ProcessStepInterface;
 
 interface CliStepInterface extends ProcessStepInterface
 {
-
 }

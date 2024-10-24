@@ -100,7 +100,7 @@ class DateFieldDefaultCalculation extends LegacyHandler implements ProcessHandle
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $options = $process->getOptions();
 

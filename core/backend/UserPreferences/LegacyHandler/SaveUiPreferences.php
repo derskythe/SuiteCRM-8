@@ -27,6 +27,7 @@
 
 namespace App\UserPreferences\LegacyHandler;
 
+use Throwable;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Process\Entity\Process;
@@ -101,8 +102,9 @@ class SaveUiPreferences extends LegacyHandler implements ProcessHandlerInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $this->init();
         $this->startLegacyApp();

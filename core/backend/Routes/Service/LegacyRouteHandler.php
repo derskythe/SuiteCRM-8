@@ -35,28 +35,30 @@ class LegacyRouteHandler
     /**
      * @var LegacyApiRedirectHandler
      */
-    private $legacyApiRedirectHandler;
+    private LegacyApiRedirectHandler $legacyApiRedirectHandler;
 
     /**
      * @var LegacyNonViewActionRedirectHandler
      */
-    private $legacyNonViewActionRedirectHandler;
+    private LegacyNonViewActionRedirectHandler $legacyNonViewActionRedirectHandler;
     /**
      * @var LegacyAssetRedirectHandler
      */
-    private $legacyAssetRedirectHandler;
+    private LegacyAssetRedirectHandler $legacyAssetRedirectHandler;
 
     /**
      * LegacyRedirectListener constructor.
+     *
      * @param LegacyApiRedirectHandler $legacyApiRedirectHandler
      * @param LegacyNonViewActionRedirectHandler $legacyNonViewActionRedirectHandler
      * @param LegacyAssetRedirectHandler $legacyAssetRedirectHandler
      */
     public function __construct(
-        LegacyApiRedirectHandler $legacyApiRedirectHandler,
+        LegacyApiRedirectHandler           $legacyApiRedirectHandler,
         LegacyNonViewActionRedirectHandler $legacyNonViewActionRedirectHandler,
-        LegacyAssetRedirectHandler $legacyAssetRedirectHandler
-    ) {
+        LegacyAssetRedirectHandler         $legacyAssetRedirectHandler
+    )
+    {
         $this->legacyApiRedirectHandler = $legacyApiRedirectHandler;
         $this->legacyNonViewActionRedirectHandler = $legacyNonViewActionRedirectHandler;
         $this->legacyAssetRedirectHandler = $legacyAssetRedirectHandler;
@@ -64,10 +66,12 @@ class LegacyRouteHandler
 
     /**
      * Re-direct user
+     *
      * @param Request $request
+     *
      * @return array
      */
-    public function getLegacyRoute(Request $request): array
+    public function getLegacyRoute(Request $request) : array
     {
         if ($this->isRedirectLoop($request)) {
             return [
@@ -95,66 +99,77 @@ class LegacyRouteHandler
             return $this->legacyNonViewActionRedirectHandler->getIncludeFile($request);
         }
 
-
         return [];
     }
 
     /**
      * Check if it is legacy entry point
+     *
      * @param Request $request
+     *
      * @return bool
      */
-    protected function isRedirectLoop(Request $request): bool
+    protected function isRedirectLoop(Request $request) : bool
     {
-        return strpos($request->getPathInfo(), 'legacy/legacy') !== false;
+        return str_contains($request->getPathInfo(), 'legacy/legacy');
     }
 
     /**
      * Check if it is legacy entry point
+     *
      * @param Request $request
+     *
      * @return bool
      */
-    protected function isAssetRequest(Request $request): bool
+    protected function isAssetRequest(Request $request) : bool
     {
         return $this->legacyAssetRedirectHandler->isAssetRequest($request);
     }
 
     /**
      * Check if it is legacy entry point
+     *
      * @param Request $request
+     *
      * @return bool
      */
-    protected function isLegacyEntryPoint(Request $request): bool
+    protected function isLegacyEntryPoint(Request $request) : bool
     {
         return $this->legacyNonViewActionRedirectHandler->isLegacyEntryPoint($request);
     }
 
     /**
      * Check if it is legacy entry point
+     *
      * @param Request $request
+     *
      * @return bool
      */
-    protected function isLegacyEntryPointFile(Request $request): bool
+    protected function isLegacyEntryPointFile(Request $request) : bool
     {
         return $this->legacyNonViewActionRedirectHandler->isLegacyEntryPointFile($request);
     }
 
     /**
      * Check if it is legacy api request
+     *
      * @param Request $request
+     *
      * @return bool
      */
-    protected function isLegacyApi(Request $request): bool
+    protected function isLegacyApi(Request $request) : bool
     {
         return $this->legacyApiRedirectHandler->isApiRequest($request);
     }
 
     /**
      * Check if it is legacy non view request
+     *
      * @param Request $request
+     *
      * @return bool
      */
-    protected function isLegacyNonViewActionRoute(Request $request): bool
+    protected function isLegacyNonViewActionRoute(Request $request) : bool
     {
         return $this->legacyNonViewActionRedirectHandler->isMatch($request);
     }

@@ -47,11 +47,11 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * LegacyHandler constructor.
@@ -164,8 +164,9 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      * @throws Exception
+     * @throws \Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
         $this->startLegacyApp();
@@ -194,8 +195,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
         $process->setStatus('success');
         $process->setMessages([]);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Trackers/TrackerManagerPort.php';
+        require_once $this->legacyDir . '/include/portability/Services/Trackers/TrackerManagerPort.php';
 
         $trackerManager = new TrackerManagerPort();
         $result = $trackerManager->trackView($itemId, $itemModule, $action);
@@ -209,7 +209,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

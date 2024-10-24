@@ -46,12 +46,12 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * UnlinkRelationHandler constructor.
@@ -193,12 +193,11 @@ class UnlinkRelationHandler extends LegacyHandler implements ProcessHandlerInter
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Relationships/UnlinkService.php';
+        require_once $this->legacyDir.'/include/portability/Services/Relationships/UnlinkService.php';
 
         [ 'payload' => $payload ] = $process->getOptions();
         [

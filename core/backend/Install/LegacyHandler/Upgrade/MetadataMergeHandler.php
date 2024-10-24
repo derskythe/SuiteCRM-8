@@ -42,12 +42,12 @@ class MetadataMergeHandler extends LegacyHandler
     /**
      * @var string
      */
-    protected $upgradePackageDir;
+    protected string $upgradePackageDir;
 
     /**
      * @var UpgradePackageHandler
      */
-    protected $packageHandler;
+    protected UpgradePackageHandler $packageHandler;
 
     /**
      * LegacyHandler constructor.
@@ -102,8 +102,7 @@ class MetadataMergeHandler extends LegacyHandler
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'modules/UpgradeWizard/SugarMerge/SugarMerge.php';
+        require_once $this->legacyDir.'/modules/UpgradeWizard/SugarMerge/SugarMerge.php';
 
         $feedback = new Feedback();
 

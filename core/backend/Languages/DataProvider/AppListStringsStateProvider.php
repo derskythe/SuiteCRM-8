@@ -40,10 +40,11 @@ final class AppListStringsStateProvider implements ProviderInterface
     /**
      * @var AppListStringsHandler
      */
-    private $appListStringsHandler;
+    private AppListStringsHandler $appListStringsHandler;
 
     /**
      * AppListStringsStateProvider constructor.
+     *
      * @param AppListStringsHandler $appListStringsHandler
      */
     public function __construct(AppListStringsHandler $appListStringsHandler)
@@ -53,12 +54,18 @@ final class AppListStringsStateProvider implements ProviderInterface
 
     /**
      * Get app list strings for given language id
+     *
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
+     *
      * @return AppListStrings|null
      */
-    public function provide(Operation $operation, array $uriVariables = [], array $context = []): ?AppListStrings
+    public function provide(
+        Operation $operation,
+        array     $uriVariables = [],
+        array     $context = []
+    ) : ?AppListStrings
     {
         return $this->appListStringsHandler->getAppListStrings($uriVariables['id'] ?? '');
     }

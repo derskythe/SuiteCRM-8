@@ -21,7 +21,7 @@ class FavoritesHandler extends LegacyHandler implements FavoriteProviderInterfac
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * FavoritesHandler constructor.
@@ -73,8 +73,7 @@ class FavoritesHandler extends LegacyHandler implements FavoriteProviderInterfac
 
         $legacyModule = $this->moduleNameMapper->toLegacy($module);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Favorites/FavoritesManagerPort.php';
+        require_once $this->legacyDir.'/include/portability/Services/Favorites/FavoritesManagerPort.php';
 
         $favoritesManager = new FavoritesManagerPort();
 
@@ -95,8 +94,7 @@ class FavoritesHandler extends LegacyHandler implements FavoriteProviderInterfac
 
         $legacyModule = $this->moduleNameMapper->toLegacy($module);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Favorites/FavoritesManagerPort.php';
+        require_once $this->legacyDir.'/include/portability/Services/Favorites/FavoritesManagerPort.php';
 
         $favoritesManager = new FavoritesManagerPort();
 

@@ -27,6 +27,7 @@
 
 namespace App\Process\LegacyHandler;
 
+use Exception;
 use App\Engine\LegacyHandler\LegacyHandler;
 
 class PortalUserActivator extends LegacyHandler
@@ -38,6 +39,10 @@ class PortalUserActivator extends LegacyHandler
         return self::PROCESS_TYPE;
     }
 
+    /**
+     * @throws JsonException
+     * @throws Exception
+     */
     public function switchPortalUserStatus(
         string $contact_id,
         string $failLabel,
@@ -52,7 +57,7 @@ class PortalUserActivator extends LegacyHandler
         $msg = '';
 
         $action = $activate ? 'enable_user' : 'disable_user';
-        require_once 'modules/AOP_Case_Updates/util.php';
+        require_once $this->legacyDir . '/modules/AOP_Case_Updates/util.php';
         if (!isAOPEnabled()) {
             return $mod_strings['LBL_AOP_DISABLED'];
         }
@@ -60,8 +65,8 @@ class PortalUserActivator extends LegacyHandler
         $contact = \BeanFactory::getBean('Contacts', $contact_id);
 
         if (
-            array_key_exists("aop", $sugar_config) &&
-            array_key_exists("joomla_url", $sugar_config['aop']) &&
+            array_key_exists('aop', $sugar_config) &&
+            array_key_exists('joomla_url', $sugar_config['aop']) &&
             !empty($contact) &&
             property_exists($contact, 'joomla_account_id') &&
             $contact->joomla_account_id !== null
@@ -72,7 +77,8 @@ class PortalUserActivator extends LegacyHandler
                 . '&uid=' . $contact->joomla_account_id;
 
             $apiResponse = file_get_contents($apiEndpoint);
-            $decodedResponse = json_decode($apiResponse);
+            $decodedResponse = json_decode(
+                $apiResponse, false, 512, JSON_THROW_ON_ERROR);
 
             if (empty($decodedResponse) || !$decodedResponse->success) {
                 $msg = $decodedResponse->error ? : $mod_strings[$failLabel];

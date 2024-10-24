@@ -27,6 +27,7 @@
 
 namespace App\Install\Service\Installation\Steps;
 
+use Throwable;
 use App\Engine\Model\Feedback;
 use App\Engine\Model\ProcessStepTrait;
 use App\Install\LegacyHandler\InstallHandler;
@@ -46,7 +47,7 @@ class SystemChecks implements InstallStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * SystemChecks constructor.
@@ -75,6 +76,7 @@ class SystemChecks implements InstallStepInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function execute(array &$context): Feedback
     {
@@ -83,8 +85,11 @@ class SystemChecks implements InstallStepInterface
 
     /**
      * Run system check
+     *
      * @param array $context
+     *
      * @return Feedback
+     * @throws Throwable
      */
     public function runSystemCheck(array &$context): Feedback
     {

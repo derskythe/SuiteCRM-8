@@ -34,6 +34,7 @@ use App\Install\Service\LegacyMigration\LegacyMigrationStepInterface;
 
 /**
  * Class ChangeRewriteBase
+ *
  * @package App\Install\Service\LegacyMigration\Steps;
  */
 class ChangeRewriteBase implements LegacyMigrationStepInterface
@@ -42,15 +43,16 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
     use InstallStepTrait;
 
     public const HANDLER_KEY = 'change-rewrite-base';
-    public const POSITION = 400;
+    public const POSITION    = 400;
 
     /**
      * @var string
      */
-    private $legacyDir;
+    private string $legacyDir;
 
     /**
      * ChangeRewriteBase constructor.
+     *
      * @param string $legacyDir
      */
     public function __construct(string $legacyDir)
@@ -61,7 +63,7 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -69,7 +71,7 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getOrder(): int
+    public function getOrder() : int
     {
         return self::POSITION;
     }
@@ -77,21 +79,19 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function execute(array &$context): Feedback
+    public function execute(array &$context) : Feedback
     {
+        $feedback = new Feedback();
+        $feedback->setSuccess(true);
         $htAccessPath = $this->legacyDir . '/.htaccess';
         if (!file_exists($htAccessPath)) {
-            $feedback = new Feedback();
-            $feedback->setSuccess(true);
-            $feedback->setMessages(['WARNING: No htaccess file. Skipping htaccess update']);
+            $feedback->setMessages([ 'WARNING: No htaccess file. Skipping htaccess update' ]);
 
             return $feedback;
         }
 
         if (!is_writable($htAccessPath)) {
-            $feedback = new Feedback();
-            $feedback->setSuccess(true);
-            $feedback->setMessages(['WARNING:  Not able to write to htaccess. Skipping htaccess update']);
+            $feedback->setMessages([ 'WARNING:  Not able to write to htaccess. Skipping htaccess update' ]);
 
             return $feedback;
         }
@@ -104,27 +104,30 @@ class ChangeRewriteBase implements LegacyMigrationStepInterface
         $match = $matches[0] ?? '';
 
         if (!$matchFound || empty($match)) {
-            $feedback = new Feedback();
-            $feedback->setSuccess(true);
             $feedback->setMessages([
-                'WARNING: No RewriteBase configuration or not according to expected pattern. Skipping htaccess update',
-            ]);
+                                       'WARNING: No RewriteBase configuration or not according to expected pattern. Skipping htaccess update',
+                                   ]);
 
             return $feedback;
         }
 
-        $replacement = preg_replace('/RewriteBase\s*(\/)?(.*)(\/)?$/', 'RewriteBase /$2/public/legacy', $match);
+        $replacement = preg_replace(
+            '/RewriteBase\s*(\/)?(.*)(\/)?$/',
+            'RewriteBase /$2/public/legacy',
+            $match
+        );
         $replacement = str_replace('//', '/', $replacement);
-
         $contents = preg_replace('/RewriteBase\s*(.*)/', $replacement, $contents);
 
-        file_put_contents($htAccessPath, $contents);
-
-        $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages([
-            'Updated htaccess RewriteBase',
-        ]);
+        if (!file_put_contents($htAccessPath, $contents)) {
+            $feedback->setMessages([
+                                       'WARNING: Write to file failed!'
+                                   ]);
+        } else {
+            $feedback->setMessages([
+                                       'Updated htaccess RewriteBase',
+                                   ]);
+        }
 
         return $feedback;
     }
