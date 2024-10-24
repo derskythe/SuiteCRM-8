@@ -62,13 +62,13 @@ class NonGmailSentFolderHandler
     public const ERR_IS_GMAIL = 9;
     public const ERR_COULDNT_COPY_TO_SENT = 10;
     public const UNHANDLER_ERROR = 100;
-    
+
     /**
      *
      * @var int|null
      */
     protected $lastError = null;
-    
+
     /**
      *
      */
@@ -82,7 +82,7 @@ class NonGmailSentFolderHandler
             );
         }
     }
-    
+
     /**
      *
      */
@@ -95,7 +95,7 @@ class NonGmailSentFolderHandler
         }
         $this->lastError = null;
     }
-    
+
     /**
      *
      * @return int
@@ -106,7 +106,7 @@ class NonGmailSentFolderHandler
         $this->lastError = null;
         return $ret;
     }
-    
+
     /**
      *
      * @param int $err
@@ -116,19 +116,21 @@ class NonGmailSentFolderHandler
         if (!is_int($err)) {
             throw new InvalidArgumentException('Error code should be an integer.', self::ERR_SHOULD_BE_INT);
         }
-        
+
         if (null !== $this->lastError) {
             LoggerManager::getLogger()->error('Last Error already set for NonGmailSentFolderHandler but never checked: ' . $this->lastError);
         }
         $this->lastError = $err;
     }
-    
-    
+
+
     /**
      *
      * @param InboundEmail $ie
-     * @return bool
      * @param SugarPHPMailer $mail
+     *
+     * @return bool
+     * @throws EmailException
      */
     public function storeInSentFolder(InboundEmail $ie, SugarPHPMailer $mail, $options = "\\Seen")
     {
@@ -144,7 +146,7 @@ class NonGmailSentFolderHandler
             $this->setLastError(self::ERR_IS_POP3);
             $ok = false;
         }
-        $isGmail = $mail->oe->mail_smtptype == 'gmail';
+        $isGmail = $mail->oe->mail_smtptype === 'gmail';
         if ($ok && $isGmail) {
             $this->setLastError(self::ERR_IS_GMAIL);
             $ok = false;
@@ -156,7 +158,7 @@ class NonGmailSentFolderHandler
         }
         return $ret;
     }
-    
+
     /**
      *
      * @param InboundEmail $ie
@@ -168,12 +170,12 @@ class NonGmailSentFolderHandler
     {
         $ret = false;
         $this->clearLastError();
-        $sentFolder = $ie->get_stored_options("sentFolder");
+        $sentFolder = $ie->get_stored_options('sentFolder');
         if (!empty($sentFolder)) {
             $ret = $this->connectToNonGmailServer($ie, $mail, $sentFolder, $options);
         } else {
             if (!$ie->mailbox) {
-                LoggerManager::getLogger()->warn("could not copy email to sent folder, mailbox is not set or empty");
+                LoggerManager::getLogger()->warn('could not copy email to sent folder, mailbox is not set or empty');
                 $this->setLastError(self::ERR_EMPTY_MAILBOX);
             } else {
                 LoggerManager::getLogger()->warn("could not copy email to {$ie->mailbox} sent folder as its empty");
@@ -182,7 +184,7 @@ class NonGmailSentFolderHandler
         }
         return $ret;
     }
-    
+
     /**
      *
      * @param InboundEmail $ie
@@ -200,12 +202,12 @@ class NonGmailSentFolderHandler
         if ($ie->isPop3Protocol()) {
             $msg .= 'It is a pop3 protocoll.';
         }
-        if ($mail->oe->mail_smtptype == 'gmail') {
+        if ($mail->oe->mail_smtptype === 'gmail') {
             $msg .= 'It is a gmail.';
         }
         return $msg;
     }
-    
+
     /**
      *
      * @param InboundEmail $ie
@@ -218,9 +220,9 @@ class NonGmailSentFolderHandler
         if (!is_string($sentFolder) || !$sentFolder) {
             throw new InvalidArgumentException('Sent folder should be a valid folder name string.', self::ERR_SHOULD_BE_STRING);
         }
-        
+
         $msg = $ie->connectMailserver();
-        $ret = $msg == 'true';
+        $ret = $msg === 'true';
         if ($ret) {
             $ret = $this->copyToNonGmailSentFolder($ie, $mail, $sentFolder, $options);
             return $ret;
@@ -230,13 +232,16 @@ class NonGmailSentFolderHandler
         );
         return false;
     }
-    
+
     /**
      *
      * @param InboundEmail $ie
      * @param SugarPHPMailer $mail
      * @param string $sentFolder
+     *
      * @return @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
+     * @throws ImapHandlerException
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     protected function copyToNonGmailSentFolder(InboundEmail $ie, SugarPHPMailer $mail, $sentFolder, $options = "\\Seen")
     {

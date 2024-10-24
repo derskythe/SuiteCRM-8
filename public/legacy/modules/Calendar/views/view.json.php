@@ -43,10 +43,10 @@ require_once('include/MVC/View/SugarView.php');
 #[\AllowDynamicProperties]
 class CalendarViewJson extends SugarView
 {
-    public function display()
+    public function display() : void
     {
         if (!isset($this->view_object_map['jsonData']) || !is_array($this->view_object_map['jsonData'])) {
-            $GLOBALS['log']->fatal("JSON data has not been passed from Calendar controller");
+            $GLOBALS['log']->fatal('JSON data has not been passed from Calendar controller');
             sugar_cleanup(true);
         }
 

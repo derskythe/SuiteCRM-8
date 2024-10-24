@@ -46,7 +46,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class EmployeesViewList extends ViewList
 {
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->lv = new ListViewSmarty();
         $this->lv->delete = false;
@@ -71,22 +71,23 @@ class EmployeesViewList extends ViewList
     /**
      * Return the "breadcrumbs" to display at the top of the page
      *
-     * @param  bool $show_help optional, true if we show the help links
+     * @param bool $show_help optional, true if we show the help links
+     *
      * @return HTML string containing breadcrumb title
      */
-    public function getModuleTitle($show_help = true)
+    public function getModuleTitle(bool $show_help = true) : string
     {
         global $sugar_version, $sugar_flavor, $server_unique_key, $current_language, $action, $current_user;
 
         $theTitle = "<div class='moduleTitle'>\n<h2>";
 
-        $module = preg_replace("/ /", "", (string) $this->module);
+        $module = preg_replace('/ /', '', (string) $this->module);
 
         $params = $this->_getModuleTitleParams();
         $count = is_countable($params) ? count($params) : 0;
         $index = 0;
 
-        if (SugarThemeRegistry::current()->directionality == "rtl") {
+        if (SugarThemeRegistry::current()->directionality === 'rtl') {
             $params = array_reverse($params);
         }
 
@@ -123,6 +124,9 @@ EOHTML;
         return $theTitle;
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function listViewProcess()
     {
         $this->processSearchForm();
@@ -132,7 +136,7 @@ EOHTML;
             return;
         }
         if (empty($_REQUEST['search_form_only']) || $_REQUEST['search_form_only'] == false) {
-            $this->lv->ss->assign("SEARCH", true);
+            $this->lv->ss->assign('SEARCH', true);
             $this->lv->ss->assign('savedSearchData', $this->searchForm->getSavedSearchData());
 
             $tplFile = 'include/ListView/ListViewGeneric.tpl';
@@ -140,7 +144,7 @@ EOHTML;
                 $tplFile = 'include/ListView/ListViewNoMassUpdate.tpl';
             }
             if (!empty($this->where)) {
-                $this->where .= " AND ";
+                $this->where .= ' AND ';
             }
             $this->where .= "(users.status <> 'Reserved' or users.status is null) ";
             $this->lv->setup($this->seed, $tplFile, $this->where, $this->params);
@@ -167,7 +171,7 @@ EOHTML;
             $this->where = '(' . implode(' ) AND ( ', $where_clauses) . ')';
         }
         $GLOBALS['log']->info("List View Where Clause: $this->where");
-        
+
         if ($this->use_old_search) {
             switch (isset($view) ? $view : null) {
                 case 'basic_search':

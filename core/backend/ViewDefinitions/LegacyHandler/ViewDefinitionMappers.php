@@ -35,7 +35,7 @@ class ViewDefinitionMappers
     /**
      * @var ViewDefinitionMapperInterface[][]
      */
-    protected $registry = [];
+    protected array $registry = [];
 
     /**
      * ViewDefinitionMappers constructor.

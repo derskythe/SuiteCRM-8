@@ -112,10 +112,10 @@ class ProjectTable
                 $rflag = '0';
                 foreach ($resource_array as $resource) {
                     if ($resource->id == $task->assigned_user_id) {
-                        if ($resource->type == 'user') {
+                        if ($resource->type === 'user') {
                             echo '<a target="blank" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$resource->name.'</a>';
                             $rflag = '1';
-                        } elseif ($resource->type == 'contact') {
+                        } elseif ($resource->type === 'contact') {
                             echo '<a target="blank" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$resource->name.'</a>';
                             $rflag = '1';
                         }
@@ -139,9 +139,9 @@ class ProjectTable
                             <span id="exportToPDFSpan">';
 
                 if (ACLController::checkAccess('Project', 'delete', true)) {
-                    echo '<button style = "height:20px;width:20px;" class="remove_button" value = "'.$task->id.'" class="gantt_button" > '.$mod_strings["LBL_DELETE_TASK"].' </button >';
+                    echo '<button style = "height:20px;width:20px;" class="remove_button" value = "'.$task->id.'" class="gantt_button" > '. $mod_strings['LBL_DELETE_TASK'].' </button >';
                 } else {
-                    echo '<button disabled="disabled" style = "height:20px;width:20px;" class="remove_button" value = "'.$task->id.'" class="gantt_button" > '.$mod_strings["LBL_DELETE_TASK"].' </button >';
+                    echo '<button disabled="disabled" style = "height:20px;width:20px;" class="remove_button" value = "'.$task->id.'" class="gantt_button" > '. $mod_strings['LBL_DELETE_TASK'].' </button >';
                 }
                 echo '</span>
                          </td>

@@ -46,13 +46,13 @@
 #[\AllowDynamicProperties]
 class DashletRssFeedTitle
 {
-    public $defaultEncoding = "UTF-8";
+    public $defaultEncoding = 'UTF-8';
     public $readBytes = 8192;
     public $url;
     public $cut = 70;
-    public $contents = "";
-    public $title = "";
-    public $endWith = "...";
+    public $contents = '';
+    public $title = '';
+    public $endWith = '...';
     public $xmlEncoding = false;
     public $fileOpen = false;
 
@@ -79,7 +79,7 @@ class DashletRssFeedTitle
     public function readFeed()
     {
         if ($this->url) {
-            if (!in_array(strtolower(parse_url((string) $this->url, PHP_URL_SCHEME)), array("http", "https"), true)) {
+            if (!in_array(strtolower(parse_url((string) $this->url, PHP_URL_SCHEME)), array( 'http', 'https' ), true)) {
                 return false;
             }
             $fileOpen = @fopen($this->url, 'rb');
@@ -99,7 +99,7 @@ class DashletRssFeedTitle
     public function getTitle()
     {
         $matches = array();
-        preg_match("/<title>(.*?)<\/title>/i", (string) $this->contents, $matches);
+        preg_match('/<title>(.*?)<\/title>/i', (string) $this->contents, $matches);
         if (isset($matches[0])) {
             $match = $matches[0];
             if (isset($matches[1])) {

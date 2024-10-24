@@ -45,7 +45,7 @@
  */
 class SugarCache
 {
-    const EXTERNAL_CACHE_NULL_VALUE = "SUGAR_CACHE_NULL_ZZ";
+    const EXTERNAL_CACHE_NULL_VALUE = 'SUGAR_CACHE_NULL_ZZ';
 
     protected static $_cacheInstance;
 
@@ -69,20 +69,23 @@ class SugarCache
         foreach ($locations as $location) {
             if (is_dir($location) && $dir = opendir($location)) {
                 while (($file = readdir($dir)) !== false) {
-                    if ($file == ".."
-                            || $file == "."
+                    if ($file === '..'
+                        || $file === '.'
                             || !is_file("$location/$file")
                             ) {
                         continue;
                     }
                     require_once("$location/$file");
-                    $cacheClass = basename($file, ".php");
+                    $cacheClass = basename($file, '.php');
                     if (class_exists($cacheClass) && is_subclass_of($cacheClass, 'SugarCacheAbstract')) {
                         $GLOBALS['log']->debug("Found cache backend $cacheClass");
                         $cacheInstance = new $cacheClass();
                         if ($cacheInstance->useBackend()
                                 && $cacheInstance->getPriority() < $lastPriority) {
-                            $GLOBALS['log']->debug("Using cache backend $cacheClass, since ".$cacheInstance->getPriority()." is less than ".$lastPriority);
+                            $GLOBALS['log']->debug(
+                                "Using cache backend $cacheClass, since " . $cacheInstance->getPriority(
+                                ) . ' is less than ' . $lastPriority
+                            );
                             self::$_cacheInstance = $cacheInstance;
                             $lastPriority = $cacheInstance->getPriority();
                         }
@@ -98,7 +101,7 @@ class SugarCache
      */
     public static function instance()
     {
-        if (!is_subclass_of(self::$_cacheInstance, 'SugarCacheAbstract')) {
+        if (!self::$_cacheInstance instanceof \SugarCacheAbstract) {
             self::_init();
         }
 
@@ -143,7 +146,7 @@ class SugarCache
         // Zend OPcache
         if ($full_reset && SugarCache::isOPcacheEnabled()) {
             if (!opcache_reset()) {
-                LoggerManager::getLogger()->error("OPCache - could not reset");
+                LoggerManager::getLogger()->error('OPCache - could not reset');
             }
         }
     }
@@ -181,7 +184,7 @@ class SugarCache
     public static function cleanDir($dir)
     {
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file) {
-            if ((new SplFileInfo($file))->getExtension() == 'php') {
+            if ((new SplFileInfo($file))->getExtension() === 'php') {
                 sugarCache::cleanFile($file);
             }
         }
@@ -218,7 +221,9 @@ class SugarCache
  */
 function sugar_cache_retrieve($key)
 {
-    return SugarCache::instance()->$key;
+    if (!empty(SugarCache::instance()->$key)) {
+        return SugarCache::instance()->$key;
+    }
 }
 
 /**

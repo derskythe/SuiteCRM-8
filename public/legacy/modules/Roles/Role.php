@@ -56,24 +56,24 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class Role extends SugarBean
 {
-    public $field_name_map;
+    public ?array $field_name_map;
 
-    public $id;
-    public $deleted;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $created_by;
-    public $name;
-    public $description;
+    public string $id;
+    public int $deleted;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $created_by;
+    public string $name;
+    public string $description;
     public $modules;
     public $disable_row_level_security = true;
 
-    public $table_name = 'roles';
+    public string $table_name = 'roles';
     public $rel_module_table = 'roles_modules';
-    public $object_name = 'Role';
-    public $module_dir = 'Roles';
-    public $new_schema = true;
+    public string $object_name = 'Role';
+    public string $module_dir = 'Roles';
+    public bool $new_schema = true;
 
     public function __construct()
     {
@@ -83,19 +83,19 @@ class Role extends SugarBean
 
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
 
-    public function create_export_query($order_by, $where)
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         return $this->create_new_list_query($order_by, $where);
     }
 
     public function query_modules($allow = 1)
     {
-        $query = "SELECT module_id FROM roles_modules WHERE ";
+        $query = 'SELECT module_id FROM roles_modules WHERE ';
         $query .= "role_id = '$this->id' AND allow = '$allow' AND deleted=0";
         $result = $this->db->query($query);
 
@@ -149,7 +149,7 @@ class Role extends SugarBean
         $result = $this->db->query($sql);
 
         while ($row = $this->db->fetchByAssoc($result)) {
-            $role_id = $row["role_id"];
+            $role_id = $row['role_id'];
             $sql = "SELECT module_id FROM roles_modules WHERE role_id='$role_id' AND allow='1'";
             $res = $this->db->query($sql);
 
@@ -194,7 +194,7 @@ class Role extends SugarBean
 
     public function check_user_role_count($user_id)
     {
-        $query =  "SELECT count(*) AS num FROM roles_users WHERE ";
+        $query = 'SELECT count(*) AS num FROM roles_users WHERE ';
         $query .= "user_id='$user_id' AND deleted=0";
         $result = $this->db->query($query);
 

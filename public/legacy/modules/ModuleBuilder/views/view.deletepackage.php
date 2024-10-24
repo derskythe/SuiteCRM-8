@@ -47,20 +47,20 @@ class Viewdeletepackage extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
            );
     }
 
-    public function display()
+    public function display() : void
     {
         global $mod_strings;
-        
+
         $ajax = new AjaxCompose();
         $ajax->addSection(
             'center',

@@ -49,9 +49,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * for EditViews and DetailViews.  A sample invocation from a Meta-Data file is as follows:
  *
  *  array (
- * 	   'name' => 'primary_address_street',
- *	   'type' => 'address',
- *	   'displayParams'=>array('key'=>'primary'),
+ *        'name' => 'primary_address_street',
+ *       'type' => 'address',
+ *       'displayParams'=>array('key'=>'primary'),
  *  ),
  *
  * Where name is set to the field for ACL verification, type is set to 'address'
@@ -62,9 +62,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * example we may enable copying from the primary address fields with:
  *
  *  array (
- * 	   'name' => 'altaddress_street',
- *	   'type' => 'address',
- *	   'displayParams'=>array('key'=>'alt', 'copy'=>'primary'),
+ *        'name' => 'altaddress_street',
+ *       'type' => 'address',
+ *       'displayParams'=>array('key'=>'alt', 'copy'=>'primary'),
  *  ),
  *
  */
@@ -80,16 +80,16 @@ class SugarFieldAddress extends SugarFieldBase
             $this->ss->trigger_error($app_strings['ERR_ADDRESS_KEY_NOT_SPECIFIED']);
             return;
         }
-        
+
         //Allow for overrides.  You can specify a Smarty template file location in the language file.
         if (isset($app_strings['SMARTY_ADDRESS_DETAILVIEW'])) {
             $tplCode = $app_strings['SMARTY_ADDRESS_DETAILVIEW'];
             return $this->fetch($tplCode);
         }
-        
+
         return $this->fetch($this->findTemplate('DetailView'));
     }
-    
+
     public function getEditViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
     {
         $this->setup($parentFieldArray, $vardef, $displayParams, $tabindex);
@@ -99,7 +99,7 @@ class SugarFieldAddress extends SugarFieldBase
             $this->ss->trigger_error($app_strings['ERR_ADDRESS_KEY_NOT_SPECIFIED']);
             return;
         }
-        
+
         //Allow for overrides.  You can specify a Smarty template file location in the language file.
         if (isset($app_strings['SMARTY_ADDRESS_EDITVIEW'])) {
             $tplCode = $app_strings['SMARTY_ADDRESS_EDITVIEW'];

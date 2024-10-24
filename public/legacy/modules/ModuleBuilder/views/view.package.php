@@ -46,17 +46,20 @@ class Viewpackage extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
            );
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         global $mod_strings;
         $smarty = new Sugar_Smarty();
@@ -67,8 +70,8 @@ class Viewpackage extends SugarView
 
             $smarty->assign('buttons', $this->buttons);
             $smarty->assign('title', $GLOBALS['mod_strings']['LBL_MODULEBUILDER']);
-            $smarty->assign("question", $GLOBALS['mod_strings']['LBL_QUESTION_PACKAGE']);
-            $smarty->assign("defaultHelp", "mbHelp");
+            $smarty->assign('question', $GLOBALS['mod_strings']['LBL_QUESTION_PACKAGE']);
+            $smarty->assign('defaultHelp', 'mbHelp');
 
             $ajax = new AjaxCompose();
             $ajax->addCrumb($GLOBALS['mod_strings']['LBL_MODULEBUILDER'], 'ModuleBuilder.getContent("module=ModuleBuilder&action=package")');
@@ -78,11 +81,11 @@ class Viewpackage extends SugarView
         } else {
             $name = (!empty($_REQUEST['package']))?$_REQUEST['package']:'';
             $mb->getPackage($name);
-            
+
             require_once('modules/ModuleBuilder/MB/MBPackageTree.php') ;
             $mbt = new MBPackageTree();
             $nodes = $mbt->fetchNodes();
-            
+
             $package_labels = array();
             if (!empty($nodes['tree_data']['nodes'])) {
                 foreach ($nodes['tree_data']['nodes'] as $entry) {
@@ -91,10 +94,10 @@ class Viewpackage extends SugarView
                     }
                 }
             }
-            
+
             $json = getJSONobj();
             $smarty->assign('package_labels', $json->encode($package_labels));
-            
+
             $this->package =& $mb->packages[$name];
             $this->loadModuleTypes();
             $this->loadPackageHelp($name);
@@ -103,7 +106,7 @@ class Viewpackage extends SugarView
             $smarty->assign('mod_strings', $mod_strings);
             $smarty->assign('package_already_deployed', 'false');
             foreach ($this->package->modules as $a_module) {
-                if (in_array($a_module->key_name, $GLOBALS['moduleList'])) {
+                if (in_array($a_module->key_name, $GLOBALS['moduleList'], true)) {
                     $smarty->assign('package_already_deployed', 'true');
                     break;
                 }
@@ -116,7 +119,7 @@ class Viewpackage extends SugarView
             }
             $ajax->addCrumb($name, '');
             $html=$smarty->fetch('modules/ModuleBuilder/tpls/MBPackage/package.tpl');
-            if (!empty($_REQUEST['action']) && $_REQUEST['action']=='SavePackage') {
+            if (!empty($_REQUEST['action']) && $_REQUEST['action'] === 'SavePackage') {
                 $html.="<script>ModuleBuilder.treeRefresh('ModuleBuilder')</script>";
             }
             $ajax->addSection('center', translate('LBL_SECTION_PACKAGE', 'ModuleBuilder'), $html);
@@ -146,10 +149,10 @@ class Viewpackage extends SugarView
         ) {
         global $mod_strings;
         $this->buttons[$mod_strings['LBL_NEW_PACKAGE']] = array(
-                                        'action' => "module=ModuleBuilder&action=package&new=1",
-                                        'help' => 'newPackage',
-                                        'linkId' => 'newPackageLink',
-                                        'icon' => 'new-package'
+            'action' => 'module=ModuleBuilder&action=package&new=1',
+            'help' => 'newPackage',
+            'linkId' => 'newPackageLink',
+            'icon' => 'new-package'
                                         );
         foreach ($packages as $package) {
             $this->buttons[$package] = array(

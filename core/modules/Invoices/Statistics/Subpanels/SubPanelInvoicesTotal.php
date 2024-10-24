@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Invoices\Statistics\Subpanels;
 
 use App\Statistics\Entity\Statistic;
@@ -42,7 +41,7 @@ class SubPanelInvoicesTotal extends SubpanelDataQueryHandler implements Statisti
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -50,9 +49,9 @@ class SubPanelInvoicesTotal extends SubpanelDataQueryHandler implements Statisti
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -78,15 +77,15 @@ class SubPanelInvoicesTotal extends SubpanelDataQueryHandler implements Statisti
         if (empty($result)) {
             $statistic = $this->getEmptyResponse(self::KEY);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_INVOICES_OVERDUE_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_INVOICES_OVERDUE']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_INVOICES_OVERDUE_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_INVOICES_OVERDUE' ]);
 
             return $statistic;
         }
 
         $statistic = $this->buildSingleValueResponse(self::KEY, 'int', $result);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_INVOICES_OVERDUE_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_INVOICES_OVERDUE']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_INVOICES_OVERDUE_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_INVOICES_OVERDUE' ]);
         $this->close();
 
         return $statistic;

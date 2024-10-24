@@ -15,7 +15,7 @@ class FP_eventsViewEdit extends ViewEdit
 
 
 
-    public function display()
+    public function display() : void
     {
         $this->bean->email_templates();
         parent::display();

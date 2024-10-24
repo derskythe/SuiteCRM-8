@@ -79,7 +79,7 @@ class MBModule
         $this->implementable = array(
         'has_tab' => !empty($mod_strings[ 'LBL_NAV_TAB' ]) ? $mod_strings[ 'LBL_NAV_TAB' ] : false) ;
         $this->path = $this->getModuleDir() ;
-        //		$this->mbrelationship = new MBRelationship($this->name, $this->path, $this->key_name);
+        //        $this->mbrelationship = new MBRelationship($this->name, $this->path, $this->key_name);
         $this->relationships = new UndeployedRelationships($this->path) ;
         $this->mbvardefs = new MBVardefs($this->name, $this->path, $this->key_name) ;
 
@@ -88,7 +88,7 @@ class MBModule
 
     public function getDBName($name)
     {
-        return preg_replace("/[^\w]+/", "_", (string) $name) ;
+        return preg_replace('/[^\w]+/', '_', (string) $name) ;
     }
 
     public function getModuleName()
@@ -168,7 +168,7 @@ class MBModule
         if (!empty($existingVardefs['fields'][$vardef['name']])) {
             $vardef = array_merge($existingVardefs['fields'][$vardef['name']], $vardef);
         }
-        if (! empty($vardef [ 'source' ]) && $vardef [ 'source' ] == 'custom_fields') {
+        if (! empty($vardef [ 'source' ]) && $vardef [ 'source' ] === 'custom_fields') {
             unset($vardef [ 'source' ]) ;
         }
 
@@ -336,7 +336,7 @@ class MBModule
             //pass in the key_name incase it has changed mblanguage will check if it is different and handle it accordingly
             $this->mblanguage->save($this->key_name) ;
 
-            if (! file_exists($this->package_path . "/icons/icon_" . ucfirst($this->key_name) . ".gif")) {
+            if (! file_exists($this->package_path . '/icons/icon_' . ucfirst($this->key_name) . '.gif')) {
                 $this->createIcon() ;
             }
 
@@ -368,10 +368,10 @@ class MBModule
     {
         $d = dir($from) ;
         while ($filename = $d->read()) {
-            if (substr($filename, 0, 1) == '.') {
+            if (str_starts_with($filename, '.')) {
                 continue ;
             }
-            if ($filename != 'metadata' && $filename != 'Dashlets' && $filename != 'relationships' && $filename != 'language' && $filename != 'config.php' && $filename != 'relationships.php' && $filename != 'vardefs.php') {
+            if ($filename !== 'metadata' && $filename !== 'Dashlets' && $filename !== 'relationships' && $filename !== 'language' && $filename !== 'config.php' && $filename !== 'relationships.php' && $filename !== 'vardefs.php') {
                 copy_recursive("$from/$filename", "$to/$filename") ;
             }
         }
@@ -399,7 +399,7 @@ class MBModule
             mkdir_recursive($to) ;
             $d = dir($from) ;
             while ($e = $d->read()) {
-                if (substr($e, 0, 1) == '.') {
+                if (str_starts_with($e, '.')) {
                     continue ;
                 }
                 $nfrom = $from . '/' . $e ;
@@ -453,6 +453,9 @@ class MBModule
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function createClasses($path)
     {
         $class = array( ) ;
@@ -470,7 +473,7 @@ class MBModule
             }
         }
         foreach ($this->config [ 'templates' ] as $template => $a) {
-            if ($template == 'basic') {
+            if ($template === 'basic') {
                 continue ;
             }
             $class [ 'templates' ] .= ",'$template'" ;
@@ -516,6 +519,9 @@ class MBModule
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function createMenu($path)
     {
         $smarty = new Sugar_Smarty() ;
@@ -543,7 +549,7 @@ class MBModule
         $psubs = $this->getProvidedSubpanels() ;
         foreach ($psubs as $sub) {
             $subLabel = $sub ;
-            if ($subLabel == 'default') {
+            if ($subLabel === 'default') {
                 $subLabel = $GLOBALS [ 'mod_strings' ] [ 'LBL_DEFAULT' ] ;
             }
             $lSubs [] = array( 'name' => $subLabel , 'type' => 'list' , 'action' => 'module=ModuleBuilder&MB=true&action=editLayout&view=ListView&view_module=' . $this->name . '&view_package=' . $this->package . '&subpanel=' . $sub . '&subpanelLabel=' . $subLabel . '&local=1' ) ;
@@ -598,7 +604,7 @@ class MBModule
 
             while ($g = $f->read()) {
                 // sanity check to confirm that this is a usable subpanel...
-                if (substr($g, 0, 1) != '.' && AbstractRelationships::validSubpanel($subpanelDir . $g)) {
+                if (!str_starts_with($g, '.') && AbstractRelationships::validSubpanel($subpanelDir . $g)) {
                     $subname = str_replace('.php', '', $g) ;
                     $this->providedSubpanels [ $subname ] = $subname ;
                 }
@@ -613,7 +619,7 @@ class MBModule
         $types = array( ) ;
         $d = dir(MB_TEMPLATES) ;
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) != '.') {
+            if (!str_starts_with($e, '.')) {
                 $types [ $e ] = $e ;
             }
         }
@@ -660,7 +666,7 @@ class MBModule
         }
         $dir = dir($new_dir) ;
         while ($e = $dir->read()) {
-            if (substr($e, 0, 1) != '.') {
+            if (!str_starts_with($e, '.')) {
                 if (is_dir($new_dir . '/' . $e)) {
                     $this->renameMetaData($new_dir . '/' . $e, $old_name) ;
                 }
@@ -694,7 +700,7 @@ class MBModule
                     $contents = str_replace($search_array, $replace_array, $contents);
 
 
-                    if ("relationships.php" == $e) {
+                    if ('relationships.php' === $e) {
                         //bug 39598 Relationship Name Is Not Updated If Module Name Is Changed In Module Builder
                         $contents = str_replace("'{$old_name}'", "'{$this->key_name}'", $contents) ;
                     }
@@ -768,7 +774,7 @@ class MBModule
 
     public function saveAvailibleSubpanelDef($panelName, $layout)
     {
-        $dir = $this->getModuleDir() . "/metadata/subpanels" ;
+        $dir = $this->getModuleDir() . '/metadata/subpanels';
         $filepath = "$dir/{$panelName}.php" ;
         if (mkdir_recursive($dir)) {
             // preserve any $module_name entry if one exists
@@ -776,7 +782,7 @@ class MBModule
                 include($filepath) ;
             }
             $module_name = (isset($module_name)) ? $module_name : $this->key_name ;
-            $layout = "<?php\n" . '$module_name=\'' . $module_name . "';\n" . '$subpanel_layout = ' . var_export_helper($layout) . ";" ;
+            $layout = "<?php\n" . '$module_name=\'' . $module_name . "';\n" . '$subpanel_layout = ' . var_export_helper($layout) . ';';
             $GLOBALS [ 'log' ]->debug("About to save this file to $filepath") ;
             $GLOBALS [ 'log' ]->debug($layout) ;
             sugar_file_put_contents($filepath, $layout) ;
@@ -789,49 +795,57 @@ class MBModule
 
     public function createIcon()
     {
-        $icondir = $this->package_path . "/icons";
+        $icondir = $this->package_path . '/icons';
         mkdir_recursive($icondir);
-        mkdir_recursive($icondir . "/sub_panel/modules");
-        mkdir_recursive($icondir . "/sidebar/modules");
+        mkdir_recursive($icondir . '/sub_panel/modules');
+        mkdir_recursive($icondir . '/sidebar/modules');
 
-        $template = "";
+        $template = '';
         foreach ($this->config ['templates'] as $temp => $val) {
             $template = $temp;
         }
 
         // GIF Version
-        copy("include/SugarObjects/templates/$template/icons/$template.gif", "$icondir/icon_" . ucfirst($this->key_name) . ".gif");
-        copy("include/SugarObjects/templates/$template/icons/$template.gif", "$icondir/" . $this->key_name . ".gif");
+        copy("include/SugarObjects/templates/$template/icons/$template.gif", "$icondir/icon_" . ucfirst($this->key_name) . '.gif'
+        );
+        copy("include/SugarObjects/templates/$template/icons/$template.gif", "$icondir/" . $this->key_name . '.gif');
         // SVG Version
         if (file_exists("include/SugarObjects/templates/$template/icons/$template.svg")) {
-            copy("include/SugarObjects/templates/$template/icons/$template.svg", "$icondir/" . $this->key_name . ".svg");
+            copy("include/SugarObjects/templates/$template/icons/$template.svg", "$icondir/" . $this->key_name . '.svg');
         }
         // GIF Version
         if (file_exists("include/SugarObjects/templates/$template/icons/Create$template.gif")) {
-            copy("include/SugarObjects/templates/$template/icons/Create$template.gif", "$icondir/Create" . $this->key_name . ".gif");
+            copy("include/SugarObjects/templates/$template/icons/Create$template.gif", "$icondir/Create" . $this->key_name . '.gif'
+            );
         }
         // SVG Version
         if (file_exists("include/SugarObjects/templates/$template/icons/Create$template.svg")) {
-            copy("include/SugarObjects/templates/$template/icons/Create$template.svg", "$icondir/Create" . $this->key_name . ".svg");
+            copy("include/SugarObjects/templates/$template/icons/Create$template.svg", "$icondir/Create" . $this->key_name . '.svg'
+            );
         }
         // GIF Version
         if (file_exists("include/SugarObjects/templates/$template/icons/{$template}_32.gif")) {
-            copy("include/SugarObjects/templates/$template/icons/{$template}_32.gif", "$icondir/icon_" . $this->key_name . "_32.gif");
+            copy("include/SugarObjects/templates/$template/icons/{$template}_32.gif", "$icondir/icon_" . $this->key_name . '_32.gif'
+            );
         }
         // SVG Version
         if (file_exists("include/SugarObjects/templates/$template/icons/{$template}_32.svg")) {
-            copy("include/SugarObjects/templates/$template/icons/{$template}_32.svg", "$icondir/icon_" . $this->key_name . "_32.svg");
+            copy("include/SugarObjects/templates/$template/icons/{$template}_32.svg", "$icondir/icon_" . $this->key_name . '_32.svg'
+            );
         }
 
         // SuiteP Support
         if (file_exists("include/SugarObjects/templates/$template/icons/sidebar/modules/{$template}.svg")) {
-            copy("include/SugarObjects/templates/$template/icons/sidebar/modules/{$template}.svg", "$icondir/sidebar/modules/" . $this->key_name . ".svg");
+            copy("include/SugarObjects/templates/$template/icons/sidebar/modules/{$template}.svg", "$icondir/sidebar/modules/" . $this->key_name . '.svg'
+            );
         }
         if (file_exists("include/SugarObjects/templates/$template/icons/sub_panel/{$template}.svg")) {
-            copy("include/SugarObjects/templates/$template/icons/sub_panel/{$template}.svg", "$icondir/sub_panel/" . $this->key_name . ".svg");
+            copy("include/SugarObjects/templates/$template/icons/sub_panel/{$template}.svg", "$icondir/sub_panel/" . $this->key_name . '.svg'
+            );
         }
         if (file_exists("include/SugarObjects/templates/$template/icons/sub_panel/modules/{$template}.svg")) {
-            copy("include/SugarObjects/templates/$template/icons/sub_panel/modules/{$template}.svg", "$icondir/sub_panel/modules/" . $this->key_name . ".svg");
+            copy("include/SugarObjects/templates/$template/icons/sub_panel/modules/{$template}.svg", "$icondir/sub_panel/modules/" . $this->key_name . '.svg'
+            );
         }
     }
 

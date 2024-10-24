@@ -53,7 +53,10 @@ class ViewModulelistmenu extends SugarView
         parent::__construct();
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         $this->ss->display('include/MVC/View/tpls/modulelistmenu.tpl');
     }

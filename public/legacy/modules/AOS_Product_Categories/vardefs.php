@@ -63,7 +63,7 @@ $dictionary['AOS_Product_Categories'] = array(
                 'merge_filter' => 'disabled',
                 'id' => 'AOS_Product_Categoriesis_parent',
             ),
-        "aos_products" => array(
+        'aos_products' => array(
             'name' => 'aos_products',
             'type' => 'link',
             'source' => 'non-db',
@@ -72,7 +72,7 @@ $dictionary['AOS_Product_Categories'] = array(
             'vname' => 'LBL_AOS_PRODUCT_CATEGORIES_AOS_PRODUCTS_FROM_AOS_PRODUCTS_TITLE',
         ),
 
-        "sub_categories" => array(
+        'sub_categories' => array(
             'name' => 'sub_categories',
             'type' => 'link',
             'source' => 'non-db',
@@ -92,7 +92,7 @@ $dictionary['AOS_Product_Categories'] = array(
                 'vname' => 'LBL_PARENT_CATEGORY',
                 'side' => 'right',
             ),
-        "parent_category_name" => array(
+        'parent_category_name' => array(
             'name' => 'parent_category_name',
             'type' => 'relate',
             'source' => 'non-db',
@@ -104,7 +104,7 @@ $dictionary['AOS_Product_Categories'] = array(
             'module' => 'AOS_Product_Categories',
             'rname' => 'name',
         ),
-        "parent_category_id" => array(
+        'parent_category_id' => array(
             'name' => 'parent_category_id',
             'type' => 'id',
             'reportable' => false,
@@ -113,7 +113,7 @@ $dictionary['AOS_Product_Categories'] = array(
 
     ),
     'relationships' => array(
-        "sub_product_categories" => array(
+        'sub_product_categories' => array(
             'lhs_module' => 'AOS_Product_Categories',
             'lhs_table' => 'aos_product_categories',
             'lhs_key' => 'id',
@@ -122,7 +122,7 @@ $dictionary['AOS_Product_Categories'] = array(
             'rhs_key' => 'parent_category_id',
             'relationship_type' => 'one-to-many',
         ),
-        "products" => array(
+        'products' => array(
             'lhs_module' => 'AOS_Product_Categories',
             'lhs_table' => 'aos_product_categories',
             'lhs_key' => 'id',

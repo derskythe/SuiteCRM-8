@@ -76,7 +76,7 @@ class SubPanelTilesTabs extends SubPanelTiles
     public function applyUserCustomLayoutToTabs($tabs, $key='All')
     {
         //WDong Bug: 12258 "All" tab in the middle of a record's detail view is not localized.
-        if ($key=='All') {
+        if ($key === 'All') {
             $key=translate('LBL_TABGROUP_ALL');
         }
         $usersCustomLayout = SubPanelTilesTabs::getSubpanelGroupLayout($key);
@@ -97,9 +97,9 @@ class SubPanelTilesTabs extends SubPanelTiles
 
     /*
      * Place subpanels into tabs for display on a DetailView
-     * @param array $tabs	Array containing the ids of all subpanels to be placed into tabs
-     * @param boolean $showTabs	Call the view code to display the generated tabs
-     * @param string $selectedGroup	(Optional) Name of any selected tab (defaults to 'All')
+     * @param array $tabs    Array containing the ids of all subpanels to be placed into tabs
+     * @param boolean $showTabs    Call the view code to display the generated tabs
+     * @param string $selectedGroup    (Optional) Name of any selected tab (defaults to 'All')
      */
     public function getTabs($showTabs = true, $selectedGroup='')
     {
@@ -109,7 +109,7 @@ class SubPanelTilesTabs extends SubPanelTiles
     public function _getTabs($tabs, $showTabs = true, $selectedGroup='All')
     {
         //WDong Bug: 12258 "All" tab in the middle of a record's detail view is not localized.
-        if ($selectedGroup=='All') {
+        if ($selectedGroup === 'All') {
             $selectedGroup=translate('LBL_TABGROUP_ALL');
         }
 
@@ -154,15 +154,15 @@ class SubPanelTilesTabs extends SubPanelTiles
         }
 
         /* Move history to same tab as activities */
-        if (in_array('history', $tabs) && in_array('activities', $tabs)) {
+        if (in_array('history', $tabs, true) && in_array('activities', $tabs, true)) {
             foreach ($groups as $mainTab => $group) {
-                if (in_array('activities', array_map('strtolower', $group['modules']))) {
-                    if (!in_array('history', array_map('strtolower', $group['modules']))) {
+                if (in_array('activities', array_map('strtolower', $group['modules']), true)) {
+                    if (!in_array('history', array_map('strtolower', $group['modules']), true)) {
                         /* Move hist from there to here */
                         $groups[$mainTab]['modules'] []= 'history';
                     }
                 } else {
-                    if (false !== ($i = array_search('history', array_map('strtolower', $group['modules'])))) {
+                    if (false !== ($i = array_search('history', array_map('strtolower', $group['modules']), true))) {
                         unset($groups[$mainTab]['modules'][$i]);
                         if (empty($groups[$mainTab]['modules'])) {
                             unset($groups[$mainTab]);
@@ -198,7 +198,7 @@ class SubPanelTilesTabs extends SubPanelTiles
             foreach ($groups as $key => $tab) {
                 $display = false;
                 foreach ($tab['modules'] as $subkey=>$subtab) {
-                    if (in_array(strtolower($subtab), $tabs)) {
+                    if (in_array(strtolower($subtab), $tabs, true)) {
                         $display = true;
                         break;
                     }

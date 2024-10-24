@@ -40,27 +40,27 @@
 #[\AllowDynamicProperties]
 class SurveyQuestions extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'SurveyQuestions';
-    public $object_name = 'SurveyQuestions';
-    public $table_name = 'surveyquestions';
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'SurveyQuestions';
+    public string $object_name = 'SurveyQuestions';
+    public string $table_name = 'surveyquestions';
+    public bool $importable = false;
     public $disable_row_level_security = true; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_id;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $SecurityGroups;
     public $sort_order;
@@ -71,7 +71,7 @@ class SurveyQuestions extends Basic
         parent::__construct();
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':

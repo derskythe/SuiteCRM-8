@@ -88,6 +88,8 @@ class GoogleApiKeySaverEntryPoint
      * @param array $sugar_config
      * @param Google\Client $client
      * @param array $request
+     *
+     * @throws Exception
      */
     public function __construct(User $current_user, $sugar_config, Google\Client $client, $request)
     {
@@ -143,6 +145,9 @@ class GoogleApiKeySaverEntryPoint
 
     /**
      * handle requested action handler method
+     *
+     * @throws Exception
+     * @throws Exception
      */
     protected function handleRequest()
     {
@@ -193,7 +198,7 @@ class GoogleApiKeySaverEntryPoint
             $user->setPreference('GoogleApiRefreshToken', base64_encode($accessRefreshToken), false, 'GoogleSync');
         }
         $user->savePreferencesToDB();
-        $url = $this->sugarConfig['site_url'] . "/index.php?module=Users&action=EditView&record=" . $this->currentUser->id;
+        $url = $this->sugarConfig['site_url'] . '/index.php?module=Users&action=EditView&record=' . $this->currentUser->id;
         $this->redirect($url);
     }
 
@@ -214,17 +219,20 @@ class GoogleApiKeySaverEntryPoint
         }
         $user->setPreference('GoogleApiToken', '', false, 'GoogleSync');
         $user->savePreferencesToDB();
-        $url = $this->sugarConfig['site_url'] . "/index.php?module=Users&action=EditView&record=" . $this->currentUser->id;
+        $url = $this->sugarConfig['site_url'] . '/index.php?module=Users&action=EditView&record=' . $this->currentUser->id;
         $this->redirect($url);
     }
 
     /**
      * shows an error - pick error message from language file instead
      * using simple requested text as it is an XSS vulnerability issue
+     *
+     * @throws SmartyException
+     * @throws \SuiteCRM\ErrorMessageException
      */
     protected function handleRequestError()
     {
-        $url = $this->sugarConfig['site_url'] . "/index.php?module=Users&action=EditView&record=" . $this->currentUser->id;
+        $url = $this->sugarConfig['site_url'] . '/index.php?module=Users&action=EditView&record=' . $this->currentUser->id;
         $tpl = new Sugar_Smarty();
         $txtKey = $this->request['error'];
         $tpl->assign('error', LangText::get($txtKey));
@@ -240,7 +248,7 @@ class GoogleApiKeySaverEntryPoint
     {
         LoggerManager::getLogger()->error('Unkown entry point function given.');
         // If we don't get a known return, we just silently return to the user profile.
-        $url = $this->sugarConfig['site_url'] . "/index.php?module=Users&action=EditView&record=" . $this->currentUser->id;
+        $url = $this->sugarConfig['site_url'] . '/index.php?module=Users&action=EditView&record=' . $this->currentUser->id;
         $this->redirect($url);
     }
 

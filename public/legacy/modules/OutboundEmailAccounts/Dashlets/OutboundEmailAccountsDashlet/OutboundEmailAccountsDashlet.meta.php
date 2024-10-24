@@ -48,10 +48,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
- 
+
 global $app_strings;
 
-$dashletMeta['OutboundEmailAccountsDashlet'] = array('module'		=> 'OutboundEmailAccounts',
+$dashletMeta['OutboundEmailAccountsDashlet'] = array('module'        => 'OutboundEmailAccounts',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'OutboundEmailAccounts'),
                                           'description' => 'A customizable view into OutboundEmailAccounts',
                                           'icon'        => 'icon_OutboundEmailAccounts_32.gif',

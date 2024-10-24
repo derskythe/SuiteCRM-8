@@ -27,6 +27,7 @@
 
 namespace App\Module\Accounts\Statistics\Series;
 
+use Psr\Log\LoggerInterface;
 use App\Statistics\Entity\Statistic;
 use App\Data\LegacyHandler\ListDataQueryHandler;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -57,6 +58,7 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
 
     /**
      * LeadDaysOpen constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -67,16 +69,26 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
      * @param RequestStack $requestStack
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        ListDataQueryHandler $queryHandler,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        ListDataQueryHandler      $queryHandler,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $requestStack
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $requestStack);
+        RequestStack              $requestStack,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $requestStack,
+            $logger
+        );
         $this->queryHandler = $queryHandler;
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -84,7 +96,7 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return $this->getKey();
     }
@@ -92,7 +104,7 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -100,9 +112,9 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id, $criteria, $sort] = $this->extractContext($query);
+        [ $module, $id, $criteria, $sort ] = $this->extractContext($query);
 
         if (empty($module) || $module !== 'accounts') {
             return $this->getEmptySeriesResponse(self::KEY);
@@ -144,6 +156,7 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
 
     /**
      * @param string $legacyName
+     *
      * @return bool|SugarBean
      */
     protected function getBean(string $legacyName)
@@ -154,17 +167,18 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
     /**
      * @return array
      */
-    protected function getMonths(): array
+    protected function getMonths() : array
     {
-        return [1,2,3,4,5,6,7,8,9,10,11,12];
+        return [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
     }
 
     /**
      * @param array $query
      * @param $bean
+     *
      * @return array
      */
-    protected function runQuery(array $query, $bean): array
+    protected function runQuery(array $query, $bean) : array
     {
         // send limit -2 to not add a limit
         return $this->queryHandler->runQuery($bean, $query, -1, -2);
@@ -172,11 +186,13 @@ class AccountsNewByMonth extends LegacyHandler implements StatisticsProviderInte
 
     /**
      * @param array $query
+     *
      * @return array
      */
-    protected function generateQuery(array $query): array
+    protected function generateQuery(array $query) : array
     {
-        $query['select'] = 'SELECT COUNT(accounts.name) as value, EXTRACT(MONTH FROM accounts.date_entered) as month, accounts.account_type as name';
+        $query['select'] =
+            'SELECT COUNT(accounts.name) as value, EXTRACT(MONTH FROM accounts.date_entered) as month, accounts.account_type as name';
         $query['where'] .= ' AND accounts.account_type is not null ';
         $query['order_by'] = '';
         $query['group_by'] = ' GROUP BY EXTRACT(MONTH FROM accounts.date_entered), accounts.account_type';

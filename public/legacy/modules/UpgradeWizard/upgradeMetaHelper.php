@@ -146,9 +146,9 @@ class UpgradeMetaHelper
         }
         $files_queries[$currStep]=$value;
         if (is_writable($file_queries_file) && write_array_to_file(
-            "file_queries",
-            $file_queries,
-            $file_queries_file
+                'file_queries',
+                $file_queries,
+                $file_queries_file
         )) {
             //writing to the file
         }
@@ -177,7 +177,7 @@ class UpgradeMetaHelper
             $allModFiles = findAllFiles('modules/'.$mod, $allModFiles);
             foreach ($allModFiles as $file) {
                 //$file_md5_ref = str_replace(clean_path(getcwd()),'',$file);
-                if (file_exists($file) && !in_array($file, $exclude_files)) {
+                if (file_exists($file) && !in_array($file, $exclude_files, true)) {
                     if (isset($md5_string['./'.$file])) {
                         $fileContents = file_get_contents($file);
                         if (md5($fileContents) != $md5_string['./'.$file]) {
@@ -268,7 +268,7 @@ class UpgradeMetaHelper
         $modules = array();
         $d = dir('modules');
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) == '.' || !is_dir('modules/' . $e)) {
+            if (str_starts_with($e, '.') || !is_dir('modules/' . $e)) {
                 continue;
             }
             if (file_exists('modules/' . $e . '/metadata/studio.php')) {
@@ -322,13 +322,13 @@ class UpgradeMetaHelper
                        case 'SearchForm': $parser = $this->svparser; break;
                     }
 
-                $lowerCaseView = $view == 'SearchForm' ? 'search' : strtolower($view);
+                $lowerCaseView = $view === 'SearchForm' ? 'search' : strtolower($view);
 
                 include('modules/'.$module_name.'/vardefs.php');
                 $bean_name = $beanList[$module_name];
                 $newFile = $this->upgrade_dir.'/modules/'.$module_name.'/metadata/'.$lowerCaseView.'defs.php';
 
-                $bean_name = $bean_name == 'aCase' ? 'Case' : $bean_name;
+                $bean_name = $bean_name === 'aCase' ? 'Case' : $bean_name;
                 sugar_file_put_contents($newFile, $parser->parse(
                     $file,
                     $dictionary[$bean_name]['fields'],

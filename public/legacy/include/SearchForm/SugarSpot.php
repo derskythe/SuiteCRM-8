@@ -46,25 +46,28 @@
  */
 class SugarSpot
 {
-    protected $module = "";
+    protected $module = '';
 
     /**
      * @param string $current_module
      */
-    public function __construct($current_module = "")
+    public function __construct($current_module = '')
     {
         $this->module = $current_module;
     }
+
     /**
      * searchAndDisplay
      *
      * Performs the search and returns the HTML widget containing the results
      *
-     * @param  $query string what we are searching for
+     * @param  $query   string what we are searching for
      * @param  $modules array modules we are searching in
-     * @param  $offset int search result offset
+     * @param  $offset  int search result offset
+     *
      * @return string HTML code containing results
      *
+     * @throws SmartyException
      * @deprecated deprecated since 6.5
      */
     public function searchAndDisplay($query, $modules, $offset=-1)
@@ -122,7 +125,7 @@ class SugarSpot
                     } else {
                         $foundName = '';
                         foreach ($row as $k=>$v) {
-                            if (strpos($k, 'NAME') !== false) {
+                            if (str_contains($k, 'NAME')) {
                                 if (!empty($row[$k])) {
                                     $name = $v;
                                     break;
@@ -263,7 +266,7 @@ class SugarSpot
         // bug49650 - strip out asterisks from query in case
         // user thinks asterisk is a wildcard value
         $query = str_replace('*', '', $query);
-        
+
         $limit = !empty($GLOBALS['sugar_config']['max_spotresults_initial']) ? $GLOBALS['sugar_config']['max_spotresults_initial'] : 5;
         if ($offset !== -1) {
             $limit = !empty($GLOBALS['sugar_config']['max_spotresults_more']) ? $GLOBALS['sugar_config']['max_spotresults_more'] : 20;
@@ -289,7 +292,7 @@ class SugarSpot
                 continue;
             }
 
-            if ($class == 'aCase') {
+            if ($class === 'aCase') {
                 $class = 'Case';
             }
 
@@ -318,19 +321,19 @@ class SugarSpot
                         }
                         # Bug 42961 Spot search for custom fields
                         if (!$keep && (isset($v['force_unifiedsearch']) == false || $v['force_unifiedsearch'] != true)) {
-                            if (strpos($k, 'email') === false || !$searchEmail) {
+                            if (!str_contains($k, 'email') || !$searchEmail) {
                                 unset($searchFields[$moduleName][$k]);
                             }
                         }
                     } else {
-                        if ($GLOBALS['dictionary'][$class]['fields'][$k]['type'] == 'int' && !is_numeric($query)) {
+                        if ($GLOBALS['dictionary'][$class]['fields'][$k]['type'] === 'int' && !is_numeric($query)) {
                             unset($searchFields[$moduleName][$k]);
                         }
                     }
                 } else {
                     if (empty($GLOBALS['dictionary'][$class]['fields'][$k])) {
                         //If module did not have unified_search defined, then check the exception for an email search before we unset
-                        if (strpos($k, 'email') === false || !$searchEmail) {
+                        if (!str_contains($k, 'email') || !$searchEmail) {
                             unset($searchFields[$moduleName][$k]);
                         }
                     } else {
@@ -355,7 +358,7 @@ class SugarSpot
             }
 
             foreach ($seed->field_defs as $k => $v) {
-                if (isset($seed->field_defs[$k]['type']) && ($seed->field_defs[$k]['type'] == 'name') && !isset($return_fields[$k])) {
+                if (isset($seed->field_defs[$k]['type']) && ($seed->field_defs[$k]['type'] === 'name') && !isset($return_fields[$k])) {
                     $return_fields[$k] = $seed->field_defs[$k];
                 }
             }
@@ -418,7 +421,7 @@ class SugarSpot
                     $ret_array = $seed->create_new_list_query('', $clause, $allfields, array(), 0, '', true, $seed, true);
                     $query_parts[] = $ret_array_start['select'] . $ret_array['from'] . $ret_array['where'] . $ret_array['order_by'];
                 }
-                $main_query = "(".implode(") UNION (", $query_parts).")";
+                $main_query = '(' . implode(') UNION (', $query_parts) . ')';
             } else {
                 foreach ($searchFields[$moduleName] as $k=>$v) {
                     if (isset($seed->field_defs[$k])) {
@@ -437,7 +440,7 @@ class SugarSpot
                     $limit = $GLOBALS['sugar_config']['list_max_entries_per_page'];
                 }
 
-                if ($offset == 'end') {
+                if ($offset === 'end') {
                     $totalCount = $this->_getCount($seed, $main_query);
                     if ($totalCount) {
                         $offset = (floor(($totalCount -1) / $limit)) * $limit;
@@ -484,7 +487,7 @@ class SugarSpot
             $pageData['offsets'] = array( 'current'=>$offset, 'next'=>$nextOffset, 'prev'=>$prevOffset, 'end'=>$endOffset, 'total'=>$totalCount, 'totalCounted'=>$totalCounted);
             $pageData['bean'] = array('objectName' => $seed->object_name, 'moduleDir' => $seed->module_dir);
 
-            $results[$moduleName] = array("data" => $data, "pageData" => $pageData);
+            $results[$moduleName] = array( 'data' => $data, 'pageData' => $pageData );
         }
         return $results;
     }
@@ -497,7 +500,7 @@ class SugarSpot
     protected function _searchKeys($item1, $key, $patterns)
     {
         //make the module name singular....
-        if ($patterns[1][strlen($patterns[1])-1] == 's') {
+        if ($patterns[1][strlen($patterns[1])-1] === 's') {
             $patterns[1]=substr($patterns[1], 0, (strlen($patterns[1])-1));
         }
 

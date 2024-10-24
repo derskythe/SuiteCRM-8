@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Campaigns\Statistics\Subpanels;
 
 use App\Statistics\DateTimeStatisticsHandlingTrait;
@@ -36,6 +35,7 @@ use DateFormatService;
 
 /**
  * Class SubPanelCampaignsLastReceived
+ *
  * @package App\Legacy\Statistics
  */
 class SubPanelCampaignsLastReceived extends SubpanelDataQueryHandler implements StatisticsProviderInterface
@@ -47,7 +47,7 @@ class SubPanelCampaignsLastReceived extends SubpanelDataQueryHandler implements 
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -55,10 +55,10 @@ class SubPanelCampaignsLastReceived extends SubpanelDataQueryHandler implements 
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         $subpanel = $query['key'];
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id) || empty($subpanel)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -91,19 +91,18 @@ class SubPanelCampaignsLastReceived extends SubpanelDataQueryHandler implements 
         if (empty($result)) {
             $statistic = $this->getEmptyResponse(self::KEY);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_CAMPAIGN_LAST_RECEIVED_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_CAMPAIGN_LAST_RECEIVED']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_CAMPAIGN_LAST_RECEIVED_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_CAMPAIGN_LAST_RECEIVED' ]);
 
             return $statistic;
         }
         $result = $result['last_received'];
         $finalDate = $dateFormatService->toDBDate($result);
-        $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $finalDate]);
+        $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $finalDate ]);
 
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_CAMPAIGN_LAST_RECEIVED_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_CAMPAIGN_LAST_RECEIVED']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_CAMPAIGN_LAST_RECEIVED_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_CAMPAIGN_LAST_RECEIVED' ]);
         $this->close();
-
 
         return $statistic;
     }

@@ -242,7 +242,7 @@ class BreadCrumbStack
             $s2 = array();
             if (is_array($filter_module)) {
                 foreach ($this->stack as $entry) {
-                    if (in_array($entry['module_name'], $filter_module)) {
+                    if (in_array($entry['module_name'], $filter_module, true)) {
                         $s2[$entry['item_id']] = $entry;
                     }
                 }

@@ -53,12 +53,12 @@ global $app_list_strings;
 global $mod_strings;
 
 $admin = BeanFactory::newBean('Administration');
-$admin->retrieveSettings("notify");
+$admin->retrieveSettings('notify');
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	HELPER FUNCTIONS
-////	END HELPER FUNCTIONS
+////    HELPER FUNCTIONS
+////    END HELPER FUNCTIONS
 ///////////////////////////////////////////////////////////////////////////////
 
 if (isset($_REQUEST['userOffset'])) { // ajax call to lookup timezone

@@ -54,8 +54,8 @@ if (empty($GLOBALS['sugar_config']['upload_dir'])) {
 $uploadHta = 'upload://.htaccess';
 
 $denyAll = <<<eoq
-	Order Deny,Allow
-	Deny from all
+    Order Deny,Allow
+    Deny from all
 eoq;
 
 if (file_exists($uploadHta) && filesize($uploadHta)) {
@@ -63,7 +63,7 @@ if (file_exists($uploadHta) && filesize($uploadHta)) {
     if (is_writable($uploadHta)) {
         $oldHtaccess = file_get_contents($uploadHta);
         // use a different regex boundary b/c .htaccess uses the typicals
-        if (strpos($oldHtaccess, $denyAll) === false) {
+        if (!str_contains($oldHtaccess, $denyAll)) {
             $oldHtaccess .= "\n";
             $oldHtaccess .= $denyAll;
         }

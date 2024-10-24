@@ -132,7 +132,7 @@ class ImportFile extends ImportDataSource
         $this->_sourcename   = $filename;
         $this->_deleteFile = $deleteFile;
         $this->_delimiter  = (empty($delimiter) ? ',' : $delimiter);
-        if ($this->_delimiter == '\t') {
+        if ($this->_delimiter === '\t') {
             $this->_delimiter = "\t";
         }
         $this->_enclosure  = (empty($enclosure) ? '' : trim($enclosure));
@@ -153,7 +153,7 @@ class ImportFile extends ImportDataSource
 
         rewind($this->_fp);
         $bomCheck = fread($this->_fp, 3);
-        if ($bomCheck != pack("CCC", 0xef, 0xbb, 0xbf)) {
+        if ($bomCheck != pack('CCC', 0xef, 0xbb, 0xbf)) {
             rewind($this->_fp);
         }
     }
@@ -177,6 +177,8 @@ class ImportFile extends ImportDataSource
 
     /**
      * This is needed to prevent unserialize vulnerability
+     *
+     * @throws Exception
      */
     public function __wakeup()
     {
@@ -184,7 +186,7 @@ class ImportFile extends ImportDataSource
         foreach (get_object_vars($this) as $k => $v) {
             $this->$k = null;
         }
-        throw new Exception("Not a serializable object");
+        throw new Exception('Not a serializable object');
     }
 
     /**
@@ -284,7 +286,7 @@ class ImportFile extends ImportDataSource
     public function autoDetectCSVProperties()
     {
         // defaults
-        $this->_delimiter  = ",";
+        $this->_delimiter  = ',';
         $this->_enclosure  = '"';
 
         $this->_detector = new CsvAutoDetect($this->_sourcename);
@@ -416,27 +418,27 @@ class ImportFile extends ImportDataSource
     }
 
     //Begin Implementation for SPL's Iterator interface
-    public function key()
+    public function key() : mixed
     {
         return $this->_rowsCount;
     }
 
-    public function current()
+    public function current() : mixed
     {
         return $this->_currentRow;
     }
 
-    public function next()
+    public function next() : void
     {
         $this->getNextRow();
     }
 
-    public function valid()
+    public function valid() : bool
     {
         return $this->_currentRow !== false;
     }
 
-    public function rewind()
+    public function rewind() : void
     {
         $this->setFpAfterBOM();
         //Load our first row

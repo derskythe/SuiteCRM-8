@@ -82,9 +82,9 @@ class AM_ProjectTemplatesTable
 
         if (!is_null($tasks)) {
             foreach ($tasks as $task) {
-                $task->duration_unit = "Days";
+                $task->duration_unit = 'Days';
                 $task->date_start =  Date('Y-m-d');
-                $task->date_finish = Date('Y-m-d', strtotime("+" . ($task->duration - 1) . " days"));
+                $task->date_finish = Date('Y-m-d', strtotime('+' . ($task->duration - 1) . ' days'));
 
                 echo '<tr class="row_sortable">
                         <td class="project_table_cells"><input class="order_number" name="order_number[]" rel="'.$task->id.'" type="hidden" value="'.$task->order_number.'" />'.$task->task_number.'</td>';
@@ -117,10 +117,10 @@ class AM_ProjectTemplatesTable
                 $rflag = '0';
                 foreach ($resource_array as $resource) {
                     if ($resource->id == $task->assigned_user_id) {
-                        if ($resource->type == 'user') {
+                        if ($resource->type === 'user') {
                             echo '<a target="blank" href="index.php?module=Users&action=DetailView&record='.$resource->id.'">'.$resource->name.'</a>';
                             $rflag = '1';
-                        } elseif ($resource->type == 'contact') {
+                        } elseif ($resource->type === 'contact') {
                             echo '<a target="blank" href="index.php?module=Contacts&action=DetailView&record='.$resource->id.'">'.$resource->name.'</a>';
                             $rflag = '1';
                         }

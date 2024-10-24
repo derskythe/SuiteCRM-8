@@ -41,28 +41,28 @@
 #[\AllowDynamicProperties]
 class AOR_Field extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOR_Fields';
-    public $object_name = 'AOR_Field';
-    public $table_name = 'aor_fields';
-    public $tracker_visibility = false;
-    public $importable = true;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOR_Fields';
+    public string $object_name = 'AOR_Field';
+    public string $table_name = 'aor_fields';
+    public bool $tracker_visibility = false;
+    public bool $importable = true;
     public $disable_row_level_security = true;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
     public $field_order;
-    public $field;
+    public string $field;
     public $display;
     public $label;
     public $field_function;
@@ -80,8 +80,9 @@ class AOR_Field extends Basic
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save_lines($post_data, $parent, $key = '')
     {
         require_once('modules/AOW_WorkFlow/aow_utils.php');
@@ -106,7 +107,7 @@ class AOR_Field extends Basic
                 $field = BeanFactory::newBean('AOR_Fields');
                 $field->group_display = false;
 
-                if ($key == 'aor_fields_') {
+                if ($key === 'aor_fields_') {
                     foreach ($post_data['aor_fields_group_display'] as $gdKey => $gdValue) {
                         if ($gdValue == $i) {
                             $field->group_display = $gdKey + 1;
@@ -119,16 +120,16 @@ class AOR_Field extends Basic
                     $field_name = $field_def['name'];
                     $postField = isset($post_data[$key . $field_name]) ? $post_data[$key . $field_name] : null;
                     if (is_array($postField)) {
-                        if ($field_name != 'group_display' && isset($postField[$i])) {
+                        if ($field_name !== 'group_display' && isset($postField[$i])) {
                             if (is_array($postField[$i])) {
                                 $postField[$i] = base64_encode(serialize($postField[$i]));
                             } else {
-                                if ($field_name == 'value') {
+                                if ($field_name === 'value') {
                                     $postField[$i] = fixUpFormatting($_REQUEST['report_module'], $field->field, $postField[$i]);
                                 }
                             }
-                            if ($field_name == 'module_path') {
-                                $postField[$i] = base64_encode(serialize(explode(":", $postField[$i])));
+                            if ($field_name === 'module_path') {
+                                $postField[$i] = base64_encode(serialize(explode(':', $postField[$i])));
                             }
                             $field->$field_name = $postField[$i];
                         }

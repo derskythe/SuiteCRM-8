@@ -87,7 +87,7 @@ class ViewEdit extends SugarView
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $metadataFile = $this->getMetaDataFile();
         $this->ev = $this->getEditView();
@@ -98,7 +98,7 @@ class ViewEdit extends SugarView
     /**
      * @inheritdoc
      */
-    public function display()
+    public function display() : void
     {
         $this->ev->process();
         echo $this->ev->display($this->showTitle);

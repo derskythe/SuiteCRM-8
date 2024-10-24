@@ -27,6 +27,7 @@
 
 namespace App\Install\LegacyHandler\Upgrade;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Model\Feedback;
@@ -41,12 +42,12 @@ class MetadataMergeHandler extends LegacyHandler
     /**
      * @var string
      */
-    protected $upgradePackageDir;
+    protected string $upgradePackageDir;
 
     /**
      * @var UpgradePackageHandler
      */
-    protected $packageHandler;
+    protected UpgradePackageHandler $packageHandler;
 
     /**
      * LegacyHandler constructor.
@@ -67,7 +68,8 @@ class MetadataMergeHandler extends LegacyHandler
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
         string $upgradePackageDir,
-        UpgradePackageHandler $packageHandler
+        UpgradePackageHandler $packageHandler,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -75,7 +77,8 @@ class MetadataMergeHandler extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
 
         $this->upgradePackageDir = $upgradePackageDir;
@@ -99,8 +102,7 @@ class MetadataMergeHandler extends LegacyHandler
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'modules/UpgradeWizard/SugarMerge/SugarMerge.php';
+        require_once $this->legacyDir.'/modules/UpgradeWizard/SugarMerge/SugarMerge.php';
 
         $feedback = new Feedback();
 

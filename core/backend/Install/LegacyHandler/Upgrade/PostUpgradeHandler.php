@@ -38,7 +38,7 @@ class PostUpgradeHandler extends LegacyHandler
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -46,15 +46,13 @@ class PostUpgradeHandler extends LegacyHandler
     /**
      * @return Feedback
      */
-    public function run(): Feedback
+    public function run() : Feedback
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/System/Upgrade/PostUpgrade.php';
+        require_once $this->legacyDir.'/include/portability/System/Upgrade/PostUpgrade.php';
 
         $feedback = new Feedback();
-
         $service = new PostUpgrade();
 
         $result = $service->run();

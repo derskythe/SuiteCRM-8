@@ -104,10 +104,10 @@ if (isset($_REQUEST['target'])) {
 $form->assign('DOCUMENT_REVISION_ID', $document_revision_id);
 
 //$form->assign('request_data', $request_data);
-$form->assign("CATEGORY_OPTIONS", get_select_options_with_id($app_list_strings['document_category_dom'], $category_id));
-$form->assign("SUB_CATEGORY_OPTIONS", get_select_options_with_id($app_list_strings['document_subcategory_dom'], $subcategory_id));
-$form->assign("IS_TEMPLATE_OPTIONS", get_select_options_with_id($app_list_strings['checkbox_dom'], $is_template));
-$form->assign("TEMPLATE_TYPE_OPTIONS", get_select_options_with_id($app_list_strings['document_template_type_dom'], $template_type));
+$form->assign('CATEGORY_OPTIONS', get_select_options_with_id($app_list_strings['document_category_dom'], $category_id));
+$form->assign('SUB_CATEGORY_OPTIONS', get_select_options_with_id($app_list_strings['document_subcategory_dom'], $subcategory_id));
+$form->assign('IS_TEMPLATE_OPTIONS', get_select_options_with_id($app_list_strings['checkbox_dom'], $is_template));
+$form->assign('TEMPLATE_TYPE_OPTIONS', get_select_options_with_id($app_list_strings['document_template_type_dom'], $template_type));
 
 ob_start();
 insert_popup_header($theme);

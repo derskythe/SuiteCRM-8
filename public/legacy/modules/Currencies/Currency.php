@@ -58,23 +58,23 @@ if (!defined('sugarEntry') || !sugarEntry) {
 class Currency extends SugarBean
 {
     // Stored fields
-    public $id;
+    public string $id;
     public $iso4217;
-    public $name;
+    public string $name;
     public $status;
     public $conversion_rate;
-    public $deleted;
-    public $date_entered;
-    public $date_modified;
+    public int $deleted;
+    public string $date_entered;
+    public string $date_modified;
     public $symbol;
     public $hide = '';
     public $unhide = '';
-    public $field_name_map;
+    public ?array $field_name_map;
 
-    public $table_name = "currencies";
-    public $object_name = "Currency";
-    public $module_dir = "Currencies";
-    public $new_schema = true;
+    public string $table_name = 'currencies';
+    public string $object_name = 'Currency';
+    public string $module_dir = 'Currencies';
+    public bool $new_schema = true;
 
     public $disable_num_format = true;
 
@@ -203,10 +203,10 @@ class Currency extends SugarBean
         return '';
     }
 
-    public function retrieve($id = -99, $encode = true, $deleted = true)
+    public function retrieve($id = -99, $encode = true, $deleted = true) : ?SugarBean
     {
         if ($id == '-99') {
-            $this->name = 	$this->getDefaultCurrencyName();
+            $this->name =     $this->getDefaultCurrencyName();
             $this->symbol = $this->getDefaultCurrencySymbol();
             $this->id = '-99';
             $this->conversion_rate = 1;
@@ -219,7 +219,7 @@ class Currency extends SugarBean
             parent::retrieve($id, $encode, $deleted);
         }
         if (!isset($this->name) || $this->deleted == 1) {
-            $this->name = 	$this->getDefaultCurrencyName();
+            $this->name =     $this->getDefaultCurrencyName();
             $this->symbol = $this->getDefaultCurrencySymbol();
             $this->conversion_rate = 1;
             $this->iso4217 = $this->getDefaultISO4217();
@@ -236,13 +236,13 @@ class Currency extends SugarBean
      * Method for returning the currency symbol, must return chr(2) for the € symbol
      * to display correctly in pdfs
      * Parameters:
-     * 	none
+     *     none
      * Returns:
-     * 	$symbol otherwise chr(2) for euro symbol
+     *     $symbol otherwise chr(2) for euro symbol
      */
     public function getPdfCurrencySymbol()
     {
-        if ($this->symbol == '&#8364;' || $this->symbol == '€') {
+        if ($this->symbol === '&#8364;' || $this->symbol === '€') {
             return chr(2);
         }
         return $this->symbol;
@@ -258,7 +258,7 @@ class Currency extends SugarBean
         global $current_user;
 
         sugar_cache_clear('currency_list');
-        require_once "include/portability/Services/Cache/CacheManager.php";
+        require_once 'include/portability/Services/Cache/CacheManager.php';
         (new CacheManager())->markAsNeedsUpdate('rebuild_all');
         return parent::save($check_notify);
     }
@@ -294,7 +294,7 @@ function currency_format_number($amount, $params = array())
 
     $showCurrencySymbol = $locale->getPrecedentPreference('default_currency_symbol') != '' ? true : false;
     if ($showCurrencySymbol && !isset($params['currency_symbol'])) {
-        $params["currency_symbol"] = true;
+        $params['currency_symbol'] = true;
     }
     return format_number($amount, $real_round, $real_decimals, $params);
 }
@@ -391,7 +391,7 @@ function format_number($amount, $round = null, $decimals = null, $params = array
     if (!empty($params['currency_symbol']) && $params['currency_symbol']) {
         if (!empty($params['symbol_override'])) {
             $symbol = $params['symbol_override'];
-        } elseif (!empty($params['type']) && $params['type'] == 'pdf') {
+        } elseif (!empty($params['type']) && $params['type'] === 'pdf') {
             $symbol = $currency->getPdfCurrencySymbol();
             $symbol_space = false;
         } else {
@@ -477,7 +477,7 @@ function unformat_number($string)
     // remove num_grp_sep and replace decimal separator with decimal
     $string = trim(str_replace(array($seps[0], $seps[1], $currency->symbol), array('', '.', ''), $string));
     if (preg_match('/^[+-]?\d(\.\d+)?[Ee]([+-]?\d+)?$/', $string)) {
-        $string = sprintf("%.0f", $string);
+        $string = sprintf('%.0f', $string);
     }//for scientific number format. After round(), we may get this number type.
     preg_match('/[\-\+]?[0-9\.]*/', $string, $string);
 
@@ -496,11 +496,11 @@ function format_money($amount, $for_display = true)
     // Currently, it stays closer to the existing format, and just rounds to two decimal points
     if (isset($amount)) {
         if ($for_display) {
-            return sprintf("%0.02f", $amount);
+            return sprintf('%0.02f', $amount);
         }
         // If it's an editable field, don't use a thousand separator.
         // Or perhaps we will want to, but it doesn't matter right now.
-        return sprintf("%0.02f", $amount);
+        return sprintf('%0.02f', $amount);
     }
     return;
 }
@@ -578,7 +578,7 @@ function toString($echo = true)
 function getCurrencyDropDown($focus, $field='currency_id', $value='', $view='DetailView')
 {
     $view = ucfirst($view);
-    if ($view == 'EditView' || $view == 'MassUpdate' || $view == 'QuickCreate' || $view == 'ConvertLead') {
+    if ($view === 'EditView' || $view === 'MassUpdate' || $view === 'QuickCreate' || $view === 'ConvertLead') {
         if (isset($_REQUEST[$field]) && !empty($_REQUEST[$field])) {
             $value = $_REQUEST[$field];
         } elseif (empty($focus->id)) {
@@ -607,7 +607,7 @@ function getCurrencyDropDown($focus, $field='currency_id', $value='', $view='Det
 
         //
         foreach ((array)$defs as $name=>$key) {
-            if ($key['type'] == 'currency') {
+            if ($key['type'] === 'currency') {
                 $currency_fields[]= $name;
             }
         }
@@ -617,15 +617,15 @@ function getCurrencyDropDown($focus, $field='currency_id', $value='', $view='Det
         $currency->setCurrencyFields($currency_fields);
         $html = '<select name="';
         // If it's a lead conversion (ConvertLead view), add the module_name before the $field
-        if ($view == "ConvertLead") {
+        if ($view === 'ConvertLead') {
             $html .= $focus->module_name;
         }
         $html .= $field. '" id="' . $field  . '_select" ';
-        if ($view != 'MassUpdate') {
+        if ($view !== 'MassUpdate') {
             $html .= 'onchange="CurrencyConvertAll(this.form);"';
         }
         $html .= '>'. $selectCurrency . '</select>';
-        if ($view != 'MassUpdate') {
+        if ($view !== 'MassUpdate') {
             $html .= $currency->getJavascript();
         }
         return $html;
@@ -637,7 +637,7 @@ function getCurrencyDropDown($focus, $field='currency_id', $value='', $view='Det
 
 function getCurrencyNameDropDown($focus, $field='currency_name', $value='', $view='DetailView')
 {
-    if ($view == 'EditView' || $view == 'MassUpdate' || $view == 'QuickCreate') {
+    if ($view === 'EditView' || $view === 'MassUpdate' || $view === 'QuickCreate') {
         require_once('modules/Currencies/ListCurrency.php');
         $currency_fields = array();
         //Bug 18276 - Fix for php 5.1.6
@@ -657,7 +657,7 @@ function getCurrencyNameDropDown($focus, $field='currency_name', $value='', $vie
 
         //
         foreach ((array)$defs as $name=>$key) {
-            if ($key['type'] == 'currency') {
+            if ($key['type'] === 'currency') {
                 $currency_fields[]= $name;
             }
         }
@@ -682,7 +682,7 @@ function getCurrencyNameDropDown($focus, $field='currency_name', $value='', $vie
 
 function getCurrencySymbolDropDown($focus, $field='currency_name', $value='', $view='DetailView')
 {
-    if ($view == 'EditView' || $view == 'MassUpdate' || $view == 'QuickCreate') {
+    if ($view === 'EditView' || $view === 'MassUpdate' || $view === 'QuickCreate') {
         require_once('modules/Currencies/ListCurrency.php');
         $currency_fields = array();
         //Bug 18276 - Fix for php 5.1.6
@@ -702,7 +702,7 @@ function getCurrencySymbolDropDown($focus, $field='currency_name', $value='', $v
 
         //
         foreach ((array)$defs as $name=>$key) {
-            if ($key['type'] == 'currency') {
+            if ($key['type'] === 'currency') {
                 $currency_fields[]= $name;
             }
         }

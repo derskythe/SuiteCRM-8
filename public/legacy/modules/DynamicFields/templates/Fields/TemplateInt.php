@@ -77,7 +77,7 @@ class TemplateInt extends TemplateRange
     {
         parent::populateFromPost();
         if (isset($this->auto_increment)) {
-            $this->auto_increment = $this->auto_increment == "true" || $this->auto_increment === true;
+            $this->auto_increment = $this->auto_increment === 'true' || $this->auto_increment === true;
         }
     }
 

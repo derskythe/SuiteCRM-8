@@ -24,6 +24,8 @@ class HtmlSanitizer
 
     /**
      * SugarCleaner constructor.
+     *
+     * @throws \HTMLPurifier_Exception
      */
     public function __construct(array $extraConfigs = [])
     {
@@ -33,8 +35,8 @@ class HtmlSanitizer
 
         $config = \HTMLPurifier_Config::createDefault();
 
-        if (!is_dir(sugar_cached("htmlclean"))) {
-            create_cache_directory("htmlclean/");
+        if (!is_dir(sugar_cached('htmlclean'))) {
+            create_cache_directory('htmlclean/');
         }
 
         $baseConfigs = [];

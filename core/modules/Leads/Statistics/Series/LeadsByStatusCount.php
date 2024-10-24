@@ -27,6 +27,7 @@
 
 namespace App\Module\Leads\Statistics\Series;
 
+use Psr\Log\LoggerInterface;
 use App\Statistics\Entity\Statistic;
 use App\Data\LegacyHandler\ListDataQueryHandler;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -57,6 +58,7 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
 
     /**
      * LeadDaysOpen constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -67,16 +69,26 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
      * @param RequestStack $requestStack
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        ListDataQueryHandler $queryHandler,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        ListDataQueryHandler      $queryHandler,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $requestStack
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $requestStack);
+        RequestStack              $requestStack,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $requestStack,
+            $logger
+        );
         $this->queryHandler = $queryHandler;
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -84,7 +96,7 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return $this->getKey();
     }
@@ -92,7 +104,7 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -100,9 +112,9 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id, $criteria, $sort] = $this->extractContext($query);
+        [ $module, $id, $criteria, $sort ] = $this->extractContext($query);
 
         if (empty($module) || $module !== 'leads') {
             return $this->getEmptySeriesResponse(self::KEY);
@@ -131,7 +143,6 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
 
         $series = $this->buildSingleSeries($result, $nameField, $valueField);
 
-
         $chartOptions = new ChartOptions();
 
         $statistic = $this->buildSeriesResponse(self::KEY, 'int', $series, $chartOptions);
@@ -143,6 +154,7 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
 
     /**
      * @param string $legacyName
+     *
      * @return bool|SugarBean
      */
     protected function getBean(string $legacyName)
@@ -153,9 +165,10 @@ class LeadsByStatusCount extends LegacyHandler implements StatisticsProviderInte
     /**
      * @param array $query
      * @param $bean
+     *
      * @return array
      */
-    protected function runQuery(array $query, $bean): array
+    protected function runQuery(array $query, $bean) : array
     {
         // send limit -2 to not add a limit
         return $this->queryHandler->runQuery($bean, $query, -1, -2);

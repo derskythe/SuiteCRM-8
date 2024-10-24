@@ -76,15 +76,16 @@ if (!defined('sugarEntry') || !sugarEntry) {
         return $compress_exempt_files;
     }
 
-
-
-    /**ConcatenateFiles($from_path)
-     *
-     * This method takes in a string value of the root directory to begin processing
-     * it uses the predefined array of groupings to create a concatenated file for each grouping
-     * and places the concatenated file in root directory
-     * @from_path root directory where processing should take place
-     */
+/**ConcatenateFiles($from_path)
+ *
+ * This method takes in a string value of the root directory to begin processing
+ * it uses the predefined array of groupings to create a concatenated file for each grouping
+ * and places the concatenated file in root directory
+ *
+ * @from_path root directory where processing should take place
+ * @throws Exception
+ * @throws Exception
+ */
     function ConcatenateFiles($from_path)
     {
 
@@ -122,7 +123,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
                     $currPerm = fileperms($loc);
                     //check to see if target exists, if it does then open file
                     if (file_exists($trgt)) {
-                        if (in_array($trgt, $files_opened)) {
+                        if (in_array($trgt, $files_opened, true)) {
                             //open target file
                             if (function_exists('sugar_fopen')) {
                                 $trgt_handle = sugar_fopen($trgt, 'a');
@@ -205,7 +206,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
         }
     }
 
-    function create_backup_folder($bu_path)
+/**
+ * @throws Exception
+ */
+function create_backup_folder($bu_path)
     {
         $bu_path = str_replace('\\', '/', (string) $bu_path);
         //get path after root
@@ -233,17 +237,16 @@ if (!defined('sugarEntry') || !sugarEntry) {
         }
     }
 
-
-
-
-    /**CompressFiles
-     * This method will call jsmin libraries to minify passed in files
-     * This method takes in 2 string values of the files to process
-     * Processing will back up javascript files and then minify the original javascript.
-     * Back up javascript files will have an added .src extension
-     * @from_path file name and path to be processed
-     * @to_path file name and path to be  used to place newly compressed contents
-     */
+/**CompressFiles
+ * This method will call jsmin libraries to minify passed in files
+ * This method takes in 2 string values of the files to process
+ * Processing will back up javascript files and then minify the original javascript.
+ * Back up javascript files will have an added .src extension
+ *
+ * @from_path file name and path to be processed
+ * @to_path   file name and path to be  used to place newly compressed contents
+ * @throws Exception
+ */
     function CompressFiles($from_path, $to_path)
     {
         if (!defined('JSMIN_AS_LIB')) {
@@ -281,12 +284,12 @@ if (!defined('sugarEntry') || !sugarEntry) {
                         //See if line contains open or closing comments
 
                         //if opening comments are found, set $beg to true
-                        if (strpos($newLine, '/*')!== false) {
+                        if (str_contains($newLine, '/*')) {
                             $beg = true;
                         }
 
                         //if closing comments are found, set $beg to false
-                        if (strpos($newLine, '*/')!== false) {
+                        if (str_contains($newLine, '*/')) {
                             $beg = false;
                         }
 
@@ -304,7 +307,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
                             //Check to see that ReadNextLine is true, if so then add the last line collected
                             //make sure the last line is either the end to a comment block, or starts with '//'
                             //else do not add as it is live code.
-                            if (!empty($newLine) && ((strpos($newLine, '*/')!== false) || ($newLine[0].$newLine[1]== '//'))) {
+                            if (!empty($newLine) && ((str_contains($newLine, '*/')) || ($newLine[0]. $newLine[1] === '//'))) {
                                 //add new line to license string
                                 $lic_str .=$newLine;
                             }
@@ -324,7 +327,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
                 //minify javascript
                 //$jMin = new JSMin($from_path,$to_path,$lic_arr);
                 $min_file = str_replace('.js', '-min.js', (string) $from_path);
-                if (strpos((string) $from_path, '-min.js') !== false) {
+                if (str_contains((string) $from_path, '-min.js')) {
                     $min_file = $from_path;
                 }
 
@@ -378,7 +381,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
             while (false !== ($dir = readdir($handle))) {
 
                   //make sure you go into directory tree and not out of tree
-                if ($dir!= '.' && $dir!= '..') {
+                if ($dir !== '.' && $dir !== '..') {
                     //make recursive call to process this directory
                     reverseScripts($from_path.'/'.$dir, $to_path);
                 }
@@ -388,7 +391,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
         //if this is not a directory, then
         //check if this is a javascript file, then process
         $path_parts = pathinfo($from_path);
-        if (is_file((string)$from_path) && isset($path_parts['extension']) && $path_parts['extension'] =='js') {
+        if (is_file((string)$from_path) && isset($path_parts['extension']) && $path_parts['extension'] === 'js') {
 
                     //create backup directory if needed
             $bu_dir = dirname($bu_path);
@@ -453,7 +456,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
                 while (false !== ($dir = readdir($handle))) {
 
                       //make sure you go into directory tree and not out of tree
-                    if ($dir!= '.' && $dir!= '..') {
+                    if ($dir !== '.' && $dir !== '..') {
                         //make recursive call to process this directory
                         BackUpAndCompressScriptFiles($from_path.'/'.$dir, $to_path, $backup);
                     }
@@ -465,7 +468,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
             //check if this is a javascript file, then process
             // Also, check if there's a min counterpart, in which case, don't use this file.
             $path_parts = pathinfo($from_path);
-            if (is_file((string)$from_path) && isset($path_parts['extension']) && $path_parts['extension'] =='js') {
+            if (is_file((string)$from_path) && isset($path_parts['extension']) && $path_parts['extension'] === 'js') {
                 /*$min_file_path = $path_parts['dirname'].'/'.$path_parts['filename'].'-min.'.$path_parts['extension'];
                 if(is_file($min_file_path)) {
                     $from_path = $min_file_path;

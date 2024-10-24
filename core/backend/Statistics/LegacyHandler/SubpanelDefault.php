@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Statistics\LegacyHandler;
 
+use Throwable;
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
 use App\Statistics\Entity\Statistic;
 use App\Statistics\Service\StatisticsProviderInterface;
@@ -35,7 +35,8 @@ use App\Statistics\StatisticsHandlingTrait;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 
-class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProviderInterface, LoggerAwareInterface
+class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProviderInterface,
+                                                                  LoggerAwareInterface
 {
     use StatisticsHandlingTrait;
 
@@ -44,25 +45,25 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
+        $sub_panel = $query['params']['subpanel'] ?? $query['key'];
 
-        $subpanel = $query['params']['subpanel'] ?? $query['key'];
-
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -70,10 +71,10 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
         $this->init();
         $this->startLegacyApp();
 
-        $queries = $this->getQueries($module, $id, $subpanel);
+        $queries = $this->getQueries($module, $id, $sub_panel);
 
         if (empty($queries)) {
-            $this->logger->error('default-statistic: No queries found.', ['query' => $query]);
+            $this->logger->error('default-statistic: No queries found.', [ 'query' => $query ]);
 
             return $this->getErrorResponse(self::KEY);
         }
@@ -91,8 +92,8 @@ class SubpanelDefault extends SubpanelDataQueryHandler implements StatisticsProv
         $result = $this->fetchRow($dbQuery);
         $statistic = $this->buildSingleValueResponse(self::KEY, 'int', $result);
 
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_DEFAULT_TOTAL_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_DEFAULT_TOTAL']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_DEFAULT_TOTAL_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_DEFAULT_TOTAL' ]);
         $this->close();
 
         return $statistic;

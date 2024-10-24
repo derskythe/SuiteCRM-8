@@ -54,8 +54,8 @@ $searchFields[$module_name] =
             'query_type'=>'format',
             'operator' => 'subquery',
             'subquery' => 'SELECT sugarfavorites.record_id FROM sugarfavorites
-			                    WHERE sugarfavorites.deleted=0
-			                        and sugarfavorites.module = "'.$module_name.'"
-			                        and sugarfavorites.assigned_user_id = "{0}"',
+                                WHERE sugarfavorites.deleted=0
+                                    and sugarfavorites.module = "'.$module_name.'"
+                                    and sugarfavorites.assigned_user_id = "{0}"',
             'db_field'=>array('id')),
     );

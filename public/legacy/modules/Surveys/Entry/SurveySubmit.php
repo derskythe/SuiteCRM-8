@@ -7,7 +7,7 @@ $survey = BeanFactory::getBean('Surveys', $surveyId);
 if (empty($survey->id)) {
     do404();
 }
-if ($survey->status != 'Public') {
+if ($survey->status !== 'Public') {
     do404();
 }
 $contactId = !empty($_REQUEST['contact']) ? $_REQUEST['contact'] : '';
@@ -25,7 +25,7 @@ function getCampaignIdFromTracker($trackerId)
     $db = DBManagerFactory::getInstance();
     $trackerId = $db->quote($trackerId);
     $sql = <<<EOF
-            SELECT campaign_id 
+            SELECT campaign_id
             FROM campaign_log WHERE target_tracker_key = "$trackerId"
 EOF;
 
@@ -37,6 +37,9 @@ EOF;
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
 {
     $contactName = 'Unknown Contact';
@@ -68,15 +71,15 @@ function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
     foreach ($survey->get_linked_beans('surveys_surveyquestions', 'SurveyQuestions', 'sort_order') as $question) {
         $userResponse = $request['question'][$question->id];
         switch ($question->type) {
-            case "Checkbox":
+            case 'Checkbox':
                 $qr = BeanFactory::newBean('SurveyQuestionResponses');
                 $qr->surveyresponse_id = $response->id;
                 $qr->surveyquestion_id = $question->id;
                 $qr->answer_bool = $userResponse;
                 $qr->save();
                 break;
-            case "Radio":
-            case "Dropdown":
+            case 'Radio':
+            case 'Dropdown':
                 $qr = BeanFactory::newBean('SurveyQuestionResponses');
                 $qr->surveyresponse_id = $response->id;
                 $qr->surveyquestion_id = $question->id;
@@ -84,7 +87,7 @@ function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
                 $qr->load_relationship('surveyquestionoptions_surveyquestionresponses');
                 $qr->surveyquestionoptions_surveyquestionresponses->add($userResponse);
                 break;
-            case "Multiselect":
+            case 'Multiselect':
                 foreach ($userResponse as $selected) {
                     $qr = BeanFactory::newBean('SurveyQuestionResponses');
                     $qr->surveyresponse_id = $response->id;
@@ -94,7 +97,7 @@ function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
                     $qr->surveyquestionoptions_surveyquestionresponses->add($selected);
                 }
                 break;
-            case "Matrix":
+            case 'Matrix':
                 foreach ($userResponse as $key => $val) {
                     $qo = BeanFactory::getBean('SurveyQuestionOptions', $key);
                     $qr = BeanFactory::newBean('SurveyQuestionResponses');
@@ -103,21 +106,21 @@ function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
                     $qr->answer = $val;
                     if ($val == 2) {//Dissatisfied
                         $response->happiness = 0;
-                        $response->happiness_text .= $qo->name . " - Dissatisfied<br>";
+                        $response->happiness_text .= $qo->name . ' - Dissatisfied<br>';
                     }
                     $qr->save();
                     $qr->load_relationship('surveyquestionoptions_surveyquestionresponses');
                     $qr->surveyquestionoptions_surveyquestionresponses->add($key);
                 }
                 break;
-            case "DateTime":
+            case 'DateTime':
                 $qr = BeanFactory::newBean('SurveyQuestionResponses');
                 $qr->surveyresponse_id = $response->id;
                 $qr->surveyquestion_id = $question->id;
                 $qr->answer_datetime = $userResponse . ':00';
                 $qr->save();
                 break;
-            case "Date":
+            case 'Date':
                 //TODO: Convert from user format
                 $qr = BeanFactory::newBean('SurveyQuestionResponses');
                 $qr->surveyresponse_id = $response->id;
@@ -125,15 +128,15 @@ function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
                 $qr->answer_datetime = $userResponse . ' 00:00:00';
                 $qr->save();
                 break;
-            case "Textbox":
+            case 'Textbox':
                 if ($userResponse) {
                     $response->happiness = 0;
-                    $response->happiness_text .= $question->name . " - " . $userResponse . "<br>";
+                    $response->happiness_text .= $question->name . ' - ' . $userResponse . '<br>';
                 }
                 // no break
-            case "Rating":
-            case "Scale":
-            case "Text":
+            case 'Rating':
+            case 'Scale':
+            case 'Text':
             default:
                 $qr = BeanFactory::newBean('SurveyQuestionResponses');
                 $qr->surveyresponse_id = $response->id;
@@ -149,7 +152,7 @@ function processSurvey(Surveys $survey, $trackerId, $contactId, $request)
 
 function do404()
 {
-    header("HTTP/1.0 404 Not Found"); ?>
+    header('HTTP/1.0 404 Not Found'); ?>
     <html>
     <head></head>
     <body><h1>Page not found</h1></body>

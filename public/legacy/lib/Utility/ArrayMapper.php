@@ -103,7 +103,7 @@ class ArrayMapper
      *
      * @return ArrayMapper fluent setter
      */
-    public function setMappable(&$mappable)
+    public function setMappable($mappable)
     {
         if (!is_object($mappable) && !is_array($mappable)) {
             throw new InvalidArgumentException('Argument must be either a an array or an object');
@@ -410,7 +410,7 @@ class ArrayMapper
     private function fixStringValue($value)
     {
         if (is_string($value)) {
-            preg_match_all("/&#?\w+;/", $value, $entities, PREG_SET_ORDER);
+            preg_match_all('/&#?\w+;/', $value, $entities, PREG_SET_ORDER);
             $entities = array_unique(array_column($entities, 0));
             foreach ($entities as $entity) {
                 $decoded = mb_convert_encoding($entity, 'UTF-8', 'HTML-ENTITIES');
@@ -479,7 +479,7 @@ class ArrayMapper
      */
     private function isBlackListed($path)
     {
-        $result = in_array($path, $this->blacklist);
+        $result = in_array($path, $this->blacklist, true);
 
         if ($result === false) {
             return false;
@@ -495,7 +495,7 @@ class ArrayMapper
      */
     private function handleValue($value, $mappedPath)
     {
-        if (strpos((string) $mappedPath, '+') === 0) {
+        if (str_starts_with((string) $mappedPath, '+')) {
             $mappedPath = substr((string) $mappedPath, 1);
             $this->appendInPath($value, $mappedPath);
         } else {

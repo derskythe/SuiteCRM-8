@@ -59,7 +59,7 @@ class HTMLPurifierURISchemeCid extends \HTMLPurifier_URIScheme
      * @param \HTMLPurifier_Context $context
      * @return bool
      */
-    public function doValidate(&$uri, $config, $context)
+    public function doValidate(&$uri, $config, $context) : bool
     {
         $uri->userinfo = null;
         $uri->port = null;

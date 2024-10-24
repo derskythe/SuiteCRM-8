@@ -6,7 +6,7 @@ class SugarFieldCronSchedule extends SugarFieldBase
     private function getDays()
     {
         $days = array();
-        $date = new DateTime("1986-05-01");
+        $date = new DateTime('1986-05-01');
         $period = new DateInterval('P1D');
         for ($x = 1; $x <= 31; $x++) {
             $days[$x] = $date->format('jS');
@@ -18,7 +18,7 @@ class SugarFieldCronSchedule extends SugarFieldBase
     private function getWeekDays()
     {
         $days = array();
-        $date = new DateTime("1986-05-04");
+        $date = new DateTime('1986-05-04');
         $period = new DateInterval('P1D');
         for ($x = 0; $x < 7; $x++) {
             $days[$x] = $date->format('D');

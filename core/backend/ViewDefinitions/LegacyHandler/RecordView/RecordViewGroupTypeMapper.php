@@ -37,7 +37,7 @@ class RecordViewGroupTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @var GroupedFieldDefinitionMapperInterface
      */
-    private $mapper;
+    private GroupedFieldDefinitionMapperInterface $mapper;
 
     /**
      * RecordViewAddressMapper constructor.

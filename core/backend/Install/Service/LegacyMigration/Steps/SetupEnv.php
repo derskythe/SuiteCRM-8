@@ -37,6 +37,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Class SetupEnv
+ *
  * @package App\Install\Service\LegacyMigration\Steps;
  */
 class SetupEnv implements LegacyMigrationStepInterface
@@ -45,19 +46,20 @@ class SetupEnv implements LegacyMigrationStepInterface
     use InstallStepTrait;
 
     public const HANDLER_KEY = 'setup-env';
-    public const POSITION = 200;
+    public const POSITION    = 200;
 
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
     /**
      * @var KernelInterface
      */
-    private $kernel;
+    private KernelInterface $kernel;
 
     /**
      * SetupEnv constructor.
+     *
      * @param InstallHandler $handler
      * @param KernelInterface $kernel
      */
@@ -70,7 +72,7 @@ class SetupEnv implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -78,7 +80,7 @@ class SetupEnv implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getOrder(): int
+    public function getOrder() : int
     {
         return self::POSITION;
     }
@@ -86,9 +88,10 @@ class SetupEnv implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function execute(array &$context): Feedback
+    public function execute(array &$context) : Feedback
     {
         $config = $this->handler->loadLegacyConfig();
+        $feedback = new Feedback();
 
         $inputs = [];
         $inputs['db_password'] = $config['dbconfig']['db_password'] ?? '';
@@ -98,34 +101,21 @@ class SetupEnv implements LegacyMigrationStepInterface
         $inputs['db_port'] = $config['dbconfig']['db_port'] ?? '';
         $inputs['db_type'] = $config['dbconfig']['db_type'] ?? 'mysql';
 
-        $inputsValid = $this->validateInputs($inputs);
-
-        if (!$inputsValid) {
-            return (new Feedback())->setSuccess(false)->setMessages(['Missing database configuration on legacy config']);
-        }
-
-        $isConnectionOk = $this->handler->checkDBConnection($inputs);
-
-        if ($isConnectionOk === false) {
-            $feedback = new Feedback();
+        if (!$this->validateInputs($inputs)) {
+            $feedback->setSuccess(false);
+            $feedback->setMessages([ 'Missing database configuration on legacy config' ]);
+        } else if (!$this->handler->checkDBConnection($inputs)) {
             $feedback->setSuccess(false);
             $feedback->setStatusCode(InstallStatus::DB_CREDENTIALS_NOT_OK);
-            $feedback->setMessages(['Could not connect to db']);
-            $feedback->setMessageLabels(['ERR_DB_LOGIN_FAILURE_SHORT']);
-            return $feedback;
-        }
-
-        $result = $this->handler->createEnv($inputs);
-
-
-        $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Created .env.local']);
-
-        if ($result === false) {
+            $feedback->setMessages([ 'Could not connect to db' ]);
+            $feedback->setMessageLabels([ 'ERR_DB_LOGIN_FAILURE_SHORT' ]);
+        } else if (!$this->handler->createEnv($inputs)) {
             $feedback->setSuccess(false);
-            $feedback->setMessages(['Could not create .env.local']);
+            $feedback->setMessages([ 'Could not create .env.local' ]);
             $feedback->setStatusCode(InstallStatus::FAILED);
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages([ 'Created .env.local' ]);
         }
 
         return $feedback;

@@ -69,9 +69,9 @@ if (isset($_REQUEST['next_free']) && $_REQUEST['next_free'] == true) {
         }
         $in = substr($in, 0, (strlen($in) - 2));
         $in .= ') ';
-        
+
         $team = '';
-        
+
         $qE = 'SELECT count(id) AS c FROM emails WHERE deleted = 0 AND assigned_user_id'.$in.$team.'LIMIT 1';
         $rE = $next->db->query($qE);
         $aE = $next->db->fetchByAssoc($rE);
@@ -83,7 +83,7 @@ if (isset($_REQUEST['next_free']) && $_REQUEST['next_free'] == true) {
             $next->retrieve($aE['id']);
             $next->assigned_user_id = $current_user->id;
             $next->save();
-            
+
             header('Location: index.php?module=Emails&action=DetailView&record='.$next->id);
         } else {
             // no free items
@@ -96,19 +96,19 @@ if (isset($_REQUEST['next_free']) && $_REQUEST['next_free'] == true) {
 }
 ?>
 <table width="100%" cellpadding="12" cellspacing="0" border="0">
-	<tr>
-		<td valign="middle" align="center" colspan="2">
-			<?php echo $mod_strings['LBL_LOCK_FAIL_DESC']; ?>
-			<br>
-			<?php echo $userName.$mod_strings['LBL_LOCK_FAIL_USER']; ?>
-		</td>
-	</tr>
-	<tr>
-		<td valign="middle" align="right" width="50%">
-			<a href="index.php?module=Emails&action=ListView&type=inbound&group=true"><?php echo $mod_strings['LBL_BACK_TO_GROUP']; ?></a>
-		</td>
-		<td valign="middle" align="left">
-			<a href="index.php?module=Emails&action=PessimisticLock&next_free=true"><?php echo $mod_strings['LBL_NEXT_EMAIL']; ?></a>
-		</td>
-	</tr>
+    <tr>
+        <td valign="middle" align="center" colspan="2">
+            <?php echo $mod_strings['LBL_LOCK_FAIL_DESC']; ?>
+            <br>
+            <?php echo $userName.$mod_strings['LBL_LOCK_FAIL_USER']; ?>
+        </td>
+    </tr>
+    <tr>
+        <td valign="middle" align="right" width="50%">
+            <a href="index.php?module=Emails&action=ListView&type=inbound&group=true"><?php echo $mod_strings['LBL_BACK_TO_GROUP']; ?></a>
+        </td>
+        <td valign="middle" align="left">
+            <a href="index.php?module=Emails&action=PessimisticLock&next_free=true"><?php echo $mod_strings['LBL_NEXT_EMAIL']; ?></a>
+        </td>
+    </tr>
 </table>

@@ -55,34 +55,14 @@ require_once __DIR__ . '/../../include/EmailInterface.php';
 #[\AllowDynamicProperties]
 class Contact extends Person implements EmailInterface
 {
-    public $field_name_map;
     // Stored fields
-    public $id;
-    public $name = '';
     public $lead_source;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-
-    public $description;
-    public $salutation;
-    public $first_name;
-    public $last_name;
-    public $title;
     public $department;
     public $birthdate;
     public $reports_to_id;
     public $do_not_call;
     public $phone_home;
     public $phone_mobile;
-    public $phone_work;
-    public $phone_other;
-    public $phone_fax;
-    public $email1;
     public $email_and_name1;
     public $email_and_name2;
     public $email2;
@@ -119,7 +99,7 @@ class Contact extends Person implements EmailInterface
     public $meeting_id;
     public $call_id;
     public $email_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $accept_status;
     public $accept_status_id;
     public $accept_status_name;
@@ -131,65 +111,57 @@ class Contact extends Person implements EmailInterface
     public $primary_address_street_3;
     public $campaign_id;
     public $sync_contact;
-    public $full_name; // l10n localized name
     public $invalid_email;
-    public $table_name = "contacts";
-    public $rel_account_table = "accounts_contacts";
+    public $rel_account_table = 'accounts_contacts';
     //This is needed for upgrade.  This table definition moved to Opportunity module.
-    public $rel_opportunity_table = "opportunities_contacts";
+    public $rel_opportunity_table = 'opportunities_contacts';
 
-    public $object_name = "Contact";
-    public $module_dir = 'Contacts';
-    public $new_schema = true;
-    public $importable = true;
-
-    // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array(
-        'bug_id',
-        'assigned_user_name',
-        'account_name',
-        'account_id',
-        'opportunity_id',
-        'case_id',
-        'task_id',
-        'note_id',
-        'meeting_id',
-        'call_id',
-        'email_id'
-    );
-
-    public $relationship_fields = array(
-        'account_id' => 'accounts',
-        'bug_id' => 'bugs',
-        'call_id' => 'calls',
-        'case_id' => 'cases',
-        'email_id' => 'emails',
-        'meeting_id' => 'meetings',
-        'note_id' => 'notes',
-        'task_id' => 'tasks',
-        'opportunity_id' => 'opportunities',
-        'contacts_users_id' => 'user_sync'
-    );
 
     public function __construct()
     {
         parent::__construct();
+
+        $this->object_name = 'Contact';
+        $this->module_dir = 'Contacts';
+        $this->importable = true;
+        $this->table_name = 'contacts';
+        $this->additional_column_fields =
+            array( 'bug_id',
+                   'assigned_user_name',
+                   'account_name',
+                   'account_id',
+                   'opportunity_id',
+                   'case_id',
+                   'task_id',
+                   'note_id',
+                   'meeting_id',
+                   'call_id',
+                   'email_id' );
+        $this->relationship_fields =
+            array( 'account_id'        => 'accounts',
+                   'bug_id'            => 'bugs',
+                   'call_id'           => 'calls',
+                   'case_id'           => 'cases',
+                   'email_id'          => 'emails',
+                   'meeting_id'        => 'meetings',
+                   'note_id'           => 'notes',
+                   'task_id'           => 'tasks',
+                   'opportunity_id'    => 'opportunities',
+                   'contacts_users_id' => 'user_sync' );
     }
-
-
 
 
     public function add_list_count_joins(&$query, $where)
     {
         // accounts.name
-        if (stristr((string) $where, "accounts.name")) {
+        if (stristr((string) $where, 'accounts.name')) {
             // add a join to the accounts table.
-            $query .= "
-	            LEFT JOIN accounts_contacts
-	            ON contacts.id=accounts_contacts.contact_id
-	            LEFT JOIN accounts
-	            ON accounts_contacts.account_id=accounts.id
-			";
+            $query .= '
+                LEFT JOIN accounts_contacts
+                ON contacts.id=accounts_contacts.contact_id
+                LEFT JOIN accounts
+                ON accounts_contacts.account_id=accounts.id
+            ';
         }
         $custom_join = $this->getCustomJoin();
         $query .= $custom_join['join'];
@@ -200,12 +172,12 @@ class Contact extends Person implements EmailInterface
         $array_assign = parent::listviewACLHelper();
         $is_owner = false;
         //MFH BUG 18281; JChi #15255
-        $is_owner = !empty($this->assigned_user_id) && $this->assigned_user_id == $GLOBALS['current_user']->id;
+        $is_owner = !empty($this->assigned_user_id) && $this->assigned_user_id === $GLOBALS['current_user']->id;
         if (!ACLController::moduleSupportsACL('Accounts') || ACLController::checkAccess(
-            'Accounts',
-            'view',
-            $is_owner
-        )
+                'Accounts',
+                'view',
+                $is_owner
+            )
         ) {
             $array_assign['ACCOUNT'] = 'a';
         } else {
@@ -226,9 +198,10 @@ class Contact extends Person implements EmailInterface
         $parentbean = null,
         $singleSelect = false,
         $ifListForExport = false
-    ) {
+    )
+    {
         //if this is from "contact address popup" action, then process popup list query
-        if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'ContactAddressPopup') {
+        if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'ContactAddressPopup') {
             return $this->address_popup_create_new_list_query(
                 $order_by,
                 $where,
@@ -243,7 +216,7 @@ class Contact extends Person implements EmailInterface
             );
         }
         //any other action goes to parent function in sugarbean
-        if (strpos((string) $order_by, 'sync_contact') !== false) {
+        if (str_contains((string) $order_by, 'sync_contact')) {
             //we have found that the user is ordering by the sync_contact field, it would be troublesome to sort by this field
             //and perhaps a performance issue, so just remove it
             $order_by = '';
@@ -260,7 +233,7 @@ class Contact extends Person implements EmailInterface
             $parentbean,
             $singleSelect,
             $ifListForExport
-            );
+        );
     }
 
 
@@ -274,7 +247,8 @@ class Contact extends Person implements EmailInterface
         $return_array = false,
         $parentbean = null,
         $singleSelect = false
-    ) {
+    )
+    {
         //if this is any action that is not the contact address popup, then go to parent function in sugarbean
         if (isset($_REQUEST['action']) && $_REQUEST['action'] !== 'ContactAddressPopup') {
             return parent::create_new_list_query(
@@ -292,10 +266,10 @@ class Contact extends Person implements EmailInterface
 
         $custom_join = $this->getCustomJoin();
         // MFH - BUG #14208 creates alias name for select
-        $select_query = "SELECT ";
-        $select_query .= $this->db->concat($this->table_name, array('first_name', 'last_name')) . " name, ";
+        $select_query = 'SELECT ';
+        $select_query .= $this->db->concat($this->table_name, array( 'first_name', 'last_name' )) . ' name, ';
         $select_query .= "
-				$this->table_name.*,
+                $this->table_name.*,
                 accounts.name as account_name,
                 accounts.id as account_id,
                 accounts.assigned_user_id account_id_owner,
@@ -304,17 +278,17 @@ class Contact extends Person implements EmailInterface
         $ret_array = [];
         $ret_array['select'] = $select_query;
 
-        $from_query = "
-                FROM contacts ";
+        $from_query = '
+                FROM contacts ';
 
-        $from_query .= "LEFT JOIN users
-	                    ON contacts.assigned_user_id=users.id
-	                    LEFT JOIN accounts_contacts
-	                    ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0
-	                    LEFT JOIN accounts
-	                    ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 ";
+        $from_query .= 'LEFT JOIN users
+                        ON contacts.assigned_user_id=users.id
+                        LEFT JOIN accounts_contacts
+                        ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0
+                        LEFT JOIN accounts
+                        ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 ';
         $from_query .= "LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 ";
-        $from_query .= "LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ";
+        $from_query .= 'LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ';
         $from_query .= $custom_join['join'];
         $ret_array['from'] = $from_query;
         $ret_array['from_min'] = 'from contacts';
@@ -322,18 +296,16 @@ class Contact extends Person implements EmailInterface
         $where_auto = '1=1';
         if ($show_deleted == 0) {
             $where_auto = " $this->table_name.deleted=0 ";
-        //$where_auto .= " AND accounts.deleted=0  ";
+            //$where_auto .= " AND accounts.deleted=0  ";
         } elseif ($show_deleted == 1) {
             $where_auto = " $this->table_name.deleted=1 ";
         }
 
-
-        if ($where != "") {
+        if ($where != '') {
             $where_query = "where ($where) AND " . $where_auto;
         } else {
-            $where_query = "where " . $where_auto;
+            $where_query = 'where ' . $where_auto;
         }
-
 
         $ret_array['where'] = $where_query;
         $ret_array['order_by'] = '';
@@ -352,7 +324,7 @@ class Contact extends Person implements EmailInterface
     }
 
 
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
@@ -360,16 +332,16 @@ class Contact extends Person implements EmailInterface
                                 contacts.*,
                                 email_addresses.email_address email_address,
                                 '' email_addresses_non_primary, " . // email_addresses_non_primary needed for get_field_order_mapping()
-            "accounts.name as account_name,
-                                users.user_name as assigned_user_name ";
+            'accounts.name as account_name,
+                                users.user_name as assigned_user_name ';
         $query .= $custom_join['select'];
-        $query .= " FROM contacts ";
-        $query .= "LEFT JOIN users
-	                                ON contacts.assigned_user_id=users.id ";
-        $query .= "LEFT JOIN accounts_contacts
-	                                ON ( contacts.id=accounts_contacts.contact_id and (accounts_contacts.deleted is null or accounts_contacts.deleted = 0))
-	                                LEFT JOIN accounts
-	                                ON accounts_contacts.account_id=accounts.id ";
+        $query .= ' FROM contacts ';
+        $query .= 'LEFT JOIN users
+                                    ON contacts.assigned_user_id=users.id ';
+        $query .= 'LEFT JOIN accounts_contacts
+                                    ON ( contacts.id=accounts_contacts.contact_id and (accounts_contacts.deleted is null or accounts_contacts.deleted = 0))
+                                    LEFT JOIN accounts
+                                    ON accounts_contacts.account_id=accounts.id ';
 
         //join email address table too.
         $query .= ' LEFT JOIN  email_addr_bean_rel on contacts.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module=\'Contacts\' and email_addr_bean_rel.deleted=0 and email_addr_bean_rel.primary_address=1 ';
@@ -377,13 +349,13 @@ class Contact extends Person implements EmailInterface
 
         $query .= $custom_join['join'];
 
-        $where_auto = "( accounts.deleted IS NULL OR accounts.deleted=0 )
-                      AND contacts.deleted=0 ";
+        $where_auto = '( accounts.deleted IS NULL OR accounts.deleted=0 )
+                      AND contacts.deleted=0 ';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where ($where) AND " . $where_auto;
         } else {
-            $query .= "where " . $where_auto;
+            $query .= 'where ' . $where_auto;
         }
 
         $order_by = $this->process_order_by($order_by);
@@ -399,15 +371,15 @@ class Contact extends Person implements EmailInterface
         parent::fill_in_additional_list_fields();
         $this->_create_proper_name_field();
         // cn: bug 8586 - l10n names for Contacts in Email TO: field
-        $this->email_and_name1 = "{$this->full_name} &lt;" . $this->email1 . "&gt;";
-        $this->email_and_name2 = "{$this->full_name} &lt;" . $this->email2 . "&gt;";
+        $this->email_and_name1 = "{$this->full_name} &lt;" . $this->email1 . '&gt;';
+        $this->email_and_name2 = "{$this->full_name} &lt;" . $this->email2 . '&gt;';
 
         if ($this->force_load_details == true) {
             $this->fill_in_additional_detail_fields();
         }
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         if (empty($this->id)) {
@@ -418,11 +390,11 @@ class Contact extends Person implements EmailInterface
 
         // retrieve the account information and the information about the person the contact reports to.
         $query = "SELECT acc.id, acc.name, con_reports_to.first_name, con_reports_to.last_name
-		from contacts
-		left join accounts_contacts a_c on a_c.contact_id = '" . $this->id . "' and a_c.deleted=0
-		left join accounts acc on a_c.account_id = acc.id and acc.deleted=0
-		left join contacts con_reports_to on con_reports_to.id = contacts.reports_to_id
-		where contacts.id = '" . $this->id . "'";
+        from contacts
+        left join accounts_contacts a_c on a_c.contact_id = '" . $this->id . "' and a_c.deleted=0
+        left join accounts acc on a_c.account_id = acc.id and acc.deleted=0
+        left join contacts con_reports_to on con_reports_to.id = contacts.reports_to_id
+        where contacts.id = '" . $this->id . "'";
         // Bug 43196 - If a contact is related to multiple accounts, make sure we pull the one we are looking for
         // Bug 44730  was introduced due to this, fix is to simply clear any whitespaces around the account_id first
 
@@ -432,9 +404,9 @@ class Contact extends Person implements EmailInterface
             $query .= " and acc.id = '{$this->account_id}'";
         }
 
-        $query .= " ORDER BY a_c.date_modified DESC";
+        $query .= ' ORDER BY a_c.date_modified DESC';
 
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
 
         // Get the id and the name.
         $row = $this->db->fetchByAssoc($result);
@@ -477,7 +449,7 @@ class Contact extends Person implements EmailInterface
         if (!empty($this->campaign_id)) {
             $camp = BeanFactory::newBean('Campaigns');
             $where = "campaigns.id='{$this->campaign_id}'";
-            $campaign_list = $camp->get_full_list("campaigns.name", $where, true);
+            $campaign_list = $camp->get_full_list('campaigns.name', $where, true);
             if (!empty($campaign_list) && !empty($campaign_list[0]->name)) {
                 $this->campaign_name = $campaign_list[0]->name;
             }
@@ -493,7 +465,7 @@ class Contact extends Person implements EmailInterface
     {
         global $current_user;
 
-        $this->load_relationship("user_sync");
+        $this->load_relationship('user_sync');
 
         if (!isset($this->user_sync)) {
             $GLOBALS['log']->fatal('Contact::$user_sync is not set');
@@ -508,7 +480,7 @@ class Contact extends Person implements EmailInterface
             $beanIDs = $this->user_sync->get();
         }
 
-        if (in_array($current_user->id, $beanIDs)) {
+        if (in_array($current_user->id, $beanIDs, true)) {
             $this->contacts_users_id = $current_user->id;
         }
     }
@@ -522,7 +494,7 @@ class Contact extends Person implements EmailInterface
             $temp_array['SYNC_CONTACT'] = !empty($this->contacts_users_id) ? 1 : 0;
         }
 
-        $temp_array['EMAIL_AND_NAME1'] = "{$this->full_name} &lt;" . $temp_array['EMAIL1'] . "&gt;";
+        $temp_array['EMAIL_AND_NAME1'] = "{$this->full_name} &lt;" . $temp_array['EMAIL1'] . '&gt;';
 
         return $temp_array;
     }
@@ -531,7 +503,7 @@ class Contact extends Person implements EmailInterface
      * builds a generic search based on the query string using or
      * do not include any $this-> because this is called on without having the class instantiated
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);
@@ -551,14 +523,13 @@ class Contact extends Person implements EmailInterface
             array_push($where_clauses, "contacts.assistant_phone like '%$the_query_string%'");
         }
 
-        $the_where = "";
+        $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != "") {
-                $the_where .= " or ";
+            if ($the_where != '') {
+                $the_where .= ' or ';
             }
             $the_where .= $clause;
         }
-
 
         return $the_where;
     }
@@ -567,8 +538,8 @@ class Contact extends Person implements EmailInterface
     {
         global $locale;
 
-        $xtpl->assign("CONTACT_NAME", trim($locale->getLocaleFormattedName($contact->first_name, $contact->last_name)));
-        $xtpl->assign("CONTACT_DESCRIPTION", nl2br($contact->description));
+        $xtpl->assign('CONTACT_NAME', trim($locale->getLocaleFormattedName($contact->first_name, $contact->last_name)));
+        $xtpl->assign('CONTACT_DESCRIPTION', nl2br($contact->description));
 
         return $xtpl;
     }
@@ -590,12 +561,14 @@ class Contact extends Person implements EmailInterface
         return empty($result) ? null : $result;
     }
 
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
 
         //if account_id was replaced unlink the previous account_id.
         //this rel_fields_before_value is populated by sugarbean during the retrieve call.
-        if (!empty($this->account_id) && !empty($this->rel_fields_before_value['account_id']) && trim($this->account_id) !== trim($this->rel_fields_before_value['account_id'])
+        if (!empty($this->account_id) && !empty($this->rel_fields_before_value['account_id']) && trim(
+                $this->account_id
+            ) !== trim($this->rel_fields_before_value['account_id'])
         ) {
             //unlink the old record.
             $this->load_relationship('accounts');
@@ -604,7 +577,7 @@ class Contact extends Person implements EmailInterface
         parent::save_relationship_changes($is_update);
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -637,7 +610,6 @@ class Contact extends Person implements EmailInterface
             $focus_user = BeanFactory::newBean('Users');
         }
 
-
         if (empty($list_of_users)) {
             return;
         }
@@ -645,9 +617,9 @@ class Contact extends Person implements EmailInterface
             $this->load_relationship('user_sync');
         }
 
-        if (strtolower($list_of_users) == 'all') {
+        if (strtolower($list_of_users) === 'all') {
             // add all non-deleted users
-            $sql = "SELECT id FROM users WHERE deleted=0 AND is_group=0 AND portal_only=0";
+            $sql = 'SELECT id FROM users WHERE deleted=0 AND is_group=0 AND portal_only=0';
             $result = $this->db->query($sql);
             while ($hash = $this->db->fetchByAssoc($result)) {
                 if (!isset($this->user_sync)) {
@@ -661,7 +633,7 @@ class Contact extends Person implements EmailInterface
                 }
             }
         } else {
-            $theList = explode(",", $list_of_users);
+            $theList = explode(',', $list_of_users);
             foreach ($theList as $eachItem) {
                 if (($user_id = $focus_user->retrieve_user_id($eachItem))
                     || $focus_user->retrieve($eachItem)

@@ -44,7 +44,7 @@ class ContactTest extends SuitePHPUnitFrameworkTestCase
 
         //test with valid string
         $query = "";
-        $expected = "\n	            LEFT JOIN accounts_contacts\n	            ON contacts.id=accounts_contacts.contact_id\n	            LEFT JOIN accounts\n	            ON accounts_contacts.account_id=accounts.id\n                    LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c ";
+        $expected = "\n                LEFT JOIN accounts_contacts\n                ON contacts.id=accounts_contacts.contact_id\n                LEFT JOIN accounts\n                ON accounts_contacts.account_id=accounts.id\n                    LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c ";
         $contact->add_list_count_joins($query, 'accounts.name');
         $query = preg_replace('/\s+/', '', (string) $query);
         $expected =preg_replace('/\s+/', '', (string) $expected);
@@ -52,7 +52,7 @@ class ContactTest extends SuitePHPUnitFrameworkTestCase
 
         //test with valid string
         $query = "";
-        $expected = "\n	            LEFT JOIN accounts_contacts\n	            ON contacts.id=accounts_contacts.contact_id\n	            LEFT JOIN accounts\n	            ON accounts_contacts.account_id=accounts.id\n	                 LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c ";
+        $expected = "\n                LEFT JOIN accounts_contacts\n                ON contacts.id=accounts_contacts.contact_id\n                LEFT JOIN accounts\n                ON accounts_contacts.account_id=accounts.id\n                     LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c ";
         $contact->add_list_count_joins($query, 'contacts.name');
         self::assertSame(" LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c ", $query);
     }
@@ -84,7 +84,7 @@ class ContactTest extends SuitePHPUnitFrameworkTestCase
 
         //test with request action parameter = ContactAddressPopup
         $_REQUEST['action'] = 'ContactAddressPopup';
-        $expected = "SELECT LTRIM(RTRIM(CONCAT(IFNULL(contacts.first_name,''),'',IFNULL(contacts.last_name,'')))) name, \n				contacts.*,\n                accounts.name as account_name,\n                accounts.id as account_id,\n                accounts.assigned_user_id account_id_owner,\n                users.user_name as assigned_user_name \n                FROM contacts LEFT JOIN users\n	                    ON contacts.assigned_user_id=users.id\n	                    LEFT JOIN accounts_contacts\n	                    ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0\n	                    LEFT JOIN accounts\n	                    ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) where (account.name is null) AND  contacts.deleted=0 ";
+        $expected = "SELECT LTRIM(RTRIM(CONCAT(IFNULL(contacts.first_name,''),'',IFNULL(contacts.last_name,'')))) name, \n                contacts.*,\n                accounts.name as account_name,\n                accounts.id as account_id,\n                accounts.assigned_user_id account_id_owner,\n                users.user_name as assigned_user_name \n                FROM contacts LEFT JOIN users\n                        ON contacts.assigned_user_id=users.id\n                        LEFT JOIN accounts_contacts\n                        ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0\n                        LEFT JOIN accounts\n                        ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) where (account.name is null) AND  contacts.deleted=0 ";
         $actual = $contact->create_new_list_query("account.name","account.name is null");
         $this->assertSame($expected,$actual);
         */
@@ -97,13 +97,13 @@ class ContactTest extends SuitePHPUnitFrameworkTestCase
         $contact = BeanFactory::newBean('Contacts');
 
         //test with empty string params
-        $expected = "SELECT LTRIM(RTRIM(CONCAT(IFNULL(contacts.first_name,''),'',IFNULL(contacts.last_name,'')))) name, \n				contacts.*,\n                accounts.name as account_name,\n                accounts.id as account_id,\n                accounts.assigned_user_id account_id_owner,\n                users.user_name as assigned_user_name ,contacts_cstm.*\n                FROM contacts LEFT JOIN users\n	                    ON contacts.assigned_user_id=users.id\n	                    LEFT JOIN accounts_contacts\n	                    ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0\n	                    LEFT JOIN accounts\n	                    ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id)  LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c where  contacts.deleted=0 ";
+        $expected = "SELECT LTRIM(RTRIM(CONCAT(IFNULL(contacts.first_name,''),'',IFNULL(contacts.last_name,'')))) name, \n                contacts.*,\n                accounts.name as account_name,\n                accounts.id as account_id,\n                accounts.assigned_user_id account_id_owner,\n                users.user_name as assigned_user_name ,contacts_cstm.*\n                FROM contacts LEFT JOIN users\n                        ON contacts.assigned_user_id=users.id\n                        LEFT JOIN accounts_contacts\n                        ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0\n                        LEFT JOIN accounts\n                        ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id)  LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c where  contacts.deleted=0 ";
         $actual = $contact->address_popup_create_new_list_query('', '');
         self::assertSame($expected, $actual);
 
 
         //test with valid string params
-        $expected = "SELECT LTRIM(RTRIM(CONCAT(IFNULL(contacts.first_name,''),'',IFNULL(contacts.last_name,'')))) name, \n				contacts.*,\n                accounts.name as account_name,\n                accounts.id as account_id,\n                accounts.assigned_user_id account_id_owner,\n                users.user_name as assigned_user_name ,contacts_cstm.*\n                FROM contacts LEFT JOIN users\n	                    ON contacts.assigned_user_id=users.id\n	                    LEFT JOIN accounts_contacts\n	                    ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0\n	                    LEFT JOIN accounts\n	                    ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id)  LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c where (contacts.name=\"\") AND  contacts.deleted=0 ";
+        $expected = "SELECT LTRIM(RTRIM(CONCAT(IFNULL(contacts.first_name,''),'',IFNULL(contacts.last_name,'')))) name, \n                contacts.*,\n                accounts.name as account_name,\n                accounts.id as account_id,\n                accounts.assigned_user_id account_id_owner,\n                users.user_name as assigned_user_name ,contacts_cstm.*\n                FROM contacts LEFT JOIN users\n                        ON contacts.assigned_user_id=users.id\n                        LEFT JOIN accounts_contacts\n                        ON contacts.id=accounts_contacts.contact_id  and accounts_contacts.deleted = 0\n                        LEFT JOIN accounts\n                        ON accounts_contacts.account_id=accounts.id AND accounts.deleted=0 LEFT JOIN email_addr_bean_rel eabl  ON eabl.bean_id = contacts.id AND eabl.bean_module = 'Contacts' and eabl.primary_address = 1 and eabl.deleted=0 LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id)  LEFT JOIN contacts_cstm ON contacts.id = contacts_cstm.id_c where (contacts.name=\"\") AND  contacts.deleted=0 ";
         $actual = $contact->address_popup_create_new_list_query('contacts.id', 'contacts.name=""');
         self::assertSame($expected, $actual);
     }
@@ -260,11 +260,11 @@ class ContactTest extends SuitePHPUnitFrameworkTestCase
         //execute the method and verify that it retunrs expected results
         $expected = "SELECT emails.id FROM emails  JOIN (select DISTINCT email_id from emails_email_addr_rel eear
 
-	join email_addr_bean_rel eabr on eabr.bean_id ='' and eabr.bean_module = 'Contacts' and
-	eabr.email_address_id = eear.email_address_id and eabr.deleted=0
-	where eear.deleted=0 and eear.email_id not in
-	(select eb.email_id from emails_beans eb where eb.bean_module ='Contacts' and eb.bean_id = '')
-	) derivedemails on derivedemails.email_id = emails.id";
+    join email_addr_bean_rel eabr on eabr.bean_id ='' and eabr.bean_module = 'Contacts' and
+    eabr.email_address_id = eear.email_address_id and eabr.deleted=0
+    where eear.deleted=0 and eear.email_id not in
+    (select eb.email_id from emails_beans eb where eb.bean_module ='Contacts' and eb.bean_id = '')
+    ) derivedemails on derivedemails.email_id = emails.id";
         $actual = $contact->get_unlinked_email_query();
         self::assertSame($expected, $actual);
     }

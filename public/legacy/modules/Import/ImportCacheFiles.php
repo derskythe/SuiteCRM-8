@@ -84,9 +84,9 @@ class ImportCacheFiles
      * Get import directory name
      * @return string
      */
-    public static function getImportDir()
+    public static function getImportDir() : string
     {
-        return "upload://import";
+        return 'upload://import';
     }
 
 
@@ -96,11 +96,11 @@ class ImportCacheFiles
      * @param string $fileName String value of the upload file name
      * @return string The converted URL of the file name
      */
-    public static function convertFileNameToUrl($fileName)
+    public static function convertFileNameToUrl($fileName) : string
     {
-        $fileName = str_replace(self::getImportDir() . "/", "", $fileName);
-        $fileName = "index.php?entryPoint=download&id=ImportErrors&type=import&tempName=" . $fileName . "&isTempFile=1";
-        return $fileName;
+        $fileName = str_replace(self::getImportDir() . '/', '', $fileName);
+
+        return 'index.php?entryPoint=download&id=ImportErrors&type=import&tempName=' . $fileName . '&isTempFile=1';
     }
 
 
@@ -110,7 +110,7 @@ class ImportCacheFiles
      * @param  string $type string to prepend to the filename, typically to indicate the file's use
      * @return string filename
      */
-    private static function _createFileName($type = self::FILE_MISCELLANEOUS)
+    private static function _createFileName($type = self::FILE_MISCELLANEOUS) : string
     {
         global $current_user;
         $importdir = self::getImportDir();
@@ -125,7 +125,7 @@ class ImportCacheFiles
      *
      * @return bool
      */
-    public static function ensureWritable()
+    public static function ensureWritable() : bool
     {
         foreach (self::$all_files as $type) {
             $filename = self::_createFileName($type);
@@ -143,7 +143,7 @@ class ImportCacheFiles
      *
      * @return string filename
      */
-    public static function getDuplicateFileName()
+    public static function getDuplicateFileName() : string
     {
         return self::_createFileName(self::FILE_DUPLICATES);
     }
@@ -153,7 +153,7 @@ class ImportCacheFiles
      *
      * @return string filename
      */
-    public static function getDuplicateFileDisplayName()
+    public static function getDuplicateFileDisplayName() : string
     {
         return self::_createFileName(self::FILE_DUPLICATES_DISPLAY);
     }
@@ -163,7 +163,7 @@ class ImportCacheFiles
      *
      * @return string filename
      */
-    public static function getErrorFileName()
+    public static function getErrorFileName() : string
     {
         return self::_createFileName(self::FILE_ERRORS);
     }
@@ -173,7 +173,7 @@ class ImportCacheFiles
      *
      * @return string filename
      */
-    public static function getErrorRecordsFileName()
+    public static function getErrorRecordsFileName() : string
     {
         return self::_createFileName(self::FILE_ERROR_RECORDS);
     }
@@ -183,7 +183,7 @@ class ImportCacheFiles
      *
      * @return string filename
      */
-    public static function getErrorRecordsWithoutErrorFileName()
+    public static function getErrorRecordsWithoutErrorFileName() : string
     {
         return self::_createFileName(self::FILE_ERROR_RECORDS_ONLY);
     }
@@ -193,7 +193,7 @@ class ImportCacheFiles
      *
      * @return string filename
      */
-    public static function getStatusFileName()
+    public static function getStatusFileName() : string
     {
         return self::_createFileName(self::FILE_STATUS);
     }
@@ -201,16 +201,17 @@ class ImportCacheFiles
     /**
      * Clears out all cache files in the import directory
      */
-    public static function clearCacheFiles()
+    public static function clearCacheFiles() : void
     {
         global $sugar_config;
         $importdir = self::getImportDir();
-        if (is_dir($importdir)) {
-            $files = dir($importdir);
-            while (false !== ($file = $files->read())) {
-                if (!is_dir($file) && stristr($file, '.csv')) {
-                    unlink("$importdir/$file");
-                }
+        if (!is_dir($importdir)) {
+            return;
+        }
+        $files = dir($importdir);
+        while (false !== ($file = $files->read())) {
+            if (!is_dir($file) && stristr($file, '.csv')) {
+                unlink("$importdir/$file");
             }
         }
     }

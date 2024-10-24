@@ -78,7 +78,7 @@ class MyProjectTaskDashlet extends DashletGeneric
     {
         $resultArray = parent::buildWhere();
 
-        $resultArray[] = $this->seedBean->table_name . '.' . "percent_complete != 100";
+        $resultArray[] = $this->seedBean->table_name . '.' . 'percent_complete != 100';
 
         return $resultArray;
     }

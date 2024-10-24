@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  * SugarCRM Community Edition is a customer relationship management program developed by
@@ -40,34 +41,24 @@
 #[\AllowDynamicProperties]
 class Favorites extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'Favorites';
-    public $object_name = 'Favorites';
-    public $table_name = 'favorites';
-    public $importable = false;
-    public $tracker_visibility = false;
+    public string $module_dir = 'Favorites';
+    public string $object_name = 'Favorites';
+    public string $table_name = 'favorites';
+    public bool $importable = false;
+    public bool $tracker_visibility = false;
     public $disable_row_level_security = true;
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $parent_id;
     public $parent_type;
 
     /**
      * @param $id
+     *
      * @return bool
+     * @throws Exception
      */
     public function deleteFavorite($id)
     {
@@ -85,6 +76,7 @@ class Favorites extends Basic
     /**
      * @param $module
      * @param $record_id
+     *
      * @return array
      */
     public function getFavoriteID($module, $record_id)
@@ -97,14 +89,15 @@ class Favorites extends Basic
         $currentUserIdQuote = $db->quote($current_user->id);
 
         $query = "SELECT id FROM favorites WHERE parent_id= '" . $recordIdQuote .
-                "' AND parent_type = '" . $moduleQuote . "' AND assigned_user_id = '" .
-                $currentUserIdQuote . "' AND deleted = 0 ORDER BY date_entered DESC";
+            "' AND parent_type = '" . $moduleQuote . "' AND assigned_user_id = '" .
+            $currentUserIdQuote . "' AND deleted = 0 ORDER BY date_entered DESC";
 
         return $db->getOne($query);
     }
 
     /**
      * @param string $id
+     *
      * @return array
      */
     public function getCurrentUserSidebarFavorites($id = null)
@@ -118,11 +111,11 @@ class Favorites extends Basic
         if ($id) {
             $idQuote = $db->quote($id);
             $query = "SELECT parent_id, parent_type FROM favorites WHERE assigned_user_id = '" .
-                    $currentUserIdQuote . "' AND parent_id = '" . $idQuote .
-                    "' AND deleted = 0 ORDER BY date_entered DESC";
+                $currentUserIdQuote . "' AND parent_id = '" . $idQuote .
+                "' AND deleted = 0 ORDER BY date_entered DESC";
         } else {
             $query = "SELECT parent_id, parent_type FROM favorites WHERE assigned_user_id = '" .
-                    $currentUserIdQuote . "' AND deleted = 0 ORDER BY date_entered DESC";
+                $currentUserIdQuote . "' AND deleted = 0 ORDER BY date_entered DESC";
         }
 
         $result = $db->query($query);
@@ -139,9 +132,25 @@ class Favorites extends Basic
                 // Change since 7.7 side bar icons can exist in images/sidebar.
                 $sidebarPath = 'themes/' . SugarThemeRegistry::current() . '/images/sidebar/modules/';
                 if (file_exists($sidebarPath)) {
-                    $return_array[$i]['image'] = SugarThemeRegistry::current()->getImage('sidebar/modules/' . $row['parent_type'], 'border="0" align="absmiddle"', null, null, '.gif', $bean->name);
+                    $return_array[$i]['image'] =
+                        SugarThemeRegistry::current()->getImage(
+                            'sidebar/modules/' . $row['parent_type'],
+                            'border="0" align="absmiddle"',
+                            null,
+                            null,
+                            '.gif',
+                            $bean->name
+                        );
                 } else {
-                    $return_array[$i]['image'] = SugarThemeRegistry::current()->getImage($row['parent_type'], 'border="0" align="absmiddle"', null, null, '.gif', $bean->name);
+                    $return_array[$i]['image'] =
+                        SugarThemeRegistry::current()->getImage(
+                            $row['parent_type'],
+                            'border="0" align="absmiddle"',
+                            null,
+                            null,
+                            '.gif',
+                            $bean->name
+                        );
                 }
 
                 ++$i;
@@ -154,6 +163,8 @@ class Favorites extends Basic
     /**
      * @parm string $module
      * @return array Representing an array of \SuiteCRM\API\JsonApi\Resource\Resource
+     * @throws \SuiteCRM\Exception\Exception
+     * @throws \SuiteCRM\Exception\Exception
      */
     public function getCurrentUserFavoritesForModule($module)
     {
@@ -168,7 +179,7 @@ class Favorites extends Basic
             );
         }
 
-        if (in_array($module, $moduleList) === false) {
+        if (in_array($module, $moduleList, true) === false) {
             throw new \SuiteCRM\Exception\Exception(
                 '[Favorites] [module not found] ' . $module,
                 \SuiteCRM\Enumerator\ExceptionCode::APPLICTAION_MODULE_NOT_FOUND
@@ -180,11 +191,11 @@ class Favorites extends Basic
         $currentUserIdQuote = $db->quote($current_user->id);
         $moduleQuote = $db->quote($module);
         $dbResult = $db->query(
-            "SELECT parent_id, parent_type FROM favorites " .
+            'SELECT parent_id, parent_type FROM favorites ' .
             " WHERE assigned_user_id = '" . $currentUserIdQuote . "'" .
-            " AND deleted = 0 " .
+            ' AND deleted = 0 ' .
             " AND parent_type = '" . $moduleQuote . "'" .
-            " ORDER BY date_entered DESC "
+            ' ORDER BY date_entered DESC '
         );
 
         while ($row = $db->fetchByAssoc($dbResult)) {
@@ -192,8 +203,8 @@ class Favorites extends Basic
             $sugarBean = BeanFactory::getBean($row['parent_type'], $row['parent_id']);
             if ($sugarBean !== false) {
                 $response[] = array(
-                    'id' => $sugarBean->id,
-                    'type' => $sugarBean->module_name,
+                    'id'         => $sugarBean->id,
+                    'type'       => $sugarBean->module_name,
                     'attributes' => array(
                         'name' => $sugarBean->name
                     )
@@ -213,11 +224,13 @@ class Favorites extends Basic
         }
         parent::save($notify);
     }
+
     /**
      * @param string $interface
+     *
      * @return bool
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':

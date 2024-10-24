@@ -272,7 +272,7 @@ class ApiTester extends Actor
         $db = DBManagerFactory::getInstance();
 
         $query = sprintf(
-            "INSERT INTO accounts (id, name, account_type, date_entered) VALUES (%s, %s, %s, %s)",
+            'INSERT INTO accounts (id, name, account_type, date_entered) VALUES (%s, %s, %s, %s)',
             $db->quoted($id),
             $db->quoted($name),
             $db->quoted($accountType),
@@ -294,7 +294,7 @@ class ApiTester extends Actor
         $db = DBManagerFactory::getInstance();
 
         $query = sprintf(
-            "INSERT INTO contacts (id, date_entered) VALUES (%s,%s)",
+            'INSERT INTO contacts (id, date_entered) VALUES (%s,%s)',
             $db->quoted($id),
             $db->quoted(date('Y-m-d H:i:s'))
         );
@@ -312,7 +312,7 @@ class ApiTester extends Actor
     public function deleteBean($tableName, $id)
     {
         $db = DBManagerFactory::getInstance();
-        $query = sprintf("DELETE FROM %s WHERE id = %s", $tableName, $db->quoted($id));
+        $query = sprintf('DELETE FROM %s WHERE id = %s', $tableName, $db->quoted($id));
         $db->query($query);
     }
 

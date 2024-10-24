@@ -21,7 +21,7 @@ function smarty_function_modules_selector($params)
     "<input type='hidden' name='$name' id='$name'/>";
 
     foreach ($modules as $module => $translation) {
-        $checked = in_array($module, $params['selectedModules']) ? 'checked' : null;
+        $checked = in_array($module, $params['selectedModules'], true) ? 'checked' : null;
 
         echo
         '<div class="form-check">',

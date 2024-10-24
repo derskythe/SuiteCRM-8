@@ -69,67 +69,67 @@ switch ($_REQUEST['style']) {
     case 'rsort':
              rsort($sugarteam);
              break;
-             
+
 }
 
-$founders = array("<b>Founders:</b>", 'John Roberts', 'Clint Oram', 'Jacob Taylor');
+$founders = array( '<b>Founders:</b>', 'John Roberts', 'Clint Oram', 'Jacob Taylor');
 
-$body =  implode('<br>', $founders) . "<br><br><b>Developers:</b><br>" . implode('<br>', $sugarteam);
+$body =  implode('<br>', $founders) . '<br><br><b>Developers:</b><br>' . implode('<br>', $sugarteam);
 ?>
 <script>
-	var user_notices = new Array();
-	var delay = 25000
-	var index = 0;
-	var lastIndex = 0;
-	var scrollerHeight=200
-	var bodyHeight = ''
-	var scrollSpeed = 1;
-	var curTeam = 'all';
-	var scrolling = true;
-
-
-	
-
-
-	function stopNotice(){
-			scrolling = false;
-	}
-	function startNotice(){
-			scrolling = true;
-	}
-	function scrollNotice(){
-
-		if(scrolling){
-		
-		var body = document.getElementById('NOTICEBODY')
-		var daddy = document.getElementById('daddydiv')
-
-		if(parseInt(body.style.top) > bodyHeight *-1 ){
-
-			body.style.top = (parseInt(body.style.top) - scrollSpeed) + 'px';
-
-		}else{
-			
-			body.style.top =scrollerHeight + "px"
-		}
-		}
-
-		setTimeout("scrollNotice()", 50);
-
-	}
-	function nextNotice(){
+    var user_notices = new Array();
+    var delay = 25000
+    var index = 0;
+    var lastIndex = 0;
+    var scrollerHeight=200
+    var bodyHeight = ''
+    var scrollSpeed = 1;
+    var curTeam = 'all';
+    var scrolling = true;
 
 
 
-		body = document.getElementById('NOTICEBODY');
-		if(scrolling){
-				body.style.top = scrollerHeight/2 +'px'
-				bodyHeight= parseInt(body.offsetHeight);
-		}
-				
 
-		}
-	
+
+    function stopNotice(){
+            scrolling = false;
+    }
+    function startNotice(){
+            scrolling = true;
+    }
+    function scrollNotice(){
+
+        if(scrolling){
+
+        var body = document.getElementById('NOTICEBODY')
+        var daddy = document.getElementById('daddydiv')
+
+        if(parseInt(body.style.top) > bodyHeight *-1 ){
+
+            body.style.top = (parseInt(body.style.top) - scrollSpeed) + 'px';
+
+        }else{
+
+            body.style.top =scrollerHeight + "px"
+        }
+        }
+
+        setTimeout("scrollNotice()", 50);
+
+    }
+    function nextNotice(){
+
+
+
+        body = document.getElementById('NOTICEBODY');
+        if(scrolling){
+                body.style.top = scrollerHeight/2 +'px'
+                bodyHeight= parseInt(body.offsetHeight);
+        }
+
+
+        }
+
 
 
 </script>
@@ -141,12 +141,10 @@ $body =  implode('<br>', $founders) . "<br><br><b>Developers:</b><br>" . implode
 </div>
 <script>
 if(window.addEventListener){
-	window.addEventListener("load", nextNotice, false);
-	window.addEventListener("load", scrollNotice, false);
+    window.addEventListener("load", nextNotice, false);
+    window.addEventListener("load", scrollNotice, false);
 }else{
-	window.attachEvent("onload", nextNotice);
-	window.attachEvent("onload", scrollNotice);
+    window.attachEvent("onload", nextNotice);
+    window.attachEvent("onload", scrollNotice);
 }
 </script>
-
-

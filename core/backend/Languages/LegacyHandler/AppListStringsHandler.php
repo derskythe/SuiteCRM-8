@@ -25,36 +25,36 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Languages\LegacyHandler;
 
-
-use ApiPlatform\Core\Exception\ItemNotFoundException;
+use ApiPlatform\Exception\ItemNotFoundException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Languages\Entity\AppListStrings;
 
 class AppListStringsHandler extends LegacyHandler implements AppListStringsProviderInterface
 {
     protected const MSG_LANGUAGE_NOT_FOUND = 'Not able to get language: ';
-    public const HANDLER_KEY = 'app-list-strings';
+    public const    HANDLER_KEY            = 'app-list-strings';
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get app list strings for given $language
+     *
      * @param $language
+     *
      * @return AppListStrings|null
      */
-    public function getAppListStrings(string $language): ?AppListStrings
+    public function getAppListStrings(string $language) : ?AppListStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         $this->init();
@@ -81,9 +81,9 @@ class AppListStringsHandler extends LegacyHandler implements AppListStringsProvi
         return $appListStrings;
     }
 
-    protected function decodeLabels(array $appListStringsArray): array
+    protected function decodeLabels(array $appListStringsArray) : array
     {
-        foreach($appListStringsArray as $key => $string){
+        foreach ($appListStringsArray as $key => $string) {
             if (!is_array($string)) {
                 $string = html_entity_decode($string ?? '', ENT_QUOTES);
             }

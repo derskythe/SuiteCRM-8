@@ -27,6 +27,7 @@
 
 namespace App\Process\LegacyHandler;
 
+use Throwable;
 use AddContactsToTargetListService;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -38,23 +39,25 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
+class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements ProcessHandlerInterface,
+                                                                                LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'bulk-contacts-to-target-list';
+    protected const PROCESS_TYPE          = 'bulk-contacts-to-target-list';
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * LinkRelationHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -64,13 +67,14 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
     )
     {
         parent::__construct(
@@ -79,7 +83,8 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -87,7 +92,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -95,7 +100,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -103,7 +108,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -111,7 +116,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $baseModule = $options['module'] ?? '';
@@ -121,10 +126,10 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
         $modalRecordId = $modalRecord['id'] ?? '';
 
         return [
-            $baseModule => [
+            $baseModule  => [
                 [
                     'action' => 'view',
-                    'ids' => $baseIds
+                    'ids'    => $baseIds
                 ]
             ],
             $modalModule => [
@@ -139,7 +144,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -151,7 +156,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -160,13 +165,13 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
         $options = $process->getOptions();
         [
             'module' => $baseModule,
-            'ids' => $baseIds
+            'ids'    => $baseIds
         ] = $options;
 
-        ['modalRecord' => $modalRecord] = $options;
+        [ 'modalRecord' => $modalRecord ] = $options;
         [
             'module' => $modalModule,
-            'id' => $modalId
+            'id'     => $modalId
         ] = $modalRecord;
 
         if (empty($baseModule) || empty($baseIds) || empty($modalModule) || empty($modalId)) {
@@ -176,25 +181,25 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
         $this->startLegacyApp();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Relationships/AddContactsToTargetListService.php';
+        require_once $this->legacyDir . '/include/portability/Services/Relationships/AddContactsToTargetListService.php';
 
         $options = $process->getOptions();
         [
             'module' => $baseModule,
-            'ids' => $baseIds
+            'ids'    => $baseIds
         ] = $options;
 
-        ['modalRecord' => $modalRecord] = $options;
+        [ 'modalRecord' => $modalRecord ] = $options;
         [
             'module' => $modalModule,
-            'id' => $modalId
+            'id'     => $modalId
         ] = $modalRecord;
 
         $baseModule = $this->moduleNameMapper->toLegacy($baseModule);
@@ -209,11 +214,11 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
 
         if (!empty($result['message'])) {
             $process->setMessages([
-                $result['message']
-            ]);
+                                      $result['message']
+                                  ]);
         }
 
-        $process->setData(['reload' => false]);
+        $process->setData([ 'reload' => false ]);
 
         $this->close();
     }
@@ -221,7 +226,7 @@ class AddContactsToTargetListBulkActionHandler extends LegacyHandler implements 
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

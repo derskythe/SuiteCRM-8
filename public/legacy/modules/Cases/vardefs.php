@@ -92,7 +92,7 @@ $dictionary['Case'] = array(
             'type' => 'text',
             'len' => 100,
             'importable' => 'false',
-            'studio' => array("formula" => false),
+            'studio' => array( 'formula' => false),
         ),
         'account_id' => array(
             'name' => 'account_id',

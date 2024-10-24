@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Process\Service;
 
 use App\Process\Entity\Process;
@@ -34,42 +33,49 @@ interface ProcessHandlerInterface
 {
     /**
      * Get the Process Type
+     *
      * @return string
      */
-    public function getProcessType(): string;
+    public function getProcessType() : string;
 
     /**
      * Required Auth role, empty string means no authentication needed
      *
      * @return string
      */
-    public function requiredAuthRole(): string;
+    public function requiredAuthRole() : string;
 
     /**
      * Get required acls list per module, empty array means no acl check needed
      *
      * @param Process $process
+     *
      * @return array
      */
-    public function getRequiredACLs(Process $process): array;
+    public function getRequiredACLs(Process $process) : array;
 
     /**
      * Configure process for given type
+     *
      * @param Process $process
      */
-    public function configure(Process $process): void;
+    public function configure(Process $process) : void;
 
     /**
      * Validate received options
+     *
      * @param Process $process
+     *
      * @return void
      */
-    public function validate(Process $process): void;
+    public function validate(Process $process) : void;
 
     /**
      * Run process
+     *
      * @param Process $process
-     * @return mixed
+     *
+     * @return void
      */
-    public function run(Process $process);
+    public function run(Process $process) : void;
 }

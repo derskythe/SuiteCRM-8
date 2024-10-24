@@ -58,7 +58,7 @@ class OAuth2ClientsViewDetail extends ViewDetail
     /**
      * @see SugarView::preDisplay()
      */
-    public function getMetaDataFile()
+    public function getMetaDataFile() : ?string
     {
         $this->setViewType();
         return parent::getMetaDataFile();
@@ -81,7 +81,7 @@ class OAuth2ClientsViewDetail extends ViewDetail
     /**
      * @inheritdoc
      */
-    public function display()
+    public function display() : void
     {
         $this->dv->formName = $this->formName;
         parent::display();

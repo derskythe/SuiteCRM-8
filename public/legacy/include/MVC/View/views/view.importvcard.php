@@ -56,13 +56,14 @@ class ViewImportvcard extends SugarView
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings, $app_list_strings;
 
-        $this->ss->assign("ERROR_TEXT", $app_strings['LBL_EMPTY_VCARD']);
+        $this->ss->assign('ERROR_TEXT', $app_strings['LBL_EMPTY_VCARD']);
         if (isset($_REQUEST['error'])) {
             switch ($_REQUEST['error']) {
                 case 'vcardErrorFilesize':
@@ -75,10 +76,10 @@ class ViewImportvcard extends SugarView
                     $error = 'LBL_VCARD_ERROR_DEFAULT';
                     break;
             }
-            $this->ss->assign("ERROR", $app_strings[$error]);
+            $this->ss->assign('ERROR', $app_strings[$error]);
         }
-        $this->ss->assign("HEADER", $app_strings['LBL_IMPORT_VCARD']);
-        $this->ss->assign("MODULE", $_REQUEST['module']);
+        $this->ss->assign('HEADER', $app_strings['LBL_IMPORT_VCARD']);
+        $this->ss->assign('MODULE', $_REQUEST['module']);
         $params = array();
         $params[] = "<a href='index.php?module={$_REQUEST['module']}&action=index'>{$mod_strings['LBL_MODULE_NAME']}</a>";
         $params[] = $app_strings['LBL_IMPORT_VCARD_BUTTON_LABEL'];

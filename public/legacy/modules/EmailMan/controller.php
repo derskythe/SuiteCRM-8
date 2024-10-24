@@ -53,12 +53,12 @@ class EmailManController extends SugarController
         if (!is_admin($current_user)
                 && !is_admin_for_module($GLOBALS['current_user'], 'Emails')
                 && !is_admin_for_module($GLOBALS['current_user'], 'Campaigns')) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
 
         //Do not allow users to spoof for sendmail if the config flag is not set.
         if (!isset($sugar_config['allow_sendmail_outbound']) || !$sugar_config['allow_sendmail_outbound']) {
-            $_REQUEST['mail_sendtype'] = "SMTP";
+            $_REQUEST['mail_sendtype'] = 'SMTP';
         }
 
         // save Outbound settings  #Bug 20033 Ensure data for Outbound email exists before trying to update the system mailer.
@@ -102,7 +102,7 @@ class EmailManController extends SugarController
             $configurator->config['email_allow_send_as_user']  = (isset($_REQUEST['mail_allowusersend']) && $_REQUEST['mail_allowusersend'] == '1') ? true : false;
             $configurator->config['legacy_email_behaviour']  = isTrue($_REQUEST['legacy_email_behaviour'] ?? false);
             ///////////////////////////////////////////////////////////////////////////////
-            ////	SECURITY
+            ////    SECURITY
             $security = array();
             if (isset($_REQUEST['applet'])) {
                 $security['applet'] = 'applet';
@@ -147,7 +147,7 @@ class EmailManController extends SugarController
 
             $configurator->config['email_xss'] = base64_encode(serialize($security));
 
-            ////	SECURITY
+            ////    SECURITY
             ///////////////////////////////////////////////////////////////////////////////
 
             ksort($sugar_config);

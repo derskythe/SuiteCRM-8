@@ -25,11 +25,10 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Languages\LegacyHandler;
 
-
-use ApiPlatform\Core\Exception\ItemNotFoundException;
+use Psr\Log\LoggerInterface;
+use ApiPlatform\Exception\ItemNotFoundException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Languages\Entity\ModStrings;
@@ -40,9 +39,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ModStringsHandler extends LegacyHandler
 {
     protected const MSG_LANGUAGE_NOT_FOUND = 'Not able to get language: ';
-    public const HANDLER_KEY = 'mod-strings';
+    public const    HANDLER_KEY            = 'mod-strings';
 
-    protected static $extraModules = [
+    protected static array $extraModules = [
         'SecurityGroups',
         'Bugs',
         'History',
@@ -52,15 +51,16 @@ class ModStringsHandler extends LegacyHandler
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var ModuleRegistryInterface
      */
-    private $moduleRegistry;
+    private ModuleRegistryInterface $moduleRegistry;
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -71,16 +71,26 @@ class ModStringsHandler extends LegacyHandler
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        ModuleRegistryInterface $moduleRegistry,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        ModuleRegistryInterface   $moduleRegistry,
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->moduleRegistry = $moduleRegistry;
     }
@@ -88,20 +98,22 @@ class ModStringsHandler extends LegacyHandler
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get mod strings for given $language
+     *
      * @param $language
+     *
      * @return ModStrings|null
      */
-    public function getModStrings(string $language): ?ModStrings
+    public function getModStrings(string $language) : ?ModStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         $this->init();
@@ -127,7 +139,6 @@ class ModStringsHandler extends LegacyHandler
             $allModStringsArray[$frontendName] = $moduleStrings;
         }
 
-
         if (empty($allModStringsArray)) {
             throw new ItemNotFoundException(self::MSG_LANGUAGE_NOT_FOUND . "'$language'");
         }
@@ -143,24 +154,23 @@ class ModStringsHandler extends LegacyHandler
 
     /**
      * @param array $stringArray
+     *
      * @return array
      */
-    protected function removeEndingColon(array $stringArray): array
+    protected function removeEndingColon(array $stringArray) : array
     {
-        $stringArray = array_map(static function ($label) {
+        return array_map(static function ($label) {
             if (is_string($label)) {
                 return preg_replace('/:$/', '', $label);
             }
 
             return $label;
         }, $stringArray);
-
-        return $stringArray;
     }
 
-    protected function decodeLabels(array $moduleStrings): array
+    protected function decodeLabels(array $moduleStrings) : array
     {
-        foreach($moduleStrings as $key => $string){
+        foreach ($moduleStrings as $key => $string) {
             if (!is_array($string)) {
                 $string = html_entity_decode($string ?? '', ENT_QUOTES);
             }

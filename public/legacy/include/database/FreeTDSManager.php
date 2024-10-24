@@ -49,53 +49,59 @@ include_once('include/database/MssqlManager.php');
  */
 class FreeTDSManager extends MssqlManager
 {
-    public $dbName = 'FreeTDS SQL Server';
-    public $variant = 'freetds';
-    public $label = 'LBL_MSSQL2';
+    public string $dbName = 'FreeTDS SQL Server';
+    public string $variant = 'freetds';
+    public string $label = 'LBL_MSSQL2';
 
-    protected $capabilities = array(
-        "affected_rows" => true,
-        'fulltext' => true,
+    protected array $capabilities = array(
+        'affected_rows'  => true,
+        'fulltext'       => true,
         'limit_subquery' => true,
     );
 
-    protected $type_map = array(
-            'int'      => 'int',
-            'double'   => 'float',
-            'float'    => 'float',
-            'uint'     => 'int',
-            'ulong'    => 'int',
-            'long'     => 'bigint',
-            'short'    => 'smallint',
-            'varchar'  => 'nvarchar',
-            'text'     => 'nvarchar(max)',
-            'longtext' => 'nvarchar(max)',
-            'date'     => 'datetime',
-            'enum'     => 'nvarchar',
-            'relate'   => 'nvarchar',
-            'multienum'=> 'nvarchar(max)',
-            'html'     => 'nvarchar(max)',
-            'longhtml' => 'text',
-        'emailbody' => 'nvarchar(max)',
-            'datetime' => 'datetime',
-            'datetimecombo' => 'datetime',
-            'time'     => 'datetime',
-            'bool'     => 'bit',
-            'tinyint'  => 'tinyint',
-            'char'     => 'char',
-            'blob'     => 'nvarchar(max)',
-            'longblob' => 'nvarchar(max)',
-            'currency' => 'decimal(26,6)',
-            'decimal'  => 'decimal',
-            'decimal2' => 'decimal',
-            'id'       => 'varchar(36)',
-            'url'      => 'nvarchar',
-            'encrypt'  => 'nvarchar',
-            'file'     => 'nvarchar',
-            'decimal_tpl' => 'decimal(%d, %d)',
+    protected array $type_map = array(
+        'int'           => 'int',
+        'double'        => 'float',
+        'float'         => 'float',
+        'uint'          => 'int',
+        'ulong'         => 'int',
+        'long'          => 'bigint',
+        'short'         => 'smallint',
+        'varchar'       => 'nvarchar',
+        'text'          => 'nvarchar(max)',
+        'longtext'      => 'nvarchar(max)',
+        'date'          => 'datetime',
+        'enum'          => 'nvarchar',
+        'relate'        => 'nvarchar',
+        'multienum'     => 'nvarchar(max)',
+        'html'          => 'nvarchar(max)',
+        'longhtml'      => 'text',
+        'emailbody'     => 'nvarchar(max)',
+        'datetime'      => 'datetime',
+        'datetimecombo' => 'datetime',
+        'time'          => 'datetime',
+        'bool'          => 'bit',
+        'tinyint'       => 'tinyint',
+        'char'          => 'char',
+        'blob'          => 'nvarchar(max)',
+        'longblob'      => 'nvarchar(max)',
+        'currency'      => 'decimal(26,6)',
+        'decimal'       => 'decimal',
+        'decimal2'      => 'decimal',
+        'id'            => 'varchar(36)',
+        'url'           => 'nvarchar',
+        'encrypt'       => 'nvarchar',
+        'file'          => 'nvarchar',
+        'decimal_tpl'   => 'decimal(%d, %d)',
     );
 
-    public function query($sql, $dieOnError = false, $msg = '', $suppress = false, $keepResult = false)
+    public function query(
+        string|array $sql,
+        bool         $dieOnError = false,
+        string       $msg = '',
+        bool         $suppress = false,
+        bool         $keepResult = false
+    )
     {
         global $app_strings;
         if (is_array($sql)) {
@@ -103,15 +109,17 @@ class FreeTDSManager extends MssqlManager
         }
 
         $sql = $this->_appendN($sql);
+
         return parent::query($sql, $dieOnError, $msg, $suppress, $keepResult);
     }
 
     /**
      * Check if this driver can be used
+     *
      * @return bool
      */
-    public function valid()
+    public function valid() : bool
     {
-        return function_exists("mssql_connect") && DBManagerFactory::isFreeTDS();
+        return function_exists('mssql_connect') && DBManagerFactory::isFreeTDS();
     }
 }

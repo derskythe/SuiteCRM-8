@@ -56,10 +56,10 @@ function get_merge_query($seed, $merge_module, $key)
     'Quotes' => 'SELECT contacts.first_name, contacts.last_name, contacts.id, contacts.date_entered FROM contacts LEFT JOIN quotes_contacts ON contacts.id=quotes_contacts.contact_id AND (quotes_contacts.deleted is NULL or quotes_contacts.deleted=0)'
 ),
 'Opportunities'=>array(
-    "Accounts"=>'SELECT opportunities.id, opportunities.name FROM opportunities LEFT JOIN accounts_opportunities ON opportunities.id = accounts_opportunities.opportunity_id AND (accounts_opportunities.deleted is NULL or accounts_opportunities.deleted=0)'
+    'Accounts' =>'SELECT opportunities.id, opportunities.name FROM opportunities LEFT JOIN accounts_opportunities ON opportunities.id = accounts_opportunities.opportunity_id AND (accounts_opportunities.deleted is NULL or accounts_opportunities.deleted=0)'
 ),
 'Accounts'=>array(
-    "Opportunities"=>'SELECT accounts.id, accounts.name FROM accounts LEFT JOIN accounts_opportunities ON accounts.id = accounts_opportunities.account_id AND (accounts_opportunities.deleted is NULL or accounts_opportunities.deleted=0)'
+    'Opportunities' =>'SELECT accounts.id, accounts.name FROM accounts LEFT JOIN accounts_opportunities ON accounts.id = accounts_opportunities.account_id AND (accounts_opportunities.deleted is NULL or accounts_opportunities.deleted=0)'
 ),
 );
 
@@ -77,7 +77,7 @@ function get_merge_query($seed, $merge_module, $key)
 
     $relModule = $seed->module_dir;
 
-    $select = "";
+    $select = '';
     if (!empty($selQuery[$relModule][$merge_module])) {
         $select = $selQuery[$relModule][$merge_module];
     } else {
@@ -90,13 +90,13 @@ function get_merge_query($seed, $merge_module, $key)
     }
 
     if (empty($select)) {
-        $select = "SELECT contacts.first_name, contacts.last_name, contacts.id, contacts.date_entered FROM contacts";
+        $select = 'SELECT contacts.first_name, contacts.last_name, contacts.id, contacts.date_entered FROM contacts';
     }
 
     if (empty($whereQuery[$relModule][$merge_module])) {
         $select .= " WHERE {$seed->table_name}.id = '{$seed->db->quote($key)}'";
     } else {
-        $select .= " WHERE ". $whereQuery[$relModule][$merge_module] . "'{$seed->db->quote($key)}'";
+        $select .= ' WHERE ' . $whereQuery[$relModule][$merge_module] . "'{$seed->db->quote($key)}'";
     }
     $select .=  " ORDER BY {$seed->table_name}.date_entered";
     return $select;

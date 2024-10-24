@@ -189,6 +189,8 @@ class PopupMetaDataParser extends ListLayoutMetaDataParser
 
     /**
      * @param bool $populate
+     *
+     * @throws Exception
      */
     public function handleSave($populate = true)
     {
@@ -223,7 +225,7 @@ class PopupMetaDataParser extends ListLayoutMetaDataParser
         $GLOBALS['mod_strings'] = return_module_language($current_language, $this->_moduleName);
         require($file);
         if (!isset($popupMeta)) {
-            sugar_die("unable to load Module Popup Definition");
+            sugar_die('unable to load Module Popup Definition');
         }
 
         if ($this->_view == MB_POPUPSEARCH) {
@@ -285,7 +287,7 @@ class PopupMetaDataParser extends ListLayoutMetaDataParser
             if (!isset($targetDefs[$key]) && $forWhere) {
                 $targetDefs[$key] = $this->_getTargetModuleName($def) . '.' . $key;
             } else {
-                if (!in_array($key, $targetDefs) && !$forWhere) {
+                if (!in_array($key, $targetDefs, true) && !$forWhere) {
                     array_push($targetDefs, $key);
                 }
             }
@@ -311,7 +313,7 @@ class PopupMetaDataParser extends ListLayoutMetaDataParser
     private function _getTargetModuleName($def)
     {
         $dir = strtolower($this->implementation->getModuleDir());
-        if (isset($this->_fielddefs[$def['name']]) && isset($this->_fielddefs[$def['name']]['source']) && $this->_fielddefs[$def['name']]['source'] == 'custom_fields') {
+        if (isset($this->_fielddefs[$def['name']]) && isset($this->_fielddefs[$def['name']]['source']) && $this->_fielddefs[$def['name']]['source'] === 'custom_fields') {
             return $dir . '_cstm';
         }
 

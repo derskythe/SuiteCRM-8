@@ -54,6 +54,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
     public function persistNewAccessToken(AccessTokenEntityInterface $accessTokenEntity)
     {
@@ -94,6 +95,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
      * @inheritdoc
      *
      * @throws InvalidArgumentException When access token is not found.
+     * @throws \Exception
      */
     public function revokeAccessToken($tokenId)
     {
@@ -111,6 +113,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
 
     /**
      * @inheritdoc
+     * @throws \DateMalformedStringException
      */
     public function isAccessTokenRevoked($tokenId)
     {

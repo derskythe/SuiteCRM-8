@@ -27,6 +27,7 @@
 
 namespace App\Engine\LegacyHandler\ActionAvailabilityChecker\Checkers;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Service\ActionAvailabilityChecker\ActionAvailabilityCheckerInterface;
@@ -43,6 +44,7 @@ class PortalUserActionChecker extends LegacyHandler implements ActionAvailabilit
 
     /**
      * PortalUserActionChecker constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -52,21 +54,24 @@ class PortalUserActionChecker extends LegacyHandler implements ActionAvailabilit
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $requestStack,
-        ModuleNameMapperInterface $moduleNameMapper
-    ) {
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $requestStack,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $requestStack
+            $requestStack,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -74,7 +79,7 @@ class PortalUserActionChecker extends LegacyHandler implements ActionAvailabilit
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return 'portal-user-availability-checker';
     }
@@ -84,7 +89,7 @@ class PortalUserActionChecker extends LegacyHandler implements ActionAvailabilit
      *
      * @return string
      */
-    public function getType(): string
+    public function getType() : string
     {
         return 'portal-enabled';
     }
@@ -95,9 +100,10 @@ class PortalUserActionChecker extends LegacyHandler implements ActionAvailabilit
      * @param string $module - the active module
      * @param array|null $entry
      * @param array|null $context
+     *
      * @return bool
      */
-    public function checkAvailability(string $module, ?array $entry = [], ?array $context = []): bool
+    public function checkAvailability(string $module, ?array $entry = [], ?array $context = []) : bool
     {
         $this->init();
         global $sugar_config;

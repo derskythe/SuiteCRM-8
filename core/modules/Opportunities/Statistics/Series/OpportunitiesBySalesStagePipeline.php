@@ -27,6 +27,7 @@
 
 namespace App\Module\Opportunities\Statistics\Series;
 
+use Psr\Log\LoggerInterface;
 use App\Data\LegacyHandler\ListDataQueryHandler;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -57,6 +58,7 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
 
     /**
      * LeadDaysOpen constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -67,16 +69,26 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        ListDataQueryHandler $queryHandler,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        ListDataQueryHandler      $queryHandler,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        RequestStack              $session,
+        LoggerInterface $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->queryHandler = $queryHandler;
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -84,7 +96,7 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return $this->getKey();
     }
@@ -92,7 +104,7 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -100,9 +112,9 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id, $criteria, $sort] = $this->extractContext($query);
+        [ $module, $id, $criteria, $sort ] = $this->extractContext($query);
 
         if (empty($module) || $module !== 'opportunities') {
             return $this->getEmptySeriesResponse(self::KEY);
@@ -141,6 +153,7 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
 
     /**
      * @param string $legacyName
+     *
      * @return bool|SugarBean
      */
     protected function getBean(string $legacyName)
@@ -151,9 +164,10 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
     /**
      * @param array $query
      * @param $bean
+     *
      * @return array
      */
-    protected function runQuery(array $query, $bean): array
+    protected function runQuery(array $query, $bean) : array
     {
         // send limit -2 to not add a limit
         return $this->queryHandler->runQuery($bean, $query, -1, -2);
@@ -161,9 +175,10 @@ class OpportunitiesBySalesStagePipeline extends LegacyHandler implements Statist
 
     /**
      * @param array $query
+     *
      * @return array
      */
-    protected function generateQuery(array $query): array
+    protected function generateQuery(array $query) : array
     {
         $query['select'] = 'SELECT opportunities.sales_stage, SUM(opportunities.amount_usdollar) as amount_usdollar';
         $query['where'] .= ' AND opportunities.amount_usdollar is not null AND opportunities.sales_stage is not null ';

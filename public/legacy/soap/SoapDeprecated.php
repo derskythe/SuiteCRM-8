@@ -224,10 +224,10 @@ $server->register(
 function create_session($user_name, $password)
 {
     if (validate_user($user_name, $password)) {
-        return "Success";
+        return 'Success';
     }
 
-    return "Failed";
+    return 'Failed';
 }
 
 /**
@@ -242,7 +242,7 @@ function end_session($user_name)
     // get around optimizer warning
     $user_name = $user_name;
 
-    return "Success";
+    return 'Success';
 }
 
 /**
@@ -281,7 +281,7 @@ function validate_user($user_name, $password)
             }
         } else {
             $GLOBALS['log']->fatal("SECURITY: failed attempted login for $user_name using SOAP api");
-            $server->setError("Invalid username and/or password");
+            $server->setError('Invalid username and/or password');
 
             return false;
         }
@@ -298,7 +298,7 @@ function validate_user($user_name, $password)
  * @param Contact $seed_contact -- A template SugarBean.  This is a blank Contact
  * @param ID $msi_id -- Index Count
  */
-function add_contacts_matching_email_address(&$output_list, $email_address, &$seed_contact, &$msi_id)
+function add_contacts_matching_email_address(&$output_list, $email_address, $seed_contact, &$msi_id)
 {
     // escape the email address
     $safe_email_address = addslashes($email_address);
@@ -317,13 +317,13 @@ function add_contacts_matching_email_address(&$output_list, $email_address, &$se
         }
 
         $output_list[] = array(
-            "name1" => $contact->first_name,
-            "name2" => $contact->last_name,
-            "association" => $contact->account_name,
-            "type" => 'Contact',
-            "id" => $contact->id,
-            "msi_id" => $msi_id,
-            "email_address" => $contact->email1
+            'name1'         => $contact->first_name,
+            'name2'         => $contact->last_name,
+            'association'   => $contact->account_name,
+            'type'          => 'Contact',
+            'id'            => $contact->id,
+            'msi_id'        => $msi_id,
+            'email_address' => $contact->email1
         );
 
         $accounts = $contact->get_linked_beans('accounts', 'Account');
@@ -363,7 +363,7 @@ function add_contacts_matching_email_address(&$output_list, $email_address, &$se
  * @param Bean $seed_lead -- Seed Lead Bean
  * @param int $msi_id -- output array offset.
  */
-function add_leads_matching_email_address(&$output_list, $email_address, &$seed_lead, &$msi_id)
+function add_leads_matching_email_address(&$output_list, $email_address, $seed_lead, &$msi_id)
 {
     $safe_email_address = DBManagerFactory::getInstance()->quote($email_address);
     if (!$seed_lead->ACLAccess('ListView')) {
@@ -379,13 +379,13 @@ function add_leads_matching_email_address(&$output_list, $email_address, &$seed_
         }
 
         $output_list[] = array(
-            "name1" => $lead->first_name,
-            "name2" => $lead->last_name,
-            "association" => $lead->account_name,
-            "type" => 'Lead',
-            "id" => $lead->id,
-            "msi_id" => $msi_id,
-            "email_address" => $lead->email1
+            'name1'         => $lead->first_name,
+            'name2'         => $lead->last_name,
+            'association'   => $lead->account_name,
+            'type'          => 'Lead',
+            'id'            => $lead->id,
+            'msi_id'        => $msi_id,
+            'email_address' => $lead->email1
         );
 
         $msi_id = $msi_id + 1;
@@ -418,13 +418,13 @@ function get_contact_relationships($user_name, $password, $id)
     $seed_contact->retrieve($id);
 
     $output_list[] = array(
-        "name1" => $seed_contact->first_name,
-        "name2" => $seed_contact->last_name,
-        "association" => $seed_contact->account_name,
-        "type" => 'Contact',
-        "id" => $seed_contact->id,
-        "msi_id" => $msi_id,
-        "email_address" => $seed_contact->email1
+        'name1'         => $seed_contact->first_name,
+        'name2'         => $seed_contact->last_name,
+        'association'   => $seed_contact->account_name,
+        'type'          => 'Contact',
+        'id'            => $seed_contact->id,
+        'msi_id'        => $msi_id,
+        'email_address' => $seed_contact->email1
     );
 
     $accounts = $seed_contact->get_linked_beans('accounts', 'Account');
@@ -478,7 +478,7 @@ function contact_by_email($user_name, $password, $email_address)
     $seed_contact = BeanFactory::newBean('Contacts');
     $seed_lead = BeanFactory::newBean('Leads');
     $output_list = array();
-    $email_address_list = explode("; ", $email_address);
+    $email_address_list = explode('; ', $email_address);
 
     // remove duplicate email addresses
     $non_duplicate_email_address_list = array();
@@ -529,13 +529,13 @@ function get_contact_array($contact, $msi_id = '0')
     $contact->emailAddress->handleLegacyRetrieve($contact);
 
     return array(
-        "name1" => $contact->first_name,
-        "name2" => $contact->last_name,
-        "association" => $contact->account_name,
-        "type" => 'Contact',
-        "id" => $contact->id,
-        "msi_id" => $msi_id,
-        "email_address" => $contact->email1
+        'name1'         => $contact->first_name,
+        'name2'         => $contact->last_name,
+        'association'   => $contact->account_name,
+        'type'          => 'Contact',
+        'id'            => $contact->id,
+        'msi_id'        => $msi_id,
+        'email_address' => $contact->email1
     );
 }
 
@@ -606,7 +606,7 @@ function contact_by_search($name, $where = '', $msi_id = '0')
     if (!$seed_contact->ACLAccess('ListView')) {
         return array();
     }
-    $response = $seed_contact->get_list("last_name, first_name", $where, 0);
+    $response = $seed_contact->get_list('last_name, first_name', $where, 0);
     $contactList = $response['list'];
 
     $output_list = array();
@@ -631,13 +631,13 @@ function get_lead_array($lead, $msi_id = '0')
     $lead->emailAddress->handleLegacyRetrieve($lead);
 
     return array(
-        "name1" => $lead->first_name,
-        "name2" => $lead->last_name,
-        "association" => $lead->account_name,
-        "type" => 'Lead',
-        "id" => $lead->id,
-        "msi_id" => $msi_id,
-        "email_address" => $lead->email1
+        'name1'         => $lead->first_name,
+        'name2'         => $lead->last_name,
+        'association'   => $lead->account_name,
+        'type'          => 'Lead',
+        'id'            => $lead->id,
+        'msi_id'        => $msi_id,
+        'email_address' => $lead->email1
     );
 }
 
@@ -650,7 +650,7 @@ function lead_by_search($name, $where = '', $msi_id = '0')
     if (!$seed_lead->ACLAccess('ListView')) {
         return array();
     }
-    $response = $seed_lead->get_list("last_name, first_name", $where, 0);
+    $response = $seed_lead->get_list('last_name, first_name', $where, 0);
     $lead_list = $response['list'];
 
     $output_list = array();
@@ -673,13 +673,13 @@ function lead_by_search($name, $where = '', $msi_id = '0')
 function get_account_array($account, $msi_id)
 {
     return array(
-        "name1" => '',
-        "name2" => $account->name,
-        "association" => $account->billing_address_city,
-        "type" => 'Account',
-        "id" => $account->id,
-        "msi_id" => $msi_id,
-        "email_address" => $account->email1
+        'name1'         => '',
+        'name2'         => $account->name,
+        'association'   => $account->billing_address_city,
+        'type'          => 'Account',
+        'id'            => $account->id,
+        'msi_id'        => $msi_id,
+        'email_address' => $account->email1
     );
 }
 
@@ -692,7 +692,7 @@ function account_by_search($name, $where = '', $msi_id = '0')
     if ($where == '') {
         $where = $seed_account->build_generic_where_clause($name);
     }
-    $response = $seed_account->get_list("name", $where, 0);
+    $response = $seed_account->get_list('name', $where, 0);
     $accountList = $response['list'];
 
     $output_list = array();
@@ -715,13 +715,13 @@ function account_by_search($name, $where = '', $msi_id = '0')
 function get_opportunity_array($value, $msi_id = '0')
 {
     return array(
-        "name1" => '',
-        "name2" => $value->name,
-        "association" => $value->account_name,
-        "type" => 'Opportunity',
-        "id" => $value->id,
-        "msi_id" => $msi_id,
-        "email_address" => ''
+        'name1'         => '',
+        'name2'         => $value->name,
+        'association'   => $value->account_name,
+        'type'          => 'Opportunity',
+        'id'            => $value->id,
+        'msi_id'        => $msi_id,
+        'email_address' => ''
     );
 }
 
@@ -734,7 +734,7 @@ function opportunity_by_search($name, $where = '', $msi_id = '0')
     if ($where == '') {
         $where = $seed->build_generic_where_clause($name);
     }
-    $response = $seed->get_list("name", $where, 0);
+    $response = $seed->get_list('name', $where, 0);
     $list = $response['list'];
 
     $output_list = array();
@@ -757,13 +757,13 @@ function opportunity_by_search($name, $where = '', $msi_id = '0')
 function get_bean_array($value, $msi_id, $type)
 {
     return array(
-        "name1" => '',
-        "name2" => $value->get_summary_text(),
-        "association" => '',
-        "type" => $type,
-        "id" => $value->id,
-        "msi_id" => $msi_id,
-        "email_address" => ''
+        'name1'         => '',
+        'name2'         => $value->get_summary_text(),
+        'association'   => '',
+        'type'          => $type,
+        'id'            => $value->id,
+        'msi_id'        => $msi_id,
+        'email_address' => ''
     );
 }
 
@@ -777,13 +777,13 @@ function get_bean_array($value, $msi_id, $type)
 function get_case_array($value, $msi_id)
 {
     return array(
-        "name1" => '',
-        "name2" => $value->get_summary_text(),
-        "association" => $value->account_name,
-        "type" => 'Case',
-        "id" => $value->id,
-        "msi_id" => $msi_id,
-        "email_address" => ''
+        'name1'         => '',
+        'name2'         => $value->get_summary_text(),
+        'association'   => $value->account_name,
+        'type'          => 'Case',
+        'id'            => $value->id,
+        'msi_id'        => $msi_id,
+        'email_address' => ''
     );
 }
 
@@ -796,7 +796,7 @@ function bug_by_search($name, $where = '', $msi_id = '0')
     if ($where == '') {
         $where = $seed->build_generic_where_clause($name);
     }
-    $response = $seed->get_list("name", $where, 0);
+    $response = $seed->get_list('name', $where, 0);
     $list = $response['list'];
 
     $output_list = array();
@@ -818,7 +818,7 @@ function case_by_search($name, $where = '', $msi_id = '0')
     if ($where == '') {
         $where = $seed->build_generic_where_clause($name);
     }
-    $response = $seed->get_list("name", $where, 0);
+    $response = $seed->get_list('name', $where, 0);
     $list = $response['list'];
 
     $output_list = array();
@@ -836,20 +836,23 @@ function case_by_search($name, $where = '', $msi_id = '0')
  *
  * This function does not require a session be created first.
  *
- * @param string $user_name -- Name of the user to authenticate
- * @param string $password -- MD5 hash of the user password for authentication
- * @param id $parent_id -- [optional] The parent record to link the email to.
+ * @param string $user_name          -- Name of the user to authenticate
+ * @param string $password           -- MD5 hash of the user password for authentication
+ * @param id $parent_id              -- [optional] The parent record to link the email to.
  * @param unknown_type $contact_ids
- * @param string $date_sent_received -- Date/time the email was sent in Visual Basic Date format. (e.g. '7/22/2004 9:36:31 AM')
- * @param string $email_subject -- The subject of the email
- * @param string $email_body -- The body of the email
+ * @param string $date_sent_received -- Date/time the email was sent in Visual Basic Date format. (e.g. '7/22/2004
+ *                                   9:36:31 AM')
+ * @param string $email_subject      -- The subject of the email
+ * @param string $email_body         -- The body of the email
+ *
  * @return "Invalid username and/or password"
  * @return -1 If the authenticated user does not have ACL access to save Email.
+ * @throws Exception
  */
 function track_email($user_name, $password, $parent_id, $contact_ids, $date_sent_received, $email_subject, $email_body)
 {
     if (!validate_user($user_name, $password)) {
-        return "Invalid username and/or password";
+        return 'Invalid username and/or password';
     }
     global $current_user;
 
@@ -858,7 +861,7 @@ function track_email($user_name, $password, $parent_id, $contact_ids, $date_sent
     // translate date sent from VB format 7/22/2004 9:36:31 AM
     // to yyyy-mm-dd 9:36:31 AM
 
-    $date_sent_received = preg_replace("@([0-9]*)/([0-9]*)/([0-9]*)( .*$)@", "\\3-\\1-\\2\\4", $date_sent_received);
+    $date_sent_received = preg_replace('@([0-9]*)/([0-9]*)/([0-9]*)( .*$)@', "\\3-\\1-\\2\\4", $date_sent_received);
 
 
     $seed_user = BeanFactory::newBean('Users');
@@ -880,7 +883,7 @@ function track_email($user_name, $password, $parent_id, $contact_ids, $date_sent
     $email->date_start = $date_sent_received;
 
     // Save one copy of the email message
-    $parent_id_list = explode(";", $parent_id);
+    $parent_id_list = explode(';', $parent_id);
     $parent_id = explode(':', $parent_id_list[0]);
 
     // Having a parent object is optional.  If it is set, then associate it.
@@ -891,7 +894,7 @@ function track_email($user_name, $password, $parent_id, $contact_ids, $date_sent
 
     $email->save();
     // for each contact, add a link between the contact and the email message
-    $id_list = explode(";", $contact_ids);
+    $id_list = explode(';', $contact_ids);
 
     foreach ($id_list as $id) {
         if (!empty($id)) {
@@ -899,9 +902,12 @@ function track_email($user_name, $password, $parent_id, $contact_ids, $date_sent
         }
     }
 
-    return "Succeeded";
+    return 'Succeeded';
 }
 
+/**
+ * @throws Exception
+ */
 function create_contact($user_name, $password, $first_name, $last_name, $email_address)
 {
     if (!validate_user($user_name, $password)) {
@@ -927,6 +933,9 @@ function create_contact($user_name, $password, $first_name, $last_name, $email_a
     return $contact->save();
 }
 
+/**
+ * @throws Exception
+ */
 function create_lead($user_name, $password, $first_name, $last_name, $email_address)
 {
     if (!validate_user($user_name, $password)) {
@@ -953,6 +962,9 @@ function create_lead($user_name, $password, $first_name, $last_name, $email_addr
     return $lead->save();
 }
 
+/**
+ * @throws Exception
+ */
 function create_account($user_name, $password, $name, $phone, $website)
 {
     if (!validate_user($user_name, $password)) {
@@ -978,6 +990,9 @@ function create_account($user_name, $password, $name, $phone, $website)
     return $account->id;
 }
 
+/**
+ * @throws Exception
+ */
 function create_case($user_name, $password, $name)
 {
     if (!validate_user($user_name, $password)) {
@@ -1000,6 +1015,9 @@ function create_case($user_name, $password, $name)
     return $case->save();
 }
 
+/**
+ * @throws Exception
+ */
 function create_opportunity($user_name, $password, $name, $amount)
 {
     if (!validate_user($user_name, $password)) {
@@ -1026,7 +1044,7 @@ function search($user_name, $password, $name)
     if (!validate_user($user_name, $password)) {
         return array();
     }
-    $name_list = explode("; ", $name);
+    $name_list = explode('; ', $name);
     $list = array();
     foreach ($name_list as $single_name) {
         $list = array_merge($list, contact_by_search($single_name));

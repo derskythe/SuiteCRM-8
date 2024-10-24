@@ -84,9 +84,10 @@ class OpportunitiesByLeadSourceByOutcomeDashlet extends DashletGenericChart
     }
 
     /**
+     * @throws SmartyException
      * @see DashletGenericChart::display()
      */
-    public function display()
+    public function display() : string
     {
         global $current_user, $sugar_config;
 
@@ -126,7 +127,7 @@ class OpportunitiesByLeadSourceByOutcomeDashlet extends DashletGenericChart
             $currency->retrieve($current_user->getPreference('currency'));
             $currency_symbol = $currency->symbol;
         }
-        $subtitle = translate('LBL_OPP_SIZE', 'Charts') . " " . $currency_symbol . "1" . translate('LBL_OPP_THOUSANDS', 'Charts');
+        $subtitle = translate('LBL_OPP_SIZE', 'Charts') . ' ' . $currency_symbol . '1' . translate('LBL_OPP_THOUSANDS', 'Charts');
         $thousands_symbol = translate('LBL_OPP_THOUSANDS', 'Charts');
 
         $module = 'Opportunities';
@@ -253,9 +254,9 @@ EOD;
      */
     protected function constructQuery()
     {
-        $query = "SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total, ".
-            "count(*) as opp_count FROM opportunities ";
-        $query .= " WHERE opportunities.deleted=0 ";
+        $query = 'SELECT lead_source,sales_stage,sum(amount_usdollar/1000) as total, ' .
+            'count(*) as opp_count FROM opportunities ';
+        $query .= ' WHERE opportunities.deleted=0 ';
         if (isset($this->lsbo_ids) && count($this->lsbo_ids) > 0) {
             $query .= "AND opportunities.assigned_user_id IN ('".implode("','", $this->lsbo_ids)."') ";
         }
@@ -264,7 +265,7 @@ EOD;
         } else {
             $query .= "AND opportunities.lead_source IN ('".implode("','", array_keys($GLOBALS['app_list_strings']['lead_source_dom']))."') ";
         }
-        $query .= " GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage";
+        $query .= ' GROUP BY sales_stage,lead_source ORDER BY lead_source,sales_stage';
 
         return $query;
     }
@@ -280,19 +281,19 @@ EOD;
         $chart['tooltips']= array();
 
         foreach ($data as $i) {
-            $key = $i["lead_source"];
-            $keyDom = $i["lead_source_dom_option"];
-            $stage = $i["sales_stage"];
-            $stageDom = $i["sales_stage_dom_option"];
-            if (!in_array($key, $chart['labels'])) {
+            $key = $i['lead_source'];
+            $keyDom = $i['lead_source_dom_option'];
+            $stage = $i['sales_stage'];
+            $stageDom = $i['sales_stage_dom_option'];
+            if (!in_array($key, $chart['labels'], true)) {
                 $chart['labels'][] = $key;
                 $chart['data'][] = array();
             }
-            if (!in_array($stage, $chart['key'])) {
+            if (!in_array($stage, $chart['key'], true)) {
                 $chart['key'][] = $stage;
             }
 
-            $formattedFloat = (float)number_format((float)$i["total"], 2, '.', '');
+            $formattedFloat = (float)number_format((float) $i['total'], 2, '.', '');
             $chart['data'][count($chart['data'])-1][] = $formattedFloat;
             $chart['tooltips'][]="<div><input type='hidden' class='stage' value='$stageDom'><input type='hidden' class='category' value='$keyDom'></div>".$stage.'('.$currency_symbol.$formattedFloat.$thousands_symbol.') '.$key;
         }

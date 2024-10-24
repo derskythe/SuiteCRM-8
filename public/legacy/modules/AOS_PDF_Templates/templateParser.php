@@ -30,6 +30,9 @@ use SuiteCRM\Utility\SuiteValidator as SuiteValidator;
 #[\AllowDynamicProperties]
 class templateParser
 {
+    /**
+     * @throws Exception
+     */
     public static function parse_template($string, $bean_arr)
     {
         foreach ($bean_arr as $bean_name => $bean_id) {
@@ -37,8 +40,8 @@ class templateParser
             $string = templateParser::parse_template_bean($string, $focus->table_name, $focus);
 
             foreach ($focus->field_defs as $focus_name => $focus_arr) {
-                if ($focus_arr['type'] == 'relate') {
-                    if (isset($focus_arr['module']) && $focus_arr['module'] != '' && $focus_arr['module'] != 'EmailAddress') {
+                if ($focus_arr['type'] === 'relate') {
+                    if (isset($focus_arr['module']) && $focus_arr['module'] != '' && $focus_arr['module'] !== 'EmailAddress') {
                         $idName = $focus_arr['id_name'];
                         $relate_focus = BeanFactory::getBean($focus_arr['module'], $focus->$idName);
 
@@ -72,11 +75,11 @@ class templateParser
                     continue;
                 }
 
-                if ($field_def['type'] == 'currency') {
-                    $repl_arr[$key . "_" . $fieldName] = currency_format_number($focus->$fieldName, $params = array('currency_symbol' => false));
-                } elseif (($field_def['type'] == 'radioenum' || $field_def['type'] == 'enum' || $field_def['type'] == 'dynamicenum') && isset($field_def['options'])) {
-                    $repl_arr[$key . "_" . $fieldName] = translate($field_def['options'], $focus->module_dir, $focus->$fieldName);
-                } elseif ($field_def['type'] == 'multienum' && isset($field_def['options'])) {
+                if ($field_def['type'] === 'currency') {
+                    $repl_arr[$key . '_' . $fieldName] = currency_format_number($focus->$fieldName, $params = array( 'currency_symbol' => false));
+                } elseif (($field_def['type'] === 'radioenum' || $field_def['type'] === 'enum' || $field_def['type'] === 'dynamicenum') && isset($field_def['options'])) {
+                    $repl_arr[$key . '_' . $fieldName] = translate($field_def['options'], $focus->module_dir, $focus->$fieldName);
+                } elseif ($field_def['type'] === 'multienum' && isset($field_def['options'])) {
                     $mVals = unencodeMultienum($focus->{$fieldName});
                     $translatedVals = array();
 
@@ -84,18 +87,18 @@ class templateParser
                         $translatedVals[] = translate($field_def['options'], $focus->module_dir, $mVal);
                     }
 
-                    $repl_arr[$key . "_" . $fieldName] = implode(", ", $translatedVals);
+                    $repl_arr[$key . '_' . $fieldName] = implode(', ', $translatedVals);
                 } //Fix for Windows Server as it needed to be converted to a string.
-                elseif ($field_def['type'] == 'int') {
-                    $repl_arr[$key . "_" . $fieldName] = (string)$focus->$fieldName;
-                } elseif ($field_def['type'] == 'bool') {
-                    if ($focus->{$fieldName} == "1") {
-                        $repl_arr[$key . "_" . $fieldName] = "true";
+                elseif ($field_def['type'] === 'int') {
+                    $repl_arr[$key . '_' . $fieldName] = (string)$focus->$fieldName;
+                } elseif ($field_def['type'] === 'bool') {
+                    if ($focus->{$fieldName} == '1') {
+                        $repl_arr[$key . '_' . $fieldName] = 'true';
                     } else {
-                        $repl_arr[$key . "_" . $fieldName] = "false";
+                        $repl_arr[$key . '_' . $fieldName] = 'false';
                     }
-                } elseif ($field_def['type'] == 'image') {
-                    $secureLink = $sugar_config['site_url'] . '/' . "public/" . $focus->id . '_' . $fieldName;
+                } elseif ($field_def['type'] === 'image') {
+                    $secureLink = $sugar_config['site_url'] . '/' . 'public/' . $focus->id . '_' . $fieldName;
                     $file_location = $sugar_config['upload_dir'] . '/' . $focus->id . '_' . $fieldName;
                     // create a copy with correct extension by mime type
                     if (!file_exists('public')) {
@@ -106,18 +109,18 @@ class templateParser
                     }
 
                     if (empty($focus->{$fieldName})) {
-                        $repl_arr[$key . "_" . $fieldName] = "";
+                        $repl_arr[$key . '_' . $fieldName] = '';
                     } else {
                         $link = $secureLink;
-                        $repl_arr[$key . "_" . $fieldName] = '<img src="' . $link . '" width="' . $field_def['width'] . '" height="' . $field_def['height'] . '"/>';
+                        $repl_arr[$key . '_' . $fieldName] = '<img src="' . $link . '" width="' . $field_def['width'] . '" height="' . $field_def['height'] . '"/>';
                     }
-                } elseif ($field_def['type'] == 'wysiwyg') {
-                    $repl_arr[$key . "_" . $field_def['name']] = html_entity_decode((string) $focus->$field_def['name'],
-                        ENT_COMPAT, 'UTF-8');
-                    $repl_arr[$key . "_" . $fieldName] = html_entity_decode((string) $focus->{$fieldName},
-                        ENT_COMPAT, 'UTF-8');
+                } elseif ($field_def['type'] === 'wysiwyg') {
+                    $repl_arr[$key . '_' . $field_def['name']] = html_entity_decode((string) $focus->$field_def['name'],
+                                                                                    ENT_COMPAT, 'UTF-8');
+                    $repl_arr[$key . '_' . $fieldName] = html_entity_decode((string) $focus->{$fieldName},
+                                                                            ENT_COMPAT, 'UTF-8');
                 } else {
-                    $repl_arr[$key . "_" . $fieldName] = $focus->{$fieldName};
+                    $repl_arr[$key . '_' . $fieldName] = $focus->{$fieldName};
                 }
             }
         } // end foreach()
@@ -126,7 +129,10 @@ class templateParser
         reset($repl_arr);
 
         foreach ($repl_arr as $name => $value) {
-            if ((strpos($name, 'product_discount') !== false || strpos($name, 'quotes_discount') !== false) && strpos($name, '_amount') === false) {
+            if ((str_contains($name, 'product_discount') || str_contains($name, 'quotes_discount')) && !str_contains(
+                    $name,
+                    '_amount'
+                )) {
                 if ($value !== '' && isset($repl_arr['aos_products_quotes_discount'])) {
                     if ($isValidator->isPercentageField($repl_arr['aos_products_quotes_discount'])) {
                         $sep = get_number_separators();

@@ -64,7 +64,7 @@ class jjwg_Areas extends jjwg_Areas_sugar
     /**
      * Retrieve object by id
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         parent::retrieve($id, $encode, $deleted);
 
@@ -88,11 +88,11 @@ class jjwg_Areas extends jjwg_Areas_sugar
         if (preg_match('/[\n\r]/', (string) $this->coordinates)) {
             $this->coords = preg_split("/[\n\r\s]+/", (string) $this->coordinates, null, PREG_SPLIT_NO_EMPTY);
         } else {
-            $this->coords = preg_split("/[\s]+/", (string) $this->coordinates, null, PREG_SPLIT_NO_EMPTY);
+            $this->coords = preg_split('/[\s]+/', (string) $this->coordinates, null, PREG_SPLIT_NO_EMPTY);
         }
         if (count($this->coords) > 0) {
             foreach ($this->coords as $coord) {
-                $p = preg_split("/[\s\(\)]*,[\s\(\)]*/", (string) $coord, null, PREG_SPLIT_NO_EMPTY);
+                $p = preg_split('/[\s\(\)]*,[\s\(\)]*/', (string) $coord, null, PREG_SPLIT_NO_EMPTY);
                 if ($this->is_valid_lng($p[0]) && $this->is_valid_lat($p[1])) {
                     $this->polygon[] = array(
                         'lng' => $p[0],
@@ -390,6 +390,6 @@ class jjwg_Areas extends jjwg_Areas_sugar
 
         // Coordinate Results (lng,lat,elv)
         $coordinates = preg_split('/[,]+/', (string) $pointString);
-        return array("x" => $coordinates[0], "y" => $coordinates[1]);
+        return array( 'x' => $coordinates[0], 'y' => $coordinates[1]);
     }
 }

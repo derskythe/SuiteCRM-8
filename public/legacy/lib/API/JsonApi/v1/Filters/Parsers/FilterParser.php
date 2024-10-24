@@ -112,7 +112,10 @@ class FilterParser
     /**
      * @param string $filterKey
      * @param string $filterValue
+     *
      * @return array
+     * @throws Exception
+     * @throws Exception
      */
     public function parseFilter($filterKey, $filterValue)
     {
@@ -130,8 +133,9 @@ class FilterParser
 
     /**
      * @param $fieldKey
+     *
      * @return array
-     * @throws Exception
+     * @throws Exception*@throws BadRequestException
      */
     protected function parseFieldKey($fieldKey)
     {
@@ -141,7 +145,7 @@ class FilterParser
             );
         }
 
-        if (strpos($fieldKey, '.') !== false) {
+        if (str_contains($fieldKey, '.')) {
             $parsedKey = $this->splitFieldKeys($fieldKey);
         } else {
             $parsedKey = array(
@@ -173,7 +177,7 @@ class FilterParser
             );
         }
 
-        if (strpos($fieldKey, $delimiter) === false) {
+        if (!str_contains($fieldKey, $delimiter)) {
             throw new Exception(
                 '[JsonApi][v1][Filters][Parsers][FilterParser]' .
                 '[splitFieldKeys][InvalidValue] expected period "' . $fieldKey . '"'
@@ -307,7 +311,7 @@ class FilterParser
             );
         }
 
-        if (strpos($fieldKey, $delimiter) === false) {
+        if (!str_contains($fieldKey, $delimiter)) {
             throw new Exception(
                 '[JsonApi][v1][Filters][Parsers][FilterParser]' .
                 '[splitValues][InvalidValue] expected delimiter "' . $fieldKey . '"'

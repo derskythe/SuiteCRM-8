@@ -53,37 +53,37 @@ class EmailsSignatureResolver
     public const ERR_HTML_NONE = 302;
     public const ERR_PLAINTEXT_AMBIGUOUS = 303;
     public const ERR_PLAINTEXT_NONE = 304;
-    
+
     /**
      *
      * @var array
      */
     protected $signatureArray;
-    
+
     /**
      *
      * @var string
      */
     protected $html;
-    
+
     /**
      *
      * @var string
      */
     protected $plaintext;
-    
+
     /**
      *
      * @var array
      */
     protected $errors;
-    
+
     /**
      *
      * @var bool
      */
     protected $noDefaultAvailable;
-    
+
     /**
      *
      * @param array $signatureArray
@@ -96,12 +96,16 @@ class EmailsSignatureResolver
         $this->html = $this->resolveHtml();
         $this->plaintext = $this->resolvePlaintext();
         $this->noDefaultAvailable = false;
-        if (in_array(self::ERR_HTML_NONE, $this->errors) && in_array(self::ERR_PLAINTEXT_NONE, $this->errors)) {
+        if (in_array(self::ERR_HTML_NONE, $this->errors, true) && in_array(
+                self::ERR_PLAINTEXT_NONE,
+                $this->errors,
+                true
+            )) {
             $this->noDefaultAvailable = true;
         }
         return $this->errors;
     }
-    
+
     /**
      *
      * @return string|null this function returns null and/or set errors variable if error(s) occured
@@ -123,7 +127,7 @@ class EmailsSignatureResolver
         LoggerManager::getLogger()->error('Signature html not found!');
         return null;
     }
-    
+
     /**
      *
      * @return string|null this function returns null and/or set errors variable if error(s) occured
@@ -145,7 +149,7 @@ class EmailsSignatureResolver
         LoggerManager::getLogger()->error('Signature plain text not found!');
         return null;
     }
-    
+
     /**
      *
      * @return string
@@ -154,7 +158,7 @@ class EmailsSignatureResolver
     {
         return $this->html;
     }
-    
+
     /**
      *
      * @return string
@@ -163,7 +167,7 @@ class EmailsSignatureResolver
     {
         return $this->plaintext;
     }
-    
+
     /**
      *
      * @return bool

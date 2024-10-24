@@ -56,11 +56,11 @@ class EmailTemplatesViewClassic extends ViewClassic
     {
     }
 
-    public function display()
+    public function display() : void
     {
         /* BEGIN - SECURITY GROUPS - The whole file is custom but the purpose is the following code */
         //turn on normal display of subpanels
-        if ($this->action == 'DetailView') {
+        if ($this->action === 'DetailView') {
             $this->options['show_subpanels'] = true;
         }
         /* END - SECURITY GROUPS */

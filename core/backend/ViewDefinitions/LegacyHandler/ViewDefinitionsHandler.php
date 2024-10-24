@@ -54,22 +54,22 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
      * @var array
      */
     protected $listViewColumnInterface = [
-        'name' => '',
-        'width' => '',
-        'label' => '',
-        'link' => false,
-        'default' => false,
-        'module' => '',
-        'id' => '',
+        'name'     => '',
+        'width'    => '',
+        'label'    => '',
+        'link'     => false,
+        'default'  => false,
+        'module'   => '',
+        'id'       => '',
         'sortable' => true,
-        'type' => ''
+        'type'     => ''
     ];
 
     /**
      * @var array
      */
     private $defaultFields = [
-        'type' => 'type',
+        'type'  => 'type',
         'label' => 'vname',
     ];
 
@@ -120,6 +120,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * ViewDefinitionsHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -160,7 +161,8 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->fieldDefinitionProvider = $fieldDefinitionProvider;
@@ -176,7 +178,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -184,7 +186,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
     /**
      * @inheritDoc
      */
-    public function getViewDefs(string $moduleName, array $views = []): ViewDefinition
+    public function getViewDefs(string $moduleName, array $views = []) : ViewDefinition
     {
         $this->init();
 
@@ -207,7 +209,6 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
         $viewDef = new ViewDefinition();
         $viewDef->setId($moduleName);
-
 
         if (in_array('listView', $views, true)) {
             $listViewDef = $this->listViewDefinitionsHandler->fetch($moduleName, $legacyModuleName, $fieldDefinition);
@@ -251,7 +252,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
     /**
      * @inheritDoc
      */
-    public function getListViewDef(string $moduleName): ViewDefinition
+    public function getListViewDef(string $moduleName) : ViewDefinition
     {
         $this->init();
 
@@ -271,7 +272,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
     /**
      * @inheritDoc
      */
-    public function getSearchDefs(string $moduleName): ViewDefinition
+    public function getSearchDefs(string $moduleName) : ViewDefinition
     {
         $this->init();
 
@@ -291,7 +292,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
     /**
      * @inheritDoc
      */
-    public function getRecordViewDefs(string $moduleName): ViewDefinition
+    public function getRecordViewDefs(string $moduleName) : ViewDefinition
     {
         $this->init();
 
@@ -315,11 +316,13 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Get search defs array
+     *
      * @param string $module
      * @param FieldDefinition $fieldDefinition
+     *
      * @return array
      */
-    protected function fetchSearchDefs(string $module, FieldDefinition $fieldDefinition): array
+    protected function fetchSearchDefs(string $module, FieldDefinition $fieldDefinition) : array
     {
         /* @noinspection PhpIncludeInspection */
         require_once 'include/SearchForm/SearchForm2.php';
@@ -352,11 +355,12 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Merge searchFields defs info into vardefs
+     *
      * @param array $definition
      * @param FieldDefinition $fieldDefinition
      * @param string $type
      */
-    protected function mergeFieldDefinition(array &$definition, FieldDefinition $fieldDefinition, string $type): void
+    protected function mergeFieldDefinition(array &$definition, FieldDefinition $fieldDefinition, string $type) : void
     {
         $vardefs = $fieldDefinition->getVardef();
         if (!isset($definition['layout'][$type])) {
@@ -383,12 +387,14 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Add field definition to current field metadata
+     *
      * @param array|null $vardefs
      * @param $key
      * @param $field
+     *
      * @return array
      */
-    protected function addFieldDefinition(array $vardefs, $key, $field): array
+    protected function addFieldDefinition(array $vardefs, $key, $field) : array
     {
         $baseField = $this->getField($field);
 
@@ -411,12 +417,19 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Merge searchFields defs info into searchDefs
+     *
      * @param string $module
      * @param array $definition
      * @param array $searchDefs
      * @param string $type
      */
-    protected function mergeSearchInfo(string $module, array &$definition, FieldDefinition $fieldDefinition, array $searchDefs, string $type): void
+    protected function mergeSearchInfo(
+        string          $module,
+        array           &$definition,
+        FieldDefinition $fieldDefinition,
+        array           $searchDefs,
+        string          $type
+    ) : void
     {
         if (!isset($definition['layout'][$type])) {
             return;
@@ -443,10 +456,10 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
             }
 
             $definition['layout'][$type][$fieldVardefKey] = [
-                'name' => $fieldVardefKey,
+                'name'        => $fieldVardefKey,
                 'vardefBased' => true,
-                'display' => 'none',
-                'readonly' => true,
+                'display'     => 'none',
+                'readonly'    => true,
             ];
         }
     }
@@ -457,9 +470,10 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
      * @param string $module
      * @param array $searchDefs
      * @param $fieldName
+     *
      * @return bool
      */
-    protected function useRangeSearch(string $module, array $searchDefs, $fieldName): bool
+    protected function useRangeSearch(string $module, array $searchDefs, $fieldName) : bool
     {
         if (isset($searchDefs['searchFields'][$module]["range_$fieldName"])) {
             return true;
@@ -470,9 +484,10 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * @param $moduleName
+     *
      * @return string
      */
-    private function validateModuleName($moduleName): string
+    private function validateModuleName($moduleName) : string
     {
         $moduleName = $this->moduleNameMapper->toLegacy($moduleName);
 
@@ -485,11 +500,12 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Rename layout entry
+     *
      * @param array $definition
      * @param string $type
      * @param string $newName
      */
-    protected function renameSearchLayout(array &$definition, string $type, string $newName): void
+    protected function renameSearchLayout(array &$definition, string $type, string $newName) : void
     {
         if (isset($definition['layout'][$type])) {
             $definition['layout'][$newName] = $definition['layout'][$type];
@@ -499,11 +515,13 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Extract field name
+     *
      * @param $key
      * @param $field
+     *
      * @return string
      */
-    protected function getFieldName($key, $field): string
+    protected function getFieldName($key, $field) : string
     {
         if (is_numeric($key) && is_string($field)) {
             return $field;
@@ -518,10 +536,12 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Get base field structure
+     *
      * @param $field
+     *
      * @return array
      */
-    protected function getField($field): array
+    protected function getField($field) : array
     {
         $baseField = $field;
 
@@ -536,10 +556,12 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
 
     /**
      * Apply defaults
+     *
      * @param array $field
+     *
      * @return array
      */
-    protected function applyDefaults(array $field): array
+    protected function applyDefaults(array $field) : array
     {
         foreach ($this->defaultFields as $attribute => $default) {
             if (empty($field[$attribute])) {
@@ -555,9 +577,10 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
      * Injects an empty option into the field options if it's not already present.
      *
      * @param array $merged The merged array containing field definition and metadata
+     *
      * @return array The updated merged array with the empty option injected
      */
-    protected function injectEmptyOption(array $merged): array
+    protected function injectEmptyOption(array $merged) : array
     {
         if (empty($merged['fieldDefinition']['options'])) {
             return $merged;
@@ -566,7 +589,7 @@ class ViewDefinitionsHandler extends LegacyHandler implements ViewDefinitionsPro
         $metadata = $merged['fieldDefinition']['metadata'] ?? [];
         $extraOptions = $metadata['extraOptions'] ?? [];
         $extraOptions[] = [
-            'value' => '__SuiteCRMEmptyString__',
+            'value'    => '__SuiteCRMEmptyString__',
             'labelKey' => 'LBL_EMPTY',
         ];
 

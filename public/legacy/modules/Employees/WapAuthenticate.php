@@ -55,7 +55,7 @@ $focus->load_user($username_password);
 if ($focus->is_authenticated()) {
     // save the user information into the session
     // go to the home screen
-    header("Location: ".$GLOBALS['app']->getLoginRedirect());
+    header('Location: ' . $GLOBALS['app']->getLoginRedirect());
     unset($_SESSION['login_password']);
     unset($_SESSION['login_error']);
     unset($_SESSION['login_user_name']);
@@ -98,7 +98,7 @@ if ($focus->is_authenticated()) {
     // Clear all uploaded import files for this user if it exists
 
     require_once('modules/Import/ImportCacheFiles.php');
-    $tmp_file_name = ImportCacheFiles::getImportDir()."/IMPORT_" . $focus->id;
+    $tmp_file_name = ImportCacheFiles::getImportDir(). '/IMPORT_' . $focus->id;
 
     if (file_exists($tmp_file_name)) {
         unlink($tmp_file_name);
@@ -110,5 +110,5 @@ if ($focus->is_authenticated()) {
 
     // go back to the login screen.
     // create an error message for the user.
-    header("Location: index.php");
+    header('Location: index.php');
 }

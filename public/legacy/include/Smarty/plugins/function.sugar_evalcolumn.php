@@ -88,28 +88,28 @@ function smarty_function_sugar_evalcolumn($params, &$smarty)
     if (!empty($params['var']['assign'])) {
         return '{$' . $params['colData']['field']['name'] . '}';
     } else {
-    	$code = $params['var']['customCode'];
-    	if(isset($params['tabindex']) && preg_match_all("'(<[ ]*?)(textarea|input|select)([^>]*?)(>)'si", $code, $matches, PREG_PATTERN_ORDER)) {
-    	   $str_replace = array();
-    	   $tabindex = ' tabindex="' . $params['tabindex'] . '" ';
-    	   foreach($matches[3] as $match) {
-    	   	       $str_replace[$match] = $tabindex . $match;
-    	   }
-    	   $code = str_replace(array_keys($str_replace), array_values($str_replace), $code);
-    	}
+        $code = $params['var']['customCode'];
+        if(isset($params['tabindex']) && preg_match_all("'(<[ ]*?)(textarea|input|select)([^>]*?)(>)'si", $code, $matches, PREG_PATTERN_ORDER)) {
+           $str_replace = array();
+           $tabindex = ' tabindex="' . $params['tabindex'] . '" ';
+           foreach($matches[3] as $match) {
+                      $str_replace[$match] = $tabindex . $match;
+           }
+           $code = str_replace(array_keys($str_replace), array_values($str_replace), $code);
+        }
 
         if(isset($params['accesskey']) && preg_match_all("'(<[ ]*?)(textarea|input|select)([^>]*?)(>)'si", $code, $matches, PREG_PATTERN_ORDER)) {
-    	   $str_replace = array();
-    	   $accesskey = ' accesskey="' . $params['accesskey'] . '" ';
-    	   foreach($matches[3] as $match) {
-    	   	       $str_replace[$match] = $accesskey . $match;
-    	   }
-    	   $code = str_replace(array_keys($str_replace), array_values($str_replace), $code);
-    	}
+           $str_replace = array();
+           $accesskey = ' accesskey="' . $params['accesskey'] . '" ';
+           foreach($matches[3] as $match) {
+                      $str_replace[$match] = $accesskey . $match;
+           }
+           $code = str_replace(array_keys($str_replace), array_values($str_replace), $code);
+        }
 
         // Add a string replace to swap out @@FIELD@@ for the actual field,
         // we can't do this through customCode directly because the sugar_field smarty function returns smarty code to run on the second pass
-        if (!empty($code) && strpos($code,'@@FIELD@@') !== FALSE ) {
+        if (!empty($code) && str_contains($code, '@@FIELD@@')) {
             // First we need to fetch extra data about the field
             // sfp == SugarFieldParams
             $sfp = $params;
@@ -126,12 +126,12 @@ function smarty_function_sugar_evalcolumn($params, &$smarty)
             $code = str_replace('@@FIELD@@',$fieldText,$code);
         }
 
-    	//eggsurplus bug 28321: add support for rendering customCode AND normal field rendering
-    	if(!empty($params['var']['displayParams']['enableConnectors']) && empty($params['var']['customCodeRenderField'])) {
-    	  require_once('include/connectors/utils/ConnectorUtils.php');
-    	  $code .= '&nbsp;' . ConnectorUtils::getConnectorButtonScript($params['var']['displayParams'], $smarty);
-    	}
-    	return $code;
+        //eggsurplus bug 28321: add support for rendering customCode AND normal field rendering
+        if(!empty($params['var']['displayParams']['enableConnectors']) && empty($params['var']['customCodeRenderField'])) {
+          require_once('include/connectors/utils/ConnectorUtils.php');
+          $code .= '&nbsp;' . ConnectorUtils::getConnectorButtonScript($params['var']['displayParams'], $smarty);
+        }
+        return $code;
     }
 
 

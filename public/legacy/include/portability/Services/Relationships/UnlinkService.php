@@ -159,14 +159,15 @@ class UnlinkService
 
         $quotedRecord = $db->quote($record);
         $quotedLinkedId = $db->quote($linkedId);
-        $query = "SELECT email_marketing_prospect_lists.id from email_marketing_prospect_lists ";
-        $query .= " left join email_marketing on email_marketing.id=email_marketing_prospect_lists.email_marketing_id";
+        $query = 'SELECT email_marketing_prospect_lists.id from email_marketing_prospect_lists ';
+        $query .= ' left join email_marketing on email_marketing.id=email_marketing_prospect_lists.email_marketing_id';
         $query .= " where email_marketing.campaign_id='$quotedRecord'";
         $query .= " and email_marketing_prospect_lists.prospect_list_id='$quotedLinkedId'";
 
         $result = $bean->db->query($query);
         while (($row = $bean->db->fetchByAssoc($result)) != null) {
-            $del_query = " update email_marketing_prospect_lists set email_marketing_prospect_lists.deleted=1, email_marketing_prospect_lists.date_modified=" . $bean->db->convert(
+            $del_query =
+                ' update email_marketing_prospect_lists set email_marketing_prospect_lists.deleted=1, email_marketing_prospect_lists.date_modified=' . $bean->db->convert(
                     "'" . TimeDate::getInstance()->nowDb() . "'",
                     'datetime'
                 );
@@ -178,11 +179,14 @@ class UnlinkService
 
     /**
      * Handle Accounts Leads special scenario
+     *
      * @param SugarBean $bean
      * @param string $beanName
      * @param string $record
      * @param string $linkField
      * @param string $linkedId
+     *
+     * @throws Exception
      */
     protected function handleAccountsLeads(
         SugarBean $bean,
@@ -191,7 +195,7 @@ class UnlinkService
         string $linkField,
         string $linkedId
     ): void {
-        if ($beanName !== "Account" || $linkField !== 'leads') {
+        if ($beanName !== 'Account' || $linkField !== 'leads') {
             return;
         }
 
@@ -218,7 +222,7 @@ class UnlinkService
      */
     protected function handleMeetings(SugarBean $bean, string $beanName, string $record, string $linkedId): void
     {
-        if ($beanName !== "Meeting") {
+        if ($beanName !== 'Meeting') {
             return;
         }
 
@@ -233,13 +237,16 @@ class UnlinkService
 
     /**
      * Handle Users / EAPM relationship special scenario
+     *
      * @param string $beanName
      * @param string $linkField
      * @param string $linkedId
+     *
+     * @throws Exception
      */
     protected function handleUsersEapm(string $beanName, string $linkField, string $linkedId): void
     {
-        if ($beanName !== "User" || $linkField !== 'eapm') {
+        if ($beanName !== 'User' || $linkField !== 'eapm') {
             return;
         }
 

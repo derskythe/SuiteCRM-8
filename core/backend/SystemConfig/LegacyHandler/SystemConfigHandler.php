@@ -27,6 +27,7 @@
 
 namespace App\SystemConfig\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Core\Exception\ItemNotFoundException;
 use App\Currency\LegacyHandler\CurrencyHandler;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -45,39 +46,41 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderInterface
 {
     protected const MSG_CONFIG_NOT_FOUND = 'Not able to find config key: ';
-    public const HANDLER_KEY = 'system-config';
+    public const    HANDLER_KEY          = 'system-config';
 
     /**
      * @var array
      */
-    protected $exposedSystemConfigs = [];
+    protected array $exposedSystemConfigs = [];
 
     /**
      * @var array
      */
-    protected $injectedSystemConfigs = [];
+    protected array $injectedSystemConfigs = [];
 
     /**
      * @var SystemConfigMappers
      */
-    private $mappers;
+    private SystemConfigMappers $mappers;
 
     /**
      * @var array
      */
-    private $systemConfigKeyMap;
+    private array $systemConfigKeyMap;
 
     /**
      * @var CurrencyHandler
      */
-    private $currencyHandler;
+    private CurrencyHandler $currencyHandler;
     /**
      * @var InstallHandler
      */
-    private $installHandler;
+    private InstallHandler $installHandler;
+    private LoggerInterface $logger;
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -113,48 +116,52 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
      * @param NavigationProviderInterface $navigation
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        array $exposedSystemConfigs,
-        ActionNameMapperInterface $actionNameMapper,
-        ModuleNameMapperInterface $moduleNameMapper,
+        string                              $projectDir,
+        string                              $legacyDir,
+        string                              $legacySessionName,
+        string                              $defaultSessionName,
+        LegacyScopeState                    $legacyScopeState,
+        array                               $exposedSystemConfigs,
+        ActionNameMapperInterface           $actionNameMapper,
+        ModuleNameMapperInterface           $moduleNameMapper,
         ClassicViewRoutingExclusionsHandler $exclusionsManager,
-        SystemConfigMappers $mappers,
-        CurrencyHandler $currencyHandler,
-        InstallHandler $installHandler,
-        array $systemConfigKeyMap,
-        array $cacheResetActions,
-        array $navigationTabLimits,
-        array $filterRangeSearchTypes,
-        array $listViewColumnLimits,
-        array $listViewSettingsLimits,
-        array $listViewActionsLimits,
-        array $recordViewActionLimits,
-        array $subpanelViewActionLimits,
-        array $listViewLineActionsLimits,
-        array $listViewUrlQueryFilterMapping,
-        array $uiConfigs,
-        array $notificationsConfigs,
-        array $notificationsReloadActions,
-        array $globalRecentlyViewedReloadActions,
-        array $extensions,
-        array $logoutConfig,
-        array $sessionExpiredConfig,
-        array $recordViewConvertIgnore,
-        RequestStack $session,
-        NavigationProviderInterface $navigation
-    ) {
+        SystemConfigMappers                 $mappers,
+        CurrencyHandler                     $currencyHandler,
+        InstallHandler                      $installHandler,
+        array                               $systemConfigKeyMap,
+        array                               $cacheResetActions,
+        array                               $navigationTabLimits,
+        array                               $filterRangeSearchTypes,
+        array                               $listViewColumnLimits,
+        array                               $listViewSettingsLimits,
+        array                               $listViewActionsLimits,
+        array                               $recordViewActionLimits,
+        array                               $subpanelViewActionLimits,
+        array                               $listViewLineActionsLimits,
+        array                               $listViewUrlQueryFilterMapping,
+        ?array                              $uiConfigs,
+        ?array                              $notificationsConfigs,
+        ?array                              $notificationsReloadActions,
+        ?array                              $globalRecentlyViewedReloadActions,
+        array                               $extensions,
+        ?array                              $logoutConfig,
+        ?array                              $sessionExpiredConfig,
+        ?array                              $recordViewConvertIgnore,
+        RequestStack                        $session,
+        NavigationProviderInterface         $navigation,
+        LoggerInterface                     $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
+        $this->logger = $logger;
         $this->exposedSystemConfigs = $exposedSystemConfigs;
 
         $this->injectedSystemConfigs['module_name_map'] = $moduleNameMapper->getLegacyToFrontendMap();
@@ -172,11 +179,17 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
         $this->injectedSystemConfigs['subpanelview_actions_limits'] = $subpanelViewActionLimits;
         $this->injectedSystemConfigs['listview_line_actions_limits'] = $listViewLineActionsLimits;
         $this->injectedSystemConfigs['listview_url_query_filter_mapping'] = $listViewUrlQueryFilterMapping;
-        $this->injectedSystemConfigs['ui'] = $uiConfigs ?? [];
-        $this->injectedSystemConfigs['ui']['notifications'] = $notificationsConfigs ?? [];
-        $this->injectedSystemConfigs['ui']['notifications_reload_actions'] = $notificationsReloadActions ?? [];
-        $this->injectedSystemConfigs['ui']['global_recently_viewed_reload_actions'] = $globalRecentlyViewedReloadActions ?? [];
-        $this->injectedSystemConfigs['list_max_entries_per_record_thread'] = $uiConfigs['list_max_entries_per_record_thread'] ?? null;
+        $this->injectedSystemConfigs['ui'] = $uiConfigs
+            ?? [];
+        $this->injectedSystemConfigs['ui']['notifications'] = $notificationsConfigs
+            ?? [];
+        $this->injectedSystemConfigs['ui']['notifications_reload_actions'] = $notificationsReloadActions
+            ?? [];
+        $this->injectedSystemConfigs['ui']['global_recently_viewed_reload_actions'] =
+            $globalRecentlyViewedReloadActions ?? [];
+        $this->injectedSystemConfigs['list_max_entries_per_record_thread'] =
+            $uiConfigs['list_max_entries_per_record_thread']
+            ?? null;
         $this->injectedSystemConfigs['extensions'] = $extensions;
 
         $logoutConfig = $logoutConfig ?? [];
@@ -194,7 +207,7 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -202,7 +215,7 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     /**
      * @inheritDoc
      */
-    public function getConfigs(): ?array
+    public function getConfigs() : ?array
     {
         $this->init();
 
@@ -216,13 +229,23 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     /**
      * @inheritDoc
      */
-    public function getConfigDefaults(): ?array
+    public function getConfigDefaults() : ?array
     {
         $this->init();
 
         try {
             $defaults = get_sugar_config_defaults();
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
+
             return null;
         }
 
@@ -233,32 +256,41 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Get system config
+     *
      * @param array $config
+     *
      * @return Feedback
      */
-    public function updateSystemConfig(array $config): Feedback
+    public function updateSystemConfig(array $config) : Feedback
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/System/Config/ConfigHandler.php';
+        require_once $this->legacyDir . '/include/portability/System/Config/ConfigHandler.php';
 
         $feedback = new Feedback();
 
         $handler = new \ConfigHandler();
 
         $feedback->setSuccess(true);
-        $feedback->setMessages(['Updated system config']);
+        $feedback->setMessages([ 'Updated system config' ]);
 
         try {
             $handler->updateConfig($config);
 
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
             $feedback->setSuccess(false);
-            $feedback->setMessages(['Unable to update config']);
-            $feedback->setDebug([$exception->getMessage(), $exception->getTraceAsString()]);
+            $feedback->setMessages([ 'Unable to update config' ]);
+            $feedback->setDebug([ $e->getMessage(), $e->getTraceAsString() ]);
         }
-
 
         $this->close();
 
@@ -267,9 +299,10 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Get all exposed system configs
+     *
      * @return array
      */
-    public function getAllSystemConfigs(): array
+    public function getAllSystemConfigs() : array
     {
         if (!$this->isInstalled()) {
             return $this->getAllInstallConfigs();
@@ -292,26 +325,42 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Get all exposed install system configs
+     *
      * @return array
      */
-    public function getAllInstallConfigs(): array
+    public function getAllInstallConfigs() : array
     {
-        $this->installHandler->initLegacy();
+        try {
+            $this->installHandler->initLegacy();
 
-        $this->loadInstallConfig();
+            $this->loadInstallConfig();
 
-        $configs = $this->loadSystemConfigs();
+            $configs = $this->loadSystemConfigs();
 
-        $this->installHandler->closeLegacy();
+            $this->installHandler->closeLegacy();
 
-        return $configs;
+            return $configs;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
+
+            throw $e;
+        }
     }
 
     /**
      * Load all exposed system configs
+     *
      * @return array
      */
-    protected function loadSystemConfigs(): array
+    protected function loadSystemConfigs() : array
     {
         $configs = [];
 
@@ -329,10 +378,12 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Load system config with given $key
+     *
      * @param $configKey
+     *
      * @return SystemConfig|null
      */
-    protected function loadSystemConfig(string $configKey): ?SystemConfig
+    protected function loadSystemConfig(string $configKey) : ?SystemConfig
     {
         global $sugar_config;
 
@@ -341,12 +392,13 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
         }
 
         if (!isset($this->exposedSystemConfigs[$configKey])) {
-            throw new ItemNotFoundException(self::MSG_CONFIG_NOT_FOUND . "'$configKey'");
+            $message = self::MSG_CONFIG_NOT_FOUND . '\'' . $configKey . '\'';
+            $this->logger->error($message);
+            throw new ItemNotFoundException($message);
         }
 
         $config = new SystemConfig();
         $config->setId($configKey);
-
 
         if (!empty($this->injectedSystemConfigs[$configKey])) {
             if (is_array($this->injectedSystemConfigs[$configKey])) {
@@ -366,7 +418,10 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
             $items = $sugar_config[$configKey];
 
             if (is_array($this->exposedSystemConfigs[$configKey])) {
-                $items = $this->filterItems($sugar_config[$configKey], $this->exposedSystemConfigs[$configKey]);
+                $items = $this->filterItems(
+                    $sugar_config[$configKey],
+                    $this->exposedSystemConfigs[$configKey]
+                );
             }
 
             $config->setItems($items);
@@ -381,28 +436,29 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Filter to retrieve only exposed items
+     *
      * @param array $allItems
      * @param array $exposed
+     *
      * @return array
      */
-    protected function filterItems(array $allItems, array $exposed): array
+    protected function filterItems(array $allItems, array $exposed) : array
     {
-        $items = [];
-
         if (empty($exposed)) {
-            return $items;
+            return [];
         }
 
+        $items = [];
         foreach ($allItems as $configKey => $configValue) {
             if (!isset($exposed[$configKey])) {
                 continue;
             }
 
-            if (is_array($allItems[$configKey])) {
-                $subItems = $allItems[$configKey];
+            if (is_array($configValue)) {
+                $subItems = $configValue;
 
                 if (is_array($exposed[$configKey])) {
-                    $subItems = $this->filterItems($allItems[$configKey], $exposed[$configKey]);
+                    $subItems = $this->filterItems($configValue, $exposed[$configKey]);
                 }
 
                 $items[$configKey] = $subItems;
@@ -418,9 +474,10 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Map config values using mappers registered in the mapper registry
+     *
      * @param SystemConfig $config |null
      */
-    protected function mapConfigValues(?SystemConfig $config): void
+    protected function mapConfigValues(?SystemConfig $config) : void
     {
         if ($config === null || empty($config->getId())) {
             return;
@@ -434,9 +491,10 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Map config key
+     *
      * @param SystemConfig|null $config
      */
-    protected function mapKey(?SystemConfig $config): void
+    protected function mapKey(?SystemConfig $config) : void
     {
         if ($config === null || empty($config->getId())) {
             return;
@@ -449,10 +507,12 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Get system config
+     *
      * @param string $configKey
+     *
      * @return SystemConfig|null
      */
-    public function getSystemConfig(string $configKey): ?SystemConfig
+    public function getSystemConfig(string $configKey) : ?SystemConfig
     {
         if (!$this->isInstalled()) {
             return $this->getInstallConfig($configKey);
@@ -478,41 +538,56 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
 
     /**
      * Get system config
+     *
      * @param string $configKey
+     *
      * @return SystemConfig|null
      */
-    public function getInstallConfig(string $configKey): ?SystemConfig
+    public function getInstallConfig(string $configKey) : ?SystemConfig
     {
+        try {
+            $this->installHandler->initLegacy();
 
-        $this->installHandler->initLegacy();
+            $this->loadInstallConfig();
 
-        $this->loadInstallConfig();
+            $config = $this->loadSystemConfig($configKey);
 
-        $config = $this->loadSystemConfig($configKey);
+            $this->mapConfigValues($config);
+            $this->mapKey($config);
 
-        $this->mapConfigValues($config);
-        $this->mapKey($config);
+            $this->installHandler->closeLegacy();
 
-        $this->installHandler->closeLegacy();
+            return $config;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
 
-        return $config;
+            throw $e;
+        }
     }
 
     /**
      * Load install configs
      */
-    protected function loadInstallConfig(): void
+    protected function loadInstallConfig() : void
     {
         global $sugar_config;
 
         // load minimal sugar config required to provide basic data to Suite8 application
         $sugar_config = array(
-            'cache_dir' => 'cache/',
-            'default_currency_iso4217' => 'USD',
-            'default_currency_symbol' => '$',
-            'default_language' => 'en_us',
-            'default_theme' => 'suite8',
-            'languages' =>
+            'cache_dir'                 => 'cache/',
+            'default_currency_iso4217'  => 'USD',
+            'default_currency_symbol'   => '$',
+            'default_language'          => 'en_us',
+            'default_theme'             => 'suite8',
+            'languages'                 =>
                 array(
                     'en_us' => 'English (US)'
                 ),
@@ -523,7 +598,7 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     /**
      * Init injected configs
      */
-    protected function initInjectedConfigs(): void
+    protected function initInjectedConfigs() : void
     {
         $this->injectedSystemConfigs['currencies'] = $this->currencyHandler->getCurrencies();
     }
@@ -531,7 +606,7 @@ class SystemConfigHandler extends LegacyHandler implements SystemConfigProviderI
     /**
      * @return bool
      */
-    protected function isInstalled(): bool
+    protected function isInstalled() : bool
     {
         return $this->installHandler->isLegacyInstalled();
     }

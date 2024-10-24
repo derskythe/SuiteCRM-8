@@ -48,20 +48,33 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
-$fields_array['Case'] = array('column_fields' => array("id"
-        , "name"
-        , "case_number"
-        , "account_name"
-        , "account_id"
-        , "date_entered"
-        , "date_modified"
-        , "modified_user_id"
-        , "assigned_user_id"
-        , "created_by"
-        , "status"
-        , "priority"
-        , "description"
-        , "resolution"
+$fields_array['Case'] = array('column_fields' => array( 'id'
+                                                        ,
+                                                        'name'
+                                                        ,
+                                                        'case_number'
+                                                        ,
+                                                        'account_name'
+                                                        ,
+                                                        'account_id'
+                                                        ,
+                                                        'date_entered'
+                                                        ,
+                                                        'date_modified'
+                                                        ,
+                                                        'modified_user_id'
+                                                        ,
+                                                        'assigned_user_id'
+                                                        ,
+                                                        'created_by'
+                                                        ,
+                                                        'status'
+                                                        ,
+                                                        'priority'
+                                                        ,
+                                                        'description'
+                                                        ,
+                                                        'resolution'
         ),
         'list_fields' => array('id', 'priority', 'status', 'name', 'account_name', 'case_number', 'account_id', 'assigned_user_name', 'assigned_user_id'
         ),

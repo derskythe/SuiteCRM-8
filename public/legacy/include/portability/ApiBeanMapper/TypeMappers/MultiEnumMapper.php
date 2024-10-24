@@ -75,11 +75,11 @@ class MultiEnumMapper implements TypeMapperInterface
             return $string;
         }
 
-        if (strpos($string, '^') === 0) {
+        if (str_starts_with($string, '^')) {
             $string = substr($string, 1, strlen($string));
         }
 
-        if (substr($string, -1) === '^') {
+        if (str_ends_with($string, '^')) {
             $string = substr($string, 0, -1);
         }
 

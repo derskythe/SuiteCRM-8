@@ -47,17 +47,17 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 ini_set('memory_limit', -1);
 ///////////////////////////////////////////////////////////////////////////////
-////	UTILITIES THAT MUST BE LOCAL :(
+////    UTILITIES THAT MUST BE LOCAL :(
 //local function for clearing cache
 function clearCacheSU($thedir, $extension)
 {
     if ($current = @opendir($thedir)) {
         while (false !== ($children = readdir($current))) {
-            if ($children != "." && $children != "..") {
-                if (is_dir($thedir . "/" . $children)) {
-                    clearCacheSU($thedir . "/" . $children, $extension);
-                } elseif (is_file($thedir . "/" . $children) && substr_count($children, (string) $extension)) {
-                    unlink($thedir . "/" . $children);
+            if ($children !== '.' && $children !== '..') {
+                if (is_dir($thedir . '/' . $children)) {
+                    clearCacheSU($thedir . '/' . $children, $extension);
+                } elseif (is_file($thedir . '/' . $children) && substr_count($children, (string) $extension)) {
+                    unlink($thedir . '/' . $children);
                 }
             }
         }
@@ -79,7 +79,7 @@ function clearCacheSU($thedir, $extension)
                      'group' => '',
              );
          ksort($sugar_config);
-         if (is_writable('config.php') && write_array_to_file("sugar_config", $sugar_config, 'config.php')) {
+         if (is_writable('config.php') && write_array_to_file('sugar_config', $sugar_config, 'config.php')) {
              //writing to the file
          }
      }
@@ -104,7 +104,7 @@ function checkLoggerSettings()
             ),
           );
         ksort($sugar_config);
-        if (is_writable('config.php') && write_array_to_file("sugar_config", $sugar_config, 'config.php')) {
+        if (is_writable('config.php') && write_array_to_file('sugar_config', $sugar_config, 'config.php')) {
             //writing to the file
         }
     }
@@ -131,7 +131,7 @@ function checkResourceSettings()
             'default_limit' => 1000,
           );
         ksort($sugar_config);
-        if (is_writable('config.php') && write_array_to_file("sugar_config", $sugar_config, 'config.php')) {
+        if (is_writable('config.php') && write_array_to_file('sugar_config', $sugar_config, 'config.php')) {
             //writing to the file
         }
     }
@@ -149,7 +149,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_assigned_user','Users','users','id','{$relModName}','{$relObjName}','assigned_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_assigned_user','Users','users','id','{$relModName}','{$relObjName}','assigned_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
         //modified_user
@@ -160,7 +160,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_modified_user','Users','users','id','{$relModName}','{$relObjName}','modified_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_modified_user','Users','users','id','{$relModName}','{$relObjName}','modified_user_id',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
         //created_by
@@ -171,7 +171,7 @@ function createMissingRels()
         $a = DBManagerFactory::getInstance()->fetchByAssoc($result);
         if (!isset($a['id']) && empty($a['id'])) {
             $qRel = "INSERT INTO relationships (id,relationship_name, lhs_module, lhs_table, lhs_key, rhs_module, rhs_table, rhs_key, join_table, join_key_lhs, join_key_rhs, relationship_type, relationship_role_column, relationship_role_column_value, reverse, deleted)
-						VALUES ('{$guid}', '{$relObjName}_created_by','Users','users','id','{$relModName}','{$relObjName}','created_by',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
+                        VALUES ('{$guid}', '{$relObjName}_created_by','Users','users','id','{$relModName}','{$relObjName}','created_by',NULL,NULL,NULL,'one-to-many',NULL,NULL,'0','0')";
             DBManagerFactory::getInstance()->query($qRel);
         }
     }
@@ -212,7 +212,7 @@ function merge_passwordsetting($sugar_config, $sugar_version)
 
     ksort($sugar_config);
 
-    if (write_array_to_file("sugar_config", $sugar_config, "config.php")) {
+    if (write_array_to_file('sugar_config', $sugar_config, 'config.php')) {
         return true;
     } else {
         return false;
@@ -262,7 +262,7 @@ function verifyArguments($argv, $usage_dce, $usage_regular)
         // 7 arguments
         if ((is_countable($argv) ? count($argv) : 0) < 7) {
             echo "*******************************************************************************\n";
-            echo "*** ERROR: Missing required parameters.  Received ".(is_countable($argv) ? count($argv) : 0)." argument(s), require 7.\n";
+            echo '*** ERROR: Missing required parameters.  Received ' .(is_countable($argv) ? count($argv) : 0)." argument(s), require 7.\n";
             echo $usage_dce;
             echo "FAILURE\n";
             exit(1);
@@ -289,7 +289,7 @@ function verifyArguments($argv, $usage_dce, $usage_regular)
         }
             if ((is_countable($argv) ? count($argv) : 0) < 5) {
                 echo "*******************************************************************************\n";
-                echo "*** ERROR: Missing required parameters.  Received ".(is_countable($argv) ? count($argv) : 0)." argument(s), require 5.\n";
+                echo '*** ERROR: Missing required parameters.  Received ' .(is_countable($argv) ? count($argv) : 0)." argument(s), require 5.\n";
                 echo $usage_regular;
                 echo "FAILURE\n";
                 exit(1);
@@ -338,13 +338,13 @@ function threeWayMerge()
 {
     //using threeway merge apis
 }
-////	END UTILITIES THAT MUST BE LOCAL :(
+////    END UTILITIES THAT MUST BE LOCAL :(
 ///////////////////////////////////////////////////////////////////////////////
 
 //Bug 52872. Dies if the request does not come from CLI.
 $sapi_type = php_sapi_name();
-if (substr($sapi_type, 0, 3) != 'cli') {
-    die("This is command-line only script");
+if (!str_starts_with($sapi_type, 'cli')) {
+    die('This is command-line only script');
 }
 //End of #52872
 
@@ -358,7 +358,7 @@ $_SERVER['PHP_SELF'] = 'silentUpgrade.php';
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	USAGE
+////    USAGE
 $usage_dce =<<<eoq1
 Usage: php.exe -f silentUpgrade.php [upgradeZipFile] [logFile] [pathToSuiteCRMInstance]
 
@@ -395,13 +395,13 @@ Arguments:
     pathToSuiteCRMInstance                  : Suite Instance instance being upgraded.
     admin-user                           : admin user performing the upgrade
 eoq2;
-////	END USAGE
+////    END USAGE
 ///////////////////////////////////////////////////////////////////////////////
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
-////	STANDARD REQUIRED SUGAR INCLUDES AND PRESETS
+////    STANDARD REQUIRED SUGAR INCLUDES AND PRESETS
 if (!defined('sugarEntry')) {
     define('sugarEntry', true);
 }
@@ -427,18 +427,18 @@ $upgradeType = verifyArguments($argv, $usage_dce, $usage_regular);
 //////  Verify that all the arguments are appropriately placed////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-////	PREP LOCALLY USED PASSED-IN VARS & CONSTANTS
-//$GLOBALS['log']	= LoggerManager::getLogger();
+////    PREP LOCALLY USED PASSED-IN VARS & CONSTANTS
+//$GLOBALS['log']    = LoggerManager::getLogger();
 //require_once('/var/www/html/eddy/sugarnode/SugarTemplateUtilities.php');
 
-$path			= $argv[2]; // custom log file, if blank will use ./upgradeWizard.log
-//$db				= &DBManagerFactory::getInstance();  //<---------
+$path            = $argv[2]; // custom log file, if blank will use ./upgradeWizard.log
+//$db                = &DBManagerFactory::getInstance();  //<---------
 
 
-//$UWstrings		= return_module_language('en_us', 'UpgradeWizard');
-//$adminStrings	= return_module_language('en_us', 'Administration');
-//$mod_strings	= array_merge($adminStrings, $UWstrings);
-$subdirs		= array('full', 'langpack', 'module', 'patch', 'theme', 'temp');
+//$UWstrings        = return_module_language('en_us', 'UpgradeWizard');
+//$adminStrings    = return_module_language('en_us', 'Administration');
+//$mod_strings    = array_merge($adminStrings, $UWstrings);
+$subdirs        = array('full', 'langpack', 'module', 'patch', 'theme', 'temp');
 
 //$_REQUEST['zip_from_dir'] = $zip_from_dir;
 
@@ -463,7 +463,7 @@ $errors = array();
 if ($upgradeType == constant('DCE_INSTANCE')) {
     //$instanceUpgradePath = "{$argv[1]}/DCEUpgrade/{$zip_from_dir}";
     //$instanceUpgradePath = "{$argv[1]}";
-    include("ini_setup.php");
+    include('ini_setup.php');
 
     //get new template path for use in later processing
     $dceupgrade_pos = strpos($argv[1], '/DCEUpgrade');
@@ -481,7 +481,7 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
         require_once("{$newtemplate_path}/include/Sugar_Smarty.php");
     }
     if (!class_exists('LanguageManager')){
-    	require_once("{$newtemplate_path}/include/SugarObjects/LanguageManager.php");
+        require_once("{$newtemplate_path}/include/SugarObjects/LanguageManager.php");
     }
     */
 
@@ -506,10 +506,10 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
     $isDCEInstance = true;
     $configOptions = $sugar_config['dbconfig'];
 
-    $GLOBALS['log']	= LoggerManager::getLogger();
-    $db				= &DBManagerFactory::getInstance();
+    $GLOBALS['log']    = LoggerManager::getLogger();
+    $db                = &DBManagerFactory::getInstance();
     ///////////////////////////////////////////////////////////////////////////////
-    ////	MAKE SURE PATCH IS COMPATIBLE
+    ////    MAKE SURE PATCH IS COMPATIBLE
 
     if (is_file("{$argv[1]}/manifest.php")) {
         // provides $manifest array
@@ -517,7 +517,7 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
     }
     //If Instance then the files will be accessed from Template/DCEUpgrade folder
     $zip_from_dir = '';
-    if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] != "") {
+    if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] != '') {
         $zip_from_dir   = $manifest['copy_files']['from_dir'];
     }
 
@@ -538,14 +538,14 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
         require_once("{$newtemplate_path}/modules/UpgradeWizard/uw_utils.php");
     }
 
-    $ce_to_pro_ent = isset($manifest['name']) && ($manifest['name'] == 'SugarCE to SugarPro' || $manifest['name'] == 'SugarCE to SugarEnt' || $manifest['name'] == 'SugarCE to SugarCorp' || $manifest['name'] == 'SugarCE to SugarUlt');
+    $ce_to_pro_ent = isset($manifest['name']) && ($manifest['name'] === 'SugarCE to SugarPro' || $manifest['name'] === 'SugarCE to SugarEnt' || $manifest['name'] === 'SugarCE to SugarCorp' || $manifest['name'] === 'SugarCE to SugarUlt');
     $_SESSION['upgrade_from_flavor'] = $manifest['name'];
 
     //check for db upgrade
     //check exit on conflicts
     $skipDBUpgrade = 'no'; //default
     if ($argv[6] != null && !empty($argv[6])) {
-        if (strtolower($argv[6]) == 'yes') {
+        if (strtolower($argv[6]) === 'yes') {
             $skipDBUpgrade = 'yes'; //override
         }
     }
@@ -555,10 +555,10 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
     global $path;
     $path = $argv[2];
 
-    if ($skipDBUpgrade == 'no') {
+    if ($skipDBUpgrade === 'no') {
         //upgrade the db
         ///////////////////////////////////////////////////////////////////////////////
-        ////	HANDLE PREINSTALL SCRIPTS
+        ////    HANDLE PREINSTALL SCRIPTS
         $file = "{$argv[1]}/".constant('SUGARCRM_PRE_INSTALL_FILE');
         if (is_file($file)) {
             include($file);
@@ -602,7 +602,7 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
         logThis('Set default_max_tabs to 8', $path);
         $sugar_config['default_max_tabs'] = 8;
 
-        if (!write_array_to_file("sugar_config", $sugar_config, "config.php")) {
+        if (!write_array_to_file('sugar_config', $sugar_config, 'config.php')) {
             logThis('*** ERROR: could not write config.php! - upgrade will fail!', $path);
             $errors[] = 'Could not write config.php!';
         }
@@ -637,7 +637,7 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
         $GLOBALS['reload_vardefs'] = true;
 
         foreach ($beanFiles as $bean => $file) {
-            if (file_exists($newtemplate_path . '/' . $file) && $bean != 'UpgradeHistory') {
+            if (file_exists($newtemplate_path . '/' . $file) && $bean !== 'UpgradeHistory') {
                 unset($GLOBALS['dictionary'][$bean]);
                 require_once($newtemplate_path . '/' . $file);
 
@@ -685,7 +685,7 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
 
         //iterate through list and remove commonalities to get new modules
         foreach ($newModuleList as $remove_mod) {
-            if (in_array($remove_mod, $oldModuleList)) {
+            if (in_array($remove_mod, $oldModuleList, true)) {
                 unset($newModuleList[$remove_mod]);
             }
         }
@@ -713,20 +713,20 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
             include($newtemplate_path.'/modules/Administration/language/en_us.lang.php');
             if (isset($globalteam->name)) {
                 echo 'Global '.$mod_strings['LBL_UPGRADE_TEAM_EXISTS'].'<br>';
-                logThis(" Finish Building private teams", $path);
+                logThis(' Finish Building private teams', $path);
             } else {
-                $globalteam->create_team("Global", $mod_strings['LBL_GLOBAL_TEAM_DESC'], $globalteam->global_team);
+                $globalteam->create_team('Global', $mod_strings['LBL_GLOBAL_TEAM_DESC'], $globalteam->global_team);
             }
 
             //build private teams
-            logThis(" Start Building private teams", $path);
+            logThis(' Start Building private teams', $path);
             upgradeModulesForTeam();
-            logThis(" Finish Building private teams", $path);
+            logThis(' Finish Building private teams', $path);
 
             //build team sets
-            logThis(" Start Building the team_set and team_sets_teams", $path);
+            logThis(' Start Building the team_set and team_sets_teams', $path);
             upgradeModulesForTeamsets();
-            logThis(" Finish Building the team_set and team_sets_teams", $path);
+            logThis(' Finish Building the team_set and team_sets_teams', $path);
 
             //upgrade teams
             if (file_exists($newtemplate_path.'/modules/Administration/upgradeTeams.php')) {
@@ -746,7 +746,7 @@ if ($upgradeType == constant('DCE_INSTANCE')) {
             }
         }
 
-        require("sugar_version.php");
+        require('sugar_version.php');
         require('config.php');
         global $sugar_config;
 
@@ -832,7 +832,7 @@ if (file_exists($newtemplate_path . '/include/SugarLogger/LoggerManager.php')) {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-////	RECORD ERRORS
+////    RECORD ERRORS
 $phpErrors = ob_get_contents();
 ob_end_clean();
 
@@ -842,7 +842,7 @@ if (count($errors) > 0) {
     }
     echo "FAILED\n";
 } else {
-    logThis("***** SilentUpgrade completed successfully.", $path);
+    logThis('***** SilentUpgrade completed successfully.', $path);
     echo "********************************************************************\n";
     echo "*************************** SUCCESS*********************************\n";
     echo "********************************************************************\n";

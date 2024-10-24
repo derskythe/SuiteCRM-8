@@ -136,7 +136,7 @@ class DeleteRecordsBulkAction implements ProcessHandlerInterface, LoggerAwareInt
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $result = $this->deleteRecords($process);
 

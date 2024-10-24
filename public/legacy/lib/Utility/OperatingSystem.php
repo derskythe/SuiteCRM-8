@@ -101,13 +101,13 @@ class OperatingSystem
         $trimmedPath = trim($path, '"');
 
         $removeEscapedSpace = str_replace('\ ', ' ', $trimmedPath);
-        $removeEscapedTab = str_replace('\	', '	', $removeEscapedSpace);
+        $removeEscapedTab = str_replace('\    ', '    ', $removeEscapedSpace);
 
         $replaceSeparator = preg_replace('/[\\\\\/]/', $ds, $removeEscapedTab);
 
         if ($ds === '/') {
             $addEscapedSpace = str_replace(' ', '\\ ', $replaceSeparator);
-            $addEscapedTab = str_replace('	', '\\	', $addEscapedSpace);
+            $addEscapedTab = str_replace('    ', '\\    ', $addEscapedSpace);
             $newPath = $addEscapedTab;
         } else {
             $newPath = $replaceSeparator;

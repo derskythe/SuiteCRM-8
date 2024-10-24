@@ -94,7 +94,7 @@ class LanguageManager
 
     public static function addTemplate($module, $lang, $template)
     {
-        if ($template == 'default') {
+        if ($template === 'default') {
             $template = 'basic';
         }
         $templates = array();
@@ -155,7 +155,7 @@ class LanguageManager
             $cache_dir = sugar_cached('modules/');
             if (file_exists($cache_dir) && $dir = @opendir($cache_dir)) {
                 while (($entry = readdir($dir)) !== false) {
-                    if ($entry == "." || $entry == "..") {
+                    if ($entry === '.' || $entry === '..') {
                         continue;
                     }
                     foreach ($languages as $clean_lang) {
@@ -210,12 +210,12 @@ class LanguageManager
         if (empty($createdModules[$module]) && isset($GLOBALS['beanList'][$module])) {
             $object = $GLOBALS['beanList'][$module];
 
-            if ($object == 'aCase') {
+            if ($object === 'aCase') {
                 $object = 'Case';
             }
 
-            if (!empty($GLOBALS["dictionary"][(string)$object]["templates"])) {
-                $templates = $GLOBALS["dictionary"][(string)$object]["templates"];
+            if (!empty($GLOBALS['dictionary'][(string) $object]['templates'])) {
+                $templates = $GLOBALS['dictionary'][(string) $object]['templates'];
                 $loaded_mod_strings = LanguageManager::loadTemplateLanguage($module, $templates, $lang, $loaded_mod_strings);
                 $createdModules[$module] = true;
             }
@@ -321,6 +321,6 @@ class LanguageManager
             $GLOBALS['sugar_config']['js_lang_version'] += 1;
         }
 
-        write_array_to_file("sugar_config", $GLOBALS['sugar_config'], "config.php");
+        write_array_to_file('sugar_config', $GLOBALS['sugar_config'], 'config.php');
     }
 }

@@ -41,7 +41,7 @@
 $viewdefs['Contacts']['ConvertLead'] = array(
     'copyData' => true,
     'required' => true,
-    'select' => "report_to_name",
+    'select' => 'report_to_name',
     'default_action' => 'create',
     'templateMeta' => array(
         'form'=>array(
@@ -105,7 +105,7 @@ $viewdefs['Contacts']['ConvertLead'] = array(
 $viewdefs['Accounts']['ConvertLead'] = array(
     'copyData' => true,
     'required' => true,
-    'select' => "account_name",
+    'select' => 'account_name',
     'default_action' => 'create',
     'relationship' => 'accounts_contacts',
     'templateMeta' => array(
@@ -236,13 +236,13 @@ $viewdefs['Calls']['ConvertLead'] = array(
                     'label' => 'LBL_DURATION',
                     'customCode' => '{literal}
 <script type="text/javascript">
-    function isValidCallsDuration() { 
+    function isValidCallsDuration() {
         form = document.getElementById(\'ConvertLead\');
         if ( form.duration_hours.value + form.duration_minutes.value <= 0 ) {
-            alert(\'{/literal}{sugar_translate label="NOTICE_DURATION_TIME" module="Calls"}{literal}\'); 
+            alert(\'{/literal}{sugar_translate label="NOTICE_DURATION_TIME" module="Calls"}{literal}\');
             return false;
         }
-        return true; 
+        return true;
     }
 </script>{/literal}
 <input name="Callsduration_hours" tabindex="1" size="2" maxlength="2" type="text" value="{$fields.duration_hours.value}"/>
@@ -295,13 +295,13 @@ $viewdefs['Meetings']['ConvertLead'] = array(
                     'label' => 'LBL_DURATION',
                     'customCode' => '{literal}
 <script type="text/javascript">
-    function isValidMeetingsDuration() { 
+    function isValidMeetingsDuration() {
         form = document.getElementById(\'ConvertLead\');
         if ( form.duration_hours.value + form.duration_minutes.value <= 0 ) {
-            alert(\'{/literal}{sugar_translate label="NOTICE_DURATION_TIME" module="Calls"}{literal}\'); 
+            alert(\'{/literal}{sugar_translate label="NOTICE_DURATION_TIME" module="Calls"}{literal}\');
             return false;
         }
-        return true; 
+        return true;
     }
 </script>{/literal}
 <input name="Meetingsduration_hours" tabindex="1" size="2" maxlength="2" type="text" value="{$fields.duration_hours.value}" />

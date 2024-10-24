@@ -52,12 +52,12 @@ class AM_ProjectTemplatesViewEdit extends ViewEdit
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         global $json;
 
         $this->bean->is_template = 0;
-        $this->ev->ss->assign("is_template", 0);
+        $this->ev->ss->assign('is_template', 0);
 
         $json = getJSONobj();
         $json_config = new json_config();

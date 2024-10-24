@@ -223,7 +223,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
                 if (stristr($optInEmailField, '_default') !== false) {
                     $emailField = str_replace('_default', '', $optInEmailField);
 
-                    if (!in_array($emailField, $optInEmailFields)) {
+                    if (!in_array($emailField, $optInEmailFields, true)) {
                         $optedOut[] = $emailField;
                     }
 
@@ -238,7 +238,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
                     $sea = BeanFactory::newBean('EmailAddresses');
                     $emailId = $sea->AddUpdateEmailAddress($person->$optInEmailField);
                     if ($sea->retrieve($emailId)) {
-                        if (in_array($optInEmailField, $optedOut)) {
+                        if (in_array($optInEmailField, $optedOut, true)) {
                             $sea->resetOptIn();
                             continue;
                         } else {
@@ -287,13 +287,13 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
             $redirect_url = $_POST['redirect_url'];
             $query_string = '';
             $first_char = '&';
-            if (strpos((string) $redirect_url, '?') === false) {
+            if (!str_contains((string) $redirect_url, '?')) {
                 $first_char = '?';
             }
             $first_iteration = true;
             $get_and_post = array_merge($_GET, $_POST);
             foreach ($get_and_post as $param => $value) {
-                if ($param == 'redirect_url' && $param == 'submit') {
+                if ($param === 'redirect_url' && $param === 'submit') {
                     continue;
                 }
 
@@ -323,7 +323,7 @@ if (isset($_POST['campaign_id']) && !empty($_POST['campaign_id'])) {
                 echo '<form name="redirect" action="'.$_POST['redirect_url'].'" method="GET">';
 
                 foreach ($_POST as $param => $value) {
-                    if ($param != 'redirect_url' || $param != 'submit') {
+                    if ($param !== 'redirect_url' || $param !== 'submit') {
                         echo '<input type="hidden" name="'.$param.'" value="'.$value.'">';
                     }
                 }

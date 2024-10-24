@@ -46,12 +46,6 @@ namespace SuiteCRM\Tests\Unit\lib\SuiteCRM\Utility\BeanJsonSerializerTestData;
 #[\AllowDynamicProperties]
 class BeanMock extends \SugarBean
 {
-    public $fetched_rel_row = [];
-    public $id;
-    public $fetched_row;
-    public $module_name;
-    public $module_dir;
-
     /** @noinspection PhpMissingParentConstructorInspection */
     public function __construct($file)
     {
@@ -65,6 +59,6 @@ class BeanMock extends \SugarBean
      */
     public function load_relationships()
     {
-        echo "load_relationships() has been called on the mocked class!";
+        echo 'load_relationships() has been called on the mocked class!';
     }
 }

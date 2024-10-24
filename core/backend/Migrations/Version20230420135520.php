@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -38,27 +38,17 @@ final class Version20230420135520 extends BaseMigration implements ContainerAwar
 {
     use EnvHandlingMigrationTrait;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $upgradeLogger;
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return 'Add login throttling interval to .env';
     }
 
-    public function isTransactional(): bool
+    public function isTransactional() : bool
     {
         return false;
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
         $envFile = $this->getProjectDir() . "/.env";
 
@@ -72,20 +62,21 @@ final class Version20230420135520 extends BaseMigration implements ContainerAwar
 
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 
     /**
      * Check and add missing login throttling config
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addLoginThrottlingConfig(&$envContents, string $envFile): void
+    protected function addLoginThrottlingConfig(&$envContents, string $envFile) : void
     {
         $properties = [
             'LOGIN_THROTTLING_IP_LOGIN_MAX_ATTEMPTS' => '50',
-            'LOGIN_THROTTLING_INTERVAL' => '"30 minutes"'
+            'LOGIN_THROTTLING_INTERVAL'              => '"30 minutes"'
         ];
 
         $wrapperStart = '###> login throttling ###';

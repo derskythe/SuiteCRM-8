@@ -43,12 +43,12 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 /**
  * Connector component
+ *
  * @api
  */
 #[\AllowDynamicProperties]
 class component
 {
-    protected $_has_testing_enabled = false;
     protected $_source;
 
     public function __construct()
@@ -65,13 +65,14 @@ class component
      * and loads the SugarBean's fields with the results as defined in the connector
      * loadBean configuration mapping
      *
-     * @param array $args arguments to pass into getItem
-     * @param string|null $module value of the module to map bean to
+     * @param array $args          arguments to pass into getItem
+     * @param string|null $module  value of the module to map bean to
      * @param SugarBean|null $bean instance to load values into
-     * @throws Exception Thrown if results could not be loaded into bean
+     *
      * @return mixed
+     * @throws Exception Thrown if results could not be loaded into bean
      */
-    public function fillBean($args=array(), $module=null, $bean=null)
+    public function fillBean($args = array(), $module = null, $bean = null)
     {
         $result = null;
         if (is_object($bean)) {
@@ -82,9 +83,10 @@ class component
             if (!empty($module) && ($bean = loadBean($module))) {
                 return $this->fillBean($args, $module, $bean);
             } else {
-                throw new Exception("Invalid bean");
+                throw new Exception('Invalid bean');
             }
         }
+
         return $result;
     }
 
@@ -94,13 +96,14 @@ class component
      * and loads the SugarBean's fields with the results as defined in the connector
      * loadBean configuration mapping
      *
-     * @param array $args arguments to pass into getItem
+     * @param array $args         arguments to pass into getItem
      * @param string|null $module value of the module to map bean to
-     * @param SugarBean[] $beans load SugarBean instances into
-     * @throws Exception Thrown if errors are found
+     * @param SugarBean[] $beans  load SugarBean instances into
+     *
      * @return mixed
+     * @throws Exception Thrown if errors are found
      */
-    public function fillBeans($args=array(), $module=null, $beans=array())
+    public function fillBeans($args = array(), $module = null, $beans = array())
     {
         $results = array();
         $args = $this->mapInput($args, $module);
@@ -109,7 +112,6 @@ class component
             throw new Exception($GLOBALS['app_strings']['ERR_MISSING_MAPPING_ENTRY_FORM_MODULE']);
         }
 
-
         require_once('include/connectors/filters/FilterFactory.php');
         $filter = FilterFactory::getInstance(get_class($this->_source));
         $list = $filter->getList($args, $module);
@@ -117,11 +119,11 @@ class component
         if (!empty($list)) {
             $resultSize = is_countable($list) ? count($list) : 0;
             if (!empty($beans)) {
-                if (count($beans) != $resultSize) {
+                if (count($beans) !== $resultSize) {
                     throw new Exception($GLOBALS['app_strings']['ERR_CONNECTOR_FILL_BEANS_SIZE_MISMATCH']);
                 }
             } else {
-                for ($x=0; $x < $resultSize; $x++) {
+                for ($x = 0; $x < $resultSize; $x++) {
                     $beans[$x] = loadBean($module);
                 }
             }
@@ -141,21 +143,24 @@ class component
 
             $field_defs = $this->getFieldDefs();
             $map = $this->getMapping();
-            $hasOptions = !empty($map['options']) ? true : false;
+            $hasOptions = !empty($map['options']);
             if ($hasOptions) {
                 $options = $map['options'];
                 $optionFields = array();
 
-                foreach ($field_defs as $name=>$field) {
-                    if (!empty($field['options']) && !empty($map['options'][$field['options']]) && !empty($map['beans'][$module][$name])) {
+                foreach ($field_defs as $name => $field) {
+                    if (!empty($field['options']) && !empty($map['options'][$field['options']])
+                        && !empty($map['beans'][$module][$name])) {
                         $optionFields[$name] = $map['beans'][$module][$name];
                     }
                 }
 
-                foreach ($results as $key=>$bean) {
-                    foreach ($optionFields as $sourceField=>$sugarField) {
+                foreach ($results as $bean) {
+                    foreach ($optionFields as $sourceField => $sugarField) {
                         $options_map = $options[$field_defs[$sourceField]['options']];
-                        $results[$key]->$sugarField =  !empty($options_map[$results[$key]->$sugarField]) ? $options_map[$results[$key]->$sugarField] : $results[$key]->$sugarField;
+                        $bean->$sugarField =
+                            !empty($options_map[$bean->$sugarField])
+                                ? $options_map[$bean->$sugarField] : $bean->$sugarField;
                     }
                 } //foreach
             }
@@ -170,9 +175,8 @@ class component
      * Obtain a list of items
      *
      * @param string $module ideally this method should return a list of beans of type $module.
-     * @param Mixed $args this represents the 'query' on the data source.
+     * @param Mixed $args    this represents the 'query' on the data source.
      */
-
 
     /**
      * Given a bean, persist it to a data source
@@ -181,6 +185,7 @@ class component
      */
     public function save($bean)
     {
+
     }
 
 
@@ -205,11 +210,11 @@ class component
      * setConfig
      * Used by the Factories to set the config on the corresponding object
      *
-     * @param array $config this file will be specified in config file corresponding to the wrapper or data source we are
-     * using. The name would be something like hoovers.php if we are using the hoovers data source or hoovers wrapper
-     * and it would exist in the same directory as the connector and/or wrapper.
-     * Note that the confing specified at the connector level takes precendence over the config specified at the wrapper level.
-     * This logic is performed in ConnectorFactory.php
+     * @param array $config this file will be specified in config file corresponding to the wrapper or data source we
+     *                      are using. The name would be something like hoovers.php if we are using the hoovers data
+     *                      source or hoovers wrapper and it would exist in the same directory as the connector and/or
+     *                      wrapper. Note that the confing specified at the connector level takes precendence over the
+     *                      config specified at the wrapper level. This logic is performed in ConnectorFactory.php
      */
     public function setConfig($config)
     {
@@ -236,11 +241,11 @@ class component
                 if (!empty($field_defs[$arg]['input'])) {
                     $in_field = $field_defs[$arg]['input'];
                     $temp = explode('.', $in_field);
-                    $eval_code = "\$input_params";
+                    $eval_code = '$input_params';
                     foreach ($temp as $arr_key) {
                         $eval_code .= '[\'' . $arr_key . '\']';
                     }
-                    $eval_code .= "= \$val;";
+                    $eval_code .= '= $val;';
                     eval($eval_code);
                 } else {
                     $input_params[$arg] = $val;
@@ -251,7 +256,9 @@ class component
         return $input_params;
     }
 
-
+    /**
+     * @throws Exception
+     */
     public function mapOutput($bean, $result)
     {
         if (is_object($bean)) {
@@ -271,7 +278,7 @@ class component
                     $mapped[$source_field] = $bean->$sugar_field;
                 }
             } else {
-                foreach ($result as $key=>$value) {
+                foreach ($result as $key => $value) {
                     if (isset($bean->field_defs[$key])) {
                         $bean->$key = $value;
                     }
@@ -294,6 +301,7 @@ class component
 
             return $bean;
         }
+
         return $bean;
     }
 
@@ -319,20 +327,21 @@ class component
                 $value = $function($bean, $out_field, $value);
             }
         }
+
         return $value;
     }
 
-    public function saveConfig($persister=null)
+    public function saveConfig($persister = null)
     {
         $this->_source->saveConfig($persister);
     }
 
-    public function loadConfig($persister=null)
+    public function loadConfig($persister = null)
     {
         $this->_source->loadConfig($persister);
     }
 
-    public function setMapping($map=array())
+    public function setMapping($map = array())
     {
         $this->_source->setMapping($map);
     }
@@ -345,6 +354,7 @@ class component
     public function getModuleMapping($module)
     {
         $map = $this->getMapping();
+
         return !empty($map['beans'][$module]) ? $map['beans'][$module] : array();
     }
 
@@ -373,7 +383,7 @@ class component
         return $this->_source;
     }
 
-    public function setSource($source)
+    public function setSource($source) : void
     {
         $this->_source = $source;
     }

@@ -118,7 +118,7 @@ class Sale extends Basic
     /**
      *
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         //Ensure that the amount_usdollar field is not null.
@@ -131,6 +131,7 @@ class Sale extends Basic
      * @param bool $check_notify
      *
      * @return string
+     * @throws Exception
      */
     public function save($check_notify = false)
     {

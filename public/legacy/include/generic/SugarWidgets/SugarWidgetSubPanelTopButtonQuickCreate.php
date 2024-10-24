@@ -87,16 +87,18 @@ class SugarWidgetSubPanelTopButtonQuickCreate extends SugarWidgetSubPanelTopButt
             #26451,add these fields for custom one-to-many relate field.
             if (!empty($defines['child_module_name'])) {
                 $button .= "<input type='hidden' name='". $relationship_name ."_name' value='".$defines['focus']->name."'>";
-                $childFocusName = !empty($GLOBALS['beanList'][$defines['child_module_name']]) ? $GLOBALS['beanList'][$defines['child_module_name']] : "";
-                if (!empty($GLOBALS['dictionary'][ $childFocusName ]["fields"][$relationship_name .'_name']['id_name'])) {
-                    $button .= "<input type='hidden' name='". $GLOBALS['dictionary'][ $childFocusName ]["fields"][$relationship_name .'_name']['id_name'] ."' value='".$defines['focus']->id."'>";
+                $childFocusName =
+                    !empty($GLOBALS['beanList'][$defines['child_module_name']])
+                        ? $GLOBALS['beanList'][$defines['child_module_name']] : '';
+                if (!empty($GLOBALS['dictionary'][$childFocusName]['fields'][$relationship_name . '_name']['id_name'])) {
+                    $button .= "<input type='hidden' name='" . $GLOBALS['dictionary'][$childFocusName]['fields'][$relationship_name . '_name']['id_name'] . "' value='" . $defines['focus']->id . "'>";
                 }
             }
-            
+
             //Set the return_name form variable that will allow EditView2.php
             $additionalFormFields['return_name'] = $defines['focus']->name;
         }
-        
+
         if (!empty($defines['view'])) {
             $button .= '<input type="hidden" name="target_view" value="'. $defines['view'] . '" />';
         }
@@ -110,14 +112,14 @@ class SugarWidgetSubPanelTopButtonQuickCreate extends SugarWidgetSubPanelTopButt
 
         // TODO: move this out and get $additionalFormFields working properly
         if (empty($additionalFormFields['parent_type'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_type'] = 'Accounts';
             } else {
                 $additionalFormFields['parent_type'] = $defines['focus']->module_dir;
             }
         }
         if (empty($additionalFormFields['parent_name'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_name'] = $defines['focus']->account_name;
                 $additionalFormFields['account_name'] = $defines['focus']->account_name;
             } else {
@@ -125,7 +127,7 @@ class SugarWidgetSubPanelTopButtonQuickCreate extends SugarWidgetSubPanelTopButt
             }
         }
         if (empty($additionalFormFields['parent_id'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_id'] = $defines['focus']->account_id;
                 $additionalFormFields['account_id'] = $defines['focus']->account_id;
             } else {
@@ -133,9 +135,9 @@ class SugarWidgetSubPanelTopButtonQuickCreate extends SugarWidgetSubPanelTopButt
             }
         }
 
-        if (strtolower($defines['child_module_name']) =='contracts') {
+        if (strtolower($defines['child_module_name']) === 'contracts') {
             //set variables to account name, or parent account name
-            if (strtolower($defines['parent_bean_name']) == 'account') {
+            if (strtolower($defines['parent_bean_name']) === 'account') {
                 //if account is parent bean, then get focus id/focus name
                 if (isset($defines['focus']->id)) {
                     $additionalFormFields['account_id'] = $defines['focus']->id;
@@ -143,7 +145,7 @@ class SugarWidgetSubPanelTopButtonQuickCreate extends SugarWidgetSubPanelTopButt
                 if (isset($defines['focus']->name)) {
                     $additionalFormFields['account_name'] = $defines['focus']->name;
                 }
-            } elseif (strtolower($defines['parent_bean_name']) == 'quote') {
+            } elseif (strtolower($defines['parent_bean_name']) === 'quote') {
                 //if quote is parent bean, then get billing_account_id/billing_account_name
                 if (isset($defines['focus']->billing_account_id)) {
                     $additionalFormFields['account_id'] = $defines['focus']->billing_account_id;
@@ -167,7 +169,7 @@ class SugarWidgetSubPanelTopButtonQuickCreate extends SugarWidgetSubPanelTopButt
 
         // fill in additional form fields for all but action
         foreach ($additionalFormFields as $key => $value) {
-            if ($key != 'action') {
+            if ($key !== 'action') {
                 $button .= '<input type="hidden" name="' . $key . '" value=\'' . $value . '\' />' . "\n";
             }
         }

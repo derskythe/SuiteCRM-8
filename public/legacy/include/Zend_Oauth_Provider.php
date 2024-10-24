@@ -178,7 +178,7 @@ class Zend_Oauth_Provider
         if (empty($this->requestPath)) {
             return true;
         }
-        if ($this->requestPath[0] == '/') {
+        if ($this->requestPath[0] === '/') {
             return $this->url->getPath() != $this->requestPath;
         }
 
@@ -242,7 +242,7 @@ class Zend_Oauth_Provider
     protected function assembleParams($method, $params = array())
     {
         $params = array_merge($_GET, $params);
-        if ($method == 'POST') {
+        if ($method === 'POST') {
             $params = array_merge($_POST, $params);
         }
         $auth = null;
@@ -259,10 +259,9 @@ class Zend_Oauth_Provider
         }
 
         // import header data
-        if (!empty($auth) && substr((string) $auth, 0,
-                6) == 'OAuth ' && preg_match_all('/(oauth_[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', (string) $auth, $matches)) {
+        if (!empty($auth) && str_starts_with((string) $auth, 'OAuth ') && preg_match_all('/(oauth_[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', (string) $auth, $matches)) {
             foreach ($matches[1] as $num => $header) {
-                if ($header == 'realm') {
+                if ($header === 'realm') {
                     continue;
                 }
                 $params[$header] = urldecode(empty($matches[3][$num]) ? $matches[4][$num] : $matches[3][$num]);
@@ -279,11 +278,11 @@ class Zend_Oauth_Provider
      */
     protected function getRequestUrl()
     {
-        $proto = "http";
+        $proto = 'http';
         if (empty($_SERVER['SERVER_PORT']) || empty($_SERVER['HTTP_HOST']) || empty($_SERVER['REQUEST_URI'])) {
-            return Zend_Uri_Http::fromString("http://localhost/");
+            return Zend_Uri_Http::fromString('http://localhost/');
         }
-        if ($_SERVER['SERVER_PORT'] == 443 || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (!empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on')) {
+        if ($_SERVER['SERVER_PORT'] == 443 || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || (!empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] === 'on')) {
             $proto = 'https';
         }
 

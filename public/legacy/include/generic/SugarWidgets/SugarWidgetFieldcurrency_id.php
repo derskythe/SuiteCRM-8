@@ -100,15 +100,15 @@ class SugarWidgetFieldcurrency_id extends SugarWidgetFieldEnum
 
         $field_def = $this->reporter->all_fields[$layout_def['column_key']];
         if (!empty($field_def['sort_on'])) {
-            $order_by = $layout_def['table_alias'].".".$field_def['sort_on'];
+            $order_by = $layout_def['table_alias'] . '.' . $field_def['sort_on'];
         } else {
             $order_by = $this->_get_column_select($layout_def);
         }
 
-        if (empty($layout_def['sort_dir']) || $layout_def['sort_dir'] == 'a') {
-            $order_dir = "ASC";
+        if (empty($layout_def['sort_dir']) || $layout_def['sort_dir'] === 'a') {
+            $order_dir = 'ASC';
         } else {
-            $order_dir = "DESC";
+            $order_dir = 'DESC';
         }
         return $this->reporter->db->orderByEnum($order_by, $list, $order_dir);
     }

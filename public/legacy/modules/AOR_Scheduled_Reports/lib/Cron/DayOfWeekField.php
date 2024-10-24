@@ -19,7 +19,7 @@ class DayOfWeekField extends AbstractField
 {
     public function isSatisfiedBy(\DateTime $date, $value)
     {
-        if ($value == '?') {
+        if ($value === '?') {
             return true;
         }
 
@@ -91,12 +91,15 @@ class DayOfWeekField extends AbstractField
         }
 
         // Test to see which Sunday to use -- 0 == 7 == Sunday
-        $format = in_array(7, str_split($value)) ? 'N' : 'w';
+        $format = in_array(7, str_split($value), true) ? 'N' : 'w';
         $fieldValue = $date->format($format);
 
         return $this->isSatisfied($fieldValue, $value);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     public function increment(\DateTime $date, $invert = false)
     {
         if ($invert) {

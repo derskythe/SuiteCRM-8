@@ -53,7 +53,7 @@ require_once 'modules/ModuleBuilder/parsers/constants.php' ;
 
 class ManyToOneRelationship extends AbstractRelationship
 {
-    
+
 
     public $one_to_many;
     public $relationship_only;
@@ -88,12 +88,12 @@ class ManyToOneRelationship extends AbstractRelationship
     /*
      * BUILD methods called during the build
      */
-    
+
     public function buildLabels($update = false)
     {
         return $this->one_to_many->buildLabels();
     }
-    
+
     /*
      * Construct subpanel definitions
      * The format is that of TO_MODULE => relationship, FROM_MODULE, FROM_MODULES_SUBPANEL, mimicking the format in the layoutdefs.php
@@ -112,7 +112,7 @@ class ManyToOneRelationship extends AbstractRelationship
     {
         return $this->one_to_many->buildVardefs();
     }
-    
+
     /*
      * Define what fields to add to which modules layouts
      * @return array    An array of module => fieldname
@@ -123,9 +123,9 @@ class ManyToOneRelationship extends AbstractRelationship
             return array() ;
         }
 
-        return array( $this->lhs_module => static::getValidDBName($this->relationship_name . "_name") ) ; // this must match the name of the relate field from buildVardefs
+        return array( $this->lhs_module => static::getValidDBName($this->relationship_name . '_name') ) ; // this must match the name of the relate field from buildVardefs
     }
-       
+
     /*
      * @return array    An array of relationship metadata definitions
      */
@@ -133,25 +133,25 @@ class ManyToOneRelationship extends AbstractRelationship
     {
         return $this->one_to_many->buildRelationshipMetaData();
     }
-    
+
     public function setName($relationshipName)
     {
         parent::setName($relationshipName);
         $this->one_to_many->setname($relationshipName);
     }
-    
+
     public function setReadonly($set = true)
     {
         parent::setReadonly($set);
         $this->one_to_many->setReadonly();
     }
-    
+
     public function delete()
     {
         parent::delete();
         $this->one_to_many->delete();
     }
-    
+
     public function setRelationship_only()
     {
         parent::setRelationship_only();

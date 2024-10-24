@@ -49,19 +49,19 @@ if (!defined('sugarEntry') || !sugarEntry) {
 clean_incoming_data();
 
 require_once("install/language/{$_GET['language']}.lang.php");
-require_once("install/install_utils.php");
+require_once('install/install_utils.php');
 
-$license_file = wordwrap(getLicenseContents("LICENSE.txt"), 100);
+$license_file = wordwrap(getLicenseContents('LICENSE.txt'), 100);
 $langHeader = get_language_header();
 $out =<<<EOQ
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html {$langHeader}>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-   <meta http-equiv="Content-Style-Type" content="text/css">   
+   <meta http-equiv="Content-Style-Type" content="text/css">
    <title>{$mod_strings['LBL_LICENSE_TITLE_2']}</title>
    <link REL="SHORTCUT ICON" HREF="include/images/sugar_icon.ico">
-   <link rel="stylesheet" href="install/install.css" type="text/css">   
+   <link rel="stylesheet" href="install/install.css" type="text/css">
 </head>
 
 <body>

@@ -49,18 +49,6 @@ require_once __DIR__ . '/../../include/SugarObjects/templates/file/File.php';
 #[\AllowDynamicProperties]
 class Note extends File
 {
-    public $field_name_map;
-    // Stored fields
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-    public $description;
-    public $name;
     public $filename;
     // handle to an upload_file object
     // used in emails
@@ -71,44 +59,38 @@ class Note extends File
     public $contact_id;
     public $portal_flag;
 
-    public $parent_name;
+    public string $parent_name;
     public $contact_name;
     public $contact_phone;
     public $contact_email;
     public $file_mime_type;
-    public $module_dir = "Notes";
     public $default_note_name_dom = array('Meeting notes', 'Reminder');
-    public $table_name = "notes";
-    public $new_schema = true;
-    public $object_name = "Note";
-    public $importable = true;
-
-    // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array(
-        'contact_name',
-        'contact_phone',
-        'contact_email',
-        'parent_name',
-        'first_name',
-        'last_name'
-    );
-
+    public bool $new_schema = true;
 
     public function __construct()
     {
         parent::__construct();
+        $this->module_dir = 'Notes';
+        $this->table_name = 'notes';
+        $this->object_name = 'Note';
+        $this->importable = true;
+        $this->additional_column_fields = array(
+            'contact_name',
+            'contact_phone',
+            'contact_email',
+            'parent_name',
+            'first_name',
+            'last_name'
+        );
     }
-
-
-
 
     public function safeAttachmentName()
     {
         global $sugar_config;
 
         //get position of last "." in file name
-        $file_ext_beg = strrpos((string) $this->filename, ".");
-        $file_ext = "";
+        $file_ext_beg = strrpos((string) $this->filename, '.');
+        $file_ext = '';
 
         //get file extension
         if ($file_ext_beg !== false) {
@@ -119,9 +101,9 @@ class Note extends File
         foreach ($sugar_config['upload_badext'] as $badExt) {
             if (strtolower($file_ext) === strtolower($badExt)) {
                 //if found, then append with .txt and break out of lookup
-                $this->name = $this->name . ".txt";
+                $this->name = $this->name . '.txt';
                 $this->file_mime_type = 'text/';
-                $this->filename = $this->filename . ".txt";
+                $this->filename = $this->filename . '.txt';
                 break; // no need to look for more
             }
         }
@@ -131,13 +113,16 @@ class Note extends File
      * overrides SugarBean's method.
      * If a system setting is set, it will mark all related notes as deleted, and attempt to delete files that are
      * related to those notes
+     *
      * @param string id ID
+     *
+     * @throws Exception
      */
     public function mark_deleted($id)
     {
         global $sugar_config;
 
-        if ($this->parent_type == 'Emails') {
+        if ($this->parent_type === 'Emails') {
             if (isset($sugar_config['email_default_delete_attachments']) && $sugar_config['email_default_delete_attachments'] == true) {
                 $removeFile = "upload://$id";
                 if (file_exists($removeFile)) {
@@ -152,12 +137,12 @@ class Note extends File
         parent::mark_deleted($id);
     }
 
-    public function deleteAttachment($isduplicate = "false")
+    public function deleteAttachment($isduplicate = 'false')
     {
         $removeFile = null;
 
         if ($this->ACLAccess('edit')) {
-            if ($isduplicate == "true") {
+            if ($isduplicate === 'true') {
                 return true;
             }
             $removeFile = "upload://{$this->id}";
@@ -189,7 +174,7 @@ class Note extends File
     }
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -210,27 +195,27 @@ class Note extends File
         return file_get_contents($path);
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $query = "SELECT notes.*, contacts.first_name, contacts.last_name, users.user_name as assigned_user_name ";
+        $query = 'SELECT notes.*, contacts.first_name, contacts.last_name, users.user_name as assigned_user_name ';
 
         $query .= $custom_join['select'];
 
-        $query .= " FROM notes ";
+        $query .= ' FROM notes ';
 
-        $query .= "	LEFT JOIN contacts ON notes.contact_id=contacts.id ";
-        $query .= "  LEFT JOIN users ON notes.assigned_user_id=users.id ";
+        $query .= '    LEFT JOIN contacts ON notes.contact_id=contacts.id ';
+        $query .= '  LEFT JOIN users ON notes.assigned_user_id=users.id ';
 
         $query .= $custom_join['join'];
 
-        $where_auto = " notes.deleted=0 AND (contacts.deleted IS NULL OR contacts.deleted=0)";
+        $where_auto = ' notes.deleted=0 AND (contacts.deleted IS NULL OR contacts.deleted=0)';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where $where AND " . $where_auto;
         } else {
-            $query .= "where " . $where_auto;
+            $query .= 'where ' . $where_auto;
         }
 
         $order_by = $this->process_order_by($order_by);
@@ -247,7 +232,7 @@ class Note extends File
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         //TODO:  Seems odd we need to clear out these values so that list views don't show the previous rows value if current value is blank
@@ -326,7 +311,7 @@ class Note extends File
                     }
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess($this->parent_type, $this->parent_id, 'view');
             /* END - SECURITY GROUPS */
         }
@@ -365,7 +350,7 @@ class Note extends File
                     $is_owner = $current_user->id == $parent_bean->assigned_user_id;
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess('Contacts', $this->contact_id, 'view');
             /* END - SECURITY GROUPS */
         }
@@ -384,7 +369,7 @@ class Note extends File
         return $array_assign;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':

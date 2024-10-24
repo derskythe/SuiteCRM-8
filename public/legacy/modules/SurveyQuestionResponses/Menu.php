@@ -46,18 +46,18 @@ global $mod_strings, $app_strings, $sugar_config;
 if (ACLController::checkAccess('SurveyQuestionResponses', 'edit', true)) {
     $module_menu[] =
         array(
-            "index.php?module=SurveyQuestionResponses&action=EditView&return_module=SurveyQuestionResponses&return_action=DetailView",
+            'index.php?module=SurveyQuestionResponses&action=EditView&return_module=SurveyQuestionResponses&return_action=DetailView',
             $mod_strings['LNK_NEW_RECORD'],
-            "Add",
+            'Add',
             'SurveyQuestionResponses'
         );
 }
 if (ACLController::checkAccess('SurveyQuestionResponses', 'list', true)) {
     $module_menu[] =
         array(
-            "index.php?module=SurveyQuestionResponses&action=index&return_module=SurveyQuestionResponses&return_action=DetailView",
+            'index.php?module=SurveyQuestionResponses&action=index&return_module=SurveyQuestionResponses&return_action=DetailView',
             $mod_strings['LNK_LIST'],
-            "View",
+            'View',
             'SurveyQuestionResponses'
         );
 }

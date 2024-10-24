@@ -44,11 +44,14 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class updateDependencies
 {
+    /**
+     * @throws DateMalformedStringException
+     */
     public function update_dependency(&$bean, $event, $arguments)
     {
         //Get all tasks that are dependant on the current task being saved.
         $Task = BeanFactory::getBean('ProjectTask');
-        $tasks = $Task->get_full_list("", "project_task.project_id = '".$bean->project_id."' AND project_task.predecessors = '".$bean->project_task_id."'");
+        $tasks = $Task->get_full_list('', "project_task.project_id = '".$bean->project_id."' AND project_task.predecessors = '".$bean->project_task_id."'");
 
         // Make sure the fetched row exists.
         if ($bean->fetched_row === false) {
@@ -66,7 +69,7 @@ class updateDependencies
 
                     $rel_type = $task->relationship_type;//Determine their dependency type
 
-                    if ($rel_type == 'FS') {//if its a Finish to start
+                    if ($rel_type === 'FS') {//if its a Finish to start
                         //Modify the task's start and end date dependant on the difference in days
                         $start = new DateTime($task->date_start);
                         $start = $start->modify($diff);
@@ -81,7 +84,7 @@ class updateDependencies
                         $task->date_finish = $enddate;
                         $task->save();
                     } else {
-                        if ($rel_type == 'SS') {//if its a start to start
+                        if ($rel_type === 'SS') {//if its a start to start
                             //check if the tasks duration has not been changed so that it does not update when the parent tasks duration is changed
                             if ($bean->fetched_row['duration'] == $bean->duration) {
                                 $start = new DateTime($task->date_start);
@@ -105,6 +108,10 @@ class updateDependencies
     }
 
     //Gets the difference in days between two dates
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function count_days($start_date, $end_date)
     {
         $d1 = new DateTime($start_date);

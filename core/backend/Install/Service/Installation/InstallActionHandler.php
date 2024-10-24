@@ -42,7 +42,7 @@ class InstallActionHandler implements ProcessHandlerInterface
     /**
      * @var InstallStepHandler
      */
-    private $handler;
+    private InstallStepHandler $handler;
 
     /**
      * @inheritDoc
@@ -130,7 +130,7 @@ class InstallActionHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $options = $process->getOptions();
 
@@ -149,15 +149,15 @@ class InstallActionHandler implements ProcessHandlerInterface
     protected function runSteps(array $context): Feedback
     {
         $position = 0;
-        $success = true;
+        $success = false;
 
         do {
             $result = $this->getHandler()->runPosition($position, $context);
 
-            $success = $success && $result->isSuccess();
+            $success = $result->isSuccess();
 
             if (!$success) {
-                foreach ($result->getFeedback() as $key => $feedback) {
+                foreach ($result->getFeedback() as $feedback) {
 
                     if (!$feedback->isSuccess()) {
                         return $feedback;

@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Process\DataPersister;
 
 use ApiPlatform\Metadata\Operation;
@@ -56,11 +55,16 @@ class ProcessProcessor implements ProcessorInterface
 
     /**
      * ProcessProcessor constructor.
+     *
      * @param ProcessHandlerRegistry $registry
      * @param Security $security
      * @param AclManagerInterface $acl
      */
-    public function __construct(ProcessHandlerRegistry $registry, Security $security, AclManagerInterface $acl)
+    public function __construct(
+        ProcessHandlerRegistry $registry,
+        Security               $security,
+        AclManagerInterface    $acl
+    )
     {
         $this->registry = $registry;
         $this->security = $security;
@@ -69,13 +73,20 @@ class ProcessProcessor implements ProcessorInterface
 
     /**
      * Handle Process create / update request
+     *
      * @param Process $process
      * @param Operation $operation
      * @param array $uriVariables
      * @param array $context
+     *
      * @return Process|void
      */
-    public function process(mixed $process, Operation $operation, array $uriVariables = [], array $context = []): ?Process
+    public function process(
+        mixed     $process,
+        Operation $operation,
+        array     $uriVariables = [],
+        array     $context = []
+    ) : ?Process
     {
         $processHandler = $this->registry->get($process->getType());
 
@@ -88,7 +99,7 @@ class ProcessProcessor implements ProcessorInterface
         $processHandler->configure($process);
 
         if (!$hasAccess) {
-            $process->setMessages(['LBL_ACCESS_DENIED']);
+            $process->setMessages([ 'LBL_ACCESS_DENIED' ]);
             $process->setStatus('error');
 
             return $process;
@@ -106,15 +117,16 @@ class ProcessProcessor implements ProcessorInterface
 
     /**
      * Check if user has the needed role
+     *
      * @param ProcessHandlerInterface $processHandler
      */
-    protected function checkAuthentication(ProcessHandlerInterface $processHandler): void
+    protected function checkAuthentication(ProcessHandlerInterface $processHandler) : void
     {
         if (empty($processHandler->requiredAuthRole())) {
             return;
         }
 
-        if ($this->security->isGranted($processHandler->requiredAuthRole()) === true) {
+        if ($this->security->isGranted($processHandler->requiredAuthRole())) {
             return;
         }
 
@@ -123,10 +135,11 @@ class ProcessProcessor implements ProcessorInterface
 
     /**
      * Check acl access
+     *
      * @param ProcessHandlerInterface $processHandler
      * @param Process $process
      */
-    protected function checkACLAccess(ProcessHandlerInterface $processHandler, Process $process): bool
+    protected function checkACLAccess(ProcessHandlerInterface $processHandler, Process $process) : bool
     {
         $modulesACLs = $processHandler->getRequiredACLs($process) ?? [];
         if (empty($modulesACLs)) {
@@ -142,7 +155,7 @@ class ProcessProcessor implements ProcessorInterface
                 continue;
             }
 
-            if ($hasAccess === false) {
+            if (!$hasAccess) {
                 return false;
             }
 
@@ -155,12 +168,18 @@ class ProcessProcessor implements ProcessorInterface
                     continue;
                 }
 
-                if ($hasAccess === false) {
+                if (!$hasAccess) {
                     return false;
                 }
 
                 if (empty($record) && empty($ids)) {
-                    $hasAccess &= $this->acl->checkAccess($module, $action, true, 'module', true);
+                    $hasAccess &= $this->acl->checkAccess(
+                        $module,
+                        $action,
+                        true,
+                        'module',
+                        true
+                    );
                     continue;
                 }
 
@@ -182,9 +201,10 @@ class ProcessProcessor implements ProcessorInterface
      * @param array $ids
      * @param string $module
      * @param string $action
+     *
      * @return bool
      */
-    protected function checkRecordsAccess(array $ids, string $module, string $action): bool
+    protected function checkRecordsAccess(array $ids, string $module, string $action) : bool
     {
         if (empty($ids)) {
             return true;
@@ -192,7 +212,7 @@ class ProcessProcessor implements ProcessorInterface
 
         foreach ($ids as $id) {
             $hasAccess = $this->acl->checkRecordAccess($module, $action, $id);
-            if ($hasAccess === false) {
+            if (!$hasAccess) {
                 return false;
             }
         }

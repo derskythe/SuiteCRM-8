@@ -62,7 +62,7 @@ class ProjectViewList extends ViewList
 
 
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->lv = new ProjectListViewSmarty();
     }

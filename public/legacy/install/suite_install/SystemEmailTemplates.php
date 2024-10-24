@@ -40,6 +40,8 @@
 
 /**
  * Install System Email Templates
+ *
+ * @throws Exception
  */
 function installSystemEmailTemplates()
 {
@@ -50,8 +52,8 @@ function installSystemEmailTemplates()
     foreach ($templates as $configKey => $templateData) {
         if (
             isset($sugar_config['system_email_templates'])
-            && isset($sugar_config['system_email_templates'][$configKey . "_id"])
-            && !empty($sugar_config['system_email_templates'][$configKey . "_id"])
+            && isset($sugar_config['system_email_templates'][$configKey . '_id'])
+            && !empty($sugar_config['system_email_templates'][$configKey . '_id'])
         ) {
             continue;
         }
@@ -61,7 +63,7 @@ function installSystemEmailTemplates()
             $template->$field = $value;
         }
         $template->save();
-        $sugar_config['system_email_templates'][$configKey . "_id"] = $template->id;
+        $sugar_config['system_email_templates'][$configKey . '_id'] = $template->id;
     }
 
     ksort($sugar_config);
@@ -84,11 +86,11 @@ function setSystemEmailTemplatesDefaultConfig()
     // set confirm_opt_in_template
     if (
         isset($sugar_config['system_email_templates'])
-        && isset($sugar_config['system_email_templates']['confirm_opt_in_template' . "_id"])
+        && isset($sugar_config['system_email_templates']['confirm_opt_in_template' . '_id'])
         && isset($sugar_config['email_enable_confirm_opt_in'])
     ) {
         $sugar_config['email_confirm_opt_in_email_template_id'] =
-            $sugar_config['system_email_templates']['confirm_opt_in_template' . "_id"];
+            $sugar_config['system_email_templates']['confirm_opt_in_template' . '_id'];
     }
 
     ksort($sugar_config);

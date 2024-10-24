@@ -140,22 +140,22 @@ class OAuthPluginBase extends ExternalAPIBase implements ExternalOAuthAPIPlugin
 
     public function getOauthParams()
     {
-        return $this->getValue("oauthParams");
+        return $this->getValue('oauthParams');
     }
 
     public function getOauthRequestURL()
     {
-        return $this->getValue("oauthReq");
+        return $this->getValue('oauthReq');
     }
 
     public function getOauthAuthURL()
     {
-        return $this->getValue("oauthAuth");
+        return $this->getValue('oauthAuth');
     }
 
     public function getOauthAccessURL()
     {
-        return $this->getValue("oauthAccess");
+        return $this->getValue('oauthAccess');
     }
 
     /**
@@ -192,7 +192,7 @@ class OAuthPluginBase extends ExternalAPIBase implements ExternalOAuthAPIPlugin
 
             $request_token_info = $oauth->getRequestTokenByUrl($oauthReq, $callback_url);
 
-            $GLOBALS['log']->debug("OAuth token: ".var_export($request_token_info, true));
+            $GLOBALS['log']->debug('OAuth token: ' . var_export($request_token_info, true));
 
             if (empty($request_token_info['oauth_token_secret']) || empty($request_token_info['oauth_token'])) {
                 return false;
@@ -208,7 +208,7 @@ class OAuthPluginBase extends ExternalAPIBase implements ExternalOAuthAPIPlugin
             $oauth->setToken($_SESSION['eapm_oauth_token'], $_SESSION['eapm_oauth_secret']);
             $GLOBALS['log']->debug("OAuth access token: {$accReq}");
             $access_token_info = $oauth->getAccessToken($accReq);
-            $GLOBALS['log']->debug("OAuth token: ".var_export($access_token_info, true));
+            $GLOBALS['log']->debug('OAuth token: ' . var_export($access_token_info, true));
             // FIXME: error checking here
             $this->oauth_token = $access_token_info['oauth_token'];
             $this->oauth_secret = $access_token_info['oauth_token_secret'];

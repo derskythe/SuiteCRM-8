@@ -15,7 +15,7 @@ class Jjwg_MapsViewMap_Markers extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -967,7 +967,7 @@ $(document).ready(function(){
     if (empty($group_name)) {
         echo '{'.$GLOBALS['mod_strings']['LBL_MAP_NULL_GROUP_NAME'].'}';
     } else {
-        echo htmlentities($group_name, ENT_COMPAT, "UTF-8", false);
+        echo htmlentities($group_name, ENT_COMPAT, 'UTF-8', false);
     } ?><br/>
 <?php
   } ?>

@@ -56,8 +56,9 @@ class DocumentSoap
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function saveFile($document, $portal = false)
     {
         global $sugar_config;
@@ -79,11 +80,11 @@ class DocumentSoap
             $decodedFile = base64_decode($document['file']);
             $this->upload_file->set_for_soap($document['filename'], $decodedFile);
 
-            $ext_pos = strrpos((string) $this->upload_file->stored_file_name, ".");
+            $ext_pos = strrpos((string) $this->upload_file->stored_file_name, '.');
             $this->upload_file->file_ext = substr((string) $this->upload_file->stored_file_name, $ext_pos + 1);
-            if (in_array($this->upload_file->file_ext, $sugar_config['upload_badext'])) {
-                $this->upload_file->stored_file_name .= ".txt";
-                $this->upload_file->file_ext = "txt";
+            if (in_array($this->upload_file->file_ext, $sugar_config['upload_badext'], true)) {
+                $this->upload_file->stored_file_name .= '.txt';
+                $this->upload_file->file_ext = 'txt';
             }
 
             $revision = BeanFactory::newBean('DocumentRevisions');

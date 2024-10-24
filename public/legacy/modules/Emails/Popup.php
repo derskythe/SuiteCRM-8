@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'show_raw') {
+if (isset($_REQUEST['mode']) && $_REQUEST['mode'] === 'show_raw') {
     $email = BeanFactory::newBean('Emails');
     $email->retrieve($_REQUEST['metadata']);
     echo nl2br($email->raw_source);

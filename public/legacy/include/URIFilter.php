@@ -49,8 +49,8 @@ class URIFilter extends \HTMLPurifier_URIFilter
         }
 
         if (!empty($uri->scheme)
-            && strtolower($uri->scheme) != 'http'
-            && strtolower($uri->scheme) != 'https'
+            && strtolower($uri->scheme) !== 'http'
+            && strtolower($uri->scheme) !== 'https'
         ) {
             // do not touch non-HTTP URLs
             return true;
@@ -67,7 +67,7 @@ class URIFilter extends \HTMLPurifier_URIFilter
         foreach ($this->allowed as $allow) {
             // must be equal to our domain or subdomain of our domain
             if ($uri->host == $allow
-                || substr((string) $uri->host, -(strlen((string) $allow) + 1)) == ".$allow"
+                || substr((string) $uri->host, -(strlen((string) $allow) + 1)) === ".$allow"
             ) {
                 return true;
             }
@@ -77,11 +77,11 @@ class URIFilter extends \HTMLPurifier_URIFilter
         // referring back to Sugar URLs
         // allow URLs that don't start with /? or /index.php?
         if (!empty($uri->path)
-            && $uri->path != '/'
+            && $uri->path !== '/'
         ) {
             $lpath = strtolower($uri->path);
-            if (substr($lpath, -10) != '/index.php'
-                && $lpath != 'index.php'
+            if (!str_ends_with($lpath, '/index.php')
+                && $lpath !== 'index.php'
             ) {
                 return true;
             }

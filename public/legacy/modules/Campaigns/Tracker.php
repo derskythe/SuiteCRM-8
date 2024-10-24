@@ -64,7 +64,7 @@ $GLOBALS['log'] = LoggerManager::getLogger('Campaign Tracker v2');
 $db = DBManagerFactory::getInstance();
 
 if (empty($_REQUEST['track'])) {
-    $track = "";
+    $track = '';
 } else {
     $track = $_REQUEST['track'];
 }

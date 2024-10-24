@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-$dictionary["emails_email_templates"] = array(
+$dictionary['emails_email_templates'] = array(
   'true_relationship_type' => 'one-to-one',
   'from_studio' => true,
   'relationships' =>

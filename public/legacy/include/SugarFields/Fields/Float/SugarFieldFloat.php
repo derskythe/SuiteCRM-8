@@ -51,14 +51,14 @@ class SugarFieldFloat extends SugarFieldInt
         if (isset($vardef['precision'])) {
             $precision = $vardef['precision'];
         }
-        
+
         if ($rawField === '' || $rawField === null) {
             return '';
         }
 
         return format_number($rawField, $precision, $precision);
     }
-    
+
     public function unformatField($formattedField, $vardef)
     {
         if ($formattedField === '' || $formattedField === null) {
@@ -76,15 +76,15 @@ class SugarFieldFloat extends SugarFieldInt
         $focus,
         ImportFieldSanitize $settings
         ) {
-        $value = str_replace($settings->num_grp_sep, "", $value);
+        $value = str_replace($settings->num_grp_sep, '', $value);
         $dec_sep = $settings->dec_sep;
-        if ($dec_sep != '.') {
-            $value = str_replace($dec_sep, ".", $value);
+        if ($dec_sep !== '.') {
+            $value = str_replace($dec_sep, '.', $value);
         }
         if (!is_numeric($value)) {
             return false;
         }
-        
+
         return $value;
     }
 }

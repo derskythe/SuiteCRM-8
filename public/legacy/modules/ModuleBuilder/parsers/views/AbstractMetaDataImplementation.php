@@ -177,7 +177,7 @@ abstract class AbstractMetaDataImplementation
             return null;
         }
         // END ASSERTIONS
-        $GLOBALS['log']->debug(get_class($this) . "->_loadFromFile(): reading from " . $filename);
+        $GLOBALS['log']->debug(get_class($this) . '->_loadFromFile(): reading from ' . $filename);
         require $filename; // loads the viewdef - must be a require not require_once to ensure can reload if called twice in succession
 
         // Check to see if we have the module name set as a variable rather than embedded in the $viewdef array
@@ -220,7 +220,7 @@ abstract class AbstractMetaDataImplementation
 
         if (isset($variables ['module_name'])) {
             $mbName = $variables ['module_name'];
-            if ($mbName != $this->_moduleName) {
+            if ($mbName !== $this->_moduleName) {
                 $defs [$this->_moduleName] = $defs [$mbName];
                 unset($defs [$mbName]);
             }
@@ -229,7 +229,7 @@ abstract class AbstractMetaDataImplementation
         // now remove the modulename preamble from the loaded defs
         reset($defs);
 
-        $GLOBALS['log']->debug(get_class($this) . "->_loadFromFile: returning " . print_r($defs, true));
+        $GLOBALS['log']->debug(get_class($this) . '->_loadFromFile: returning ' . print_r($defs, true));
 
         return array_shift($defs); // 'value' contains the value part of 'key'=>'value' part
     }
@@ -248,7 +248,7 @@ abstract class AbstractMetaDataImplementation
             return null;
         }
         // END ASSERTIONS
-        $GLOBALS['log']->debug(get_class($this) . "->_loadFromFile(): reading from " . $filename);
+        $GLOBALS['log']->debug(get_class($this) . '->_loadFromFile(): reading from ' . $filename);
 
         if (!empty($mod)) {
             $oldModStrings = $GLOBALS['mod_strings'];
@@ -270,7 +270,7 @@ abstract class AbstractMetaDataImplementation
                 $defs = $defs[PopupMetaDataParser::$defsMap[$view]];
             } else {
                 //If there are no defs for this view, grab them from the non-popup view
-                if ($view == MB_POPUPLIST) {
+                if ($view === MB_POPUPLIST) {
                     $this->_view = MB_LISTVIEW;
                     $defs = $this->_loadFromFile($this->getFileName(
                         MB_LISTVIEW,
@@ -278,7 +278,7 @@ abstract class AbstractMetaDataImplementation
                         null,
                         MB_CUSTOMMETADATALOCATION
                     ));
-                    if ($defs == null) {
+                    if ($defs === null) {
                         $defs = $this->_loadFromFile($this->getFileName(
                             MB_LISTVIEW,
                             $this->_moduleName,
@@ -288,7 +288,7 @@ abstract class AbstractMetaDataImplementation
                     }
                     $this->_view = $view;
                 } else {
-                    if ($view == MB_POPUPSEARCH) {
+                    if ($view === MB_POPUPSEARCH) {
                         $this->_view = MB_ADVANCEDSEARCH;
                         $defs = $this->_loadFromFile($this->getFileName(
                             MB_ADVANCEDSEARCH,
@@ -296,7 +296,7 @@ abstract class AbstractMetaDataImplementation
                             null,
                             MB_CUSTOMMETADATALOCATION
                         ));
-                        if ($defs == null) {
+                        if ($defs === null) {
                             $defs = $this->_loadFromFile($this->getFileName(
                                 MB_ADVANCEDSEARCH,
                                 $this->_moduleName,
@@ -311,7 +311,7 @@ abstract class AbstractMetaDataImplementation
                         $this->_view = $view;
                     }
                 }
-                if ($defs == null) {
+                if ($defs === null) {
                     $defs = array();
                 }
             }
@@ -370,7 +370,7 @@ abstract class AbstractMetaDataImplementation
         }
 
         if (sugar_file_put_contents($filename, $out) === false) {
-            $GLOBALS ['log']->fatal(get_class($this) . ": could not write new viewdef file " . $filename);
+            $GLOBALS ['log']->fatal(get_class($this) . ': could not write new viewdef file ' . $filename);
         }
     }
 
@@ -410,7 +410,7 @@ abstract class AbstractMetaDataImplementation
     protected function _mergeFielddefs(&$fielddefs, $layout)
     {
         foreach ($layout as $key => $def) {
-            if ((string)$key == 'templateMeta') {
+            if ((string)$key === 'templateMeta') {
                 continue;
             }
 
@@ -459,7 +459,7 @@ abstract class AbstractMetaDataImplementation
         $type = strtolower($type);
 
         // BEGIN ASSERTIONS
-        if ($type != MB_BASEMETADATALOCATION && $type != MB_HISTORYMETADATALOCATION) {
+        if ($type !== MB_BASEMETADATALOCATION && $type !== MB_HISTORYMETADATALOCATION) {
             // just warn rather than die
             $GLOBALS ['log']->warning(
                 "UndeployedMetaDataImplementation->getFileName(): view type $type is not recognized"

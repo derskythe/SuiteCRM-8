@@ -40,7 +40,7 @@
 
 class ViewXML extends SugarView
 {
-    public $type ='detail';
+    public $type = 'detail';
 
     public function __construct()
     {
@@ -48,9 +48,7 @@ class ViewXML extends SugarView
     }
 
 
-
-
-    public function display()
+    public function display() : void
     {
         echo 'Not implemented';
     }

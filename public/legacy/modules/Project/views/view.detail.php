@@ -58,7 +58,7 @@ class ProjectViewDetail extends ViewDetail
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $beanFiles;
         require_once($beanFiles['Project']);
@@ -74,7 +74,7 @@ class ProjectViewDetail extends ViewDetail
         } else {
             $this->ss->assign('OWNER_ONLY', false);
         }
-        $this->ss->assign("IS_TEMPLATE", 0);
+        $this->ss->assign('IS_TEMPLATE', 0);
 
         parent::display();
     }

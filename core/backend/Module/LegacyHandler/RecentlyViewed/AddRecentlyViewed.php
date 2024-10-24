@@ -42,19 +42,20 @@ use TrackerManagerPort;
 class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'add-recently-viewed';
+    protected const PROCESS_TYPE          = 'add-recently-viewed';
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * LegacyHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -64,21 +65,24 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
-    ) {
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -86,7 +90,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -94,7 +98,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -102,7 +106,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -110,9 +114,9 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
-        ['recentlyViewed' => $recentlyViewed] = $process->getOptions();
+        [ 'recentlyViewed' => $recentlyViewed ] = $process->getOptions();
         $itemId = $recentlyViewed['attributes']['item_id'] ?? '';
         $itemModule = $recentlyViewed['attributes']['module_name'] ?? '';
 
@@ -129,7 +133,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -141,17 +145,16 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
 
-        ['recentlyViewed' => $recentlyViewed] = $process->getOptions();
+        [ 'recentlyViewed' => $recentlyViewed ] = $process->getOptions();
         $itemModule = $recentlyViewed['attributes']['module_name'] ?? '';
         $itemModule = $this->moduleNameMapper->toLegacy($itemModule);
         $action = $recentlyViewed['attributes']['action'] ?? '';
-
 
         if (empty($itemModule) || empty($action)) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -161,13 +164,14 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      * @throws Exception
+     * @throws \Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
         $this->startLegacyApp();
 
-        ['recentlyViewed' => $recentlyViewed] = $process->getOptions();
+        [ 'recentlyViewed' => $recentlyViewed ] = $process->getOptions();
 
         if (empty($recentlyViewed)) {
             $process->setStatus('success');
@@ -191,14 +195,13 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
         $process->setStatus('success');
         $process->setMessages([]);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Trackers/TrackerManagerPort.php';
+        require_once $this->legacyDir . '/include/portability/Services/Trackers/TrackerManagerPort.php';
 
         $trackerManager = new TrackerManagerPort();
         $result = $trackerManager->trackView($itemId, $itemModule, $action);
         $process->setData([
-            'tracker' => $result
-        ]);
+                              'tracker' => $result
+                          ]);
 
         $this->close();
     }
@@ -206,7 +209,7 @@ class AddRecentlyViewed extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }

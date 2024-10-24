@@ -36,7 +36,7 @@ class PackageHandler
     /**
      * @var Filesystem
      */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
     public function __construct()
     {
@@ -49,11 +49,7 @@ class PackageHandler
      */
     public function exists(string $path): bool
     {
-        if (!$this->filesystem->exists($path)) {
-            return false;
-        }
-
-        return true;
+        return $this->filesystem->exists($path);
     }
 
     /**
@@ -71,8 +67,7 @@ class PackageHandler
         }
 
         $result = $zip->extractTo($outputPath);
-        $result = $zip->close() && $result;
 
-        return $result;
+        return $zip->close() && $result;
     }
 }

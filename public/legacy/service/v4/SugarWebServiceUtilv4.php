@@ -54,24 +54,22 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         }
 
         $view = strtolower($view);
-        switch (strtolower($type)) {
-            case 'default':
-            default:
-                if ($view == 'subpanel') {
-                    $results = $this->get_subpanel_defs($moduleName, $type);
+        {
+            if ($view === 'subpanel') {
+                $results = $this->get_subpanel_defs($moduleName, $type);
+            } else {
+                $v = new SugarView(null, array());
+                $v->module = $moduleName;
+                $v->type = $view;
+                $fullView = ucfirst($view) . 'View';
+                $metadataFile = $v->getMetaDataFile();
+                require_once($metadataFile);
+                if ($view === 'list') {
+                    $results = $listViewDefs[$moduleName];
                 } else {
-                    $v = new SugarView(null, array());
-                    $v->module = $moduleName;
-                    $v->type = $view;
-                    $fullView = ucfirst($view) . 'View';
-                    $metadataFile = $v->getMetaDataFile();
-                    require_once($metadataFile);
-                    if ($view == 'list') {
-                        $results = $listViewDefs[$moduleName];
-                    } else {
-                        $results = $viewdefs[$moduleName][$fullView];
-                    }
+                    $results = $viewdefs[$moduleName][$fullView];
                 }
+            }
         }
 
         //Add field level acls.
@@ -88,8 +86,8 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
      */
     public function get_data_list(
         $seed,
-        $order_by = "",
-        $where = "",
+        $order_by = '',
+        $where = '',
         $row_offset = 0,
         $limit = -1,
         $max = -1,
@@ -186,13 +184,13 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         $link_fields = array();
         if (!empty($value->field_defs)) {
             foreach ($value->field_defs as $var) {
-                if (!empty($fields) && !in_array($var['name'], $fields)) {
+                if (!empty($fields) && !in_array($var['name'], $fields, true)) {
                     continue;
                 }
-                if (isset($var['source']) && ($var['source'] != 'db' && $var['source'] != 'non-db' &&$var['source'] != 'custom_fields') && $var['name'] != 'email1' && $var['name'] != 'email2' && (!isset($var['type'])|| $var['type'] != 'relate')) {
+                if (isset($var['source']) && ($var['source'] !== 'db' && $var['source'] !== 'non-db' && $var['source'] !== 'custom_fields') && $var['name'] !== 'email1' && $var['name'] !== 'email2' && (!isset($var['type'])|| $var['type'] !== 'relate')) {
                     continue;
                 }
-                if ((isset($var['source']) && $var['source'] == 'non_db') && (isset($var['type']) && $var['type'] != 'link')) {
+                if ((isset($var['source']) && $var['source'] === 'non_db') && (isset($var['type']) && $var['type'] !== 'link')) {
                     continue;
                 }
                 $required = 0;
@@ -200,11 +198,11 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
                 $options_ret = array();
                 // Apparently the only purpose of this check is to make sure we only return fields
                 //   when we've read a record.  Otherwise this function is identical to get_module_field_list
-                if (isset($var['required']) && ($var['required'] || $var['required'] == 'true')) {
+                if (isset($var['required']) && ($var['required'] || $var['required'] === 'true')) {
                     $required = 1;
                 }
 
-                if ($var['type'] == 'bool') {
+                if ($var['type'] === 'bool') {
                     $var['options'] = 'checkbox_dom';
                 }
 
@@ -218,50 +216,32 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
                     }
                 }
 
-                if (!empty($var['dbType']) && $var['type'] == 'bool') {
+                if (!empty($var['dbType']) && $var['type'] === 'bool') {
                     $options_ret['type'] = $this->get_name_value('type', $var['dbType']);
                 }
 
                 $entry = array();
                 $entry['name'] = $var['name'];
                 $entry['type'] = $var['type'];
-                $entry['group'] = isset($var['group']) ? $var['group'] : '';
-                $entry['id_name'] = isset($var['id_name']) ? $var['id_name'] : '';
+                $entry['group'] = $var['group'] ?? '';
+                $entry['id_name'] = $var['id_name'] ?? '';
                 if (isset($var['parentenum'])) {
                     $entry['parentenum'] = $var['parentenum'];
                 }
 
-                if ($var['type'] == 'link') {
-                    $entry['relationship'] = (isset($var['relationship']) ? $var['relationship'] : '');
-                    $entry['module'] = (isset($var['module']) ? $var['module'] : '');
-                    $entry['bean_name'] = (isset($var['bean_name']) ? $var['bean_name'] : '');
+                if ($var['type'] === 'link') {
+                    $entry['relationship'] = ($var['relationship'] ?? '');
+                    $entry['module'] = ($var['module'] ?? '');
+                    $entry['bean_name'] = ($var['bean_name'] ?? '');
                     $link_fields[$var['name']] = $entry;
                 } else {
-                    if ($translate) {
-                        $entry['label'] = isset($var['vname']) ? translate($var['vname'], $value->module_dir) : $var['name'];
-                    } else {
-                        $entry['label'] = isset($var['vname']) ? $var['vname'] : $var['name'];
-                    }
-                    $entry['required'] = $required;
-                    $entry['options'] = $options_ret;
-                    $entry['related_module'] = (isset($var['id_name']) && isset($var['module'])) ? $var['module'] : '';
-                    $entry['calculated'] =  (isset($var['calculated']) && $var['calculated']) ? true : false;
-                    $entry['len'] =  isset($var['len']) ? $var['len'] : '';
-
-                    if (isset($var['default'])) {
-                        $entry['default_value'] = $var['default'];
-                    }
-                    if ($var['type'] == 'parent' && isset($var['type_name'])) {
-                        $entry['type_name'] = $var['type_name'];
-                    }
-
-                    $module_fields[$var['name']] = $entry;
+                    $module_fields[$var['name']] = create_entry($var, $translate, $value, $required);
                 } // else
             } //foreach
         } //if
 
-        if ($value->module_dir == 'Meetings' || $value->module_dir == 'Calls') {
-            if (isset($module_fields['duration_minutes']) && isset($GLOBALS['app_list_strings']['duration_intervals'])) {
+        if ($value->module_dir === 'Meetings' || $value->module_dir === 'Calls') {
+            if (isset($module_fields['duration_minutes'], $GLOBALS['app_list_strings']['duration_intervals'])) {
                 $options_dom = $GLOBALS['app_list_strings']['duration_intervals'];
                 $options_ret = array();
                 foreach ($options_dom as $key=>$oneOption) {
@@ -272,53 +252,15 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
             }
         }
 
-        if ($value->module_dir == 'Bugs') {
-            require_once('modules/Releases/Release.php');
-            $seedRelease = BeanFactory::newBean('Releases');
-            $options = $seedRelease->get_releases(true, "Active");
-            $options_ret = array();
-            foreach ($options as $name=>$value) {
-                $options_ret[] =  array('name'=> $name , 'value'=>$value);
-            }
-            if (isset($module_fields['fixed_in_release'])) {
-                $module_fields['fixed_in_release']['type'] = 'enum';
-                $module_fields['fixed_in_release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['found_in_release'])) {
-                $module_fields['found_in_release']['type'] = 'enum';
-                $module_fields['found_in_release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['release'])) {
-                $module_fields['release']['type'] = 'enum';
-                $module_fields['release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['release_name'])) {
-                $module_fields['release_name']['type'] = 'enum';
-                $module_fields['release_name']['options'] = $options_ret;
-            }
+        if ($value->module_dir === 'Bugs') {
+            [ $value, $module_fields ] = check_dirs($value, $module_fields);
         }
 
-        if (isset($value->assigned_user_name) && isset($module_fields['assigned_user_id'])) {
-            $module_fields['assigned_user_name'] = $module_fields['assigned_user_id'];
-            $module_fields['assigned_user_name']['name'] = 'assigned_user_name';
-        }
-        if (isset($value->assigned_name) && isset($module_fields['team_id'])) {
-            $module_fields['team_name'] = $module_fields['team_id'];
-            $module_fields['team_name']['name'] = 'team_name';
-        }
-        if (isset($module_fields['modified_user_id'])) {
-            $module_fields['modified_by_name'] = $module_fields['modified_user_id'];
-            $module_fields['modified_by_name']['name'] = 'modified_by_name';
-        }
-        if (isset($module_fields['created_by'])) {
-            $module_fields['created_by_name'] = $module_fields['created_by'];
-            $module_fields['created_by_name']['name'] = 'created_by_name';
-        }
+        $module_fields = set_assigned_user_name($value, $module_fields, true);
 
         $GLOBALS['log']->info('End: SoapHelperWebServices->get_field_list');
         return array('module_fields' => $module_fields, 'link_fields' => $link_fields);
     }
-
 
     public function new_handle_set_entries($module_name, $name_value_lists, $select_fields = false)
     {
@@ -337,7 +279,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
 
             $seed->update_vcal = false;
             foreach ($name_value_list as $name => $value) {
-                if (is_array($value) &&  $value['name'] == 'id') {
+                if (is_array($value) &&  $value['name'] === 'id') {
                     $seed->retrieve($value['value']);
                     break;
                 } elseif ($name === 'id') {
@@ -355,15 +297,15 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
                     $val = $value['value'];
                 }
 
-                if ($seed->field_name_map[$field_name]['type'] == 'enum') {
+                if ($seed->field_name_map[$field_name]['type'] === 'enum') {
                     $vardef = $seed->field_name_map[$field_name];
                     if (isset($app_list_strings[$vardef['options']]) && !isset($app_list_strings[$vardef['options']][$val])) {
-                        if (in_array($val, $app_list_strings[$vardef['options']])) {
+                        if (in_array($val, $app_list_strings[$vardef['options']], true)) {
                             $val = array_search($val, $app_list_strings[$vardef['options']], true);
                         }
                     }
                 }
-                if ($module_name == 'Users' && !empty($seed->id) && ($seed->id != $current_user->id) && $field_name == 'user_hash') {
+                if ($module_name === 'Users' && !empty($seed->id) && ($seed->id != $current_user->id) && $field_name === 'user_hash') {
                     continue;
                 }
                 if (!empty($seed->field_name_map[$field_name]['sensitive'])) {
@@ -378,7 +320,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
             $count++;
 
             //Add the account to a contact
-            if ($module_name == 'Contacts') {
+            if ($module_name === 'Contacts') {
                 $GLOBALS['log']->debug('Creating Contact Account');
                 $this->add_create_account($seed);
                 $duplicate_id = $this->check_for_duplicate_contacts($seed);
@@ -400,7 +342,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
                         $ids[] = $duplicate_id;//we have a conflict
                     }
                 }
-            } elseif ($module_name == 'Meetings' || $module_name == 'Calls') {
+            } elseif ($module_name === 'Meetings' || $module_name === 'Calls') {
                 //we are going to check if we have a meeting in the system
                 //with the same outlook_id. If we do find one then we will grab that
                 //id and save it
@@ -412,7 +354,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
                             //so we need to query the db to find if we already
                             //have an object with this outlook_id, if we do
                             //then we can set the id, otherwise this is a new object
-                            $order_by = "";
+                            $order_by = '';
                             $query = $seed->table_name.".outlook_id = '".$seed->outlook_id."'";
                             $response = $seed->get_list($order_by, $query, 0, -1, -1, 0);
                             $list = $response['list'];
@@ -486,7 +428,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
 
     public function checkOAuthAccess($errorObject)
     {
-        require_once "include/SugarOAuthServer.php";
+        require_once 'include/SugarOAuthServer.php';
         try {
             $oauth = new SugarOAuthServer();
             $token = $oauth->authorizedToken();
@@ -507,7 +449,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         }
         global $current_user;
         $current_user = $user;
-        ini_set("session.use_cookies", 0); // disable cookies to prevent session ID from going out
+        ini_set('session.use_cookies', 0); // disable cookies to prevent session ID from going out
         session_start();
         session_regenerate_id();
         $_SESSION['oauth'] = $oauth->authorization();
@@ -532,7 +474,7 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
      */
     public function get_subpanel_defs($module, $type)
     {
-        global $beanList, $beanFiles;
+        global $beanList, $beanFiles, $layout_defs;
         $results = array();
         switch ($type) {
             case 'wireless':
@@ -560,18 +502,6 @@ class SugarWebServiceUtilv4 extends SugarWebServiceUtilv3_1
         }
 
         //Filter results for permissions
-        foreach ($layout_defs[$module]['subpanel_setup'] as $subpanel => $subpaneldefs) {
-            $moduleToCheck = $subpaneldefs['module'];
-            if (!isset($beanList[$moduleToCheck])) {
-                continue;
-            }
-            $class_name = $beanList[$moduleToCheck];
-            $bean = new $class_name();
-            if ($bean->ACLAccess('list')) {
-                $results[$subpanel] = $subpaneldefs;
-            }
-        }
-
-        return $results;
+        return populateLayoutDefs($layout_defs[$module]['subpanel_setup'], $beanList, $results);
     }
 }

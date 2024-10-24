@@ -57,7 +57,7 @@ class ViewClassic extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if (($this->bean instanceof SugarBean) && isset($this->view_object_map['remap_action']) && !$this->bean->ACLAccess($this->view_object_map['remap_action'])) {
             ACLController::displayNoAccess(true);

@@ -45,15 +45,15 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class EmailMarketing extends SugarBean
 {
-    public $field_name_map;
+    public ?array $field_name_map;
 
-    public $id;
-    public $deleted;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $created_by;
-    public $name;
+    public string $id;
+    public int $deleted;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $created_by;
+    public string $name;
     public $from_addr;
     public $from_name;
     public $reply_to_name;
@@ -67,11 +67,11 @@ class EmailMarketing extends SugarBean
     public $inbound_email_id;
     public $outbound_email_id;
 
-    public $table_name = 'email_marketing';
-    public $object_name = 'EmailMarketing';
-    public $module_dir = 'EmailMarketing';
+    public string $table_name = 'email_marketing';
+    public string $object_name = 'EmailMarketing';
+    public string $module_dir = 'EmailMarketing';
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
     public function __construct()
     {
@@ -87,7 +87,7 @@ class EmailMarketing extends SugarBean
 
         $date_start = trim($this->date_start);
         $time_start = trim($this->time_start);
-        if ($time_start && strpos($date_start, $time_start) === false) {
+        if ($time_start && !str_contains($date_start, $time_start)) {
             $this->date_start = "$date_start $time_start";
             $this->time_start = '';
         }
@@ -105,12 +105,12 @@ class EmailMarketing extends SugarBean
         return parent::save($check_notify);
     }
 
-    public function retrieve($id = -1, $encode=true, $deleted=true)
+    public function retrieve($id = -1, $encode=true, $deleted=true) : ?SugarBean
     {
         parent::retrieve($id, $encode, $deleted);
 
         global $timedate;
-        $date_start_array=explode(" ", trim($this->date_start));
+        $date_start_array=explode(' ', trim($this->date_start));
         if (count($date_start_array)==2) {
             $this->time_start = $date_start_array[1];
             $this->date_start = $date_start_array[0];
@@ -119,12 +119,12 @@ class EmailMarketing extends SugarBean
         return $this;
     }
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
 
-    public function create_export_query($order_by, $where)
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         return $this->create_new_list_query($order_by, $where);
     }
@@ -150,28 +150,28 @@ class EmailMarketing extends SugarBean
 
 
         //mode is set by schedule.php from campaigns module.
-        if (!isset($this->mode) || empty($this->mode) || $this->mode!='test') {
+        if (!isset($this->mode) || empty($this->mode) || $this->mode !== 'test') {
             $this->mode='rest';
         }
 
         if ($temp_array['ALL_PROSPECT_LISTS']==1) {
-            $query="SELECT name from prospect_lists ";
-            $query.=" INNER JOIN prospect_list_campaigns plc ON plc.prospect_list_id = prospect_lists.id";
+            $query= 'SELECT name from prospect_lists ';
+            $query.= ' INNER JOIN prospect_list_campaigns plc ON plc.prospect_list_id = prospect_lists.id';
             $query.=" WHERE plc.campaign_id='{$temp_array['CAMPAIGN_ID']}'";
-            $query.=" AND prospect_lists.deleted=0";
-            $query.=" AND plc.deleted=0";
-            if ($this->mode=='test') {
+            $query.= ' AND prospect_lists.deleted=0';
+            $query.= ' AND plc.deleted=0';
+            if ($this->mode === 'test') {
                 $query.=" AND prospect_lists.list_type='test'";
             } else {
                 $query.=" AND prospect_lists.list_type!='test'";
             }
         } else {
-            $query="SELECT name from prospect_lists ";
-            $query.=" INNER JOIN email_marketing_prospect_lists empl ON empl.prospect_list_id = prospect_lists.id";
+            $query= 'SELECT name from prospect_lists ';
+            $query.= ' INNER JOIN email_marketing_prospect_lists empl ON empl.prospect_list_id = prospect_lists.id';
             $query.=" WHERE empl.email_marketing_id='{$id}'";
-            $query.=" AND prospect_lists.deleted=0";
-            $query.=" AND empl.deleted=0";
-            if ($this->mode=='test') {
+            $query.= ' AND prospect_lists.deleted=0';
+            $query.= ' AND empl.deleted=0';
+            if ($this->mode === 'test') {
                 $query.=" AND prospect_lists.list_type='test'";
             } else {
                 $query.=" AND prospect_lists.list_type!='test'";
@@ -180,7 +180,7 @@ class EmailMarketing extends SugarBean
         $res = $this->db->query($query);
         while (($row = $this->db->fetchByAssoc($res)) != null) {
             if (!empty($temp_array['PROSPECT_LIST_NAME'])) {
-                $temp_array['PROSPECT_LIST_NAME'].="<BR>";
+                $temp_array['PROSPECT_LIST_NAME'].= '<BR>';
             }
             $temp_array['PROSPECT_LIST_NAME'].=$row['name'];
         }
@@ -194,7 +194,7 @@ class EmailMarketing extends SugarBean
     {
         $module = isset($_REQUEST['module']) ? $_REQUEST['module'] : null;
         $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
-        $isCampaignDetailView = $module = 'Campaigns' && $action == 'DetailView';
+        $isCampaignDetailView = $module = 'Campaigns' && $action === 'DetailView';
         return $isCampaignDetailView;
     }
 
@@ -211,7 +211,7 @@ class EmailMarketing extends SugarBean
         return $tempArray;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':return true;
@@ -221,11 +221,11 @@ class EmailMarketing extends SugarBean
 
     public function get_all_prospect_lists()
     {
-        $query="select prospect_lists.* from prospect_lists ";
-        $query.=" left join prospect_list_campaigns on prospect_list_campaigns.prospect_list_id=prospect_lists.id";
-        $query.=" where prospect_list_campaigns.deleted=0";
+        $query= 'select prospect_lists.* from prospect_lists ';
+        $query.= ' left join prospect_list_campaigns on prospect_list_campaigns.prospect_list_id=prospect_lists.id';
+        $query.= ' where prospect_list_campaigns.deleted=0';
         $query.=" and prospect_list_campaigns.campaign_id='$this->campaign_id'";
-        $query.=" and prospect_lists.deleted=0";
+        $query.= ' and prospect_lists.deleted=0';
         $query.=" and prospect_lists.list_type not like 'exempt%'";
 
         return $query;

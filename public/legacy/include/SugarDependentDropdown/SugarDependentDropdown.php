@@ -60,11 +60,11 @@ class SugarDependentDropdown
      * ensure uniformity
      */
     public $defaults = array(
-        'name'		=> '',
-        'id'		=> '',
-        'type'		=> 'none',	// form element, valid "select", "input", "checkbox", "none"
-        'label_pos'	=> 'left',		// valid: 'left', 'right', 'top', 'bottom', 'none' (none)
-        'hidden'	=> array(),		// metadata to create hidden fields with values you choose
+        'name'        => '',
+        'id'        => '',
+        'type'        => 'none',    // form element, valid "select", "input", "checkbox", "none"
+        'label_pos'    => 'left',        // valid: 'left', 'right', 'top', 'bottom', 'none' (none)
+        'hidden'    => array(),        // metadata to create hidden fields with values you choose
     );
 
     /*
@@ -90,11 +90,11 @@ class SugarDependentDropdown
      * Valid 'types' for a dependent dropdown
      */
     public $validTypes = array(
-        "select", 	// select dropdown
-        "input", 	// text input field
-        "checkbox",	// checkbox (radio buttons will not be supported)
-        "none", 	// blank
-        "multiple"	// custom functionality
+        'select',    // select dropdown
+        'input',    // text input field
+        'checkbox',    // checkbox (radio buttons will not be supported)
+        'none',    // blank
+        'multiple'    // custom functionality
     );
 
     /**
@@ -133,7 +133,7 @@ class SugarDependentDropdown
                 foreach ($sugarDependentDropdown as $key => $type) {
                     if (is_array($type)) {
                         foreach ($type as $k => $v) {
-                            if ($k == 'elements') {
+                            if ($k === 'elements') {
                                 ksort($v); // order elements
                                 foreach ($v as $index => $element) {
                                     $v[$index] = $this->initElement($element, $type['always_merge']);
@@ -144,7 +144,9 @@ class SugarDependentDropdown
 
                         if (!$this->verifyMetadata($type)) {
                             if ($this->debugMode) {
-                                $this->debugOutput("SugarRouting: metadata initialization failed.  Please check your metadata source.");
+                                $this->debugOutput(
+                                    'SugarRouting: metadata initialization failed.  Please check your metadata source.'
+                                );
                             }
                         }
                     }
@@ -164,7 +166,7 @@ class SugarDependentDropdown
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	PRIVATE UTILS
+    ////    PRIVATE UTILS
     /**
      * Verifies that an element is valid and has all the required info.
      */
@@ -184,7 +186,7 @@ class SugarDependentDropdown
         }
 
         if ($this->debugMode) {
-            $this->debugOutput("isValidElement is returning false.  Passed the following as an argument:");
+            $this->debugOutput('isValidElement is returning false.  Passed the following as an argument:');
             $this->debugOutput($element);
         }
         return false;
@@ -220,7 +222,7 @@ class SugarDependentDropdown
                     foreach ($mergedElement['handlers'] as $miniKey => $miniElement) {
                         // apply parent element's properties to mini-element
                         foreach ($mergedElement as $key => $el) {
-                            if ($key != 'handlers' && (!isset($miniElement[$key]))) {// || empty($miniElement[$key])
+                            if ($key !== 'handlers' && (!isset($miniElement[$key]))) {// || empty($miniElement[$key])
                                 $miniElement[$key] = $mergedElement[$key];
                             }
                         }
@@ -239,7 +241,7 @@ class SugarDependentDropdown
             return $mergedElement;
         } else {
             if ($this->debugMode) {
-                $this->debugOutput("SugarRouting is trying to initialize a non-element:");
+                $this->debugOutput('SugarRouting is trying to initialize a non-element:');
                 $this->debugOutput($element);
             }
         }
@@ -258,7 +260,7 @@ class SugarDependentDropdown
 
             foreach ($elements as $indexName => $element) {
                 /* confirm each element has a valid type */
-                if (!isset($element['type']) && in_array($element['type'], $this->validTypes)) {
+                if (!isset($element['type']) && in_array($element['type'], $this->validTypes, true)) {
                     if ($this->debugMode) {
                         $this->debugOutput("SugarRouting: valid 'type' not found:");
                         $this->debugOutput($element);
@@ -270,7 +272,7 @@ class SugarDependentDropdown
                  * Check based on "type"
                  */
                 switch ($element['type']) {
-                    case "select":
+                    case 'select':
                         if (isset($element['values'])) {
                             $index = substr($indexName, 7, strlen($indexName));
 
@@ -278,7 +280,7 @@ class SugarDependentDropdown
                             /* if we have an array to iterate through - this is not the case with lazy-loaded values */
                             if (is_array($element['values']) && !empty($element['values'])) {
                                 $index++; // string to int conversion, i know, sucks
-                                $nextElementKey = "element".$index;
+                                $nextElementKey = 'element' . $index;
                                 $nextElement = $elements[$nextElementKey];
 
                                 foreach ($element['values'] as $key => $value) {
@@ -322,7 +324,10 @@ class SugarDependentDropdown
             }
 
             if ($this->debugMode) {
-                $this->debugOutput((count($metadata) > 1) ? "SugarRouting: all checks passed, valid metadata confirmed" : "SugarRouting: 'handlers' checks passed, valid metadata confirmed.");
+                $this->debugOutput(
+                    (count($metadata) > 1) ? 'SugarRouting: all checks passed, valid metadata confirmed'
+                        : "SugarRouting: 'handlers' checks passed, valid metadata confirmed."
+                );
             }
             return true;
         } else {
@@ -344,6 +349,6 @@ class SugarDependentDropdown
         print_r($v);
         echo "\n</pre>\n";
     }
-    ////	END PRIVATE UTILS
+    ////    END PRIVATE UTILS
     ///////////////////////////////////////////////////////////////////////////
 } // end Class def

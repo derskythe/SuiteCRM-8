@@ -55,45 +55,45 @@ nusoap-general@lists.sourceforge.net
 * caches instances of the wsdl class
 *
 * @author   Scott Nichol <snichol@users.sourceforge.net>
-* @author	Ingo Fischer <ingo@apollon.de>
+* @author    Ingo Fischer <ingo@apollon.de>
 
 * @access public
 */
 class nusoap_wsdlcache
 {
     /**
-     *	@var resource
-     *	@access private
+     *    @var resource
+     *    @access private
      */
     public $fplock;
     /**
-     *	@var integer
-     *	@access private
+     *    @var integer
+     *    @access private
      */
     public $cache_lifetime;
     /**
-     *	@var string
-     *	@access private
+     *    @var string
+     *    @access private
      */
     public $cache_dir;
     /**
-     *	@var string
-     *	@access public
+     *    @var string
+     *    @access public
      */
     public $debug_str = '';
 
-	/**
-	* constructor
-	*
-	* @param string $cache_dir directory for cache-files
-	* @param integer $cache_lifetime lifetime for caching-files in seconds or 0 for unlimited
-	* @access public
-	*/
-	function __construct($cache_dir='.', $cache_lifetime=0) {
-		$this->fplock = array();
-		$this->cache_dir = $cache_dir != '' ? $cache_dir : '.';
-		$this->cache_lifetime = $cache_lifetime;
-	}
+    /**
+    * constructor
+    *
+    * @param string $cache_dir directory for cache-files
+    * @param integer $cache_lifetime lifetime for caching-files in seconds or 0 for unlimited
+    * @access public
+    */
+    function __construct($cache_dir='.', $cache_lifetime=0) {
+        $this->fplock = array();
+        $this->cache_dir = $cache_dir != '' ? $cache_dir : '.';
+        $this->cache_lifetime = $cache_lifetime;
+    }
 
     /**
     * creates the filename used to cache a wsdl instance
@@ -128,7 +128,7 @@ class nusoap_wsdlcache
     public function get($wsdl)
     {
         $filename = $this->createFilename($wsdl);
-        if ($this->obtainMutex($filename, "r")) {
+        if ($this->obtainMutex($filename, 'r')) {
             // check for expired WSDL that must be removed from the cache
             if ($this->cache_lifetime > 0) {
                 if (file_exists($filename) && (time() - filemtime($filename) > $this->cache_lifetime)) {
@@ -146,7 +146,7 @@ class nusoap_wsdlcache
             }
             $fp = @fopen($filename, 'rb');
             if ($fp) {
-                $s = implode("", @file($filename));
+                $s = implode('', @file($filename));
                 fclose($fp);
                 $this->debug("Got $wsdl ($filename) from cache");
             } else {
@@ -175,8 +175,8 @@ class nusoap_wsdlcache
             $this->debug("Lock for $filename already exists");
             return false;
         }
-        $this->fplock[md5($filename)] = fopen($filename.".lock", 'wb');
-        if ($mode == "r") {
+        $this->fplock[md5($filename)] = fopen($filename . '.lock', 'wb');
+        if ($mode === 'r') {
             return flock($this->fplock[md5($filename)], LOCK_SH);
         }
         return flock($this->fplock[md5($filename)], LOCK_EX);
@@ -193,7 +193,7 @@ class nusoap_wsdlcache
     {
         $filename = $this->createFilename($wsdl_instance->wsdl);
         $s = serialize($wsdl_instance);
-        if ($this->obtainMutex($filename, "w")) {
+        if ($this->obtainMutex($filename, 'w')) {
             $fp = fopen($filename, 'wb');
             if (! $fp) {
                 $this->debug("Cannot write $wsdl_instance->wsdl ($filename) in cache");
@@ -244,7 +244,7 @@ class nusoap_wsdlcache
             return false;
         }
         // ignore errors obtaining mutex
-        $this->obtainMutex($filename, "w");
+        $this->obtainMutex($filename, 'w');
         $ret = unlink($filename);
         $this->debug("Removed ($ret) $wsdl ($filename) from cache");
         $this->releaseMutex($filename);

@@ -42,8 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-require_once("include/templates/Template.php");
+require_once('include/templates/Template.php');
 
 class TemplateDragDropChooser extends Template
 {
@@ -87,12 +86,12 @@ class TemplateDragDropChooser extends Template
 
 
         //convert values for gridcount in case they are in string form
-        if ($this->args['gridcount'] == 'one') {
+        if ($this->args['gridcount'] === 'one') {
             $this->args['gridcount'] = 0;
-        } elseif ($this->args['gridcount'] == 'two') {
+        } elseif ($this->args['gridcount'] === 'two') {
             $this->args['gridcount'] = 1;
         } elseif (
-            $this->args['gridcount'] == 'three') {
+            $this->args['gridcount'] === 'three') {
             $this->args['gridcount'] = 2;
         }
 
@@ -138,11 +137,11 @@ class TemplateDragDropChooser extends Template
             $html_str .=   "<td width='180px' class='tabDetailViewDF'><div id='$right_div_name' class='ygrid-mso' style='width:180px;height:270px;overflow:hidden;'> </div></td>";
             $html_str_arr['right'] = "<td width='180px' class='tabDetailViewDF'><div id='$right_div_name' class='ygrid-mso' style='width:180px;height:270px;overflow:hidden;'> </div></td>";
         }
-        $html_str .=   "</tr></table></div>";
-        $html_str_arr['end'] = "</tr></table></div>";
+        $html_str .= '</tr></table></div>';
+        $html_str_arr['end'] = '</tr></table></div>';
 
         //create the needed javascript to set the values and invoke listener
-        $j_str = "<script> ";
+        $j_str = '<script> ';
         $j_str .= $this->args['classname'] . ".rows0 = {$data0_enc};\n";
         $j_str .= $this->args['classname'] . ".hdr0 = '{$this->args['left_header']}';\n";
         if ($this->args['gridcount']==1) {
@@ -165,8 +164,8 @@ class TemplateDragDropChooser extends Template
 
         $j_str .= $this->args['classname'] . ".divs = [$divs_str]; ";
 
-        $j_str .= "YAHOO.util.Event.on(window, 'load', " . $this->args['classname'] . ".init); ";
-        $j_str .= "</script> ";
+        $j_str .= "YAHOO.util.Event.on(window, 'load', " . $this->args['classname'] . '.init); ';
+        $j_str .= '</script> ';
         //return display string
         $str = $j_str . '  ' . $html_str;
         $html_str_arr['script'] = $j_str;
@@ -189,12 +188,12 @@ class TemplateDragDropChooser extends Template
         //create some defaults in case arguments are missing
 
         //convert values for gridcount in case they are in string form
-        if (!isset($this->args['gridcount']) || empty($this->args['gridcount']) || $this->args['gridcount'] == 'one') {
+        if (!isset($this->args['gridcount']) || empty($this->args['gridcount']) || $this->args['gridcount'] === 'one') {
             $this->args['gridcount'] = 0;
-        } elseif ($this->args['gridcount'] == 'two') {
+        } elseif ($this->args['gridcount'] === 'two') {
             $this->args['gridcount'] = 1;
         } elseif (
-            $this->args['gridcount'] == 'three') {
+            $this->args['gridcount'] === 'three') {
             $this->args['gridcount'] = 2;
         }
 
@@ -227,14 +226,14 @@ class TemplateDragDropChooser extends Template
         $j_str =   "
         <script>
            var container = new YAHOO.util.Element('grid_Div').addClass('yui-skin-sam');
-           var " . $this->args['classname'] . "_grid2, " . $this->args['classname'] . "_grid1, " . $this->args['classname'] . "_grid0;
-           var " . $this->args['classname'] . "_sugar_grid2, " . $this->args['classname'] . "_sugar_grid1, " . $this->args['classname'] . "_sugar_grid0;
+           var " . $this->args['classname'] . '_grid2, ' . $this->args['classname'] . '_grid1, ' . $this->args['classname'] . '_grid0;
+           var ' . $this->args['classname'] . '_sugar_grid2, ' . $this->args['classname'] . '_sugar_grid1, ' . $this->args['classname'] . '_sugar_grid0;
 
            /*
             * This invokes the grid objects
             */
 
-            " . $this->args['classname'] . " =  {" ;
+            ' . $this->args['classname'] . ' =  {';
         $j_str .=   "
             rows0 : [],
             rows1 : [],
@@ -261,7 +260,7 @@ class TemplateDragDropChooser extends Template
         $count = 0;
         while ($count<$this->args['gridcount']+1) {
             // bug50219 Set up default strings for sortable grids
-            $sortParams = "sortable: false";
+            $sortParams = 'sortable: false';
             // set strings to sortable if it is SUGAR_GRID_grid0
             if ($count == 0) {
                 $sortParams = "sortable: true, sortOptions:{sortFunction: {$this->args['classname']}.customSort} ";
@@ -285,12 +284,12 @@ class TemplateDragDropChooser extends Template
 
             $count = $count+1;
         }
-        $j_str.="
+        $j_str .= '
             }
         };
 
         </script>
-        ";
+        ';
         //all done, return final script
         return $j_str;
     }

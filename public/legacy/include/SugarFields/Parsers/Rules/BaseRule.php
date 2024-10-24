@@ -67,7 +67,7 @@ class BaseRule
         return $this->parsePanels($panels, $view);
     }
 
-    public function parsePanels($panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
         return $panels;
     }

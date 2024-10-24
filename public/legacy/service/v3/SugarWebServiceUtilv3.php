@@ -38,7 +38,8 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-require_once('service/core/SoapHelperWebService.php');
+require_once(__DIR__.'/../../service/core/SoapHelperWebService.php');
+require_once(__DIR__.'/../../soap/SoapHelperFunctions.php');
 #[\AllowDynamicProperties]
 class SugarWebServiceUtilv3 extends SoapHelperWebServices
 {
@@ -57,23 +58,23 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
         $filterFields = array();
         foreach ($fields as $field) {
             if (is_array($invalid_contact_fields)) {
-                if (in_array($field, $invalid_contact_fields)) {
+                if (in_array($field, $invalid_contact_fields, true)) {
                     continue;
                 }
             }
             if (isset($value->field_defs[$field])) {
                 $var = $value->field_defs[$field];
-                if ($var['type'] == 'link') {
+                if ($var['type'] === 'link') {
                     continue;
                 }
                 if (isset($var['source'])
-                    && ($var['source'] != 'db' && $var['source'] != 'custom_fields' && $var['source'] != 'non-db')
-                    && $var['name'] != 'email1' && $var['name'] != 'email2'
-                    && (!isset($var['type'])|| $var['type'] != 'relate')) {
-                    if ($value->module_dir == 'Emails'
-                        && (($var['name'] == 'description') || ($var['name'] == 'description_html') || ($var['name'] == 'from_addr_name')
-                            || ($var['name'] == 'reply_to_addr') || ($var['name'] == 'to_addrs_names') || ($var['name'] == 'cc_addrs_names')
-                            || ($var['name'] == 'bcc_addrs_names') || ($var['name'] == 'raw_source'))) {
+                    && ($var['source'] !== 'db' && $var['source'] !== 'custom_fields' && $var['source'] !== 'non-db')
+                    && $var['name'] !== 'email1' && $var['name'] !== 'email2'
+                    && (!isset($var['type'])|| $var['type'] !== 'relate')) {
+                    if ($value->module_dir === 'Emails'
+                        && (($var['name'] === 'description') || ($var['name'] === 'description_html') || ($var['name'] === 'from_addr_name')
+                            || ($var['name'] === 'reply_to_addr') || ($var['name'] === 'to_addrs_names') || ($var['name'] === 'cc_addrs_names')
+                            || ($var['name'] === 'bcc_addrs_names') || ($var['name'] === 'raw_source'))) {
                     } else {
                         continue;
                     }
@@ -113,17 +114,17 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
                 $row = array();
                 foreach ($filterFields as $field) {
                     if (isset($bean->$field)) {
-                        if (isset($bean->field_defs[$field]['type']) && $bean->field_defs[$field]['type'] == 'date') {
+                        if (isset($bean->field_defs[$field]['type']) && $bean->field_defs[$field]['type'] === 'date') {
                             $row[$field] = $timedate->to_display_date_time($bean->$field);
                         }
                         $row[$field] = $bean->$field;
                     } else {
-                        $row[$field] = "";
+                        $row[$field] = '';
                     }
                 }
                 //Users can't see other user's hashes
                 if (is_a($bean, 'User') && $current_user->id != $bean->id && isset($row['user_hash'])) {
-                    $row['user_hash'] = "";
+                    $row['user_hash'] = '';
                 }
                 $row = clean_sensitive_data($bean->field_defs, $row);
                 $list[] = $row;
@@ -143,13 +144,13 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
         $link_fields = array();
         if (!empty($value->field_defs)) {
             foreach ($value->field_defs as $var) {
-                if (!empty($fields) && !in_array($var['name'], $fields)) {
+                if (!empty($fields) && !in_array($var['name'], $fields, true)) {
                     continue;
                 }
-                if (isset($var['source']) && ($var['source'] != 'db' && $var['source'] != 'non-db' &&$var['source'] != 'custom_fields') && $var['name'] != 'email1' && $var['name'] != 'email2' && (!isset($var['type'])|| $var['type'] != 'relate')) {
+                if (isset($var['source']) && ($var['source'] !== 'db' && $var['source'] !== 'non-db' && $var['source'] !== 'custom_fields') && $var['name'] !== 'email1' && $var['name'] !== 'email2' && (!isset($var['type'])|| $var['type'] !== 'relate')) {
                     continue;
                 }
-                if ((isset($var['source']) && $var['source'] == 'non_db') || (isset($var['type']) && $var['type'] == 'link')) {
+                if ((isset($var['source']) && $var['source'] === 'non_db') || (isset($var['type']) && $var['type'] === 'link')) {
                     continue;
                 }
                 $required = 0;
@@ -157,7 +158,7 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
                 $options_ret = array();
                 // Apparently the only purpose of this check is to make sure we only return fields
                 //   when we've read a record.  Otherwise this function is identical to get_module_field_list
-                if (isset($var['required']) && ($var['required'] || $var['required'] == 'true')) {
+                if (isset($var['required']) && ($var['required'] || $var['required'] === 'true')) {
                     $required = 1;
                 }
 
@@ -171,7 +172,7 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
                     }
                 }
 
-                if (!empty($var['dbType']) && $var['type'] == 'bool') {
+                if (!empty($var['dbType']) && $var['type'] === 'bool') {
                     $options_ret['type'] = $this->get_name_value('type', $var['dbType']);
                 }
 
@@ -181,10 +182,10 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
                 $entry['group'] = isset($var['group']) ? $var['group'] : '';
                 $entry['id_name'] = isset($var['id_name']) ? $var['id_name'] : '';
 
-                if ($var['type'] == 'link') {
-                    $entry['relationship'] = (isset($var['relationship']) ? $var['relationship'] : '');
-                    $entry['module'] = (isset($var['module']) ? $var['module'] : '');
-                    $entry['bean_name'] = (isset($var['bean_name']) ? $var['bean_name'] : '');
+                if ($var['type'] === 'link') {
+                    $entry['relationship'] = ($var['relationship'] ?? '');
+                    $entry['module'] = ($var['module'] ?? '');
+                    $entry['bean_name'] = ($var['bean_name'] ?? '');
                     $link_fields[$var['name']] = $entry;
                 } else {
                     if ($translate) {
@@ -203,44 +204,11 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
             } //foreach
         } //if
 
-        if ($value->module_dir == 'Bugs') {
-            require_once('modules/Releases/Release.php');
-            $seedRelease = BeanFactory::newBean('Releases');
-            $options = $seedRelease->get_releases(true, "Active");
-            $options_ret = array();
-            foreach ($options as $name=>$value) {
-                $options_ret[] =  array('name'=> $name , 'value'=>$value);
-            }
-            if (isset($module_fields['fixed_in_release'])) {
-                $module_fields['fixed_in_release']['type'] = 'enum';
-                $module_fields['fixed_in_release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['release'])) {
-                $module_fields['release']['type'] = 'enum';
-                $module_fields['release']['options'] = $options_ret;
-            }
-            if (isset($module_fields['release_name'])) {
-                $module_fields['release_name']['type'] = 'enum';
-                $module_fields['release_name']['options'] = $options_ret;
-            }
+        if ($value->module_dir === 'Bugs') {
+            [ $value, $module_fields ] = check_dirs($value, $module_fields);
         }
 
-        if (isset($value->assigned_user_name) && isset($module_fields['assigned_user_id'])) {
-            $module_fields['assigned_user_name'] = $module_fields['assigned_user_id'];
-            $module_fields['assigned_user_name']['name'] = 'assigned_user_name';
-        }
-        if (isset($value->assigned_name) && isset($module_fields['team_id'])) {
-            $module_fields['team_name'] = $module_fields['team_id'];
-            $module_fields['team_name']['name'] = 'team_name';
-        }
-        if (isset($module_fields['modified_user_id'])) {
-            $module_fields['modified_by_name'] = $module_fields['modified_user_id'];
-            $module_fields['modified_by_name']['name'] = 'modified_by_name';
-        }
-        if (isset($module_fields['created_by'])) {
-            $module_fields['created_by_name'] = $module_fields['created_by'];
-            $module_fields['created_by_name']['name'] = 'created_by_name';
-        }
+        $module_fields = set_assigned_user_name($value, $module_fields, true);
 
         $GLOBALS['log']->info('End: SoapHelperWebServices->get_field_list');
         return array('module_fields' => $module_fields, 'link_fields' => $link_fields);
@@ -248,33 +216,19 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
 
     public function get_subpanel_defs($module, $type)
     {
-        global $beanList, $beanFiles;
+        global $beanList, $layout_defs;
         $results = array();
-        switch ($type) {
-            case 'default':
-            default:
-                if (file_exists('modules/'.$module.'/metadata/subpaneldefs.php')) {
-                    require('modules/'.$module.'/metadata/subpaneldefs.php');
-                }
-                if (file_exists('custom/modules/'.$module.'/Ext/Layoutdefs/layoutdefs.ext.php')) {
-                    require('custom/modules/'.$module.'/Ext/Layoutdefs/layoutdefs.ext.php');
-                }
+        {
+            if (file_exists('modules/' . $module . '/metadata/subpaneldefs.php')) {
+                require('modules/' . $module . '/metadata/subpaneldefs.php');
+            }
+            if (file_exists('custom/modules/' . $module . '/Ext/Layoutdefs/layoutdefs.ext.php')) {
+                require('custom/modules/' . $module . '/Ext/Layoutdefs/layoutdefs.ext.php');
+            }
         }
 
         //Filter results for permissions
-        foreach ($layout_defs[$module]['subpanel_setup'] as $subpanel => $subpaneldefs) {
-            $moduleToCheck = $subpaneldefs['module'];
-            if (!isset($beanList[$moduleToCheck])) {
-                continue;
-            }
-            $class_name = $beanList[$moduleToCheck];
-            $bean = new $class_name();
-            if ($bean->ACLAccess('list')) {
-                $results[$subpanel] = $subpaneldefs;
-            }
-        }
-
-        return $results;
+        return populateLayoutDefs($layout_defs[$module]['subpanel_setup'], $beanList, $results);
     }
 
     public function get_module_view_defs($module_name, $type, $view)
@@ -285,24 +239,22 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
         $metadataFile = null;
         $results = array();
         $view = strtolower($view);
-        switch (strtolower($type)) {
-            case 'default':
-            default:
-                if ($view == 'subpanel') {
-                    $results = $this->get_subpanel_defs($module_name, $type);
+        {
+            if ($view === 'subpanel') {
+                $results = $this->get_subpanel_defs($module_name, $type);
+            } else {
+                $v = new SugarView(null, array());
+                $v->module = $module_name;
+                $v->type = $view;
+                $fullView = ucfirst($view) . 'View';
+                $metadataFile = $v->getMetaDataFile();
+                require_once($metadataFile);
+                if ($view === 'list') {
+                    $results = $listViewDefs[$module_name];
                 } else {
-                    $v = new SugarView(null, array());
-                    $v->module = $module_name;
-                    $v->type = $view;
-                    $fullView = ucfirst($view) . 'View';
-                    $metadataFile = $v->getMetaDataFile();
-                    require_once($metadataFile);
-                    if ($view == 'list') {
-                        $results = $listViewDefs[$module_name];
-                    } else {
-                        $results = $viewdefs[$module_name][$fullView];
-                    }
+                    $results = $viewdefs[$module_name][$fullView];
                 }
+            }
         }
 
         return $results;
@@ -316,7 +268,7 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
      */
     public function get_visible_modules($availModules)
     {
-        require_once("modules/MySettings/TabController.php");
+        require_once('modules/MySettings/TabController.php');
         $controller = new TabController();
         $tabs = $controller->get_tabs_system();
         $enabled_modules= array();
@@ -374,7 +326,7 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
         }
 
         //Sort the result list by the date due flag in ascending order
-        usort($results, array( $this , "cmp_datedue" )) ;
+        usort($results, array( $this, 'cmp_datedue' )) ;
 
         //Only return a subset of the results.
         $results = array_slice($results, 0, $maxCount);
@@ -396,7 +348,7 @@ class SugarWebServiceUtilv3 extends SoapHelperWebServices
             $query[] = "{$seed->table_name}.{$meta['status_field']} {$meta['status_opp']} '".$GLOBALS['db']->quote($meta['status'])."' ";
         }
 
-        return implode(" AND ", $query);
+        return implode(' AND ', $query);
     }
     /**
      * Given a list of bean entries, format the expected response.

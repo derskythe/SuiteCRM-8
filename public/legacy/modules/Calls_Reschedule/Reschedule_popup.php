@@ -15,7 +15,7 @@ $full_name = $locale->getLocaleFormattedName($firstname, $lastname);
 
 $user_real_names = $current_user->getPreference('use_real_names');
 
-if ($user_real_names == 'on') {
+if ($user_real_names === 'on') {
     $Name = $full_name;
 } else {
     $Name = $current_user->user_name;
@@ -30,30 +30,30 @@ $time_stamp = $call->date_start; //get the time stamp for the current call
 //Set the date and time input fields on the pop-up based on the current users time format setting
 switch ($time_format) {
     case 'H:i':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
-        $time = explode(":", $time);//splits the time into hours and minutes
+        $time = explode(':', $time);//splits the time into hours and minutes
         $hour = $time[0];//gets the hour
         $min = $time[1];//gets the time
         $period = '';
         $format = '23:00';//set time format for the javascript live update of date/time
         break;
     case 'H.i':
-        $existing_date = explode(" ", $time_stamp);
+        $existing_date = explode(' ', $time_stamp);
         $time = $existing_date[1];
         $date = $existing_date[0];
-        $time = explode(".", $time);
+        $time = explode('.', $time);
         $hour = $time[0];
         $min = $time[1];
         $period = '';
         $format = '23.00';
         break;
     case 'h:ia':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
-        $time = explode(":", $time);//splits the time into hours and minutes
+        $time = explode(':', $time);//splits the time into hours and minutes
         $hour = $time[0];//gets the hour
         $min = $time[1];//gets the time
         $period = substr($min, -2);//gets only the 'pm' from the time
@@ -61,20 +61,20 @@ switch ($time_format) {
         $format = '11:00pm';
         break;
     case 'h:i a':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time and the period from time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time and the period from time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
         $period = $existing_date[2];//gets the period
-        $time = explode(":", $time);
+        $time = explode(':', $time);
         $hour = $time[0];
         $min = $time[1];
         $format = '11:00 pm';
         break;
     case 'h:iA':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
-        $time = explode(":", $time);//splits the time into hours and minutes
+        $time = explode(':', $time);//splits the time into hours and minutes
         $hour = $time[0];//gets the hour
         $min = $time[1];//gets the time
         $period = substr($min, -2);//gets only the 'pm' from the time
@@ -82,20 +82,20 @@ switch ($time_format) {
         $format = '11:00PM';
         break;
     case 'h:i A':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time and the period from time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time and the period from time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
         $period = $existing_date[2];//gets the period
-        $time = explode(":", $time);
+        $time = explode(':', $time);
         $hour = $time[0];
         $min = $time[1];
         $format = '11:00 PM';
         break;
     case 'h.ia':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
-        $time = explode(".", $time);//splits the time into hours and minutes
+        $time = explode('.', $time);//splits the time into hours and minutes
         $hour = $time[0];//gets the hour
         $min = $time[1];//gets the time
         $period = substr($min, -2);//gets only the 'pm' from the time
@@ -103,20 +103,20 @@ switch ($time_format) {
         $format = '11.00pm';
         break;
     case 'h.i a':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time and the period from time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time and the period from time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
         $period = $existing_date[2];//gets the period
-        $time = explode(".", $time);
+        $time = explode('.', $time);
         $hour = $time[0];
         $min = $time[1];
         $format = '11.00 pm';
         break;
     case 'h.iA':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
-        $time = explode(".", $time);//splits the time into hours and minutes
+        $time = explode('.', $time);//splits the time into hours and minutes
         $hour = $time[0];//gets the hour
         $min = $time[1];//gets the time
         $period = substr($min, -2);//gets only the 'pm' from the time
@@ -124,11 +124,11 @@ switch ($time_format) {
         $format = '11.00PM';
         break;
     case 'h.i A':
-        $existing_date = explode(" ", $time_stamp);//splits the date from the time and the period from time
+        $existing_date = explode(' ', $time_stamp);//splits the date from the time and the period from time
         $time = $existing_date[1];//gets the time
         $date = $existing_date[0];//gets the date
         $period = $existing_date[2];//gets the period
-        $time = explode(".", $time);
+        $time = explode('.', $time);
         $hour = $time[0];
         $min = $time[1];
         $format = '11.00 PM';
@@ -177,12 +177,12 @@ $mins .= '</select>';
 $merm1 =  '<select id="date_start_meridiem" name="date_start_meridiem" class="datetimecombo_time" size="1">';
 //$merm1 .= '<option></option>';
 
-if ($period == 'am') {
+if ($period === 'am') {
     $merm1 .= '<option selected="selected" value="am">am</option>';
 } else {
     $merm1 .= '<option value="am">am</option>';
 }
-if ($period == 'pm') {
+if ($period === 'pm') {
     $merm1 .= '<option selected="selected" value="pm">pm</option>';
 } else {
     $merm1 .= '<option value="pm">pm</option>';
@@ -190,12 +190,12 @@ if ($period == 'pm') {
 $merm1 .= '</select>';
 //$merm2 is used for upper case: AM / PM
 $merm2 =  '<select id="date_start_meridiem" name="date_start_meridiem" class="datetimecombo_time" size="1">';
-    if ($period == 'AM') {
+    if ($period === 'AM') {
         $merm2 .= '<option selected="selected" value="AM">AM</option>';
     } else {
         $merm2 .= '<option value="AM">AM</option>';
     }
-    if ($period == 'PM') {
+    if ($period === 'PM') {
         $merm2 .= '<option selected="selected" value="PM">PM</option>';
     } else {
         $merm2 .= '<option value="PM">PM</option>';
@@ -274,7 +274,7 @@ $hours2 .= '</select>';
             <br/>
             <label for="reason"><?php echo $app_strings['LBL_RESCHEDULE_REASON']; ?></label><br />
             <select id='reason' name='reason'>
-                <?php echo get_select_options_with_id($app_list_strings["call_reschedule_dom"], ''); ?>
+                <?php echo get_select_options_with_id($app_list_strings['call_reschedule_dom'], ''); ?>
             </select>
             <br/>
             <span id="error2" style="color: #ff0000;display: none;"><?php echo $app_strings['LBL_RESCHEDULE_ERROR2']; ?></span>

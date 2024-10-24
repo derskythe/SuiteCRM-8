@@ -31,17 +31,13 @@ namespace App\Install\Service;
 trait InstallationUtilsTrait
 {
     /**
-     * Check if is app is installed
+     * Check if is app being installed
      * @param $legacyDir
      * @return bool is locked
      */
     public function isAppInstalled($legacyDir): bool
     {
-        $sugarConfigFile = $legacyDir . '/config.php';
-        if (!file_exists($sugarConfigFile)) {
-            return false;
-        }
-        return true;
+        return file_exists($legacyDir . '/config.php');
     }
 
     /**

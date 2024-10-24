@@ -56,7 +56,7 @@ class SoapResourceObserver extends ResourceObserver
      * response can be returned when the notify method is triggered.
      * @param $server The instance of the nusoap soap server
      */
-    public function set_soap_server(& $server)
+    public function set_soap_server($server)
     {
         $this->soapServer = $server;
     }

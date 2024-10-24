@@ -27,6 +27,7 @@
 
 namespace App\Engine\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\Service\CacheManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -65,7 +66,8 @@ class CacheManagerHandler extends LegacyHandler implements CacheManagerInterface
         LegacyScopeState       $legacyScopeState,
         RequestStack           $requestStack,
         CacheInterface         $cache,
-        CacheItemPoolInterface $cachePool
+        CacheItemPoolInterface $cachePool,
+        LoggerInterface        $logger
     )
     {
         parent::__construct(
@@ -74,18 +76,19 @@ class CacheManagerHandler extends LegacyHandler implements CacheManagerInterface
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $requestStack
+            $requestStack,
+            $logger
         );
         $this->cache = $cache;
         $this->cachePool = $cachePool;
     }
 
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
-    public function markAsNeedsUpdate($key): void
+    public function markAsNeedsUpdate($key) : void
     {
         $this->init();
 
@@ -96,7 +99,7 @@ class CacheManagerHandler extends LegacyHandler implements CacheManagerInterface
         $this->close();
     }
 
-    public function checkForCacheUpdate($keys, $modules): void
+    public function checkForCacheUpdate($keys, $modules) : void
     {
         $this->init();
 
@@ -108,6 +111,7 @@ class CacheManagerHandler extends LegacyHandler implements CacheManagerInterface
             $this->cachePool->clear();
             $query = "DELETE FROM cache_rebuild ";
             $db->query($query);
+
             return;
         }
 
@@ -120,9 +124,12 @@ class CacheManagerHandler extends LegacyHandler implements CacheManagerInterface
         while ($row = $db->fetchByAssoc($result)) {
             foreach ($keys as $key) {
                 if ($row['cache_key'] == $key && $row['rebuild'] == 1) {
-                    if (str_contains($row['cache_key'], 'all-module-metadata-' . $current_user->id ) && !empty($modules)) {
+                    if (str_contains(
+                            $row['cache_key'],
+                            'all-module-metadata-' . $current_user->id
+                        ) && !empty($modules)) {
                         foreach ($modules as $module) {
-                            if (empty($module)){
+                            if (empty($module)) {
                                 continue;
                             }
                             $moduleKey = 'app-metadata-module-metadata-' . $module . '-' . $current_user->id;

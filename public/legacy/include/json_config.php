@@ -42,7 +42,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 /*********************************************************************************
-
  * Description:  This class is used to include the json server config inline. Previous method
  * of using <script src=json_server.php></script> causes multiple server hits per page load
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
@@ -78,11 +77,11 @@ class json_config
     {
         global $json, $sugar_config;
 
-        $str = "\nvar ". $this->global_registry_var_name." = new Object();\n";
-        $str .= "\n".$this->global_registry_var_name.".config = {\"site_url\":\"".getJavascriptSiteURL()."\"};\n";
+        $str = "\nvar " . $this->global_registry_var_name . " = new Object();\n";
+        $str .= "\n" . $this->global_registry_var_name . '.config = {"site_url":"' . getJavascriptSiteURL() . "\"};\n";
 
-        $str .= $this->global_registry_var_name.".meta = new Object();\n";
-        $str .= $this->global_registry_var_name.".meta.modules = new Object();\n";
+        $str .= $this->global_registry_var_name . ".meta = new Object();\n";
+        $str .= $this->global_registry_var_name . ".meta.modules = new Object();\n";
 
         /*
         $modules_arr = array('Meetings','Calls');
@@ -91,10 +90,10 @@ class json_config
         global $beanFiles,$beanList;
         //header('Content-type: text/xml');
         foreach($modules_arr as $module) {
-        	require_once($beanFiles[$beanList[$module]]);
-        	$focus = new $beanList[$module];
-        	$meta_modules[$module] = array();
-        	$meta_modules[$module]['field_defs'] = $focus->field_defs;
+         require_once($beanFiles[$beanList[$module]]);
+         $focus = new $beanList[$module];
+         $meta_modules[$module] = array();
+         $meta_modules[$module]['field_defs'] = $focus->field_defs;
         }
 
         $str .= $this->global_registry_var_name.".meta.modules.Meetings = ". $json->encode($meta_modules['Meetings'])."\n";
@@ -125,7 +124,7 @@ class json_config
         $user_arr['fields']['email'] = $current_user->email1;
         $user_arr['fields']['gmt_offset'] = $timedate->getUserUTCOffset();
         $user_arr['fields']['date_time_format'] = $current_user->getUserDateTimePreferences();
-        $str = "\n".$this->global_registry_var_name.".current_user = ".$json->encode($user_arr).";\n";
+        $str = "\n" . $this->global_registry_var_name . '.current_user = ' . $json->encode($user_arr) . ";\n";
         return $str;
     }
 
@@ -136,15 +135,15 @@ class json_config
             return '';
         } else {
             if (empty($record)) {
-                return "\n".$this->global_registry_var_name.'["focus"] = {"module":"'.$module.'",users_arr:[],fields:{"id":"-1"}}'."\n";
+                return "\n" . $this->global_registry_var_name . '["focus"] = {"module":"' . $module . '",users_arr:[],fields:{"id":"-1"}}' . "\n";
             }
         }
 
         $module_arr = $this->meeting_retrieve($module, $record);
-        return "\n".$this->global_registry_var_name."['focus'] = ". $json->encode($module_arr).";\n";
+        return "\n" . $this->global_registry_var_name . "['focus'] = " . $json->encode($module_arr) . ";\n";
     }
 
-    /*	multiple project module related changes added by haris raheem*/
+    /* multiple project module related changes added by haris raheem*/
     public function meeting_retrieve($module, $record)
     {
         global $json, $response;
@@ -159,19 +158,19 @@ class json_config
         $focus->retrieve($record);
         $module_arr = $this->populateBean($focus);
 
-        if ($module == 'Meetings') {
+        if ($module === 'Meetings') {
             $users = $focus->get_meeting_users();
         } else {
-            if ($module == 'Calls') {
+            if ($module === 'Calls') {
                 $users = $focus->get_call_users();
             } else {
-                if ($module == 'Project') {
+                if ($module === 'Project') {
                     $focus->load_relationships('users');
-                    $users=$focus->get_linked_beans('project_users_1', 'User');
+                    $users = $focus->get_linked_beans('project_users_1', 'User');
                 } else {
-                    if ($module == 'AM_ProjectTemplates') {
+                    if ($module === 'AM_ProjectTemplates') {
                         $focus->load_relationships('users');
-                        $users=$focus->get_linked_beans('am_projecttemplates_users_1', 'User');
+                        $users = $focus->get_linked_beans('am_projecttemplates_users_1', 'User');
                     }
                 }
             }
@@ -194,13 +193,13 @@ class json_config
 
         $focus->load_relationships('contacts');
 
-        if ($module == 'Project') {
-            $contacts=$focus->get_linked_beans('project_contacts_1', 'Contact');
+        if ($module === 'Project') {
+            $contacts = $focus->get_linked_beans('project_contacts_1', 'Contact');
         } else {
-            if ($module == 'AM_ProjectTemplates') {
-                $contacts=$focus->get_linked_beans('am_projecttemplates_contacts_1', 'Contact');
+            if ($module === 'AM_ProjectTemplates') {
+                $contacts = $focus->get_linked_beans('am_projecttemplates_contacts_1', 'Contact');
             } else {
-                $contacts=$focus->get_linked_beans('contacts', 'Contact');
+                $contacts = $focus->get_linked_beans('contacts', 'Contact');
             }
         }
 
@@ -210,9 +209,9 @@ class json_config
 
         $module_arr['leads_arr'] = array();
 
-        if ($module != 'Project' && $module != 'AM_ProjectTemplates') {
+        if ($module !== 'Project' && $module !== 'AM_ProjectTemplates') {
             $focus->load_relationships('leads');
-            $leads=$focus->get_linked_beans('leads', 'Lead');
+            $leads = $focus->get_linked_beans('leads', 'Lead');
             foreach ($leads as $lead) {
                 array_push($module_arr['users_arr'], $this->populateBean($lead));
             }
@@ -227,22 +226,25 @@ class json_config
         $mod_list_strings = return_mod_list_strings_language($current_language, $currentModule);
 
         global $json;
-        $str = "\n".$this->global_registry_var_name."['calendar_strings'] =  {\"dom_cal_month_long\":". $json->encode($mod_list_strings['dom_cal_month_long']).",\"dom_cal_weekdays_long\":". $json->encode($mod_list_strings['dom_cal_weekdays_long'])."}\n";
+        $str =
+            "\n" . $this->global_registry_var_name . "['calendar_strings'] =  {\"dom_cal_month_long\":" . $json->encode(
+                $mod_list_strings['dom_cal_month_long']
+            ) . ',"dom_cal_weekdays_long":' . $json->encode($mod_list_strings['dom_cal_weekdays_long']) . "}\n";
         if (empty($module)) {
             $module = 'Home';
         }
         $currentModule = $module;
         $mod_strings = return_module_language($current_language, $currentModule);
-        return  $str . "\n".$this->global_registry_var_name."['meeting_strings'] =  ". $json->encode($mod_strings)."\n";
+        return $str . "\n" . $this->global_registry_var_name . "['meeting_strings'] =  " . $json->encode($mod_strings) . "\n";
     }
 
     // HAS MEETING SPECIFIC CODE:
-    public function populateBean(&$focus)
+    public function populateBean($focus)
     {
         require_once('include/utils/db_utils.php');
         $all_fields = $focus->column_fields;
         // MEETING SPECIFIC
-        $all_fields = array_merge($all_fields, array('required','accept_status','name')); // need name field for contacts and users
+        $all_fields = array_merge($all_fields, array('required', 'accept_status', 'name')); // need name field for contacts and users
         $all_fields = $this->listFilter($focus->module_dir, $all_fields);
         //$all_fields = array_merge($focus->column_fields,$focus->additional_column_fields);
 
@@ -254,13 +256,13 @@ class json_config
 
         foreach ($all_fields as $field) {
             if (isset($focus->$field) && !is_object($focus->$field)) {
-                $focus->$field =  from_html($focus->$field);
-                $focus->$field =  preg_replace("/\r\n/", "<BR>", (string) $focus->$field);
-                $focus->$field =  preg_replace("/\n/", "<BR>", $focus->$field);
+                $focus->$field = from_html($focus->$field);
+                $focus->$field = preg_replace("/\r\n/", '<BR>', (string) $focus->$field);
+                $focus->$field = preg_replace("/\n/", '<BR>', $focus->$field);
                 $module_arr['fields'][$field] = $focus->$field;
             }
         }
-        $GLOBALS['log']->debug("JSON_SERVER:populate bean:");
+        $GLOBALS['log']->debug('JSON_SERVER:populate bean:');
         return $module_arr;
     }
 

@@ -67,6 +67,7 @@ class EmailsNonImportedDetailView extends EmailsDetailView
 
     /**
      * @inheritdoc
+     * @throws Exception
      * @see DetailView2::populateBean()
      */
     public function populateBean($request = array())

@@ -46,6 +46,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 ********************************************************************************/
 require_once('include/utils/encryption_utils.php');
 
+/**
+ * @throws DateMalformedStringException
+ */
 function getSystemInfo($send_usage_info=true)
 {
     global $sugar_config;
@@ -61,7 +64,7 @@ function getSystemInfo($send_usage_info=true)
 
         //get user count.
 
-        $query = "SELECT count(*) as total from users WHERE " . User::getLicensedUsersWhere();
+        $query = 'SELECT count(*) as total from users WHERE ' . User::getLicensedUsersWhere();
         $result = $db->getOne($query, false, 'fetching active users count');
         if ($result !== false) {
             $info['users'] = $result;
@@ -80,12 +83,12 @@ function getSystemInfo($send_usage_info=true)
         }
 
 
-        $result=$db->getOne("select count(*) count from users", false, 'fetching all users count');
+        $result=$db->getOne('select count(*) count from users', false, 'fetching all users count');
         if ($result !== false) {
             $info['registered_users'] = $result;
         }
 
-        $lastMonth = $db->convert("'". $timedate->getNow()->modify("-30 days")->asDb(false) . "'", 'datetime');
+        $lastMonth = $db->convert("'". $timedate->getNow()->modify('-30 days')->asDb(false) . "'", 'datetime');
         if (!$send_usage_info) {
             $info['users_active_30_days'] = -1;
         } else {
@@ -98,7 +101,7 @@ function getSystemInfo($send_usage_info=true)
         if (!$send_usage_info) {
             $info['latest_tracker_id'] = -1;
         } else {
-            $id=$db->getOne("select id from tracker order by date_modified desc", false, 'fetching most recent tracker entry');
+            $id=$db->getOne('select id from tracker order by date_modified desc', false, 'fetching most recent tracker entry');
             if ($id !== false) {
                 $info['latest_tracker_id'] = $id;
             }
@@ -117,7 +120,7 @@ function getSystemInfo($send_usage_info=true)
     $info['os_version'] = php_uname('r');
     $info['timezone_u'] = $GLOBALS['current_user']->getPreference('timezone');
     $info['timezone'] = date('e');
-    if ($info['timezone'] == 'e') {
+    if ($info['timezone'] === 'e') {
         $info['timezone'] = date('T');
     }
     return $info;
@@ -171,7 +174,7 @@ function check_now($send_usage_info=true, $get_request_data=false, $response_dat
                 return array(
                     array(
                         'version' => $sugar_version,
-                        'description' => "You have the latest version."
+                        'description' => 'You have the latest version.'
                     )
                 );
             }
@@ -190,7 +193,7 @@ function check_now($send_usage_info=true, $get_request_data=false, $response_dat
         }
         $encodedResult = $sclient->call('sugarHome', array('key'=>$key, 'data'=>$encoded));
     } else {
-        $encodedResult = 	$response_data['data'];
+        $encodedResult =     $response_data['data'];
         $key = $response_data['key'];
     }
 
@@ -242,13 +245,13 @@ function check_now($send_usage_info=true, $get_request_data=false, $response_dat
         $license->saveSetting('license', 'latest_versions', base64_encode(serialize($resultData['versions'])));
     } else {
         $resultData['versions'] = array();
-        $license->saveSetting('license', 'latest_versions', '')	;
+        $license->saveSetting('license', 'latest_versions', '')    ;
     }
 
     if ((is_countable($resultData) ? count($resultData) : 0) == 1 && !empty($resultData['versions'][0]['version'])
         && compareVersions($sugar_version, $resultData['versions'][0]['version'])) {
         $resultData['versions'][0]['version'] = $sugar_version;
-        $resultData['versions'][0]['description'] = "You have the latest version.";
+        $resultData['versions'][0]['description'] = 'You have the latest version.';
     }
 
 
@@ -320,14 +323,14 @@ function get_last_check_date_config_setting()
 function set_sugarbeat($value)
 {
     global $sugar_config;
-    $_SUGARBEAT="sugarbeet";
+    $_SUGARBEAT= 'sugarbeet';
     $sugar_config[$_SUGARBEAT] = $value;
-    write_array_to_file("sugar_config", $sugar_config, "config.php");
+    write_array_to_file('sugar_config', $sugar_config, 'config.php');
 }
 function get_sugarbeat()
 {
     global $sugar_config;
-    $_SUGARBEAT="sugarbeet";
+    $_SUGARBEAT= 'sugarbeet';
 
     if (isset($sugar_config[$_SUGARBEAT]) && $sugar_config[$_SUGARBEAT] == false) {
         return false;
@@ -342,7 +345,7 @@ function shouldCheckSugar()
     global $license, $timedate;
     if (
 
-    get_CheckUpdates_config_setting() == 'automatic') {
+    get_CheckUpdates_config_setting() === 'automatic') {
         return true;
     }
 

@@ -698,34 +698,36 @@ class EmailTest extends SuitePHPUnitFrameworkTestCase
         $email = BeanFactory::newBean('Emails');
 
         //with empty params
-        $expected = "		<script type=\"text/javascript\" language=\"JavaScript\"><!-- Begin
-			function clear_form(form) {
-				var newLoc = \"index.php?action=\" + form.action.value + \"&module=\" + form.module.value + \"&query=true&clear_query=true\";
-				if(typeof(form.advanced) != \"undefined\"){
-					newLoc += \"&advanced=\" + form.advanced.value;
-				}
-				document.location.href= newLoc;
-			}
-		//  End --></script>";
+        $expected = "        <script type=\"text/javascript\" language=\"JavaScript\"><!-- Begin
+            function clear_form(form) {
+                var newLoc = \"index.php?action=\" + form.action.value + \"&module=\" + form.module.value + \"&query=true&clear_query=true\";
+                if(typeof(form.advanced) != \"undefined\"){
+                    newLoc += \"&advanced=\" + form.advanced.value;
+                }
+                document.location.href= newLoc;
+            }
+        //  End --></script>";
         $actual = $email->u_get_clear_form_js('', '', '');
-        self::assertSame($expected, $actual, "exp:[" . print_r($expected, true) . "] act:[" . print_r($actual, true) . "]");
+        self::assertSame($expected, $actual, 'exp:[' . print_r($expected, true) . '] act:[' . print_r($actual, true) . ']'
+        );
 
         //with valid params
-        $expected = "\n		<script type=\"text/javascript\" language=\"JavaScript\"><!-- Begin\n			function clear_form(form) {\n				var newLoc = \"index.php?action=\" + form.action.value + \"&module=\" + form.module.value + \"&query=true&clear_query=true&type=out&assigned_user_id=1\";\n				if(typeof(form.advanced) != \"undefined\"){\n					newLoc += \"&advanced=\" + form.advanced.value;\n				}\n				document.location.href= newLoc;\n			}\n		//  End --></script>";
+        $expected = "\n        <script type=\"text/javascript\" language=\"JavaScript\"><!-- Begin\n            function clear_form(form) {\n                var newLoc = \"index.php?action=\" + form.action.value + \"&module=\" + form.module.value + \"&query=true&clear_query=true&type=out&assigned_user_id=1\";\n                if(typeof(form.advanced) != \"undefined\"){\n                    newLoc += \"&advanced=\" + form.advanced.value;\n                }\n                document.location.href= newLoc;\n            }\n        //  End --></script>";
         $actual = $email->u_get_clear_form_js('out', '', '1');
-        self::assertSame($expected, $actual, "exp:[" . print_r($expected, true) . "] act:[" . print_r($actual, true) . "]");
+        self::assertSame($expected, $actual, 'exp:[' . print_r($expected, true) . '] act:[' . print_r($actual, true) . ']'
+        );
     }
 
     public function testpickOneButton(): void
     {
         $email = BeanFactory::newBean('Emails');
 
-        $expected = "<div><input	title=\"Take from Group\"
-						class=\"button\"
-						type=\"button\" name=\"button\"
-						onClick=\"window.location='index.php?module=Emails&action=Grab';\"
-						style=\"margin-bottom:2px\"
-						value=\"  Take from Group  \"></div>";
+        $expected = "<div><input    title=\"Take from Group\"
+                        class=\"button\"
+                        type=\"button\" name=\"button\"
+                        onClick=\"window.location='index.php?module=Emails&action=Grab';\"
+                        style=\"margin-bottom:2px\"
+                        value=\"  Take from Group  \"></div>";
         $actual = $email->pickOneButton();
         self::assertSame($expected, $actual);
     }
@@ -851,7 +853,7 @@ class EmailTest extends SuitePHPUnitFrameworkTestCase
         $email = BeanFactory::newBean('Emails');
 
         //test without setting REQUEST parameters
-        $email->description_html = "some email description containing email text &amp; &#39; <br>&nbsp;";
+        $email->description_html = 'some email description containing email text &amp; &#39; <br>&nbsp;';
         $result = $email->handleBody(new SugarPHPMailer());
         $expected = "some email description containing email text & ' \n ";
         $actual = $email->description;
@@ -1034,7 +1036,7 @@ class EmailTest extends SuitePHPUnitFrameworkTestCase
         $email = BeanFactory::newBean('Emails');
 
         $expected = "SELECT emails.id , emails.mailbox_id, emails.name, emails.date_sent_received, emails.status, emails.type, emails.flagged, emails.reply_to_status,
-		                      emails_text.from_addr, emails_text.to_addrs  FROM emails   JOIN emails_text on emails.id = emails_text.email_id   WHERE (emails.type= 'inbound' OR emails.type='archived' OR emails.type='out') AND emails.deleted = 0 ";
+                              emails_text.from_addr, emails_text.to_addrs  FROM emails   JOIN emails_text on emails.id = emails_text.email_id   WHERE (emails.type= 'inbound' OR emails.type='archived' OR emails.type='out') AND emails.deleted = 0 ";
         $actual = $email->_genereateSearchImportedEmailsQuery();
         self::assertSame($expected, $actual);
     }
@@ -1124,22 +1126,22 @@ class EmailTest extends SuitePHPUnitFrameworkTestCase
         $email = BeanFactory::newBean('Emails');
 
         //test with empty string
-        $expected = "<div><input	title=\"Check For New Email\"
-						class=\"button\"
-						type=\"button\" name=\"button\"
-						onClick=\"window.location='index.php?module=Emails&action=Check&type=';\"
-						style=\"margin-bottom:2px\"
-						value=\"  Check Mail  \"></div>";
+        $expected = "<div><input    title=\"Check For New Email\"
+                        class=\"button\"
+                        type=\"button\" name=\"button\"
+                        onClick=\"window.location='index.php?module=Emails&action=Check&type=';\"
+                        style=\"margin-bottom:2px\"
+                        value=\"  Check Mail  \"></div>";
         $actual = $email->checkInbox('');
         self::assertSame($expected, $actual);
 
         //test with valid string
-        $expected = "<div><input	title=\"Check For New Email\"
-						class=\"button\"
-						type=\"button\" name=\"button\"
-						onClick=\"window.location='index.php?module=Emails&action=Check&type=test';\"
-						style=\"margin-bottom:2px\"
-						value=\"  Check Mail  \"></div>";
+        $expected = "<div><input    title=\"Check For New Email\"
+                        class=\"button\"
+                        type=\"button\" name=\"button\"
+                        onClick=\"window.location='index.php?module=Emails&action=Check&type=test';\"
+                        style=\"margin-bottom:2px\"
+                        value=\"  Check Mail  \"></div>";
         $actual = $email->checkInbox('test');
         self::assertSame($expected, $actual);
     }

@@ -70,8 +70,8 @@ $params[] = $focus->merge_bean->name;
 echo getClassicModuleTitle($focus->merge_bean->module_dir, $params, true);
 
        $order_by_name = $focus->merge_module.'2_'.strtoupper($focus->merge_bean->object_name).'_ORDER_BY' ;
-       $lvso = isset($_REQUEST['lvso'])?$_REQUEST['lvso']:"";
-       $request_order_by_name = isset($_REQUEST[$order_by_name])?$_REQUEST[$order_by_name]:"";
+       $lvso = isset($_REQUEST['lvso'])?$_REQUEST['lvso']: '';
+       $request_order_by_name = isset($_REQUEST[$order_by_name])?$_REQUEST[$order_by_name]: '';
 
 echo '<form onsubmit="return check_form(\'MassUpdate\');" id="MassUpdate" name="MassUpdate" method="post" action="index.php">'
     .'<input type="hidden" value="Step2" name="action"/>'
@@ -170,12 +170,12 @@ $onCancelRedirectURL =
 $form_top = <<<EOQ
 
             <input type="hidden" id="selectCount" name="selectCount[]" value=0>
-			<input type="hidden" name="merge_module" value="$merge_module">
-			<input type="hidden" name="record" value="$return_id">
-			<input type="hidden" name="return_module" value="$focus->merge_module">
-			<input type="hidden" name="return_id" value="$return_id">
-			<input type="hidden" name="return_action" value="DetailView">
-			<input title="$button_title" class="button" onclick="return verify_selection(this);" type="submit" name="button" value="  $button_label  " id="perform_merge_button">
+            <input type="hidden" name="merge_module" value="$merge_module">
+            <input type="hidden" name="record" value="$return_id">
+            <input type="hidden" name="return_module" value="$focus->merge_module">
+            <input type="hidden" name="return_id" value="$return_id">
+            <input type="hidden" name="return_action" value="DetailView">
+            <input title="$button_title" class="button" onclick="return verify_selection(this);" type="submit" name="button" value="  $button_label  " id="perform_merge_button">
             <input title="$cancel_title"
                    accessKey="$cancel_key"
                    class="button" onclick="window.location.href='. $onCancelRedirectURL '"
@@ -183,7 +183,7 @@ $form_top = <<<EOQ
                    name="button"
                    value="  $cancel_label  "
                    id="cancel_merge_button">
-		</form>
+        </form>
         <script>
            function verify_selection(theElement) {
                 theElement.form.action.value='Step3';

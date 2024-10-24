@@ -61,7 +61,7 @@ class ExtensionManager
         static::handleAuth();
         static::initialise();
 
-        if ($extension === 'Language' && strpos($targetFileName, $filter) !== 0) {
+        if ($extension === 'Language' && !str_starts_with($targetFileName, $filter)) {
             $targetFileName = $filter . $targetFileName;
         }
 
@@ -123,7 +123,7 @@ class ExtensionManager
         $filter = ''
     ) {
         static::$logger->{'debug'}(
-            self::class . "::compileExtensionFiles() : Merging module files in " .
+            self::class . '::compileExtensionFiles() : Merging module files in ' .
             "custom/Extension/modules/<module>/$extension to custom/modules/<module>/$extension/$targetFileName"
         );
 
@@ -147,7 +147,7 @@ class ExtensionManager
                         continue;
                     }
 
-                    if (strpos($entry, '_override') === 0) {
+                    if (str_starts_with($entry, '_override')) {
                         $override[] = $entry;
                         continue;
                     }

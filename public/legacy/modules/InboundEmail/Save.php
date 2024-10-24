@@ -90,7 +90,7 @@ foreach ($focus->column_fields as $field) {
         continue;
     }
 
-    if ($field !== "group_id") {
+    if ($field !== 'group_id') {
         if (is_string($_REQUEST[$field])) {
             $focus->$field = trim($_REQUEST[$field]);
         } else {
@@ -175,7 +175,7 @@ if (!empty($_REQUEST['external_oauth_connection_id'])) {
 }
 
 /////////////////////////////////////////////////////////
-////	SERVICE STRING CONCATENATION
+////    SERVICE STRING CONCATENATION
 $useSsl = isTrue($_REQUEST['is_ssl'] ?? false);
 $optimum = $focus->getSessionConnectionString($focus->server_url, $focus->email_user, $focus->port, $focus->protocol);
 if (empty($optimum)) {
@@ -189,10 +189,10 @@ if (is_array($optimum) && (count($optimum) > 0) && !empty($optimum['serial'])) {
 } else {
     // no save
     // allowing bad save to allow Email Campaigns configuration to continue even without IMAP
-    $focus->service = "::::::".$focus->protocol."::::"; // save bogus info.
-    $error = "&error=true";
+    $focus->service = '::::::' .$focus->protocol. '::::'; // save bogus info.
+    $error = '&error=true';
 }
-////	END SERVICE STRING CONCAT
+////    END SERVICE STRING CONCAT
 /////////////////////////////////////////////////////////
 
 if (isTrue($_REQUEST['mark_read'] ?? false)) {
@@ -217,9 +217,9 @@ $stored_options['allow_outbound_group_usage'] = isTrue($_REQUEST['allow_outbound
 $stored_options['outbound_email'] = $_REQUEST['outbound_email_id'] ?? null;
 
 if (!$focus->isPop3Protocol()) {
-    $stored_options['mailbox'] = (isset($_REQUEST['mailbox']) ? trim($_REQUEST['mailbox']) : "");
-    $stored_options['trashFolder'] = (isset($_REQUEST['trashFolder']) ? trim($_REQUEST['trashFolder']) : "");
-    $stored_options['sentFolder'] = (isset($_REQUEST['sentFolder']) ? trim($_REQUEST['sentFolder']) : "");
+    $stored_options['mailbox'] = (isset($_REQUEST['mailbox']) ? trim($_REQUEST['mailbox']) : '');
+    $stored_options['trashFolder'] = (isset($_REQUEST['trashFolder']) ? trim($_REQUEST['trashFolder']) : '');
+    $stored_options['sentFolder'] = (isset($_REQUEST['sentFolder']) ? trim($_REQUEST['sentFolder']) : '');
 } // if
 if ($focus->isMailBoxTypeCreateCase() || ($focus->mailbox_type === 'createcase' && empty($_REQUEST['id']))) {
     $stored_options['distrib_method'] = $_REQUEST['distrib_method'] ?? '';
@@ -246,7 +246,7 @@ $storedOptions['folderDelimiter'] = $delimiter;
 
 if (!empty($type) && $type !== 'personal') {
     if (!isset($focus->id)) {
-        $groupId = "";
+        $groupId = '';
         if (isset($_REQUEST['group_id']) && empty($_REQUEST['group_id'])) {
             $groupId = $_REQUEST['group_id'];
         } else {
@@ -263,7 +263,7 @@ if (!empty($type) && $type !== 'personal') {
         }
         $stored_options['isAutoImport'] = true;
     } else {
-        $focus->groupfolder_id = "";
+        $focus->groupfolder_id = '';
         //If the user is turning the auto-import feature off then remove all previous subscriptions.
         if (!empty($focus->fetched_row['groupfolder_id'])) {
             $log->debug("Clearing all subscriptions to folder id: {$focus->fetched_row['groupfolder_id']}");
@@ -304,7 +304,7 @@ $showFolders = sugar_unserialize(base64_decode($current_user->getPreference('sho
 if (!is_array($showFolders)) {
     $showFolders = [];
 }
-if (!in_array($focus->id, $showFolders)) {
+if (!in_array($focus->id, $showFolders, true)) {
     $showFolders[] = $focus->id;
     $showStore = base64_encode(serialize($showFolders));
     $current_user->setPreference('showFolders', $showStore, 0, 'Emails');
@@ -333,9 +333,9 @@ if (empty($foldersFoundRow)) {
     $focusUser = $owner;
     $params = array(
         // Inbox
-        "inbound" => array(
+        'inbound' => array(
             'name' => $focus->mailbox . ' ('.$focus->name.')',
-            'folder_type' => "inbound",
+            'folder_type' => 'inbound',
             'has_child' => 1,
             'dynamic_query' => '',
             'is_dynamic' => 1,
@@ -343,9 +343,9 @@ if (empty($foldersFoundRow)) {
             'modified_by' => $focusUser->id,
         ),
         // My Drafts
-        "draft" => array(
+        'draft' => array(
             'name' => $mod_strings['LNK_MY_DRAFTS'] . ' ('.$stored_options['sentFolder'].')',
-            'folder_type' => "draft",
+            'folder_type' => 'draft',
             'has_child' => 0,
             'dynamic_query' => '',
             'is_dynamic' => 1,
@@ -353,9 +353,9 @@ if (empty($foldersFoundRow)) {
             'modified_by' => $focusUser->id,
         ),
         // Sent Emails
-        "sent" => array(
+        'sent' => array(
             'name' => $mod_strings['LNK_SENT_EMAIL_LIST'] . ' ('.$stored_options['sentFolder'].')',
-            'folder_type' => "sent",
+            'folder_type' => 'sent',
             'has_child' => 0,
             'dynamic_query' => '',
             'is_dynamic' => 1,
@@ -363,9 +363,9 @@ if (empty($foldersFoundRow)) {
             'modified_by' => $focusUser->id,
         ),
         // Archived Emails
-        "archived" => array(
+        'archived' => array(
             'name' => $mod_strings['LBL_LIST_TITLE_MY_ARCHIVES'],
-            'folder_type' => "archived",
+            'folder_type' => 'archived',
             'has_child' => 0,
             'dynamic_query' => '',
             'is_dynamic' => 1,
@@ -375,13 +375,13 @@ if (empty($foldersFoundRow)) {
     );
 
 
-    require_once("include/SugarFolders/SugarFolders.php");
+    require_once('include/SugarFolders/SugarFolders.php');
 
     $parent_id = '';
 
 
     foreach ($params as $type => $type_params) {
-        if ($type == "inbound") {
+        if ($type === 'inbound') {
             $folder = new SugarFolder();
             foreach ($params[$type] as $key => $val) {
                 $folder->$key = $val;
@@ -405,7 +405,7 @@ if (empty($foldersFoundRow)) {
     }
 } else {
     // Update folders
-    require_once("include/SugarFolders/SugarFolders.php");
+    require_once('include/SugarFolders/SugarFolders.php');
     $foldersFound = $focus->db->query('SELECT * FROM folders WHERE folders.id LIKE "'.$focus->id.'" OR '.
         'folders.parent_folder LIKE "'.$focus->id.'"');
     while ($row = $focus->db->fetchRow($foldersFound)) {
@@ -458,7 +458,7 @@ if (!empty($focus->groupfolder_id)) {
 }
 
 //check if we are in campaigns module
-if ($_REQUEST['module'] == 'Campaigns') {
+if ($_REQUEST['module'] === 'Campaigns') {
     //this is coming from campaign wizard, Just set the error message if it exists and skip the redirect
     if (!empty($error)) {
         $_REQUEST['error'] = true;
@@ -469,17 +469,17 @@ if ($_REQUEST['module'] == 'Campaigns') {
     $_REQUEST['return_id'] = $focus->id;
 
     $edit='';
-    if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != "") {
+    if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] != '') {
         $return_module = $_REQUEST['return_module'];
     } else {
-        $return_module = "InboundEmail";
+        $return_module = 'InboundEmail';
     }
-    if (isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != "") {
+    if (isset($_REQUEST['return_action']) && $_REQUEST['return_action'] != '') {
         $return_action = $_REQUEST['return_action'];
     } else {
-        $return_action = "DetailView";
+        $return_action = 'DetailView';
     }
-    if (isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != "") {
+    if (isset($_REQUEST['return_id']) && $_REQUEST['return_id'] != '') {
         $return_id = $_REQUEST['return_id'];
     }
     if (!empty($_REQUEST['edit'])) {
@@ -487,7 +487,7 @@ if ($_REQUEST['module'] == 'Campaigns') {
         $edit='&edit=true';
     }
 
-    $log->debug("Saved record with id of ".$return_id);
+    $log->debug('Saved record with id of ' .$return_id);
 
     $redirectUrl = "Location: index.php?module=$return_module&action=$return_action&record=$return_id$edit";
 
@@ -521,10 +521,10 @@ function syncSugarFoldersWithBeanChanges($fieldName, $focus)
             break;
 
         case 'status':
-            if ($focus->status == 'Inactive') {
+            if ($focus->status === 'Inactive') {
                 $f->clearSubscriptionsForFolder($focus->groupfolder_id);
             } else {
-                if ($focus->mailbox_type != 'bounce') {
+                if ($focus->mailbox_type !== 'bounce') {
                     $f->addSubscriptionsToGroupFolder();
                 }
             }

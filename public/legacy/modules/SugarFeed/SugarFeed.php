@@ -45,26 +45,26 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class SugarFeed extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'SugarFeed';
-    public $object_name = 'SugarFeed';
-    public $table_name = 'sugarfeed';
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'SugarFeed';
+    public string $object_name = 'SugarFeed';
+    public string $table_name = 'sugarfeed';
+    public bool $importable = false;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_id;
+    public string $assigned_user_name;
     public $assigned_user_link;
 
     public function __construct()
@@ -77,7 +77,7 @@ class SugarFeed extends Basic
 
     public static function activateModuleFeed($module, $updateDB = true)
     {
-        if ($module != 'UserFeed') {
+        if ($module !== 'UserFeed') {
             // UserFeed is a fake module, used for the user postings to the feed
             // Don't try to load up any classes for it
             $fileList = SugarFeed::getModuleFeedFiles($module);
@@ -98,7 +98,7 @@ class SugarFeed extends Basic
 
     public static function disableModuleFeed($module, $updateDB = true)
     {
-        if ($module != 'UserFeed') {
+        if ($module !== 'UserFeed') {
             // UserFeed is a fake module, used for the user postings to the feed
             // Don't try to load up any classes for it
             $fileList = SugarFeed::getModuleFeedFiles($module);
@@ -147,10 +147,10 @@ class SugarFeed extends Basic
             }
             $d = dir($baseDir);
             while ($file = $d->read()) {
-                if ($file[0] == '.') {
+                if ($file[0] === '.') {
                     continue;
                 }
-                if (substr($file, -4) == '.php') {
+                if (str_ends_with($file, '.php')) {
                     // We found one
                     $fileList[$file] = $baseDir.$file;
                 }
@@ -221,10 +221,10 @@ class SugarFeed extends Basic
                 if (file_exists($baseDir.$module.'/SugarFeeds/')) {
                     $dFeed = dir($baseDir.$module.'/SugarFeeds/');
                     while ($file = $dFeed->read()) {
-                        if ($file[0] == '.') {
+                        if ($file[0] === '.') {
                             continue;
                         }
-                        if (substr($file, -4) == '.php') {
+                        if (str_ends_with($file, '.php')) {
                             // We found one
                             $feedModules[$module] = $module;
                         }
@@ -257,6 +257,9 @@ class SugarFeed extends Basic
         );
     }
 
+    /**
+     * @throws Exception
+     */
     public static function pushFeed(
         $text,
         $module,
@@ -327,10 +330,10 @@ class SugarFeed extends Basic
             }
             $d = dir($dirName);
             while ($file = $d->read()) {
-                if ($file[0] == '.') {
+                if ($file[0] === '.') {
                     continue;
                 }
-                if (substr($file, -4) == '.php') {
+                if (str_ends_with($file, '.php')) {
                     // We found one
                     $typeName = substr($file, 0, -4);
                     $linkTypeList[$typeName] = $typeName;
@@ -465,7 +468,7 @@ class SugarFeed extends Basic
             }
 
             $replyHTML .= '<div style="float: left; margin-right: 3px; width: 50px; height: 50px;"><!--not_in_theme!--><img src="'.$image_url.'" style="max-width: 50px; max-height: 50px;"></div> ';
-            $replyHTML .= str_replace("{this.CREATED_BY}", get_assigned_user_name($reply->created_by), html_entity_decode((string) $reply->name)).'<br>';
+            $replyHTML .= str_replace('{this.CREATED_BY}', get_assigned_user_name($reply->created_by), html_entity_decode((string) $reply->name)).'<br>';
             $replyHTML .= '<div class="byLineBox"><span class="byLineLeft">'. static::getTimeLapse($reply->date_entered) . '&nbsp;</span><div class="byLineRight">  &nbsp;' .$delete. '</div></div><div class="clear"></div>';
         }
 
@@ -482,7 +485,7 @@ class SugarFeed extends Basic
         //Fix #9875 SugarFeed shows 0 seconds ago and negative interval for certain datetime formats
         //Use proper user datetime format to convert datetime string to timestamp
         $user_format=$timedate->get_date_time_format();
-		$first=date_create_from_format($user_format,$currentTime);
+        $first=date_create_from_format($user_format,$currentTime);
         if(empty($first)){
             LoggerManager::getLogger()->warn('SugarFeed getTimeLapse: Could not fetch currentTime ');
             $first=0;
@@ -559,7 +562,7 @@ class SugarFeed extends Basic
     {
         $urls = getUrls($input);
         foreach ($urls as $url) {
-            $output = "<a href='$url' target='_blank'>".$url."</a>";
+            $output = "<a href='$url' target='_blank'>".$url. '</a>';
             $input = str_replace($url, $output, (string) $input);
         }
         return $input;

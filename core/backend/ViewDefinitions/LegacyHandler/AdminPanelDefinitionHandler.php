@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\ViewDefinitions\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleNameMapperInterface;
@@ -47,15 +47,16 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var RouteConverterInterface
      */
-    private $routeConverter;
+    private RouteConverterInterface $routeConverter;
 
     /**
      * AdminPanelDefinitionsHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -66,22 +67,25 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
      * @param RouteConverterInterface $routeConverter
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session,
-        RouteConverterInterface $routeConverter
-    ) {
+        RequestStack              $session,
+        RouteConverterInterface   $routeConverter,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->routeConverter = $routeConverter;
@@ -90,7 +94,7 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -98,13 +102,12 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
     /**
      * @inheritDoc
      */
-    public function getAdminPanelDef(): array
+    public function getAdminPanelDef() : array
     {
         $this->init();
         $admin_group_header = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require 'modules/Administration/metadata/adminpaneldefs.php';
+        require $this->legacyDir.'/modules/Administration/metadata/adminpaneldefs.php';
         $admin_group_header = $admin_group_header ?? [];
         $adminPanelMap = [];
         foreach ($admin_group_header as $adminEntry) {
@@ -113,10 +116,10 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
             }
 
             $mapEntry = [
-                'titleLabelKey' => $adminEntry[0] ?? '',
+                'titleLabelKey'       => $adminEntry[0] ?? '',
                 'descriptionLabelKey' => $adminEntry[4] ?? '',
-                'linkGroup' => [],
-                'icon' => $adminEntry[5] ?? ''
+                'linkGroup'           => [],
+                'icon'                => $adminEntry[5] ?? ''
             ];
             $adminEntryLinks = $adminEntry[3] ?? [];
 
@@ -138,9 +141,10 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
 
     /**
      * @param mixed $linkGroup
+     *
      * @return array
      */
-    protected function buildAdminMenuGroup($linkGroup): array
+    protected function buildAdminMenuGroup(array $linkGroup) : array
     {
         $mappedLinkGroup = [];
         foreach ($linkGroup as $linkKey => $link) {
@@ -153,18 +157,19 @@ class AdminPanelDefinitionHandler extends LegacyHandler implements AdminPanelDef
 
     /**
      * @param mixed $link
+     *
      * @return array
      */
-    protected function buildAdminMenuLink($link): array
+    protected function buildAdminMenuLink(array $link) : array
     {
         $path = $this->routeConverter->convertUri($link[3]);
         $path = str_replace('./#/', '/', $path);
         $mappedLink = [
-            'category' => $link[0] ?? '',
-            'titleKey' => $link[1] ?? '',
+            'category'       => $link[0] ?? '',
+            'titleKey'       => $link[1] ?? '',
             'descriptionKey' => $link[2] ?? '',
-            'link' => $path ?? '',
-            'icon' => $link[4] ?? '',
+            'link'           => $path ?? '',
+            'icon'           => $link[4] ?? '',
         ];
         $query = parse_url($path, PHP_URL_QUERY);
         if ($query) {

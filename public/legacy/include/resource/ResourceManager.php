@@ -91,7 +91,7 @@ class ResourceManager
             return false;
         }
 
-        if ($module == 'Soap') {
+        if ($module === 'Soap') {
             require_once('include/resource/Observers/SoapResourceObserver.php');
             $observer = new SoapResourceObserver('Soap');
         } elseif (defined('SUITE_PHPUNIT_RUNNER')) {
@@ -108,7 +108,7 @@ class ResourceManager
             if (isset($GLOBALS['sugar_config']['resource_management'])) {
                 $res = $GLOBALS['sugar_config']['resource_management'];
                 if (!empty($res['special_query_modules']) &&
-                    in_array($observer->module, $res['special_query_modules']) &&
+                    in_array($observer->module, $res['special_query_modules'], true) &&
                     !empty($res['special_query_limit']) &&
                     is_int($res['special_query_limit']) &&
                     $res['special_query_limit'] > 0

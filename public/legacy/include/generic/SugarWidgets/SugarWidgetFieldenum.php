@@ -52,13 +52,15 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
     public function queryFilterEmpty($layout_def)
     {
         $column = $this->_get_column_select($layout_def);
-        return "(coalesce(" . $this->reporter->db->convert($column, "length") . ",0) = 0 OR $column = '^^')";
+
+        return '(coalesce(' . $this->reporter->db->convert($column, 'length') . ",0) = 0 OR $column = '^^')";
     }
 
     public function queryFilterNot_Empty($layout_def)
     {
         $column = $this->_get_column_select($layout_def);
-        return "(coalesce(" . $this->reporter->db->convert($column, "length") . ",0) > 0 AND $column != '^^' )\n";
+
+        return '(coalesce(' . $this->reporter->db->convert($column, 'length') . ",0) > 0 AND $column != '^^' )\n";
     }
 
     public function queryFilteris($layout_def)
@@ -67,7 +69,8 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
         if (is_array($layout_def['input_name0'])) {
             $input_name0 = $layout_def['input_name0'][0];
         }
-        return $this->_get_column_select($layout_def)." = ".$this->reporter->db->quoted($input_name0)."\n";
+
+        return $this->_get_column_select($layout_def) . ' = ' . $this->reporter->db->quoted($input_name0) . "\n";
     }
 
     public function queryFilteris_not($layout_def)
@@ -76,7 +79,8 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
         if (is_array($layout_def['input_name0'])) {
             $input_name0 = $layout_def['input_name0'][0];
         }
-        return $this->_get_column_select($layout_def)." <> ".$this->reporter->db->quoted($input_name0)."\n";
+
+        return $this->_get_column_select($layout_def) . ' <> ' . $this->reporter->db->quoted($input_name0) . "\n";
     }
 
     public function queryFilterone_of($layout_def, $rename_columns = true)
@@ -85,8 +89,9 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
         foreach ($layout_def['input_name0'] as $value) {
             $arr[] = $this->reporter->db->quoted($value);
         }
-        $str = implode(",", $arr);
-        return $this->_get_column_select($layout_def)." IN (".$str.")\n";
+        $str = implode(',', $arr);
+
+        return $this->_get_column_select($layout_def) . ' IN (' . $str . ")\n";
     }
 
     public function queryFilternot_one_of($layout_def)
@@ -95,9 +100,10 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
         foreach ($layout_def['input_name0'] as $value) {
             $arr[] = $this->reporter->db->quoted($value);
         }
-        $reporter = $this->layout_manager->getAttribute("reporter");
-        $str = implode(",", $arr);
-        return $this->_get_column_select($layout_def)." NOT IN (".$str.")\n";
+        $reporter = $this->layout_manager->getAttribute('reporter');
+        $str = implode(',', $arr);
+
+        return $this->_get_column_select($layout_def) . ' NOT IN (' . $str . ")\n";
     }
 
     public function & displayList(&$layout_def)
@@ -126,13 +132,13 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
                 $field_name = $field_def['name'];
                 $field_type = $field_def['type'];
                 $div_id = $field_def['module'] ."&$record&$field_name";
-                $str = "<div id='$div_id'>" . $cell . "&nbsp;"
+                $str = "<div id='$div_id'>" . $cell . '&nbsp;'
                      . SugarThemeRegistry::current()->getImage(
-                         "edit_inline",
-                         "border='0' alt='Edit Layout' align='bottom' onClick='SUGAR.reportsInlineEdit.inlineEdit(" .
+                        'edit_inline',
+                        "border='0' alt='Edit Layout' align='bottom' onClick='SUGAR.reportsInlineEdit.inlineEdit(" .
                         "\"$div_id\",\"$cell\",\"$module\",\"$record\",\"$field_name\",\"$field_type\");'"
                        )
-                     . "</div>";
+                    . '</div>';
             }
         }
         return $str;
@@ -162,7 +168,7 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
         if (isset($field_def['options'])) {
             $cell = translate($field_def['options'], $field_def['module'], $value);
         } else {
-            if (isset($field_def['type']) && $field_def['type'] == 'enum' && isset($field_def['function'])) {
+            if (isset($field_def['type']) && $field_def['type'] === 'enum' && isset($field_def['function'])) {
                 global $beanFiles;
                 if (empty($beanFiles)) {
                     include('include/modules.php');
@@ -184,7 +190,7 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
                     array_push($cell, translate($field_def['options'], $field_def['module'], $val));
                 }
             }
-            $cell = implode(", ", $cell);
+            $cell = implode(', ', $cell);
         }
         return $cell;
     }
@@ -193,14 +199,14 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
     {
         $field_def = $this->reporter->all_fields[$layout_def['column_key']];
         if (!empty($field_def['sort_on'])) {
-            $order_by = $layout_def['table_alias'].".".$field_def['sort_on'];
+            $order_by = $layout_def['table_alias'] . '.' . $field_def['sort_on'];
         } else {
             $order_by = $this->_get_column_select($layout_def);
         }
         $list = array();
         if (isset($field_def['options'])) {
             $list = translate($field_def['options'], $field_def['module']);
-        } elseif (isset($field_def['type']) && $field_def['type'] == 'enum' && isset($field_def['function'])) {
+        } elseif (isset($field_def['type']) && $field_def['type'] === 'enum' && isset($field_def['function'])) {
             global $beanFiles;
             if (empty($beanFiles)) {
                 include('include/modules.php');
@@ -209,10 +215,10 @@ class SugarWidgetFieldEnum extends SugarWidgetReportField
             require_once($beanFiles[$bean_name]);
             $list = $field_def['function']();
         }
-        if (empty($layout_def['sort_dir']) || $layout_def['sort_dir'] == 'a') {
-            $order_dir = "ASC";
+        if (empty($layout_def['sort_dir']) || $layout_def['sort_dir'] === 'a') {
+            $order_dir = 'ASC';
         } else {
-            $order_dir = "DESC";
+            $order_dir = 'DESC';
         }
         return $this->reporter->db->orderByEnum($order_by, $list, $order_dir);
     }

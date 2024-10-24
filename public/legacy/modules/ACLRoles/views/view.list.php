@@ -43,7 +43,10 @@
 #[\AllowDynamicProperties]
 class ACLRolesViewList extends ViewList
 {
-    public function preDisplay()
+    /**
+     * @throws Exception
+     */
+    public function preDisplay() : void
     {
         //bug #46690: Developer Access to Users/Teams/Roles
         if (!$GLOBALS['current_user']->isAdminForModule('Users') && !$GLOBALS['current_user']->isDeveloperForModule('Users')) {

@@ -107,7 +107,7 @@ class DashletMetaDataParser extends ListLayoutMetaDataParser
         if ($this->_view == MB_DASHLETSEARCH && isset($viewDefinitions['searchfields'])) {
             //Remove any relate fields from the possible defs as they will break the homepage
             foreach ($fieldDefinitions as $id => $def) {
-                if (isset($def['type']) && $def['type'] == 'relate') {
+                if (isset($def['type']) && $def['type'] === 'relate') {
                     if (isset($fieldDefinitions[$id]['id_name'])) {
                         $fieldDefinitions[$fieldDefinitions[$id]['id_name']] = $def;
                         unset($fieldDefinitions[$id]);
@@ -164,6 +164,8 @@ class DashletMetaDataParser extends ListLayoutMetaDataParser
 
     /**
      * @param bool $populate
+     *
+     * @throws Exception
      */
     public function handleSave($populate = true)
     {
@@ -201,7 +203,7 @@ class DashletMetaDataParser extends ListLayoutMetaDataParser
 
         require($file);
         if (!isset($dashletData[$dashletName])) {
-            sugar_die("unable to load Module Dashlet Definition");
+            sugar_die('unable to load Module Dashlet Definition');
         }
         if ($fh = sugar_fopen($writeFile, 'w')) {
             if ($this->_view == MB_DASHLETSEARCH) {

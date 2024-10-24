@@ -44,10 +44,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-require_once("include/utils.php");
-require_once("include/ytree/Tree.php");
-require_once("include/ytree/ExtNode.php");
-require_once("include/SugarFolders/SugarFolders.php");
+require_once('include/utils.php');
+require_once('include/ytree/Tree.php');
+require_once('include/ytree/ExtNode.php');
+require_once('include/SugarFolders/SugarFolders.php');
 require_once 'include/Exceptions/SuiteException.php';
 
 
@@ -58,8 +58,8 @@ class EmailUI
     public $folder; // place holder for SugarFolder object
     public $folderStates = array(); // array of folderPath names and their states (1/0)
     public $smarty;
-    public $addressSeparators = array(";", ",");
-    public $rolloverStyle = "<style>div#rollover {position: relative;float: left;margin: none;text-decoration: none;}div#rollover a:hover {padding: 0;}div#rollover a span {display: none;}div#rollover a:hover span {text-decoration: none;display: block;width: 250px;margin-top: 5px;margin-left: 5px;position: absolute;padding: 10px;color: #333;	border: 1px solid #ccc;	background-color: #fff;	font-size: 12px;z-index: 1000;}</style>\n";
+    public $addressSeparators = array( ';', ',' );
+    public $rolloverStyle = "<style>div#rollover {position: relative;float: left;margin: none;text-decoration: none;}div#rollover a:hover {padding: 0;}div#rollover a span {display: none;}div#rollover a:hover span {text-decoration: none;display: block;width: 250px;margin-top: 5px;margin-left: 5px;position: absolute;padding: 10px;color: #333;    border: 1px solid #ccc;    background-color: #fff;    font-size: 12px;z-index: 1000;}</style>\n";
     public $groupCss = "<span class='groupInbox'>";
     public $cacheTimeouts = array(
         'messages' => 86400,    // 24 hours
@@ -101,14 +101,15 @@ class EmailUI
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	CORE
+    ////    CORE
     /**
      * Renders the frame for emails
-     * @throws RuntimeException
+     *
+     * @throws RuntimeException*@throws SmartyException
      */
-    public function displayEmailFrame($baseTpl = "modules/Emails/templates/_baseEmail.tpl")
+    public function displayEmailFrame($baseTpl = 'modules/Emails/templates/_baseEmail.tpl')
     {
-        require_once("include/OutboundEmail/OutboundEmail.php");
+        require_once('include/OutboundEmail/OutboundEmail.php');
 
         global $app_strings, $app_list_strings;
         global $mod_strings;
@@ -145,17 +146,17 @@ class EmailUI
         $qsd = QuickSearchDefaults::getQuickSearchDefaults();
         $qsd->setFormName('advancedSearchForm');
         $quicksearchAssignedUser = "if(typeof sqs_objects == 'undefined'){var sqs_objects = new Array;}";
-        $quicksearchAssignedUser .= "sqs_objects['advancedSearchForm_assigned_user_name']=" . json_encode($qsd->getQSUser()) . ";";
+        $quicksearchAssignedUser .= "sqs_objects['advancedSearchForm_assigned_user_name']=" . json_encode($qsd->getQSUser()) . ';';
         $qsd->setFormName('Distribute');
-        $quicksearchAssignedUser .= "sqs_objects['Distribute_assigned_user_name']=" . json_encode($qsd->getQSUser()) . ";";
+        $quicksearchAssignedUser .= "sqs_objects['Distribute_assigned_user_name']=" . json_encode($qsd->getQSUser()) . ';';
         $this->smarty->assign('quickSearchForAssignedUser', $quicksearchAssignedUser);
 
 
         ///////////////////////////////////////////////////////////////////////
-        ////	BASIC ASSIGNS
-        $this->smarty->assign("currentUserId", $current_user->id);
-        $this->smarty->assign("CURRENT_USER_EMAIL", $current_user->email1);
-        $this->smarty->assign("currentUserName", $current_user->name);
+        ////    BASIC ASSIGNS
+        $this->smarty->assign('currentUserId', $current_user->id);
+        $this->smarty->assign('CURRENT_USER_EMAIL', $current_user->email1);
+        $this->smarty->assign('currentUserName', $current_user->name);
         $this->smarty->assign('yuiPath', 'modules/Emails/javascript/yui-ext/');
         $this->smarty->assign('app_strings', $app_strings);
         $this->smarty->assign('mod_strings', $mod_strings);
@@ -167,7 +168,7 @@ class EmailUI
         $this->smarty->assign('current_language', $current_language);
         $this->smarty->assign('server_unique_key', $server_unique_key);
         $this->smarty->assign('qcModules', json_encode($QCAvailableModules));
-        $extAllDebugValue = "ext-all.js";
+        $extAllDebugValue = 'ext-all.js';
         $this->smarty->assign('extFileName', $extAllDebugValue);
 
         $useRequestedRecord = false;
@@ -185,14 +186,14 @@ class EmailUI
         $emailSettings = $e2UserPreferences['emailSettings'];
 
         ///////////////////////////////////////////////////////////////////////
-        ////	USER SETTINGS
+        ////    USER SETTINGS
         // settings: accounts
 
         $cuDatePref = $user->getUserDateTimePreferences();
         $this->smarty->assign('dateFormat', $cuDatePref['date']);
         $this->smarty->assign(
             'dateFormatExample',
-            str_replace(array("Y", "m", "d"), array("yyyy", "mm", "dd"), (string) $cuDatePref['date'])
+            str_replace(array( 'Y', 'm', 'd' ), array( 'yyyy', 'mm', 'dd' ), (string) $cuDatePref['date'])
         );
         $this->smarty->assign('calFormat', $timedate->get_cal_date_format());
         $this->smarty->assign('TIME_FORMAT', $timedate->get_user_time_format());
@@ -201,8 +202,8 @@ class EmailUI
         $ieAccountsOptions = "<option value=''>{$app_strings['LBL_NONE']}</option>\n";
 
         foreach ($ieAccounts as $k => $v) {
-            $disabled = (!$v->is_personal) ? "DISABLED" : "";
-            $group = (!$v->is_personal) ? $app_strings['LBL_EMAIL_GROUP'] . "." : "";
+            $disabled = (!$v->is_personal) ? 'DISABLED' : '';
+            $group = (!$v->is_personal) ? $app_strings['LBL_EMAIL_GROUP'] . '.' : '';
             $ieAccountsOptions .= "<option value='{$v->id}' $disabled>{$group}{$v->name}</option>\n";
         }
 
@@ -242,11 +243,11 @@ class EmailUI
             get_select_options_with_id($app_list_strings['email_settings_num_dom'], $emailSettings['showNumInList'])
         );
 
-        ////	END USER SETTINGS
+        ////    END USER SETTINGS
         ///////////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////
-        ////	SIGNATURES
+        ////    SIGNATURES
 
         $prependSignature = $user->getPreference('signature_prepend') ?
             'true' :
@@ -276,20 +277,20 @@ class EmailUI
                     </span>';
         }
         $this->smarty->assign('signatureButtons', $signatureButtons);
-        $this->smarty->assign('signaturePrepend', $prependSignature == 'true' ? 'CHECKED' : '');
-        ////	END SIGNATURES
+        $this->smarty->assign('signaturePrepend', $prependSignature === 'true' ? 'CHECKED' : '');
+        ////    END SIGNATURES
         ///////////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////
-        ////	EMAIL TEMPLATES
+        ////    EMAIL TEMPLATES
         $email_templates_arr = $this->getEmailTemplatesArray();
         natcasesort($email_templates_arr);
         $this->smarty->assign('EMAIL_TEMPLATE_OPTIONS', get_select_options_with_id($email_templates_arr, ''));
-        ////	END EMAIL TEMPLATES
+        ////    END EMAIL TEMPLATES
         ///////////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////
-        ////	FOLDERS & TreeView
+        ////    FOLDERS & TreeView
         $this->smarty->assign(
             'groupUserOptions',
             $ie->getGroupsWithSelectOptions(array('' => $app_strings['LBL_EMAIL_CREATE_NEW']))
@@ -303,14 +304,14 @@ class EmailUI
         if (!empty($focusFolderSerial)) {
             $focusFolder = sugar_unserialize($focusFolderSerial);
             //$focusFolder['ieId'], $focusFolder['folder']
-            $preloadFolder .= json_encode($focusFolder) . ";";
+            $preloadFolder .= json_encode($focusFolder) . ';';
         } else {
-            $preloadFolder .= "new Object();";
+            $preloadFolder .= 'new Object();';
         }
-        ////	END FOLDERS
+        ////    END FOLDERS
         ///////////////////////////////////////////////////////////////////////
 
-        $out = "";
+        $out = '';
         $out .= $this->smarty->fetch($baseTpl);
         $out .= $tree->generate_header();
         $out .= $tree->generateNodesNoInit(true, 'email2treeinit');
@@ -351,16 +352,19 @@ eoq;
      * by an ajax call.
      *
      * @return JSON An object containing html markup and js script variables.
+     * @throws SmartyException
+     * @throws SmartyException
+     * @throws SmartyException
      */
     public function displayQuickComposeEmailFrame()
     {
         $this->preflightUserCache();
 
         $this->_generateComposeConfigData('email_compose_light');
-        $javascriptOut = $this->smarty->fetch("modules/Emails/templates/_baseConfigData.tpl");
+        $javascriptOut = $this->smarty->fetch('modules/Emails/templates/_baseConfigData.tpl');
 
-        $divOut = $this->smarty->fetch("modules/Emails/templates/overlay.tpl");
-        $divOut .= $this->smarty->fetch("modules/Emails/templates/addressSearchContent.tpl");
+        $divOut = $this->smarty->fetch('modules/Emails/templates/overlay.tpl');
+        $divOut .= $this->smarty->fetch('modules/Emails/templates/addressSearchContent.tpl');
 
         $outData = array('jsData' => $javascriptOut, 'divData' => $divOut);
         $out = json_encode($outData);
@@ -404,10 +408,10 @@ eoq;
      */
     public function generateComposePackageForQuickCreateFromComposeUrl($emailLinkUrl, $lazyLoad = false)
     {
-        $composeData = explode("&", $emailLinkUrl);
+        $composeData = explode('&', $emailLinkUrl);
         $a_composeData = array();
         foreach ($composeData as $singleRequest) {
-            $tmp = explode("=", $singleRequest);
+            $tmp = explode('=', $singleRequest);
             $a_composeData[$tmp[0]] = urldecode($tmp[1]);
         }
 
@@ -426,7 +430,7 @@ eoq;
     {
         global $current_user;
 
-        if ($current_user->getEmailClient() == 'sugar') {
+        if ($current_user->getEmailClient() === 'sugar') {
             $html =<<<HTML
             <a class="email-link" href="mailto:{$addr}"
                     onclick="$(document).openComposeViewModal(this);"
@@ -673,7 +677,7 @@ HTML;
         // but not double quotes since json would escape them
         foreach ($composePackage as $key => $singleCompose) {
             if (is_string($singleCompose)) {
-                $composePackage[$key] = str_replace("&nbsp;", " ", (string) from_html($singleCompose));
+                $composePackage[$key] = str_replace('&nbsp;', ' ', (string) from_html($singleCompose));
             }
         }
 
@@ -692,7 +696,7 @@ HTML;
      * @param String $type Drives which tinyMCE options will be included.
      * @throws RuntimeException
      */
-    public function _generateComposeConfigData($type = "email_compose_light")
+    public function _generateComposeConfigData($type = 'email_compose_light')
     {
         global $app_list_strings, $current_user, $app_strings, $mod_strings, $current_language, $locale;
 
@@ -707,14 +711,14 @@ HTML;
         $linkBeans = json_encode(get_select_options_with_id($parent_types, ''));
 
         //TinyMCE Config
-        require_once("include/SugarTinyMCE.php");
+        require_once('include/SugarTinyMCE.php');
         $tiny = new SugarTinyMCE();
         $tinyConf = $tiny->getConfig($type);
 
         //Generate Language Packs
         $lang = "var app_strings = new Object();\n";
         foreach ($app_strings as $k => $v) {
-            if (strpos((string) $k, 'LBL_EMAIL_') !== false) {
+            if (str_contains((string) $k, 'LBL_EMAIL_')) {
                 $vJS = json_encode($v);
                 $lang .= "app_strings.{$k} = {$vJS};\n";
             }
@@ -749,9 +753,9 @@ HTML;
         //Signatures
         $defsigID = $current_user->getPreference('signature_default');
         $defaultSignature = $current_user->getDefaultSignature();
-        $sigJson = !empty($defaultSignature) ? json_encode(array($defaultSignature['id'] => from_html($defaultSignature['signature_html']))) : "new Object()";
+        $sigJson = !empty($defaultSignature) ? json_encode(array($defaultSignature['id'] => from_html($defaultSignature['signature_html']))) : 'new Object()';
         $this->smarty->assign('defaultSignature', $sigJson);
-        $this->smarty->assign('signatureDefaultId', (isset($defaultSignature['id'])) ? $defaultSignature['id'] : "");
+        $this->smarty->assign('signatureDefaultId', (isset($defaultSignature['id'])) ? $defaultSignature['id'] : '');
         //User Preferences
         $this->smarty->assign('userPrefs', json_encode($this->getUserPrefsJS()));
 
@@ -791,11 +795,11 @@ HTML;
         //Relateable List of People for address book search
         //#20776 jchi
         $peopleTables = array(
-            "users",
-            "contacts",
-            "leads",
-            "prospects",
-            "accounts"
+            'users',
+            'contacts',
+            'leads',
+            'prospects',
+            'accounts'
         );
         $filterPeopleTables = array();
         global $app_list_strings, $app_strings;
@@ -816,11 +820,11 @@ HTML;
 
 
 
-    ////	END CORE
+    ////    END CORE
     ///////////////////////////////////////////////////////////////////////////
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	ADDRESS BOOK
+    ////    ADDRESS BOOK
     /**
      * Retrieves all relationship metadata for a user's address book
      * @return array
@@ -898,7 +902,10 @@ HTML;
 
     /**
      * saves editted Contact info
+     *
      * @param string $str JSON serialized object
+     *
+     * @throws Exception
      */
     public function saveContactEdit($str)
     {
@@ -917,7 +924,7 @@ HTML;
         $addresses = array();
 
         foreach ($obj as $k => $req) {
-            if (strpos((string) $k, 'emailAddress') !== false) {
+            if (str_contains((string) $k, 'emailAddress')) {
                 $addresses[$k] = $req;
             }
         }
@@ -930,16 +937,19 @@ HTML;
 
     /**
      * Prepares the Edit Contact mini-form via template assignment
+     *
      * @param string id ID of contact in question
      * @param string module Module in focus
+     *
      * @return array
+     * @throws SmartyException
      */
     public function getEditContact($id, $module)
     {
         global $app_strings;
 
 
-        if (!class_exists("Contact")) {
+        if (!class_exists('Contact')) {
         }
 
         $contact = BeanFactory::newBean('Contacts');
@@ -953,21 +963,21 @@ HTML;
             $contactMeta['first_name'] = $contact->first_name;
             $contactMeta['last_name'] = $contact->last_name;
 
-            $this->smarty->assign("app_strings", $app_strings);
+            $this->smarty->assign('app_strings', $app_strings);
             $this->smarty->assign(
-                "contact_strings",
+                'contact_strings',
                 return_module_language(get_current_language(), 'Contacts')
             );
-            $this->smarty->assign("contact", $contactMeta);
+            $this->smarty->assign('contact', $contactMeta);
 
             $ea = new SugarEmailAddress();
             $newEmail = $ea->getEmailAddressWidgetEditView($id, $module, true);
-            $this->smarty->assign("emailWidget", $newEmail['html']);
+            $this->smarty->assign('emailWidget', $newEmail['html']);
 
-            $ret['form'] = $this->smarty->fetch("modules/Emails/templates/editContact.tpl");
+            $ret['form'] = $this->smarty->fetch('modules/Emails/templates/editContact.tpl');
             $ret['prefillData'] = $newEmail['prefillData'];
         } else {
-            $id = "";
+            $id = '';
             $ret['form'] = $app_strings['LBL_EMAIL_ERROR_NO_ACCESS'];
             $ret['prefillData'] = '{}';
         }
@@ -1010,7 +1020,7 @@ HTML;
 
         foreach ($modules as $module => $contacts) {
             if (!empty($union)) {
-                $union .= " UNION ALL ";
+                $union .= ' UNION ALL ';
             }
 
             $table = strtolower($module);
@@ -1018,7 +1028,7 @@ HTML;
 
             foreach ($contacts as $contact) {
                 if (!empty($idsSerial)) {
-                    $idsSerial .= ",";
+                    $idsSerial .= ',';
                 }
                 $idsSerial .= "'{$contact['id']}'";
             }
@@ -1026,7 +1036,7 @@ HTML;
             $union .= "(SELECT id, first_name, last_name, title, '{$module}' module FROM {$table} WHERE id IN({$idsSerial}) AND deleted = 0 )";
         }
         if (!empty($union)) {
-            $union .= " ORDER BY last_name";
+            $union .= ' ORDER BY last_name';
         }
 
         $r = $user->db->query($union);
@@ -1050,12 +1060,12 @@ HTML;
 
         return $ret;
     }
-    ////	END ADDRESS BOOK
+    ////    END ADDRESS BOOK
     ///////////////////////////////////////////////////////////////////////////
 
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	EMAIL 2.0 Preferences
+    ////    EMAIL 2.0 Preferences
     /**
      * @param bool $useRequestedRecord
      * @return array
@@ -1108,8 +1118,8 @@ HTML;
         $showUnreadOnly = $user->getPreference('showUnreadOnly', 'Emails');
 
         $listViewSort = array(
-            "sortBy" => 'date',
-            "sortDirection" => 'DESC',
+            'sortBy'        => 'date',
+            'sortDirection' => 'DESC',
         );
 
         // signature prefs
@@ -1147,7 +1157,7 @@ HTML;
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	FOLDER FUNCTIONS
+    ////    FOLDER FUNCTIONS
 
     /**
      * Creates a new Sugar folder
@@ -1160,7 +1170,7 @@ HTML;
 
         $this->folder->name = $nodeLabel;
         $this->folder->is_group = $isGroup;
-        $this->folder->parent_folder = ($parentId == 'Home') ? "" : $parentId;
+        $this->folder->parent_folder = ($parentId === 'Home') ? '' : $parentId;
         $this->folder->has_child = 0;
         $this->folder->created_by = $current_user->id;
         $this->folder->modified_by = $current_user->id;
@@ -1241,30 +1251,30 @@ HTML;
         }
 
         // folders
-        if (!file_exists($cacheRoot . "/folders")) {
+        if (!file_exists($cacheRoot . '/folders')) {
             mkdir_recursive(clean_path("{$cacheRoot}/folders"));
         }
 
         // messages
-        if (!file_exists($cacheRoot . "/messages")) {
+        if (!file_exists($cacheRoot . '/messages')) {
             mkdir_recursive(clean_path("{$cacheRoot}/messages"));
         }
 
         // attachments
-        if (!file_exists($cacheRoot . "/attachments")) {
+        if (!file_exists($cacheRoot . '/attachments')) {
             mkdir_recursive(clean_path("{$cacheRoot}/attachments"));
         }
     }
 
     public function deleteEmailCacheForFolders($cacheRoot)
     {
-        $filePath = $cacheRoot . "/folders/folders.php";
+        $filePath = $cacheRoot . '/folders/folders.php';
         if (file_exists($filePath)) {
             unlink($filePath);
         }
     }
     ///////////////////////////////////////////////////////////////////////////
-    ////	IMAP FUNCTIONS
+    ////    IMAP FUNCTIONS
     /**
      * Identifies subscribed mailboxes and empties the trash
      * @param object $ie InboundEmail
@@ -1301,7 +1311,7 @@ HTML;
             $user = $current_user;
         }
 
-        $tree = new Tree("frameFolders");
+        $tree = new Tree('frameFolders');
         $tree->tree_style = 'include/ytree/TreeView/css/check/tree.css';
 
         $nodes = array();
@@ -1323,12 +1333,12 @@ HTML;
             $personals = $ie->retrieveByGroupId($user->id);
 
             foreach ($personals as $k => $personalAccount) {
-                if (in_array($personalAccount->id, $showFolders)) {
+                if (in_array($personalAccount->id, $showFolders, true)) {
                     // check for cache value
                     $cacheRoot = sugar_cached("modules/Emails/{$personalAccount->id}");
                     $this->preflightEmailCache($cacheRoot);
 
-                    if ($this->validCacheFileExists($personalAccount->id, 'folders', "folders.php")) {
+                    if ($this->validCacheFileExists($personalAccount->id, 'folders', 'folders.php')) {
                         $mailboxes = $this->getMailBoxesFromCacheValue($personalAccount);
                     } else {
                         $mailboxes = $personalAccount->getMailboxes();
@@ -1342,7 +1352,7 @@ HTML;
                     $acctNode->set_property('protocol', $personalAccount->protocol);
 
                     if (array_key_exists('Home::' . $personalAccount->name, $this->folderStates)) {
-                        if ($this->folderStates['Home::' . $personalAccount->name] == 'open') {
+                        if ($this->folderStates['Home::' . $personalAccount->name] === 'open') {
                             $acctNode->expanded = true;
                         }
                     }
@@ -1370,13 +1380,13 @@ HTML;
         // GROUP INBOX NODES
         $beans = $ie->retrieveAllByGroupId($user->id, false);
         foreach ($beans as $k => $groupAccount) {
-            if (in_array($groupAccount->id, $showFolders)) {
+            if (in_array($groupAccount->id, $showFolders, true)) {
                 // check for cache value
                 $cacheRoot = sugar_cached("modules/Emails/{$groupAccount->id}");
                 $this->preflightEmailCache($cacheRoot);
                 //$groupAccount->connectMailserver();
 
-                if ($this->validCacheFileExists($groupAccount->id, 'folders', "folders.php")) {
+                if ($this->validCacheFileExists($groupAccount->id, 'folders', 'folders.php')) {
                     $mailboxes = $this->getMailBoxesFromCacheValue($groupAccount);
                 } else {
                     $mailboxes = $groupAccount->getMailBoxesForGroupAccount();
@@ -1390,12 +1400,12 @@ HTML;
                 $acctNode->set_property('protocol', $groupAccount->protocol);
 
                 if (array_key_exists('Home::' . $groupAccount->name, $this->folderStates)) {
-                    if ($this->folderStates['Home::' . $groupAccount->name] == 'open') {
+                    if ($this->folderStates['Home::' . $groupAccount->name] === 'open') {
                         $acctNode->expanded = true;
                     }
                 }
                 $acctNode->dynamic_load = true;
-                $nodePath = $rootNode->_properties['id'] . "::" . $acctNode->_properties['id'];
+                $nodePath = $rootNode->_properties['id'] . '::' . $acctNode->_properties['id'];
 
                 foreach ($mailboxes as $k => $mbox) {
                     $acctNode->add_node($this->buildTreeNode(
@@ -1424,7 +1434,7 @@ HTML;
     public function getMailBoxesFromCacheValue($mailAccount)
     {
         $cacheRoot = sugar_cached("modules/Emails/{$mailAccount->id}");
-        $foldersCache = $this->getCacheValue($mailAccount->id, 'folders', "folders.php", 'foldersCache');
+        $foldersCache = $this->getCacheValue($mailAccount->id, 'folders', 'folders.php', 'foldersCache');
         $mailboxes = $foldersCache['mailboxes'];
         $mailboxesArray = $mailAccount->generateFlatArrayFromMultiDimArray(
             $mailboxes,
@@ -1452,16 +1462,16 @@ HTML;
         global $sugar_config;
 
         // get unread counts
-        $exMbox = explode("::", $nodePath);
+        $exMbox = explode('::', $nodePath);
         $unseen = 0;
         $GLOBALS['log']->debug("$key --- $nodePath::$label");
 
         if (count($exMbox) >= 2) {
-            $mailbox = "";
+            $mailbox = '';
             $exMboxCount = count($exMbox);
             for ($i = 2; $i < $exMboxCount; $i++) {
-                if ($mailbox != "") {
-                    $mailbox .= ".";
+                if ($mailbox != '') {
+                    $mailbox .= '.';
                 }
                 $mailbox .= $exMbox[$i];
             }
@@ -1475,15 +1485,15 @@ HTML;
             }
         }
 
-        $nodePath = $nodePath . "::" . $label;
+        $nodePath = $nodePath . '::' . $label;
         $node = new ExtNode($nodePath, $label);
         $node->dynamicloadfunction = '';
         $node->expanded = false;
-        $node->set_property('labelStyle', "remoteFolder");
+        $node->set_property('labelStyle', 'remoteFolder');
 
 
         if (array_key_exists($nodePath, $this->folderStates)) {
-            if ($this->folderStates[$nodePath] == 'open') {
+            if ($this->folderStates[$nodePath] === 'open') {
                 $node->expanded = true;
             }
         }
@@ -1520,7 +1530,7 @@ HTML;
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	DISPLAY CODE
+    ////    DISPLAY CODE
     /**
      * Used exclusively by draft code.  Returns Notes and Documents as attachments.
      * @param array $ret
@@ -1591,13 +1601,13 @@ HTML;
 
     public function parseAttachmentInfo(&$actualAttachmentInfo, $attachmentHtmlData)
     {
-        $downLoadPHP = strpos((string) $attachmentHtmlData, "index.php?entryPoint=download&");
+        $downLoadPHP = strpos((string) $attachmentHtmlData, 'index.php?entryPoint=download&');
         while ($downLoadPHP) {
             $attachmentHtmlData = substr((string) $attachmentHtmlData, $downLoadPHP + 30);
             $final = strpos($attachmentHtmlData, "\">");
             $actualAttachmentInfo[] = substr($attachmentHtmlData, 0, $final);
             $attachmentHtmlData = substr($attachmentHtmlData, $final);
-            $downLoadPHP = strpos($attachmentHtmlData, "index.php?entryPoint=download&");
+            $downLoadPHP = strpos($attachmentHtmlData, 'index.php?entryPoint=download&');
         } // while
     }
 
@@ -1610,7 +1620,7 @@ HTML;
      */
     public function getQuickCreateForm($vars, $email, $addToAddressBookButton = false)
     {
-        require_once("include/EditView/EditView2.php");
+        require_once('include/EditView/EditView2.php');
         global $app_strings;
         global $mod_strings;
         global $current_user;
@@ -1635,7 +1645,7 @@ HTML;
         $emailAddress = array();
 
         // people
-        if (in_array($bean, $people)) {
+        if (in_array($bean, $people, true)) {
             // lead specific
             $focus->lead_source = 'Email';
             $focus->lead_source_description = trim($email->name);
@@ -1643,17 +1653,17 @@ HTML;
             $from = (isset($email->from_name) && !empty($email->from_name)) ? $email->from_name : $email->from_addr;
 
             if (isset($_REQUEST['sugarEmail']) && !empty($_REQUEST['sugarEmail'])) {
-                if ($email->status == "sent") {
+                if ($email->status === 'sent') {
                     $from = (isset($email->to_addrs_names) && !empty($email->to_addrs_names)) ? $email->to_addrs_names : $email->to_addrs;
                 } else {
                     $from = (isset($email->from_name) && !empty($email->from_name)) ? $email->from_name : $email->from_addr_name;
                 }
             }
 
-            $name = explode(" ", trim($from));
+            $name = explode(' ', trim($from));
 
             $address = trim(array_pop($name));
-            $address = str_replace(array("<", ">", "&lt;", "&gt;"), "", $address);
+            $address = str_replace(array( '<', '>', '&lt;', '&gt;' ), '', $address);
 
             isValidEmailAddress($address);
 
@@ -1672,7 +1682,7 @@ HTML;
 
                 foreach ($name as $first) {
                     if (!empty($focus->first_name)) {
-                        $focus->first_name .= " ";
+                        $focus->first_name .= ' ';
                     }
                     $focus->first_name .= trim($first);
                 }
@@ -1755,15 +1765,18 @@ HTML;
 
     /**
      * Renders the Import form from Smarty and returns HTML
-     * @param array $vars request variable global
+     *
+     * @param array $vars   request variable global
      * @param object $email Fetched email object
      * @param bool $addToAddressBook
+     *
      * @return array
+     * @throws SmartyException
      */
     public function getImportForm($vars, $email, $formName = 'ImportEditView')
     {
-        require_once("include/EditView/EditView2.php");
-        require_once("include/TemplateHandler/TemplateHandler.php");
+        require_once('include/EditView/EditView2.php');
+        require_once('include/TemplateHandler/TemplateHandler.php');
         require_once('include/QuickSearchDefaults.php');
         $qsd = QuickSearchDefaults::getQuickSearchDefaults();
         $qsd->setFormName($formName);
@@ -1775,7 +1788,7 @@ HTML;
             "{$formName}_parent_name" => $qsd->getQSParent(),
         );
         $smarty = new Sugar_Smarty();
-        $smarty->assign("APP", $app_strings);
+        $smarty->assign('APP', $app_strings);
         $smarty->assign('formName', $formName);
         $showAssignTo = false;
         if (!isset($vars['showAssignTo']) || $vars['showAssignTo'] == true) {
@@ -1790,16 +1803,16 @@ HTML;
             }
             $sqs_objects["{$formName}_assigned_user_name"] = $qsd->getQSUser();
         }
-        $smarty->assign("showAssignedTo", $showAssignTo);
+        $smarty->assign('showAssignedTo', $showAssignTo);
 
         $showDelete = false;
         if (!isset($vars['showDelete']) || $vars['showDelete'] == true) {
             $showDelete = true;
         }
-        $smarty->assign("showDelete", $showDelete);
+        $smarty->assign('showDelete', $showDelete);
 
-        $smarty->assign("userId", $email->assigned_user_id);
-        $smarty->assign("userName", $email->assigned_user_name);
+        $smarty->assign('userId', $email->assigned_user_id);
+        $smarty->assign('userName', $email->assigned_user_name);
         $parent_types = $app_list_strings['record_type_display'];
         $smarty->assign('parentOptions', get_select_options_with_id($parent_types, $email->parent_type));
 
@@ -1807,7 +1820,7 @@ HTML;
         $smarty->assign('SQS', $quicksearch_js);
 
         $meta = array();
-        $meta['html'] = $smarty->fetch("modules/Emails/templates/importRelate.tpl");
+        $meta['html'] = $smarty->fetch('modules/Emails/templates/importRelate.tpl');
 
         return $meta;
     }
@@ -1815,6 +1828,7 @@ HTML;
     /**
      * This function returns the detail view for email in new 2.0 interface
      *
+     * @throws SmartyException
      */
     public function getDetailViewForEmail2($emailId)
     {
@@ -1832,20 +1846,20 @@ HTML;
         $focus->retrieve($emailId);
         $detailView->ss = new Sugar_Smarty();
         $detailView = new DetailView();
-        $title = "";
+        $title = '';
         $offset = 0;
-        if ($focus->type == 'out') {
+        if ($focus->type === 'out') {
             $title = getClassicModuleTitle('Emails', array($mod_strings['LBL_SENT_MODULE_NAME'], $focus->name), true);
-        } elseif ($focus->type == 'draft') {
+        } elseif ($focus->type === 'draft') {
             $title = getClassicModuleTitle(
                 'Emails',
                 array($mod_strings['LBL_LIST_FORM_DRAFTS_TITLE'], $focus->name),
                 true
             );
-        } elseif ($focus->type == 'inbound') {
+        } elseif ($focus->type === 'inbound') {
             $title = getClassicModuleTitle('Emails', array($mod_strings['LBL_INBOUND_TITLE'], $focus->name), true);
         }
-        $smarty->assign("emailTitle", $title);
+        $smarty->assign('emailTitle', $title);
 
         // DEFAULT TO TEXT IF NO HTML CONTENT:
         $html = trim(from_html($focus->description_html));
@@ -1856,9 +1870,9 @@ HTML;
         }
 
         //if not empty or set to test (from test campaigns)
-        if (!empty($focus->parent_type) && $focus->parent_type != 'test') {
+        if (!empty($focus->parent_type) && $focus->parent_type !== 'test') {
             $smarty->assign('PARENT_MODULE', $focus->parent_type);
-            $smarty->assign('PARENT_TYPE', $app_list_strings['record_type_display'][$focus->parent_type] . ":");
+            $smarty->assign('PARENT_TYPE', $app_list_strings['record_type_display'][$focus->parent_type] . ':');
         }
 
         global $gridline;
@@ -1885,25 +1899,25 @@ HTML;
         $smarty->assign('MODIFIED_BY', $focus->modified_by_name);
         $smarty->assign('DATE_SENT_RECEIVED', $focus->date_sent_received);
         $smarty->assign('EMAIL_NAME', 'RE: ' . $focus->name);
-        $smarty->assign("TAG", $focus->listviewACLHelper());
-        $smarty->assign("SUGAR_VERSION", $GLOBALS['sugar_version']);
-        $smarty->assign("JS_CUSTOM_VERSION", $GLOBALS['sugar_config']['js_custom_version']);
+        $smarty->assign('TAG', $focus->listviewACLHelper());
+        $smarty->assign('SUGAR_VERSION', $GLOBALS['sugar_version']);
+        $smarty->assign('JS_CUSTOM_VERSION', $GLOBALS['sugar_config']['js_custom_version']);
         if (!empty($focus->reply_to_email)) {
             $replyTo = "
                 <tr>
                 <td class=\"tabDetailViewDL\"><slot>" . $mod_strings['LBL_REPLY_TO_NAME'] . "</slot></td>
-                <td colspan=3 class=\"tabDetailViewDF\"><slot>" . $focus->reply_to_addr . "</slot></td>
-                </tr>";
-            $smarty->assign("REPLY_TO", $replyTo);
+                <td colspan=3 class=\"tabDetailViewDF\"><slot>" . $focus->reply_to_addr . '</slot></td>
+                </tr>';
+            $smarty->assign('REPLY_TO', $replyTo);
         }
         ///////////////////////////////////////////////////////////////////////////////
-        ////	JAVASCRIPT VARS
+        ////    JAVASCRIPT VARS
         $jsVars = '';
         $jsVars .= "var showRaw = '{$mod_strings['LBL_BUTTON_RAW_LABEL']}';";
         $jsVars .= "var hideRaw = '{$mod_strings['LBL_BUTTON_RAW_LABEL_HIDE']}';";
-        $smarty->assign("JS_VARS", $jsVars);
+        $smarty->assign('JS_VARS', $jsVars);
         ///////////////////////////////////////////////////////////////////////////////
-        ////	NOTES (attachements, etc.)
+        ////    NOTES (attachements, etc.)
         ///////////////////////////////////////////////////////////////////////////////
 
         $note = BeanFactory::newBean('Notes');
@@ -1913,7 +1927,7 @@ HTML;
         if (isset($macro_values) && isset($macro_values['email_template_id'])) {
             $where = "notes.parent_id='{$macro_values['email_template_id']}'";
         }
-        $notes_list = $note->get_full_list("notes.name", $where, true);
+        $notes_list = $note->get_full_list('notes.name', $where, true);
 
         if (!isset($notes_list)) {
             $notes_list = array();
@@ -1923,12 +1937,12 @@ HTML;
         $notes_listCount = count($notes_list);
         for ($i = 0; $i < $notes_listCount; $i++) {
             $the_note = $notes_list[$i];
-            $attachments .= "<a href=\"index.php?entryPoint=download&id={$the_note->id}&type=Notes\">" . $the_note->name . "</a><br />";
+            $attachments .= "<a href=\"index.php?entryPoint=download&id={$the_note->id}&type=Notes\">" . $the_note->name . '</a><br />';
             $focus->cid2Link($the_note->id, $the_note->file_mime_type);
         }
         $smarty->assign('DESCRIPTION', nl2br($focus->description));
         $smarty->assign('DESCRIPTION_HTML', from_html($focus->description_html));
-        $smarty->assign("ATTACHMENTS", $attachments);
+        $smarty->assign('ATTACHMENTS', $attachments);
         ///////////////////////////////////////////////////////////////////////////////
         ////    SUBPANELS
         ///////////////////////////////////////////////////////////////////////////////
@@ -1936,9 +1950,9 @@ HTML;
         if ($show_subpanels) {
             require_once('include/SubPanel/SubPanelTiles.php');
             $subpanel = new SubPanelTiles($focus, 'Emails');
-            $smarty->assign("SUBPANEL", $subpanel->display());
+            $smarty->assign('SUBPANEL', $subpanel->display());
         }
-        $meta['html'] = $smarty->fetch("modules/Emails/templates/emailDetailView.tpl");
+        $meta['html'] = $smarty->fetch('modules/Emails/templates/emailDetailView.tpl');
 
         return $meta;
     } // fn
@@ -1954,10 +1968,16 @@ HTML;
     /**
      * Marks emails with the passed flag type.  This will be applied to local
      * cache files as well as remote emails.
-     * @param string $type Flag type
+     *
+     * @param string $type   Flag type
      * @param string $ieId
      * @param string $folder IMAP folder structure or SugarFolder GUID
-     * @param string $uids Comma sep list of UIDs or GUIDs
+     * @param string $uids   Comma sep list of UIDs or GUIDs
+     *
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function markEmails($type, $ieId, $folder, $uids)
     {
@@ -1965,7 +1985,7 @@ HTML;
         $uids = $this->_cleanUIDList($uids);
         $exUids = explode($app_strings['LBL_EMAIL_DELIMITER'], $uids);
 
-        if (strpos($folder, 'sugar::') !== false) {
+        if (str_contains($folder, 'sugar::')) {
             // dealing with a sugar email object, uids are GUIDs
             foreach ($exUids as $id) {
                 $email = BeanFactory::newBean('Emails');
@@ -1979,26 +1999,26 @@ HTML;
                 // BUG FIX END
 
                 switch ($type) {
-                    case "unread":
+                    case 'unread':
                         $email->status = 'unread';
                         $email->save();
                         break;
 
-                    case "read":
+                    case 'read':
                         $email->status = 'read';
                         $email->save();
                         break;
 
-                    case "deleted":
+                    case 'deleted':
                         $email->delete();
                         break;
 
-                    case "flagged":
+                    case 'flagged':
                         $email->flagged = 1;
                         $email->save();
                         break;
 
-                    case "unflagged":
+                    case 'unflagged':
                         $email->flagged = 0;
                         $email->save();
                         break;
@@ -2022,7 +2042,7 @@ HTML;
             $ie->mailbox = $folder;
             $ie->connectMailserver();
             // mark cache files
-            if ($type == 'deleted') {
+            if ($type === 'deleted') {
                 $ie->deleteMessageOnMailServer($uids);
                 $ie->deleteMessageFromCache($uids);
             } else {
@@ -2030,21 +2050,21 @@ HTML;
                 $manipulated = array();
 
                 foreach ($overviews['retArr'] as $k => $overview) {
-                    if (in_array($overview->uid, $exUids)) {
+                    if (in_array($overview->uid, $exUids, true)) {
                         switch ($type) {
-                            case "unread":
+                            case 'unread':
                                 $overview->seen = 0;
                                 break;
 
-                            case "read":
+                            case 'read':
                                 $overview->seen = 1;
                                 break;
 
-                            case "flagged":
+                            case 'flagged':
                                 $overview->flagged = 1;
                                 break;
 
-                            case "unflagged":
+                            case 'unflagged':
                                 $overview->flagged = 0;
                                 break;
                         }
@@ -2055,7 +2075,7 @@ HTML;
                 if (!empty($manipulated)) {
                     $ie->setCacheValue($ie->mailbox, array(), $manipulated);
                     /* now mark emails on email server */
-                    $ie->markEmails(implode(",", explode($app_strings['LBL_EMAIL_DELIMITER'], $uids)), $type);
+                    $ie->markEmails(implode(',', explode($app_strings['LBL_EMAIL_DELIMITER'], $uids)), $type);
                 }
             } // end not type == deleted
         }
@@ -2064,10 +2084,10 @@ HTML;
     public function doAssignment($distributeMethod, $ieid, $folder, $uids, $users)
     {
         global $app_strings;
-        $users = explode(",", $users);
+        $users = explode(',', $users);
         $emailIds = explode($app_strings['LBL_EMAIL_DELIMITER'], $uids);
-        $out = "";
-        if ($folder != 'sugar::Emails') {
+        $out = '';
+        if ($folder !== 'sugar::Emails') {
             $emailIds = array();
             $uids = explode($app_strings['LBL_EMAIL_DELIMITER'], $uids);
             $ie = BeanFactory::newBean('InboundEmail');
@@ -2093,7 +2113,7 @@ HTML;
                         $ie->mailbox = $folder;
                         $ie->deleteMessageFromCache(($uids[] = $uid));
                     } else {
-                        $out = $out . "Message No : " . $messageIndex . " failed. Reason : Message already imported \r\n";
+                        $out = $out . 'Message No : ' . $messageIndex . " failed. Reason : Message already imported \r\n";
                     }
                 }
                 $messageIndex++;
@@ -2118,11 +2138,11 @@ HTML;
     public function doDistributionWithMethod($users, $emailIds, $distributionMethod)
     {
         // we have users and the items to distribute
-        if ($distributionMethod == 'roundRobin') {
+        if ($distributionMethod === 'roundRobin') {
             $this->distRoundRobin($users, $emailIds);
-        } elseif ($distributionMethod == 'leastBusy') {
+        } elseif ($distributionMethod === 'leastBusy') {
             $this->distLeastBusy($users, $emailIds);
-        } elseif ($distributionMethod == 'direct') {
+        } elseif ($distributionMethod === 'direct') {
             if ((is_countable($users) ? count($users) : 0) > 1) {
                 // only 1 user allowed in direct assignment
                 $error = 1;
@@ -2135,9 +2155,12 @@ HTML;
 
     /**
      * distributes emails to users on Round Robin basis
+     *
      * @param    $userIds    array of users to dist to
      * @param    $mailIds    array of email ids to push on those users
+     *
      * @return  boolean        true on success
+     * @throws Exception
      */
     public function distRoundRobin($userIds, $mailIds)
     {
@@ -2166,9 +2189,12 @@ HTML;
 
     /**
      * distributes emails to users on Least Busy basis
+     *
      * @param    $userIds    array of users to dist to
      * @param    $mailIds    array of email ids to push on those users
+     *
      * @return  boolean        true on success
+     * @throws Exception
      */
     public function distLeastBusy($userIds, $mailIds)
     {
@@ -2193,9 +2219,12 @@ HTML;
 
     /**
      * distributes emails to 1 user
+     *
      * @param    $user        users to dist to
-     * @param    $mailIds    array of email ids to push
+     * @param    $mailIds     array of email ids to push
+     *
      * @return  boolean        true on success
+     * @throws Exception
      */
     public function distDirect($user, $mailIds)
     {
@@ -2230,9 +2259,9 @@ HTML;
 
     public function getLastRobin($ie)
     {
-        $lastRobin = "";
-        if ($this->validCacheFileExists($ie->id, 'folders', "robin.cache.php")) {
-            $lastRobin = $this->getCacheValue($ie->id, 'folders', "robin.cache.php", 'robin');
+        $lastRobin = '';
+        if ($this->validCacheFileExists($ie->id, 'folders', 'robin.cache.php')) {
+            $lastRobin = $this->getCacheValue($ie->id, 'folders', 'robin.cache.php', 'robin');
         } // if
 
         return $lastRobin;
@@ -2245,7 +2274,7 @@ HTML;
         if (!file_exists($cacheFolderPath)) {
             mkdir_recursive($cacheFolderPath);
         }
-        $this->writeCacheFile('robin', $lastRobin, $ie->id, 'folders', "robin.cache.php");
+        $this->writeCacheFile('robin', $lastRobin, $ie->id, 'folders', 'robin.cache.php');
     } // fn
 
     /**
@@ -2262,15 +2291,15 @@ HTML;
         $out = [];
 
         $ie->mailbox = $_REQUEST['mbox'];
-        $filename = $_REQUEST['mbox'] . $_REQUEST['uid'] . ".php";
-        $md5uidl = "";
+        $filename = $_REQUEST['mbox'] . $_REQUEST['uid'] . '.php';
+        $md5uidl = '';
         if ($ie->isPop3Protocol()) {
             $md5uidl = md5($_REQUEST['uid']);
-            $filename = $_REQUEST['mbox'] . $md5uidl . ".php";
+            $filename = $_REQUEST['mbox'] . $md5uidl . '.php';
         } // if
 
-        if (isset($filename) && strpos($filename, "..") !== false) {
-            die("Directory navigation attack denied.");
+        if (isset($filename) && str_contains($filename, '..')) {
+            die('Directory navigation attack denied.');
         }
 
         if ($this->validCacheFileExists($_REQUEST['ieId'], 'messages', $filename)) {
@@ -2298,7 +2327,7 @@ HTML;
             // modify the out object to store date in GMT format on the local cache file
             $dateTimeInUserFormat = $out['meta']['email']['date_start'];
             $out['meta']['email']['date_start'] = $timedate->to_db($dateTimeInUserFormat);
-            if ($status == 'error') {
+            if ($status === 'error') {
                 $writeToCacheFile = false;
             }
             if ($writeToCacheFile) {
@@ -2343,9 +2372,11 @@ eoq;
         }
 
         if ($noCache) {
-            $GLOBALS['log']->debug("EMAILUI: getSingleMessage() NOT using cache file");
+            $GLOBALS['log']->debug('EMAILUI: getSingleMessage() NOT using cache file');
         } else {
-            $GLOBALS['log']->debug("EMAILUI: getSingleMessage() using cache file [ " . $_REQUEST['mbox'] . $_REQUEST['uid'] . ".php ]");
+            $GLOBALS['log']->debug(
+                'EMAILUI: getSingleMessage() using cache file [ ' . $_REQUEST['mbox'] . $_REQUEST['uid'] . '.php ]'
+            );
         }
 
         $this->setReadFlag($_REQUEST['ieId'], $_REQUEST['mbox'], $_REQUEST['uid']);
@@ -2396,7 +2427,7 @@ eoq;
         //Get the most complete address list availible for this email
         $addresses = array('toAddresses' => 'to', 'ccAddresses' => 'cc', 'bccAddresses' => 'bcc');
         foreach ($addresses as $var => $type) {
-            ${$var} = "";
+            ${$var} = '';
             foreach (array("{$type}_addrs_names", "{$type}addrs", "{$type}_addrs") as $emailVar) {
                 if (!empty($email->$emailVar)) {
                     ${$var} = $email->$emailVar;
@@ -2409,7 +2440,7 @@ eoq;
         $ret['type'] = $email->type;
         $ret['name'] = $email->name;
         $ret['description'] = $description;
-        $ret['from'] = (isset($_REQUEST['composeType']) && $_REQUEST['composeType'] == 'forward') ? "" : $email->from_addr;
+        $ret['from'] = (isset($_REQUEST['composeType']) && $_REQUEST['composeType'] === 'forward') ? '' : $email->from_addr;
         isValidEmailAddress($ret['from']);
         $ret['to'] = from_html($toAddresses);
         $ret['uid'] = $email->id;
@@ -2417,12 +2448,12 @@ eoq;
         $ret['parent_type'] = $email->parent_type;
         $ret['parent_id'] = $email->parent_id;
 
-        if ($email->type == 'draft') {
+        if ($email->type === 'draft') {
             $ret['cc'] = from_html($ccAddresses);
             $ret['bcc'] = $bccAddresses;
         }
         // reply all
-        if (isset($_REQUEST['composeType']) && $_REQUEST['composeType'] == 'replyAll') {
+        if (isset($_REQUEST['composeType']) && $_REQUEST['composeType'] === 'replyAll') {
             $ret['cc'] = from_html($ccAddresses);
             $ret['bcc'] = $bccAddresses;
 
@@ -2437,23 +2468,23 @@ eoq;
 
             $ret['cc'] = from_html($email->cc_addrs);
             $toAddresses = from_html($toAddresses);
-            $to = str_replace($this->addressSeparators, "::", (string) $toAddresses);
-            $exTo = explode("::", $to);
+            $to = str_replace($this->addressSeparators, '::', (string) $toAddresses);
+            $exTo = explode('::', $to);
 
             if (is_array($exTo)) {
                 foreach ($exTo as $addr) {
                     $addr = strtolower(trim($addr));
-                    if (!in_array($addr, $userEmails)) {
+                    if (!in_array($addr, $userEmails, true)) {
                         if (!empty($ret['cc'])) {
-                            $ret['cc'] = $ret['cc'] . ", ";
+                            $ret['cc'] = $ret['cc'] . ', ';
                         }
                         $ret['cc'] = $ret['cc'] . trim($addr);
                     }
                 }
             } elseif (!empty($exTo)) {
                 $exTo = trim($exTo);
-                if (!in_array($exTo, $userEmails)) {
-                    $ret['cc'] = $ret['cc'] . ", " . $exTo;
+                if (!in_array($exTo, $userEmails, true)) {
+                    $ret['cc'] = $ret['cc'] . ', ' . $exTo;
                 }
             }
         }
@@ -2475,35 +2506,35 @@ eoq;
 
         $header = '';
         switch ($type) {
-            case "reply":
-            case "replyAll":
+            case 'reply':
+            case 'replyAll':
                 $header = $email->getReplyHeader();
                 if (!preg_match('/^(re:)+/i', (string) $email->name)) {
                     $email->name = "{$mod_strings['LBL_RE']} {$email->name}";
                 }
-                if ($type == "reply") {
-                    $email->cc_addrs = "";
+                if ($type === 'reply') {
+                    $email->cc_addrs = '';
                     if (!empty($email->reply_to_addr)) {
                         $email->from_addr = $email->reply_to_addr;
                         isValidEmailAddress($email->from_addr);
                     } // if
                 } else {
                     if (!empty($email->reply_to_addr)) {
-                        $email->to_addrs = $email->to_addrs . "," . $email->reply_to_addr;
+                        $email->to_addrs = $email->to_addrs . ',' . $email->reply_to_addr;
                     } // if
                 } // else
                 break;
 
-            case "forward":
+            case 'forward':
                 $header = $email->getForwardHeader();
                 if (!preg_match('/^(fw:)+/i', (string) $email->name)) {
                     $email->name = "{$mod_strings['LBL_FW']} {$email->name}";
                 }
-                $email->cc_addrs = "";
+                $email->cc_addrs = '';
                 break;
 
-            case "replyCase":
-                $GLOBALS['log']->debug("EMAILUI: At reply case");
+            case 'replyCase':
+                $GLOBALS['log']->debug('EMAILUI: At reply case');
                 $header = $email->getReplyHeader();
 
                 $myCase = BeanFactory::newBean('Cases');
@@ -2512,7 +2543,7 @@ eoq;
                 $email->parent_name = $myCase->name;
                 $GLOBALS['log']->debug("****Case # : {$myCase->case_number} macro: $myCaseMacro");
                 if (!strpos((string) $email->name, str_replace('%1', $myCase->case_number, (string) $myCaseMacro))) {
-                    $GLOBALS['log']->debug("Replacing");
+                    $GLOBALS['log']->debug('Replacing');
                     $email->name = str_replace('%1', $myCase->case_number, (string) $myCaseMacro) . ' ' . $email->name;
                 }
                 $email->name = "{$mod_strings['LBL_RE']} {$email->name}";
@@ -2530,7 +2561,7 @@ eoq;
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    ////	PRIVATE HELPERS
+    ////    PRIVATE HELPERS
     /**
      * Generates a UNION query to get one list of users, contacts, leads, and
      * prospects; used specifically for the addressBook
@@ -2541,22 +2572,22 @@ eoq;
         $db = DBManagerFactory::getInstance();
         if (!isset($person) || $person === 'LBL_DROPDOWN_LIST_ALL') {
             $peopleTables = array(
-                "users",
-                "contacts",
-                "leads",
-                "prospects",
-                "accounts"
+                'users',
+                'contacts',
+                'leads',
+                'prospects',
+                'accounts'
             );
         } else {
             $peopleTables = array($person);
         }
         $q = '';
 
-        $whereAdd = "";
+        $whereAdd = '';
 
         foreach ($whereArr as $column => $clause) {
             if (!empty($whereAdd)) {
-                $whereAdd .= " AND ";
+                $whereAdd .= ' AND ';
             }
             $clause = $current_user->db->quote($clause);
             $whereAdd .= "{$column} LIKE '{$clause}%'";
@@ -2588,7 +2619,7 @@ eoq;
             }
             $t .= "FROM {$table} ";
             $t .= "JOIN email_addr_bean_rel eabr ON ({$table}.id = eabr.bean_id and eabr.deleted=0) ";
-            $t .= "JOIN email_addresses ea ON (eabr.email_address_id = ea.id) ";
+            $t .= 'JOIN email_addresses ea ON (eabr.email_address_id = ea.id) ';
             $t .= " WHERE {$where}";
 
             if (!empty($q)) {
@@ -2598,7 +2629,7 @@ eoq;
             $q .= "({$t})";
         }
         $countq = "SELECT count(people.id) c from ($q) people";
-        $q .= "ORDER BY last_name";
+        $q .= 'ORDER BY last_name';
 
         return array('query' => $q, 'countQuery' => $countq);
     }
@@ -2616,11 +2647,11 @@ eoq;
         $searchBeans = null;
         if ($beanType === 'LBL_DROPDOWN_LIST_ALL') {
             $searchBeans = array(
-                "users",
-                "contacts",
-                "leads",
-                "prospects",
-                "accounts"
+                'users',
+                'contacts',
+                'leads',
+                'prospects',
+                'accounts'
             );
         }
 
@@ -2675,7 +2706,7 @@ eoq;
         global $current_user;
         $t = '';
         $q = '';
-        $whereAdd = "";
+        $whereAdd = '';
         $relatedIDs = '';
         if ($beanIds != '') {
             foreach ($beanIds as $key => $value) {
@@ -2698,7 +2729,7 @@ eoq;
 
             foreach ($whereArr as $column => $clause) {
                 if (!empty($whereAdd)) {
-                    $whereAdd .= " OR ";
+                    $whereAdd .= ' OR ';
                 }
                 $clause = $current_user->db->quote($clause);
                 $whereAdd .= "{$column} LIKE '{$clause}%'";
@@ -2729,7 +2760,7 @@ eoq;
 
             $t .= "FROM {$table} ";
             $t .= "JOIN email_addr_bean_rel eabr ON ({$table}.id = eabr.bean_id and eabr.deleted=0) ";
-            $t .= "JOIN email_addresses ea ON (eabr.email_address_id = ea.id) ";
+            $t .= 'JOIN email_addresses ea ON (eabr.email_address_id = ea.id) ';
             $t .= " WHERE {$where}";
         } // if
 
@@ -2800,39 +2831,39 @@ eoq;
 
         $params = array(
             // My Emails
-            "inbound" => array(
+            'inbound' => array(
                 'name' => $mod_strings['LNK_MY_INBOX'],
-                'folder_type' => "inbound",
+                'folder_type' => 'inbound',
                 'has_child' => 1,
-                'dynamic_query' => $this->generateDynamicFolderQuery("inbound", $user->id),
+                'dynamic_query' => $this->generateDynamicFolderQuery('inbound', $user->id),
                 'is_dynamic' => 1,
                 'created_by' => $user->id,
                 'modified_by' => $user->id,
             ),
             // My Drafts
-            "draft" => array(
+            'draft' => array(
                 'name' => $mod_strings['LNK_MY_DRAFTS'],
-                'folder_type' => "draft",
+                'folder_type' => 'draft',
                 'has_child' => 0,
-                'dynamic_query' => $this->generateDynamicFolderQuery("draft", $user->id),
+                'dynamic_query' => $this->generateDynamicFolderQuery('draft', $user->id),
                 'is_dynamic' => 1,
                 'created_by' => $user->id,
                 'modified_by' => $user->id,
             ),
             // Sent Emails
-            "sent" => array(
+            'sent' => array(
                 'name' => $mod_strings['LNK_SENT_EMAIL_LIST'],
-                'folder_type' => "sent",
+                'folder_type' => 'sent',
                 'has_child' => 0,
-                'dynamic_query' => $this->generateDynamicFolderQuery("sent", $user->id),
+                'dynamic_query' => $this->generateDynamicFolderQuery('sent', $user->id),
                 'is_dynamic' => 1,
                 'created_by' => $user->id,
                 'modified_by' => $user->id,
             ),
             // Archived Emails
-            "archived" => array(
+            'archived' => array(
                 'name' => $mod_strings['LBL_LIST_TITLE_MY_ARCHIVES'],
-                'folder_type' => "archived",
+                'folder_type' => 'archived',
                 'has_child' => 0,
                 'dynamic_query' => '',
                 'is_dynamic' => 1,
@@ -2842,16 +2873,16 @@ eoq;
         );
 
         $q = "SELECT * FROM folders f WHERE f.created_by = '{$user->id}' AND f.deleted = 0 AND coalesce(" . $user->db->convert(
-            "f.folder_type",
-            "length"
-        ) . ",0) > 0";
+                'f.folder_type',
+                'length'
+        ) . ',0) > 0';
         $r = $user->db->query($q);
 
         while ($row = DBManagerFactory::getInstance()->fetchByAssoc($r)) {
-            if ($row['folder_type'] == 'inbound') {
+            if ($row['folder_type'] === 'inbound') {
                 $parent_id = $row['id'];
             }
-            if (!in_array($row['folder_type'], $folder_types)) {
+            if (!in_array($row['folder_type'], $folder_types, true)) {
                 array_push($folder_types, $row['folder_type']);
             }
             if (isset($params[$row['folder_type']])) {
@@ -2859,10 +2890,10 @@ eoq;
             }
         }
 
-        require_once("include/SugarFolders/SugarFolders.php");
+        require_once('include/SugarFolders/SugarFolders.php');
 
         foreach ($params as $type => $type_params) {
-            if ($type == "inbound") {
+            if ($type === 'inbound') {
                 $folder = $this->createFolder($user, $params[$type]);
 
                 $parent_id = $folder->id;
@@ -2897,16 +2928,16 @@ eoq;
 
         $status = $type;
 
-        if ($type == "sent") {
-            $type = "out";
+        if ($type === 'sent') {
+            $type = 'out';
         }
 
-        $replacee = array("::TYPE::", "::STATUS::", "::USER_ID::");
+        $replacee = array( '::TYPE::', '::STATUS::', '::USER_ID::' );
         $replacer = array($type, $status, $userId);
 
         $ret = str_replace($replacee, $replacer, (string) $q);
 
-        if ($type == 'inbound') {
+        if ($type === 'inbound') {
             $ret .= " AND status NOT IN ('sent', 'archived', 'draft') AND type NOT IN ('out', 'archived', 'draft')";
         } else {
             $ret .= " AND status NOT IN ('archived') AND type NOT IN ('archived')";
@@ -2936,11 +2967,11 @@ eoq;
     {
         global $sugar_config;
         $cacheRoot = sugar_cached("modules/Emails/{$ieId}");
-        $files = findAllFiles($cacheRoot . "/messages/", array());
+        $files = findAllFiles($cacheRoot . '/messages/', array());
         foreach ($files as $file) {
             unlink($file);
         } // fn
-        $files = findAllFiles($cacheRoot . "/attachments/", array());
+        $files = findAllFiles($cacheRoot . '/attachments/', array());
         foreach ($files as $file) {
             unlink($file);
         } // for
@@ -2979,6 +3010,9 @@ eoq;
         return $email_templates_arr;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getFromAccountsArray($ie)
     {
         global $current_user;
@@ -3011,10 +3045,10 @@ eoq;
         $groupSubs = $sf->getSubscriptions($current_user);
 
         foreach ($ieAccountsFull as $k => $v) {
-            $personalSelected = (!empty($showFolders) && in_array($v->id, $showFolders));
+            $personalSelected = (!empty($showFolders) && in_array($v->id, $showFolders, true));
 
             $allowOutboundGroupUsage = isTrue($v->get_stored_options('allow_outbound_group_usage', false) ?? false);
-            $groupSelected = (in_array($v->groupfolder_id, $groupSubs) && $allowOutboundGroupUsage);
+            $groupSelected = (in_array($v->groupfolder_id, $groupSubs, true) && $allowOutboundGroupUsage);
             $selected = ($personalSelected || $groupSelected);
 
             if (!$selected) {
@@ -3029,11 +3063,11 @@ eoq;
                 $name = from_html($name);
                 if (!$v->is_personal) {
                     $ieAccountsFrom[] = array(
-                        "value" => $v->id,
-                        "text" => "{$name} ({$addr}) - {$app_strings['LBL_EMAIL_UPPER_CASE_GROUP']}"
+                        'value' => $v->id,
+                        'text'  => "{$name} ({$addr}) - {$app_strings['LBL_EMAIL_UPPER_CASE_GROUP']}"
                     );
                 } else {
-                    $ieAccountsFrom[] = array("value" => $v->id, "text" => "{$name} ({$addr})");
+                    $ieAccountsFrom[] = array( 'value' => $v->id, 'text' => "{$name} ({$addr})");
                 } // else
             } // if
         } // foreach
@@ -3049,8 +3083,8 @@ eoq;
             $admin = BeanFactory::newBean('Administration');
             $admin->retrieveSettings(); //retrieve all admin settings.
             $ieAccountsFrom[] = array(
-                "value" => $system->id,
-                "text" =>
+                'value' => $system->id,
+                'text'  =>
                     "{$ret['name']} ({$ret['email']}){$myAccountString}"
             );
         }
@@ -3061,9 +3095,13 @@ eoq;
     /**
      * This function will return all the accounts this user has access to based on the
      * match of the emailId passed in as a parameter
+     *
      * @deprecate 7.9
+     *
      * @param unknown_type $ie
+     *
      * @return unknown
+     * @throws Exception
      */
     public function getFromAllAccountsArray($ie, $ret)
     {
@@ -3082,8 +3120,8 @@ eoq;
         $foundInSystemAccounts = false;
 
         //$toArray = array();
-        if ($ret['type'] == "draft") {
-            $toArray = explode(",", $ret['from']);
+        if ($ret['type'] === 'draft') {
+            $toArray = explode(',', $ret['from']);
         } else {
             $toArray = $ie->email->email2ParseAddressesForAddressesOnly($ret['to']);
         } // else
@@ -3145,16 +3183,16 @@ eoq;
             if ($foundInPersonalAccounts) {
                 if ($v->is_personal) {
                     $ieAccountsFrom[] = array(
-                        "value" => $v->id,
-                        "selected" => $selected,
-                        "text" => "{$storedOptionsName} ({$storedOptions['from_addr']})"
+                        'value'    => $v->id,
+                        'selected' => $selected,
+                        'text'     => "{$storedOptionsName} ({$storedOptions['from_addr']})"
                     );
                 } // if
             } else {
                 $ieAccountsFrom[] = array(
-                    "value" => $v->id,
-                    "selected" => $selected,
-                    "text" => "{$storedOptionsName} ({$storedOptions['from_addr']}) - {$app_strings['LBL_EMAIL_UPPER_CASE_GROUP']}"
+                    'value'    => $v->id,
+                    'selected' => $selected,
+                    'text'     => "{$storedOptionsName} ({$storedOptions['from_addr']}) - {$app_strings['LBL_EMAIL_UPPER_CASE_GROUP']}"
                 );
             } // else
         } // foreach
@@ -3162,15 +3200,15 @@ eoq;
         if (!empty($system->id)) {
             if (!$foundInPersonalAccounts && !$foundInGroupAccounts && $foundInSystemAccounts) {
                 $ieAccountsFrom[] = array(
-                    "value" => $system->id,
-                    "selected" => true,
-                    "text" =>
+                    'value'    => $system->id,
+                    'selected' => true,
+                    'text'     =>
                         "{$return['name']} ({$return['email']}){$myAccountString}"
                 );
             } else {
                 $ieAccountsFrom[] = array(
-                    "value" => $system->id,
-                    "text" =>
+                    'value' => $system->id,
+                    'text'  =>
                         "{$return['name']} ({$return['email']}){$myAccountString}"
                 );
             } // else
@@ -3195,10 +3233,10 @@ eoq;
             return '';
         }
 
-        $bad = array("<", ">", "'", '"', "&");
-        $good = array("&lt;", "&gt;", "&#39;", "&quot;", "&amp;");
+        $bad = array( '<', '>', "'", '"', '&' );
+        $good = array( '&lt;', '&gt;', '&#39;', '&quot;', '&amp;' );
 
-        $ret = "";
+        $ret = '';
         $aCount = count($a);
 
         for ($i = 0; $i < $aCount; $i++) {
@@ -3243,15 +3281,15 @@ eoq;
             }
 
             $ieAccountsShowOptionsMeta[] = array(
-                "id" => $v->id,
-                "name" => $v->name,
-                'is_active' => $selected,
-                'server_url' => $v->server_url,
-                'is_group' => !$v->is_personal,
-                'group_id' => $v->group_id,
-                'is_default' => $default,
+                'id'              => $v->id,
+                'name'            => $v->name,
+                'is_active'       => $selected,
+                'server_url'      => $v->server_url,
+                'is_group'        => !$v->is_personal,
+                'group_id'        => $v->group_id,
+                'is_default'      => $default,
                 'has_groupfolder' => $has_groupfolder,
-                'type' => $type
+                'type'            => $type
             );
         }
 
@@ -3267,7 +3305,7 @@ eoq;
                 $server_url = $app_strings['LBL_EMAIL_MULT_GROUP_FOLDER_ACCOUNTS_EMPTY'];
             } else {
                 if ((is_countable($relatedIEAccounts) ? count($relatedIEAccounts) : 0) == 1) {
-                    if ($relatedIEAccounts[0]->status != 'Active' || $relatedIEAccounts[0]->mailbox_type == 'bounce') {
+                    if ($relatedIEAccounts[0]->status !== 'Active' || $relatedIEAccounts[0]->mailbox_type === 'bounce') {
                         continue;
                     }
 
@@ -3280,15 +3318,15 @@ eoq;
 
             $type = $mod_strings['LBL_MAILBOX_TYPE_GROUP_FOLDER'];
             $ieAccountsShowOptionsMeta[] = array(
-                "id" => $singleGroup['id'],
-                "name" => $singleGroup['origName'],
-                'is_active' => $singleGroup['selected'],
-                'server_url' => $server_url,
-                'is_group' => true,
-                'group_id' => $singleGroup['id'],
-                'is_default' => false,
+                'id'              => $singleGroup['id'],
+                'name'            => $singleGroup['origName'],
+                'is_active'       => $singleGroup['selected'],
+                'server_url'      => $server_url,
+                'is_group'        => true,
+                'group_id'        => $singleGroup['id'],
+                'is_default'      => false,
                 'has_groupfolder' => true,
-                'type' => $type
+                'type'            => $type
             );
         }
 
@@ -3304,17 +3342,17 @@ eoq;
         $ieAccountsFull = $ie->retrieveAllByGroupId($current_user->id);
         //$ieAccountsShowOptions = "<option value=''>{$app_strings['LBL_NONE']}</option>\n";
         $ieAccountsShowOptionsMeta = array();
-        $ieAccountsShowOptionsMeta[] = array("value" => "", "text" => $app_strings['LBL_NONE'], 'selected' => '');
+        $ieAccountsShowOptionsMeta[] = array( 'value' => '', 'text' => $app_strings['LBL_NONE'], 'selected' => '');
         $showFolders = sugar_unserialize(base64_decode($current_user->getPreference('showFolders', 'Emails')));
 
         foreach ($ieAccountsFull as $k => $v) {
-            if (!in_array($v->id, $showFolders)) {
+            if (!in_array($v->id, $showFolders, true)) {
                 continue;
             }
-            $group = (!$v->is_personal) ? $app_strings['LBL_EMAIL_GROUP'] . "." : "";
+            $group = (!$v->is_personal) ? $app_strings['LBL_EMAIL_GROUP'] . '.' : '';
             $ieAccountsShowOptionsMeta[] = array(
-                "value" => $v->id,
-                "text" => $group . $v->name,
+                'value'    => $v->id,
+                'text'     => $group . $v->name,
                 'protocol' => $v->protocol
             );
         }
@@ -3324,25 +3362,28 @@ eoq;
 
     /**
      * Formats a display message on successful async call
+     *
      * @param string $type Type of message to display
+     *
+     * @throws SmartyException
      */
     public function displaySuccessMessage($type)
     {
         global $app_strings;
 
         switch ($type) {
-            case "delete":
+            case 'delete':
                 $message = $app_strings['LBL_EMAIL_DELETE_SUCCESS'];
                 break;
 
             default:
-                $message = "NOOP: invalid type";
+                $message = 'NOOP: invalid type';
                 break;
         }
 
         $this->smarty->assign('app_strings', $app_strings);
         $this->smarty->assign('message', $message);
-        echo $this->smarty->fetch("modules/Emails/templates/successMessage.tpl");
+        echo $this->smarty->fetch('modules/Emails/templates/successMessage.tpl');
     }
 
     /**
@@ -3494,13 +3535,13 @@ eoq;
 
         $arrayString = var_export_helper($array);
 
-        $date = date("r");
+        $date = date('r');
         $the_string = <<<eoq
 <?php // created: {$date}
     \$cacheFile = {$arrayString};
 ?>
 eoq;
-        if ($fh = @sugar_fopen($file, "w")) {
+        if ($fh = @sugar_fopen($file, 'w')) {
             fwrite($fh, $the_string);
             fclose($fh);
 
@@ -3528,7 +3569,7 @@ eoq;
 
         $cached = ($fromCache) ? 1 : 0;
 
-        if ($data['mbox'] == 'undefined' || empty($data['mbox'])) {
+        if ($data['mbox'] === 'undefined' || empty($data['mbox'])) {
             $data['mbox'] = $app_strings['LBL_NONE'];
         }
 
@@ -3559,7 +3600,7 @@ eoq;
             $cached = ($fromCache) ? 1 : 0;
         }
 
-        if ($a['mbox'] == 'undefined' || empty($a['mbox'])) {
+        if ($a['mbox'] === 'undefined' || empty($a['mbox'])) {
             $a['mbox'] = $app_strings['LBL_NONE'];
         }
 
@@ -3622,7 +3663,7 @@ eoq;
         preg_match_all('/@.*;/U', $str, $matches);
         if (!empty($matches[0])) {
             foreach ($matches[0] as $key => $value) {
-                $new[] = str_replace(";", ",", (string) $value);
+                $new[] = str_replace(';', ',', (string) $value);
             }
 
             return str_replace($matches[0], $new, $str);

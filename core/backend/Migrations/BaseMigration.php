@@ -37,24 +37,24 @@ abstract class BaseMigration extends AbstractMigration
     /**
      * @var ContainerInterface
      */
-    protected $container;
+    protected ?ContainerInterface $container;
 
     /**
      * @var LoggerInterface
      */
-    protected $upgradeLogger;
+    protected ?LoggerInterface $upgradeLogger;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setContainer(ContainerInterface $container = null) : void
     {
         $this->container = $container;
     }
 
-    protected function getProjectDir(): string
+    protected function getProjectDir() : string
     {
         return $this->container->getParameter('kernel.project_dir');
     }
 
-    protected function log(string $message): void
+    protected function log(string $message) : void
     {
         $logger = $this->getUpgradeLogger();
         if ($logger === null) {
@@ -64,7 +64,7 @@ abstract class BaseMigration extends AbstractMigration
         $logger->info($message);
     }
 
-    protected function getUpgradeLogger(): ?LoggerInterface
+    protected function getUpgradeLogger() : ?LoggerInterface
     {
         if ($this->upgradeLogger !== null) {
             return $this->upgradeLogger;
@@ -72,10 +72,9 @@ abstract class BaseMigration extends AbstractMigration
 
         $logger = '';
 
-        if ($this->container !== null){
+        if ($this->container !== null) {
             $logger = $this->container->get('monolog.logger.upgrade');
         }
-
 
         if ($logger instanceof LoggerInterface) {
             $this->upgradeLogger = $logger;

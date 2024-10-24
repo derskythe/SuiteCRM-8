@@ -65,14 +65,14 @@ function get_validate_record_js()
 
 <script type="text/javascript" language="Javascript">
 function verify_data(form) {
-	var isError = false;
-	var errorMessage = "";
+    var isError = false;
+    var errorMessage = "";
 
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
-	return true;
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
+    return true;
 }
 </script>
 

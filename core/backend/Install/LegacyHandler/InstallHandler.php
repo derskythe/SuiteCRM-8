@@ -27,6 +27,8 @@
 
 namespace App\Install\LegacyHandler;
 
+use Throwable;
+use InstallValidation;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Engine\Model\Feedback;
@@ -34,7 +36,6 @@ use App\Install\Service\Installation\InstallStatus;
 use App\Install\Service\InstallationUtilsTrait;
 use App\Install\Service\InstallPreChecks;
 use App\Security\AppSecretGenerator;
-use Exception;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PDO;
@@ -46,6 +47,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class InstallHandler
+ *
  * @package App\Legacy
  */
 class InstallHandler extends LegacyHandler
@@ -55,27 +57,23 @@ class InstallHandler extends LegacyHandler
     public const HANDLER_KEY = 'install';
 
     /**
-     * @var string
-     */
-    protected $legacyDir;
-
-    /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $local_logger;
 
     protected AppSecretGenerator $appSecretGenerator;
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * InstallHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -102,17 +100,19 @@ class InstallHandler extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $requestStack
+            $requestStack,
+            $logger
         );
-        $this->legacyDir = $legacyDir;
-        $this->logger = $logger;
+        $this->local_logger = $logger;
         $this->appSecretGenerator = $appSecretGenerator;
     }
 
     /**
      * Init legacy
+     *
+     * @throws \Throwable
      */
-    public function initLegacy(): void
+    public function initLegacy() : void
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -123,17 +123,20 @@ class InstallHandler extends LegacyHandler
 
     /**
      * Close legacy
+     *
+     * @throws \Throwable
      */
-    public function closeLegacy(): void
+    public function closeLegacy() : void
     {
-        chdir($this->projectDir);
         $this->switchSession($this->defaultSessionName);
+        chdir($this->projectDir);
     }
 
     /**
      * @return Feedback
+     * @throws Throwable
      */
-    public function installLegacy(): Feedback
+    public function installLegacy() : Feedback
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -144,9 +147,9 @@ class InstallHandler extends LegacyHandler
         $feedback = new Feedback();
 
         if (!is_file('config_si.php')) {
-            $this->logger->error('config_si.php is required for CLI Install.');
+            $this->local_logger->error('config_si.php is required for CLI Install.');
 
-            return $feedback->setSuccess(false)->setMessages(['config_si.php is required for CLI Install.']);
+            return $feedback->setSuccess(false)->setMessages([ 'config_si.php is required for CLI Install.' ]);
         }
 
         $_REQUEST['goto'] = 'SilentInstall';
@@ -160,9 +163,9 @@ class InstallHandler extends LegacyHandler
         ob_end_clean();
 
         if (is_file('config.php')) {
-            $feedback->setSuccess(true)->setMessages(['SuiteCRM Installation Completed']);
+            $feedback->setSuccess(true)->setMessages([ 'SuiteCRM Installation Completed' ]);
         } else {
-            $feedback->setSuccess(false)->setMessages(['SuiteCRM Installation Failed']);
+            $feedback->setSuccess(false)->setMessages([ 'SuiteCRM Installation Failed' ]);
         }
 
         chdir($this->projectDir);
@@ -175,9 +178,11 @@ class InstallHandler extends LegacyHandler
 
     /**
      * @param array $context
+     *
      * @return Feedback
+     * @throws Throwable
      */
-    public function runSystemCheck(array &$context): Feedback
+    public function runSystemCheck(array $context) : Feedback
     {
         $this->switchSession($this->legacySessionName);
         chdir($this->legacyDir);
@@ -188,9 +193,9 @@ class InstallHandler extends LegacyHandler
         $this->runLegacyEntryPoint();
 
         /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/InstallValidation/InstallValidation.php';
+        require_once $this->legacyDir . '/include/portability/InstallValidation/InstallValidation.php';
 
-        $validator = (new \InstallValidation())->validate($context);
+        $validator = (new InstallValidation())->validate($context);
         $result = $validator->result();
 
         $feedback = new Feedback();
@@ -214,24 +219,32 @@ class InstallHandler extends LegacyHandler
         return $feedback;
     }
 
-    public function runCheckRouteAccess(array $inputArray): FeedBack
+    /**
+     * @param array $inputArray
+     *
+     * @return Feedback
+     * @throws \JsonException
+     */
+    public function runCheckRouteAccess(array $inputArray) : Feedback
     {
         $results = [];
         $url = $inputArray['site_host'];
 
         $log = new Logger('install.log');
-        $log->pushHandler(new StreamHandler(__DIR__ . '/../../../../logs/install.log', Logger::DEBUG));
+        $log->pushHandler(new StreamHandler($this->projectDir . '/logs/install.log', Logger::DEBUG));
 
         $feedback = new Feedback();
         $feedback->setSuccess(true);
 
-
-        require_once __DIR__ . "/../../../../core/backend/Install/Service/InstallPreChecks.php";
-        $installChecks = new InstallPreChecks($log);
+        require_once($this->projectDir . 'core/backend/Install/Service/InstallPreChecks.php');
+        $installChecks = new InstallPreChecks(
+            $log,
+            $this->projectDir,
+            $this->legacyDir
+        );
 
         $results[] = $installChecks->checkMainPage($url);
         $results[] = $installChecks->checkGraphQlAPI($url);
-        $modStrings = $installChecks->getLanguageStrings();
 
         $warnings = [];
         $errorsFound = false;
@@ -246,8 +259,13 @@ class InstallHandler extends LegacyHandler
                         continue;
                     }
 
-                    if (in_array($error, $modStrings) && $error !== $modStrings['LBL_EMPTY']) {
-                        $warnings[] = "One or More Failed Checks: " . $error . " Please refer to the logs/install.log";
+                    if (in_array(
+                            $error,
+                            $installChecks->modStrings,
+                            true
+                        ) && $error !== $installChecks->modStrings['LBL_EMPTY']) {
+                        $warnings[] = 'One or More Failed Checks: ' . $error .
+                            ' Please refer to the logs/install.log';
                     }
 
                 }
@@ -272,42 +290,43 @@ class InstallHandler extends LegacyHandler
 
     /**
      * @param array $inputArray
+     *
      * @return bool
      */
-    public function createConfig(array $inputArray): bool
+    public function createConfig(array $inputArray) : bool
     {
-        $siteURL = rtrim($inputArray['site_host'] ?? '', " \t\n\r\0\x0B/");;
+        $siteURL = rtrim($inputArray['site_host'] ?? '', " \t\n\r\0\x0B/");
         $configArray = [
-            'dbUSRData' => 'same',
-            'default_currency_iso4217' => 'USD',
-            'default_currency_name' => 'US Dollar',
+            'dbUSRData'                           => 'same',
+            'default_currency_iso4217'            => 'USD',
+            'default_currency_name'               => 'US Dollar',
             'default_currency_significant_digits' => '2',
-            'default_currency_symbol' => '$',
-            'default_date_format' => 'Y-m-d',
-            'default_decimal_seperator' => '.',
-            'default_export_charset' => 'ISO-8859-1',
-            'default_language' => 'en_us',
-            'default_locale_name_format' => 's f l',
-            'default_number_grouping_seperator' => ',',
-            'default_time_format' => 'H:i',
-            'export_delimiter' => ',',
-            'setup_db_admin_password' => $inputArray['db_password'],
-            'setup_db_admin_user_name' => $inputArray['db_username'],
-            'setup_db_port_num' => $inputArray['db_port'],
-            'setup_db_create_database' => 1,
-            'setup_db_database_name' => $inputArray['db_name'],
-            'setup_db_drop_tables' => 0,
-            'setup_db_host_name' => $inputArray['db_host'],
-            'demoData' => $inputArray['demoData'],
-            'setup_db_type' => 'mysql',
-            'setup_db_username_is_privileged' => true,
-            'setup_site_admin_password' => $inputArray['site_password'],
-            'setup_site_admin_user_name' => $inputArray['site_username'],
-            'setup_site_url' => $siteURL,
-            'setup_system_name' => 'SuiteCRM',
+            'default_currency_symbol'             => '$',
+            'default_date_format'                 => 'Y-m-d',
+            'default_decimal_seperator'           => '.',
+            'default_export_charset'              => 'ISO-8859-1',
+            'default_language'                    => 'en_us',
+            'default_locale_name_format'          => 's f l',
+            'default_number_grouping_seperator'   => ',',
+            'default_time_format'                 => 'H:i',
+            'export_delimiter'                    => ',',
+            'setup_db_admin_password'             => $inputArray['db_password'],
+            'setup_db_admin_user_name'            => $inputArray['db_username'],
+            'setup_db_port_num'                   => $inputArray['db_port'],
+            'setup_db_create_database'            => 1,
+            'setup_db_database_name'              => $inputArray['db_name'],
+            'setup_db_drop_tables'                => 0,
+            'setup_db_host_name'                  => $inputArray['db_host'],
+            'demoData'                            => $inputArray['demoData'],
+            'setup_db_type'                       => 'mysql',
+            'setup_db_username_is_privileged'     => true,
+            'setup_site_admin_password'           => $inputArray['site_password'],
+            'setup_site_admin_user_name'          => $inputArray['site_username'],
+            'setup_site_url'                      => $siteURL,
+            'setup_system_name'                   => 'SuiteCRM',
         ];
 
-        $contents = '<?php' . "\n" . '$sugar_config_si = ' . var_export($configArray, 1) . ";\n";
+        $contents = '<?php' . PHP_EOL . '$sugar_config_si = ' . var_export($configArray, 1) . ';' . PHP_EOL;
         $filesystem = new Filesystem();
 
         try {
@@ -317,7 +336,10 @@ class InstallHandler extends LegacyHandler
 
             return true;
         } catch (IOExceptionInterface $exception) {
-            $this->logger->error('An error occurred while creating your silent install config at ' . $exception->getPath());
+            $this->local_logger->error(
+                'An error occurred while creating your silent install config at ' .
+                $exception->getPath()
+            );
 
             return false;
         }
@@ -325,23 +347,35 @@ class InstallHandler extends LegacyHandler
 
     /**
      * Check db host connection before proceeding
+     *
      * @param array $inputArray
+     *
      * @return bool
      */
-    public function checkDBConnection(array $inputArray): bool
+    public function checkDBConnection(array $inputArray) : bool
     {
-        $dbHost = $inputArray["db_host"];
-        $dbPort = $inputArray["db_port"];
+        $dbHost = $inputArray['db_host'];
+        $dbPort = $inputArray['db_port'];
         $hostString = !empty($dbPort) ? $dbHost . ':' . $dbPort : $dbHost;
 
         try {
             new PDO(
-                "mysql:host=" . $hostString . ";",
+                'mysql:host=' . $hostString . ';',
                 $inputArray['db_username'],
                 $inputArray['db_password']
             );
         } catch (PDOException $e) {
-            $this->logger->error('An error occurred while checking the Database Host Connection ' . $e->getMessage());
+            $message = sprintf(
+                'An error occurred while checking the Database Host Connection %s File: %s Line: %d. Hostname: %s, Username: %s, Password: %s',
+                $e->getMessage(),
+                $e->getFile(),
+                $e->getLine(),
+                $hostString,
+                $inputArray['db_username'],
+                $inputArray['db_password']
+            );
+            $this->local_logger->critical($message);
+            $this->local_logger->critical($e->getMessage(), $e->getTrace());
 
             return false;
         }
@@ -351,10 +385,12 @@ class InstallHandler extends LegacyHandler
 
     /**
      * Create local env file
+     *
      * @param array $inputArray
+     *
      * @return bool
      */
-    public function createEnv(array $inputArray): bool
+    public function createEnv(array $inputArray) : bool
     {
         $password = urlencode($inputArray['db_password'] ?? '');
         $username = urlencode($inputArray['db_username'] ?? '');
@@ -363,9 +399,15 @@ class InstallHandler extends LegacyHandler
         $port = $inputArray['db_port'] ?? '';
         $hostString = !empty($port) ? $host . ':' . $port : $host;
 
-        $content = "DATABASE_URL=\"mysql://$username:$password@$hostString/$dbName\"\n";
-        $content .= "APP_SECRET=" . $this->appSecretGenerator->generate();
-        $this->logger->info('Generated randomly generated APP_SECRET for .env.local');
+        $content = sprintf(
+            'DATABASE_URL="mysql://%s:%s@%s/%s"',
+            $username,
+            $password,
+            $hostString,
+            $dbName
+        );
+        $content .= 'APP_SECRET=' . $this->appSecretGenerator->generate();
+        $this->local_logger->info('Generated randomly generated APP_SECRET for .env.local');
 
         $filesystem = new Filesystem();
         try {
@@ -377,7 +419,9 @@ class InstallHandler extends LegacyHandler
 
             return true;
         } catch (IOExceptionInterface $exception) {
-            $this->logger->error('An error occurred while creating the Database Env config at ' . $exception->getPath());
+            $this->local_logger->error(
+                'An error occurred while creating the Database Env config at ' . $exception->getPath()
+            );
 
             return false;
         }
@@ -385,40 +429,44 @@ class InstallHandler extends LegacyHandler
 
     /**
      * Check if is installed
+     *
      * @return bool is installed
      */
-    public function isInstalled(): bool
+    public function isInstalled() : bool
     {
         $filesystem = new Filesystem();
 
-        $this->logger->error('A SuiteCRM Instance is already been installed. Stopping ');
+        $this->local_logger->error('A SuiteCRM Instance is already been installed. Stopping ');
 
         return $filesystem->exists('.env.local');
     }
 
     /**
      * Check if is legacy app is installed
+     *
      * @return bool is installed
      */
-    public function isLegacyInstalled(): bool
+    public function isLegacyInstalled() : bool
     {
         return $this->isAppInstalled($this->legacyDir);
     }
 
     /**
      * Check if is installer locked
+     *
      * @return bool is locked
      */
-    public function isInstallerLocked(): bool
+    public function isInstallerLocked() : bool
     {
         return $this->isAppInstallerLocked($this->legacyDir);
     }
 
     /**
      * Load legacy config
+     *
      * @return array|null is locked
      */
-    public function loadLegacyConfig(): ?array
+    public function loadLegacyConfig() : ?array
     {
         return $this->getLegacyConfig($this->legacyDir);
     }

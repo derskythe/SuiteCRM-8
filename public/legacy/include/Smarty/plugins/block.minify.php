@@ -1,10 +1,10 @@
 <?php
-function smarty_block_minify($params, $content, &$smarty, &$repeat)
+function smarty_block_minify($params, $content, &$smarty, $repeat)
 {
     if (!$repeat && isset($content)) {
         // HTML Minifier
         $input = $content;
-        if (trim($input) === "") {
+        if (trim($input) === '') {
             return $input;
         }
         // Remove extra white-space(s) between HTML attribute(s)
@@ -14,9 +14,9 @@ function smarty_block_minify($params, $content, &$smarty, &$repeat)
                 ' $1$2',
                 $matches[2]
             ) . $matches[3] . '>';
-        }, str_replace("\r", "", $input));
+        },                             str_replace("\r", '', $input));
         // Minify inline CSS declaration(s)
-        if (strpos($input, ' style=') !== false) {
+        if (str_contains($input, ' style=')) {
             $input = preg_replace_callback('#<([^<]+?)\s+style=([\'"])(.*?)\2(?=[\/\s>])#s', function ($matches) {
                 return '<' . $matches[1] . ' style=' . $matches[2] . minify_css($matches[3]) . $matches[2];
             }, $input);
@@ -61,7 +61,7 @@ function smarty_block_minify($params, $content, &$smarty, &$repeat)
                     '$1 ',
                     "\n",
                     ' ',
-                    ""
+                    ''
                 ),
             $input
         );
@@ -75,7 +75,7 @@ function fn_minify_css($input)
     // Keep important white-space(s) in `calc()`
     if (stripos($input, 'calc(') !== false) {
         $input = preg_replace_callback('#\b(calc\()\s*(.*?)\s*\)#i', function ($m) {
-            return $m[1] . preg_replace('#\s+#', X . '\s', $m[2]) . ')';
+            return $m[1] . preg_replace('#\s+#', 'X' . '\s', $m[2]) . ')';
         }, $input);
     }
 
@@ -110,10 +110,10 @@ function fn_minify_css($input)
         ),
         array(
             // [^1]
-            X . '\s$1',
+            'X' . '\s$1',
             // [^2]
-            ']' . X . '\s',
-            ')' . X . '\s',
+            ']' . 'X' . '\s',
+            ')' . 'X' . '\s',
             // [^3]
             '#$1$2$3',
             // [^4]
@@ -146,21 +146,21 @@ function minify_css($input)
     }
     global $SS, $CC;
     // Keep important white-space(s) between comment(s)
-    $input = preg_replace('#(' . $CC . ')\s+(' . $CC . ')#', '$1' . X . '\s$2', $input);
+    $input = preg_replace('#(' . $CC . ')\s+(' . $CC . ')#', '$1' . 'X' . '\s$2', $input);
     // Create chunk(s) of string(s), comment(s) and text
     $input = preg_split('#(' . $SS . '|' . $CC . ')#', $input, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
-    $output = "";
+    $output = '';
     foreach ($input as $v) {
-        if (trim($v) === "") {
+        if (trim($v) === '') {
             continue;
         }
         if (
-            ($v[0] === '"' && substr($v, -1) === '"') ||
-            ($v[0] === "'" && substr($v, -1) === "'") ||
-            (substr($v, 0, 2) === '/*' && substr($v, -2) === '*/')
+            ($v[0] === '"' && str_ends_with($v, '"')) ||
+            ($v[0] === "'" && str_ends_with($v, "'")) ||
+            (str_starts_with($v, '/*') && str_ends_with($v, '*/'))
         ) {
             // Remove if not detected as important comment ...
-            if ($v[0] === '/' && substr($v, 0, 3) !== '/*!') {
+            if ($v[0] === '/' && !str_starts_with($v, '/*!')) {
                 continue;
             }
             $output .= $v; // String or comment ...
@@ -186,5 +186,5 @@ function minify_css($input)
 
 function __minify_v($input)
 {
-    return str_replace(array(X . '\n', X . '\t', X . '\s'), array("\n", "\t", ' '), $input);
+    return str_replace(array('X' . '\n', 'X' . '\t', 'X' . '\s'), array("\n", "\t", ' '), $input);
 }

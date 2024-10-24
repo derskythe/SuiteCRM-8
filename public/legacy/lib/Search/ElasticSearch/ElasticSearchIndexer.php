@@ -102,7 +102,7 @@ class ElasticSearchIndexer extends AbstractIndexer
         try {
             return !empty($sugar_config['search']['ElasticSearch']['enabled']);
         } catch (Exception $exception) {
-            LoggerManager::getLogger()->fatal("Failed to retrieve ElasticSearch options");
+            LoggerManager::getLogger()->fatal('Failed to retrieve ElasticSearch options');
 
             return false;
         }
@@ -160,7 +160,7 @@ class ElasticSearchIndexer extends AbstractIndexer
 
         $this->statistics($end, $start);
 
-        $this->logger->info("Indexing complete");
+        $this->logger->info('Indexing complete');
     }
 
     /**
@@ -275,13 +275,13 @@ class ElasticSearchIndexer extends AbstractIndexer
     /** Removes all the indexes from Elasticsearch, effectively nuking all data. */
     public function removeAllIndices(): void
     {
-        $this->logger->debug("Deleting all indices");
+        $this->logger->debug('Deleting all indices');
         try {
             $this->client->indices()->delete(['index' => '_all']);
         } /** @noinspection PhpRedundantCatchClauseInspection */
         catch (Missing404Exception $ignore) {
             // Index not there, not big deal since we meant to delete it anyway.
-            $this->logger->warn('Index not found, no index has been deleted.');
+            $this->logger->warning('Index not found, no index has been deleted.');
         }
     }
 
@@ -338,7 +338,7 @@ class ElasticSearchIndexer extends AbstractIndexer
         $elapsed = Carbon::now()->micro - $start;
 
         if ($status === false) {
-            $this->logger->error("Failed to ping server");
+            $this->logger->error('Failed to ping server');
 
             return false;
         }
@@ -505,7 +505,7 @@ class ElasticSearchIndexer extends AbstractIndexer
                     $type = $item[$action]['error']['type'];
                     $reason = $item[$action]['error']['reason'];
                     $this->logger->error("[$action] [$type] $reason");
-                    
+
                     if ($action === 'index') {
                         $this->indexedRecordsCount--;
                     }
@@ -566,7 +566,7 @@ class ElasticSearchIndexer extends AbstractIndexer
         $meta = $this->getMeta($module);
 
         if (!isset($meta['last_index'])) {
-            throw new RuntimeException("Last index metadata not found.");
+            throw new RuntimeException('Last index metadata not found.');
         }
 
         return $meta['last_index'];

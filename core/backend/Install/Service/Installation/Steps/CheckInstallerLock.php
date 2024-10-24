@@ -47,7 +47,7 @@ class CheckInstallerLock implements InstallStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * CheckInstallerLock constructor.
@@ -79,19 +79,16 @@ class CheckInstallerLock implements InstallStepInterface
      */
     public function execute(array &$context): Feedback
     {
-
-        $isLocked = $this->handler->isInstallerLocked();
         $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Installer not locked. Proceeding with install']);
 
-        if ($isLocked === true) {
+        if (!$this->handler->isInstallerLocked()) {
             $feedback->setSuccess(false);
             $feedback->setMessages(['Installer locked. Stopping install process']);
             $feedback->setMessageLabels(['LBL_DISABLED_TITLE_2']);
             $feedback->setStatusCode(InstallStatus::LOCKED);
-
-            return $feedback;
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages(['Installer not locked. Proceeding with install']);
         }
 
         return $feedback;

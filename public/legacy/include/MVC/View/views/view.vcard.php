@@ -41,18 +41,16 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-
 require_once('include/vCard.php');
 
 class ViewVcard extends SugarView
 {
     public $type = 'detail';
-    
+
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $vcard = new vCard();
         $vcard->loadContact($this->bean->id, $this->module);

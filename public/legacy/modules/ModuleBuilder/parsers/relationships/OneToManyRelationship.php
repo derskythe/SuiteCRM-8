@@ -93,7 +93,7 @@ class OneToManyRelationship extends AbstractRelationship
     /*
      * BUILD methods called during the build
      */
-    
+
     /*
      * Construct subpanel definitions
      * The format is that of TO_MODULE => relationship, FROM_MODULE, FROM_MODULES_SUBPANEL, mimicking the format in the layoutdefs.php
@@ -104,12 +104,12 @@ class OneToManyRelationship extends AbstractRelationship
         if ($this->relationship_only) {
             return array() ;
         }
-        
-        $source = "";
+
+        $source = '';
         if ($this->rhs_module == $this->lhs_module) {
             $source = $this->getJoinKeyLHS();
         }
- 
+
         return array(
             $this->lhs_module => $this->getSubpanelDefinition(
                 $this->relationship_name,
@@ -128,7 +128,7 @@ class OneToManyRelationship extends AbstractRelationship
     public function buildVardefs()
     {
         $vardefs = array( ) ;
-        
+
         $vardefs [ $this->rhs_module ] [] = $this->getLinkFieldDefinition(
             $this->lhs_module,
             $this->relationship_name,
@@ -153,10 +153,10 @@ class OneToManyRelationship extends AbstractRelationship
                 'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getRightModuleSystemLabel()) . '_TITLE'
             );
         }
-        
+
         return $vardefs ;
     }
-    
+
     /*
      * Define what fields to add to which modules layouts
      * @return array    An array of module => fieldname
@@ -167,9 +167,9 @@ class OneToManyRelationship extends AbstractRelationship
             return array() ;
         }
 
-        return array( $this->rhs_module =>static::getValidDBName($this->relationship_name . "_name")); // this must match the name of the relate field from buildVardefs
+        return array( $this->rhs_module =>static::getValidDBName($this->relationship_name . '_name')); // this must match the name of the relate field from buildVardefs
     }
-       
+
     /*
      * @return array    An array of relationship metadata definitions
      */

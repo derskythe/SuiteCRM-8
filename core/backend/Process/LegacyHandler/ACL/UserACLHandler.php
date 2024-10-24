@@ -44,40 +44,41 @@ use UserACLService;
 class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'user-acl';
+    protected const PROCESS_TYPE          = 'user-acl';
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var BaseActionDefinitionProviderInterface
      */
-    private $baseActionDefinitionProvider;
+    private BaseActionDefinitionProviderInterface $baseActionDefinitionProvider;
 
     /**
      * @var LegacyActionResolverInterface
      */
-    private $legacyActionResolver;
+    private LegacyActionResolverInterface $legacyActionResolver;
 
     /**
      * @var array
      */
-    private $adminOnlyModuleActions;
+    private array $adminOnlyModuleActions;
 
     /**
      * @var ActionNameMapperInterface
      */
-    private $actionNameMapper;
+    private ActionNameMapperInterface $actionNameMapper;
 
     /**
      * UserACLHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -90,26 +91,30 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
      * @param array $adminOnlyModuleActions
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper,
+        string                                $projectDir,
+        string                                $legacyDir,
+        string                                $legacySessionName,
+        string                                $defaultSessionName,
+        LegacyScopeState                      $legacyScopeState,
+        RequestStack                          $session,
+        ModuleNameMapperInterface             $moduleNameMapper,
         BaseActionDefinitionProviderInterface $baseActionDefinitionProvider,
-        LegacyActionResolverInterface $legacyActionResolver,
-        ActionNameMapperInterface $actionNameMapper,
-        array $adminOnlyModuleActions
-    ) {
+        LegacyActionResolverInterface         $legacyActionResolver,
+        ActionNameMapperInterface             $actionNameMapper,
+        array                                 $adminOnlyModuleActions,
+        LoggerInterface                       $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
+        $this->logger = $logger;
         $this->moduleNameMapper = $moduleNameMapper;
         $this->baseActionDefinitionProvider = $baseActionDefinitionProvider;
         $this->legacyActionResolver = $legacyActionResolver;
@@ -120,7 +125,7 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -128,7 +133,7 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -136,7 +141,7 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -144,7 +149,7 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         return [];
     }
@@ -154,7 +159,8 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
      */
     public function configure(
         Process $process
-    ): void {
+    ) : void
+    {
         //This process is synchronous
         //We aren't going to store a record on db
         //thus we will use process type as the id
@@ -167,7 +173,8 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
      */
     public function validate(
         Process $process
-    ): void {
+    ) : void
+    {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
         }
@@ -184,18 +191,18 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
 
     /**
      * @inheritDoc
+     * @throws \Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
         $this->startLegacyApp();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/ACL/UserACLService.php';
+        require_once $this->legacyDir . '/include/portability/Services/ACL/UserACLService.php';
 
         $options = $process->getOptions();
         [
-            'module' => $module,
+            'module'  => $module,
             'payload' => $payload
         ] = $options;
 
@@ -220,14 +227,23 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
 
         $hasAccess = false;
         if ($this->moduleNameMapper->isValidModule($legacyModuleName)
-            && ($this->baseActionDefinitionProvider->isActionAccessible($frontEndModuleName, $actionKey, $context))
+            && ($this->baseActionDefinitionProvider->isActionAccessible(
+                $frontEndModuleName,
+                $actionKey,
+                $context
+            ))
         ) {
             $hasAccess = true;
         }
 
         global $current_user;
         $isAdmin = is_admin($current_user);
-        $isActionAdminOnly = $this->isAdminOnlyAction($frontEndModuleName, $legacyModuleName, $actionKey, $queryParams);
+        $isActionAdminOnly = $this->isAdminOnlyAction(
+            $frontEndModuleName,
+            $legacyModuleName,
+            $actionKey,
+            $queryParams
+        );
 
         if ($isActionAdminOnly && !$isAdmin) {
             $hasAccess = false;
@@ -244,25 +260,30 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
 
         if (!empty($result['message'])) {
             $process->setMessages([
-                $result['message']
-            ]);
+                                      $result['message']
+                                  ]);
         }
 
         $this->close();
 
-        $process->setData(['result' => $result['status']]);
+        $process->setData([ 'result' => $result['status'] ]);
     }
 
     /**
      * Get list of modules the user has access to
+     *
      * @param string $primaryAction
      * @param string $secondaryAction
+     *
      * @return string
      * @description Special case, when action is treated as module name by legacy
      * e.g. merge-records is an action but treated as a module by legacy
      * we need to identify the actual module(parent) name and the applicable acls in this case
      */
-    protected function entryExistsInLegacyActionMapper(string $primaryAction, string $secondaryAction): string
+    protected function entryExistsInLegacyActionMapper(
+        string $primaryAction,
+        string $secondaryAction
+    ) : string
     {
         $actionModuleIdentifierKey = $this->legacyActionResolver->get($primaryAction, $secondaryAction);
 
@@ -275,17 +296,23 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
 
     /**
      * Get list of modules the user has access to
+     *
      * @param string $primaryAction
      * @param string $secondaryAction
      * @param array $queryParams
+     *
      * @return string
      */
     protected function getResolvedLegacyModule(
         string $primaryAction,
         string $secondaryAction,
-        array $queryParams
-    ): string {
-        $actionModuleIdentifierKey = $this->entryExistsInLegacyActionMapper($primaryAction, $secondaryAction);
+        array  $queryParams
+    ) : string
+    {
+        $actionModuleIdentifierKey = $this->entryExistsInLegacyActionMapper(
+            $primaryAction,
+            $secondaryAction
+        );
 
         if (empty($actionModuleIdentifierKey)) {
             return '';
@@ -297,7 +324,7 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }
@@ -307,9 +334,15 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
      * @param string $legacyModule
      * @param string $actionKey
      * @param array $queryParams
+     *
      * @return bool
      */
-    protected function isAdminOnlyAction(string $module, string $legacyModule,  string $actionKey, array $queryParams): bool
+    protected function isAdminOnlyAction(
+        string $module,
+        string $legacyModule,
+        string $actionKey,
+        array  $queryParams
+    ) : bool
     {
         if (!empty($queryParams['import_module']) && strtolower($module) === 'import') {
             $module = $this->moduleNameMapper->toFrontEnd($queryParams['import_module']);
@@ -319,8 +352,7 @@ class UserACLHandler extends LegacyHandler implements ProcessHandlerInterface, L
 
         $adminOnlyList = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/modules.php';
+        require_once $this->legacyDir . '/include/modules.php';
         $legacyActionName = strtolower($this->actionNameMapper->toLegacy($actionKey));
         $adminOnlyActions = $adminOnlyList[$legacyModule] ?? [];
         $adminOnlyAction = $adminOnlyActions[$legacyActionName] ?? $adminOnlyActions['all'] ?? false;

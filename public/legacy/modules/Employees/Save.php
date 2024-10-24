@@ -55,9 +55,9 @@ parse_str($tabs_def, $DISPLAY_ARR);
 //of the non-admin user to be associated with the admin user thereby allowing the non-admin to reset the password
 //of the admin user.
 if (isset($_POST['record']) && !is_admin($GLOBALS['current_user']) && !$GLOBALS['current_user']->isAdminForModule('Employees') && ($_POST['record'] != $GLOBALS['current_user']->id)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 } elseif (!isset($_POST['record']) && !is_admin($GLOBALS['current_user']) && !$GLOBALS['current_user']->isAdminForModule('Employees')) {
-    sugar_die("Unauthorized access to user administration.");
+    sugar_die('Unauthorized access to user administration.');
 }
 
 $focus = BeanFactory::newBean('Employees');
@@ -73,21 +73,21 @@ $focus->save();
 $return_id = $focus->id;
 
 
-if (isset($_POST['return_module']) && $_POST['return_module'] != "") {
+if (isset($_POST['return_module']) && $_POST['return_module'] != '') {
     $return_module = $_POST['return_module'];
 } else {
-    $return_module = "Employees";
+    $return_module = 'Employees';
 }
-if (isset($_POST['return_action']) && $_POST['return_action'] != "") {
+if (isset($_POST['return_action']) && $_POST['return_action'] != '') {
     $return_action = $_POST['return_action'];
 } else {
-    $return_action = "DetailView";
+    $return_action = 'DetailView';
 }
-if (isset($_POST['return_id']) && $_POST['return_id'] != "") {
+if (isset($_POST['return_id']) && $_POST['return_id'] != '') {
     $return_id = $_POST['return_id'];
 }
 
-$GLOBALS['log']->debug("Saved record with id of ".$return_id);
+$GLOBALS['log']->debug('Saved record with id of ' .$return_id);
 
 
 header("Location: index.php?action=$return_action&module=$return_module&record=$return_id");
@@ -95,8 +95,8 @@ header("Location: index.php?action=$return_action&module=$return_module&record=$
 
 function populateFromRow(&$focus, $row)
 {
-    
-    
+
+
     //only employee specific field values need to be copied.
     $e_fields=array('first_name','last_name','reports_to_id','description','phone_home','phone_mobile','phone_work','phone_other','phone_fax','address_street','address_city','address_state','address_country','address_country', 'address_postalcode', 'messenger_id','messenger_type');
     if (is_admin($GLOBALS['current_user'])) {
@@ -105,7 +105,7 @@ function populateFromRow(&$focus, $row)
     // Also add custom fields
     $sfh = new SugarFieldHandler();
     foreach ($focus->field_defs as $fieldName => $field) {
-        if (isset($field['source']) && $field['source'] == 'custom_fields') {
+        if (isset($field['source']) && $field['source'] === 'custom_fields') {
             $type = !empty($field['custom_type']) ? $field['custom_type'] : $field['type'];
             $sf = $sfh->getSugarField($type);
             if ($sf != null) {

@@ -53,7 +53,7 @@ class MailMergeController extends SugarController
     public function action_search()
     {
         global $beanList;
-        
+
         //set ajax view
         $this->view = 'ajax';
         //get the module
@@ -64,7 +64,7 @@ class MailMergeController extends SugarController
         $term = !empty($_REQUEST['term']) ? DBManagerFactory::getInstance()->quote($_REQUEST['term']) : '';
 
         $max = !empty($_REQUEST['max']) ? $_REQUEST['max'] : 10;
-        $order_by = !empty($_REQUEST['order_by']) ? $_REQUEST['order_by'] : $lmodule.".name";
+        $order_by = !empty($_REQUEST['order_by']) ? $_REQUEST['order_by'] : $lmodule. '.name';
         $offset = !empty($_REQUEST['offset']) ? $_REQUEST['offset'] : 0;
         $response = array();
 
@@ -74,9 +74,9 @@ class MailMergeController extends SugarController
             $using_cp = false;
 
             if (!empty($term)) {
-                if ($module == 'Contacts' || $module == 'Leads') {
+                if ($module === 'Contacts' || $module === 'Leads') {
                     $where = $lmodule.".first_name like '%".$term."%' OR ".$lmodule.".last_name like '%".$term."%'";
-                    $order_by = $lmodule.".last_name";
+                    $order_by = $lmodule. '.last_name';
                 } else {
                     $where = $lmodule.".name like '".$term."%'";
                 }

@@ -74,7 +74,7 @@ class AlertNameMapper implements FieldMapperInterface
 
         $searchString = $targetModule . ':';
 
-        if (strpos($nameValue, $searchString) === 0) {
+        if (str_starts_with($nameValue, $searchString)) {
             $nameValue = preg_replace('/^' . $searchString . '/', '', $nameValue);
         }
 

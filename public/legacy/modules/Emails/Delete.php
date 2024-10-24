@@ -47,7 +47,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 $focus = BeanFactory::newBean('Emails');
 
 if (!isset($_REQUEST['record'])) {
-    sugar_die("A record number must be specified to delete the email.");
+    sugar_die('A record number must be specified to delete the email.');
 }
 $focus->retrieve($_REQUEST['record']);
 $email_type = $focus->type;
@@ -62,7 +62,7 @@ if (!isset($_REQUEST['assigned_user_id'])) {
     $_REQUEST['assigned_user_id'] = '';
 }
 
-if ($email_type == 'archived') {
+if ($email_type === 'archived') {
     global $current_user;
     $loc = 'Location: index.php?module=Emails';
 } else {

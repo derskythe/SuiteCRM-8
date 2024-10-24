@@ -42,7 +42,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 require_once('include/json_config.php');
 
 #[\AllowDynamicProperties]
@@ -54,9 +53,9 @@ class MeetingsViewEdit extends ViewEdit
      * Override preDisplay to check for presence of 'status' in $_REQUEST
      * This is to support the "Close And Create New" operation.
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
-        if (!empty($_REQUEST['status']) && ($_REQUEST['status'] == 'Held')) {
+        if (!empty($_REQUEST['status']) && ($_REQUEST['status'] === 'Held')) {
             $this->bean->status = 'Held';
         }
 
@@ -64,9 +63,12 @@ class MeetingsViewEdit extends ViewEdit
     }
 
     /**
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $json;
         $json = getJSONobj();
@@ -82,8 +84,14 @@ class MeetingsViewEdit extends ViewEdit
             $this->bean->status = $this->bean->getDefaultStatus();
         } //if
 
-        $this->ss->assign('remindersData', Reminder::loadRemindersData('Meetings', $this->bean->id, $this->ev->isDuplicate));
-        $this->ss->assign('remindersDataJson', Reminder::loadRemindersDataJson('Meetings', $this->bean->id, $this->ev->isDuplicate));
+        $this->ss->assign(
+            'remindersData',
+            Reminder::loadRemindersData('Meetings', $this->bean->id, $this->ev->isDuplicate)
+        );
+        $this->ss->assign(
+            'remindersDataJson',
+            Reminder::loadRemindersDataJson('Meetings', $this->bean->id, $this->ev->isDuplicate)
+        );
         $this->ss->assign('remindersDefaultValuesDataJson', Reminder::loadRemindersDefaultValuesDataJson());
         $this->ss->assign('remindersDisabled', json_encode(false));
 

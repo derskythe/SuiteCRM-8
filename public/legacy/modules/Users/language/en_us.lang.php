@@ -212,7 +212,7 @@ $mod_strings = array(
     'LBL_MESSENGER_TYPE' => 'IM Type',
     'LBL_MOBILE_PHONE' => 'Mobile',
     'LBL_MODIFIED_BY' => 'Modified By',
-    'LBL_CREATED_BY_NAME' => 'Created By', //bug 48978
+    'LBL_CREATED_BY_NAME' => 'Created By',//bug 48978
     'LBL_MODIFIED_BY_ID' => 'Modified By ID',
     'LBL_MODULE_NAME' => 'Users',
     'LBL_MODULE_TITLE' => 'Users: Home',
@@ -331,7 +331,7 @@ $mod_strings = array(
     'LBL_AFFECTED' => 'affected',
     'LBL_USER_NAME_FOR_ROLE' => 'Users/Teams/Roles',
     'LBL_SESSION_EXPIRED' => 'You have been logged out because your session has expired.',
-// INBOUND EMAIL STRINGS
+    // INBOUND EMAIL STRINGS
     'LBL_ASSIGN_TO_USER' => 'Assign To User',
     'LBL_BASIC' => 'Inbound Setup',
     'LBL_LOGIN' => 'User Name',
@@ -351,9 +351,9 @@ $mod_strings = array(
     'LBL_TEST_SETTINGS' => 'Test Settings',
     'LBL_TEST_SUCCESSFUL' => 'Connection completed successfully.',
     'LBL_TOGGLE_ADV' => 'Show Advanced',
-// END INBOUND EMAIL STRINGS
+    // END INBOUND EMAIL STRINGS
     'LBL_LDAP_EXTENSION_ERROR' => 'LDAP Error: Extensions not loaded',
-// PROJECT RESOURCES STRINGS
+    // PROJECT RESOURCES STRINGS
     'LBL_RESOURCE_NAME' => 'Name',
     'LBL_SMTP_SERVER_HELP' => 'This SMTP Mail Server can be used for outgoing mail. Provide a username and password for your email account in order to use the mail server.',
     'LBL_MISSING_DEFAULT_OUTBOUND_SMTP_SETTINGS' => 'The administrator has not yet configured the default outbound account. Unable to send test email.',
@@ -418,8 +418,8 @@ $mod_strings = array(
     'LBL_WIZARD_LOCALE_DESC' => 'Specify your time zone and how you would like dates, currencies and names to appear in SuiteCRM.',
     'LBL_WIZARD_SMTP_DESC' => 'Provide your email account username and password for the default outbound email server.',
     'LBL_EAPM_SUBPANEL_TITLE' => 'External Accounts',
-    'LBL_EDITLAYOUT' => 'Edit Layout' /* for 508 compliance fix */,
-    'LBL_CHECKMARK' => 'Checkmark' /* for 508 compliance fix */,
+    'LBL_EDITLAYOUT' => 'Edit Layout'/* for 508 compliance fix */,
+    'LBL_CHECKMARK' => 'Checkmark'/* for 508 compliance fix */,
     'LBL_OAUTH_TOKENS' => 'OAuth Tokens',
     //For export labels
     'LBL_SHOW_ON_EMPLOYEES' => 'Display Employee Record',
@@ -427,7 +427,7 @@ $mod_strings = array(
     'LBL_DELETED' => 'Deleted',
     'LBL_HIDEOPTIONS' => 'Hide Options',
     'LBL_SHOWOPTIONS' => 'Show Options',
-    'LBL_SUITE_PRINT' => "Print this page",
+    'LBL_SUITE_PRINT' => 'Print this page',
 
     'LBL_QUICK_ACCOUNT' => 'Create Account',
     'LBL_QUICK_CONTACT' => 'Create Contact',
@@ -438,8 +438,8 @@ $mod_strings = array(
     'LBL_QUICK_TASK' => 'Create Task',
     'LBL_ENABLE_NOTIFICATIONS' => 'Enable Desktop Notifications',
     'LBL_DESKTOP_NOTIFICATIONS' => 'Desktop Notifications',
-    'LBL_LIST_NONINHERITABLE' => "Not Inheritable",
-    'LBL_PRIMARY_GROUP' => "Primary Group",
+    'LBL_LIST_NONINHERITABLE' => 'Not Inheritable',
+    'LBL_PRIMARY_GROUP' => 'Primary Group',
     'LBL_PASSWORD_MIS_MATCH' => 'Confirm Password does not match New Password',
     'LBL_EMAIL_INFORMATION' => 'EMAIL',
     'LBL_FW' => 'FW:',
@@ -661,21 +661,21 @@ $mod_strings = array(
     'LBL_TEST_EMAIL_BODY' => 'This email was sent in order to test the outgoing mail server information provided in the SuiteCRM application. A successful receipt of this email indicates that the outgoing mail server information provided is valid.',
     // for outbound email dialog
     'LBL_MAIL_SMTPAUTH_REQ' => 'Use SMTP Authentication?',
-    'LBL_EDIT_LAYOUT' => 'Edit Layout' /* for 508 compliance fix */,
-    'LBL_ATTACHMENT' => 'Attachment' /* for 508 compliance fix */,
-    'LBL_DELETE_INLINE' => 'Delete' /* for 508 compliance fix */,
-    'LBL_CREATE_CASES' => 'Create Cases' /* for 508 compliance fix */,
-    'LBL_CREATE_LEADS' => 'Create Leads' /* for 508 compliance fix */,
-    'LBL_CREATE_CONTACTS' => 'Create Contacts' /* for 508 compliance fix */,
-    'LBL_CREATE_BUGS' => 'Create Bugs' /* for 508 compliance fix */,
-    'LBL_CREATE_TASKS' => 'Create Tasks' /* for 508 compliance fix */,
-    'LBL_CHECK_INLINE' => 'Correct' /* for 508 compliance fix */,
-    'LBL_CLOSE' => 'Close' /* for 508 compliance fix */,
-    'LBL_HELP' => 'Help' /* for 508 compliance fix */,
-    'LBL_WAIT' => 'Wait' /* for 508 compliance fix */,
-    'LBL_CHECKEMAIL' => 'Check Email' /* for 508 compliance fix */,
-    'LBL_COMPOSEEMAIL' => 'Compose Email' /* for 508 compliance fix */,
-    'LBL_EMAILSETTINGS' => 'Email Settings' /* for 508 compliance fix */,
+    'LBL_EDIT_LAYOUT' => 'Edit Layout'/* for 508 compliance fix */,
+    'LBL_ATTACHMENT' => 'Attachment'/* for 508 compliance fix */,
+    'LBL_DELETE_INLINE' => 'Delete'/* for 508 compliance fix */,
+    'LBL_CREATE_CASES' => 'Create Cases'/* for 508 compliance fix */,
+    'LBL_CREATE_LEADS' => 'Create Leads'/* for 508 compliance fix */,
+    'LBL_CREATE_CONTACTS' => 'Create Contacts'/* for 508 compliance fix */,
+    'LBL_CREATE_BUGS' => 'Create Bugs'/* for 508 compliance fix */,
+    'LBL_CREATE_TASKS' => 'Create Tasks'/* for 508 compliance fix */,
+    'LBL_CHECK_INLINE' => 'Correct'/* for 508 compliance fix */,
+    'LBL_CLOSE' => 'Close'/* for 508 compliance fix */,
+    'LBL_HELP' => 'Help'/* for 508 compliance fix */,
+    'LBL_WAIT' => 'Wait'/* for 508 compliance fix */,
+    'LBL_CHECKEMAIL' => 'Check Email'/* for 508 compliance fix */,
+    'LBL_COMPOSEEMAIL' => 'Compose Email'/* for 508 compliance fix */,
+    'LBL_EMAILSETTINGS' => 'Email Settings'/* for 508 compliance fix */,
     // SNIP
     'LBL_EMAILS_MEETINGS_REL' => 'Emails: Meetings',
     'LBL_DATE_MODIFIED' => 'Date Modified',

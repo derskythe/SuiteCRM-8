@@ -90,11 +90,14 @@ class AddContactsToTargetListService
 
     /**
      * Link contacts to target list
+     *
      * @param SugarBean|null $bean - bean object of base module
      * @param array $baseIds
      * @param string $modalModule
      * @param string $modalId
+     *
      * @return bool
+     * @throws Exception
      */
     protected function linkContactsToTargetList(
         SugarBean $bean,

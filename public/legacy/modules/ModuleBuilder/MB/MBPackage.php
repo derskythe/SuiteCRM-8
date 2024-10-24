@@ -77,7 +77,7 @@ class MBPackage
         }
         $d = dir(MB_PACKAGE_PATH . '/' . $this->name . '/modules');
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) !== '.' && is_dir(MB_PACKAGE_PATH . '/' . $this->name . '/modules/' . $e)) {
+            if (!str_starts_with($e, '.') && is_dir(MB_PACKAGE_PATH . '/' . $this->name . '/modules/' . $e)) {
                 $this->getModule($e, $force);
             }
         }
@@ -160,7 +160,7 @@ class MBPackage
         $time = time();
         $this->description = to_html($this->description);
         $isUninstallable = ($this->is_uninstallable ? true : false);
-        
+
         if ($GLOBALS['sugar_flavor'] === 'CE') {
             $flavors = array('CE');
         } else {
@@ -219,10 +219,10 @@ class MBPackage
             $d = dir($this->path . '/language');
             while ($e = $d->read()) {
                 $lang_path = $this->path . '/language/' . $e;
-                if (substr($e, 0, 1) !== '.' && is_dir($lang_path)) {
+                if (!str_starts_with($e, '.') && is_dir($lang_path)) {
                     $f = dir($lang_path);
                     while ($g = $f->read()) {
-                        if (substr($g, 0, 1) !== '.' && is_file($lang_path . '/' . $g)) {
+                        if (!str_starts_with($g, '.') && is_file($lang_path . '/' . $g)) {
                             $lang = substr($g, 0, strpos($g, '.'));
                             $installdefs['language'][] = array(
                                 'from' => '<basepath>/SugarModules/language/' . $e . '/' . $g,
@@ -454,7 +454,7 @@ class MBPackage
         if (file_exists($include_path) && is_dir($include_path)) {
             $dd = dir($include_path);
             while ($gg = $dd->read()) {
-                if (substr($gg, 0, 1) !== '.' && is_file($include_path . '/' . $gg)) {
+                if (!str_starts_with($gg, '.') && is_file($include_path . '/' . $gg)) {
                     $lang = substr($gg, 0, strpos($gg, '.'));
                     $installdefs['language'][] = array(
                         'from' => '<basepath>/SugarModules/include/language/' . $gg,
@@ -505,7 +505,7 @@ class MBPackage
             DIRECTORY_SEPARATOR .
             'language';
         foreach (scandir($lang_path) as $langFile) {
-            if (substr((string) $langFile, 0, 1) !== '.' && is_file($lang_path . DIRECTORY_SEPARATOR . $langFile)) {
+            if (!str_starts_with((string) $langFile, '.') && is_file($lang_path . DIRECTORY_SEPARATOR . $langFile)) {
                 $lang = substr((string) $langFile, 0, strpos((string) $langFile, '.'));
                 $installdefs['language'][] = array(
                     'from' => '<basepath>/SugarModules/modules/' . $module . '/language/' . $langFile,
@@ -569,7 +569,7 @@ class MBPackage
             'quickcreatedefs.php'
         ];
         foreach (scandir($meta_path) as $meta_file) {
-            if (substr((string) $meta_file, 0, 1) !== '.' && is_file($meta_path . '/' . $meta_file)) {
+            if (!str_starts_with((string) $meta_file, '.') && is_file($meta_path . '/' . $meta_file)) {
                 $installdefs['copy'][] = array(
                     'from' => '<basepath>/SugarModules/modules/' . $module . '/metadata/' . $meta_file,
                     'to' => 'custom/modules/' . $module . '/metadata/' . $meta_file,
@@ -607,7 +607,7 @@ class MBPackage
         );
 
         /* @var $fInfo SplFileInfo */
-        foreach (new RegexIterator($recursiveIterator, "/\.php$/i") as $fInfo) {
+        foreach (new RegexIterator($recursiveIterator, '/\.php$/i') as $fInfo) {
             $newPath = substr((string) $fInfo->getPathname(), strrpos((string) $fInfo->getPathname(), $generalPath));
 
             $installdefs['copy'][] = array(
@@ -641,6 +641,7 @@ class MBPackage
      * @param bool $clean
      *
      * @return string
+     * @throws Exception
      */
     public function exportCustom($modules, $export = true, $clean = true)
     {
@@ -900,8 +901,8 @@ class MBPackage
             $includeRelationships[] = $module;
 
             foreach ($customRels as $k => $v) {
-                if (in_array($v->getLhsModule(), $includeRelationships) &&
-                    in_array($v->getRhsModule(), $includeRelationships)
+                if (in_array($v->getLhsModule(), $includeRelationships, true) &&
+                    in_array($v->getRhsModule(), $includeRelationships, true)
                 ) {
                     $includeMask[] = $k;
                 }
@@ -915,7 +916,7 @@ class MBPackage
 
         /* @var $fileInfo SplFileInfo */
         foreach ($recursiveIterator as $fileInfo) {
-            if ($fileInfo->isFile() && !in_array($fileInfo->getPathname(), $result)) {
+            if ($fileInfo->isFile() && !in_array($fileInfo->getPathname(), $result, true)) {
                 //get the filename in lowercase for easier comparison
                 $fn = $fileInfo->getFilename();
                 if (!empty($fn)) {
@@ -954,7 +955,7 @@ class MBPackage
         //in both cases set the shouldExport flag to true
         $lc_mod = strtolower($module);
         $fn = strtolower($fn);
-        if ((strpos($fn, $lc_mod) === false) || (strpos($fn, $lc_mod . '_' . $lc_mod) !== false)) {
+        if ((!str_contains($fn, $lc_mod)) || (str_contains($fn, $lc_mod . '_' . $lc_mod))) {
             $shouldExport = true;
         } else {
 
@@ -968,7 +969,7 @@ class MBPackage
                 //if the filename also has the related module name, then add the relationship file
                 //strip the current module,as we have already checked for existance of module name and dont want any false positives
                 $fn = str_replace($lc_mod, '', $fn);
-                if (strpos($fn, strtolower($relatedModule)) !== false) {
+                if (str_contains($fn, strtolower($relatedModule))) {
                     //both modules exist in the filename lets include in the results array
                     $shouldExport = true;
                     break;
@@ -1149,9 +1150,9 @@ class MBPackage
          * @var $fileInfo SplFileInfo
          */
         foreach ($recursiveIterator as $fileInfo) {
-            if ($fileInfo->isFile() && !in_array($fileInfo->getPathname(), $result)) {
+            if ($fileInfo->isFile() && !in_array($fileInfo->getPathname(), $result, true)) {
                 foreach ($relationships as $k => $v) {
-                    if (strpos((string) $fileInfo->getFilename(), (string) $k) !== false) {   //filter by modules being exported
+                    if (str_contains((string) $fileInfo->getFilename(), (string) $k)) {   //filter by modules being exported
                         if ($this->filterExportedRelationshipFile(
                             $fileInfo->getFilename(),
                             $moduleName,

@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-require_once("data/Relationships/M2MRelationship.php");
+require_once('data/Relationships/M2MRelationship.php');
 
 /**
  * Represents a many to many relationship that is table based.
@@ -98,11 +98,11 @@ class EmailAddressRelationship extends M2MRelationship
         $lhsLinkName = $this->lhsLink;
 
         if (!($lhs instanceof SugarBean)) {
-            $GLOBALS['log']->fatal("LHS is not a SugarBean object");
+            $GLOBALS['log']->fatal('LHS is not a SugarBean object');
             return false;
         }
         if (!($rhs instanceof SugarBean)) {
-            $GLOBALS['log']->fatal("RHS is not a SugarBean object");
+            $GLOBALS['log']->fatal('RHS is not a SugarBean object');
             return false;
         }
         if (empty($lhs->$lhsLinkName) && !$lhs->load_relationship($lhsLinkName)) {
@@ -110,7 +110,7 @@ class EmailAddressRelationship extends M2MRelationship
             return false;
         }
 
-        if (empty($_SESSION['disable_workflow']) || $_SESSION['disable_workflow'] != "Yes") {
+        if (empty($_SESSION['disable_workflow']) || $_SESSION['disable_workflow'] !== 'Yes') {
             if (!empty($lhs->$lhsLinkName)) {
                 $lhs->$lhsLinkName->load();
                 $this->callBeforeDelete($lhs, $rhs, $lhsLinkName);
@@ -128,7 +128,7 @@ class EmailAddressRelationship extends M2MRelationship
             $this->removeSelfReferencing($lhs, $rhs);
         }
 
-        if (empty($_SESSION['disable_workflow']) || $_SESSION['disable_workflow'] != "Yes") {
+        if (empty($_SESSION['disable_workflow']) || $_SESSION['disable_workflow'] !== 'Yes') {
             if (!empty($lhs->$lhsLinkName)) {
                 $lhs->$lhsLinkName->load();
                 $this->callAfterDelete($lhs, $rhs, $lhsLinkName);
@@ -145,14 +145,14 @@ class EmailAddressRelationship extends M2MRelationship
      * @param bool $ignore_role_filter
      * @return string
      */
-    protected function getRoleWhere($table = "", $ignore_role_filter = false)
+    protected function getRoleWhere($table = '', $ignore_role_filter = false)
     {
         $roleCheck = parent::getRoleWhere($table, $ignore_role_filter);
 
-        if ($this->def['relationship_role_column'] == 'primary_address' &&
-            $this->def["relationship_role_column_value"] == '1') {
+        if ($this->def['relationship_role_column'] === 'primary_address' &&
+            $this->def['relationship_role_column_value'] == '1') {
             if (empty($table)) {
-                $roleCheck .= " AND bean_module";
+                $roleCheck .= ' AND bean_module';
             } else {
                 $roleCheck .= " AND $table.bean_module";
             }

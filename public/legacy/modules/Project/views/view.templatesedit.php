@@ -46,10 +46,10 @@ class ProjectViewTemplatesEdit extends ViewEdit
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         $crumbs = array();
         $crumbs[] = $this->_getModuleTitleListParam($browserTitle);
         if (!empty($this->bean->id)) {
@@ -58,11 +58,11 @@ class ProjectViewTemplatesEdit extends ViewEdit
         $crumbs[] = $mod_strings['LBL_PROJECT_TEMPLATE'];
         return $crumbs;
     }
-    
-    public function display()
+
+    public function display() : void
     {
         $this->bean->is_template = 1;
-        $this->ev->ss->assign("is_template", 1);
+        $this->ev->ss->assign('is_template', 1);
 
         parent::display();
     }

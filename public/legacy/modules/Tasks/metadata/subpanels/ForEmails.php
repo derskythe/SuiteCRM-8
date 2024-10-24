@@ -47,9 +47,9 @@ $subpanel_layout = array(
     //Removed button because this layout def is a component of
     //the activities sub-panel.
 
-    'where' => "",
-    
-                
+    'where' => '',
+
+
     'list_fields' => array(
         'object_image'=>array(
             'vname' => 'LBL_OBJECT_IMAGE',
@@ -74,7 +74,7 @@ $subpanel_layout = array(
              'vname' => 'LBL_LIST_CONTACT',
              'width' => '11%',
         ),
-        
+
         'parent_name'=>array(
              'vname' => 'LBL_LIST_RELATED_TO',
              'width' => '22%',
@@ -107,7 +107,7 @@ $subpanel_layout = array(
             'usage'=>'query_only',
             'force_exists'=>true
             ),
-                
-                
+
+
     ),
 );

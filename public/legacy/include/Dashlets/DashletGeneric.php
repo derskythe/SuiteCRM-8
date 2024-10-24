@@ -236,18 +236,18 @@ class DashletGeneric extends Dashlet
                 $name = strtolower($name);
                 $currentSearchFields[$name] = array();
                 $widgetDef = $this->seedBean->field_defs[$name];
-                if ($widgetDef['name'] == 'assigned_user_name') {
+                if ($widgetDef['name'] === 'assigned_user_name') {
                     $widgetDef['name'] = 'assigned_user_id';
                 }
                 //bug 39170 - begin
-                if ($widgetDef['name'] == 'created_by_name') {
+                if ($widgetDef['name'] === 'created_by_name') {
                     $name = $widgetDef['name'] = 'created_by';
                 }
-                if ($widgetDef['name'] == 'modified_by_name') {
+                if ($widgetDef['name'] === 'modified_by_name') {
                     $name = $widgetDef['name'] = 'modified_user_id';
                 }
                 //bug 39170 - end
-                if ($widgetDef['type']=='enum') {
+                if ($widgetDef['type']==='enum') {
                     $filterNotSelected = array(); // we need to have some value otherwise '' or null values make -none- to be selected by default
                 } else {
                     $filterNotSelected = '';
@@ -320,7 +320,7 @@ class DashletGeneric extends Dashlet
         }
         foreach ($this->filters as $name=>$params) {
             if (!empty($params)) {
-                if ($name == 'assigned_user_id' && $this->myItemsOnly) {
+                if ($name === 'assigned_user_id' && $this->myItemsOnly) {
                     continue;
                 } // don't handle assigned user filter if filtering my items only
                 $widgetDef = $this->seedBean->field_defs[$name];
@@ -328,8 +328,8 @@ class DashletGeneric extends Dashlet
                 $widgetClass = $this->layoutManager->getClassFromWidgetDef($widgetDef, true);
                 $widgetDef['table'] = $this->seedBean->table_name;
                 $widgetDef['table_alias'] = $this->seedBean->table_name;
-                if (!empty($widgetDef['source']) && $widgetDef['source'] == 'custom_fields') {
-                    $widgetDef['table'] = $this->seedBean->table_name."_cstm";
+                if (!empty($widgetDef['source']) && $widgetDef['source'] === 'custom_fields') {
+                    $widgetDef['table'] = $this->seedBean->table_name . '_cstm';
                     $widgetDef['table_alias'] = $widgetDef['table'];
                 }
                 switch ($widgetDef['type']) {// handle different types
@@ -387,7 +387,7 @@ class DashletGeneric extends Dashlet
             require($customMetadata);
             $this->searchFields = $dashletData[$this->seedBean->module_dir.'Dashlet']['searchFields'];
             foreach ($this->searchFields  as $key =>$def) {
-                if ($key == 'assigned_user_name') {
+                if ($key === 'assigned_user_name') {
                     $this->searchFields['assigned_user_id'] = $def;
                     unset($this->searchFields['assigned_user_name']);
                     break;
@@ -401,7 +401,7 @@ class DashletGeneric extends Dashlet
     /**
      * Does all dashlet processing, here's your chance to modify the rows being displayed!
      */
-    public function process($lvsParams = array(), $id = null)
+    public function process($lvsParams = array(), $id = null) : mixed
     {
         $currentSearchFields = array();
         $configureView = true; // configure view or regular view
@@ -425,14 +425,12 @@ class DashletGeneric extends Dashlet
                 $displayColumns[strtoupper($val)] = $this->columns[$val];
                 $displayColumns[strtoupper($val)]['label'] = trim($displayColumns[strtoupper($val)]['label'], ':');// strip : at the end of headers
             }
-        } else {
-            if (isset($this->columns)) {
-                // use the default
-                foreach ($this->columns as $name => $val) {
-                    if (!empty($val['default']) && $val['default']) {
-                        $displayColumns[strtoupper($name)] = $val;
-                        $displayColumns[strtoupper($name)]['label'] = trim($displayColumns[strtoupper($name)]['label'], ':');
-                    }
+        } else if (isset($this->columns)) {
+            // use the default
+            foreach ($this->columns as $name => $val) {
+                if (!empty($val['default']) && $val['default']) {
+                    $displayColumns[strtoupper($name)] = $val;
+                    $displayColumns[strtoupper($name)]['label'] = trim($displayColumns[strtoupper($name)]['label'], ':');
                 }
             }
         }
@@ -447,22 +445,20 @@ class DashletGeneric extends Dashlet
         //bug: 44592 - dashlet sort order was not being preserved between logins
         if (!empty($lvsParams['orderBy']) && !empty($lvsParams['sortOrder'])) {
             $lvsParams['overrideOrder'] = true;
-        } else {
-            if (empty($lvdOrderBy['orderBy'])) {
-                foreach ($displayColumns as $colName => $colParams) {
-                    if (!empty($colParams['defaultOrderColumn'])) {
-                        $lvsParams['overrideOrder'] = true;
-                        $lvsParams['orderBy'] = $colName;
-                        $lvsParams['sortOrder'] = $colParams['defaultOrderColumn']['sortOrder'];
-                    }
+        } else if (empty($lvdOrderBy['orderBy'])) {
+            foreach ($displayColumns as $colName => $colParams) {
+                if (!empty($colParams['defaultOrderColumn'])) {
+                    $lvsParams['overrideOrder'] = true;
+                    $lvsParams['orderBy'] = $colName;
+                    $lvsParams['sortOrder'] = $colParams['defaultOrderColumn']['sortOrder'];
                 }
             }
         }
         // Check for 'last_name' column sorting with related fields (last_name, first_name)
         // See ListViewData.php for actual sorting change.
-        if ($lvdOrderBy['orderBy'] == 'last_name' && !empty($displayColumns['NAME']) && !empty($displayColumns['NAME']['related_fields']) &&
-            in_array('last_name', $displayColumns['NAME']['related_fields']) &&
-            in_array('first_name', $displayColumns['NAME']['related_fields'])) {
+        if ($lvdOrderBy['orderBy'] === 'last_name' && !empty($displayColumns['NAME']) && !empty($displayColumns['NAME']['related_fields']) &&
+            in_array('last_name', $displayColumns['NAME']['related_fields'], true) &&
+            in_array('first_name', $displayColumns['NAME']['related_fields'], true)) {
             $lvsParams['overrideLastNameOrder'] = true;
         }
 
@@ -481,7 +477,7 @@ class DashletGeneric extends Dashlet
             // assign a baseURL w/ the action set as DisplayDashlet
             foreach ($this->lvs->data['pageData']['urls'] as $type => $url) {
                 // awu Replacing action=DisplayDashlet with action=DynamicAction&DynamicAction=DisplayDashlet
-                if ($type == 'orderBy') {
+                if ($type === 'orderBy') {
                     $this->lvs->data['pageData']['urls'][$type] = preg_replace('/(action=.*&)/Ui', 'action=DynamicAction&DynamicAction=displayDashlet&', (string) $url);
                 } else {
                     $this->lvs->data['pageData']['urls'][$type] = preg_replace('/(action=.*&)/Ui', 'action=DynamicAction&DynamicAction=displayDashlet&', (string) $url) . '&sugar_body_only=1&id=' . $this->id;
@@ -493,11 +489,12 @@ class DashletGeneric extends Dashlet
     }
 
     /**
-      * Displays the Dashlet, must call process() prior to calling this
-      *
-      * @return string HTML that displays Dashlet
-      */
-    public function display()
+     * Displays the Dashlet, must call process() prior to calling this
+     *
+     * @return string HTML that displays Dashlet
+     * @throws SmartyException
+     */
+    public function display() : string
     {
         return parent::display() . $this->lvs->display(false) . $this->processAutoRefresh();
     }
@@ -522,14 +519,14 @@ class DashletGeneric extends Dashlet
         foreach ($this->searchFields as $name=>$params) {
             $widgetDef = $this->seedBean->field_defs[$name];
             //bug39170 - begin
-            if ($widgetDef['name']=='created_by_name' && $req['created_by']) {
+            if ($widgetDef['name'] === 'created_by_name' && $req['created_by']) {
                 $widgetDef['name'] = 'created_by';
             }
-            if ($widgetDef['name']=='modified_by_name' && $req['modified_user_id']) {
+            if ($widgetDef['name'] === 'modified_by_name' && $req['modified_user_id']) {
                 $widgetDef['name'] = 'modified_user_id';
             }
             //bug39170 - end
-            if ($widgetDef['type'] == 'datetimecombo' || $widgetDef['type'] == 'datetime' || $widgetDef['type'] == 'date') { // special case datetime types
+            if ($widgetDef['type'] === 'datetimecombo' || $widgetDef['type'] === 'datetime' || $widgetDef['type'] === 'date') { // special case datetime types
                 $options['filters'][$widgetDef['name']] = array();
                 if (!empty($req['type_' . $widgetDef['name']])) { // save the type of date filter
                     $options['filters'][$widgetDef['name']]['type'] = $req['type_' . $widgetDef['name']];
@@ -569,7 +566,7 @@ class DashletGeneric extends Dashlet
     public function addCustomFields()
     {
         foreach ($this->seedBean->field_defs as $fieldName => $def) {
-            if (!empty($def['type']) && $def['type'] == 'html') {
+            if (!empty($def['type']) && $def['type'] === 'html') {
                 continue;
             }
             if (isset($def['vname'])) {
@@ -577,7 +574,7 @@ class DashletGeneric extends Dashlet
                 if (is_array($translated)) {
                     $translated = $def['vname'];
                 }
-                if (!empty($def['source']) && $def['source'] == 'custom_fields') {
+                if (!empty($def['source']) && $def['source'] === 'custom_fields') {
                     if (isset($this->columns[$fieldName]['default']) && $this->columns[$fieldName]['default']) {
                         $this->columns[$fieldName] = array('width' => '10',
                                                        'label' => $translated,

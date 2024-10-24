@@ -27,6 +27,7 @@
 
 namespace App\Routes\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Process\Service\ActionNameMapperInterface;
@@ -48,19 +49,21 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
     /**
      * Lazy initialized mapper
+     *
      * @var RouteConverter
      */
-    protected $converter;
+    protected ?RouteConverter $converter;
     /**
      * @var ActionNameMapperInterface
      */
-    private $actionNameMapper;
+    private ActionNameMapperInterface $actionNameMapper;
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -71,16 +74,26 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
         ActionNameMapperInterface $actionNameMapper,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->actionNameMapper = $actionNameMapper;
     }
@@ -88,7 +101,7 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -97,9 +110,10 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      * Check if the given $request route is a Legacy route
      *
      * @param Request $request
+     *
      * @return bool
      */
-    public function isLegacyRoute(Request $request): bool
+    public function isLegacyRoute(Request $request) : bool
     {
         if ($this->isLegacyViewRoute($request)) {
             return true;
@@ -121,9 +135,10 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      * Check if the given $request route can be converted
      *
      * @param Request $request
+     *
      * @return bool
      */
-    public function isLegacyViewRoute(Request $request): bool
+    public function isLegacyViewRoute(Request $request) : bool
     {
         if (!empty($request->getPathInfo()) && $request->getPathInfo() !== '/') {
             return false;
@@ -148,9 +163,10 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      * Convert given $uri route
      *
      * @param string $uri
+     *
      * @return string
      */
-    public function convertUri(string $uri): string
+    public function convertUri(string $uri) : string
     {
         $request = Request::create($uri);
 
@@ -161,9 +177,10 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      * Convert given $request route
      *
      * @param Request $request
+     *
      * @return string
      */
-    public function convert(Request $request): string
+    public function convert(Request $request) : string
     {
         $this->init();
 
@@ -191,16 +208,16 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
 
     /**
      * Get mapper. Initialize it if needed
+     *
      * @return RouteConverter
      */
-    protected function getConverter(): RouteConverter
+    protected function getConverter() : RouteConverter
     {
         if ($this->converter !== null) {
             return $this->converter;
         }
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/RouteConverter.php';
+        require_once $this->legacyDir . '/include/portability/RouteConverter.php';
 
         $this->converter = new RouteConverter();
 
@@ -211,17 +228,18 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
      * Parse given $uri route
      *
      * @param string $uri
+     *
      * @return array
      */
-    public function parseUri(string $uri): array
+    public function parseUri(string $uri) : array
     {
-        if (strpos($uri, '/#/') !== false) {
+        if (str_contains($uri, '/#/')) {
             $anchor = parse_url($uri, PHP_URL_FRAGMENT);
             $query = parse_url($uri, PHP_URL_QUERY);
             parse_str($query, $params);
 
             return [
-                'route' => './#' . $anchor,
+                'route'  => './#' . $anchor,
                 'params' => $params
             ];
         }
@@ -238,15 +256,18 @@ class RouteConverterHandler extends LegacyHandler implements RouteConverterInter
             throw new InvalidArgumentException('No module defined');
         }
 
-        $queryParams = [];
-
         $converter = $this->getConverter();
 
-        $route = $converter->convert($module, $action, $record, $queryParams);
-
         $result = [
-            'route' => $route,
-            'params' => $converter->excludeParams($request->query->all(), ['module', 'action', 'record']),
+            'route'  => $converter->convert($module, $action, $record, []),
+            'params' => $converter->excludeParams(
+                $request->query->all(),
+                [
+                    'module',
+                    'action',
+                    'record'
+                ]
+            ),
             'module' => $module
         ];
 

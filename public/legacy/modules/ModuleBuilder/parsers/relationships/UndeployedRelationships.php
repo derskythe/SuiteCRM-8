@@ -65,7 +65,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
     {
         $this->basepath = $path ;
         // pull the module and package names out of the path
-        $this->moduleName = basename((string) $path, "/") ; // just in case there are any trailing /
+        $this->moduleName = basename((string) $path, '/') ; // just in case there are any trailing /
         $this->packageName = basename(dirname((string) $path, 2)) ; // simpler than explode :)
         require_once 'modules/ModuleBuilder/MB/ModuleBuilder.php' ;
         $mb = new ModuleBuilder() ;
@@ -92,7 +92,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
         foreach ($mb->getPackageList() as $packageName) {
             $package = $mb->packages [ $packageName ] ;
             foreach ($package->modules as $module) {
-                $relatableModules [ $package->key . "_" . $module->name ] = $module->getProvidedSubpanels() ;
+                $relatableModules [ $package->key . '_' . $module->name ] = $module->getProvidedSubpanels() ;
             }
         }
 
@@ -227,7 +227,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
         foreach ($this->relationships as $relationshipName => $relationship) {
             $definition = $relationship->getDefinition() ;
             // activities will always appear on the rhs only - lhs will be always be this module in MB
-            if (strtolower($definition [ 'rhs_module' ]) == 'activities') {
+            if (strtolower($definition [ 'rhs_module' ]) === 'activities') {
                 $this->activitiesToAdd = true ;
                 $relationshipName = $definition [ 'relationship_name' ] ;
                 foreach (self::$activities as $activitiesSubModuleLower => $activitiesSubModuleName) {
@@ -265,7 +265,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
         }
 
         // use an installDefPrefix of <basepath>/SugarModules for compatibility with the rest of ModuleBuilder
-        $this->installDefs = parent::build($basepath, "<basepath>/SugarModules", $relationships) ;
+        $this->installDefs = parent::build($basepath, '<basepath>/SugarModules', $relationships) ;
     }
 
     /*
@@ -301,7 +301,7 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
     private function removeAppLangStrings($relationship)
     {
         $def = $relationship->getDefinition();
-        if (strtolower($def [ 'rhs_module' ]) == 'activities' && !empty($_REQUEST [ 'view_package' ]) && !empty($_REQUEST [ 'view_module' ])) {
+        if (strtolower($def [ 'rhs_module' ]) === 'activities' && !empty($_REQUEST ['view_package' ]) && !empty($_REQUEST ['view_module' ])) {
             $mb = new ModuleBuilder() ;
             $module = $mb->getPackageModule($_REQUEST [ 'view_package' ], $_REQUEST [ 'view_module' ]) ;
             $appStrings = $module->getAppListStrings() ;
@@ -337,13 +337,13 @@ class UndeployedRelationships extends AbstractRelationships implements Relations
             foreach (array( MB_EDITVIEW , MB_DETAILVIEW ) as $view) {
                 $parsedName = AbstractRelationships::parseDeployedModuleName($deployedModuleName) ;
                 if (isset($parsedName [ 'packageName' ])) {
-                    $GLOBALS [ 'log' ]->debug(get_class($this) . ": " . (($actionAdd) ? "adding" : "removing") . " $fieldName on $view layout for undeployed module {$parsedName [ 'moduleName' ]} in package {$parsedName [ 'packageName' ]}") ;
+                    $GLOBALS [ 'log' ]->debug(get_class($this) . ': ' . (($actionAdd) ? 'adding' : 'removing') . " $fieldName on $view layout for undeployed module {$parsedName [ 'moduleName' ]} in package {$parsedName [ 'packageName' ]}") ;
                     $parser = new GridLayoutMetaDataParser($view, $parsedName [ 'moduleName' ], $parsedName [ 'packageName' ]) ;
 
                     if (($actionAdd) ? $parser->addField(array( 'name' => $fieldName )) : $parser->removeField($fieldName)) {
                         $parser->handleSave(false) ;
                     } else {
-                        $GLOBALS [ 'log' ]->debug(get_class($this) . ": couldn't " . (($actionAdd) ? "add" : "remove") . " $fieldName on $view layout for undeployed module $deployedModuleName") ;
+                        $GLOBALS [ 'log' ]->debug(get_class($this) . ": couldn't " . (($actionAdd) ? 'add' : 'remove') . " $fieldName on $view layout for undeployed module $deployedModuleName") ;
                         $successful = false ;
                     }
                 }

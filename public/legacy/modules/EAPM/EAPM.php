@@ -46,26 +46,11 @@ require_once 'include/SugarOauth.php';
 #[\AllowDynamicProperties]
 class EAPM extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'EAPM';
-    public $object_name = 'EAPM';
-    public $table_name = 'eapm';
-    public $importable = false;
-    public $id;
+    public bool $new_schema = true;
     public $type;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $password;
     public $url;
@@ -78,16 +63,26 @@ class EAPM extends Basic
     public $disable_row_level_security = true;
     public static $passwordPlaceholder = '::PASSWORD::';
 
-    public function bean_implements($interface)
+    public function __construct()
+    {
+        parent::__construct();
+        $this->module_dir = 'EAPM';
+        $this->object_name = 'EAPM';
+        $this->table_name = 'eapm';
+    }
+
+
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
-            case 'ACL': return true;
+            case 'ACL':
+                return true;
         }
 
         return false;
     }
 
-    public static function getLoginInfo($application, $includeInactive = false)
+    public static function getLoginInfo($application, bool $includeInactive = false)
     {
         global $current_user;
 
@@ -97,10 +92,11 @@ class EAPM extends Basic
             if (is_array($_SESSION['EAPM'][$application])) {
                 $eapmBean->fromArray($_SESSION['EAPM'][$application]);
             } else {
-                return;
+                return null;
             }
         } else {
-            $queryArray = array('assigned_user_id' => $current_user->id, 'application' => $application, 'deleted' => 0);
+            $queryArray =
+                array( 'assigned_user_id' => $current_user->id, 'application' => $application, 'deleted' => 0 );
             if (!$includeInactive) {
                 $queryArray['validated'] = 1;
             }
@@ -113,7 +109,7 @@ class EAPM extends Basic
                 } else {
                     $_SESSION['EAPM'][$application] = '';
 
-                    return;
+                    return null;
                 }
             }
         }
@@ -126,7 +122,18 @@ class EAPM extends Basic
         return $eapmBean;
     }
 
-    public function create_new_list_query($order_by, $where, $filter = array(), $params = array(), $show_deleted = 0, $join_type = '', $return_array = false, $parentbean = null, $singleSelect = false, $ifListForExport = false)
+    public function create_new_list_query(
+        $order_by,
+        $where,
+        $filter = array(),
+        $params = array(),
+        $show_deleted = 0,
+        $join_type = '',
+        $return_array = false,
+        $parentbean = null,
+        $singleSelect = false,
+        $ifListForExport = false
+    )
     {
         global $current_user;
 
@@ -137,11 +144,21 @@ class EAPM extends Basic
             if (empty($where)) {
                 $where = $owner_where;
             } else {
-                $where .= ' AND '.$owner_where;
+                $where .= ' AND ' . $owner_where;
             }
         }
 
-        return parent::create_new_list_query($order_by, $where, $filter, $params, $show_deleted, $join_type, $return_array, $parentbean, $singleSelect);
+        return parent::create_new_list_query(
+            $order_by,
+            $where,
+            $filter,
+            $params,
+            $show_deleted,
+            $join_type,
+            $return_array,
+            $parentbean,
+            $singleSelect
+        );
     }
 
     public function save($check_notify = false)
@@ -181,12 +198,15 @@ class EAPM extends Basic
             return false;
         }
         // Don't use save, it will attempt to revalidate
-        $adata = DBManagerFactory::getInstance()->quote(isset($this->api_data) ? $this->api_data : null);
-        DBManagerFactory::getInstance()->query("UPDATE eapm SET validated=1,api_data='$adata'  WHERE id = '{$this->id}' AND deleted = 0");
+        $adata = DBManagerFactory::getInstance()?->quote(isset($this->api_data) ? $this->api_data : null);
+        DBManagerFactory::getInstance()->query(
+            "UPDATE eapm SET validated=1,api_data='$adata'  WHERE id = '{$this->id}' AND deleted = 0"
+        );
         if (!$this->deleted && !empty($this->application)) {
             // deactivate other EAPMs with same app
-            $sql = "UPDATE eapm SET deleted=1 WHERE application = '{$this->application}' AND id != '{$this->id}' AND deleted = 0 AND assigned_user_id = '{$this->assigned_user_id}'";
-            DBManagerFactory::getInstance()->query($sql, true);
+            $sql =
+                "UPDATE eapm SET deleted=1 WHERE application = '{$this->application}' AND id != '{$this->id}' AND deleted = 0 AND assigned_user_id = '{$this->assigned_user_id}'";
+            DBManagerFactory::getInstance()?->query($sql, true);
         }
 
         // Nuke the EAPM cache for this record
@@ -200,12 +220,12 @@ class EAPM extends Basic
         if (!empty($this->application)) {
             $apiList = ExternalAPIFactory::loadFullAPIList(false, true);
         }
-        if (!empty($apiList) && isset($apiList[$this->application]) && $apiList[$this->application]['authMethod'] == 'oauth') {
+        if (!empty($apiList) && isset($apiList[$this->application]) && $apiList[$this->application]['authMethod'] === 'oauth') {
             $this->name = sprintf(translate('LBL_OAUTH_NAME', $this->module_dir), $this->application);
         }
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         $this->fillInName();
         parent::fill_in_additional_detail_fields();

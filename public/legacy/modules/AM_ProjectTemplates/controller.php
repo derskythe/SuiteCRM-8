@@ -34,6 +34,9 @@ class AM_ProjectTemplatesController extends SugarController
     }
 
 
+    /**
+     * @throws DateMalformedStringException
+     */
     public function action_create_project()
     {
         global $current_user, $db, $mod_strings;
@@ -67,8 +70,8 @@ class AM_ProjectTemplatesController extends SugarController
 
         $dateformat = $current_user->getPreference('datef');
 
-        $days = array("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday");
-        $businessHours = BeanFactory::getBean("AOBH_BusinessHours");
+        $days = array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' );
+        $businessHours = BeanFactory::getBean('AOBH_BusinessHours');
         $bhours = array();
         foreach ($days as $day) {
             $bh = $businessHours->getBusinessHoursForDay($day);
@@ -170,7 +173,7 @@ class AM_ProjectTemplatesController extends SugarController
             $project_task->estimated_effort = $row['estimated_effort'];
             $project_task->utilization = $row['utilization'];
 
-            if ($copy_all == 0 && !in_array($row['id'], $copy_tasks)) {
+            if ($copy_all == 0 && !in_array($row['id'], $copy_tasks, true)) {
                 $project_task->assigned_user_id = null;
             } else {
                 $project_task->assigned_user_id = $row['assigned_user_id'];
@@ -244,7 +247,7 @@ class AM_ProjectTemplatesController extends SugarController
 
 
         //redirct to new project
-        SugarApplication::appendErrorMessage($mod_strings["LBL_NEW_PROJECT_CREATED"]);
+        SugarApplication::appendErrorMessage($mod_strings['LBL_NEW_PROJECT_CREATED']);
         $params = array(
             'module'=> 'Project',
             'action'=>'DetailView',
@@ -262,7 +265,7 @@ class AM_ProjectTemplatesController extends SugarController
         include_once('modules/AM_ProjectTemplates/project_table.php');
 
         $project_template = BeanFactory::newBean('AM_ProjectTemplates');
-        $pid = $_POST["pid"];
+        $pid = $_POST['pid'];
         $project_template->retrieve($pid);
 
         //Get project tasks
@@ -278,9 +281,9 @@ class AM_ProjectTemplatesController extends SugarController
         $duration = $db->getOne($query);
 
         if ($duration < 31) {
-            $end_date = Date('Y-m-d', strtotime("+30 days"));
+            $end_date = Date('Y-m-d', strtotime('+30 days'));
         } else {
-            $end_date = Date('Y-m-d', strtotime("+ " . $duration . " days"));
+            $end_date = Date('Y-m-d', strtotime('+ ' . $duration . ' days'));
         }
 
         //-------------------------------------------?>
@@ -314,6 +317,10 @@ class AM_ProjectTemplatesController extends SugarController
     }
 
     //Create new project task
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function action_update_GanttChart()
     {
 
@@ -332,10 +339,10 @@ class AM_ProjectTemplatesController extends SugarController
 
         //$actual_duration = $_POST['actual_duration'];
 
-        if ($_POST['milestone'] == 'Milestone') {
+        if ($_POST['milestone'] === 'Milestone') {
             $milestone_flag = '1';
         } else {
-            if ($_POST['milestone'] == 'Task') {
+            if ($_POST['milestone'] === 'Task') {
                 $milestone_flag = '0';
             }
         }
@@ -346,7 +353,7 @@ class AM_ProjectTemplatesController extends SugarController
 
         $dateformat = $current_user->getPreference('datef');
 
-        $startdate = DateTime::createFromFormat("d/m/Y", "01/01/2016");
+        $startdate = DateTime::createFromFormat('d/m/Y', '01/01/2016');
         $start = $startdate->format('Y-m-d');
 
         //Take 1 off duration so that task displays in correct number of table cells in gantt chart.
@@ -390,6 +397,10 @@ class AM_ProjectTemplatesController extends SugarController
 
 
     //mark project task as deleted
+
+    /**
+     * @throws Exception
+     */
     public function action_delete_task()
     {
         $id = $_POST['task_id'];
@@ -423,6 +434,10 @@ class AM_ProjectTemplatesController extends SugarController
 
 
     //updates the order of the tasks
+
+    /**
+     * @throws Exception
+     */
     public function action_update_order()
     {
 
@@ -444,12 +459,12 @@ class AM_ProjectTemplatesController extends SugarController
     {
         global $mod_strings;
         $project_template = BeanFactory::newBean('AM_ProjectTemplates');
-        $project_template->retrieve($_REQUEST["project_id"]);
+        $project_template->retrieve($_REQUEST['project_id']);
 
         //Get tasks
         $project_template->load_relationship('am_tasktemplates_am_projecttemplates');
         $tasks = $project_template->get_linked_beans('am_tasktemplates_am_projecttemplates', 'AM_TaskTemplates');
-        echo '<option rel="0" value="0">'.$mod_strings["LBL_NONE"].'</option>';
+        echo '<option rel="0" value="0">'. $mod_strings['LBL_NONE'].'</option>';
         foreach ($tasks as $task) {
             echo '<option rel="'.$task->task_number.'" value="'.$task->task_number.'">'.$task->name.'</opion>';
         }
@@ -457,6 +472,9 @@ class AM_ProjectTemplatesController extends SugarController
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function create_task($name, $start, $end, $project_id, $milestone_flag, $status, $project_task_id, $predecessors, $rel_type, $duration, $duration_unit, $resource, $percent_complete, $description, $actual_duration, $order_number)
     {
         $task = BeanFactory::newBean('AM_TaskTemplates');
@@ -485,6 +503,9 @@ class AM_ProjectTemplatesController extends SugarController
         $project_template->am_tasktemplates_am_projecttemplates->add($task_id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function update_task($id, $name, $start, $end, $project_id, $milestone_flag, $status, $predecessors, $rel_type, $duration, $duration_unit, $resource, $percent_complete, $description, $actual_duration)
     {
         $task = BeanFactory::newBean('AM_TaskTemplates');

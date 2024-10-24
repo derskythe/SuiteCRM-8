@@ -27,6 +27,7 @@
 
 namespace App\Install\Service\Installation\Steps;
 
+use Throwable;
 use App\Engine\Model\Feedback;
 use App\Engine\Model\ProcessStepTrait;
 use App\Install\LegacyHandler\InstallHandler;
@@ -47,7 +48,7 @@ class RunLegacyInstall implements InstallStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * RunLegacyInstall constructor.
@@ -76,19 +77,21 @@ class RunLegacyInstall implements InstallStepInterface
 
     /**
      * @inheritDoc
+     * @throws Throwable
      */
     public function execute(array &$context): Feedback
     {
         $result = $this->handler->installLegacy();
 
         $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Legacy install successful']);
 
-        if ($result === false) {
+        if (!$result->isSuccess()) {
             $feedback->setSuccess(false);
             $feedback->setMessages(['Legacy install failed']);
             $feedback->setStatusCode(InstallStatus::FAILED);
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages(['Legacy install successful']);
         }
 
         return $feedback;

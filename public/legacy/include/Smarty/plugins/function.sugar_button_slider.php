@@ -28,43 +28,43 @@ r53792 - 2010-01-18 13:37:35 -0800 (Mon, 18 Jan 2010) - roger - adding code to s
 function smarty_function_sugar_button_slider($params, &$smarty)
 {
    if(empty($params['module'])) {
-   	  $smarty->trigger_error("sugar_button_slider: missing required param (module)");
+       $smarty->trigger_error('sugar_button_slider: missing required param (module)');
    } else if(empty($params['buttons'])) {
-   	  $smarty->trigger_error("sugar_button_slider: missing required param (buttons)");
+       $smarty->trigger_error('sugar_button_slider: missing required param (buttons)');
    } else if(empty($params['view'])) {
-   	  $smarty->trigger_error("sugar_button_slider: missing required param (view)");
+       $smarty->trigger_error('sugar_button_slider: missing required param (view)');
    }
-	$module = $params['module'];
-   	$view = $params['view'];
-   	$buttons = $params['buttons'];
-   	$str = '';
+    $module = $params['module'];
+       $view = $params['view'];
+       $buttons = $params['buttons'];
+       $str = '';
    if(is_array($buttons)) {
-   	  if(count($buttons) <= 2){
-   	  	foreach($buttons as $val => $button){
-   	  		$str .= smarty_function_sugar_button(array('module' => $module, 'id' => $button, 'view' => $view), $smarty);
-   	  	}
-   	  }else{
-   	  	$str  = '<div id="buttonSlide" class="yui-module">';
-   	  	$str .= '<table border="0">';
-   	  	$str .='<tr><td>';
-   	  	$str .='<div class="yui-hd">';
-   	  	for($i = 0; $i < 2; $i++){
-   	  		$button = $buttons[$i];
-   	  		$str .= smarty_function_sugar_button(array('module' => $module, 'id' => $button, 'view' => $view), $smarty);
-   	  		$str .= ' ';
-   	  	}
-   	  	$str .= '</div></td>';
-   	  	$str .='<td align="right"> <div class="yui-bd">';
-   	 	for($i = 2; $i < count($buttons); $i++){
-   	  		$button = $buttons[$i];
-   	  		$str .= smarty_function_sugar_button(array('module' => $module, 'id' => $button, 'view' => $view), $smarty);
-   	  		$str .= ' ';
-   	 	}
-   	  	$str .='</div></td>';
-   	  	$str .='</tr></table>';
-   	  }
+         if(count($buttons) <= 2){
+             foreach($buttons as $val => $button){
+                 $str .= smarty_function_sugar_button(array('module' => $module, 'id' => $button, 'view' => $view), $smarty);
+             }
+         }else{
+             $str  = '<div id="buttonSlide" class="yui-module">';
+             $str .= '<table border="0">';
+             $str .='<tr><td>';
+             $str .='<div class="yui-hd">';
+             for($i = 0; $i < 2; $i++){
+                 $button = $buttons[$i];
+                 $str .= smarty_function_sugar_button(array('module' => $module, 'id' => $button, 'view' => $view), $smarty);
+                 $str .= ' ';
+             }
+             $str .= '</div></td>';
+             $str .='<td align="right"> <div class="yui-bd">';
+            for($i = 2; $i < count($buttons); $i++){
+                 $button = $buttons[$i];
+                 $str .= smarty_function_sugar_button(array('module' => $module, 'id' => $button, 'view' => $view), $smarty);
+                 $str .= ' ';
+            }
+             $str .='</div></td>';
+             $str .='</tr></table>';
+         }
    }
-	return $str;
+    return $str;
 }
 
 ?>

@@ -69,6 +69,9 @@ class Popup_Picker
     {
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function process_page()
     {
         global $sugar_config;
@@ -123,52 +126,52 @@ class Popup_Picker
                 continue;
             }
 
-            if (empty($task->date_due) || $task->date_due == '0000-00-00') {
+            if (empty($task->date_due) || $task->date_due === '0000-00-00') {
                 $date_due = '';
             } else {
                 $date_due = $task->date_due;
             }
 
-            if ($task->status !== "Not Started"
-                && $task->status !== "In Progress"
-                && $task->status !== "Pending Input") {
+            if ($task->status !== 'Not Started'
+                && $task->status !== 'In Progress'
+                && $task->status !== 'Pending Input') {
                 $ts = '';
                 if (!empty($task->fetched_row['date_due'])) {
                     //tasks can have an empty date due field
                     $ts = $timedate->fromDb($task->fetched_row['date_due'])->ts;
                 }
-                $summary_list[] = array('name' => $task->name,
-                    'id' => $task->id,
-                    'type' => "Task",
-                    'direction' => '',
-                    'module' => "Tasks",
-                    'status' => $app_list_strings['task_status_dom'][$task->status],
-                    'parent_id' => $task->parent_id,
-                    'parent_type' => $task->parent_type,
-                    'parent_name' => $task->parent_name,
-                    'contact_id' => $task->contact_id,
-                    'contact_name' => $task->contact_name,
-                    'date_modified' => $date_due,
-                    'description' => $this->getTaskDetails($task),
-                    'date_type' => $app_strings['DATA_TYPE_DUE'] ?? '',
-                    'sort_value' => $ts,
-                    'image' => SugarThemeRegistry::current()->getImageURL('Tasks.svg')
+                $summary_list[] = array( 'name' => $task->name,
+                                         'id' => $task->id,
+                                         'type' => 'Task',
+                                         'direction' => '',
+                                         'module' => 'Tasks',
+                                         'status' => $app_list_strings['task_status_dom'][$task->status],
+                                         'parent_id' => $task->parent_id,
+                                         'parent_type' => $task->parent_type,
+                                         'parent_name' => $task->parent_name,
+                                         'contact_id' => $task->contact_id,
+                                         'contact_name' => $task->contact_name,
+                                         'date_modified' => $date_due,
+                                         'description' => $this->getTaskDetails($task),
+                                         'date_type' => $app_strings['DATA_TYPE_DUE'] ?? '',
+                                         'sort_value' => $ts,
+                                         'image' => SugarThemeRegistry::current()->getImageURL('Tasks.svg')
                 );
             } else {
-                $open_activity_list[] = array('name' => $task->name,
-                    'id' => $task->id,
-                    'type' => "Task",
-                    'direction' => '',
-                    'module' => "Tasks",
-                    'status' => $app_list_strings['task_status_dom'][$task->status],
-                    'parent_id' => $task->parent_id,
-                    'parent_type' => $task->parent_type,
-                    'parent_name' => $task->parent_name,
-                    'contact_id' => $task->contact_id,
-                    'contact_name' => $task->contact_name,
-                    'date_due' => $date_due,
-                    'description' => $this->getTaskDetails($task),
-                    'date_type' => $app_strings['DATA_TYPE_DUE'] ?? ''
+                $open_activity_list[] = array( 'name' => $task->name,
+                                               'id' => $task->id,
+                                               'type' => 'Task',
+                                               'direction' => '',
+                                               'module' => 'Tasks',
+                                               'status' => $app_list_strings['task_status_dom'][$task->status],
+                                               'parent_id' => $task->parent_id,
+                                               'parent_type' => $task->parent_type,
+                                               'parent_name' => $task->parent_name,
+                                               'contact_id' => $task->contact_id,
+                                               'contact_name' => $task->contact_name,
+                                               'date_due' => $date_due,
+                                               'description' => $this->getTaskDetails($task),
+                                               'date_type' => $app_strings['DATA_TYPE_DUE'] ?? ''
                 );
             }
         } // end Tasks
@@ -450,7 +453,7 @@ class Popup_Picker
      */
     public function getEmailDetails($email)
     {
-        $details = "";
+        $details = '';
 
         if (!empty($email->to_addrs)) {
             $details .= 'To: ' . $email->to_addrs . '<br>';
@@ -481,8 +484,8 @@ class Popup_Picker
     {
         global $app_strings;
 
-        $details = "";
-        if (!empty($task->date_start) && $task->date_start != '0000-00-00') {
+        $details = '';
+        if (!empty($task->date_start) && $task->date_start !== '0000-00-00') {
             $details .= $app_strings['DATA_TYPE_START'] ?? '' . $task->date_start . '<br>';
             $details .= '<br>';
         }

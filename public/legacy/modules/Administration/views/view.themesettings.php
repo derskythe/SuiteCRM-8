@@ -52,29 +52,31 @@ class AdministrationViewThemesettings extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
         return array(
-           "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>',
            $mod_strings['LBL_THEME_SETTINGS']
            );
     }
 
     /**
+     * @throws Exception
+     * @throws Exception
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         global $current_user;
         if (!is_admin($current_user)) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
 
         // Check if default_theme is valid
         if (isset($_REQUEST['default_theme']) && !array_key_exists($_REQUEST['default_theme'], SugarThemeRegistry::allThemes())) {
-            sugar_die("Default theme is invalid.");
+            sugar_die('Default theme is invalid.');
         }
 
         if (isset($_REQUEST['disabled_themes'])) {
@@ -89,7 +91,7 @@ class AdministrationViewThemesettings extends SugarView
         }
 
         if ($_REQUEST['button'] === 'Save'){
-            require_once "include/portability/Services/Cache/CacheManager.php";
+            require_once 'include/portability/Services/Cache/CacheManager.php';
             (new CacheManager())->markAsNeedsUpdate('app-metadata-theme-images');
         }
 
@@ -98,8 +100,11 @@ class AdministrationViewThemesettings extends SugarView
 
     /**
      * display the form
+     *
+     * @throws SmartyException
+     * @throws Exception
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings, $current_user;
 
@@ -109,15 +114,15 @@ class AdministrationViewThemesettings extends SugarView
 
         $enabled = array();
         foreach (SugarThemeRegistry::availableThemes() as $dir => $theme) {
-            $enabled[] = array("theme" => $theme, "dir" => $dir);
+            $enabled[] = array( 'theme' => $theme, 'dir' => $dir);
         }
         $disabled = array();
         foreach (SugarThemeRegistry::unAvailableThemes() as $dir => $theme) {
-            $disabled[] = array("theme" => $theme, "dir" => $dir);
+            $disabled[] = array( 'theme' => $theme, 'dir' => $dir);
         }
         $this->ss->assign('available_themes', SugarThemeRegistry::allThemesDefs());
         $this->ss->assign('default_theme', $GLOBALS['sugar_config']['default_theme']);
-        $this->ss->assign("THEMES", get_select_options_with_id(SugarThemeRegistry::allThemes(), $GLOBALS['sugar_config']['default_theme']));
+        $this->ss->assign('THEMES', get_select_options_with_id(SugarThemeRegistry::allThemes(), $GLOBALS['sugar_config']['default_theme']));
         $this->ss->assign('enabled_modules', json_encode($enabled));
         $this->ss->assign('disabled_modules', json_encode($disabled));
         $this->ss->assign('mod', $mod_strings);

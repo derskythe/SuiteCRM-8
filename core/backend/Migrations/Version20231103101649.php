@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -36,16 +36,17 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class Version20231103101649 extends BaseMigration implements ContainerAwareInterface
 {
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return 'Update defaultExt with Angular 16 module federation adjustments';
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
         $defaultExtensionPath = $this->getProjectDir() . '/extensions/defaultExt';
         if (!file_exists($defaultExtensionPath)) {
             $this->log('DefaultExt extension path "' . $defaultExtensionPath . '" does not exist, skipping.');
+
             return;
         }
 
@@ -53,12 +54,14 @@ final class Version20231103101649 extends BaseMigration implements ContainerAwar
 
         if (!file_exists($versionFile)) {
             $this->log('Version file "' . $versionFile . '" does not exist, skipping.');
+
             return;
         }
 
         $version = trim(file_get_contents($versionFile) ?? '');
         if (empty($version)) {
             $this->log('Empty version, skipping.');
+
             return;
         }
 
@@ -69,7 +72,10 @@ final class Version20231103101649 extends BaseMigration implements ContainerAwar
         $defaultExtensionPackage = $upgradePackagePath . '/extensions/defaultExt';
 
         if (!file_exists($defaultExtensionPackage)) {
-            $this->log('"defaultExt" extension does not exist on the extracted upgrade package (path: "' . $defaultExtensionPackage . '") , skipping.');
+            $this->log(
+                '"defaultExt" extension does not exist on the extracted upgrade package (path: "' . $defaultExtensionPackage . '") , skipping.'
+            );
+
             return;
         }
 
@@ -81,20 +87,38 @@ final class Version20231103101649 extends BaseMigration implements ContainerAwar
             $angularMessage = "SuiteCRM is now using angular 16.";
             $this->log($angularMessage);
             $output->writeln("<comment>Warning! $angularMessage</comment>");
-            $extensionsNeedToBeRebuiltMessage = "'defaultExt' and any extension that contains frontend changes will need to be rebuilt. For defaultExt you can build using `yarn run build:defaultExt`";
+            $extensionsNeedToBeRebuiltMessage =
+                "'defaultExt' and any extension that contains frontend changes will need to be rebuilt. For defaultExt you can build using `yarn run build:defaultExt`";
             $this->log($extensionsNeedToBeRebuiltMessage);
             $output->writeln("<comment>Warning! $extensionsNeedToBeRebuiltMessage</comment>");
 
-
-            $filesystem->copy($defaultExtensionPackage . '/app/tsconfig.app.json', $defaultExtensionPath . '/app/tsconfig.app.json', true);
-            $filesystem->copy($defaultExtensionPackage . '/app/webpack.config.js', $defaultExtensionPath . '/app/webpack.config.js', true);
-            $filesystem->copy($defaultExtensionPackage . '/config/extension.php', $defaultExtensionPath . '/config/extension.php', true);
+            $filesystem->copy(
+                $defaultExtensionPackage . '/app/tsconfig.app.json',
+                $defaultExtensionPath . '/app/tsconfig.app.json',
+                true
+            );
+            $filesystem->copy(
+                $defaultExtensionPackage . '/app/webpack.config.js',
+                $defaultExtensionPath . '/app/webpack.config.js',
+                true
+            );
+            $filesystem->copy(
+                $defaultExtensionPackage . '/config/extension.php',
+                $defaultExtensionPath . '/config/extension.php',
+                true
+            );
             $this->log('File: extensions/defaultExt/app/tsconfig.app.json updated using migration.');
-            $this->log('- Copied: ' . $defaultExtensionPackage . '/app/tsconfig.app.json' . ' to ' . $defaultExtensionPath . '/app/tsconfig.app.json');
+            $this->log(
+                '- Copied: ' . $defaultExtensionPackage . '/app/tsconfig.app.json' . ' to ' . $defaultExtensionPath . '/app/tsconfig.app.json'
+            );
             $this->log('File: extensions/defaultExt/app/webpack.config.js updated using migration.');
-            $this->log('- Copied: ' . $defaultExtensionPackage . '/app/webpack.config.js' . ' to ' . $defaultExtensionPath . '/app/webpack.config.js',);
+            $this->log(
+                '- Copied: ' . $defaultExtensionPackage . '/app/webpack.config.js' . ' to ' . $defaultExtensionPath . '/app/webpack.config.js',
+            );
             $this->log('File: extensions/defaultExt/config/extension.php updated using migration.');
-            $this->log('- Copied: ' . $defaultExtensionPackage . '/config/extension.php' . ' to ' . $defaultExtensionPath . '/config/extension.php');
+            $this->log(
+                '- Copied: ' . $defaultExtensionPackage . '/config/extension.php' . ' to ' . $defaultExtensionPath . '/config/extension.php'
+            );
 
             $defaultExtDisabledMessage = "'defaultExt' has been disabled. It may need to be rebuilt.";
             $this->log($defaultExtDisabledMessage);
@@ -117,7 +141,7 @@ final class Version20231103101649 extends BaseMigration implements ContainerAwar
         }
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 }

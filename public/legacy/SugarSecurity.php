@@ -37,11 +37,6 @@
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-
-
-
-
-
 #[\AllowDynamicProperties]
 class SugarSecure
 {
@@ -68,7 +63,7 @@ class SugarSecure
     {
         $dir = dir($path);
         while ($entry = $dir->read()) {
-            if (is_dir($path . '/' . $entry) && $entry != '.' && $entry != '..') {
+            if (is_dir($path . '/' . $entry) && $entry !== '.' && $entry !== '..') {
                 $this->scan($path .'/' . $entry);
             }
             if (is_file($path . '/'. $entry) && substr($entry, strlen($entry) - strlen((string) $ext), strlen((string) $ext)) == $ext) {
@@ -94,12 +89,12 @@ class ScanFileIncludes extends SugarSecure
         /*preg_match_all("'(require_once\([^\)]*\\$[^\)]*\))'si", $contents, $results, PREG_SET_ORDER);
         foreach($results as $result){
 
-        	$found .= "\n" . $result[0];
+            $found .= "\n" . $result[0];
         }
         $results = array();
         preg_match_all("'include_once\([^\)]*\\$[^\)]*\)'si", $contents, $results, PREG_SET_ORDER);
         foreach($results as $result){
-        	$found .= "\n" . $result[0];
+            $found .= "\n" . $result[0];
         }
         */
         $results = array();

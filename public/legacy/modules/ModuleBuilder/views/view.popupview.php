@@ -55,7 +55,7 @@ class ViewPopupview extends ViewListView
         $this->editLayout = $_REQUEST [ 'view' ] ;
         $this->editPackage = (isset($_REQUEST [ 'view_package' ]) && ! empty($_REQUEST [ 'view_package' ])) ? $_REQUEST [ 'view_package' ] : null ;
 
-        $this->fromModuleBuilder = isset($_REQUEST [ 'MB' ]) || (isset($_REQUEST['view_package']) && $_REQUEST['view_package'] && $_REQUEST['view_package'] != 'studio') ;
+        $this->fromModuleBuilder = isset($_REQUEST [ 'MB' ]) || (isset($_REQUEST['view_package']) && $_REQUEST['view_package'] && $_REQUEST['view_package'] !== 'studio') ;
         if (!$this->fromModuleBuilder) {
             global $app_list_strings ;
             $moduleNames = array_change_key_case($app_list_strings [ 'moduleList' ]) ;
@@ -66,7 +66,7 @@ class ViewPopupview extends ViewListView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -84,13 +84,17 @@ class ViewPopupview extends ViewListView
 //
 //    }
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
     }
 
+    /**
+     * @throws SmartyException
+     */
     public function display(
         $preview = false
-        ) {
+        ) : void
+    {
         require_once 'modules/ModuleBuilder/parsers/ParserFactory.php' ;
         $parser = ParserFactory::getParser($this->editLayout, $this->editModule, $this->editPackage) ;
 
@@ -101,10 +105,12 @@ class ViewPopupview extends ViewListView
         }
 
         if ($preview) {
-            echo $smarty->fetch("modules/ModuleBuilder/tpls/Preview/listView.tpl") ;
+            echo $smarty->fetch('modules/ModuleBuilder/tpls/Preview/listView.tpl') ;
         } else {
             $ajax = $this->constructAjax() ;
-            $ajax->addSection('center', translate('LBL_POPUP'), $smarty->fetch("modules/ModuleBuilder/tpls/listView.tpl")) ;
+            $ajax->addSection('center', translate('LBL_POPUP'), $smarty->fetch(
+                'modules/ModuleBuilder/tpls/listView.tpl'
+            )) ;
             echo $ajax->getJavascript() ;
         }
     }
@@ -162,7 +168,7 @@ class ViewPopupview extends ViewListView
         foreach ($groups as $groupKey => $group) {
             foreach ($group as $fieldKey => $field) {
                 if (isset($field [ 'width' ])) {
-                    if (substr((string) $field [ 'width' ], - 1, 1) == '%') {
+                    if (str_ends_with((string) $field ['width'], '%')) {
                         $groups [ $groupKey ] [ $fieldKey ] [ 'width' ] = substr((string) $field [ 'width' ], 0, strlen((string) $field [ 'width' ]) - 1) ;
                     }
                 }

@@ -27,7 +27,8 @@
 
 namespace App\Languages\LegacyHandler;
 
-use ApiPlatform\Core\Exception\ItemNotFoundException;
+use Psr\Log\LoggerInterface;
+use ApiPlatform\Exception\ItemNotFoundException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Install\LegacyHandler\InstallHandler;
@@ -37,9 +38,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class AppStringsHandler extends LegacyHandler
 {
     protected const MSG_LANGUAGE_NOT_FOUND = 'Not able to get language: ';
-    public const HANDLER_KEY = 'app-strings';
+    public const    HANDLER_KEY            = 'app-strings';
 
-    protected $injectedModuleLanguages = [
+    protected array $injectedModuleLanguages = [
         'Users' => [
             'LBL_LOGOUT',
             'LBL_LOGIN_BUTTON_LABEL',
@@ -61,10 +62,11 @@ class AppStringsHandler extends LegacyHandler
     /**
      * @var InstallHandler
      */
-    private $installHandler;
+    private InstallHandler $installHandler;
 
     /**
      * LegacyHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -74,43 +76,49 @@ class AppStringsHandler extends LegacyHandler
      * @param InstallHandler $installHandler
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
+        string           $projectDir,
+        string           $legacyDir,
+        string           $legacySessionName,
+        string           $defaultSessionName,
         LegacyScopeState $legacyScopeState,
-        RequestStack $session,
-        InstallHandler $installHandler
-    ) {
+        RequestStack     $session,
+        InstallHandler   $installHandler,
+        LoggerInterface  $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
 
         $this->installHandler = $installHandler;
+        require_once $this->installHandler->legacyDir . '/include/utils.php';
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get app strings for given $language
+     *
      * @param $language
+     *
      * @return AppStrings|null
      */
-    public function getAppStrings(string $language): ?AppStrings
+    public function getAppStrings(string $language) : ?AppStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         if (!$this->isInstalled()) {
@@ -140,7 +148,10 @@ class AppStringsHandler extends LegacyHandler
         $appStringsArray = $this->removeEndingColon($appStringsArray);
 
         //append install strings array
-        $appStringsArray = array_merge($this->retrieveInstallAppStrings($language)->getItems(), $appStringsArray);
+        $appStringsArray = array_merge(
+            $this->retrieveInstallAppStrings($language)->getItems(),
+            $appStringsArray
+        );
 
         $appStrings = new AppStrings();
         $appStrings->setId($language);
@@ -153,20 +164,19 @@ class AppStringsHandler extends LegacyHandler
 
     /**
      * Get install app strings for given $language
+     *
      * @param $language
+     *
      * @return AppStrings|null
+     * @throws \Throwable
      */
-    public function getInstallAppStrings(string $language): ?AppStrings
+    public function getInstallAppStrings(string $language) : ?AppStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         $this->installHandler->initLegacy();
-
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/utils.php';
-
         $appStrings = $this->retrieveInstallAppStrings($language);
 
         $this->installHandler->closeLegacy();
@@ -176,13 +186,15 @@ class AppStringsHandler extends LegacyHandler
 
     /**
      * Retrieve install app strings for given $language
+     *
      * @param $language
+     *
      * @return AppStrings|null
      */
-    public function retrieveInstallAppStrings(string $language): ?AppStrings
+    public function retrieveInstallAppStrings(string $language) : ?AppStrings
     {
         if (empty($language)) {
-            return null;
+            $language = 'en-US';
         }
 
         $appStringsArray = load_install_language($language) ?? [];
@@ -200,6 +212,7 @@ class AppStringsHandler extends LegacyHandler
 
     /**
      * Retrieve and inject language keys from a module language
+     *
      * @param string $language
      * @param string $module
      * @param array $languageKeys
@@ -208,9 +221,10 @@ class AppStringsHandler extends LegacyHandler
     protected function injectModuleLanguage(
         string $language,
         string $module,
-        array $languageKeys,
-        array &$appStringsArray
-    ): void {
+        array  $languageKeys,
+        array  &$appStringsArray
+    ) : void
+    {
         if (empty($language) || empty($module) || empty($languageKeys)) {
             return;
         }
@@ -226,25 +240,24 @@ class AppStringsHandler extends LegacyHandler
 
     /**
      * @param array $appStringsArray
+     *
      * @return array
      */
-    protected function removeEndingColon(array $appStringsArray): array
+    protected function removeEndingColon(array $appStringsArray) : array
     {
-        $appStringsArray = array_map(static function ($label) {
+        return array_map(static function ($label) {
             if (is_string($label)) {
                 return preg_replace('/:$/', '', $label);
             }
 
             return $label;
         }, $appStringsArray);
-
-        return $appStringsArray;
     }
 
     /**
      * @return bool
      */
-    protected function isInstalled(): bool
+    protected function isInstalled() : bool
     {
         return $this->installHandler->isLegacyInstalled();
     }
@@ -252,16 +265,17 @@ class AppStringsHandler extends LegacyHandler
     /**
      * @return bool
      */
-    protected function isInstallerLocked(): bool
+    protected function isInstallerLocked() : bool
     {
         return $this->installHandler->isInstallerLocked();
     }
 
     /**
      * Inject License
+     *
      * @param array $appStringsArray
      */
-    protected function injectLicense(array &$appStringsArray): void
+    protected function injectLicense(array &$appStringsArray) : void
     {
         $licenseFile = $this->projectDir . '/LICENSE.txt';
         if (file_exists($licenseFile)) {
@@ -272,9 +286,9 @@ class AppStringsHandler extends LegacyHandler
     }
 
 
-    protected function decodeLabels(array $appStringsArray): array
+    protected function decodeLabels(array $appStringsArray) : array
     {
-        foreach($appStringsArray as $key => $string){
+        foreach ($appStringsArray as $key => $string) {
             if (!is_array($string)) {
                 $string = html_entity_decode($string ?? '', ENT_QUOTES);
             }

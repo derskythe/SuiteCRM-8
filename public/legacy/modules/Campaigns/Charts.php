@@ -79,15 +79,15 @@ class campaign_charts
             $xmlFile = $sugarChart->getXMLFileName($campaign_id);
 
             if (!file_exists($xmlFile) || $refresh == true) {
-                $GLOBALS['log']->debug("datay is:");
+                $GLOBALS['log']->debug('datay is:');
                 $GLOBALS['log']->debug($datay);
-                $GLOBALS['log']->debug("user_id is: ");
+                $GLOBALS['log']->debug('user_id is: ');
                 $GLOBALS['log']->debug("cache_file_name is: $xmlFile");
 
                 $focus = BeanFactory::newBean('Campaigns');
 
-                $query = "SELECT activity_type,target_type, count(*) hits ";
-                $query .= " FROM campaign_log ";
+                $query = 'SELECT activity_type,target_type, count(*) hits ';
+                $query .= ' FROM campaign_log ';
                 $query .= " WHERE campaign_id = '$campaign_id' AND archived=0 AND deleted=0";
 
                 //if $marketing id is specified, then lets filter the chart by the value
@@ -95,8 +95,8 @@ class campaign_charts
                     $query .= " AND marketing_id ='$marketing_id'";
                 }
 
-                $query .= " GROUP BY  activity_type, target_type";
-                $query .= " ORDER BY  activity_type, target_type";
+                $query .= ' GROUP BY  activity_type, target_type';
+                $query .= ' ORDER BY  activity_type, target_type';
                 $result = $focus->db->query($query);
                 //$camp_data=$focus->db->fetchByAssoc($result);
                 $camp_data = array();
@@ -122,7 +122,7 @@ class campaign_charts
                     $leadSourceArr['all_activities'][$row['target_type']]['total'] += $row['hits'];
 
                     $total += $row['hits'];
-                    if ($row['activity_type'] == 'targeted') {
+                    if ($row['activity_type'] === 'targeted') {
                         $targeted[$row['target_type']] = $row['hits'];
                         $total_targeted += $row['hits'];
                     }
@@ -150,25 +150,25 @@ class campaign_charts
                         //create alternate text.
                         $alttext = ' ';
                         if (isset($targeted) && isset($targeted[$outcome]) && !empty($targeted[$outcome])) {
-                            $alttext = $targets[$outcome] . ': ' . $mod_strings['LBL_TARGETED'] . ' ' . $targeted[$outcome] . ', ' . $mod_strings['LBL_TOTAL_TARGETED'] . ' ' . $total_targeted . ".";
+                            $alttext = $targets[$outcome] . ': ' . $mod_strings['LBL_TARGETED'] . ' ' . $targeted[$outcome] . ', ' . $mod_strings['LBL_TOTAL_TARGETED'] . ' ' . $total_targeted . '.';
                         }
-                        if ($key != 'targeted') {
+                        if ($key !== 'targeted') {
                             $hits = (isset($leadSourceArr[$key][$outcome]) && is_array($leadSourceArr[$key][$outcome]) && is_array($leadSourceArr[$key][$outcome]['hits'])) ? array_sum($leadSourceArr[$key][$outcome]['hits']) : 0;
                             $alttext .= " $translation " . $hits;
                         }
                         $count = (isset($leadSourceArr[$key][$outcome]) && is_array($leadSourceArr[$key][$outcome]) && is_array($leadSourceArr[$key][$outcome]['total'])) ? array_sum($leadSourceArr[$key][$outcome]['total']) : 0;
                         $camp_data[$translation][$outcome] =
                             array(
-                                "numerical_value" => $count,
-                                "group_text" => $translation,
-                                "group_key" => "",
-                                "count" => (string)($count),
-                                "group_label" => $alttext,
-                                "numerical_label" => "Hits",
-                                "numerical_key" => "hits",
-                                "module" => 'Campaigns',
-                                "group_base_text" => $outcome,
-                                "link" => $key
+                                'numerical_value' => $count,
+                                'group_text'      => $translation,
+                                'group_key'       => '',
+                                'count'           => (string)($count),
+                                'group_label'     => $alttext,
+                                'numerical_label' => 'Hits',
+                                'numerical_key'   => 'hits',
+                                'module'          => 'Campaigns',
+                                'group_base_text' => $outcome,
+                                'link'            => $key
                             );
                     }
                 }
@@ -182,13 +182,14 @@ class campaign_charts
                     $sugarChart->setData(array());
                 }
 
-                $sugarChart->setProperties($mod_strings['LBL_CAMPAIGN_RESPONSE_BY_RECIPIENT_ACTIVITY'], "", 'horizontal group by chart');
+                $sugarChart->setProperties($mod_strings['LBL_CAMPAIGN_RESPONSE_BY_RECIPIENT_ACTIVITY'],
+                                           '', 'horizontal group by chart');
                 $sugarChart->saveXMLFile($xmlFile, $sugarChart->generateXML());
             }
 
             $width = '100%';
             $return = '';
-            $return .= $sugarChart->display($campaign_id, $xmlFile, $width, '480', "");
+            $return .= $sugarChart->display($campaign_id, $xmlFile, $width, '480', '');
         } else {
             $GLOBALS['log']->fatal('no campaign id');
             $return = false;
@@ -231,19 +232,21 @@ class campaign_charts
         }
 
         if ((!file_exists($cache_file_name) || $refresh == true) && $campaign_id) {
-            $GLOBALS['log']->debug("datay is:");
+            $GLOBALS['log']->debug('datay is:');
             $GLOBALS['log']->debug($datay);
-            $GLOBALS['log']->debug("user_id is: ");
+            $GLOBALS['log']->debug('user_id is: ');
             $GLOBALS['log']->debug("cache_file_name is: $cache_file_name");
 
             $focus = BeanFactory::newBean('Campaigns');
             $focus->retrieve($campaign_id);
             $opp_count=0;
-            $opp_query  = "select count(*) opp_count,sum(" . DBManagerFactory::getInstance()->convert("amount_usdollar", "IFNULL", array(0)).")  total_value";
-            $opp_query .= " from opportunities";
+            $opp_query  = 'select count(*) opp_count,sum(' . DBManagerFactory::getInstance()->convert(
+                    'amount_usdollar',
+                    'IFNULL', array( 0)). ')  total_value';
+            $opp_query .= ' from opportunities';
             $opp_query .= " where campaign_id='$campaign_id'";
             $opp_query .= " and sales_stage='Prospecting'";
-            $opp_query .= " and deleted=0";
+            $opp_query .= ' and deleted=0';
 
             $opp_result=$focus->db->query($opp_query);
             $opp_data=$focus->db->fetchByAssoc($opp_result);
@@ -253,11 +256,11 @@ class campaign_charts
             }
 
             //report query
-            $opp_query1  = "select SUM(opp.amount) as revenue";
-            $opp_query1 .= " from opportunities opp";
-            $opp_query1 .= " right join campaigns camp on camp.id = opp.campaign_id";
+            $opp_query1  = 'select SUM(opp.amount) as revenue';
+            $opp_query1 .= ' from opportunities opp';
+            $opp_query1 .= ' right join campaigns camp on camp.id = opp.campaign_id';
             $opp_query1 .= " where opp.sales_stage = 'Closed Won'and camp.id='$campaign_id' and opp.deleted=0";
-            $opp_query1 .= " group by camp.name";
+            $opp_query1 .= ' group by camp.name';
 
             $opp_result1=$focus->db->query($opp_query1);
             $opp_data1=$focus->db->fetchByAssoc($opp_result1);
@@ -272,10 +275,11 @@ class campaign_charts
                 $not_empty = true;
             }
 
-            $camp_query1  = "select camp.name, SUM(camp.actual_cost) as investment,SUM(camp.budget) as budget,SUM(camp.expected_revenue) as expected_revenue";
-            $camp_query1 .= " from campaigns camp";
+            $camp_query1  =
+                'select camp.name, SUM(camp.actual_cost) as investment,SUM(camp.budget) as budget,SUM(camp.expected_revenue) as expected_revenue';
+            $camp_query1 .= ' from campaigns camp';
             $camp_query1 .= " where camp.id='$campaign_id'";
-            $camp_query1 .= " group by camp.name";
+            $camp_query1 .= ' group by camp.name';
 
             $camp_result1=$focus->db->query($camp_query1);
             $camp_data1=$focus->db->fetchByAssoc($camp_result1);
@@ -303,15 +307,15 @@ class campaign_charts
             $opp_data1[$mod_strings['LBL_ROI_CHART_EXPECTED_REVENUE']]=$camp_data1['expected_revenue'];
 
 
-            $query = "SELECT activity_type,target_type, count(*) hits ";
-            $query.= " FROM campaign_log ";
+            $query = 'SELECT activity_type,target_type, count(*) hits ';
+            $query.= ' FROM campaign_log ';
             $query.= " WHERE campaign_id = '$campaign_id' AND archived=0 AND deleted=0";
             //if $marketing id is specified, then lets filter the chart by the value
             if (!empty($marketing_id)) {
                 $query.= " AND marketing_id ='$marketing_id'";
             }
-            $query.= " GROUP BY  activity_type, target_type";
-            $query.= " ORDER BY  activity_type, target_type";
+            $query.= ' GROUP BY  activity_type, target_type';
+            $query.= ' ORDER BY  activity_type, target_type';
             $result = $focus->db->query($query);
 
             $leadSourceArr = array();
@@ -392,19 +396,21 @@ class campaign_charts
         }
 
         if (!file_exists($cache_file_name) || $refresh == true) {
-            $GLOBALS['log']->debug("datay is:");
+            $GLOBALS['log']->debug('datay is:');
             $GLOBALS['log']->debug($datay);
-            $GLOBALS['log']->debug("user_id is: ");
+            $GLOBALS['log']->debug('user_id is: ');
             $GLOBALS['log']->debug("cache_file_name is: $cache_file_name");
 
             $focus = BeanFactory::newBean('Campaigns');
             $focus->retrieve($campaign_id);
             $opp_count=0;
-            $opp_query  = "select count(*) opp_count,sum(" . DBManagerFactory::getInstance()->convert("amount_usdollar", "IFNULL", array(0)).")  total_value";
-            $opp_query .= " from opportunities";
+            $opp_query  = 'select count(*) opp_count,sum(' . DBManagerFactory::getInstance()->convert(
+                    'amount_usdollar',
+                    'IFNULL', array( 0)). ')  total_value';
+            $opp_query .= ' from opportunities';
             $opp_query .= " where campaign_id='$campaign_id'";
             $opp_query .= " and sales_stage='Prospecting'";
-            $opp_query .= " and deleted=0";
+            $opp_query .= ' and deleted=0';
 
             $opp_result=$focus->db->query($opp_query);
             $opp_data=$focus->db->fetchByAssoc($opp_result);
@@ -414,11 +420,11 @@ class campaign_charts
             }
 
             //report query
-            $opp_query1  = "select SUM(opp.amount) as revenue";
-            $opp_query1 .= " from opportunities opp";
-            $opp_query1 .= " right join campaigns camp on camp.id = opp.campaign_id";
+            $opp_query1  = 'select SUM(opp.amount) as revenue';
+            $opp_query1 .= ' from opportunities opp';
+            $opp_query1 .= ' right join campaigns camp on camp.id = opp.campaign_id';
             $opp_query1 .= " where opp.sales_stage = 'Closed Won'and camp.id='$campaign_id' and opp.deleted=0";
-            $opp_query1 .= " group by camp.name";
+            $opp_query1 .= ' group by camp.name';
 
             $opp_result1=$focus->db->query($opp_query1);
             $opp_data1=$focus->db->fetchByAssoc($opp_result1);
@@ -433,10 +439,11 @@ class campaign_charts
                 $not_empty = true;
             }
 
-            $camp_query1  = "select camp.name, SUM(camp.actual_cost) as investment,SUM(camp.budget) as budget,SUM(camp.expected_revenue) as expected_revenue";
-            $camp_query1 .= " from campaigns camp";
+            $camp_query1  =
+                'select camp.name, SUM(camp.actual_cost) as investment,SUM(camp.budget) as budget,SUM(camp.expected_revenue) as expected_revenue';
+            $camp_query1 .= ' from campaigns camp';
             $camp_query1 .= " where camp.id='$campaign_id'";
-            $camp_query1 .= " group by camp.name";
+            $camp_query1 .= ' group by camp.name';
 
             $camp_result1=$focus->db->query($camp_query1);
             $camp_data1=$focus->db->fetchByAssoc($camp_result1);
@@ -464,15 +471,15 @@ class campaign_charts
             $opp_data1[$mod_strings['LBL_ROI_CHART_EXPECTED_REVENUE']]=$camp_data1['expected_revenue'];
 
 
-            $query = "SELECT activity_type,target_type, count(*) hits ";
-            $query.= " FROM campaign_log ";
+            $query = 'SELECT activity_type,target_type, count(*) hits ';
+            $query.= ' FROM campaign_log ';
             $query.= " WHERE campaign_id = '$campaign_id' AND archived=0 AND deleted=0";
             //if $marketing id is specified, then lets filter the chart by the value
             if (!empty($marketing_id)) {
                 $query.= " AND marketing_id ='$marketing_id'";
             }
-            $query.= " GROUP BY  activity_type, target_type";
-            $query.= " ORDER BY  activity_type, target_type";
+            $query.= ' GROUP BY  activity_type, target_type';
+            $query.= ' ORDER BY  activity_type, target_type';
             $result = $focus->db->query($query);
 
             $leadSourceArr = array();

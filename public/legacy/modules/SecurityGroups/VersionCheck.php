@@ -22,13 +22,13 @@ class VersionCheck
             if (empty($sugar_config['securitysuite_version'])
                 || $sugar_config['securitysuite_version'] != $sugar_config['sugar_version']
             ) {
-                $securitysuite_warning = "Warning! SecuritySuite no longer matches the version of Sugar that you are running. "
-                    . "SecuritySuite will not work correctly until updated to ".$sugar_config['sugar_version'].". "
-                    . "Upgrade now to  ";
+                $securitysuite_warning = 'Warning! SecuritySuite no longer matches the version of Sugar that you are running. '
+                    . 'SecuritySuite will not work correctly until updated to ' . $sugar_config['sugar_version']. '. '
+                    . 'Upgrade now to  ';
 
                 global $sugar_config;
-                $upgrade_url = "http://www.eggsurplus.com/version.php?version=".$sugar_config['sugar_version'];
-                $upgrade_text = "SecuritySuite for ".$sugar_config['sugar_version'];
+                $upgrade_url = 'http://www.eggsurplus.com/version.php?version=' . $sugar_config['sugar_version'];
+                $upgrade_text = 'SecuritySuite for ' . $sugar_config['sugar_version'];
                 $GLOBALS['log']->fatal($securitysuite_warning."<a href='$upgrade_url'>$upgrade_text</a>");
                 //echo $display_warning;?>
 <script language="Javascript">

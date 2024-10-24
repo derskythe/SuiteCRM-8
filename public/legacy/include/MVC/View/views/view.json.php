@@ -50,7 +50,7 @@ class ViewJson extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         global $beanList;
         $module = $GLOBALS['module'];

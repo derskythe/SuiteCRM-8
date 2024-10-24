@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Data\LegacyHandler\PresetDataHandlers;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleNameMapperInterface;
@@ -51,6 +51,7 @@ class SubpanelDataQueryHandler extends LegacyHandler
 
     /**
      * ListDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -60,22 +61,32 @@ class SubpanelDataQueryHandler extends LegacyHandler
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -83,7 +94,7 @@ class SubpanelDataQueryHandler extends LegacyHandler
     /**
      * @inheritDoc
      */
-    public function getType(): string
+    public function getType() : string
     {
         return 'subpanel';
     }
@@ -91,7 +102,7 @@ class SubpanelDataQueryHandler extends LegacyHandler
     /**
      * @inheritDoc
      */
-    public function getQueries(string $parentModule, string $parentId, string $subpanel): array
+    public function getQueries(string $parentModule, string $parentId, string $subpanel) : array
     {
         $this->initQueryHandler();
 
@@ -106,7 +117,7 @@ class SubpanelDataQueryHandler extends LegacyHandler
         return $this->queryHandler->getQueries($parentBean, $subpanel);
     }
 
-    protected function initQueryHandler(): void
+    protected function initQueryHandler() : void
     {
 
         if ($this->queryHandler !== null) {
@@ -121,9 +132,10 @@ class SubpanelDataQueryHandler extends LegacyHandler
 
     /**
      * @param string $query
+     *
      * @return array
      */
-    public function fetchRow(string $query): array
+    public function fetchRow(string $query) : array
     {
         $this->initQueryHandler();
 
@@ -132,9 +144,10 @@ class SubpanelDataQueryHandler extends LegacyHandler
 
     /**
      * @param string $query
+     *
      * @return array
      */
-    public function fetchAll(string $query): array
+    public function fetchAll(string $query) : array
     {
         $this->initQueryHandler();
 

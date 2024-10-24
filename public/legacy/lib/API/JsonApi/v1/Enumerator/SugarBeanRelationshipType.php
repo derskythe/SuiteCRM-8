@@ -51,6 +51,6 @@ class SugarBeanRelationshipType extends RelationshipType
      */
     public static function fromSugarBeanLink(\Link2 $sugarBeanLink)
     {
-        return $sugarBeanLink->getType() === "one" ? self::TO_ONE : self::TO_MANY;
+        return $sugarBeanLink->getType() === 'one' ? self::TO_ONE : self::TO_MANY;
     }
 }

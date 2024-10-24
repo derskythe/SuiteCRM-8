@@ -83,6 +83,7 @@ abstract class View extends BaseView
      * Returns the cancel and save button.
      *
      * @return string
+     * @throws \SmartyException
      */
     protected function getButtons(): string
     {

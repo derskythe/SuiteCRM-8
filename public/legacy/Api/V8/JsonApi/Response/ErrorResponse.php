@@ -22,13 +22,13 @@ class ErrorResponse implements JsonSerializable
      * @var string
      */
     private $detail;
-    
+
     /**
      *
      * @var Exception
      */
     private $exception;
-    
+
     /**
      * In debug mode, ErrorResponse should shows full description about occurred exceptions.
      *
@@ -36,7 +36,7 @@ class ErrorResponse implements JsonSerializable
      * @var boolean
      */
     protected $debugExceptions;
-    
+
     /**
      *
      * @param bool|null $debugExceptions optional - using ApiConfig setting by default
@@ -96,7 +96,7 @@ class ErrorResponse implements JsonSerializable
     {
         $this->detail = $detail;
     }
-    
+
     /**
      *
      * @param Exception $exception
@@ -105,7 +105,7 @@ class ErrorResponse implements JsonSerializable
     {
         $this->exception = $exception;
     }
-    
+
     /**
      *
      * @param Exception $exception
@@ -123,7 +123,7 @@ class ErrorResponse implements JsonSerializable
             'traceAsString' => $exception->getTraceAsString(),
         ];
     }
-    
+
     /**
      *
      * @return array
@@ -139,7 +139,7 @@ class ErrorResponse implements JsonSerializable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize() : mixed
     {
         $ret = [
             'errors' => [
@@ -148,12 +148,12 @@ class ErrorResponse implements JsonSerializable
                 'detail' => $this->getDetail(),
             ]
         ];
-        
+
         // do it only in debug mode!!!!
         if ($this->debugExceptions) {
             $ret['errors']['exception'] = $this->getExceptionArray();
         }
-        
+
         return $ret;
     }
 }

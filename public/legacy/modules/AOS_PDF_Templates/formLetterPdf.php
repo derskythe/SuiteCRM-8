@@ -49,7 +49,7 @@ global $sugar_config, $current_user;
 $bean = BeanFactory::getBean($_REQUEST['module']);
 
 if (!$bean) {
-    sugar_die("Invalid Module");
+    sugar_die('Invalid Module');
 }
 
 $recordIds = array();
@@ -74,10 +74,10 @@ if (isset($_REQUEST['current_post']) && $_REQUEST['current_post'] != '') {
 $template = BeanFactory::getBean('AOS_PDF_Templates', $_REQUEST['templateID']);
 
 if (!$template) {
-    sugar_die("Invalid Template");
+    sugar_die('Invalid Template');
 }
 
-$file_name = str_replace(" ", "_", (string) $template->name) . ".pdf";
+$file_name = str_replace(' ', '_', (string) $template->name) . '.pdf';
 
 $pdfConfig = [
     'mode' => 'en',
@@ -157,7 +157,7 @@ foreach ($recordIds as $recordId) {
     $header = templateParser::parse_template($header, $object_arr);
     $footer = templateParser::parse_template($footer, $object_arr);
 
-    $printable = str_replace("\n", "<br />", (string) $converted);
+    $printable = str_replace("\n", '<br />', (string) $converted);
 
     try {
         $note = BeanFactory::newBean('Notes');
@@ -168,7 +168,7 @@ foreach ($recordIds as $recordId) {
         $note->parent_id = $bean->id;
         $note->file_mime_type = 'application/pdf';
         $note->filename = $file_name;
-        if ($bean->module_dir == 'Contacts') {
+        if ($bean->module_dir === 'Contacts') {
             $note->contact_id = $bean->id;
             $note->parent_type = 'Accounts';
             $note->parent_id = $bean->account_id;

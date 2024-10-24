@@ -55,7 +55,7 @@ class SubpanelQuickEdit
     public function __construct($module, $view='QuickEdit', $proccessOverride = false)
     {
         //treat quickedit and quickcreate views as the same
-        if ($view == 'QuickEdit') {
+        if ($view === 'QuickEdit') {
             $view = 'QuickCreate';
         }
 
@@ -79,8 +79,6 @@ class SubpanelQuickEdit
         $this->ev->view = $view;
         $this->ev->ss = new Sugar_Smarty();
         $_REQUEST['return_action'] = 'SubPanelViewer';
-
-
 
         //retrieve bean if id or record is passed in
         if (isset($_REQUEST['record']) || isset($_REQUEST['id'])) {

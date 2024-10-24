@@ -34,12 +34,12 @@
 #[\AllowDynamicProperties]
 class AOS_Line_Item_Groups_sugar extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOS_Line_Item_Groups';
-    public $object_name = 'AOS_Line_Item_Groups';
-    public $table_name = 'aos_line_item_groups';
-    public $tracker_visibility = false;
-    public $importable = true;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOS_Line_Item_Groups';
+    public string $object_name = 'AOS_Line_Item_Groups';
+    public string $table_name = 'aos_line_item_groups';
+    public bool $tracker_visibility = false;
+    public bool $importable = true;
     public $disable_row_level_security = true ;
 
     public function __construct()
@@ -50,7 +50,7 @@ class AOS_Line_Item_Groups_sugar extends Basic
 
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL': return false;

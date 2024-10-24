@@ -57,13 +57,13 @@ class EAPMViewEdit extends ViewEdit
     protected function setReturnId()
     {
         $returnId = $GLOBALS['current_user']->id;
-        if (!empty($_REQUEST['user_id']) && !empty($_REQUEST['return_module']) && 'Users' == $_REQUEST['return_module']) {
+        if (!empty($_REQUEST['user_id']) && !empty($_REQUEST['return_module']) && 'Users' === $_REQUEST['return_module']) {
             $returnId = $_REQUEST['user_id'];
         }
         $this->_returnId = $returnId;
     }
 
-    protected function _getModuleTab()
+    protected function _getModuleTab() : ?string
     {
         return 'Users';
     }
@@ -71,7 +71,7 @@ class EAPMViewEdit extends ViewEdit
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -80,8 +80,8 @@ class EAPMViewEdit extends ViewEdit
         $returnId = $GLOBALS['current_user']->id;
         $returnName = $GLOBALS['current_user']->full_name;
         if (!empty($_REQUEST['return_action']) && !empty($_REQUEST['return_module'])) {
-            if ('Users' == $_REQUEST['return_module']) {
-                if ('EditView' == $_REQUEST['return_action']) {
+            if ('Users' === $_REQUEST['return_module']) {
+                if ('EditView' === $_REQUEST['return_action']) {
                     $returnAction = 'EditView';
                 }
                 if (!empty($_REQUEST['return_name'])) {
@@ -101,7 +101,7 @@ class EAPMViewEdit extends ViewEdit
         } else {
             $params[] = translate('LBL_MODULE_NAME', 'Users');
         }
-        $params[] = "<a href='index.php?module={$returnModule}&action=EditView&record={$returnId}'>".$returnName."</a>";
+        $params[] = "<a href='index.php?module={$returnModule}&action=EditView&record={$returnId}'>".$returnName. '</a>';
         $params[] = $GLOBALS['app_strings']['LBL_EDIT_BUTTON_LABEL'];
 
         return $params;
@@ -110,12 +110,12 @@ class EAPMViewEdit extends ViewEdit
     /**
      * @see SugarView::getModuleTitleIconPath()
      */
-    protected function getModuleTitleIconPath($module)
+    protected function getModuleTitleIconPath($module) : string
     {
         return parent::getModuleTitleIconPath('Users');
     }
 
-    public function display()
+    public function display() : void
     {
         $this->bean->password = empty($this->bean->password) ? '' : EAPM::$passwordPlaceholder;
 
@@ -123,8 +123,8 @@ class EAPMViewEdit extends ViewEdit
 
         $cancelUrl = "index.php?action=EditView&module=Users&record={$this->_returnId}#tab5";
 
-        if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] == 'Import') {
-            $cancelUrl = "index.php?module=Import&action=Step1&import_module=". $_REQUEST['return_action'] . "&application=" . $_REQUEST['application'];
+        if (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] === 'Import') {
+            $cancelUrl = 'index.php?module=Import&action=Step1&import_module=' . $_REQUEST['return_action'] . '&application=' . $_REQUEST['application'];
         }
         $this->ss->assign('cancelUrl', $cancelUrl);
 
@@ -132,7 +132,7 @@ class EAPMViewEdit extends ViewEdit
             if (!empty($this->bean) && empty($this->bean->id) && $this->_returnId != $GLOBALS['current_user']->id) {
                 $this->bean->assigned_user_id = $this->_returnId;
             }
-            
+
             parent::display();
         } else {
             ACLController::displayNoAccess();

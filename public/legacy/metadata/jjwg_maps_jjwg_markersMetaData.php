@@ -1,6 +1,6 @@
 <?php
 // created: 2010-11-12 15:50:54
-$dictionary["jjwg_maps_jjwg_markers"] = array(
+$dictionary['jjwg_maps_jjwg_markers'] = array(
   'true_relationship_type' => 'many-to-many',
   'relationships' =>
   array(

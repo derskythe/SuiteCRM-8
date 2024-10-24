@@ -48,6 +48,8 @@ class ConfiguratorController extends SugarController
 {
     /**
      * Go to the font manager view
+     *
+     * @throws Exception
      */
     public function action_FontManager()
     {
@@ -60,6 +62,8 @@ class ConfiguratorController extends SugarController
 
     /**
      * Delete a font and go back to the font manager
+     *
+     * @throws Exception
      */
     public function action_deleteFont()
     {
@@ -73,12 +77,15 @@ class ConfiguratorController extends SugarController
             $fontManager = new FontManager();
             $fontManager->filename = $_REQUEST['filename'];
             if (!$fontManager->deleteFont()) {
-                $urlSTR .='&error='.urlencode(implode("<br>", $fontManager->errors));
+                $urlSTR .='&error='.urlencode(implode('<br>', $fontManager->errors));
             }
         }
         header("Location: $urlSTR");
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_listview()
     {
         global $current_user;
@@ -87,8 +94,11 @@ class ConfiguratorController extends SugarController
         }
         $this->view = 'edit';
     }
+
     /**
      * Show the addFont view
+     *
+     * @throws Exception
      */
     public function action_addFontView()
     {
@@ -98,8 +108,11 @@ class ConfiguratorController extends SugarController
         }
         $this->view = 'addFontView';
     }
+
     /**
      * Add a new font and show the addFontResult view
+     *
+     * @throws Exception
      */
     public function action_addFont()
     {
@@ -108,37 +121,44 @@ class ConfiguratorController extends SugarController
             sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']);
         }
         if (empty($_FILES['pdf_metric_file']['name'])) {
-            $this->errors[]=translate("ERR_MISSING_REQUIRED_FIELDS")." ".translate("LBL_PDF_METRIC_FILE", "Configurator");
+            $this->errors[]=translate('ERR_MISSING_REQUIRED_FIELDS'). ' ' .translate(
+                    'LBL_PDF_METRIC_FILE',
+                    'Configurator'
+                );
             $this->view = 'addFontView';
             return;
         }
         if (empty($_FILES['pdf_font_file']['name'])) {
-            $this->errors[]=translate("ERR_MISSING_REQUIRED_FIELDS")." ".translate("LBL_PDF_FONT_FILE", "Configurator");
+            $this->errors[]=translate('ERR_MISSING_REQUIRED_FIELDS'). ' ' .translate('LBL_PDF_FONT_FILE', 'Configurator');
             $this->view = 'addFontView';
             return;
         }
         $path_info = pathinfo((string) $_FILES['pdf_font_file']['name']);
         $path_info_metric = pathinfo((string) $_FILES['pdf_metric_file']['name']);
-        if (($path_info_metric['extension']!="afm" && $path_info_metric['extension']!="ufm") ||
-        ($path_info['extension']!="ttf" && $path_info['extension']!="otf" && $path_info['extension']!="pfb")) {
-            $this->errors[]=translate("JS_ALERT_PDF_WRONG_EXTENSION", "Configurator");
+        if (($path_info_metric['extension'] !== 'afm' && $path_info_metric['extension'] !== 'ufm') ||
+        ($path_info['extension'] !== 'ttf' && $path_info['extension'] !== 'otf' && $path_info['extension'] !== 'pfb')) {
+            $this->errors[]=translate('JS_ALERT_PDF_WRONG_EXTENSION', 'Configurator');
             $this->view = 'addFontView';
             return;
         }
 
-        if ($_REQUEST['pdf_embedded'] == "false") {
+        if ($_REQUEST['pdf_embedded'] === 'false') {
             if (empty($_REQUEST['pdf_cidinfo'])) {
-                $this->errors[]=translate("ERR_MISSING_CIDINFO", "Configurator");
+                $this->errors[]=translate('ERR_MISSING_CIDINFO', 'Configurator');
                 $this->view = 'addFontView';
                 return;
             }
             $_REQUEST['pdf_embedded']=false;
         } else {
             $_REQUEST['pdf_embedded']=true;
-            $_REQUEST['pdf_cidinfo']="";
+            $_REQUEST['pdf_cidinfo']= '';
         }
         $this->view = 'addFontResult';
     }
+
+    /**
+     * @throws Exception
+     */
     public function action_saveadminwizard()
     {
 
@@ -199,10 +219,12 @@ class ConfiguratorController extends SugarController
             require_once 'modules/Home/dashlets.php';
 
             require_once 'install/suite_install/scenarios.php';
+            global $installation_scenarios;
+            global $enabled_tabs;
 
             foreach ($installation_scenarios as $scenario) {
                 //If the item is not in $_SESSION['scenarios'], then unset them as they are not required
-                if (!in_array($scenario['key'], $_REQUEST['scenarios'])) {
+                if (!in_array($scenario['key'], $_REQUEST['scenarios'], true)) {
                     foreach ($scenario['modules'] as $module) {
                         if (($removeKey = array_search($module, $enabled_tabs, true)) !== false) {
                             unset($enabled_tabs[$removeKey]);
@@ -239,6 +261,9 @@ class ConfiguratorController extends SugarController
         SugarApplication::redirect('index.php?module=Users&action=Wizard&skipwelcome=1');
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_saveconfig()
     {
         require_once('modules/Administration/QuickRepairAndRebuild.php');
@@ -268,6 +293,9 @@ class ConfiguratorController extends SugarController
         SugarApplication::redirect('index.php?module=Administration&action=index');
     }
 
+    /**
+     * @throws Exception
+     */
     public function action_detail()
     {
         global $current_user;
@@ -314,14 +342,14 @@ class ConfiguratorController extends SugarController
 
                 $isValid = false;
                 foreach ($subPanel->layout_defs['subpanel_setup'] as $subPanelDef) {
-                    if (empty($subPanelDef['module']) || $subPanelDef['module'] != 'History') {
+                    if (empty($subPanelDef['module']) || $subPanelDef['module'] !== 'History') {
                         continue;
                     }
                     if (empty($subPanelDef['collection_list'])) {
                         continue;
                     }
                     foreach ($subPanelDef['collection_list'] as $v) {
-                        if (!empty($v['get_subpanel_data']) && $v['get_subpanel_data'] == 'function:get_emails_by_assign_or_link') {
+                        if (!empty($v['get_subpanel_data']) && $v['get_subpanel_data'] === 'function:get_emails_by_assign_or_link') {
                             $isValid = true;
                             break 2;
                         }
@@ -333,7 +361,7 @@ class ConfiguratorController extends SugarController
 
                 $bean->load_relationships();
                 foreach ($bean->get_linked_fields() as $fieldName => $fieldDef) {
-                    if ($bean->$fieldName->getRelatedModuleName() == 'Contacts') {
+                    if ($bean->$fieldName->getRelatedModuleName() === 'Contacts') {
                         $modules[$moduleName] = !$enabled;
                         break;
                     }

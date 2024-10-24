@@ -1,7 +1,6 @@
 <?php
 
 /**
- *
  * SugarCRM Community Edition is a customer relationship management program developed by
  * SugarCRM, Inc. Copyright (C) 2004-2013 SugarCRM Inc.
  *
@@ -41,123 +40,88 @@
 
 namespace SuiteCRM;
 
-use LoggerManager;
-
 if (!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    exit('Not A Valid Entry Point');
 }
 
 #[\AllowDynamicProperties]
 class ErrorMessage
 {
-
     /**
-     * integer
+     * integer.
      */
     public const DEFAULT_CODE = 1;
 
     /**
-     * string
+     * string.
      */
-    public const DEFAULT_LOG_LEVEL = 'fatal';
+    public const DEFAULT_LOG_LEVEL = \LoggerTemplate::DEFAULT_LOG_LEVEL;
 
-    /**
-     *
-     * @var string
-     */
-    protected $message;
+    protected string $message;
 
-    /**
-     *
-     * @var integer
-     */
-    protected $code;
+    protected int $code;
 
-    /**
-     *
-     * @var string
-     */
-    protected $level;
+    protected string $level;
 
-    /**
-     *
-     * @var boolean
-     */
-    protected $throw;
+    protected bool $to_throw;
 
-    /**
-     *
-     * @param string $message
-     * @param integer|null $code
-     * @param string $level
-     * @param boolean $throw
-     */
-    public function __construct($message = '', $code = null, $level = self::DEFAULT_LOG_LEVEL, $throw = true)
+    public function __construct(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $throw = true)
     {
         $this->setState($message, $code, $level, $throw);
     }
 
-    /**
-     *
-     * @param string $message
-     * @param integer|null $code
-     * @param string $level
-     * @param boolean $throw
-     */
-    public function setState($message = '', $code = null, $level = self::DEFAULT_LOG_LEVEL, $throw = true)
+    public function setState(string $message = '', ?int $code = null, string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL, bool $to_throw = true): void
     {
         $this->message = $message;
         $this->code = $code;
         $this->level = $level;
-        $this->throw = $throw;
+        $this->to_throw = $to_throw;
     }
 
     /**
-     *
      * @throws ErrorMessageException
      */
-    public function handle()
+    public function handle(): void
     {
         if ($this->level) {
-            $log = LoggerManager::getLogger();
+            $log = \LoggerManager::getLogger();
             $level = $this->level;
-            $log->$level($this->message);
+            if (null !== $log) {
+                $log->$level($this->message);
+            } else {
+                trigger_error("Can't log message: {$this->message}");
+            }
         }
-        if ($this->throw) {
+        if ($this->to_throw) {
             throw new ErrorMessageException($this->message, $this->code);
         }
     }
 
     /**
-     *
-     * @param string $message
-     * @param string $level
-     * @param boolean $throw
-     * @param integer $code
      * @throws ErrorMessageException
      */
-    public static function handler($message, $level = self::DEFAULT_LOG_LEVEL, $throw = true, $code = self::DEFAULT_CODE)
+    public static function handler(
+        string $message,
+        string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL,
+        bool   $to_throw = true,
+        int    $code = self::DEFAULT_CODE): void
     {
-        $errorMessage = new ErrorMessage($message, $code, $level, $throw);
+        $errorMessage = new ErrorMessage($message, $code, $level, $to_throw);
         $errorMessage->handle();
     }
 
     /**
-     *
-     * @param string $message
-     * @param integer $level
+     * @throws ErrorMessageException
      */
-    public static function log($message, $level = self::DEFAULT_LOG_LEVEL)
+    public static function log(string $message, int|string $level = \LoggerTemplate::DEFAULT_LOG_LEVEL): void
     {
         self::handler($message, $level, false);
     }
 
     /**
-     *
-     * @param string $message
-     * @param integer $code
+     * @throws ErrorMessageException
      */
-    public static function drop($message, $code = self::DEFAULT_CODE)
+    public static function drop(string $message, int $code = self::DEFAULT_CODE): void
     {
         self::handler($message, $code);
     }

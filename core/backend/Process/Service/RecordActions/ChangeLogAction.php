@@ -35,7 +35,7 @@ use App\Process\Service\ProcessHandlerInterface;
 class ChangeLogAction implements ProcessHandlerInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options are not defined';
-    protected const PROCESS_TYPE = 'record-audit';
+    protected const PROCESS_TYPE          = 'record-audit';
 
     /**
      * @var ModuleNameMapperInterface
@@ -44,6 +44,7 @@ class ChangeLogAction implements ProcessHandlerInterface
 
     /**
      * ChangeLogAction constructor.
+     *
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(ModuleNameMapperInterface $moduleNameMapper)
@@ -54,7 +55,7 @@ class ChangeLogAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -62,7 +63,7 @@ class ChangeLogAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -70,7 +71,7 @@ class ChangeLogAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
@@ -89,7 +90,7 @@ class ChangeLogAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -101,7 +102,7 @@ class ChangeLogAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -117,7 +118,7 @@ class ChangeLogAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $options = $process->getOptions();
         $auditModuleName = $this->moduleNameMapper->toLegacy($options['module']);
@@ -125,21 +126,21 @@ class ChangeLogAction implements ProcessHandlerInterface
 
         $baseUrl = './legacy/index.php';
         $queryParams = [
-            'module' => 'Audit',
-            'action' => 'Popup',
+            'module'      => 'Audit',
+            'action'      => 'Popup',
             'module_name' => $auditModuleName,
-            'record' => $recordId,
-            'query' => true,
-            'mode' => 'single',
-            'create' => false,
+            'record'      => $recordId,
+            'query'       => true,
+            'mode'        => 'single',
+            'create'      => false,
         ];
 
         $legacyUrl = $baseUrl . "?" . http_build_query($queryParams);
 
         $responseData = [
             'handler' => 'audit',
-            'params' => [
-                'url' => $legacyUrl,
+            'params'  => [
+                'url'         => $legacyUrl,
                 'queryParams' => [
                 ]
             ]

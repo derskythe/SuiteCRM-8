@@ -49,7 +49,7 @@ $custom_fields = new DynamicField($module);
 if (!empty($module)) {
     $class_name = $beanList[$module];
     $class_file = $class_name;
-    if ($class_file == 'aCase') {
+    if ($class_file === 'aCase') {
         $class_file = 'Case';
     }
     require_once("modules/$module/$class_file.php");
@@ -60,7 +60,7 @@ if (!empty($module)) {
 }
 $name = $_REQUEST['field_label'];
 $options = '';
-if ($_REQUEST['field_type'] == 'enum') {
+if ($_REQUEST['field_type'] === 'enum') {
     $options = $_REQUEST['options'];
 }
 $default_value = '';

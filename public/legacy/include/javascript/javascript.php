@@ -92,7 +92,7 @@ class javascript
 
     public function addField($field, $required, $prefix='', $displayField='', $translate = false)
     {
-        if ($field == "id") {
+        if ($field === 'id') {
             return;
         }
         if (isset($this->sugarbean->field_name_map[$field]['vname'])) {
@@ -109,7 +109,7 @@ class javascript
                 if (isset($this->sugarbean->required_fields[$field]) && $this->sugarbean->required_fields[$field]) {
                     $required = 'true';
                 }
-                if ($field == 'id') {
+                if ($field === 'id') {
                     $required = 'false';
                 }
             }
@@ -184,10 +184,10 @@ class javascript
 
     public function stripEndColon($modString)
     {
-        if (substr((string) $modString, -1, 1) == ":") {
+        if (str_ends_with((string) $modString, ':')) {
             $modString = substr((string) $modString, 0, (strlen((string) $modString) - 1));
         }
-        if (substr((string) $modString, -2, 2) == ": ") {
+        if (str_ends_with((string) $modString, ': ')) {
             $modString = substr((string) $modString, 0, (strlen((string) $modString) - 2));
         }
         return $modString;
@@ -214,13 +214,13 @@ class javascript
 
     public function addFieldRange($field, $type, $displayName, $required, $prefix, $min, $max)
     {
-        $this->script .= "addToValidateRange("
+        $this->script .= 'addToValidateRange('
             . "'" . $this->formname . "', "
             . "'" . $prefix . $field . "', '"
             . $type . "', "
             . $this->getRequiredString($required) . ", '"
             . $this->stripEndColon(translate($displayName, $this->sugarbean->module_dir)) . "', "
-            . ($min === false ? 'false' : $min) . ", "
+            . ($min === false ? 'false' : $min) . ', '
             . ($max === false ? 'false' : $max)
             . ");\n";
     }
@@ -279,16 +279,16 @@ class javascript
         }
         foreach ($this->sugarbean->field_name_map as $field=>$value) {
             if (!isset($skip_fields[$field])) {
-                if (isset($value['type']) && ($value['type'] == 'datetimecombo' || $value['type'] == 'datetime')) {
+                if (isset($value['type']) && ($value['type'] === 'datetimecombo' || $value['type'] === 'datetime')) {
                     $isRequired = (isset($value['required']) && $value['required']) ? 'true' : 'false';
                     $this->addSpecialField($value['name'] . '_date', $value['name'], 'datetime', $isRequired);
-                    if ($value['type'] != 'link'  && isset($this->sugarbean->field_name_map[$field]['validation'])) {
+                    if ($value['type'] !== 'link'  && isset($this->sugarbean->field_name_map[$field]['validation'])) {
                         //datetime should also support the isbefore or other type of validate
                         $this->addField($field, '', $prefix, '', $translate);
                     }
                 } else {
                     if (isset($value['type'])) {
-                        if ($value['type'] != 'link') {
+                        if ($value['type'] !== 'link') {
                             $this->addField($field, '', $prefix, '', $translate);
                         }
                     }
@@ -299,13 +299,13 @@ class javascript
 
     public function addActionMenu()
     {
-        $this->script .= "$(document).ready(SUGAR.themes.actionMenu);";
+        $this->script .= '$(document).ready(SUGAR.themes.actionMenu);';
     }
 
     public function getScript($showScriptTag = true, $clearValidateFields = true)
     {
         $tempScript = $this->script;
-        $this->script = "";
+        $this->script = '';
         if ($showScriptTag) {
             $this->script = "<script type=\"text/javascript\">\n";
         }
@@ -317,7 +317,7 @@ class javascript
         $this->script .= $tempScript;
 
         if ($showScriptTag) {
-            $this->script .= "</script>";
+            $this->script .= '</script>';
         }
         return $this->script;
     }
@@ -337,9 +337,10 @@ class javascript
 
     protected function getRequiredString($required)
     {
-        if (is_string($required) && strtolower($required) == "false") {
-            return "false";
+        if (is_string($required) && strtolower($required) === 'false') {
+            return 'false';
         }
-        return empty($required) ? "false" : "true";
+
+        return empty($required) ? 'false' : 'true';
     }
 }

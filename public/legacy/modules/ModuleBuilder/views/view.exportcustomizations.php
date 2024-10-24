@@ -45,23 +45,26 @@ class ViewExportcustomizations extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
            );
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         $modules = [];
         $custom = [];
         global $current_user, $mod_strings;
         $smarty = new Sugar_Smarty();
-        $mb = new MBPackage("packageCustom");
+        $mb = new MBPackage('packageCustom');
         $mod=$mb->getCustomModules();
         foreach ($mod as $key => $value) {
             $modules[]=$key;

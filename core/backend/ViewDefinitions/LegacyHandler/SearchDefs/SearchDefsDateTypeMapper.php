@@ -44,7 +44,7 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'search-defs-date-mapper';
     }
@@ -52,7 +52,7 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function getModule(): string
+    public function getModule() : string
     {
         return 'default';
     }
@@ -60,7 +60,7 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition): void
+    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition) : void
     {
         $this->mapListViewSearchDefs($definition);
         $this->mapSubPanelSearchDefs($definition);
@@ -69,16 +69,17 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
     /**
      * @param string $type
      * @param array $field
+     *
      * @return array
      */
-    public function mapField(string $type, array $field): array
+    public function mapField(string $type, array $field) : array
     {
         if ($type === 'datetime') {
             $type = 'date';
         }
 
         $field['type'] = 'composite';
-        $field['fieldDefinition']['layout'] = ['operator', 'target', 'start', 'end'];
+        $field['fieldDefinition']['layout'] = [ 'operator', 'target', 'start', 'end' ];
         $field['fieldDefinition']['display'] = 'inline';
 
         $dateActiveOnAttributes = [];
@@ -107,77 +108,77 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
 
         $field['fieldDefinition']['attributeFields'] = [
             'operator' => [
-                'name' => 'operator',
-                'type' => 'enum',
-                'vname' => 'LBL_OPERATOR',
-                'options' => $field['options'] ?? 'date_range_search_dom',
-                'default' => '=',
-                'defaultValueModes' => ['filter', 'edit']
+                'name'              => 'operator',
+                'type'              => 'enum',
+                'vname'             => 'LBL_OPERATOR',
+                'options'           => $field['options'] ?? 'date_range_search_dom',
+                'default'           => '=',
+                'defaultValueModes' => [ 'filter', 'edit' ]
             ],
-            'target' => [
-                'name' => 'target',
-                'type' => $type,
+            'target'   => [
+                'name'    => 'target',
+                'type'    => $type,
                 'display' => 'none',
-                'logic' => [
+                'logic'   => [
                     'display' => [
-                        'key' => 'displayType',
-                        'modes' => ['edit', 'detail', 'create', 'filter'],
+                        'key'    => 'displayType',
+                        'modes'  => [ 'edit', 'detail', 'create', 'filter' ],
                         'params' => [
                             'attributeDependencies' => [
                                 [
-                                    'field' => $field['name'],
+                                    'field'     => $field['name'],
                                     'attribute' => 'operator'
                                 ],
                             ],
-                            'targetDisplayType' => 'default',
-                            'activeOnAttributes' => $dateActiveOnAttributes
+                            'targetDisplayType'     => 'default',
+                            'activeOnAttributes'    => $dateActiveOnAttributes
                         ]
                     ],
                 ]
             ],
-            'start' => [
-                'name' => 'start',
-                'type' => $type,
-                'vname' => 'LBL_START',
-                'showLabel' => ['*'],
-                'display' => 'none',
-                'logic' => [
+            'start'    => [
+                'name'      => 'start',
+                'type'      => $type,
+                'vname'     => 'LBL_START',
+                'showLabel' => [ '*' ],
+                'display'   => 'none',
+                'logic'     => [
                     'display' => [
-                        'key' => 'displayType',
-                        'modes' => ['edit', 'detail', 'create', 'filter'],
+                        'key'    => 'displayType',
+                        'modes'  => [ 'edit', 'detail', 'create', 'filter' ],
                         'params' => [
                             'attributeDependencies' => [
                                 [
-                                    'field' => $field['name'],
+                                    'field'     => $field['name'],
                                     'attribute' => 'operator'
                                 ],
                             ],
-                            'targetDisplayType' => 'default',
-                            'activeOnAttributes' => $startActiveOnAttributes
+                            'targetDisplayType'     => 'default',
+                            'activeOnAttributes'    => $startActiveOnAttributes
                         ]
                     ]
                 ]
             ],
-            'end' => [
-                'name' => 'end',
-                'type' => $type,
-                'vname' => 'LBL_END',
-                'labelKey' => 'LBL_END',
-                'showLabel' => ['*'],
-                'display' => 'none',
-                'logic' => [
+            'end'      => [
+                'name'      => 'end',
+                'type'      => $type,
+                'vname'     => 'LBL_END',
+                'labelKey'  => 'LBL_END',
+                'showLabel' => [ '*' ],
+                'display'   => 'none',
+                'logic'     => [
                     'display' => [
-                        'key' => 'displayType',
-                        'modes' => ['edit', 'detail', 'create', 'filter'],
+                        'key'    => 'displayType',
+                        'modes'  => [ 'edit', 'detail', 'create', 'filter' ],
                         'params' => [
                             'attributeDependencies' => [
                                 [
-                                    'field' => $field['name'],
+                                    'field'     => $field['name'],
                                     'attribute' => 'operator'
                                 ],
                             ],
-                            'targetDisplayType' => 'default',
-                            'activeOnAttributes' => $endActiveOnAttributes
+                            'targetDisplayType'     => 'default',
+                            'activeOnAttributes'    => $endActiveOnAttributes
                         ]
                     ]
                 ]
@@ -189,9 +190,10 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
 
     /**
      * @param ViewDefinition $definition
+     *
      * @return void
      */
-    public function mapListViewSearchDefs(ViewDefinition $definition): void
+    public function mapListViewSearchDefs(ViewDefinition $definition) : void
     {
         $search = $definition->getSearch() ?? [];
         $layout = $search['layout'] ?? [];
@@ -210,7 +212,8 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
 
             $enableRangeSearch = $field['enable_range_search'] ?? false;
 
-            if ($enableRangeSearch === 0 || $enableRangeSearch === false || $enableRangeSearch === '0' || $enableRangeSearch === 'false') {
+            if ($enableRangeSearch === 0 || $enableRangeSearch === false ||
+                $enableRangeSearch === '0' || $enableRangeSearch === 'false') {
                 continue;
             }
 
@@ -224,28 +227,29 @@ class SearchDefsDateTypeMapper implements ViewDefinitionMapperInterface
 
     /**
      * @param ViewDefinition $definition
+     *
      * @return void
      */
-    public function mapSubPanelSearchDefs(ViewDefinition $definition): void
+    public function mapSubPanelSearchDefs(ViewDefinition $definition) : void
     {
         $subpanel = $definition->getSubPanel() ?? [];
-        if (empty($subpanel)){
+        if (empty($subpanel)) {
             return;
         }
         foreach ($subpanel as $subpanelKey => $def) {
-            if (empty($def['searchdefs'])){
+            if (empty($def['searchdefs'])) {
                 continue;
             }
 
-            foreach ($def['searchdefs'] as $fieldKey => $field){
+            foreach ($def['searchdefs'] as $fieldKey => $field) {
                 $type = $field['type'] ?? '';
 
                 if ($type !== 'date' && $type !== 'datetime') {
                     continue;
                 }
 
-               $field = $this->mapField($type, $field);
-               $subpanel[$subpanelKey]['searchdefs'][$fieldKey] = $field;
+                $field = $this->mapField($type, $field);
+                $subpanel[$subpanelKey]['searchdefs'][$fieldKey] = $field;
             }
 
         }

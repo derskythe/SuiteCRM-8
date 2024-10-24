@@ -42,7 +42,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
 require_once('include/Sugar_Smarty.php');
 require_once('include/externalAPI/ExternalAPIFactory.php');
 
@@ -50,14 +49,27 @@ require_once('include/externalAPI/ExternalAPIFactory.php');
 #[\AllowDynamicProperties]
 class DocumentsViewExtdoc extends SugarView
 {
-    public $options = array('show_header' => false, 'show_title' => false, 'show_subpanels' => false, 'show_search' => true, 'show_footer' => false, 'show_javascript' => false, 'view_print' => false,);
+    public $options = array( 'show_header'     => false,
+                             'show_title'      => false,
+                             'show_subpanels'  => false,
+                             'show_search'     => true,
+                             'show_footer'     => false,
+                             'show_javascript' => false,
+                             'view_print'      => false, );
 
-    public function init($bean, $view_object_map)
+    public function init(
+        SugarBean $bean = null,
+        array     $view_object_map = array()
+    ) : void
     {
+        parent::init($bean, $view_object_map);
         $this->seed = $bean;
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         global $mod_strings;
 
@@ -66,13 +78,16 @@ class DocumentsViewExtdoc extends SugarView
         } else {
             $file_search = '';
         }
-        
+
         if (!isset($_REQUEST['apiName'])) {
             $apiName = 'IBMSmartCloud';
         } else {
             $tmpApi = ExternalAPIFactory::loadAPI($_REQUEST['apiName'], true);
             if ($tmpApi === false) {
-                $GLOBALS['log']->error(string_format($mod_strings['ERR_INVALID_EXTERNAL_API_ACCESS'], array($_REQUEST['apiName'])));
+                $GLOBALS['log']->error(
+                    string_format($mod_strings['ERR_INVALID_EXTERNAL_API_ACCESS'], array( $_REQUEST['apiName'] ))
+                );
+
                 return;
             }
             $apiName = $_REQUEST['apiName'];
@@ -102,29 +117,33 @@ class DocumentsViewExtdoc extends SugarView
                 }
             } catch (Exception $ex) {
                 $validSession = false;
-                $GLOBALS['log']->error(string_format($mod_strings['ERR_INVALID_EXTERNAL_API_LOGIN'], array($apiName)));
+                $GLOBALS['log']->error(string_format($mod_strings['ERR_INVALID_EXTERNAL_API_LOGIN'], array( $apiName ))
+                );
             }
         }
 
         if (!$validSession || empty($eapmBean)) {
             // Bug #49987 : Documents view.extdoc.php doesn't allow custom override
-            $tpl_file = get_custom_file_if_exists('include/externalAPI/'.$apiName.'/'.$apiName.'Signup.'.$GLOBALS['current_language'].'.tpl');
+            $tpl_file =
+                get_custom_file_if_exists(
+                    'include/externalAPI/' . $apiName . '/' . $apiName . 'Signup.' . $GLOBALS['current_language'] . '.tpl'
+                );
 
             if (file_exists($tpl_file)) {
                 $smarty = new Sugar_Smarty();
                 echo $smarty->fetch($tpl_file);
             } else {
-                $output = string_format(translate('LBL_ERR_FAILED_QUICKCHECK', 'EAPM'), array($apiName));
+                $output = string_format(translate('LBL_ERR_FAILED_QUICKCHECK', 'EAPM'), array( $apiName ));
                 $output .= '<form method="POST" target="_EAPM_CHECK" action="index.php">';
                 $output .= '<input type="hidden" name="module" value="EAPM">';
                 $output .= '<input type="hidden" name="action" value="Save">';
-                $output .= '<input type="hidden" name="record" value="'.$eapmBean->id.'">';
+                $output .= '<input type="hidden" name="record" value="' . $eapmBean->id . '">';
                 $output .= '<input type="hidden" name="active" value="1">';
                 $output .= '<input type="hidden" name="closeWhenDone" value="1">';
                 $output .= '<input type="hidden" name="refreshParentWindow" value="1">';
 
-                $output .= '<br><input type="submit" value="'.$GLOBALS['app_strings']['LBL_EMAIL_OK'].'">&nbsp;';
-                $output .= '<input type="button" onclick="lastLoadedMenu=undefined;DCMenu.closeOverlay();return false;" value="'.$GLOBALS['app_strings']['LBL_CANCEL_BUTTON_LABEL'].'">';
+                $output .= '<br><input type="submit" value="' . $GLOBALS['app_strings']['LBL_EMAIL_OK'] . '">&nbsp;';
+                $output .= '<input type="button" onclick="lastLoadedMenu=undefined;DCMenu.closeOverlay();return false;" value="' . $GLOBALS['app_strings']['LBL_CANCEL_BUTTON_LABEL'] . '">';
                 $output .= '</form>';
                 echo $output;
             }
@@ -143,10 +162,17 @@ class DocumentsViewExtdoc extends SugarView
                 foreach ($row as $key => $value) {
                     $newRow[strtoupper($key)] = $value;
                 }
-                
+
                 if ($isPopup) {
                     // We are running as a popup window, we need to replace the direct url with some javascript
-                    $newRow['DOC_URL'] = "javascript:window.opener.SUGAR.field.file.populateFromPopup('".addslashes($_REQUEST['elemBaseName'])."','".addslashes($newRow['ID'])."','".addslashes($newRow['NAME'])."','".addslashes($newRow['URL'])."','".addslashes($newRow['URL'])."'); window.close();";
+                    $newRow['DOC_URL'] =
+                        "javascript:window.opener.SUGAR.field.file.populateFromPopup('" . addslashes(
+                            $_REQUEST['elemBaseName']
+                        ) . "','" . addslashes($newRow['ID']) . "','" . addslashes(
+                            $newRow['NAME']
+                        ) . "','" . addslashes($newRow['URL']) . "','" . addslashes(
+                            $newRow['URL']
+                        ) . "'); window.close();";
                 } else {
                     $newRow['DOC_URL'] = $newRow['URL'];
                 }
@@ -155,15 +181,15 @@ class DocumentsViewExtdoc extends SugarView
         }
 
         $displayColumns = array(
-            'NAME' => array(
+            'NAME'          => array(
                 'label' => 'LBL_LIST_EXT_DOCUMENT_NAME',
-                'type' => 'varchar',
-                'link' => true,
-                ),
+                'type'  => 'varchar',
+                'link'  => true,
+            ),
             'DATE_MODIFIED' => array(
                 'label' => 'LBL_DATE',
-                'type' => 'date',
-                ),
+                'type'  => 'date',
+            ),
         );
 
         $ss = new Sugar_Smarty();
@@ -173,7 +199,7 @@ class DocumentsViewExtdoc extends SugarView
         $ss->assign('MOD', $GLOBALS['mod_strings']);
         $ss->assign('data', $searchData);
         $ss->assign('displayColumns', $displayColumns);
-        $ss->assign('imgPath', SugarThemeRegistry::current()->getImageURL($apiName.'_image_inline.png'));
+        $ss->assign('imgPath', SugarThemeRegistry::current()->getImageURL($apiName . '_image_inline.png'));
 
         if ($isPopup) {
             $ss->assign('linkTarget', '');
@@ -194,14 +220,14 @@ class DocumentsViewExtdoc extends SugarView
             insert_popup_header($GLOBALS['theme'], false);
             $output_html = ob_get_contents();
             ob_end_clean();
-            
+
             $output_html .= get_form_header(translate('LBL_SEARCH_FORM_TITLE', 'Documents'), '', false);
-            
+
             echo($output_html);
         }
 
         $ss->display('modules/Documents/tpls/view.extdoc.tpl');
-        
+
         if ($isPopup) {
             // Close the dccontent div
             echo('</div>');

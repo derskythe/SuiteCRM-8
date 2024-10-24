@@ -26,29 +26,29 @@
 #[\AllowDynamicProperties]
 class AOS_Invoices_sugar extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOS_Invoices';
-    public $object_name = 'AOS_Invoices';
-    public $table_name = 'aos_invoices';
-    public $importable = true;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOS_Invoices';
+    public string $object_name = 'AOS_Invoices';
+    public string $table_name = 'aos_invoices';
+    public bool $importable = true;
     public $lineItems = true;
 
     public $disable_row_level_security = true ; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_id;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $aos_invoices_type;
     public $industry;
@@ -105,7 +105,7 @@ class AOS_Invoices_sugar extends Basic
 
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL': return true;

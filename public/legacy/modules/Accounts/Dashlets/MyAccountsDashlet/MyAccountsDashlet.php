@@ -82,7 +82,7 @@ class MyAccountsDashlet extends DashletGeneric
      * @param array $lvsParams
      */
 
-    public function process($lvsParams = array(), $id = null)
+    public function process($lvsParams = array(), $id = null) : mixed
     {
         if (isset($this->displayColumns) && array_search('email1', $this->displayColumns, true) !== false) {
             $lvsParams['custom_select'] = ', email_address as email1';

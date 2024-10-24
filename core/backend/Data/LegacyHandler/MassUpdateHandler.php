@@ -78,7 +78,8 @@ class MassUpdateHandler extends LegacyHandler implements RecordMassUpdateService
         LegacyScopeState $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
         RecordListProviderInterface $listViewProvider,
-        RequestStack $session
+        RequestStack $session,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -86,7 +87,8 @@ class MassUpdateHandler extends LegacyHandler implements RecordMassUpdateService
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->listViewProvider = $listViewProvider;

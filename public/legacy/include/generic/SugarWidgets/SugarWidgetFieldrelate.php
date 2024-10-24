@@ -65,7 +65,7 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
         $result = $this->reporter->db->query($query);
         while ($row = $this->reporter->db->fetchByAssoc($result)) {
             $html .= '<option value="' . $row['id'] . '"';
-            if (in_array($row['id'], $values)) {
+            if (in_array($row['id'], $values, true)) {
                 $html .= ' selected="selected"';
             }
             $html .= '>' . htmlspecialchars((string) $row['title']) . '</option>';
@@ -172,7 +172,7 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
     //for to_pdf/to_csv
     public function displayListPlain($layout_def)
     {
-        $reporter = $this->layout_manager->getAttribute("reporter");
+        $reporter = $this->layout_manager->getAttribute('reporter');
         $field_def = $reporter->all_fields[$layout_def['column_key']];
         $display = strtoupper($field_def['secondary_table'].'_name');
         //#31797  , we should get the table alias in a global registered array:selected_loaded_custom_links
@@ -189,7 +189,7 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
 
     public function displayList(&$layout_def)
     {
-        $reporter = $this->layout_manager->getAttribute("reporter");
+        $reporter = $this->layout_manager->getAttribute('reporter');
         $field_def = $reporter->all_fields[$layout_def['column_key']];
         $display = strtoupper($field_def['secondary_table'].'_name');
 
@@ -206,7 +206,7 @@ class SugarWidgetFieldRelate extends SugarWidgetReportField
         $record = $layout_def['fields'][$recordField];
         $cell = "<a target='_blank' class=\"listViewTdLinkS1\" href=\"index.php?action=DetailView&module=".$field_def['ext2']."&record=$record\">";
         $cell .= $layout_def['fields'][$display];
-        $cell .= "</a>";
+        $cell .= '</a>';
         return $cell;
     }
 }

@@ -124,7 +124,7 @@ $dictionary = $olddictionary;
 
 logThis('database repaired', $path);
 
-$ce_to_pro_ent = isset($_SESSION['upgrade_from_flavor']) && ($_SESSION['upgrade_from_flavor'] == 'SugarCE to SugarPro' || $_SESSION['upgrade_from_flavor'] == 'SugarCE to SugarEnt' || $_SESSION['upgrade_from_flavor'] == 'SugarCE to SugarCorp' || $_SESSION['upgrade_from_flavor'] == 'SugarCE to SugarUlt');
+$ce_to_pro_ent = isset($_SESSION['upgrade_from_flavor']) && ($_SESSION['upgrade_from_flavor'] === 'SugarCE to SugarPro' || $_SESSION['upgrade_from_flavor'] === 'SugarCE to SugarEnt' || $_SESSION['upgrade_from_flavor'] === 'SugarCE to SugarCorp' || $_SESSION['upgrade_from_flavor'] === 'SugarCE to SugarUlt');
 
 logThis(' Start Rebuilding the config file again', $path);
 
@@ -278,31 +278,31 @@ $expirationMessage = (new PasswordExpirationService())->getExpirationMessage();
 $uwMain = <<<eoq
 <table cellpadding="3" cellspacing="0" border="0">
 
-	<tr>
-		<td align="left">
-			<p>
-			<br>
-			{$mod_strings['LBL_UW_END_LOGOUT_PRE2']}
-			<br>
-			<br>
+    <tr>
+        <td align="left">
+            <p>
+            <br>
+            {$mod_strings['LBL_UW_END_LOGOUT_PRE2']}
+            <br>
+            <br>
             <b>{$mod_strings['LBL_UW_END_LOGOUT_PRE']}</b> {$mod_strings['LBL_UW_END_LOGOUT']}
-			</p>
-			<br>
-			<p>{$expirationMessage}</p>
-		</td>
-	</tr>
+            </p>
+            <br>
+            <p>{$expirationMessage}</p>
+        </td>
+    </tr>
 </table>
 
 <script>
  function deleteCacheAjax(){
-	//AJAX call for checking the file size and comparing with php.ini settings.
-	var callback = {
-		 success:function(r) {
-		     //alert(r.responseText);
-		 }
-	}
-	postData = '&module=UpgradeWizard&action=deleteCache&to_pdf=1';
-	YAHOO.util.Connect.asyncRequest('POST', 'index.php', callback, postData);
+    //AJAX call for checking the file size and comparing with php.ini settings.
+    var callback = {
+         success:function(r) {
+             //alert(r.responseText);
+         }
+    }
+    postData = '&module=UpgradeWizard&action=deleteCache&to_pdf=1';
+    YAHOO.util.Connect.asyncRequest('POST', 'index.php', callback, postData);
 }
 </script>
 eoq;

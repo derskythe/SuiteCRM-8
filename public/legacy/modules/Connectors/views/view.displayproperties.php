@@ -51,7 +51,7 @@ class ViewDisplayProperties extends ViewList
     /**
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         $this->options['show_all'] = false;
         $this->options['show_javascript'] = true;
@@ -61,9 +61,10 @@ class ViewDisplayProperties extends ViewList
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         require_once('include/connectors/utils/ConnectorUtils.php');
         $source = $_REQUEST['source_id'];
@@ -90,16 +91,22 @@ class ViewDisplayProperties extends ViewList
         $access = $current_user->getDeveloperModules();
         $d = dir('modules');
         while ($e = $d->read()) {
-            if (substr($e, 0, 1) == '.' || !is_dir('modules/' . $e)) {
+            if (str_starts_with($e, '.') || !is_dir('modules/' . $e)) {
                 continue;
             }
-            if (empty($enabled_modules[$e]) && file_exists('modules/' . $e . '/metadata/studio.php') && file_exists('modules/' . $e . '/metadata/detailviewdefs.php') && isset($GLOBALS [ 'beanList' ][$e]) && (in_array($e, $access) || is_admin($current_user))) { // installed modules must also exist in the beanList
+            if (empty($enabled_modules[$e]) && file_exists('modules/' . $e . '/metadata/studio.php') && file_exists(
+                    'modules/' . $e . '/metadata/detailviewdefs.php'
+                ) && isset($GLOBALS ['beanList'][$e]) && (in_array(
+                        $e,
+                        $access,
+                        true
+                    ) || is_admin($current_user))) { // installed modules must also exist in the beanList
                 $disabled_modules[$e] = isset($GLOBALS['app_list_strings']['moduleList'][$e]) ? $GLOBALS['app_list_strings']['moduleList'][$e] : $e;
             }
         }
 
         $s = SourceFactory::getSource($source);
-        
+
         // Not all sources can be connected to all modules
         $enabled_modules = $s->filterAllowedModules($enabled_modules);
         $disabled_modules = $s->filterAllowedModules($disabled_modules);
@@ -126,7 +133,7 @@ class ViewDisplayProperties extends ViewList
         $fields = $s->getRequiredConfigFields();
         $this->ss->assign('externalHasProperties', !empty($fields));
 
-        $this->ss->assign('externalChecked', !empty($sources[$source]['eapm']['enabled'])?" checked":"");
+        $this->ss->assign('externalChecked', !empty($sources[$source]['eapm']['enabled'])? ' checked' : '');
         echo $this->ss->fetch($this->getCustomFilePathIfExists('modules/Connectors/tpls/display_properties.tpl'));
     }
 }

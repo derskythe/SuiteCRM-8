@@ -30,11 +30,20 @@ namespace App\Install\Service\Installation;
 use App\Engine\Service\ProcessSteps\ProcessStepExecutor;
 use Psr\Log\LoggerInterface;
 
+/**
+ * InstallStepHandler constructor.
+ *
+ * @param iterable $handlers
+ * @param iterable $extraSteps
+ * @param LoggerInterface $installLogger
+ */
 class InstallStepHandler extends ProcessStepExecutor implements InstallHandlerInterface
 {
     /**
      * InstallStepHandler constructor.
+     *
      * @param iterable $handlers
+     * @param iterable $extraSteps
      * @param LoggerInterface $installLogger
      */
     public function __construct(

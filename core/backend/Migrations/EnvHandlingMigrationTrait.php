@@ -32,18 +32,21 @@ trait EnvHandlingMigrationTrait
 
     /**
      * Get env properties content to add
+     *
      * @param string $contents
      * @param array $properties
      * @param string $wrapperStart
      * @param string $wrapperEnd
+     *
      * @return string
      */
     protected function getContentToAdd(
         string &$contents,
-        array $properties,
+        array  $properties,
         string $wrapperStart,
         string $wrapperEnd
-    ): string {
+    ) : string
+    {
 
         $missingProperties = $this->getMissingProperties($contents, $properties);
 
@@ -51,18 +54,20 @@ trait EnvHandlingMigrationTrait
             return '';
         }
 
-        $envContents = array_merge([$wrapperStart], $missingProperties, [$wrapperEnd]);
+        $envContents = array_merge([ $wrapperStart ], $missingProperties, [ $wrapperEnd ]);
 
         return "\n" . implode("\n", $envContents) . "\n";
     }
 
     /**
      * Get missing properties
+     *
      * @param string $contents
      * @param array $properties
+     *
      * @return array
      */
-    protected function getMissingProperties(string &$contents, array $properties): array
+    protected function getMissingProperties(string &$contents, array $properties) : array
     {
         $propertiesToAdd = [];
 
@@ -76,9 +81,9 @@ trait EnvHandlingMigrationTrait
         return $propertiesToAdd;
     }
 
-    protected function hasEnvProperty(string &$contents, string $propertyName): bool
+    protected function hasEnvProperty(string $contents, string $propertyName) : bool
     {
-        return strpos($contents, $propertyName) !== false;
+        return str_contains($contents, $propertyName);
     }
 
 }

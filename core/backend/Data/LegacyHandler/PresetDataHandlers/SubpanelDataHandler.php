@@ -28,6 +28,7 @@
 
 namespace App\Data\LegacyHandler\PresetDataHandlers;
 
+use Psr\Log\LoggerInterface;
 use App\Data\LegacyHandler\FilterMapper\LegacyFilterMapper;
 use App\Data\LegacyHandler\ListData;
 use App\Data\LegacyHandler\PresetListDataHandlerInterface;
@@ -78,7 +79,8 @@ class SubpanelDataHandler extends LegacyHandler implements PresetListDataHandler
         ModuleNameMapperInterface $moduleNameMapper,
         RecordMapper $recordMapper,
         LegacyFilterMapper $legacyFilterMapper,
-        RequestStack $session
+        RequestStack $session,
+        LoggerInterface $logger
     )
     {
         parent::__construct(
@@ -87,7 +89,8 @@ class SubpanelDataHandler extends LegacyHandler implements PresetListDataHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->legacyFilterMapper = $legacyFilterMapper;
         $this->moduleNameMapper = $moduleNameMapper;

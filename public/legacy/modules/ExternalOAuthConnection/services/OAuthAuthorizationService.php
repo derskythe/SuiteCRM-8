@@ -156,8 +156,11 @@ class OAuthAuthorizationService
 
     /**
      * Refresh the current token for connection
+     *
      * @param ExternalOAuthConnection $connection
+     *
      * @return void
+     * @throws Exception
      */
     public function refreshConnectionToken(ExternalOAuthConnection $connection): array {
 
@@ -191,7 +194,7 @@ class OAuthAuthorizationService
             return [
                 'success' => false,
                 'reLogin' => true,
-                'message' => "Refresh token not set. Need to re-login"
+                'message' => 'Refresh token not set. Need to re-login'
             ];
         }
 
@@ -202,7 +205,7 @@ class OAuthAuthorizationService
             return [
                 'success' => false,
                 'reLogin' => true,
-                'message' => "Was not able to refresh the token. Your session may have expired. Please try to re-login."
+                'message' => 'Was not able to refresh the token. Your session may have expired. Please try to re-login.'
             ];
         }
 
@@ -226,7 +229,7 @@ class OAuthAuthorizationService
         return [
             'success' => true,
             'reLogin' => false,
-            'message' => "successfully refreshed token"
+            'message' => 'successfully refreshed token'
         ];
     }
 
@@ -244,7 +247,7 @@ class OAuthAuthorizationService
             return [
                 'expired' => true,
                 'refreshToken' => false,
-                'message' => "Expiry date not set"
+                'message' => 'Expiry date not set'
             ];
         }
 
@@ -257,14 +260,14 @@ class OAuthAuthorizationService
             return [
                 'expired' => true,
                 'refreshToken' => true,
-                'message' => "Token expired"
+                'message' => 'Token expired'
             ];
         }
 
         return [
             'expired' => false,
             'refreshToken' => false,
-            'message' => "Token valid"
+            'message' => 'Token valid'
         ];
     }
 

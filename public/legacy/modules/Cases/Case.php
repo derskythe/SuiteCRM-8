@@ -46,17 +46,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class aCase extends Basic
 {
-    public $field_name_map = array();
-    // Stored fields
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
     public $case_number;
     public $resolution;
-    public $description;
-    public $name;
     public $status;
     public $priority;
     public $state;
@@ -64,16 +55,10 @@ class aCase extends Basic
     public $update_text;
     public $internal;
     public $send_closure_email;
-
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-
     /**
      * @var Link2
      */
     public $contacts;
-
     // These are related
     public $bug_id;
     public $account_name;
@@ -84,23 +69,22 @@ class aCase extends Basic
     public $meeting_id;
     public $call_id;
     public $email_id;
-    public $assigned_user_name;
+    public string $assigned_user_name;
     public $account_name1;
 
-    public $table_name = 'cases';
+    public string $table_name = 'cases';
     public $rel_account_table = 'accounts_cases';
     public $rel_contact_table = 'contacts_cases';
-    public $module_dir = 'Cases';
-    public $object_name = 'Case';
-    public $importable = true;
-    public $new_schema = true;
+    public string $module_dir = 'Cases';
+    public string $object_name = 'Case';
+    public bool $importable = true;
     /** "%1" is the case_number, for emails
      * leave the %1 in if you customize this.
      * YOU MUST LEAVE THE BRACKETS AS WELL*/
-    public $emailSubjectMacro = '[CASE:%1]';
+    public string $emailSubjectMacro = '[CASE:%1]';
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array(
+    public array $additional_column_fields = array(
         'bug_id',
         'assigned_user_name',
         'assigned_user_id',
@@ -112,7 +96,7 @@ class aCase extends Basic
         'email_id',
     );
 
-    public $relationship_fields = array(
+    public array $relationship_fields = array(
         'account_id' => 'accounts',
         'bug_id'     => 'bugs',
         'task_id'    => 'tasks',
@@ -142,9 +126,9 @@ class aCase extends Basic
     /**
      * @return string
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
-        return (string)$this->name;
+        return (string) $this->name;
     }
 
     /**
@@ -184,7 +168,7 @@ class aCase extends Basic
      * @param bool $is_update
      * @param array $exclude
      */
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
         parent::save_relationship_changes($is_update, $exclude);
 
@@ -201,10 +185,10 @@ class aCase extends Basic
         global $app_list_strings;
         $default = $app_list_strings['case_relationship_type_default_key'];
         $this->load_relationship('contacts');
-        $this->contacts->add($contact_id, array('contact_role' => $default));
+        $this->contacts->add($contact_id, array( 'contact_role' => $default ));
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
         // Fill in the assigned_user_name
@@ -230,12 +214,15 @@ class aCase extends Basic
     public function get_contacts()
     {
         $this->load_relationship('contacts');
-        $query_array=$this->contacts->getQuery();
+        $query_array = $this->contacts->getQuery();
 
         //update the select clause in the returned query.
 
         if (!is_array($query_array)) {
-            LoggerManager::getLogger()->fatal('Building database selection for contacts but the query information format is not an array.');
+            LoggerManager::getLogger()->fatal(
+                'Building database selection for contacts but the query information format is not an array.'
+            );
+
             return false;
         }
 
@@ -246,7 +233,7 @@ class aCase extends Basic
         foreach ($query_array as $qString) {
             $query .= ' ' . $qString;
         }
-        $temp = array('id', 'first_name', 'last_name', 'title', 'email1', 'phone_work', 'case_role', 'case_rel_id');
+        $temp = array( 'id', 'first_name', 'last_name', 'title', 'email1', 'phone_work', 'case_role', 'case_rel_id' );
 
         return $this->build_related_list2($query, BeanFactory::newBean('Contacts'), $temp);
     }
@@ -262,12 +249,18 @@ class aCase extends Basic
         $temp_array = $this->get_list_view_array();
         $temp_array['NAME'] = empty($this->name) ? '<em>blank</em>' : $this->name;
         $temp_array['PRIORITY'] =
-            empty($this->priority) ? '' :
+            empty($this->priority)
+                ? ''
+                :
                 (!isset($app_list_strings[$this->field_name_map['priority']['options']][$this->priority]) ?
                     $this->priority : $app_list_strings[$this->field_name_map['priority']['options']][$this->priority]);
         $temp_array['STATUS'] =
-            empty($this->status) ? '' :
-                (!isset($app_list_strings[$this->field_name_map['status']['options']][$this->status]) ? $this->status :
+            empty($this->status)
+                ? ''
+                :
+                (!isset($app_list_strings[$this->field_name_map['status']['options']][$this->status])
+                    ? $this->status
+                    :
                     $app_list_strings[$this->field_name_map['status']['options']][$this->status]);
         $temp_array['ENCODED_NAME'] = $this->name;
         $temp_array['CASE_NUMBER'] = $this->case_number;
@@ -295,7 +288,7 @@ class aCase extends Basic
      *
      * @return string|void
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = $this->db->quote($the_query_string);
@@ -336,7 +329,7 @@ class aCase extends Basic
         $xtpl->assign('CASE_SUBJECT', $case->name);
         $xtpl->assign(
             'CASE_PRIORITY',
-            (isset($case->priority)  ? $app_list_strings['case_priority_dom'][$case->priority] : '')
+            (isset($case->priority) ? $app_list_strings['case_priority_dom'][$case->priority] : '')
         );
         $xtpl->assign('CASE_STATUS', (isset($case->status) ? $app_list_strings['case_status_dom'][$case->status] : ''));
         $xtpl->assign('CASE_DESCRIPTION', nl2br($case->description));
@@ -349,7 +342,7 @@ class aCase extends Basic
      *
      * @return bool
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -369,7 +362,7 @@ class aCase extends Basic
         global $sugar_config;
 
         return (isset($sugar_config['inbound_email_case_subject_macro']) &&
-                !empty($sugar_config['inbound_email_case_subject_macro'])) ?
+            !empty($sugar_config['inbound_email_case_subject_macro'])) ?
             $sugar_config['inbound_email_case_subject_macro'] : $this->emailSubjectMacro;
     }
 

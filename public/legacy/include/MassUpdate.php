@@ -128,10 +128,10 @@ class MassUpdate
         }
 
         $order_by_name = (isset($bean->module_dir) ? $bean->module_dir : null).'2_'.strtoupper(isset($bean->object_name) ? $bean->object_name : null).'_ORDER_BY' ;
-        $lvso = isset($_REQUEST['lvso'])?$_REQUEST['lvso']:"";
-        $request_order_by_name = isset($_REQUEST[$order_by_name])?$_REQUEST[$order_by_name]:"";
-        $action = isset($_REQUEST['action'])?$_REQUEST['action']:"";
-        $module = isset($_REQUEST['module'])?$_REQUEST['module']:"";
+        $lvso = isset($_REQUEST['lvso']) ? $_REQUEST['lvso'] : '';
+        $request_order_by_name = isset($_REQUEST[$order_by_name]) ? $_REQUEST[$order_by_name] : '';
+        $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
+        $module = isset($_REQUEST['module']) ? $_REQUEST['module'] : '';
         if ($multi_select_popup) {
             $tempString = '';
         } else {
@@ -154,16 +154,16 @@ class MassUpdate
             LoggerManager::getLogger()->warn('Undefined index: module');
         }
 
-        if (isset($_REQUEST['module']) && $_REQUEST['module'] == 'Emails') {
-            $type = "";
+        if (isset($_REQUEST['module']) && $_REQUEST['module'] === 'Emails') {
+            $type = '';
             // determine "type" - inbound, archive, etc.
             if (isset($_REQUEST['type'])) {
                 $type = $_REQUEST['type'];
             }
             // determine owner
             $tempString .=<<<eoq
-				<input type='hidden' name='type' value="{$type}" />
-				<input type='hidden' name='ie_assigned_user_id' value="{$current_user->id}" />
+                <input type='hidden' name='type' value="{$type}" />
+                <input type='hidden' name='ie_assigned_user_id' value="{$current_user->id}" />
 eoq;
         }
 
@@ -186,7 +186,7 @@ eoq;
                     unset($_POST[$post]);
                 }
             } elseif (strlen((string) $value) == 0) {
-                if (isset($this->sugarbean->field_defs[$post]) && $this->sugarbean->field_defs[$post]['type'] == 'radioenum' && isset($_POST[$post])) {
+                if (isset($this->sugarbean->field_defs[$post]) && $this->sugarbean->field_defs[$post]['type'] === 'radioenum' && isset($_POST[$post])) {
                     $_POST[$post] = '';
                 } else {
                     unset($_POST[$post]);
@@ -194,9 +194,9 @@ eoq;
             }
 
             if (is_string($value) && isset($this->sugarbean->field_defs[$post])) {
-                if (($this->sugarbean->field_defs[$post]['type'] == 'bool'
+                if (($this->sugarbean->field_defs[$post]['type'] === 'bool'
                     || (
-                        !empty($this->sugarbean->field_defs[$post]['custom_type']) && $this->sugarbean->field_defs[$post]['custom_type'] == 'bool'
+                        !empty($this->sugarbean->field_defs[$post]['custom_type']) && $this->sugarbean->field_defs[$post]['custom_type'] === 'bool'
                     ))
                 ) {
                     if (strcmp($value, '2') == 0) {
@@ -216,21 +216,21 @@ eoq;
                     }
                 }
 
-                if (($this->sugarbean->field_defs[$post]['type'] == 'radioenum' && isset($_POST[$post]) && strlen($value) == 0)
-                    || ($this->sugarbean->field_defs[$post]['type'] == 'enum' && $value == '__SugarMassUpdateClearField__') // Set to '' if it's an explicit clear
+                if (($this->sugarbean->field_defs[$post]['type'] === 'radioenum' && isset($_POST[$post]) && strlen($value) == 0)
+                    || ($this->sugarbean->field_defs[$post]['type'] === 'enum' && $value === '__SugarMassUpdateClearField__') // Set to '' if it's an explicit clear
                 ) {
                     $_POST[$post] = '';
                 }
-                if ($this->sugarbean->field_defs[$post]['type'] == 'bool') {
+                if ($this->sugarbean->field_defs[$post]['type'] === 'bool') {
                     $this->checkClearField($post, $value);
                 }
-                if ($this->sugarbean->field_defs[$post]['type'] == 'date' && !empty($_POST[$post])) {
+                if ($this->sugarbean->field_defs[$post]['type'] === 'date' && !empty($_POST[$post])) {
                     $_POST[$post] = $timedate->to_db_date($_POST[$post], false);
                 }
-                if ($this->sugarbean->field_defs[$post]['type'] == 'datetime' && !empty($_POST[$post])) {
+                if ($this->sugarbean->field_defs[$post]['type'] === 'datetime' && !empty($_POST[$post])) {
                     $_POST[$post] = $timedate->to_db($this->date_to_dateTime($post, $value));
                 }
-                if ($this->sugarbean->field_defs[$post]['type'] == 'datetimecombo' && !empty($_POST[$post])) {
+                if ($this->sugarbean->field_defs[$post]['type'] === 'datetimecombo' && !empty($_POST[$post])) {
                     $_POST[$post] = $timedate->to_db($_POST[$post]);
                 }
             }
@@ -273,7 +273,7 @@ eoq;
             $_POST['mass'] = $new_arr;
         }
 
-        if (isset($_POST['mass']) && is_array($_POST['mass']) && $_REQUEST['massupdate'] == 'true') {
+        if (isset($_POST['mass']) && is_array($_POST['mass']) && $_REQUEST['massupdate'] === 'true') {
             $count = 0;
 
 
@@ -287,19 +287,19 @@ eoq;
                         $this->sugarbean->mark_deleted($id);
                     }
                 } else {
-                    if ($this->sugarbean->object_name == 'Contact' && isset($_POST['Sync'])) { // special for contacts module
-                        if ($_POST['Sync'] == 'true') {
+                    if ($this->sugarbean->object_name === 'Contact' && isset($_POST['Sync'])) { // special for contacts module
+                        if ($_POST['Sync'] === 'true') {
                             $this->sugarbean->retrieve($id);
                             if ($this->sugarbean->ACLAccess('Save')) {
-                                if ($this->sugarbean->object_name == 'Contact') {
+                                if ($this->sugarbean->object_name === 'Contact') {
                                     $this->sugarbean->contacts_users_id = $current_user->id;
                                     $this->sugarbean->save(false);
                                 }
                             }
-                        } elseif ($_POST['Sync'] == 'false') {
+                        } elseif ($_POST['Sync'] === 'false') {
                             $this->sugarbean->retrieve($id);
                             if ($this->sugarbean->ACLAccess('Save')) {
-                                if ($this->sugarbean->object_name == 'Contact') {
+                                if ($this->sugarbean->object_name === 'Contact') {
                                     if (!isset($this->sugarbean->users)) {
                                         $this->sugarbean->load_relationship('user_sync');
                                     }
@@ -369,7 +369,7 @@ eoq;
                         if (!empty($_POST['optout_primary'])) {
                             $setOptOutPrimaryEmailAddress = true;
                             $optout_flag_value = 0;
-                            if ($_POST['optout_primary'] == 'true') {
+                            if ($_POST['optout_primary'] === 'true') {
                                 $optout_flag_value = 1;
                             } // if
                         } // if
@@ -387,7 +387,7 @@ eoq;
                         // Fix for issue 1549: mass update the cases, and change the state value from open to close,
                         // Status value can still display New, Assigned, Pending Input (even though it should not)
                         foreach ($newbean->field_name_map as $field_name) {
-                            if (isset($field_name['type']) && $field_name['type'] == 'dynamicenum') {
+                            if (isset($field_name['type']) && $field_name['type'] === 'dynamicenum') {
                                 if (isset($field_name['parentenum']) && $field_name['parentenum'] != '') {
                                     $parentenum_name = $field_name['parentenum'];
                                     // Updated parent field value.
@@ -395,11 +395,11 @@ eoq;
 
                                     $dynamic_field_name = $field_name['name'];
 
-                                    if (strpos($newbean->$dynamic_field_name, $parentenum_value) !== 0) {
+                                    if (!str_starts_with($newbean->$dynamic_field_name, $parentenum_value)) {
                                         // Change to the default value of the correct value set.
                                         $defaultValue = '';
                                         foreach ($app_list_strings[$field_name['options']] as $key => $value) {
-                                            if (strpos((string) $key, (string) $parentenum_value) === 0) {
+                                            if (str_starts_with((string) $key, (string) $parentenum_value)) {
                                                 $defaultValue = $key;
                                                 break;
                                             }
@@ -429,7 +429,7 @@ eoq;
                         } // if
 
                         if (!empty($old_reports_to_id) && method_exists($newbean, 'update_team_memberships')) {
-                            $old_id = $old_reports_to_id == 'null' ? '' : $old_reports_to_id;
+                            $old_id = $old_reports_to_id === 'null' ? '' : $old_reports_to_id;
                         }
                     }
                 }
@@ -469,21 +469,22 @@ eoq;
 
         $field_count = 0;
 
-        $html = "<div id='massupdate_form' style='display:none;'><table width='100%' cellpadding='0' cellspacing='0' border='0' class='formHeader h3Row'><tr><td nowrap><h3><span>" . $app_strings['LBL_MASS_UPDATE'] . "</h3></td></tr></table>";
+        $html =
+            "<div id='massupdate_form' style='display:none;'><table width='100%' cellpadding='0' cellspacing='0' border='0' class='formHeader h3Row'><tr><td nowrap><h3><span>" . $app_strings['LBL_MASS_UPDATE'] . '</h3></td></tr></table>';
         $html .= "<div id='mass_update_div'><table cellpadding='0' cellspacing='1' border='0' width='100%' class='edit view' id='mass_update_table'>";
 
         $even = true;
 
-        if ($this->sugarbean->object_name == 'Contact') {
+        if ($this->sugarbean->object_name === 'Contact') {
             $html .= "<tr><td width='15%' scope='row'>$lang_sync</td><td width='35%' class='dataField'><select name='Sync'><option value=''>{$GLOBALS['app_strings']['LBL_NONE']}</option><option value='false'>{$GLOBALS['app_list_strings']['checkbox_dom']['2']}</option><option value='true'>{$GLOBALS['app_list_strings']['checkbox_dom']['1']}</option></select></td>";
             $even = false;
         } else {
-            if ($this->sugarbean->object_name == 'Employee') {
+            if ($this->sugarbean->object_name === 'Employee') {
                 $this->sugarbean->field_defs['employee_status']['type'] = 'enum';
                 $this->sugarbean->field_defs['employee_status']['massupdate'] = true;
                 $this->sugarbean->field_defs['employee_status']['options'] = 'employee_status_dom';
             } else {
-                if ($this->sugarbean->object_name == 'InboundEmail') {
+                if ($this->sugarbean->object_name === 'InboundEmail') {
                     $this->sugarbean->field_defs['status']['type'] = 'enum';
                     $this->sugarbean->field_defs['status']['options'] = 'user_status_dom';
                 }
@@ -505,7 +506,7 @@ eoq;
                 $newhtml = '';
 
                 if ($even) {
-                    $newhtml .= "<tr>";
+                    $newhtml .= '<tr>';
                 }
 
                 if (isset($field['vname'])) {
@@ -514,7 +515,7 @@ eoq;
                     $displayname = '';
                 }
 
-                if (isset($field['type']) && $field['type'] == 'relate' && isset($field['id_name']) && $field['id_name'] == 'assigned_user_id') {
+                if (isset($field['type']) && $field['type'] === 'relate' && isset($field['id_name']) && $field['id_name'] === 'assigned_user_id') {
                     $field['type'] = 'assigned_user_name';
                 }
 
@@ -523,8 +524,8 @@ eoq;
                 }
 
                 if (isset($field['type'])) {
-                    switch ($field["type"]) {
-                        case "relate":
+                    switch ($field['type']) {
+                        case 'relate':
                             // bug 14691: avoid laying out an empty cell in the <table>
                             $handleRelationship = $this->handleRelationship($displayname, $field);
                             if ($handleRelationship != '') {
@@ -532,45 +533,45 @@ eoq;
                                 $newhtml .= $handleRelationship;
                             }
                             break;
-                        case "parent":
+                        case 'parent':
                             $even = !$even;
                             $newhtml .= $this->addParent($displayname, $field);
                             break;
-                        case "int":
+                        case 'int':
                             if (!empty($field['massupdate']) && empty($field['auto_increment'])) {
                                 $even = !$even;
                                 $newhtml .= $this->addInputType($displayname, $field['name']);
                             }
                             break;
-                        case "contact_id":
+                        case 'contact_id':
                             $even = !$even;
-                            $newhtml .= $this->addContactID($displayname, $field["name"]);
+                            $newhtml .= $this->addContactID($displayname, $field['name']);
                             break;
-                        case "assigned_user_name":
+                        case 'assigned_user_name':
                             $even = !$even;
-                            $newhtml .= $this->addAssignedUserID($displayname, $field["name"]);
+                            $newhtml .= $this->addAssignedUserID($displayname, $field['name']);
                             break;
-                        case "account_id":
+                        case 'account_id':
                             $even = !$even;
-                            $newhtml .= $this->addAccountID($displayname, $field["name"]);
+                            $newhtml .= $this->addAccountID($displayname, $field['name']);
                             break;
-                        case "account_name":
+                        case 'account_name':
                             $even = !$even;
-                            $newhtml .= $this->addAccountID($displayname, $field["id_name"]);
+                            $newhtml .= $this->addAccountID($displayname, $field['id_name']);
                             break;
-                        case "bool":
+                        case 'bool':
                             $even = !$even;
-                            $newhtml .= $this->addBool($displayname, $field["name"]);
+                            $newhtml .= $this->addBool($displayname, $field['name']);
                             break;
-                        case "enum":
-                        case "dynamicenum":
-                        case "multienum":
+                        case 'enum':
+                        case 'dynamicenum':
+                        case 'multienum':
                             if (!empty($field['isMultiSelect'])) {
                                 $even = !$even;
                                 $newhtml .= $this->addStatusMulti(
                                     $displayname,
-                                    $field["name"],
-                                    translate($field["options"])
+                                    $field['name'],
+                                    translate($field['options'])
                                 );
                                 break;
                             }
@@ -578,32 +579,32 @@ eoq;
                                 $even = !$even;
                                 $newhtml .= $this->addStatus(
                                     $displayname,
-                                    $field["name"],
-                                    translate($field["options"])
+                                    $field['name'],
+                                    translate($field['options'])
                                 );
                                 break;
                             }
                             if (!empty($field['function'])) {
                                 $functionValue = $this->getFunctionValue($this->sugarbean, $field);
                                 $even = !$even;
-                                $newhtml .= $this->addStatus($displayname, $field["name"], $functionValue);
+                                $newhtml .= $this->addStatus($displayname, $field['name'], $functionValue);
                                 break;
                             }
 
 
                             break;
-                        case "radioenum":
+                        case 'radioenum':
                             $even = !$even;
-                            $newhtml .= $this->addRadioenum($displayname, $field["name"], translate($field["options"]));
+                            $newhtml .= $this->addRadioenum($displayname, $field['name'], translate($field['options']));
                             break;
-                        case "datetimecombo":
+                        case 'datetimecombo':
                             $even = !$even;
-                            $newhtml .= $this->addDatetime($displayname, $field["name"]);
+                            $newhtml .= $this->addDatetime($displayname, $field['name']);
                             break;
-                        case "datetime":
-                        case "date":
+                        case 'datetime':
+                        case 'date':
                             $even = !$even;
-                            $newhtml .= $this->addDate($displayname, $field["name"]);
+                            $newhtml .= $this->addDate($displayname, $field['name']);
                             break;
                         default:
                             $newhtml .= $this->addDefault($displayname, $field, $even);
@@ -613,7 +614,7 @@ eoq;
                 }
 
                 if ($even) {
-                    $newhtml .= "</tr>";
+                    $newhtml .= '</tr>';
                 }
 
                 $field_count++;
@@ -625,22 +626,22 @@ eoq;
         }
 
 
-        if ($this->sugarbean->object_name == 'Contact' ||
-            $this->sugarbean->object_name == 'Account' ||
-            $this->sugarbean->object_name == 'Lead' ||
-            $this->sugarbean->object_name == 'Prospect'
+        if ($this->sugarbean->object_name === 'Contact' ||
+            $this->sugarbean->object_name === 'Account' ||
+            $this->sugarbean->object_name === 'Lead' ||
+            $this->sugarbean->object_name === 'Prospect'
         ) {
             $optOutPrimaryEmail =
-                "<tr>"
+                '<tr>'
                 . "<td width='15%'  scope='row' class='dataLabel'>$lang_optout_primaryemail</td>"
                 . "<td width='35%' class='dataField'>"
                 . "<select name='optout_primary'>"
                 . "<option value=''>{$app_strings['LBL_NONE']}</option>"
                 . "<option value='false'>{$GLOBALS['app_list_strings']['checkbox_dom']['2']}</option>"
                 . "<option value='true'>{$GLOBALS['app_list_strings']['checkbox_dom']['1']}</option>"
-                . "</select>"
-                . "</td>" .
-                "</tr>";
+                . '</select>'
+                . '</td>' .
+                '</tr>';
 
             $html .= $optOutPrimaryEmail;
 
@@ -655,34 +656,34 @@ eoq;
                     . "<option value=''>{$app_strings['LBL_NONE']}</option>"
                     . "<option value='false'>{$GLOBALS['app_list_strings']['checkbox_dom']['2']}</option>"
                     . "<option value='true'>{$GLOBALS['app_list_strings']['checkbox_dom']['1']}</option>"
-                    . "</select>"
+                    . '</select>'
                     . '</td>'
                     . '</tr>';
                 $html .= $optInPrimaryEmail;
             }
         }
-        $html .= "</table>";
+        $html .= '</table>';
 
         $html .= "<table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td class='buttons'><input onclick='return sListView.send_mass_update(\"selected\", \"{$app_strings['LBL_LISTVIEW_NO_SELECTED']}\")' type='submit' id='update_button' name='Update' value='{$lang_update}' class='button'>&nbsp;<input onclick='javascript:toggleMassUpdateForm();' type='button' id='cancel_button' name='Cancel' value='{$GLOBALS['app_strings']['LBL_CANCEL_BUTTON_LABEL']}' class='button'>";
         // TODO: allow ACL access for Delete to be set false always for users
-        //		if($this->sugarbean->ACLAccess('Delete', true) && $this->sugarbean->object_name != 'User') {
-        //			global $app_list_strings;
-        //			$html .=" <input id='delete_button' type='submit' name='Delete' value='{$lang_delete}' onclick='return confirm(\"{$lang_confirm}\") && sListView.send_mass_update(\"selected\", \"{$app_strings['LBL_LISTVIEW_NO_SELECTED']}\", 1)' class='button'>";
-        //		}
+        //        if($this->sugarbean->ACLAccess('Delete', true) && $this->sugarbean->object_name != 'User') {
+        //            global $app_list_strings;
+        //            $html .=" <input id='delete_button' type='submit' name='Delete' value='{$lang_delete}' onclick='return confirm(\"{$lang_confirm}\") && sListView.send_mass_update(\"selected\", \"{$app_strings['LBL_LISTVIEW_NO_SELECTED']}\", 1)' class='button'>";
+        //        }
 
         // only for My Inbox views - to allow CSRs to have an "Archive" emails feature to get the email "out" of their inbox.
-        if ($this->sugarbean->object_name == 'Email'
+        if ($this->sugarbean->object_name === 'Email'
             && (isset($_REQUEST['assigned_user_id']) && !empty($_REQUEST['assigned_user_id']))
-            && (isset($_REQUEST['type']) && !empty($_REQUEST['type']) && $_REQUEST['type'] == 'inbound')
+            && (isset($_REQUEST['type']) && !empty($_REQUEST['type']) && $_REQUEST['type'] === 'inbound')
         ) {
             $html .= <<<eoq
-			<input type='button' name='archive' value="{$lang_archive}" class='button' onClick='setArchived();'>
-			<input type='hidden' name='ie_assigned_user_id' value="{$current_user->id}">
-			<input type='hidden' name='ie_type' value="inbound">
+            <input type='button' name='archive' value="{$lang_archive}" class='button' onClick='setArchived();'>
+            <input type='hidden' name='ie_assigned_user_id' value="{$current_user->id}">
+            <input type='hidden' name='ie_type' value="inbound">
 eoq;
         }
 
-        $html .= "</td></tr></table></div></div>";
+        $html .= '</td></tr></table></div></div>';
 
         $html .= <<<EOJS
 <script>
@@ -696,11 +697,12 @@ EOJS;
             return $html;
         }
         //If no fields are found, render either a form that still permits Mass Update deletes or just display a message that no fields are available
-        $html = "<div id='massupdate_form' style='display:none;'><table width='100%' cellpadding='0' cellspacing='0' border='0' class='formHeader h3Row'><tr><td nowrap><h3><span>" . $app_strings['LBL_MASS_UPDATE'] . "</h3></td></tr></table>";
+        $html =
+            "<div id='massupdate_form' style='display:none;'><table width='100%' cellpadding='0' cellspacing='0' border='0' class='formHeader h3Row'><tr><td nowrap><h3><span>" . $app_strings['LBL_MASS_UPDATE'] . '</h3></td></tr></table>';
         if ($this->sugarbean->ACLAccess('Delete', true) && !$hideDeleteIfNoFieldsAvailable) {
             $html .= "<table cellpadding='0' cellspacing='0' border='0' width='100%'><tr><td><input type='submit' name='Delete' value='$lang_delete' onclick=\"return confirm('{$lang_confirm}')\" class='button'></td></tr></table></div>";
         } else {
-            $html .= $app_strings['LBL_NO_MASS_UPDATE_FIELDS_AVAILABLE'] . "</div>";
+            $html .= $app_strings['LBL_NO_MASS_UPDATE_FIELDS_AVAILABLE'] . '</div>';
         }
 
         return $html;
@@ -714,7 +716,7 @@ EOJS;
         } else {
             $function = $vardef['function'];
         }
-        if (!empty($vardef['function']['returns']) && $vardef['function']['returns'] == 'html') {
+        if (!empty($vardef['function']['returns']) && $vardef['function']['returns'] === 'html') {
             if (!empty($vardef['function']['include'])) {
                 require_once($vardef['function']['include']);
             }
@@ -742,7 +744,7 @@ EOJS;
     {
         $ret_val = '';
         if (isset($field['module'])) {
-            if ($field['name'] == 'reports_to_name' && ($field['module'] == 'Users' || $field['module'] == 'Employee')) {
+            if ($field['name'] === 'reports_to_name' && ($field['module'] === 'Users' || $field['module'] === 'Employee')) {
                 return $this->addUserName($displayname, $field['name'], $field['id_name'], $field['module']);
             }
 
@@ -751,16 +753,16 @@ EOJS;
                     $ret_val = $this->addAccountID($displayname, $field['name'], $field['id_name']);
                     break;
                 case 'Contacts':
-                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], "Contacts");
+                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], 'Contacts');
                     break;
                 case 'Users':
-                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], "Users");
+                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], 'Users');
                     break;
                 case 'Employee':
-                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], "Employee");
+                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], 'Employee');
                     break;
                 case 'Releases':
-                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], "Releases");
+                    $ret_val = $this->addGenericModuleID($displayname, $field['name'], $field['id_name'], 'Releases');
                     break;
                 default:
                     if (!empty($field['massupdate'])) {
@@ -795,8 +797,8 @@ EOJS;
             'call_back_function' => 'set_return',
             'form_name' => 'MassUpdate',
             'field_to_name_array' => array(
-                'id' => "parent_id",
-                'name' => "parent_name",
+                'id'   => 'parent_id',
+                'name' => 'parent_name',
             ),
         );
 
@@ -806,10 +808,10 @@ EOJS;
         $qsName = array(
             'form' => 'MassUpdate',
             'method' => 'query',
-            'modules' => array("Accounts"),
+            'modules'       => array( 'Accounts' ),
             'group' => 'or',
             'field_list' => array('name', 'id'),
-            'populate_list' => array("mass_parent_name", "mass_parent_id"),
+            'populate_list' => array( 'mass_parent_name', 'mass_parent_id' ),
             'conditions' => array(array('name' => 'name', 'op' => 'like_custom', 'end' => '%', 'value' => '')),
             'limit' => '30',
             'no_match_text' => $app_strings['ERR_SQS_NO_MATCH']
@@ -821,8 +823,8 @@ EOJS;
 
         $change_parent_button = "<span class='id-ff'><button title='" . $app_strings['LBL_SELECT_BUTTON_TITLE'] . "'  type='button' class='button' value='" . $app_strings['LBL_SELECT_BUTTON_LABEL']
             . "' name='button_parent_name' onclick='open_popup(document.MassUpdate.{$field['type_name']}.value, 600, 400, \"\", true, false, {$encoded_popup_request_data});'>
-			<span class=\"suitepicon suitepicon-action-select\"></span>
-			</button></span>";
+            <span class=\"suitepicon suitepicon-action-select\"></span>
+            </button></span>";
         $parent_type = $field['parent_type'];
         $parent_types = $app_list_strings[$parent_type];
         $disabled_parent_types = ACLController::disabledModuleList($parent_types, false, 'list');
@@ -831,8 +833,8 @@ EOJS;
         }
         $types = get_select_options_with_id($parent_types, '');
         //BS Fix Bug 17110
-        $pattern = "/\n<OPTION.*" . $app_strings['LBL_NONE'] . "<\/OPTION>/";
-        $types = preg_replace($pattern, "", (string) $types);
+        $pattern = "/\n<OPTION.*" . $app_strings['LBL_NONE'] . '<\/OPTION>/';
+        $types = preg_replace($pattern, '', (string) $types);
         // End Fix
 
         $json = getJSONobj();
@@ -849,8 +851,8 @@ EOJS;
             </select>
         </td>
         <td valign='top'>
-			<input name='{$field['id_name']}' id='mass_{$field['id_name']}' type='hidden' value=''>
-			<input name='parent_name' id='mass_parent_name' class='sqsEnabled' autocomplete='off'
+            <input name='{$field['id_name']}' id='mass_{$field['id_name']}' type='hidden' value=''>
+            <input name='parent_name' id='mass_parent_name' class='sqsEnabled' autocomplete='off'
                 type='text' value=''>
             $change_parent_button
         </td>
@@ -872,16 +874,16 @@ document.getElementById('mass_{$field['type_name']}').onchange = function()
     document.MassUpdate.parent_name.value="";
     document.MassUpdate.parent_id.value="";
 
-	new_module = document.forms["MassUpdate"].elements["parent_type"].value;
+    new_module = document.forms["MassUpdate"].elements["parent_type"].value;
 
-	if(typeof(disabledModules[new_module]) != 'undefined') {
-		sqs_objects["MassUpdate_parent_name"]["disable"] = true;
-		document.forms["MassUpdate"].elements["parent_name"].readOnly = true;
-	} else {
-		sqs_objects["MassUpdate_parent_name"]["disable"] = false;
-		document.forms["MassUpdate"].elements["parent_name"].readOnly = false;
-	}
-	sqs_objects["MassUpdate_parent_name"]["modules"] = new Array(new_module);
+    if(typeof(disabledModules[new_module]) != 'undefined') {
+        sqs_objects["MassUpdate_parent_name"]["disable"] = true;
+        document.forms["MassUpdate"].elements["parent_name"].readOnly = true;
+    } else {
+        sqs_objects["MassUpdate_parent_name"]["disable"] = false;
+        document.forms["MassUpdate"].elements["parent_name"].readOnly = false;
+    }
+    sqs_objects["MassUpdate_parent_name"]["modules"] = new Array(new_module);
     enableQS(false);
 
     checkParentType(document.MassUpdate.parent_type.value, document.MassUpdate.button_parent_name);
@@ -901,9 +903,9 @@ EOHTML;
         //letrium ltd
         $displayname = addslashes($displayname);
         $html = <<<EOQ
-	<td scope="row" width="20%">$displayname</td>
-	<td class='dataField' width="30%"><input type="text" name='$varname' size="12" id='{$varname}' maxlength='10' value=""></td>
-	<script> addToValidate('MassUpdate','$varname','int',false,'$displayname');</script>
+    <td scope="row" width="20%">$displayname</td>
+    <td class='dataField' width="30%"><input type="text" name='$varname' size="12" id='{$varname}' maxlength='10' value=""></td>
+    <script> addToValidate('MassUpdate','$varname','int',false,'$displayname');</script>
 EOQ;
 
         return $html;
@@ -922,7 +924,7 @@ EOQ;
         global $app_strings;
 
         if (empty($id_name)) {
-            $id_name = strtolower($mod_type) . "_id";
+            $id_name = strtolower($mod_type) . '_id';
         }
 
         ///////////////////////////////////////
@@ -994,7 +996,7 @@ EOHTML;
         global $app_strings;
 
         if (empty($id_name)) {
-            $id_name = strtolower($mod_type) . "_id";
+            $id_name = strtolower($mod_type) . '_id';
         }
 
         ///////////////////////////////////////
@@ -1033,7 +1035,7 @@ EOHTML;
 <td width='35%' class='dataField'>
     <input name='{$varname}' id='mass_{$varname}' class='sqsEnabled' autocomplete='off' type='text' value=''>
     <input name='{$id_name}' id='mass_{$id_name}' type='hidden' value=''>
-	<span class="id-ff multiple">
+    <span class="id-ff multiple">
     <button title='{$app_strings['LBL_SELECT_BUTTON_TITLE']}'
         type='button' class='button' value='{$app_strings['LBL_SELECT_BUTTON_LABEL']}' name='button'
         onclick='open_popup("$mod_type", 600, 400, "", true, false, {$encoded_popup_request_data});'
@@ -1065,7 +1067,7 @@ EOHTML;
         $json = getJSONobj();
 
         if (empty($id_name)) {
-            $id_name = "account_id";
+            $id_name = 'account_id';
         }
 
         ///////////////////////////////////////
@@ -1106,8 +1108,8 @@ EOHTML;
             . "'open_popup(\"Accounts\",600,400,\"\",true,false,{$encoded_popup_request_data});' /><span class=\"suitepicon suitepicon-action-select\"></span></button></span></td>\n";
         $html .= '<script type="text/javascript" language="javascript">if(typeof sqs_objects == \'undefined\'){var sqs_objects = new Array;}sqs_objects[\'MassUpdate_' . $varname . '\'] = ' .
             $json->encode($qsParent) . '; registerSingleSmartInputListener(document.getElementById(\'mass_' . $varname . '\'));
-					addToValidateBinaryDependency(\'MassUpdate\', \'' . $varname . '\', \'alpha\', false, \'' . $app_strings['ERR_SQS_NO_MATCH_FIELD'] . $app_strings['LBL_ACCOUNT'] . '\',\'' . $id_name . '\');
-					</script>';
+                    addToValidateBinaryDependency(\'MassUpdate\', \'' . $varname . '\', \'alpha\', false, \'' . $app_strings['ERR_SQS_NO_MATCH_FIELD'] . $app_strings['LBL_ACCOUNT'] . '\',\'' . $id_name . '\');
+                    </script>';
 
         return $html;
     }
@@ -1144,16 +1146,16 @@ EOHTML;
 
         $qsUser['populate_list'] = array('mass_assigned_user_name', 'mass_assigned_user_id');
         $html = <<<EOQ
-		<td width="15%" scope="row">$displayname</td>
-		<td ><input class="sqsEnabled" autocomplete="off" id="mass_assigned_user_name" name='assigned_user_name' type="text" value=""><input id='mass_assigned_user_id' name='assigned_user_id' type="hidden" value="" />
-		<span class="id-ff multiple"><button id="mass_assigned_user_name_btn" title="{$app_strings['LBL_SELECT_BUTTON_TITLE']}" type="button" class="button" value='{$app_strings['LBL_SELECT_BUTTON_LABEL']}' name=btn1
-				onclick='open_popup("Users", 600, 400, "", true, false, $encoded_popup_request_data);' /><span class="suitepicon suitepicon-action-select"></span></button></span>
-		</td>
+        <td width="15%" scope="row">$displayname</td>
+        <td ><input class="sqsEnabled" autocomplete="off" id="mass_assigned_user_name" name='assigned_user_name' type="text" value=""><input id='mass_assigned_user_id' name='assigned_user_id' type="hidden" value="" />
+        <span class="id-ff multiple"><button id="mass_assigned_user_name_btn" title="{$app_strings['LBL_SELECT_BUTTON_TITLE']}" type="button" class="button" value='{$app_strings['LBL_SELECT_BUTTON_LABEL']}' name=btn1
+                onclick='open_popup("Users", 600, 400, "", true, false, $encoded_popup_request_data);' /><span class="suitepicon suitepicon-action-select"></span></button></span>
+        </td>
 EOQ;
         $html .= '<script type="text/javascript" language="javascript">if(typeof sqs_objects == \'undefined\'){var sqs_objects = new Array;}sqs_objects[\'MassUpdate_assigned_user_name\'] = ' .
             $json->encode($qsUser) . '; registerSingleSmartInputListener(document.getElementById(\'mass_assigned_user_name\'));
-				addToValidateBinaryDependency(\'MassUpdate\', \'assigned_user_name\', \'alpha\', false, \'' . $app_strings['ERR_SQS_NO_MATCH_FIELD'] . $app_strings['LBL_ASSIGNED_TO'] . '\',\'assigned_user_id\');
-				</script>';
+                addToValidateBinaryDependency(\'MassUpdate\', \'assigned_user_name\', \'alpha\', false, \'' . $app_strings['ERR_SQS_NO_MATCH_FIELD'] . $app_strings['LBL_ASSIGNED_TO'] . '\',\'assigned_user_id\');
+                </script>';
 
         return $html;
     }
@@ -1220,11 +1222,10 @@ EOQ;
             $options = $new_options;
         }
         $options = get_select_options_with_id_separate_key($options, $options, '', true);
-        ;
 
         // cn: added "mass_" to the id tag to differentiate from the status id in StoreQuery
         $html = '<td scope="row" width="15%">' . $displayname . '</td>
-			 <td><select id="mass_' . $varname . '" name="' . $varname . '[]" size="5" MULTIPLE>' . $options . '</select></td>';
+             <td><select id="mass_' . $varname . '" name="' . $varname . '[]" size="5" MULTIPLE>' . $options . '</select></td>';
 
         return $html;
     }
@@ -1241,21 +1242,21 @@ EOQ;
         $displayname = addslashes($displayname);
         $userformat = '(' . $timedate->get_user_date_format() . ')';
         $cal_dateformat = $timedate->get_cal_date_format();
-	$cal_fdow = $current_user->get_first_day_of_week() ? $current_user->get_first_day_of_week() : '0';
+    $cal_fdow = $current_user->get_first_day_of_week() ? $current_user->get_first_day_of_week() : '0';
 
         $javascriptend = <<<EOQ
-		 <script type="text/javascript">
-		Calendar.setup ({
-			inputField : "{$varname}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "{$varname}jscal_trigger", singleClick : true, step : 1, startWeekday: $cal_fdow, weekNumbers:false
-		});
-		</script>
+         <script type="text/javascript">
+        Calendar.setup ({
+            inputField : "{$varname}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "{$varname}jscal_trigger", singleClick : true, step : 1, startWeekday: $cal_fdow, weekNumbers:false
+        });
+        </script>
 EOQ;
         $html = <<<EOQ
-	<td scope="row" width="20%">$displayname</td>
-	<td class='dataField' width="30%"><input onblur="parseDate(this, '$cal_dateformat')" type="text" name='$varname' size="12" id='{$varname}jscal_field' maxlength='10' value="">
+    <td scope="row" width="20%">$displayname</td>
+    <td class='dataField' width="30%"><input onblur="parseDate(this, '$cal_dateformat')" type="text" name='$varname' size="12" id='{$varname}jscal_field' maxlength='10' value="">
     <span class="suitepicon suitepicon-module-calendar" id="{$varname}jscal_trigger" align="absmiddle" title="{$app_strings['LBL_MASSUPDATE_DATE']}" alt='{$app_strings['LBL_MASSUPDATE_DATE']}'></span>&nbsp;<span class="dateFormat">$userformat</span>
-	$javascriptend</td>
-	<script> addToValidate('MassUpdate','$varname','date',false,'$displayname');</script>
+    $javascriptend</td>
+    <script> addToValidate('MassUpdate','$varname','date',false,'$displayname');</script>
 EOQ;
 
         return $html;
@@ -1283,7 +1284,7 @@ EOQ;
         }
 
         $html = '<td scope="row" width="15%">' . $displayname . '</td>
-			 <td>' . implode("\n", $_html_result) . '</td>';
+             <td>' . implode("\n", $_html_result) . '</td>';
 
         return $html;
     }
@@ -1298,60 +1299,60 @@ EOQ;
         global $timedate, $app_strings, $app_list_strings, $theme, $current_user;
         $userformat = $timedate->get_user_time_format();
         $cal_dateformat = $timedate->get_cal_date_format();
-	$cal_fdow = $current_user->get_first_day_of_week() ? $current_user->get_first_day_of_week() : '0';
+    $cal_fdow = $current_user->get_first_day_of_week() ? $current_user->get_first_day_of_week() : '0';
 
         $javascriptend = <<<EOQ
 
-	<span id="{$varname}_trigger" class="suitepicon suitepicon-module-calendar" onclick="return false;"></span>
+    <span id="{$varname}_trigger" class="suitepicon suitepicon-module-calendar" onclick="return false;"></span>
 EOQ;
         $dtscript = getVersionedScript('include/SugarFields/Fields/Datetimecombo/Datetimecombo.js');
         $html = <<<EOQ
-		<td scope="row" width="20%">$displayname</td>
-		<td class='dataField' width="30%"><input onblur="parseDate(this, '$cal_dateformat')" type="text" name='$varname' size="12" id='{$varname}_date' maxlength='10' value="">
-		&nbsp;$javascriptend
+        <td scope="row" width="20%">$displayname</td>
+        <td class='dataField' width="30%"><input onblur="parseDate(this, '$cal_dateformat')" type="text" name='$varname' size="12" id='{$varname}_date' maxlength='10' value="">
+        &nbsp;$javascriptend
 
-		<span id="{$varname}_time_section"></span>
-		</td>
-		<input type="hidden" id="{$varname}" name="{$varname}">
-		$dtscript
-		<script type="text/javascript">
-		var combo_{$varname} = new Datetimecombo(" ", "$varname", "$userformat", '','','',1);
-		//Render the remaining widget fields
-		text = combo_{$varname}.html('');
-		document.getElementById('{$varname}_time_section').innerHTML = text;
+        <span id="{$varname}_time_section"></span>
+        </td>
+        <input type="hidden" id="{$varname}" name="{$varname}">
+        $dtscript
+        <script type="text/javascript">
+        var combo_{$varname} = new Datetimecombo(" ", "$varname", "$userformat", '','','',1);
+        //Render the remaining widget fields
+        text = combo_{$varname}.html('');
+        document.getElementById('{$varname}_time_section').innerHTML = text;
 
-		//Call eval on the update function to handle updates to calendar picker object
-		eval(combo_{$varname}.jsscript(''));
+        //Call eval on the update function to handle updates to calendar picker object
+        eval(combo_{$varname}.jsscript(''));
 
-		function update_{$varname}_available() {
-		      YAHOO.util.Event.onAvailable("{$varname}_date", this.handleOnAvailable, this);
-		}
+        function update_{$varname}_available() {
+              YAHOO.util.Event.onAvailable("{$varname}_date", this.handleOnAvailable, this);
+        }
 
-		update_{$varname}_available.prototype.handleOnAvailable = function(me) {
-			Calendar.setup ({
-			onClose : update_{$varname},
-			inputField : "{$varname}_date",
-			daFormat : "$cal_dateformat",
-			ifFormat : "$cal_dateformat",
-			button : "{$varname}_trigger",
-			singleClick : true,
-			step : 1,
-			startWeekday: $cal_fdow,
-			weekNumbers:false
-			});
+        update_{$varname}_available.prototype.handleOnAvailable = function(me) {
+            Calendar.setup ({
+            onClose : update_{$varname},
+            inputField : "{$varname}_date",
+            daFormat : "$cal_dateformat",
+            ifFormat : "$cal_dateformat",
+            button : "{$varname}_trigger",
+            singleClick : true,
+            step : 1,
+            startWeekday: $cal_fdow,
+            weekNumbers:false
+            });
 
-			//Call update for first time to round hours and minute values
-			combo_{$varname}.update(false);
-		}
+            //Call update for first time to round hours and minute values
+            combo_{$varname}.update(false);
+        }
 
-		var obj_{$varname} = new update_{$varname}_available();
-		</script>
+        var obj_{$varname} = new update_{$varname}_available();
+        </script>
 
-		<script> addToValidate('MassUpdate','{$varname}_date','date',false,'$displayname');
-		addToValidateBinaryDependency('MassUpdate', '{$varname}_hours', 'alpha', false, "{$app_strings['ERR_MISSING_REQUIRED_FIELDS']}", '{$varname}_date');
-		addToValidateBinaryDependency('MassUpdate', '{$varname}_minutes', 'alpha', false, "{$app_strings['ERR_MISSING_REQUIRED_FIELDS']}", '{$varname}_date');
-		addToValidateBinaryDependency('MassUpdate', '{$varname}_meridiem', 'alpha', false, "{$app_strings['ERR_MISSING_REQUIRED_FIELDS']}", '{$varname}_date');
-		</script>
+        <script> addToValidate('MassUpdate','{$varname}_date','date',false,'$displayname');
+        addToValidateBinaryDependency('MassUpdate', '{$varname}_hours', 'alpha', false, "{$app_strings['ERR_MISSING_REQUIRED_FIELDS']}", '{$varname}_date');
+        addToValidateBinaryDependency('MassUpdate', '{$varname}_minutes', 'alpha', false, "{$app_strings['ERR_MISSING_REQUIRED_FIELDS']}", '{$varname}_date');
+        addToValidateBinaryDependency('MassUpdate', '{$varname}_meridiem', 'alpha', false, "{$app_strings['ERR_MISSING_REQUIRED_FIELDS']}", '{$varname}_date');
+        </script>
 
 EOQ;
 
@@ -1364,30 +1365,30 @@ EOQ;
         //Check if none was set
         if (isset($this->sugarbean->field_defs[$field]['group'])) {
             $group = $this->sugarbean->field_defs[$field]['group'];
-            if (isset($this->sugarbean->field_defs[$group . "_flag"]) && isset($_POST[$group . "_flag"])
-                && $_POST[$group . "_flag"] == 1
+            if (isset($this->sugarbean->field_defs[$group . '_flag']) && isset($_POST[$group . '_flag'])
+                && $_POST[$group . '_flag'] == 1
             ) {
-                return "";
+                return '';
             }
         }
 
         $oldDateTime = $this->sugarbean->$field;
-        $oldTime = explode(" ", $oldDateTime);
+        $oldTime = explode(' ', $oldDateTime);
         if (isset($oldTime[1])) {
             $oldTime = $oldTime[1];
         } else {
             $oldTime = $timedate->now();
         }
-        $oldTime = explode(" ", $oldTime);
+        $oldTime = explode(' ', $oldTime);
         if (isset($oldTime[1])) {
             $oldTime = $oldTime[1];
         } else {
             $oldTime = $oldTime[0];
         }
-        $value = explode(" ", $value);
+        $value = explode(' ', $value);
         $value = $value[0];
 
-        return $value . " " . $oldTime;
+        return $value . ' ' . $oldTime;
     }
 
     public function checkClearField($field, $value)
@@ -1397,7 +1398,7 @@ EOQ;
             if (isset($this->sugarbean->field_defs[$field]['group'])) {
                 $group = $this->sugarbean->field_defs[$field]['group'];
                 if (isset($this->sugarbean->field_defs[$group])) {
-                    $_POST[$group] = "";
+                    $_POST[$group] = '';
                 }
             }
         }
@@ -1414,11 +1415,11 @@ EOQ;
             } elseif (!empty($_SESSION['export_where'])) { //bug 26026, sometimes some module doesn't have a metadata/SearchFields.php, the searchfrom is generated in the ListView.php.
                 //So currently massupdate will not gernerate the where sql. It will use the sql stored in the SESSION. But this will cause bug 24722, and it cannot be avoided now.
                 $where = $_SESSION['export_where'];
-                $whereArr = explode(" ", trim($where));
+                $whereArr = explode(' ', trim($where));
                 if ($whereArr[0] === trim('where')) {
                     $whereClean = array_shift($whereArr);
                 }
-                $this->where_clauses = implode(" ", $whereArr);
+                $this->where_clauses = implode(' ', $whereArr);
 
                 return;
             } else {
@@ -1506,29 +1507,29 @@ EOQ;
         );
         foreach ($this->sugarbean->field_defs as $field) {
             if (!isset($banned[isset($field['name']) ? $field['name'] : null]) && (!isset($field['massupdate']) || !empty($field['massupdate']))) {
-                if (isset($field['type']) && $field['type'] == 'relate' && isset($field['id_name']) && $field['id_name'] == 'assigned_user_id') {
+                if (isset($field['type']) && $field['type'] === 'relate' && isset($field['id_name']) && $field['id_name'] === 'assigned_user_id') {
                     $field['type'] = 'assigned_user_name';
                 }
                 if (isset($field['custom_type'])) {
                     $field['type'] = $field['custom_type'];
                 }
                 if (isset($field['type'])) {
-                    switch ($field["type"]) {
-                        case "relate":
-                        case "parent":
-                        case "int":
-                        case "contact_id":
-                        case "assigned_user_name":
-                        case "account_id":
-                        case "account_name":
-                        case "bool":
-                        case "enum":
-                        case "dynamicenum":
-                        case "multienum":
-                        case "radioenum":
-                        case "datetimecombo":
-                        case "datetime":
-                        case "date":
+                    switch ($field['type']) {
+                        case 'relate':
+                        case 'parent':
+                        case 'int':
+                        case 'contact_id':
+                        case 'assigned_user_name':
+                        case 'account_id':
+                        case 'account_name':
+                        case 'bool':
+                        case 'enum':
+                        case 'dynamicenum':
+                        case 'multienum':
+                        case 'radioenum':
+                        case 'datetimecombo':
+                        case 'datetime':
+                        case 'date':
                             return true;
                             break;
                     }

@@ -29,7 +29,7 @@ namespace App\Engine\LegacyHandler;
 
 class DefaultLegacyHandler extends LegacyHandler
 {
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return 'default-legacy-handler';
     }

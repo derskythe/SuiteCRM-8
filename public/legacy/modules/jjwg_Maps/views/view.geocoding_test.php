@@ -15,7 +15,7 @@ class Jjwg_MapsViewGeocoding_Test extends SugarView
 
 
 
-    public function display()
+    public function display() : void
     {
         if (!isset($_REQUEST['geocoding_address'])) {
             $_REQUEST['geocoding_address'] = '';

@@ -89,12 +89,12 @@ class AdministrationTest extends SuitePHPUnitFrameworkTestCase
 
         //test with empty string
         $expected = array(false, false);
-        $actual = $admin->get_config_prefix('');
+        $actual = $admin->getConfigPrefix('');
         self::assertSame($expected, $actual);
 
         //test with a valid string
         $expected = array('category', 'test');
-        $actual = $admin->get_config_prefix('category_test');
+        $actual = $admin->getConfigPrefix('category_test');
         self::assertSame($expected, $actual);
     }
 }

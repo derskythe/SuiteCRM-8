@@ -39,7 +39,7 @@
  */
 
 if (!defined('sugarEntry') || !sugarEntry) {
-    die('Not A Valid Entry Point');
+    die('Not A Valid Entry Point');
 }
 
 require_once('soap/SoapHelperFunctions.php');
@@ -213,7 +213,7 @@ function validate_authenticated($session_id)
         session_id($session_id);
         session_start();
 
-        if (!empty($_SESSION['is_valid_session']) && is_valid_ip_address('ip_address') && $_SESSION['type'] == 'user') {
+        if (!empty($_SESSION['is_valid_session']) && is_valid_ip_address('ip_address') && $_SESSION['type'] === 'user') {
             global $current_user;
 
             $current_user = BeanFactory::newBean('Users');
@@ -249,8 +249,8 @@ function is_valid_ip_address($session_var)
         // check to see if we've got a current ip address in $_SESSION
         // and check to see if the session has been hijacked by a foreign ip
         if (isset($_SESSION[$session_var])) {
-            $session_parts = explode(".", $_SESSION[$session_var]);
-            $client_parts = explode(".", $clientIP);
+            $session_parts = explode('.', $_SESSION[$session_var]);
+            $client_parts = explode('.', $clientIP);
             if (count($session_parts) < 4) {
                 $classCheck = 0;
             } else {
@@ -352,7 +352,7 @@ function get_entry_list(
         return array('result_count' => -1, 'entry_list' => array(), 'error' => $error->get_soap_array());
     }
     $using_cp = false;
-    if ($module_name == 'CampaignProspects') {
+    if ($module_name === 'CampaignProspects') {
         $module_name = 'Prospects';
         $using_cp = true;
     }
@@ -412,7 +412,7 @@ function get_entry_list(
     $output_list = array();
 
     $isEmailModule = false;
-    if ($module_name == 'Emails') {
+    if ($module_name === 'Emails') {
         $isEmailModule = true;
     }
     // retrieve the vardef information on the bean's fields.
@@ -437,9 +437,9 @@ function get_entry_list(
         if (property_exists($value, 'currency_id') && $userCurrency->deleted != 1) {
             // walk through all currency-related fields
             foreach ($value->field_defs as $temp_field) {
-                if (isset($temp_field['type']) && 'relate' == $temp_field['type']
-                    && isset($temp_field['module']) && 'Currencies' == $temp_field['module']
-                    && isset($temp_field['id_name']) && 'currency_id' == $temp_field['id_name']
+                if (isset($temp_field['type']) && 'relate' === $temp_field['type']
+                    && isset($temp_field['module']) && 'Currencies' === $temp_field['module']
+                    && isset($temp_field['id_name']) && 'currency_id' === $temp_field['id_name']
                 ) {
                     // populate related properties manually
                     $temp_property = $temp_field['name'];
@@ -447,8 +447,8 @@ function get_entry_list(
                     $value->$temp_property = $userCurrency->$currency_property;
                 } elseif ($value->currency_id != $userCurrency->id
                     && isset($temp_field['type'])
-                    && 'currency' == $temp_field['type']
-                    && substr((string) $temp_field['name'], -9) != '_usdollar'
+                    && 'currency' === $temp_field['type']
+                    && !str_ends_with((string) $temp_field['name'], '_usdollar')
                 ) {
                     $temp_property = $temp_field['name'];
                     $value->$temp_property *= $userCurrency->conversion_rate;
@@ -544,7 +544,7 @@ function get_entries($session, $module_name, $ids, $select_fields)
         return array('field_list' => $field_list, 'entry_list' => array(), 'error' => $error->get_soap_array());
     }
     $using_cp = false;
-    if ($module_name == 'CampaignProspects') {
+    if ($module_name === 'CampaignProspects') {
         $module_name = 'Prospects';
         $using_cp = true;
     }
@@ -653,7 +653,7 @@ function set_entry($session, $module_name, $name_value_list)
     $seed = new $class_name();
 
     foreach ($name_value_list as $value) {
-        if ($value['name'] == 'id' && isset($value['value']) && strlen((string) $value['value']) > 0) {
+        if ($value['name'] === 'id' && isset($value['value']) && strlen((string) $value['value']) > 0) {
             $result = $seed->retrieve($value['value']);
             //bug: 44680 - check to ensure the user has access before proceeding.
             if (is_null($result)) {
@@ -665,7 +665,7 @@ function set_entry($session, $module_name, $name_value_list)
         }
     }
     foreach ($name_value_list as $value) {
-        $GLOBALS['log']->debug($value['name'] . " : " . $value['value']);
+        $GLOBALS['log']->debug($value['name'] . ' : ' . $value['value']);
         $seed->{$value['name']} = $value['value'];
     }
     if (!$seed->ACLAccess('Save') || ($seed->deleted == 1 && !$seed->ACLAccess('Delete'))) {
@@ -853,7 +853,7 @@ function relate_note_to_module($session, $note_id, $module_name, $module_id)
         return array('result_count' => -1, 'entry_list' => array(), 'error' => $error->get_soap_array());
     }
 
-    if ($module_name != 'Contacts') {
+    if ($module_name !== 'Contacts') {
         $seed->parent_type = $module_name;
         $seed->parent_id = $module_id;
     } else {
@@ -1071,10 +1071,12 @@ $server->register(
 /**
  * Update the properties of a contact that is portal user.  Add the portal user name to the user's properties.
  *
- * @param String $session -- Session ID returned by a previous call to login.
- * @param String $portal_name -- The portal user_name of the contact
+ * @param String $session        -- Session ID returned by a previous call to login.
+ * @param String $portal_name    -- The portal user_name of the contact
  * @param Array $name_value_list -- collection of 'name'=>'value' pairs for finding the contact
+ *
  * @return Empty error on success, Error on failure
+ * @throws Exception
  */
 function update_portal_user($session, $portal_name, $name_value_list)
 {
@@ -1362,7 +1364,7 @@ function get_relationships($session, $module_name, $module_id, $related_module, 
     if (!empty($accessWhere)) {
         $sql .= ' AND ' . $accessWhere;
     }
-    
+
     $result = $related_mod->db->query($sql);
     while ($row = $related_mod->db->fetchByAssoc($result)) {
         $list[] = $row['id'];
@@ -1492,7 +1494,7 @@ function handle_set_relationship($set_relationship_value, $session = '')
 
         return $error->get_soap_array();
     }
-    if ($module1 == "Contacts" && $module2 == "Users") {
+    if ($module1 === 'Contacts' && $module2 === 'Users') {
         $key = 'contacts_users_id';
     } else {
         $key = array_search(strtolower($module2), $mod->relationship_fields, true);
@@ -1500,7 +1502,7 @@ function handle_set_relationship($set_relationship_value, $session = '')
             $key = Relationship::retrieve_by_modules($module1, $module2, $GLOBALS['db']);
 
             // BEGIN SnapLogic fix for bug 32064
-            if ($module1 == "Quotes" && $module2 == "ProductBundles") {
+            if ($module1 === 'Quotes' && $module2 === 'ProductBundles') {
                 // Alternative solution is perhaps to
                 // do whatever Sugar does when the same
                 // request is received from the web:
@@ -1513,7 +1515,7 @@ function handle_set_relationship($set_relationship_value, $session = '')
                 $result = DBManagerFactory::getInstance()->query(
                     $query,
                     true,
-                    "Error checking for previously existing relationship between quote and product_bundle"
+                    'Error checking for previously existing relationship between quote and product_bundle'
                 );
                 $row = DBManagerFactory::getInstance()->fetchByAssoc($result);
                 if (isset($row['count']) && $row['count'] > 0) {
@@ -1521,8 +1523,8 @@ function handle_set_relationship($set_relationship_value, $session = '')
                 }
 
                 $query = "SELECT MAX(bundle_index)+1 AS idx FROM product_bundle_quote WHERE quote_id = '{$module1_id}' AND deleted='0'";
-                $result = DBManagerFactory::getInstance()->query($query, true, "Error getting bundle_index");
-                $GLOBALS['log']->debug("*********** Getting max bundle_index");
+                $result = DBManagerFactory::getInstance()->query($query, true, 'Error getting bundle_index');
+                $GLOBALS['log']->debug('*********** Getting max bundle_index');
                 $GLOBALS['log']->debug($query);
                 $row = DBManagerFactory::getInstance()->fetchByAssoc($result);
 
@@ -1535,7 +1537,7 @@ function handle_set_relationship($set_relationship_value, $session = '')
                 $pb->save();
 
                 return $error->get_soap_array();
-            } elseif ($module1 == "ProductBundles" && $module2 == "Products") {
+            } elseif ($module1 === 'ProductBundles' && $module2 === 'Products') {
                 // And, well, similar things apply in this case
                 $pb_cls = $beanList[$module1];
                 $pb = new $pb_cls();
@@ -1546,7 +1548,7 @@ function handle_set_relationship($set_relationship_value, $session = '')
                 $result = DBManagerFactory::getInstance()->query(
                     $query,
                     true,
-                    "Error checking for previously existing relationship between quote and product_bundle"
+                    'Error checking for previously existing relationship between quote and product_bundle'
                 );
                 $row = DBManagerFactory::getInstance()->fetchByAssoc($result);
                 if (isset($row['count']) && $row['count'] > 0) {
@@ -1554,8 +1556,8 @@ function handle_set_relationship($set_relationship_value, $session = '')
                 }
 
                 $query = "SELECT MAX(product_index)+1 AS idx FROM product_bundle_product WHERE bundle_id='{$module1_id}'";
-                $result = DBManagerFactory::getInstance()->query($query, true, "Error getting bundle_index");
-                $GLOBALS['log']->debug("*********** Getting max bundle_index");
+                $result = DBManagerFactory::getInstance()->query($query, true, 'Error getting bundle_index');
+                $GLOBALS['log']->debug('*********** Getting max bundle_index');
                 $GLOBALS['log']->debug($query);
                 $row = DBManagerFactory::getInstance()->fetchByAssoc($result);
 
@@ -1591,11 +1593,11 @@ function handle_set_relationship($set_relationship_value, $session = '')
         return $error->get_soap_array();
     }
 
-    if (($module1 == 'Meetings' || $module1 == 'Calls') && ($module2 == 'Contacts' || $module2 == 'Users')) {
+    if (($module1 === 'Meetings' || $module1 === 'Calls') && ($module2 === 'Contacts' || $module2 === 'Users')) {
         $key = strtolower($module2);
         $mod->load_relationship($key);
         $mod->$key->add($module2_id);
-    } elseif ($module1 == 'Contacts' && ($module2 == 'Notes' || $module2 == 'Calls' || $module2 == 'Meetings' || $module2 == 'Tasks') && !empty($session)) {
+    } elseif ($module1 === 'Contacts' && ($module2 === 'Notes' || $module2 === 'Calls' || $module2 === 'Meetings' || $module2 === 'Tasks') && !empty($session)) {
         $mod->$key = $module2_id;
         $mod->save_relationship_changes(false);
         if (!empty($mod->account_id)) {
@@ -1706,20 +1708,20 @@ function search_by_module($user_name, $password, $search_string, $modules, $offs
                 'Accounts' => array(0 => "accounts.name like '{0}%'"),
                 'EmailAddresses' => array(0 => "ea.email_address like '{0}%'")
             ),
-            'fields' => "accounts.id, accounts.name"
+            'fields' => 'accounts.id, accounts.name'
         ),
         'Bugs' => array(
-            'where' => array('Bugs' => array(0 => "bugs.name like '{0}%'", 1 => "bugs.bug_number = {0}")),
-            'fields' => "bugs.id, bugs.name, bugs.bug_number"
+            'where' => array('Bugs' => array(0 => "bugs.name like '{0}%'", 1 => 'bugs.bug_number = {0}' )),
+            'fields' => 'bugs.id, bugs.name, bugs.bug_number'
         ),
         'Cases' => array(
             'where' => array(
                 'Cases' => array(
                     0 => "cases.name like '{0}%'",
-                    1 => "cases.case_number = {0}"
+                    1 => 'cases.case_number = {0}'
                 )
             ),
-            'fields' => "cases.id, cases.name, cases.case_number"
+            'fields' => 'cases.id, cases.name, cases.case_number'
         ),
         'Leads' => array(
             'where' => array(
@@ -1729,15 +1731,15 @@ function search_by_module($user_name, $password, $search_string, $modules, $offs
                 ),
                 'EmailAddresses' => array(0 => "ea.email_address like '{0}%'")
             ),
-            'fields' => "leads.id, leads.first_name, leads.last_name, leads.status"
+            'fields' => 'leads.id, leads.first_name, leads.last_name, leads.status'
         ),
         'Project' => array(
             'where' => array('Project' => array(0 => "project.name like '{0}%'")),
-            'fields' => "project.id, project.name"
+            'fields' => 'project.id, project.name'
         ),
         'ProjectTask' => array(
             'where' => array('ProjectTask' => array(0 => "project.id = '{0}'")),
-            'fields' => "project_task.id, project_task.name"
+            'fields' => 'project_task.id, project_task.name'
         ),
         'Contacts' => array(
             'where' => array(
@@ -1747,15 +1749,15 @@ function search_by_module($user_name, $password, $search_string, $modules, $offs
                 ),
                 'EmailAddresses' => array(0 => "ea.email_address like '{0}%'")
             ),
-            'fields' => "contacts.id, contacts.first_name, contacts.last_name"
+            'fields' => 'contacts.id, contacts.first_name, contacts.last_name'
         ),
         'Opportunities' => array(
             'where' => array('Opportunities' => array(0 => "opportunities.name like '{0}%'")),
-            'fields' => "opportunities.id, opportunities.name"
+            'fields' => 'opportunities.id, opportunities.name'
         ),
         'Users' => array(
             'where' => array('EmailAddresses' => array(0 => "ea.email_address like '{0}%'")),
-            'fields' => "users.id, users.user_name, users.first_name, ea.email_address"
+            'fields' => 'users.id, users.user_name, users.first_name, ea.email_address'
         ),
     );
 
@@ -1809,20 +1811,20 @@ function search_by_module($user_name, $password, $search_string, $modules, $offs
                         if (!empty($query)) {
                             $tmpQuery = ' UNION ';
                         }
-                        $tmpQuery .= "SELECT " . $query_array[$module_name]['fields'] . " FROM $seed->table_name ";
+                        $tmpQuery .= 'SELECT ' . $query_array[$module_name]['fields'] . " FROM $seed->table_name ";
                         // We need to confirm that the user is a member of the team of the item.
 
 
-                        if ($module_name == 'ProjectTask') {
+                        if ($module_name === 'ProjectTask') {
                             $tmpQuery .= "INNER JOIN project ON $seed->table_name.project_id = project.id ";
                         }
 
                         if (isset($seed->emailAddress) && $key == 'EmailAddresses') {
                             $tmpQuery .= " INNER JOIN email_addr_bean_rel eabl  ON eabl.bean_id = $seed->table_name.id and eabl.deleted=0";
-                            $tmpQuery .= " INNER JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ";
+                            $tmpQuery .= ' INNER JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ';
                         }
-                        $where = "WHERE (";
-                        $search_terms = explode(", ", $search_string);
+                        $where = 'WHERE (';
+                        $search_terms = explode(', ', $search_string);
                         $termCount = count($search_terms);
                         $count = 1;
                         if ($key != 'EmailAddresses') {
@@ -1835,7 +1837,7 @@ function search_by_module($user_name, $password, $search_string, $modules, $offs
                                     $addQuery = false;
                                 }
                                 if ($count < $termCount) {
-                                    $where .= " OR ";
+                                    $where .= ' OR ';
                                 }
                                 $count++;
                             }
@@ -1844,7 +1846,7 @@ function search_by_module($user_name, $password, $search_string, $modules, $offs
                             foreach ($search_terms as $term) {
                                 $where .= "ea.email_address LIKE '" . DBManagerFactory::getInstance()->quote($term) . "'";
                                 if ($count < $termCount) {
-                                    $where .= " OR ";
+                                    $where .= ' OR ';
                                 }
                                 $count++;
                             }
@@ -1946,7 +1948,7 @@ function get_mailmerge_document($session, $file_name, $fields)
 
         //parse fields
         //$token1 = strtolower($class1);
-        if ($class1 == 'Prospects') {
+        if ($class1 === 'Prospects') {
             $class1 = 'CampaignProspects';
         }
         foreach ($fields as $field) {
@@ -1972,7 +1974,7 @@ function get_mailmerge_document($session, $file_name, $fields)
         $html .= '</tr>';
 
         $ids = $merge_array['ids'];
-        $is_prospect_merge = ($seed1->object_name == 'Prospect');
+        $is_prospect_merge = ($seed1->object_name === 'Prospect');
         foreach ($ids as $key => $value) {
             if ($is_prospect_merge) {
                 $seed1 = $seed1->retrieveTarget($key);
@@ -1982,7 +1984,7 @@ function get_mailmerge_document($session, $file_name, $fields)
             $html .= '<tr>';
             foreach ($master_fields as $master_field) {
                 if (isset($seed1->$master_field)) {
-                    if ($seed1->field_name_map[$master_field]['type'] == 'enum') {
+                    if ($seed1->field_name_map[$master_field]['type'] === 'enum') {
                         //pull in the translated dom
                         $html .= '<td>' . $app_list_strings[$seed1->field_name_map[$master_field]['options']][$seed1->$master_field] . '</td>';
                     } else {
@@ -1996,7 +1998,7 @@ function get_mailmerge_document($session, $file_name, $fields)
                 $seed2->retrieve($value);
                 foreach ($related_fields as $related_field) {
                     if (isset($seed2->$related_field)) {
-                        if ($seed2->field_name_map[$related_field]['type'] == 'enum') {
+                        if ($seed2->field_name_map[$related_field]['type'] === 'enum') {
                             //pull in the translated dom
                             $html .= '<td>' . $app_list_strings[$seed2->field_name_map[$related_field]['options']][$seed2->$related_field] . '</td>';
                         } else {
@@ -2009,7 +2011,7 @@ function get_mailmerge_document($session, $file_name, $fields)
             }
             $html .= '</tr>';
         }
-        $html .= "</table></body></html>";
+        $html .= '</table></body></html>';
     }
 
     $result = base64_encode($html);
@@ -2075,7 +2077,7 @@ function get_mailmerge_document2($session, $file_name, $fields)
 
         //parse fields
         //$token1 = strtolower($class1);
-        if ($class1 == 'Prospects') {
+        if ($class1 === 'Prospects') {
             $class1 = 'CampaignProspects';
         }
         foreach ($fields as $field) {
@@ -2102,7 +2104,7 @@ function get_mailmerge_document2($session, $file_name, $fields)
 
         $ids = $merge_array['ids'];
         $resultIds = array();
-        $is_prospect_merge = ($seed1->object_name == 'Prospect');
+        $is_prospect_merge = ($seed1->object_name === 'Prospect');
         if ($is_prospect_merge) {
             $pSeed = $seed1;
         }
@@ -2116,10 +2118,10 @@ function get_mailmerge_document2($session, $file_name, $fields)
             $html .= '<tr>';
             foreach ($master_fields as $master_field) {
                 if (isset($seed1->$master_field)) {
-                    if ($seed1->field_name_map[$master_field]['type'] == 'enum') {
+                    if ($seed1->field_name_map[$master_field]['type'] === 'enum') {
                         //pull in the translated dom
                         $html .= '<td>' . $app_list_strings[$seed1->field_name_map[$master_field]['options']][$seed1->$master_field] . '</td>';
-                    } elseif ($seed1->field_name_map[$master_field]['type'] == 'multienum') {
+                    } elseif ($seed1->field_name_map[$master_field]['type'] === 'multienum') {
                         if (isset($app_list_strings[$seed1->field_name_map[$master_field]['options']])) {
                             $items = unencodeMultienum($seed1->$master_field);
                             $output = array();
@@ -2135,7 +2137,7 @@ function get_mailmerge_document2($session, $file_name, $fields)
                             $encoded_output = encodeMultienumValue($output);
                             $html .= "<td>$encoded_output</td>";
                         }
-                    } elseif ($seed1->field_name_map[$master_field]['type'] == 'currency') {
+                    } elseif ($seed1->field_name_map[$master_field]['type'] === 'currency') {
                         $amount_field = $seed1->$master_field;
                         $params = array('currency_symbol' => false);
                         $amount_field = currency_format_number($amount_field, $params);
@@ -2152,10 +2154,10 @@ function get_mailmerge_document2($session, $file_name, $fields)
                 $seed2->retrieve($value);
                 foreach ($related_fields as $related_field) {
                     if (isset($seed2->$related_field)) {
-                        if ($seed2->field_name_map[$related_field]['type'] == 'enum') {
+                        if ($seed2->field_name_map[$related_field]['type'] === 'enum') {
                             //pull in the translated dom
                             $html .= '<td>' . $app_list_strings[$seed2->field_name_map[$related_field]['options']][$seed2->$related_field] . '</td>';
-                        } elseif ($seed2->field_name_map[$related_field]['type'] == 'currency') {
+                        } elseif ($seed2->field_name_map[$related_field]['type'] === 'currency') {
                             $amount_field = $seed2->$related_field;
                             $params = array('currency_symbol' => false);
                             $amount_field = currency_format_number($amount_field, $params);
@@ -2170,7 +2172,7 @@ function get_mailmerge_document2($session, $file_name, $fields)
             }
             $html .= '</tr>';
         }
-        $html .= "</table></body></html>";
+        $html .= '</table></body></html>';
     }
     $result = base64_encode($html);
 
@@ -2434,7 +2436,7 @@ function handle_set_entries($module_name, $name_value_lists, $select_fields = fa
 
         //See if we can retrieve the seed by a given id value
         foreach ($name_value_list as $value) {
-            if ($value['name'] == 'id') {
+            if ($value['name'] === 'id') {
                 $seed->retrieve($value['value']);
                 break;
             }
@@ -2446,21 +2448,21 @@ function handle_set_entries($module_name, $name_value_lists, $select_fields = fa
         foreach ($name_value_list as $value) {
             $val = $value['value'];
 
-            if ($seed->field_name_map[$value['name']]['type'] == 'enum' || $seed->field_name_map[$value['name']]['type'] == 'radioenum') {
+            if ($seed->field_name_map[$value['name']]['type'] === 'enum' || $seed->field_name_map[$value['name']]['type'] === 'radioenum') {
                 $vardef = $seed->field_name_map[$value['name']];
                 if (isset($app_list_strings[$vardef['options']]) && !isset($app_list_strings[$vardef['options']][$val])) {
-                    if (in_array($val, $app_list_strings[$vardef['options']])) {
+                    if (in_array($val, $app_list_strings[$vardef['options']], true)) {
                         $val = array_search($val, $app_list_strings[$vardef['options']], true);
                     }
                 }
-            } elseif ($seed->field_name_map[$value['name']]['type'] == 'multienum') {
+            } elseif ($seed->field_name_map[$value['name']]['type'] === 'multienum') {
                 $vardef = $seed->field_name_map[$value['name']];
 
                 if (isset($app_list_strings[$vardef['options']]) && !isset($app_list_strings[$vardef['options']][$value])) {
-                    $items = explode(",", $val);
+                    $items = explode(',', $val);
                     $parsedItems = array();
                     foreach ($items as $item) {
-                        if (in_array($item, $app_list_strings[$vardef['options']])) {
+                        if (in_array($item, $app_list_strings[$vardef['options']], true)) {
                             $keyVal = array_search($item, $app_list_strings[$vardef['options']], true);
                             array_push($parsedItems, $keyVal);
                         }
@@ -2487,7 +2489,7 @@ function handle_set_entries($module_name, $name_value_lists, $select_fields = fa
         $count++;
 
         //Add the account to a contact
-        if ($module_name == 'Contacts') {
+        if ($module_name === 'Contacts') {
             $GLOBALS['log']->debug('Creating Contact Account');
             add_create_account($seed);
             $duplicate_id = check_for_duplicate_contacts($seed);
@@ -2506,7 +2508,7 @@ function handle_set_entries($module_name, $name_value_lists, $select_fields = fa
                 if ($seed->ACLAccess('Save')) {
                     //Determine if this is a first time sync.  We find out based on whether or not a contacts_users relationship exists
                     $seed->id = $duplicate_id;
-                    $seed->load_relationship("user_sync");
+                    $seed->load_relationship('user_sync');
                     $beans = $seed->user_sync->getBeans();
                     $first_sync = empty($beans);
 
@@ -2517,7 +2519,7 @@ function handle_set_entries($module_name, $name_value_lists, $select_fields = fa
                     $ids[] = $duplicate_id;//we have a conflict
                 }
             }
-        } elseif ($module_name == 'Meetings' || $module_name == 'Calls') {
+        } elseif ($module_name === 'Meetings' || $module_name === 'Calls') {
             //we are going to check if we have a meeting in the system
             //with the same outlook_id. If we do find one then we will grab that
             //id and save it

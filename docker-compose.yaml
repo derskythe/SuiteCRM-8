@@ -1,0 +1,127 @@
+---
+x-logging:
+  &default-logging
+  driver: "json-file"
+  options:
+    max-size: "100m"
+    max-file: "3"
+    compress: "true"
+
+services:
+  suitecrm-app-php:
+    image: ghcr.io/derskythe/suitecrm-8:latest
+    container_name: suitecrm-app-php
+    hostname: suitecrm-app-php
+    restart: unless-stopped
+    platform: "linux/amd64"
+    pull_policy: build
+    stop_grace_period: 10s
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: final
+    develop:
+      watch:
+        - action: sync
+          path: ./core/backend
+          target: /var/www/html/app/core/backend
+        - action: sync
+          path: ./core/app
+          target: /var/www/html/app/core/app
+        - action: sync
+          path: ./core/modules
+          target: /var/www/html/app/core/modules
+        - action: sync
+          path: ./public/legacy/include
+          target: /var/www/html/app/public/legacy/include
+        - action: sync
+          path: ./public/legacy/lib
+          target: /var/www/html/app/public/legacy/lib
+        - action: sync
+          path: ./public/legacy/modules
+          target: /var/www/html/app/public/legacy/modules
+    environment:
+      TZ: 'Asia/Baku'
+      SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
+      DATABASE_URL: mysql://${MYSQL_USER:-app_user}:${MYSQL_PASSWORD:-ChangeIt}@database:3306/${MYSQL_DATABASE:-app}?serverVersion=${MYSQL_VERSION:-8}&charset=${MYSQL_CHARSET:-utf8mb4}
+      SYMFONY_VERSION: ${SYMFONY_VERSION:-}
+      STABILITY: ${STABILITY:-dev}
+    volumes:
+        - type: volume
+          source: app-data
+          target: /var/www/html/app
+          read_only: false
+          volume:
+            nocopy: false
+        - type: bind
+          source: ./logs
+          target: /var/www/html/app/logs
+          read_only: false
+          volume:
+            nocopy: true
+#    entrypoint: /bin/bash
+    depends_on:
+      suitecrm-db:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/public" ]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    ports:
+      # HTTP
+      - target: 8080
+        mode: host
+        published: 8080
+        protocol: tcp
+      # HTTPS
+      - target: 443
+        mode: host
+        published: 443
+        protocol: tcp
+    tty: true
+    cpus: 0.5
+    mem_limit: 1500Mb
+    logging: *default-logging
+
+  suitecrm-db:
+    container_name: suitecrm-db
+    hostname: suitecrm-db
+    image: mariadb:10-ubi
+    ports:
+      - target: 3306
+        mode: host
+        published: 3306
+        protocol: tcp
+    volumes:
+      - mysql-data:/var/lib/mysql:rw
+      - ./mysql_init/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql:r
+      - ./mysql_init/mariadb.cnf:/etc/mysql/mariadb.conf.d/mariadb.cnf:r
+    secrets:
+      - secret_db_credentials
+    env_file:
+      - .db_credentials.env
+    environment:
+      TZ: 'Asia/Baku'
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+      MARIADB_AUTO_UPGRADE: "true"
+    ulimits:
+      memlock: 2097152 # 2MB
+    cpus: 1
+    mem_limit: 2GB
+    healthcheck:
+      test: [ "CMD", "/usr/local/bin/healthcheck.sh" ,"--connect", "--innodb_initialized" ]
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging: *default-logging
+
+volumes:
+  mysql-data:
+    name: mysql-data
+  app-data:
+
+secrets:
+  secret_db_credentials:
+    file: .db_credentials.env

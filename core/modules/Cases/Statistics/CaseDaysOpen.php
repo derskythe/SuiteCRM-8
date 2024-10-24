@@ -25,10 +25,10 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Cases\Statistics;
 
 use aCase;
+use Psr\Log\LoggerInterface;
 use App\Statistics\DateTimeStatisticsHandlingTrait;
 use App\Statistics\Entity\Statistic;
 use App\Data\LegacyHandler\AuditQueryingTrait;
@@ -49,7 +49,7 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     use AuditQueryingTrait;
 
     public const HANDLER_KEY = 'case-days-open';
-    public const KEY = 'case-days-open';
+    public const KEY         = 'case-days-open';
 
     /**
      * @var ModuleNameMapperInterface
@@ -62,6 +62,7 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
     /**
      * ListDataHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -71,16 +72,26 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        EntityManagerInterface $entityManager,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        EntityManagerInterface    $entityManager,
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->entityManager = $entityManager;
     }
@@ -88,7 +99,7 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -96,7 +107,7 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -105,14 +116,13 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
      * @inheritDoc
      * @throws Exception
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
 
         if (empty($module) || empty($id)) {
             return $this->getEmptyResponse(self::KEY);
         }
-
 
         $legacyModuleName = $this->moduleNameMapper->toLegacy($module);
 
@@ -140,9 +150,9 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
         $statistic = $this->getDateDiffStatistic(self::KEY, $start, $end);
 
         if ($this->inClosedState($case)) {
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_WAS_OPEN', 'endLabelKey' => 'LBL_STAT_DAYS']);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_WAS_OPEN', 'endLabelKey' => 'LBL_STAT_DAYS' ]);
         } else {
-            $this->addMetadata($statistic, ['labelKey' => 'LBL_HAS_BEEN_OPEN', 'endLabelKey' => 'LBL_STAT_DAYS']);
+            $this->addMetadata($statistic, [ 'labelKey' => 'LBL_HAS_BEEN_OPEN', 'endLabelKey' => 'LBL_STAT_DAYS' ]);
         }
 
         $this->close();
@@ -153,10 +163,11 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
     /**
      * @param string $id
+     *
      * @return aCase
      */
 
-    protected function getCase(string $id): aCase
+    protected function getCase(string $id) : aCase
     {
         /** @var aCase $case */
         $case = BeanFactory::getBean('Cases', $id);
@@ -166,19 +177,21 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
 
     /**
      * @param SugarBean $bean
+     *
      * @return array
      * @throws DBALException
      */
-    protected function getAuditInfo(SugarBean $bean): array
+    protected function getAuditInfo(SugarBean $bean) : array
     {
         return $this->queryAuditInfo($this->entityManager, $bean, 'state');
     }
 
     /**
      * @param aCase $case
+     *
      * @return bool
      */
-    protected function inClosedState(aCase $case): bool
+    protected function inClosedState(aCase $case) : bool
     {
         return $case->state === 'Closed';
     }
@@ -186,7 +199,7 @@ class CaseDaysOpen extends LegacyHandler implements StatisticsProviderInterface
     /**
      * @return string
      */
-    protected function getClosedStatus(): string
+    protected function getClosedStatus() : string
     {
         return 'Closed';
     }

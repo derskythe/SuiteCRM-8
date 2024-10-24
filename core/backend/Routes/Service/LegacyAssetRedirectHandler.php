@@ -35,7 +35,7 @@ class LegacyAssetRedirectHandler extends LegacyRedirectHandler
     /**
      * @var string[]
      */
-    private $legacyAssetPaths;
+    private array $legacyAssetPaths;
 
     /**
      * LegacyAssetRedirectHandler constructor.

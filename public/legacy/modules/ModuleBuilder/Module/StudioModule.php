@@ -149,7 +149,7 @@ class StudioModule
         $templates = array();
         $d = dir('include/SugarObjects/templates');
         while ($filename = $d->read()) {
-            if (substr($filename, 0, 1) !== '.') {
+            if (!str_starts_with($filename, '.')) {
                 $templates [strtolower($filename)] = strtolower($filename);
             }
         }
@@ -161,7 +161,7 @@ class StudioModule
         do {
             $seed = new $type();
             $type = get_parent_class($seed);
-        } while (!in_array(strtolower($type), $templates) && $type !== 'SugarBean');
+        } while (!in_array(strtolower($type), $templates, true) && $type !== 'SugarBean');
 
         if ($type !== 'SugarBean') {
             return strtolower($type);
@@ -181,7 +181,7 @@ class StudioModule
             return $types [$this->module];
         }
 
-        return "basic";
+        return 'basic';
     }
 
     /**
@@ -410,7 +410,7 @@ class StudioModule
                  ) as $view => $label) {
             try {
                 $title = translate($label);
-                if ($label == 'LBL_BASIC_SEARCH') {
+                if ($label === 'LBL_BASIC_SEARCH') {
                     $name = 'BasicSearch';
                 } elseif ($label === 'LBL_ADVANCED_SEARCH') {
                     $name = 'AdvancedSearch';
@@ -456,12 +456,12 @@ class StudioModule
 
         $nodes = array();
 
-        $GLOBALS ['log']->debug("StudioModule->getSubpanels(): getting subpanels for " . $this->module);
+        $GLOBALS ['log']->debug('StudioModule->getSubpanels(): getting subpanels for ' . $this->module);
 
         // counter to add a unique key to assoc array below
         $ct = 0;
         foreach (SubPanel::getModuleSubpanels($this->module) as $name => $label) {
-            if ($name == 'users') {
+            if ($name === 'users') {
                 continue;
             }
             $subname = sugar_ucfirst((!empty($label)) ? translate($label, $this->module) : $name);
@@ -496,7 +496,7 @@ class StudioModule
             if (is_dir($dir)) {
                 foreach (scandir($dir) as $fileName) {
                     // sanity check to confirm that this is a usable subpanel...
-                    if (substr((string) $fileName, 0, 1) !== '.' && substr(strtolower($fileName), -4) == ".php"
+                    if (!str_starts_with((string) $fileName, '.') && str_ends_with(strtolower($fileName), '.php')
                         && AbstractRelationships::validSubpanel("$dir/$fileName")
                     ) {
                         $subname = str_replace('.php', '', (string) $fileName);
@@ -518,8 +518,8 @@ class StudioModule
         global $moduleList, $beanFiles, $beanList, $module;
 
         //use tab controller function to get module list with named keys
-        require_once("modules/MySettings/TabController.php");
-        require_once("include/SubPanel/SubPanelDefinitions.php");
+        require_once('modules/MySettings/TabController.php');
+        require_once('include/SubPanel/SubPanelDefinitions.php');
         $modules_to_check = TabController::get_key_array($moduleList);
 
         //change case to match subpanel processing later on
@@ -565,7 +565,7 @@ class StudioModule
      */
     public function removeFieldFromLayouts($fieldName)
     {
-        require_once("modules/ModuleBuilder/parsers/ParserFactory.php");
+        require_once('modules/ModuleBuilder/parsers/ParserFactory.php');
         $GLOBALS ['log']->info(get_class($this) . "->removeFieldFromLayouts($fieldName)");
         $sources = $this->getViewMetadataSources();
         $sources[] = array('type' => MB_BASICSEARCH);

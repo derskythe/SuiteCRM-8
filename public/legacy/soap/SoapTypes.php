@@ -49,9 +49,9 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "id" => array('name'=>"id",'type'=>'xsd:string'),
-        "filename" => array('name'=>"filename",'type'=>'xsd:string'),
-        "file" => array('name'=>"file",'type'=>'xsd:string'),
+        'id'       => array( 'name' => 'id', 'type' =>'xsd:string'),
+        'filename' => array( 'name' => 'filename', 'type' =>'xsd:string'),
+        'file'     => array( 'name' => 'file', 'type' =>'xsd:string'),
     )
 );
 
@@ -62,11 +62,11 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "id" => array('name'=>"id",'type'=>'xsd:string'),
-        "filename" => array('name'=>"filename",'type'=>'xsd:string'),
-        "file" => array('name'=>"file",'type'=>'xsd:string'),
-        "related_module_id" => array('name'=>"related_module_id",'type'=>'xsd:string'),
-        "related_module_name" => array('name'=>"related_module_name",'type'=>'xsd:string'),
+        'id'                  => array( 'name' => 'id', 'type' =>'xsd:string'),
+        'filename'            => array( 'name' => 'filename', 'type' =>'xsd:string'),
+        'file'                => array( 'name' => 'file', 'type' =>'xsd:string'),
+        'related_module_id'   => array( 'name' => 'related_module_id', 'type' =>'xsd:string'),
+        'related_module_name' => array( 'name' => 'related_module_name', 'type' =>'xsd:string'),
     )
 );
 
@@ -77,7 +77,7 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "note_attachment"=>array('name'=>'note_attachment', 'type'=>'tns:new_note_attachment'),
+        'note_attachment' =>array( 'name' =>'note_attachment', 'type' =>'tns:new_note_attachment'),
     )
 );
 
@@ -88,8 +88,8 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "note_attachment"=>array('name'=>'note_attachment', 'type'=>'tns:note_attachment'),
-        "error"=> array('name'=>'error', 'type'=>'tns:error_value'),
+        'note_attachment' =>array( 'name' =>'note_attachment', 'type' =>'tns:note_attachment'),
+        'error'           => array( 'name' =>'error', 'type' =>'tns:error_value'),
     )
 );
 
@@ -633,11 +633,11 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "id" => array('name'=>"id",'type'=>'xsd:string'),
-        "document_name" => array('name'=>"document_name",'type'=>'xsd:string'),
-        "revision" => array('name' => "revision", 'type'=>'xsd:string'),
-        "filename" => array('name' => "filename", 'type'=>'xsd:string'),
-        "file" => array('name'=>"file",'type'=>'xsd:string'),
+        'id'            => array( 'name' => 'id', 'type' =>'xsd:string'),
+        'document_name' => array( 'name' => 'document_name', 'type' =>'xsd:string'),
+        'revision'      => array( 'name' => 'revision', 'type' =>'xsd:string'),
+        'filename'      => array( 'name' => 'filename', 'type' =>'xsd:string'),
+        'file'          => array( 'name' => 'file', 'type' =>'xsd:string'),
     )
 );
 
@@ -691,8 +691,8 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "document_revision"=>array('name'=>'document_revision', 'type'=>'tns:document_revision'),
-        "error"=> array('name'=>'error', 'type'=>'tns:error_value'),
+        'document_revision' =>array( 'name' =>'document_revision', 'type' =>'tns:document_revision'),
+        'error'             => array( 'name' =>'error', 'type' =>'tns:error_value'),
     )
 );
 
@@ -703,7 +703,7 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        "document_revision"=>array('name'=>'document_revision', 'type'=>'tns:document_revision'),
+        'document_revision' =>array( 'name' =>'document_revision', 'type' =>'tns:document_revision'),
     )
 );
 

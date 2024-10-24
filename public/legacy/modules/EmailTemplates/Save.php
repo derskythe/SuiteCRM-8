@@ -60,14 +60,14 @@ sugar_cache_clear('select_array:'.$focus->object_name.'namebase_module=\''. (iss
 if (isset($_REQUEST['inpopupwindow']) && $_REQUEST['inpopupwindow'] == true) {
     $focus=$form->handleSave('', false, false, true, 'download', true); //do not redirect.
     $body1 = "
-		<script type='text/javascript'>
-			function refreshTemplates() {
-				window.opener.refresh_email_template_list('$focus->id','$focus->name')
-				window.close();
-			}
+        <script type='text/javascript'>
+            function refreshTemplates() {
+                window.opener.refresh_email_template_list('$focus->id','$focus->name')
+                window.close();
+            }
 
-			refreshTemplates();
-		</script>";
+            refreshTemplates();
+        </script>";
     echo  $body1;
 } else {
     $form->handleSave('', true, false, true, 'download', true);

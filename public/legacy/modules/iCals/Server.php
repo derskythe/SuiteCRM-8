@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-    require_once "modules/iCals/HTTP_WebDAV_Server_iCal.php";
+    require_once 'modules/iCals/HTTP_WebDAV_Server_iCal.php';
     $server = new HTTP_WebDAV_Server_iCal();
     $server->ServeICalRequest();
     sugar_cleanup();

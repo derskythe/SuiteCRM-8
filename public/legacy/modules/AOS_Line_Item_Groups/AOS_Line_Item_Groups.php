@@ -49,8 +49,9 @@ class AOS_Line_Item_Groups extends AOS_Line_Item_Groups_sugar
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save_groups($post_data, $parent, $key = '')
     {
         $groups = array();

@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -38,26 +38,27 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
  */
 final class Version20231117113210 extends BaseMigration implements ContainerAwareInterface
 {
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return "Create cache_rebuild table if the table doesn't exist";
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->container->get('entity_manager');
 
         try {
-            $entityManager->getConnection()->executeQuery('CREATE TABLE cache_rebuild (cache_key varchar(255), rebuild boolean)');
+            $entityManager->getConnection()->executeQuery(
+                'CREATE TABLE cache_rebuild (cache_key varchar(255), rebuild boolean)'
+            );
         } catch (\Exception $e) {
             $this->log('cache_rebuild table already exists');
             $this->log($e->getMessage());
         }
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 }

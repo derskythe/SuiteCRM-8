@@ -147,12 +147,12 @@ class ContactFormBase extends PersonFormBase
             $lead_source_options=get_select_options_with_id($app_list_strings['lead_source_dom'], '');
         }
 
-        $form="";
+        $form= '';
 
 
-        if ($formname == 'ConvertProspect') {
+        if ($formname === 'ConvertProspect') {
             $lead_source_label = "<td scope='row'>&nbsp;</td>";
-            $lead_source_field = "<td >&nbsp;</td>";
+            $lead_source_field = '<td >&nbsp;</td>';
         } else {
             $lead_source_label = "<td scope='row' nowrap>{$mod_strings['LBL_LEAD_SOURCE']}</td>";
             $lead_source_field = "<td ><select name='{$prefix}lead_source'>$lead_source_options</select></td>";
@@ -171,91 +171,91 @@ class ContactFormBase extends PersonFormBase
         $lbl_required_symbol = $app_strings['LBL_REQUIRED_SYMBOL'];
 
         $form .= <<<EOQ
-		<input type="hidden" name="{$prefix}record" value="">
-		<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-		<table border='0' celpadding="0" cellspacing="0" width='100%'>
-		<tr>
-		<td nowrap scope='row'>$lbl_first_name</td>
-		<td scope='row'>$lbl_last_name&nbsp;<span class="required">$lbl_required_symbol</span></td>
-		<td scope='row' nowrap>{$mod_strings['LBL_TITLE']}</td>
-		<td scope='row' nowrap>{$mod_strings['LBL_DEPARTMENT']}</td>
-		</tr>
-		<tr>
-		<td ><select name='{$prefix}salutation'>$salutation_options</select>&nbsp;<input name="{$prefix}first_name" type="text" value="{$contact->first_name}"></td>
-		<td ><input name='{$prefix}last_name' type="text" value="{$contact->last_name}"></td>
-		<td  nowrap><input name='{$prefix}title' type="text" value="{$contact->title}"></td>
-		<td  nowrap><input name='{$prefix}department' type="text" value="{$contact->department}"></td>
-		</tr>
-		<tr>
-		<td nowrap colspan='4' scope='row'>$lbl_address</td>
-		</tr>
+        <input type="hidden" name="{$prefix}record" value="">
+        <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+        <table border='0' celpadding="0" cellspacing="0" width='100%'>
+        <tr>
+        <td nowrap scope='row'>$lbl_first_name</td>
+        <td scope='row'>$lbl_last_name&nbsp;<span class="required">$lbl_required_symbol</span></td>
+        <td scope='row' nowrap>{$mod_strings['LBL_TITLE']}</td>
+        <td scope='row' nowrap>{$mod_strings['LBL_DEPARTMENT']}</td>
+        </tr>
+        <tr>
+        <td ><select name='{$prefix}salutation'>$salutation_options</select>&nbsp;<input name="{$prefix}first_name" type="text" value="{$contact->first_name}"></td>
+        <td ><input name='{$prefix}last_name' type="text" value="{$contact->last_name}"></td>
+        <td  nowrap><input name='{$prefix}title' type="text" value="{$contact->title}"></td>
+        <td  nowrap><input name='{$prefix}department' type="text" value="{$contact->department}"></td>
+        </tr>
+        <tr>
+        <td nowrap colspan='4' scope='row'>$lbl_address</td>
+        </tr>
 
-		<tr>
-		<td nowrap colspan='4' ><textarea cols='80' rows='2' name='{$prefix}primary_address_street'>{$contact->primary_address_street}</textarea></td>
-		</tr>
+        <tr>
+        <td nowrap colspan='4' ><textarea cols='80' rows='2' name='{$prefix}primary_address_street'>{$contact->primary_address_street}</textarea></td>
+        </tr>
 
-		<tr>
-		<td scope='row'>{$mod_strings['LBL_CITY']}</td>
-		<td scope='row'>{$mod_strings['LBL_STATE']}</td>
-		<td scope='row'>{$mod_strings['LBL_POSTAL_CODE']}</td>
-		<td scope='row'>{$mod_strings['LBL_COUNTRY']}</td>
-		</tr>
+        <tr>
+        <td scope='row'>{$mod_strings['LBL_CITY']}</td>
+        <td scope='row'>{$mod_strings['LBL_STATE']}</td>
+        <td scope='row'>{$mod_strings['LBL_POSTAL_CODE']}</td>
+        <td scope='row'>{$mod_strings['LBL_COUNTRY']}</td>
+        </tr>
 
-		<tr>
-		<td ><input name='{$prefix}primary_address_city'  maxlength='100' value='{$contact->primary_address_city}'></td>
-		<td ><input name='{$prefix}primary_address_state'  maxlength='100' value='{$contact->primary_address_state}'></td>
-		<td ><input name='{$prefix}primary_address_postalcode'  maxlength='100' value='{$contact->primary_address_postalcode}'></td>
-		<td ><input name='{$prefix}primary_address_country'  maxlength='100' value='{$contact->primary_address_country}'></td>
-		</tr>
-
-
-		<tr>
-		<td nowrap scope='row'>$lbl_phone</td>
-		<td nowrap scope='row'>{$mod_strings['LBL_MOBILE_PHONE']}</td>
-		<td nowrap scope='row'>{$mod_strings['LBL_FAX_PHONE']}</td>
-		<td nowrap scope='row'>{$mod_strings['LBL_HOME_PHONE']}</td>
-		</tr>
-
-		<tr>
-		<td nowrap ><input name='{$prefix}phone_work' type="text" value="{$contact->phone_work}"></td>
-		<td nowrap ><input name='{$prefix}phone_mobile' type="text" value="{$contact->phone_mobile}"></td>
-		<td nowrap ><input name='{$prefix}phone_fax' type="text" value="{$contact->phone_fax}"></td>
-		<td nowrap ><input name='{$prefix}phone_home' type="text" value="{$contact->phone_home}"></td>
-		</tr>
-
-		<tr>
-		<td scope='row' nowrap>{$mod_strings['LBL_OTHER_PHONE']}</td>
-		$lead_source_label
-
-		<td scope="row">{$mod_strings['LBL_BIRTHDATE']}&nbsp;</td>
-		</tr>
+        <tr>
+        <td ><input name='{$prefix}primary_address_city'  maxlength='100' value='{$contact->primary_address_city}'></td>
+        <td ><input name='{$prefix}primary_address_state'  maxlength='100' value='{$contact->primary_address_state}'></td>
+        <td ><input name='{$prefix}primary_address_postalcode'  maxlength='100' value='{$contact->primary_address_postalcode}'></td>
+        <td ><input name='{$prefix}primary_address_country'  maxlength='100' value='{$contact->primary_address_country}'></td>
+        </tr>
 
 
-		<tr>
-		<td  nowrap><input name='{$prefix}phone_other' type="text" value="{$contact->phone_other}"></td>
-		$lead_source_field
+        <tr>
+        <td nowrap scope='row'>$lbl_phone</td>
+        <td nowrap scope='row'>{$mod_strings['LBL_MOBILE_PHONE']}</td>
+        <td nowrap scope='row'>{$mod_strings['LBL_FAX_PHONE']}</td>
+        <td nowrap scope='row'>{$mod_strings['LBL_HOME_PHONE']}</td>
+        </tr>
 
-		<td  nowrap>
-			<input name='{$prefix}birthdate' onblur="parseDate(this, '$cal_dateformat');" size='12' maxlength='10' id='{$prefix}jscal_field' type="text" value="{$birthdate}">&nbsp;
-			<!--not_in_theme!--><span class="suitepicon suitepicon-module-calendar"></span>
-		</td>
-		</tr>
+        <tr>
+        <td nowrap ><input name='{$prefix}phone_work' type="text" value="{$contact->phone_work}"></td>
+        <td nowrap ><input name='{$prefix}phone_mobile' type="text" value="{$contact->phone_mobile}"></td>
+        <td nowrap ><input name='{$prefix}phone_fax' type="text" value="{$contact->phone_fax}"></td>
+        <td nowrap ><input name='{$prefix}phone_home' type="text" value="{$contact->phone_home}"></td>
+        </tr>
+
+        <tr>
+        <td scope='row' nowrap>{$mod_strings['LBL_OTHER_PHONE']}</td>
+        $lead_source_label
+
+        <td scope="row">{$mod_strings['LBL_BIRTHDATE']}&nbsp;</td>
+        </tr>
+
+
+        <tr>
+        <td  nowrap><input name='{$prefix}phone_other' type="text" value="{$contact->phone_other}"></td>
+        $lead_source_field
+
+        <td  nowrap>
+            <input name='{$prefix}birthdate' onblur="parseDate(this, '$cal_dateformat');" size='12' maxlength='10' id='{$prefix}jscal_field' type="text" value="{$birthdate}">&nbsp;
+            <!--not_in_theme!--><span class="suitepicon suitepicon-module-calendar"></span>
+        </td>
+        </tr>
 
 EOQ;
 
-        $form .= $sugarEmailAddress->getEmailAddressWidgetEditView($contact->id, $_REQUEST['action']=='ConvertLead'?'Leads':'Contacts', false, 'include/SugarEmailAddress/templates/forWideFormBodyView.tpl');
+        $form .= $sugarEmailAddress->getEmailAddressWidgetEditView($contact->id, $_REQUEST['action'] === 'ConvertLead'?'Leads':'Contacts', false, 'include/SugarEmailAddress/templates/forWideFormBodyView.tpl');
 
         require_once('include/SugarFields/Fields/Text/SugarFieldText.php');
         $sugarfield = new SugarFieldText('Text');
         $description_text = $sugarfield->getClassicEditView('description', $contact->description, $prefix, true);
 
         $form .= <<<EOQ
-		<tr>
-		<td nowrap colspan='4' scope='row'>{$mod_strings['LBL_DESCRIPTION']}</td>
-		</tr>
-		<tr>
-		<td nowrap colspan='4' >{$description_text}</td>
-		</tr>
+        <tr>
+        <td nowrap colspan='4' scope='row'>{$mod_strings['LBL_DESCRIPTION']}</td>
+        </tr>
+        <tr>
+        <td nowrap colspan='4' >{$description_text}</td>
+        </tr>
 EOQ;
 
 
@@ -269,12 +269,12 @@ EOQ;
         unset($tempContact);
 
         $form .= <<<EOQ
-		</table>
+        </table>
 
-		<input type='hidden' name='{$prefix}alt_address_street'  value='{$contact->alt_address_street}'>
-		<input type='hidden' name='{$prefix}alt_address_city' value='{$contact->alt_address_city}'><input type='hidden' name='{$prefix}alt_address_state'   value='{$contact->alt_address_state}'><input type='hidden' name='{$prefix}alt_address_postalcode'   value='{$contact->alt_address_postalcode}'><input type='hidden' name='{$prefix}alt_address_country'  value='{$contact->alt_address_country}'>
-		<input type='hidden' name='{$prefix}do_not_call'  value='{$contact->do_not_call}'>
-		<input type='hidden' name='{$prefix}email_opt_out'  value='{$contact->email_opt_out}'>
+        <input type='hidden' name='{$prefix}alt_address_street'  value='{$contact->alt_address_street}'>
+        <input type='hidden' name='{$prefix}alt_address_city' value='{$contact->alt_address_city}'><input type='hidden' name='{$prefix}alt_address_state'   value='{$contact->alt_address_state}'><input type='hidden' name='{$prefix}alt_address_postalcode'   value='{$contact->alt_address_postalcode}'><input type='hidden' name='{$prefix}alt_address_country'  value='{$contact->alt_address_country}'>
+        <input type='hidden' name='{$prefix}do_not_call'  value='{$contact->do_not_call}'>
+        <input type='hidden' name='{$prefix}email_opt_out'  value='{$contact->email_opt_out}'>
 EOQ;
 
         if ($portal == true) {
@@ -306,11 +306,11 @@ EOQ;
         }
 
         $form .= <<<EOQ
-			<script type="text/javascript">
-				Calendar.setup ({
-				inputField : "{$prefix}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "{$prefix}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
-				});
-			</script>
+            <script type="text/javascript">
+                Calendar.setup ({
+                inputField : "{$prefix}jscal_field", daFormat : "$cal_dateformat", ifFormat : "$cal_dateformat", showsTime : false, button : "{$prefix}jscal_trigger", singleClick : true, step : 1, weekNumbers:false
+                });
+            </script>
 EOQ;
 
 
@@ -348,33 +348,33 @@ EOQ;
         $lbl_phone = $mod_strings['LBL_PHONE'];
         $user_id = $current_user->id;
         $lbl_email_address = $mod_strings['LBL_EMAIL_ADDRESS'];
-        if ($formname == 'EmailEditView') {
+        if ($formname === 'EmailEditView') {
             $form = <<<EOQ
-		<input type="hidden" name="{$prefix}record" value="">
-		<input type="hidden" name="{$prefix}email2" value="">
-		<input type="hidden" name="{$prefix}phone_work" value="">
-		<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-		$lbl_first_name<br>
-		<input name="{$prefix}first_name" type="text" value="" size=10><br>
-		$lbl_last_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
-		<input name='{$prefix}last_name' type="text" value="" size=10><br>
-		$lbl_email_address&nbsp;<span class="required">$lbl_required_symbol</span><br>
-		<input name='{$prefix}email1' type="text" value=""><br><br>
+        <input type="hidden" name="{$prefix}record" value="">
+        <input type="hidden" name="{$prefix}email2" value="">
+        <input type="hidden" name="{$prefix}phone_work" value="">
+        <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+        $lbl_first_name<br>
+        <input name="{$prefix}first_name" type="text" value="" size=10><br>
+        $lbl_last_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
+        <input name='{$prefix}last_name' type="text" value="" size=10><br>
+        $lbl_email_address&nbsp;<span class="required">$lbl_required_symbol</span><br>
+        <input name='{$prefix}email1' type="text" value=""><br><br>
 
 EOQ;
         } else {
             $form = <<<EOQ
-		<input type="hidden" name="{$prefix}record" value="">
-		<input type="hidden" name="{$prefix}email2" value="">
-		<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-		$lbl_first_name<br>
-		<input name="{$prefix}first_name" type="text" value=""><br>
-		$lbl_last_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
-		<input name='{$prefix}last_name' type="text" value=""><br>
-		$lbl_phone<br>
-		<input name='{$prefix}phone_work' type="text" value=""><br>
-		$lbl_email_address<br>
-		<input name='{$prefix}email1' type="text" value=""><br><br>
+        <input type="hidden" name="{$prefix}record" value="">
+        <input type="hidden" name="{$prefix}email2" value="">
+        <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+        $lbl_first_name<br>
+        <input name="{$prefix}first_name" type="text" value=""><br>
+        $lbl_last_name&nbsp;<span class="required">$lbl_required_symbol</span><br>
+        <input name='{$prefix}last_name' type="text" value=""><br>
+        $lbl_phone<br>
+        <input name='{$prefix}phone_work' type="text" value=""><br>
+        $lbl_email_address<br>
+        <input name='{$prefix}email1' type="text" value=""><br><br>
 
 EOQ;
         }
@@ -411,14 +411,14 @@ EOQ;
         $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
         $the_form .= <<<EOQ
 
-		<form name="{$prefix}ContactSave" onSubmit="return check_form('{$prefix}ContactSave')" method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="Contacts">
-			<input type="hidden" name="{$prefix}action" value="Save">
+        <form name="{$prefix}ContactSave" onSubmit="return check_form('{$prefix}ContactSave')" method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="Contacts">
+            <input type="hidden" name="{$prefix}action" value="Save">
 EOQ;
         $the_form .= $this->getFormBody($prefix, 'Contacts', "{$prefix}ContactSave");
         $the_form .= <<<EOQ
-		<input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="{$prefix}button" value="  $lbl_save_button_label  " >
-		</form>
+        <input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="{$prefix}button" value="  $lbl_save_button_label  " >
+        </form>
 
 EOQ;
         $the_form .= get_left_form_footer();
@@ -428,6 +428,9 @@ EOQ;
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function handleSave($prefix, $redirect=true, $useRequired=false)
     {
         global $theme, $current_user;
@@ -464,7 +467,7 @@ EOQ;
             ACLController::displayNoAccess(true);
             sugar_cleanup(true);
         }
-        if ($_REQUEST['action'] != 'ConvertLead' && $_REQUEST['action'] != 'ConvertProspect') {
+        if ($_REQUEST['action'] !== 'ConvertLead' && $_REQUEST['action'] !== 'ConvertProspect') {
             if (!empty($_POST[$prefix.'sync_contact']) || !empty($focus->sync_contact)) {
                 $focus->contacts_users_id = $current_user->id;
             } else {
@@ -515,7 +518,7 @@ EOQ;
 
                 if ($focus->hasCustomFields()) {
                     foreach ($focus->field_defs as $name=>$field) {
-                        if (!empty($field['source']) && $field['source'] == 'custom_fields') {
+                        if (!empty($field['source']) && $field['source'] === 'custom_fields') {
                             $fieldName = $focus->$name ?? '';
                             $get .= "&Contacts$name=".urlencode($fieldName);
                         }
@@ -541,7 +544,7 @@ EOQ;
                         $urlData[$var] = $_POST[$var];
                     }
                 }
-                $get .= "&".http_build_query($urlData);
+                $get .= '&' .http_build_query($urlData);
                 $_SESSION['SHOW_DUPLICATES'] = $get;
 
                 //now redirect the post to modules/Contacts/ShowDuplicates.php
@@ -575,7 +578,7 @@ EOQ;
         }
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	INBOUND EMAIL HANDLING
+        ////    INBOUND EMAIL HANDLING
         ///////////////////////////////////////////////////////////////////////////////
         if (isset($_REQUEST['inbound_email_id']) && !empty($_REQUEST['inbound_email_id'])) {
             // fake this case like it's already saved.
@@ -591,16 +594,17 @@ EOQ;
             $email->load_relationship('contacts');
             $email->contacts->add($focus->id);
 
-            header("Location: index.php?&module=Emails&action=EditView&type=out&inbound_email_id=".$_REQUEST['inbound_email_id']."&parent_id=".$email->parent_id."&parent_type=".$email->parent_type.'&start='.$_REQUEST['start'].'&assigned_user_id='.$current_user->id);
+            header(
+                'Location: index.php?&module=Emails&action=EditView&type=out&inbound_email_id=' . $_REQUEST['inbound_email_id']. '&parent_id=' .$email->parent_id. '&parent_type=' .$email->parent_type.'&start='. $_REQUEST['start'].'&assigned_user_id='.$current_user->id);
             exit();
         }
-        ////	END INBOUND EMAIL HANDLING
+        ////    END INBOUND EMAIL HANDLING
         ///////////////////////////////////////////////////////////////////////////////
 
         $focus->save($check_notify);
         $return_id = $focus->id;
 
-        $GLOBALS['log']->debug("Saved record with id of ".$return_id);
+        $GLOBALS['log']->debug('Saved record with id of ' .$return_id);
 
         if ($redirect && !empty($_POST['is_ajax_call']) && $_POST['is_ajax_call'] == '1') {
             $json = getJSONobj();
@@ -624,9 +628,9 @@ EOQ;
             return null;
         }
 
-        if ($redirect && isset($_POST['popup']) && $_POST['popup'] == 'true') {
-            $urlData = array("query" => true, "first_name" => $focus->first_name, "last_name" => $focus->last_name,
-           "module" => 'Accounts', 'action' => 'Popup');
+        if ($redirect && isset($_POST['popup']) && $_POST['popup'] === 'true') {
+            $urlData = array( 'query'  => true, 'first_name' => $focus->first_name, 'last_name' => $focus->last_name,
+                              'module' => 'Accounts', 'action' => 'Popup');
             if (!empty($_POST['return_module'])) {
                 $urlData['module'] = $_POST['return_module'];
             }
@@ -638,7 +642,7 @@ EOQ;
                     $urlData[$var] = $_POST[$var];
                 }
             }
-            header("Location: index.php?".http_build_query($urlData));
+            header('Location: index.php?' .http_build_query($urlData));
             return;
         }
 
@@ -651,41 +655,41 @@ EOQ;
 
     public function handleRedirect($return_id)
     {
-        if (isset($_POST['return_module']) && $_POST['return_module'] != "") {
+        if (isset($_POST['return_module']) && $_POST['return_module'] != '') {
             $return_module = urlencode($_POST['return_module']);
         } else {
-            $return_module = "Contacts";
+            $return_module = 'Contacts';
         }
 
-        if (isset($_POST['return_action']) && $_POST['return_action'] != "") {
-            if ($_REQUEST['return_module'] == 'Emails') {
+        if (isset($_POST['return_action']) && $_POST['return_action'] != '') {
+            if ($_REQUEST['return_module'] === 'Emails') {
                 $return_action = urlencode($_REQUEST['return_action']);
             }
             // if we create a new record "Save", we want to redirect to the DetailView
-            elseif ($_REQUEST['action'] == "Save" && $_REQUEST['return_module'] != "Home") {
+            elseif ($_REQUEST['action'] === 'Save' && $_REQUEST['return_module'] !== 'Home') {
                 $return_action = 'DetailView';
             } else {
                 // if we "Cancel", we go back to the list view.
                 $return_action = urlencode($_REQUEST['return_action']);
             }
         } else {
-            $return_action = "DetailView";
+            $return_action = 'DetailView';
         }
 
-        if (isset($_POST['return_id']) && $_POST['return_id'] != "") {
+        if (isset($_POST['return_id']) && $_POST['return_id'] != '') {
             $return_id = urlencode($_POST['return_id']);
         }
 
         //eggsurplus Bug 23816: maintain VCR after an edit/save. If it is a duplicate then don't worry about it. The offset is now worthless.
         $redirect_url = "index.php?action=$return_action&module=$return_module&record=$return_id";
         if (isset($_REQUEST['offset']) && empty($_REQUEST['duplicateSave'])) {
-            $redirect_url .= "&offset=".$_REQUEST['offset'];
+            $redirect_url .= '&offset=' . $_REQUEST['offset'];
         }
 
         if (!empty($_REQUEST['ajax_load'])) {
             echo "<script>SUGAR.ajaxUI.loadContent('$redirect_url');</script>\n";
         } else {
-            header("Location: ". $redirect_url);
+            header('Location: ' . $redirect_url);
         }
     }
 

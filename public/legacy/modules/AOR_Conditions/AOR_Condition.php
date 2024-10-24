@@ -41,29 +41,29 @@
 #[\AllowDynamicProperties]
 class AOR_Condition extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOR_Conditions';
-    public $object_name = 'AOR_Condition';
-    public $table_name = 'aor_conditions';
-    public $tracker_visibility = false;
-    public $importable = true;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOR_Conditions';
+    public string $object_name = 'AOR_Condition';
+    public string $table_name = 'aor_conditions';
+    public bool $tracker_visibility = false;
+    public bool $importable = true;
     public $disable_row_level_security = true;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
     public $aor_report_id;
     public $condition_order;
-    public $field;
+    public string $field;
     public $logic_op;
     public $parenthesis;
     public $operator;
@@ -76,8 +76,9 @@ class AOR_Condition extends Basic
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save_lines($post_data, $parent, $key = '')
     {
         require_once('modules/AOW_WorkFlow/aow_utils.php');
@@ -111,14 +112,14 @@ class AOR_Condition extends Basic
                                     $post_data[$key . $field_name][$i] = encodeMultienumValue($post_data[$key . $field_name][$i]);
                             }
                         } else {
-                            if ($field_name == 'value' && $post_data[$key . 'value_type'][$i] === 'Value') {
+                            if ($field_name === 'value' && $post_data[$key . 'value_type'][$i] === 'Value') {
                                 $post_data[$key . $field_name][$i] = fixUpFormatting($_REQUEST['report_module'], $condition->field, $post_data[$key . $field_name][$i]);
                             } else {
-                                if ($field_name == 'parameter') {
+                                if ($field_name === 'parameter') {
                                     $post_data[$key . $field_name][$i] = isset($post_data[$key . $field_name][$i]);
                                 } else {
-                                    if ($field_name == 'module_path') {
-                                        $post_data[$key . $field_name][$i] = base64_encode(serialize(explode(":", $post_data[$key . $field_name][$i])));
+                                    if ($field_name === 'module_path') {
+                                        $post_data[$key . $field_name][$i] = base64_encode(serialize(explode(':', $post_data[$key . $field_name][$i])));
                                     }
                                 }
                             }
@@ -132,14 +133,14 @@ class AOR_Condition extends Basic
                             $condition->$field_name = $post_data[$key . $field_name][$i];
                         }
                     } else {
-                        if ($field_name == 'parameter') {
+                        if ($field_name === 'parameter') {
                             $condition->$field_name = 0;
                         }
                     }
                 }
                 // Period must be saved as a string instead of a base64 encoded datetime.
                 // Overwriting value
-                if ((!isset($condition->parenthesis) || !$condition->parenthesis) && isset($condition->value_type) && $condition->value_type == 'Period') {
+                if ((!isset($condition->parenthesis) || !$condition->parenthesis) && isset($condition->value_type) && $condition->value_type === 'Period') {
                     $condition->value = base64_encode($_POST['aor_conditions_value'][$i]);
                 }
                 if (trim($condition->field) != '' || $condition->parenthesis) {

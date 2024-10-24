@@ -132,12 +132,12 @@ class DocumentTest extends SuitePHPUnitFrameworkTestCase
         $document = BeanFactory::newBean('Documents');
 
         //test with empty string parameters
-        $expected = "SELECT\n						documents.* FROM documents  WHERE  documents.deleted = 0 ORDER BY documents.document_name";
+        $expected = "SELECT\n                        documents.* FROM documents  WHERE  documents.deleted = 0 ORDER BY documents.document_name";
         $actual = $document->create_export_query('', '');
         self::assertSame($expected, $actual);
 
         //test with valid string parameters
-        $expected = "SELECT\n						documents.* FROM documents  WHERE documents.document_name = \"\" AND  documents.deleted = 0 ORDER BY documents.id";
+        $expected = "SELECT\n                        documents.* FROM documents  WHERE documents.document_name = \"\" AND  documents.deleted = 0 ORDER BY documents.id";
         $actual = $document->create_export_query('documents.id', 'documents.document_name = ""');
         self::assertSame($expected, $actual);
     }

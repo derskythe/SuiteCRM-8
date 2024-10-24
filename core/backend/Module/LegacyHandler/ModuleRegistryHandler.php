@@ -29,6 +29,7 @@ namespace App\Module\LegacyHandler;
 
 use ACLAction;
 use ACLController;
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleRegistryInterface;
@@ -41,10 +42,11 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
     /**
      * @var array
      */
-    private $frontendExcludedModules;
+    private array $frontendExcludedModules;
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -54,15 +56,25 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
+        string           $projectDir,
+        string           $legacyDir,
+        string           $legacySessionName,
+        string           $defaultSessionName,
         LegacyScopeState $legacyScopeState,
-        array $frontendExcludedModules,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        array            $frontendExcludedModules,
+        RequestStack     $session,
+        LoggerInterface  $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->frontendExcludedModules = $frontendExcludedModules;
     }
 
@@ -70,17 +82,18 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get list of modules the user has access to
+     *
      * @return array
      *  Based on @see {soap/SoapHelperFunctions.php::get_user_module_list}
      */
-    public function getUserAccessibleModules(): array
+    public function getUserAccessibleModules() : array
     {
         $this->init();
 
@@ -122,7 +135,7 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
      *
      * @return array
      */
-    protected function getAllModules(): array
+    protected function getAllModules() : array
     {
         global $app_list_strings;
 
@@ -135,8 +148,11 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
         return $modules;
     }
 
-    public function getModuleList(): array {
-
+    /**
+     * @return array
+     */
+    public function getModuleList() : array
+    {
         $this->init();
 
         global $moduleList;
@@ -153,10 +169,9 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
      *
      * @return array
      */
-    protected function getFilterAccessibleModules(): array
+    protected function getFilterAccessibleModules() : array
     {
-        /* @noinspection PhpIncludeInspection */
-        require_once("modules/MySettings/TabController.php");
+        require_once($this->legacyDir . '/modules/MySettings/TabController.php');
         $controller = new \TabController();
         $tabs = $controller->get_tabs_system();
 
@@ -173,9 +188,10 @@ class ModuleRegistryHandler extends LegacyHandler implements ModuleRegistryInter
      * Apply User action filter on current module list
      *
      * @param array $modules
+     *
      * @return array
      */
-    protected function applyUserActionFilter(array &$modules): array
+    protected function applyUserActionFilter(array &$modules) : array
     {
         global $current_user;
 

@@ -52,11 +52,13 @@ if (!defined('sugarEntry') || !sugarEntry) {
 /**
  * Returns an input control for this fieldname given
  *
- * @param  string $module
- * @param  string $fieldname
- * @param  string $vardef
- * @param  string $value
+ * @param string $module
+ * @param string $fieldname
+ * @param string $vardef
+ * @param string $value
+ *
  * @return string html for input element for this control
+ * @throws SmartyException
  */
 function getControl(
     $module,
@@ -82,17 +84,17 @@ function getControl(
 
         // if this is the id relation field, then don't have a pop-up selector.
         $idName = $vardef['id_name'] ?? '';
-        if ($vardef['type'] == 'relate' && $idName == $vardef['name']) {
+        if ($vardef['type'] === 'relate' && $idName == $vardef['name']) {
             $vardef['type'] = 'varchar';
         }
 
         // create the dropdowns for the parent type fields
-        if ($vardef['type'] == 'parent_type') {
+        if ($vardef['type'] === 'parent_type') {
             $vardef['type'] = 'enum';
         }
 
         // remove the special text entry field function 'getEmailAddressWidget'
-        if (isset($vardef['function']) && $vardef['function'] == 'getEmailAddressWidget') {
+        if (isset($vardef['function']) && $vardef['function'] === 'getEmailAddressWidget') {
             unset($vardef['function']);
         }
 
@@ -113,8 +115,8 @@ function getControl(
         $contents = preg_replace('/\{\*[^\}]*?\*\}/', '', (string) $contents);
 
         // hack to disable one of the js calls in this control
-        if (isset($vardef['function']) && $vardef['function'] == 'getCurrencyDropDown') {
-            $contents .= "{literal}<script>function CurrencyConvertAll() { return; }</script>{/literal}";
+        if (isset($vardef['function']) && $vardef['function'] === 'getCurrencyDropDown') {
+            $contents .= '{literal}<script>function CurrencyConvertAll() { return; }</script>{/literal}';
         }
 
         // Save it to the cache file
@@ -133,17 +135,17 @@ function getControl(
     $date_format = $timedate->get_cal_date_format();
     $ss->assign('USER_DATEFORMAT', $timedate->get_user_date_format());
     $ss->assign('TIME_FORMAT', $time_format);
-    $time_separator = ":";
+    $time_separator = ':';
     $match = array();
     if (preg_match('/\d+([^\d])\d+([^\d]*)/s', (string) $time_format, $match)) {
         $time_separator = $match[1];
     }
-    $t23 = strpos((string) $time_format, '23') !== false ? '%H' : '%I';
+    $t23 = str_contains((string) $time_format, '23') ? '%H' : '%I';
     if (!isset($match[2]) || $match[2] == '') {
-        $ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . "%M");
+        $ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . '%M');
     } else {
-        $pm = $match[2] == "pm" ? "%P" : "%p";
-        $ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . "%M" . $pm);
+        $pm = $match[2] === 'pm' ? '%P' : '%p';
+        $ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . '%M' . $pm);
     }
 
     $ss->assign('CALENDAR_FDOW', $current_user->get_first_day_of_week());
@@ -181,7 +183,7 @@ function getControl(
     }
     // fill in function return values
     if (!in_array($fieldname, array('email1','email2'))) {
-        if (!empty($fieldlist[$fieldname]['function']['returns']) && $fieldlist[$fieldname]['function']['returns'] == 'html') {
+        if (!empty($fieldlist[$fieldname]['function']['returns']) && $fieldlist[$fieldname]['function']['returns'] === 'html') {
             $function = $fieldlist[$fieldname]['function']['name'];
             // include various functions required in the various vardefs
             if (isset($fieldlist[$fieldname]['function']['include']) && is_file($fieldlist[$fieldname]['function']['include'])) {
@@ -192,20 +194,20 @@ function getControl(
             if (preg_match('/getCurrency.*DropDown/s', (string) $function)) {
                 $value = str_ireplace('</select>', '<option value="">'.$app_strings['LBL_NONE'].'</option></select>', (string) $value);
             }
-        } elseif ($fieldname == 'assigned_user_name' && empty($value)) {
+        } elseif ($fieldname === 'assigned_user_name' && empty($value)) {
             $fieldlist['assigned_user_id']['value'] = $GLOBALS['current_user']->id;
             $value = get_assigned_user_name($GLOBALS['current_user']->id);
-        } elseif ($fieldname == 'team_name' && empty($value)) {
+        } elseif ($fieldname === 'team_name' && empty($value)) {
             $value = json_encode(array());
         }
     }
     $fieldlist[$fieldname]['value'] = $value;
-    $ss->assign("fields", $fieldlist);
-    $ss->assign("form_name", 'importstep3');
-    $ss->assign("bean", $focus);
+    $ss->assign('fields', $fieldlist);
+    $ss->assign('form_name', 'importstep3');
+    $ss->assign('bean', $focus);
 
     // add in any additional strings
-    $ss->assign("MOD", $mod_strings);
-    $ss->assign("APP", $app_strings);
+    $ss->assign('MOD', $mod_strings);
+    $ss->assign('APP', $app_strings);
     return $ss->fetch($file);
 }

@@ -50,8 +50,8 @@ require_once('modules/AOW_Actions/actions/actionBase.php');
  */
 class actionComputeField extends actionBase
 {
-    public const RAW_VALUE = "raw";
-    public const FORMATTED_VALUE = "formatted";
+    public const RAW_VALUE = 'raw';
+    public const FORMATTED_VALUE = 'formatted';
 
     /**
      * @return array
@@ -132,7 +132,7 @@ class actionComputeField extends actionBase
             return true;
         } catch (Exception $e) {
             if (isset($GLOBALS['log'])) {
-                $GLOBALS['log']->fatal("Calculated Field Exception: " . $e->getMessage());
+                $GLOBALS['log']->fatal('Calculated Field Exception: ' . $e->getMessage());
             }
 
             return false;
@@ -155,16 +155,16 @@ class actionComputeField extends actionBase
             if ($parameterTypes[$i] == actionComputeField::FORMATTED_VALUE) {
                 $dataType = $bean->field_name_map[$parameters[$i]]['type'];
 
-                if ($dataType == 'enum' || $dataType == 'dynamicenum') {
+                if ($dataType === 'enum' || $dataType === 'dynamicenum') {
                     $resolvedParameters[$i] =
                         $GLOBALS['app_list_strings'][$bean->field_defs[$parameters[$i]]['options']][$bean->{$parameters[$i]}];
                 } else {
-                    if ($dataType == 'multienum') {
+                    if ($dataType === 'multienum') {
                         $resolvedParameters[$i] = $this->getMultiEnumTranslated($bean, $parameters[$i]);
                     }
                 }
             } else {
-                $resolvedParameters[$i] = ($bean->{$parameters[$i]} == null) ? "" : $bean->{$parameters[$i]};
+                $resolvedParameters[$i] = ($bean->{$parameters[$i]} == null) ? '' : $bean->{$parameters[$i]};
             }
         }
 
@@ -188,7 +188,7 @@ class actionComputeField extends actionBase
             }
         );
 
-        return implode(", ", $displayFieldValues);
+        return implode(', ', $displayFieldValues);
     }
 
     /**
@@ -236,12 +236,12 @@ class actionComputeField extends actionBase
             $entity = null;
 
             if (isset($relateFields[$relationParameters[$i]]) &&
-                $relateFields[$relationParameters[$i]]['type'] == 'relate'
+                $relateFields[$relationParameters[$i]]['type'] === 'relate'
             ) {
                 $relatedEntityId = $bean->{$relateFields[$relationParameters[$i]]['id_name']};
 
                 if (!$relatedEntityId) {
-                    $resolvedRelationParameters[$i] = "";
+                    $resolvedRelationParameters[$i] = '';
                     continue;
                 }
 
@@ -275,31 +275,32 @@ class actionComputeField extends actionBase
             }
 
             if ($entity == null) {
-                $resolvedRelationParameters[$i] = "";
+                $resolvedRelationParameters[$i] = '';
                 continue;
             }
 
             if ($relationParameterTypes[$i] == actionComputeField::FORMATTED_VALUE) {
                 $dataType = $entity->field_name_map[$relationParameterFields[$i]]['type'];
 
-                if ($dataType == 'enum' || $dataType == 'dynamicenum') {
+                if ($dataType === 'enum' || $dataType === 'dynamicenum') {
                     $resolvedRelationParameters[$i] =
                         $GLOBALS['app_list_strings'][$entity->field_defs[$relationParameterFields[$i]]['options']][$entity->{$relationParameterFields[$i]}];
                 } else {
-                    if ($dataType == 'multienum') {
+                    if ($dataType === 'multienum') {
                         $resolvedRelationParameters[$i] =
                             $this->getMultiEnumTranslated($entity, $relationParameterFields[$i]);
                     }
                 }
             } else {
-                if ($entity->field_name_map[$relationParameterFields[$i]]['type'] == 'relate' &&
+                if ($entity->field_name_map[$relationParameterFields[$i]]['type'] === 'relate' &&
                     isset($entity->field_name_map[$relationParameterFields[$i]]['id_name'])
                 ) {
                     $id_name = $entity->field_name_map[$relationParameterFields[$i]]['id_name'];
-                    $resolvedRelationParameters[$i] = ($entity->{$id_name} == null) ? "" : $entity->{$id_name};
+                    $resolvedRelationParameters[$i] = ($entity->{$id_name} == null) ? '' : $entity->{$id_name};
                 } else {
                     $resolvedRelationParameters[$i] =
-                        ($entity->{$relationParameterFields[$i]} == null) ? "" :
+                        ($entity->{$relationParameterFields[$i]} == null) ? ''
+                            :
                             $entity->{$relationParameterFields[$i]};
                 }
             }
@@ -318,7 +319,7 @@ class actionComputeField extends actionBase
         $related_fields = array();
 
         foreach ($bean->field_defs as $field => $defs) {
-            if (isset($defs['type']) && $defs['type'] == 'relate') {
+            if (isset($defs['type']) && $defs['type'] === 'relate') {
                 $related_fields[$field] = $defs;
             }
         }
@@ -335,123 +336,123 @@ class actionComputeField extends actionBase
      */
     public function edit_display($line, SugarBean $bean = null, $params = array())
     {
-        require_once("modules/AOW_WorkFlow/aow_utils.php");
+        require_once('modules/AOW_WorkFlow/aow_utils.php');
 
-        $containerName = "computeFieldParameterContainerLine" . $line;
+        $containerName = 'computeFieldParameterContainerLine' . $line;
 
         $moduleFieldsDropDown = $this->getModuleFieldsDropdown($bean);
         $relationOptions = $this->getOneRelationOptions($bean, $line);
 
         $html = "
-			<link rel='stylesheet' type='text/css' href='modules/AOW_Actions/actions/actionComputeField.css' />
-			<div class='computeFieldContainer' id='$containerName'>
-				<fieldset>
-					<legend>" .
-            translate("LBL_COMPUTEFIELD_PARAMETERS", "AOW_Actions") .
+            <link rel='stylesheet' type='text/css' href='modules/AOW_Actions/actions/actionComputeField.css' />
+            <div class='computeFieldContainer' id='$containerName'>
+                <fieldset>
+                    <legend>" .
+            translate('LBL_COMPUTEFIELD_PARAMETERS', 'AOW_Actions') .
             "</legend>
-					<div class='computeFieldParametersContainer'>
-						<table style='display: none;'>
-							<thead>
-								<tr>
-									<th></th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_FIELD_NAME", "AOW_Actions") .
+                    <div class='computeFieldParametersContainer'>
+                        <table style='display: none;'>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>" .
+            translate('LBL_COMPUTEFIELD_FIELD_NAME', 'AOW_Actions') .
+            '</th>
+                                    <th>' .
+            translate('LBL_COMPUTEFIELD_VALUE_TYPE', 'AOW_Actions') .
+            '</th>
+                                    <th>' .
+            translate('LBL_COMPUTEFIELD_IDENTIFIER', 'AOW_Actions') .
             "</th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_VALUE_TYPE", "AOW_Actions") .
-            "</th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_IDENTIFIER", "AOW_Actions") .
-            "</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>						
-						<select class='parameterSelect' id='parameterSelect$line'>
-							$moduleFieldsDropDown
-						</select>
-						<select class='parameterTypeSelect' id='parameterTypeSelect$line'>
-							<option value='raw'>" .
-            translate("LBL_COMPUTEFIELD_RAW_VALUE", "AOW_Actions") .
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <select class='parameterSelect' id='parameterSelect$line'>
+                            $moduleFieldsDropDown
+                        </select>
+                        <select class='parameterTypeSelect' id='parameterTypeSelect$line'>
+                            <option value='raw'>" .
+            translate('LBL_COMPUTEFIELD_RAW_VALUE', 'AOW_Actions') .
             "</option>
-							<option value='formatted'>" .
-            translate("LBL_COMPUTEFIELD_FORMATTED_VALUE", "AOW_Actions") .
+                            <option value='formatted'>" .
+            translate('LBL_COMPUTEFIELD_FORMATTED_VALUE', 'AOW_Actions') .
             "</option>
-						</select>
-						<input type='button' class='button' onclick='addParameter($line, \"$containerName\");' value='" .
-            translate("LBL_COMPUTEFIELD_ADD_PARAMETER", "AOW_Actions") .
+                        </select>
+                        <input type='button' class='button' onclick='addParameter($line, \"$containerName\");' value='" .
+            translate('LBL_COMPUTEFIELD_ADD_PARAMETER', 'AOW_Actions') .
             "' />
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend>" .
-            translate("LBL_COMPUTEFIELD_RELATION_PARAMETERS", "AOW_Actions") .
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>" .
+            translate('LBL_COMPUTEFIELD_RELATION_PARAMETERS', 'AOW_Actions') .
             "</legend>
-					<div class='computeFieldRelationParametersContainer'>
-						<table style='display: none;'>
-							<thead>
-								<tr>
-									<th></th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_RELATION", "AOW_Actions") .
+                    <div class='computeFieldRelationParametersContainer'>
+                        <table style='display: none;'>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>" .
+            translate('LBL_COMPUTEFIELD_RELATION', 'AOW_Actions') .
+            '</th>
+                                    <th>' .
+            translate('LBL_COMPUTEFIELD_FIELD_NAME', 'AOW_Actions') .
+            '</th>
+                                    <th>' .
+            translate('LBL_COMPUTEFIELD_VALUE_TYPE', 'AOW_Actions') .
+            '</th>
+                                    <th>' .
+            translate('LBL_COMPUTEFIELD_IDENTIFIER', 'AOW_Actions') .
             "</th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_FIELD_NAME", "AOW_Actions") .
-            "</th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_VALUE_TYPE", "AOW_Actions") .
-            "</th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_IDENTIFIER", "AOW_Actions") .
-            "</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>						
-						$relationOptions
-						<select class='relationParameterTypeSelect' id='relationParameterTypeSelect$line'>
-							<option value='raw'>" .
-            translate("LBL_COMPUTEFIELD_RAW_VALUE", "AOW_Actions") .
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        $relationOptions
+                        <select class='relationParameterTypeSelect' id='relationParameterTypeSelect$line'>
+                            <option value='raw'>" .
+            translate('LBL_COMPUTEFIELD_RAW_VALUE', 'AOW_Actions') .
             "</option>
-							<option value='formatted'>" .
-            translate("LBL_COMPUTEFIELD_FORMATTED_VALUE", "AOW_Actions") .
+                            <option value='formatted'>" .
+            translate('LBL_COMPUTEFIELD_FORMATTED_VALUE', 'AOW_Actions') .
             "</option>
-						</select>
-						<input type='button' class='button' onclick='addRelationParameter($line, \"$containerName\");' value='" .
-            translate("LBL_COMPUTEFIELD_ADD_RELATION_PARAMETER", "AOW_Actions") .
+                        </select>
+                        <input type='button' class='button' onclick='addRelationParameter($line, \"$containerName\");' value='" .
+            translate('LBL_COMPUTEFIELD_ADD_RELATION_PARAMETER', 'AOW_Actions') .
             "' />
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend>" .
-            translate("LBL_COMPUTEFIELD_FORMULAS", "AOW_Actions") .
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>" .
+            translate('LBL_COMPUTEFIELD_FORMULAS', 'AOW_Actions') .
             "</legend>
-					<div class='computeFieldFormulaContainer'>
-						<table style='display: none;'>
-							<thead>
-								<tr>
-									<th></th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_FIELD_NAME", "AOW_Actions") .
+                    <div class='computeFieldFormulaContainer'>
+                        <table style='display: none;'>
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>" .
+            translate('LBL_COMPUTEFIELD_FIELD_NAME', 'AOW_Actions') .
+            '</th>
+                                    <th>' .
+            translate('LBL_COMPUTEFIELD_FORMULA', 'AOW_Actions') .
             "</th>
-									<th>" .
-            translate("LBL_COMPUTEFIELD_FORMULA", "AOW_Actions") .
-            "</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>						
-						<select>
-							$moduleFieldsDropDown
-						</select>
-						<input type='button' class='button' onclick='addFormula($line, \"$containerName\");' value='" .
-            translate("LBL_COMPUTEFIELD_ADD_FORMULA", "AOW_Actions") .
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <select>
+                            $moduleFieldsDropDown
+                        </select>
+                        <input type='button' class='button' onclick='addFormula($line, \"$containerName\");' value='" .
+            translate('LBL_COMPUTEFIELD_ADD_FORMULA', 'AOW_Actions') .
             "' />
-					</div>
-				</fieldset>";
+                    </div>
+                </fieldset>";
 
         if (count($params) > 0) {
             $parameters = $this->createJavascriptArrayFromParams($params, 'parameter');
@@ -463,42 +464,42 @@ class actionComputeField extends actionBase
             $relationParameterTypes = $this->createJavascriptArrayFromParams($params, 'relationParameterType');
 
             $html .= "
-				<script id ='aow_script$line' type='text/javascript'>
-					computers[$line] = new FieldComputer($line, '$containerName', $parameters, $parameterTypes, $formulas, $formulaContents, $relationParameters, $relationParameterFields, $relationParameterTypes);
-					
-					function onRelationParameterSelectChange$line() {
-						$('#$containerName').find('.relationParameterFieldSelect').hide();
-						$('#$containerName').find('select.relationParameterFieldSelect[relation=\"' + $(this).val() + '\"]').show();
-					}
-					
-					$('#relationParameterSelect$line').change(onRelationParameterSelectChange$line);					
-					$('#relationParameterSelect$line').change();
-					
-					function onFieldChange$line(dropdown, valueDropdown) {
-						var value = $(dropdown).find('option:selected').attr('dataType');						
-						if (value == 'enum' || value == 'multienum' || value == 'dynamicenum') {
-							$(valueDropdown).show();
-						} else {
-							$(valueDropdown).hide();
-						}
-					}
-					
-					$('#$containerName .computeFieldParametersContainer').find('.parameterSelect').change(function () {
-						onFieldChange$line(this, $('#$containerName .computeFieldParametersContainer').find('.parameterTypeSelect'));
-					});
-					
-					$('#$containerName .computeFieldRelationParametersContainer').find('.relationParameterFieldSelect').change(function () {
-						onFieldChange$line(this, $('#$containerName .computeFieldRelationParametersContainer').find('.relationParameterTypeSelect'));
-					});
-					
-					$('#$containerName .computeFieldParametersContainer').find('.parameterSelect').change();
-					$('#$containerName .computeFieldRelationParametersContainer').find('.relationParameterFieldSelect:visible').change();
-				</script>";
+                <script id ='aow_script$line' type='text/javascript'>
+                    computers[$line] = new FieldComputer($line, '$containerName', $parameters, $parameterTypes, $formulas, $formulaContents, $relationParameters, $relationParameterFields, $relationParameterTypes);
+
+                    function onRelationParameterSelectChange$line() {
+                        $('#$containerName').find('.relationParameterFieldSelect').hide();
+                        $('#$containerName').find('select.relationParameterFieldSelect[relation=\"' + $(this).val() + '\"]').show();
+                    }
+
+                    $('#relationParameterSelect$line').change(onRelationParameterSelectChange$line);
+                    $('#relationParameterSelect$line').change();
+
+                    function onFieldChange$line(dropdown, valueDropdown) {
+                        var value = $(dropdown).find('option:selected').attr('dataType');
+                        if (value == 'enum' || value == 'multienum' || value == 'dynamicenum') {
+                            $(valueDropdown).show();
+                        } else {
+                            $(valueDropdown).hide();
+                        }
+                    }
+
+                    $('#$containerName .computeFieldParametersContainer').find('.parameterSelect').change(function () {
+                        onFieldChange$line(this, $('#$containerName .computeFieldParametersContainer').find('.parameterTypeSelect'));
+                    });
+
+                    $('#$containerName .computeFieldRelationParametersContainer').find('.relationParameterFieldSelect').change(function () {
+                        onFieldChange$line(this, $('#$containerName .computeFieldRelationParametersContainer').find('.relationParameterTypeSelect'));
+                    });
+
+                    $('#$containerName .computeFieldParametersContainer').find('.parameterSelect').change();
+                    $('#$containerName .computeFieldRelationParametersContainer').find('.relationParameterFieldSelect:visible').change();
+                </script>";
         }
 
-        $html .= "
-			</div>
-		";
+        $html .= '
+            </div>
+        ';
 
         return $html;
     }
@@ -510,11 +511,11 @@ class actionComputeField extends actionBase
      */
     public function getModuleFieldsDropdown($bean)
     {
-        $moduleFields = json_decode((string) getModuleFields($bean->module_name, "JSON"), true);
-        $optionsString = "";
+        $moduleFields = json_decode((string) getModuleFields($bean->module_name, 'JSON'), true);
+        $optionsString = '';
 
         foreach ($moduleFields as $key => $value) {
-            if ($key == "") {
+            if ($key == '') {
                 continue;
             }
 
@@ -543,12 +544,12 @@ class actionComputeField extends actionBase
     {
         $oneRelations = $this->getOneRelations($bean);
         $relateFields = $this->getAllRelatedFields($bean);
-        $fieldSelects = "";
+        $fieldSelects = '';
         $alreadyAddedLinks = array();
         $optionsArray = array();
 
         foreach ($oneRelations as $oneRelation) {
-            if (isset($oneRelation['name']) && in_array($oneRelation['name'], $alreadyAddedLinks)) {
+            if (isset($oneRelation['name']) && in_array($oneRelation['name'], $alreadyAddedLinks, true)) {
                 continue;
             }
 
@@ -570,17 +571,17 @@ class actionComputeField extends actionBase
         }
 
         foreach ($relateFields as $name => $relateField) {
-            if (isset($relateField['link']) && in_array($relateField['link'], $alreadyAddedLinks)) {
+            if (isset($relateField['link']) && in_array($relateField['link'], $alreadyAddedLinks, true)) {
                 continue;
             }
 
             if (isset($relateField['group']) &&
-                in_array($relateFields[$relateField['group']]['link'], $alreadyAddedLinks)
+                in_array($relateFields[$relateField['group']]['link'], $alreadyAddedLinks, true)
             ) {
                 continue;
             }
 
-            if (isset($relateField['link_type']) && $relateField['link_type'] == "relationship_info") {
+            if (isset($relateField['link_type']) && $relateField['link_type'] === 'relationship_info') {
                 continue;
             }
 
@@ -614,7 +615,7 @@ class actionComputeField extends actionBase
         $oneRelations = array();
 
         foreach ($linkedFields as $key => $value) {
-            if (!isset($value['link_type']) || $value['link_type'] != "one") {
+            if (!isset($value['link_type']) || $value['link_type'] !== 'one') {
                 continue;
             }
 
@@ -653,7 +654,7 @@ class actionComputeField extends actionBase
      *
      * @return mixed|string
      */
-    private function translate($label, $module = "", $otherModule = "")
+    private function translate($label, $module = '', $otherModule = '')
     {
         $translated = translate($label);
         if ($translated != $label) {
@@ -692,7 +693,7 @@ class actionComputeField extends actionBase
      */
     private function createOptions($optionsArray)
     {
-        $options = "";
+        $options = '';
 
         usort(
             $optionsArray,
@@ -715,7 +716,7 @@ class actionComputeField extends actionBase
                 $option['module'] .
                 ' : ' .
                 $option['relation'] .
-                "</option>";
+                '</option>';
         }
 
         return $options;
@@ -731,7 +732,7 @@ class actionComputeField extends actionBase
     {
         $paramArray = $this->getArrayFromParams($params, $key);
 
-        return count($paramArray) == 0 ? "[]" : "['" . implode("', '", $paramArray) . "']";
+        return count($paramArray) == 0 ? '[]' : "['" . implode("', '", $paramArray) . "']";
     }
 
     /**
@@ -750,7 +751,7 @@ class actionComputeField extends actionBase
             translate($oppositeModule) .
             ' : ' .
             translate($oneRelation['vname']) .
-            "</option>";
+            '</option>';
     }
 
     /**
@@ -780,6 +781,6 @@ class actionComputeField extends actionBase
             }
         }
 
-        return "";
+        return '';
     }
 }

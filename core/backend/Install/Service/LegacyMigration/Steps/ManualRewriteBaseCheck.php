@@ -49,7 +49,7 @@ class ManualRewriteBaseCheck implements LegacyMigrationStepInterface
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * ManualRewriteBaseCheck constructor.
@@ -98,8 +98,8 @@ class ManualRewriteBaseCheck implements LegacyMigrationStepInterface
             $urlParts = parse_url($siteURL) ?? [];
             $path = rtrim($urlParts['path'] ?? '', " \t\n\r\0\x0B/");
 
-            $messages[] = "- Based on your site url '" . $siteURL . "'.";
-            $messages[] = "- The RewriteBase should be something like '" . $path . '/legacy' . "'.";
+            $messages[] = '- Based on your site url \'' . $siteURL . '\'.';
+            $messages[] = '- The RewriteBase should be something like \'' . $path . '/legacy' . '\'.';
         }
 
         $alert->setMessages($messages);
@@ -112,7 +112,6 @@ class ManualRewriteBaseCheck implements LegacyMigrationStepInterface
      */
     public function execute(array &$context): Feedback
     {
-
         $feedback = new Feedback();
         $feedback->setSuccess(true);
         $feedback->setMessages([

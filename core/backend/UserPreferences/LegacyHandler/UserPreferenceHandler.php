@@ -27,6 +27,7 @@
 
 namespace App\UserPreferences\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Core\Exception\ItemNotFoundException;
 use App\UserPreferences\Entity\UserPreference;
 use App\Engine\LegacyHandler\LegacyHandler;
@@ -40,25 +41,27 @@ use User;
 class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProviderInterface
 {
     protected const MSG_USER_PREFERENCE_NOT_FOUND = 'Not able to find user preference key: ';
-    public const HANDLER_KEY = 'user-preferences';
+    public const    HANDLER_KEY                   = 'user-preferences';
 
     /**
      * @var array
      */
-    protected $exposedUserPreferences = [];
+    protected array $exposedUserPreferences = [];
 
     /**
      * @var UserPreferencesMappers
      */
-    private $mappers;
+    private UserPreferencesMappers $mappers;
 
     /**
      * @var array
      */
-    private $userPreferencesKeyMap;
+    private array $userPreferencesKeyMap;
+    private LoggerInterface $logger;
 
     /**
      * UserPreferenceHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -69,18 +72,29 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
      * @param array $userPreferencesKeyMap
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        array $exposedUserPreferences,
+        string                 $projectDir,
+        string                 $legacyDir,
+        string                 $legacySessionName,
+        string                 $defaultSessionName,
+        LegacyScopeState       $legacyScopeState,
+        array                  $exposedUserPreferences,
         UserPreferencesMappers $mappers,
-        array $userPreferencesKeyMap,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        array                  $userPreferencesKeyMap,
+        RequestStack           $session,
+        LoggerInterface        $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
 
+        $this->logger = $logger;
         $this->exposedUserPreferences = $exposedUserPreferences;
         $this->mappers = $mappers;
         $this->userPreferencesKeyMap = $userPreferencesKeyMap;
@@ -89,41 +103,57 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get all exposed user preferences
+     *
      * @return array
      */
-    public function getAllUserPreferences(): array
+    public function getAllUserPreferences() : array
     {
-        $this->init();
+        try {
+            $this->init();
 
-        $this->startLegacyApp();
+            $this->startLegacyApp();
 
-        $userPreferences = [];
+            $userPreferences = [];
 
-        foreach ($this->exposedUserPreferences as $category => $categoryPreferences) {
-            $userPreference = $this->loadUserPreferenceCategory($category);
-            if ($userPreference !== null) {
-                $userPreferences[] = $userPreference;
+            foreach ($this->exposedUserPreferences as $category => $categoryPreferences) {
+                $userPreference = $this->loadUserPreferenceCategory($category);
+                if ($userPreference !== null) {
+                    $userPreferences[] = $userPreference;
+                }
             }
+
+            $this->close();
+
+            return $userPreferences;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
+            throw $e;
         }
-
-        $this->close();
-
-        return $userPreferences;
     }
 
     /**
      * Load user preference with given $key
+     *
      * @param string $category
+     *
      * @return UserPreference|null
      */
-    protected function loadUserPreferenceCategory(string $category = 'global'): ?UserPreference
+    protected function loadUserPreferenceCategory(string $category = 'global') : ?UserPreference
     {
         $currentUser = $this->getCurrentUser();
 
@@ -136,8 +166,9 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
         }
 
         if (!isset($this->exposedUserPreferences[$category])) {
-
-            throw new ItemNotFoundException(self::MSG_USER_PREFERENCE_NOT_FOUND . "'$category'");
+            $message = self::MSG_USER_PREFERENCE_NOT_FOUND . "'$category'";
+            $this->logger->error($message);
+            throw new ItemNotFoundException($message);
         }
 
         $userPreference = new UserPreference();
@@ -163,14 +194,17 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Get currently logged in user
+     *
      * @return User
      */
-    protected function getCurrentUser(): User
+    protected function getCurrentUser() : User
     {
         global $current_user;
 
         if ($current_user === null) {
-            throw new UnexpectedValueException('Current user is not loaded');
+            $message = 'Current user is not loaded';
+            $this->logger->error($message);
+            throw new UnexpectedValueException($message);
         }
 
         return $current_user;
@@ -178,11 +212,13 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Load user preference with given $key
+     *
      * @param string $key
      * @param string $category
+     *
      * @return mixed|null
      */
-    protected function loadUserPreference(string $key, string $category = 'global')
+    protected function loadUserPreference(string $key, string $category = 'global') : mixed
     {
         if (empty($key)) {
             return null;
@@ -190,8 +226,9 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
         if (!isset($this->exposedUserPreferences[$category]) &&
             !isset($this->exposedUserPreferences[$category][$key])) {
-
-            throw new ItemNotFoundException(self::MSG_USER_PREFERENCE_NOT_FOUND . "'$key'");
+            $message = self::MSG_USER_PREFERENCE_NOT_FOUND . "'$key'";
+            $this->logger->error($message);
+            throw new ItemNotFoundException($message);
         }
 
         $currentUser = $this->getCurrentUser();
@@ -216,11 +253,13 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Filter to retrieve only exposed items
+     *
      * @param array $allItems
      * @param array $exposed
+     *
      * @return array
      */
-    protected function filterItems(array $allItems, array $exposed): array
+    protected function filterItems(array $allItems, array $exposed) : array
     {
         $filteredItems = [];
 
@@ -229,25 +268,18 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
         }
 
         foreach ($allItems as $key => $value) {
-
             if (!isset($exposed[$key])) {
                 continue;
             }
 
-            if (is_array($allItems[$key])) {
-
-                $subItems = $allItems[$key];
-
+            if (is_array($value)) {
+                $subItems = $value;
                 if (is_array($exposed[$key])) {
-
-                    $subItems = $this->filterItems($allItems[$key], $exposed[$key]);
+                    $subItems = $this->filterItems($value, $exposed[$key]);
                 }
-
                 $filteredItems[$key] = $subItems;
-
                 continue;
             }
-
             $filteredItems[$key] = $value;
         }
 
@@ -256,11 +288,13 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Map user preference value if mapper defined
+     *
      * @param string $key
      * @param $preference
+     *
      * @return mixed
      */
-    protected function mapValue(string $key, $preference)
+    protected function mapValue(string $key, $preference) : mixed
     {
         if ($this->mappers->hasMapper($key)) {
             $mapper = $this->mappers->get($key);
@@ -272,12 +306,14 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Map user preference key if mapper defined
+     *
      * @param string $key
+     *
      * @return mixed
      */
-    protected function mapKey(string $key)
+    protected function mapKey(string $key) : mixed
     {
-        if ($key === null) {
+        if ($key === '') {
             return $key;
         }
 
@@ -286,19 +322,34 @@ class UserPreferenceHandler extends LegacyHandler implements UserPreferencesProv
 
     /**
      * Get user preference
+     *
      * @param string $key
+     *
      * @return UserPreference|null
      */
-    public function getUserPreference(string $key): ?UserPreference
+    public function getUserPreference(string $key) : ?UserPreference
     {
-        $this->init();
+        try {
+            $this->init();
 
-        $this->startLegacyApp();
+            $this->startLegacyApp();
 
-        $userPreference = $this->loadUserPreferenceCategory($key);
+            $userPreference = $this->loadUserPreferenceCategory($key);
 
-        $this->close();
+            $this->close();
 
-        return $userPreference;
+            return $userPreference;
+        } catch (\Throwable $e) {
+            $this->logger->error(
+                $e->getMessage(),
+                [
+                    'exception' => $e->getMessage(),
+                    'trace'     => $e->getTraceAsString(),
+                    'method'    => $e->getFile(),
+                    'line'      => $e->getLine()
+                ]
+            );
+            throw $e;
+        }
     }
 }

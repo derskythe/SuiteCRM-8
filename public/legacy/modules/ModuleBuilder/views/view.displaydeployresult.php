@@ -60,7 +60,7 @@ class ViewDisplaydeployresult extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -70,7 +70,7 @@ class ViewDisplaydeployresult extends SugarView
            );
     }
 
-    public function display()
+    public function display() : void
     {
         $message = $this->view_object_map['message'];
         echo $message.getVersionedScript('cache/include/javascript/sugar_grp1_yui.js?')."<script type='text/javascript' language='Javascript'>YAHOO.util.Connect.asyncRequest('GET', 'index.php?module=Administration&action=RebuildRelationship&silent=true');</script>";

@@ -1,0 +1,41 @@
+name: 'SuiteCRM-8'
+run-name: 'Docker SuiteCRM-8'
+on:
+  push:
+    paths:
+      - .github/workflows/suitecrm-8.yaml
+      - .github/workflows/docker-build-n-push.yaml
+      - Dockerfile
+      - docker-compose.yaml
+      - composer.json
+      - package.json
+      - angular.json
+      - config/**
+      - core/**
+      - extensions/**
+      - public/**
+      - src/**
+  release:
+    types:
+      - created
+  workflow_dispatch:
+
+concurrency:
+  group: SuiteCRM-8
+
+jobs:
+  SuiteCRM-8:
+    name: SuiteCRM-8
+    uses: ./.github/workflows/docker-build-n-push.yml
+    permissions:
+      contents: write
+      packages: write
+    with:
+      IMAGE_NAME: "suitecrm-8"
+      RELEASE_VERSION: ${{ github.RUN_NUMBER }}
+      BUILD_TYPE: RELEASE
+      DIR_NAME: "./"
+    secrets:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      docker-user: ${{ github.REPOSITORY_OWNER }}
+      docker-token: ""

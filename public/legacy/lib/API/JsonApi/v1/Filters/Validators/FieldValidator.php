@@ -40,6 +40,7 @@
 
 namespace SuiteCRM\API\JsonApi\v1\Filters\Validators;
 
+use SuiteCRM\Exception\Exception;
 use Psr\Container\ContainerInterface;
 use SuiteCRM\API\JsonApi\v1\Filters\Interfaces\ValidatorInterface;
 use SuiteCRM\API\JsonApi\v1\Filters\Operators\FieldOperator;
@@ -68,8 +69,9 @@ class FieldValidator implements ValidatorInterface
 
     /**
      * @param string $fieldKey
+     *
      * @return bool
-     *  @throws \SuiteCRM\Exception\InvalidArgumentException
+     * @throws \SuiteCRM\Exception\InvalidArgumentException*@throws Exception
      */
     public function isValid($fieldKey)
     {

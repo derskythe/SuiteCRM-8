@@ -208,13 +208,15 @@ class EditView
      * This is the EditView constructor responsible for processing the new
      * Meta-Data framework
      *
-     * @param string $module value of module this Edit view is for
-     * @param SugarBean $focus An empty sugarbean object of module
-     * @param string $metadataFile value of file location to use in overriding default metadata file
-     * @param string $tpl value of file location to use in overriding default Smarty template
-     * @param bool $createFocus value to tell whether to create a new bean if we do not have one with an id, this is used from ConvertLead
+     * @param string $module           value of module this Edit view is for
+     * @param SugarBean $focus         An empty sugarbean object of module
+     * @param string $metadataFile     value of file location to use in overriding default metadata file
+     * @param string $tpl              value of file location to use in overriding default Smarty template
+     * @param bool $createFocus        value to tell whether to create a new bean if we do not have one with an id,
+     *                                 this is used from ConvertLead
      * @param string $metadataFileName specifies the name of the metadata file eg 'editviewdefs'
      *
+     * @throws Exception
      */
     public function setup(
         $module,
@@ -262,7 +264,7 @@ class EditView
 
                 global $dictionary;
 
-                $htmlFile = "modules/" . $this->module . "/EditView.html";
+                $htmlFile = 'modules/' . $this->module . '/EditView.html';
                 $parser = new EditViewMetaParser();
                 if (!file_exists('modules/' . $this->module . '/metadata')) {
                     sugar_mkdir('modules/' . $this->module . '/metadata');
@@ -592,7 +594,7 @@ class EditView
                     ? array_merge($this->focus->field_defs[$name], $this->fieldDefs[$name])
                     : $this->focus->field_defs[$name];
 
-                foreach (array("formula", "default", "comments", "help") as $toEscape) {
+                foreach (array( 'formula', 'default', 'comments', 'help' ) as $toEscape) {
                     if (!empty($this->fieldDefs[$name][$toEscape])) {
                         $this->fieldDefs[$name][$toEscape] = htmlentities(
                             (string) $this->fieldDefs[$name][$toEscape],
@@ -703,7 +705,7 @@ class EditView
                     ) &&
                     (
                         !isset($this->fieldDefs[$name]['function']['returns']) ||
-                        $this->fieldDefs[$name]['function']['returns'] != 'html'
+                        $this->fieldDefs[$name]['function']['returns'] !== 'html'
                     )
                     && isset($_REQUEST[$name])
                 ) {
@@ -760,9 +762,13 @@ class EditView
      * display
      * This method makes the Smarty variable assignments and then displays the
      * generated view.
+     *
      * @param bool $showTitle boolean value indicating whether or not to show a title on the resulting page
-     * @param bool $ajaxSave boolean value indicating whether or not the operation is an Ajax save request
+     * @param bool $ajaxSave  boolean value indicating whether or not the operation is an Ajax save request
+     *
      * @return string display for view as HTML
+     * @throws SmartyException
+     * @throws SmartyException
      */
     public function display($showTitle = true, $ajaxSave = false)
     {
@@ -897,7 +903,7 @@ class EditView
         }
 
         // Create Smarty variables for the Calendar picker widget
-        $t23 = strpos((string) $time_format, '23') !== false ? '%H' : '%I';
+        $t23 = str_contains((string) $time_format, '23') ? '%H' : '%I';
         if (!isset($match[2]) || empty($match[2])) {
             $this->th->ss->assign('CALENDAR_FORMAT', $date_format . ' ' . $t23 . $time_separator . '%M');
         } else {
@@ -943,12 +949,12 @@ class EditView
         //if popup select add panel if user is a member of multiple groups to metadataFile
         global $sugar_config;
         if(isset($sugar_config['securitysuite_popup_select']) && $sugar_config['securitysuite_popup_select'] == true
-            && (empty($this->focus->fetched_row['id']) || ($_REQUEST['isDuplicate'] ?? false) === true) && $this->focus->module_dir != "Users" && $this->focus->module_dir != "SugarFeed") {
+            && (empty($this->focus->fetched_row['id']) || ($_REQUEST['isDuplicate'] ?? false) === true) && $this->focus->module_dir !== 'Users' && $this->focus->module_dir !== 'SugarFeed') {
 
             //there are cases such as uploading an attachment to an email template where the request module may
             //not be the same as the current bean module. If that happens we can just skip it
             //however...let quickcreate through
-            if($this->view != 'QuickCreate' && (empty($_REQUEST['module']) || $_REQUEST['module'] != $this->focus->module_dir)) return $str;
+            if($this->view !== 'QuickCreate' && (empty($_REQUEST['module']) || $_REQUEST['module'] != $this->focus->module_dir)) return $str;
 
             require_once('modules/SecurityGroups/SecurityGroup.php');
             $security_modules = SecurityGroup::getSecurityModules();
@@ -1150,6 +1156,7 @@ EOQ;
 
     /**
      * @return string
+     * @throws SmartyException
      */
     protected function parseHeaderTitleTemplate(): string
     {

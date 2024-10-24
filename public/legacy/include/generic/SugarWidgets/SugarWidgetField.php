@@ -2,6 +2,7 @@
 if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
+
 /**
  *
  * SugarCRM Community Edition is a customer relationship management program developed by
@@ -40,7 +41,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * reasonably feasible for technical reasons, the Appropriate Legal Notices must
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
-
 #[\AllowDynamicProperties]
 class SugarWidgetField extends SugarWidget
 {
@@ -52,12 +52,12 @@ class SugarWidgetField extends SugarWidget
     public function display($layout_def)
     {
         $context = $this->layout_manager->getAttribute('context');
-        $func_name = 'display'.$context;
+        $func_name = 'display' . $context;
 
         if (!empty($context) && method_exists($this, $func_name)) {
-            return $this-> $func_name($layout_def);
+            return $this->$func_name($layout_def);
         } else {
-            return 'display not found:'.$func_name;
+            return 'display not found:' . $func_name;
         }
     }
 
@@ -65,7 +65,7 @@ class SugarWidgetField extends SugarWidget
     {
         $alias_arr = array();
 
-        if (!empty($layout_def['name']) && $layout_def['name'] == 'count') {
+        if (!empty($layout_def['name']) && $layout_def['name'] === 'count') {
             return 'count';
         }
 
@@ -77,10 +77,10 @@ class SugarWidgetField extends SugarWidget
             array_push($alias_arr, $layout_def['name']);
         }
 
-        return $this->getTruncatedColumnAlias(implode("_", $alias_arr));
+        return $this->getTruncatedColumnAlias(implode('_', $alias_arr));
     }
 
-    public function & displayDetailLabel(& $layout_def)
+    public function & displayDetailLabel(&$layout_def)
     {
         return '';
     }
@@ -88,6 +88,7 @@ class SugarWidgetField extends SugarWidget
     public function & displayDetail($layout_def)
     {
         $layout_def = '';
+
         return $layout_def;
     }
 
@@ -99,6 +100,7 @@ class SugarWidgetField extends SugarWidget
         if (!empty($layout_def['vname'])) {
             return translate($layout_def['vname'], $this->layout_manager->getAttribute('module_name'));
         }
+
         return '';
     }
 
@@ -116,10 +118,10 @@ class SugarWidgetField extends SugarWidget
         $header_cell_text = $this->displayHeaderCellPlain($layout_def);
 
         $subpanel_module = $layout_def['subpanel_module'];
-        $html_var = $subpanel_module . "_CELL";
+        $html_var = $subpanel_module . '_CELL';
         if (empty($this->base_URL)) {
             $objListView = new ListView();
-            $this->base_URL = $objListView -> getBaseURL($html_var);
+            $this->base_URL = $objListView->getBaseURL($html_var);
             $split_url = explode('&to_pdf=true&action=SubPanelViewer&subpanel=', $this->base_URL);
             $this->base_URL = $split_url[0];
             $this->base_URL .= '&inline=true&to_pdf=true&action=SubPanelViewer&subpanel=';
@@ -130,12 +132,13 @@ class SugarWidgetField extends SugarWidget
         }
 
         $objListView = new ListView();
-        $sort_by = $objListView->getSessionVariableName($html_var, "ORDER_BY").'='.$sort_by_name;
+        $sort_by = $objListView->getSessionVariableName($html_var, 'ORDER_BY') . '=' . $sort_by_name;
 
         $start = (empty($layout_def['start_link_wrapper'])) ? '' : $layout_def['start_link_wrapper'];
         $end = (empty($layout_def['end_link_wrapper'])) ? '' : $layout_def['end_link_wrapper'];
 
-        $header_cell = "<a class=\"listViewThLinkS1\" href=\"".$start.$this->base_URL.$subpanel_module.'&'.$sort_by.$end."\">";
+        $header_cell =
+            '<a class="listViewThLinkS1" href="' . $start . $this->base_URL . $subpanel_module . '&' . $sort_by . $end . '">';
         $header_cell .= $header_cell_text;
 
         $imgArrow = '';
@@ -145,7 +148,7 @@ class SugarWidgetField extends SugarWidget
         }
         $arrow_start = $objListView->getArrowUpDownStart($imgArrow);
         $arrow_end = $objListView->getArrowUpDownEnd($imgArrow);
-        $header_cell .= " ".$arrow_start.$arrow_end."</a>";
+        $header_cell .= ' ' . $arrow_start . $arrow_end . '</a>';
 
         return $header_cell;
     }
@@ -157,17 +160,19 @@ class SugarWidgetField extends SugarWidget
 
     public function displayListPlain($layout_def)
     {
-        $value= $this->_get_list_value($layout_def);
-        if (isset($layout_def['widget_type']) && $layout_def['widget_type'] =='checkbox') {
-            if ($value != '' &&  ($value == 'on' || (int)$value == 1 || $value == 'yes')) {
+        $value = $this->_get_list_value($layout_def);
+        if (isset($layout_def['widget_type']) && $layout_def['widget_type'] === 'checkbox') {
+            if ($value != '' && ($value === 'on' || (int) $value == 1 || $value === 'yes')) {
                 return "<input name='checkbox_display' class='checkbox' type='checkbox' disabled='true' checked>";
             }
+
             return "<input name='checkbox_display' class='checkbox' type='checkbox' disabled='true'>";
         }
+
         return $value;
     }
 
-    public function _get_list_value(& $layout_def)
+    public function _get_list_value($layout_def)
     {
         $key = '';
         if (isset($layout_def['varname'])) {

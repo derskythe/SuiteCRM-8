@@ -72,7 +72,7 @@ SUGAR.language.setLanguage('app_list_strings', $app_list_strings_encoded);
 EOQ;
 
         $cacheDir = create_cache_directory('jsLanguage/');
-        if ($fh = @sugar_fopen($cacheDir . $lang . '.js', "w")) {
+        if ($fh = @sugar_fopen($cacheDir . $lang . '.js', 'w')) {
             fwrite($fh, $str);
             fclose($fh);
         }
@@ -85,7 +85,7 @@ EOQ;
         // cn: bug 8242 - non-US langpack chokes
         $mod_strings = return_module_language($lang, $moduleDir);
         $mod_strings_encoded = $json->encode($mod_strings);
-        $str = "SUGAR.language.setLanguage('" . $moduleDir . "', " . $mod_strings_encoded . ");";
+        $str = "SUGAR.language.setLanguage('" . $moduleDir . "', " . $mod_strings_encoded . ');';
 
         $cacheDir = create_cache_directory('jsLanguage/' . $moduleDir . '/');
 

@@ -17,7 +17,7 @@ class ProjectListViewSmarty extends ListViewSmarty
 
 
 
-    public function buildExportLink($id = 'export_link')
+    public function buildExportLink($id = 'export_link') : string
     {
         global $app_strings;
         global $sugar_config;
@@ -37,7 +37,7 @@ class ProjectListViewSmarty extends ListViewSmarty
                 "onclick=\"return sListView.send_form(true, '{$_REQUEST['module']}', " .
                 "'index.php?entryPoint=export', " .
                 "'{$app_strings['LBL_LISTVIEW_NO_SELECTED']}')\">{$app_strings['LBL_EXPORT']}</a>" .
-                "</li><li>". // List item hack
+                '</li><li>' . // List item hack
                 "<a href='javascript:void(0)' id='map_listview_top' " .
                 " onclick=\"return sListView.send_form(true, 'jjwg_Maps', " .
                 "'index.php?entryPoint=jjwg_Maps&display_module={$_REQUEST['module']}', " .

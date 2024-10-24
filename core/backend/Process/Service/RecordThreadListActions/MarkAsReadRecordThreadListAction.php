@@ -27,6 +27,7 @@
 
 namespace App\Process\Service\RecordThreadListActions;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Data\LegacyHandler\PresetDataHandlers\AlertsDataHandler;
 use App\Data\Service\RecordMarkAsReadServiceInterface;
@@ -60,6 +61,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
 
     /**
      * MarkAsReadRecordThreadListAction constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -71,18 +73,27 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $session,
+        string                           $projectDir,
+        string                           $legacyDir,
+        string                           $legacySessionName,
+        string                           $defaultSessionName,
+        LegacyScopeState                 $legacyScopeState,
+        RequestStack                     $session,
         RecordMarkAsReadServiceInterface $recordMarkAsReadService,
-        AlertsDataHandler $alertsDataHandler,
-        ModuleNameMapperInterface $moduleNameMapper
+        AlertsDataHandler                $alertsDataHandler,
+        ModuleNameMapperInterface        $moduleNameMapper,
+        LoggerInterface                  $logger
     )
     {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->recordMarkAsReadService = $recordMarkAsReadService;
         $this->alertsDataHandler = $alertsDataHandler;
         $this->moduleNameMapper = $moduleNameMapper;
@@ -91,7 +102,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -99,7 +110,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -107,7 +118,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -115,7 +126,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
@@ -125,7 +136,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
             $module => [
                 [
                     'action' => 'view',
-                    'ids' => $ids
+                    'ids'    => $ids
                 ]
             ],
         ];
@@ -134,7 +145,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -146,7 +157,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -162,7 +173,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
     /**
      * {@inheritDoc}
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $options = $process->getOptions();
 
@@ -179,7 +190,7 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
 
         if (!$result) {
             $process->setStatus('error');
-            $process->setMessages(['ERR_NOTIFICATIONS_MARK_AS_READ']);
+            $process->setMessages([ 'ERR_NOTIFICATIONS_MARK_AS_READ' ]);
 
             return;
         }
@@ -192,13 +203,13 @@ class MarkAsReadRecordThreadListAction extends LegacyHandler implements ProcessH
 
         $responseData = [
             'reloadThread' => true,
-            'unreadCount' => $unreadCount
+            'unreadCount'  => $unreadCount
         ];
 
         $process->setData($responseData);
     }
 
-    protected function markAllAsRead(Process $process): bool
+    protected function markAllAsRead(Process $process) : bool
     {
         $options = $process->getOptions();
 

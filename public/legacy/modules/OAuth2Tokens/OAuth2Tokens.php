@@ -51,17 +51,17 @@ class OAuth2Tokens extends SugarBean
     /**
      * @var string
      */
-    public $table_name = 'oauth2tokens';
+    public string $table_name = 'oauth2tokens';
 
     /**
      * @var string
      */
-    public $object_name = 'OAuth2Tokens';
+    public string $object_name = 'OAuth2Tokens';
 
     /**
      * @var string
      */
-    public $module_dir = 'OAuth2Tokens';
+    public string $module_dir = 'OAuth2Tokens';
 
     /**
      * @var bool
@@ -116,7 +116,7 @@ class OAuth2Tokens extends SugarBean
     /**
      * @see SugarBean::get_summary_text()
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return substr((string) $this->id, 0, 10) . '...';
     }

@@ -52,7 +52,7 @@ class ViewLabels extends ViewModulefields
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -64,11 +64,14 @@ class ViewLabels extends ViewModulefields
 
     //STUDIO LABELS ONLY//
     //TODO Bundle Studio and ModuleBuilder label handling to increase maintainability.
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         $translatedEditModule = '';
         $editModule = $_REQUEST['view_module'];
-        $allLabels = (!empty($_REQUEST['labels']) && $_REQUEST['labels']== 'all');
+        $allLabels = (!empty($_REQUEST['labels']) && $_REQUEST['labels'] === 'all');
 
         if (!isset($_REQUEST['MB'])) {
             global $app_list_strings;
@@ -161,7 +164,7 @@ class ViewLabels extends ViewModulefields
         $smarty->assign('defaultHelp', 'labelsBtn');
         $smarty->assign('assistant', array('key'=>'labels', 'group'=>'module'));
         $smarty->assign('labels_choice', $mod_strings['labelTypes']);
-        $smarty->assign('labels_current', $allLabels?"all":"");
+        $smarty->assign('labels_current', $allLabels? 'all' : '');
 
         $ajax = new AjaxCompose();
         $ajax->addCrumb($mod_strings['LBL_STUDIO'], 'ModuleBuilder.getContent("module=ModuleBuilder&action=wizard")');
@@ -186,13 +189,13 @@ class ViewLabels extends ViewModulefields
                                            'Quotes',
                                            'ProductTemplates');
 
-        if (in_array($module, $hideQuickCreateForModules)) {
+        if (in_array($module, $hideQuickCreateForModules, true)) {
             if (isset($variableMap['quickcreate'])) {
                 unset($variableMap['quickcreate']);
             }
         }
 
-        if ($module == 'KBDocuments') {
+        if ($module === 'KBDocuments') {
             $variableMap  = array();
         }
 

@@ -61,28 +61,30 @@ class ImportViewDupcheck extends ImportView
     protected $pageTitleKey = 'LBL_STEP_DUP_TITLE';
 
     /**
+     * @throws SmartyException
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings, $current_user;
         global $sugar_config;
 
-        $has_header = $_REQUEST['has_header'] == 'on' ? true : false;
+        $has_header = $_REQUEST['has_header'] === 'on' ? true : false;
 
         $this->instruction = 'LBL_SELECT_DUPLICATE_INSTRUCTION';
         $this->ss->assign('INSTRUCTION', $this->getInstruction());
 
-        $this->ss->assign("MODULE_TITLE", $this->getModuleTitle(false));
-        $this->ss->assign("DELETE_INLINE_PNG", SugarThemeRegistry::current()->getImage('delete_inline', 'align="absmiddle" alt="'.$app_strings['LNK_DELETE'].'" border="0"'));
-        $this->ss->assign("PUBLISH_INLINE_PNG", SugarThemeRegistry::current()->getImage('publish_inline', 'align="absmiddle" alt="'.$mod_strings['LBL_PUBLISH'].'" border="0"'));
-        $this->ss->assign("UNPUBLISH_INLINE_PNG", SugarThemeRegistry::current()->getImage('unpublish_inline', 'align="absmiddle" alt="'.$mod_strings['LBL_UNPUBLISH'].'" border="0"'));
-        $this->ss->assign("IMPORT_MODULE", $_REQUEST['import_module']);
-        $this->ss->assign("CURRENT_STEP", $this->currentStep);
-        $this->ss->assign("JAVASCRIPT", $this->_getJS());
+        $this->ss->assign('MODULE_TITLE', $this->getModuleTitle(false));
+        $this->ss->assign('DELETE_INLINE_PNG', SugarThemeRegistry::current()->getImage('delete_inline', 'align="absmiddle" alt="'. $app_strings['LNK_DELETE'].'" border="0"'));
+        $this->ss->assign('PUBLISH_INLINE_PNG', SugarThemeRegistry::current()->getImage('publish_inline', 'align="absmiddle" alt="'. $mod_strings['LBL_PUBLISH'].'" border="0"'));
+        $this->ss->assign('UNPUBLISH_INLINE_PNG', SugarThemeRegistry::current()->getImage('unpublish_inline', 'align="absmiddle" alt="'. $mod_strings['LBL_UNPUBLISH'].'" border="0"'));
+        $this->ss->assign('IMPORT_MODULE', $_REQUEST['import_module']);
+        $this->ss->assign('CURRENT_STEP', $this->currentStep);
+        $this->ss->assign('JAVASCRIPT', $this->_getJS());
 
         $content = $this->ss->fetch('modules/Import/tpls/dupcheck.tpl');
-        $this->ss->assign("CONTENT", $content);
+        $this->ss->assign('CONTENT', $content);
         $this->ss->display('modules/Import/tpls/wizardWrapper.tpl');
     }
 
@@ -105,8 +107,8 @@ class ImportViewDupcheck extends ImportView
     {
         global $mod_strings, $sugar_config;
 
-        $has_header = $_REQUEST['has_header'] == 'on' ? true : false;
-        $uploadFileName = "upload://".basename((string) $_REQUEST['tmp_file']);
+        $has_header = $_REQUEST['has_header'] === 'on' ? true : false;
+        $uploadFileName = 'upload://' .basename((string) $_REQUEST['tmp_file']);
         $splitter = new ImportFileSplitter($uploadFileName, $sugar_config['import_max_records_per_file']);
         $splitter->splitSourceFile($_REQUEST['custom_delimiter'], html_entity_decode((string) $_REQUEST['custom_enclosure'], ENT_QUOTES), $has_header);
         $count = $splitter->getFileCount()-1;
@@ -147,10 +149,10 @@ class ImportViewDupcheck extends ImportView
 
             if (isset($field_map['dupe_'.$ik])) {
                 //index is defined in mapping, so set this index as enabled if not already defined
-                $dupe_enabled[] =  array("dupeVal" => $ik, "label" => $iv);
+                $dupe_enabled[] =  array( 'dupeVal' => $ik, 'label' => $iv);
             } else {
                 //index is not defined in mapping, so display as disabled if not already defined
-                $dupe_disabled[] =  array("dupeVal" => $ik, "label" => $iv);
+                $dupe_disabled[] =  array( 'dupeVal' => $ik, 'label' => $iv);
             }
         }
 
@@ -161,8 +163,8 @@ class ImportViewDupcheck extends ImportView
 
         $dateTimeFormat = $GLOBALS['timedate']->get_cal_date_time_format();
         $type = (isset($_REQUEST['type'])) ? $_REQUEST['type'] : '';
-        $lblUsed = str_replace(":", "", (string) $mod_strings['LBL_INDEX_USED']);
-        $lblNotUsed = str_replace(":", "", (string) $mod_strings['LBL_INDEX_NOT_USED']);
+        $lblUsed = str_replace(':', '', (string) $mod_strings['LBL_INDEX_USED']);
+        $lblNotUsed = str_replace(':', '', (string) $mod_strings['LBL_INDEX_NOT_USED']);
         return <<<EOJAVASCRIPT
 
 
@@ -215,8 +217,8 @@ ProcessImport = new function()
                             + "&import_module={$_REQUEST['import_module']}"
                             + "&has_header=" +  document.getElementById("importstepdup").has_header.value ;
                         if ( ProcessImport.fileCount >= ProcessImport.fileTotal ) {
-                        	YAHOO.SUGAR.MessageBox.updateProgress(1,'{$mod_strings['LBL_IMPORT_COMPLETED']}');
-                        	SUGAR.util.hrefURL(locationStr);
+                            YAHOO.SUGAR.MessageBox.updateProgress(1,'{$mod_strings['LBL_IMPORT_COMPLETED']}');
+                            SUGAR.util.hrefURL(locationStr);
                         }
                         else {
                             document.getElementById("importstepdup").save_map_as.value = '';
@@ -226,11 +228,11 @@ ProcessImport = new function()
                     }
                 },
                 failure: function(o) {
-                	YAHOO.SUGAR.MessageBox.minWidth = 500;
-                	YAHOO.SUGAR.MessageBox.show({
-                    	type:  "alert",
-                    	title: '{$mod_strings['LBL_IMPORT_ERROR']}',
-                    	msg:   o.responseText,
+                    YAHOO.SUGAR.MessageBox.minWidth = 500;
+                    YAHOO.SUGAR.MessageBox.show({
+                        type:  "alert",
+                        title: '{$mod_strings['LBL_IMPORT_ERROR']}',
+                        msg:   o.responseText,
                         fn: function() { window.location.reload(true); }
                     });
                 }
@@ -267,70 +269,70 @@ ProcessImport = new function()
 }
 
 //begin dragdrop code
-	var enabled_dupes = {$enabled_dupes};
-	var disabled_dupes = {$disabled_dupes};
-	var lblEnabled = '{$lblUsed}';
-	var lblDisabled = '{$lblNotUsed}';
+    var enabled_dupes = {$enabled_dupes};
+    var disabled_dupes = {$disabled_dupes};
+    var lblEnabled = '{$lblUsed}';
+    var lblDisabled = '{$lblNotUsed}';
 
 
-	SUGAR.enabledDupesTable = new YAHOO.SUGAR.DragDropTable(
-		"enabled_div",
-		[{key:"label",  label: lblEnabled, width: 225, sortable: false},
-		 {key:"module", label: lblEnabled, hidden:true}],
-		new YAHOO.util.LocalDataSource(enabled_dupes, {
-			responseSchema: {
-			   resultsList : "dupeVal",
-			   fields : [{key : "dupeVal"}, {key : "label"}]
-			}
-		}),
-		{
-			height: "300px",
-			group: ["enabled_div", "disabled_div"]
-		}
-	);
-	SUGAR.disabledDupesTable = new YAHOO.SUGAR.DragDropTable(
-		"disabled_div",
-		[{key:"label",  label: lblDisabled, width: 225, sortable: false},
-		 {key:"module", label: lblDisabled, hidden:true}],
-		new YAHOO.util.LocalDataSource(disabled_dupes, {
-			responseSchema: {
-			   resultsList : "dupeVal",
-			   fields : [{key : "dupeVal"}, {key : "label"}]
-			}
-		}),
-		{
-			height: "300px",
-		 	group: ["enabled_div", "disabled_div"]
-		 }
-	);
-	SUGAR.enabledDupesTable.disableEmptyRows = true;
+    SUGAR.enabledDupesTable = new YAHOO.SUGAR.DragDropTable(
+        "enabled_div",
+        [{key:"label",  label: lblEnabled, width: 225, sortable: false},
+         {key:"module", label: lblEnabled, hidden:true}],
+        new YAHOO.util.LocalDataSource(enabled_dupes, {
+            responseSchema: {
+               resultsList : "dupeVal",
+               fields : [{key : "dupeVal"}, {key : "label"}]
+            }
+        }),
+        {
+            height: "300px",
+            group: ["enabled_div", "disabled_div"]
+        }
+    );
+    SUGAR.disabledDupesTable = new YAHOO.SUGAR.DragDropTable(
+        "disabled_div",
+        [{key:"label",  label: lblDisabled, width: 225, sortable: false},
+         {key:"module", label: lblDisabled, hidden:true}],
+        new YAHOO.util.LocalDataSource(disabled_dupes, {
+            responseSchema: {
+               resultsList : "dupeVal",
+               fields : [{key : "dupeVal"}, {key : "label"}]
+            }
+        }),
+        {
+            height: "300px",
+             group: ["enabled_div", "disabled_div"]
+         }
+    );
+    SUGAR.enabledDupesTable.disableEmptyRows = true;
     SUGAR.disabledDupesTable.disableEmptyRows = true;
     SUGAR.enabledDupesTable.addRow({module: "", label: ""});
     SUGAR.disabledDupesTable.addRow({module: "", label: ""});
-	SUGAR.enabledDupesTable.render();
-	SUGAR.disabledDupesTable.render();
+    SUGAR.enabledDupesTable.render();
+    SUGAR.disabledDupesTable.render();
 
 
-	SUGAR.saveConfigureDupes = function()
-	{
-		var enabledTable = SUGAR.enabledDupesTable;
-		var dupeVal = [];
-		for(var i=0; i < enabledTable.getRecordSet().getLength(); i++){
-			var data = enabledTable.getRecord(i).getData();
-			if (data.dupeVal && data.dupeVal != '')
-			    dupeVal[i] = data.dupeVal;
-		}
-		    YAHOO.util.Dom.get('enabled_dupes').value = YAHOO.lang.JSON.stringify(dupeVal);
+    SUGAR.saveConfigureDupes = function()
+    {
+        var enabledTable = SUGAR.enabledDupesTable;
+        var dupeVal = [];
+        for(var i=0; i < enabledTable.getRecordSet().getLength(); i++){
+            var data = enabledTable.getRecord(i).getData();
+            if (data.dupeVal && data.dupeVal != '')
+                dupeVal[i] = data.dupeVal;
+        }
+            YAHOO.util.Dom.get('enabled_dupes').value = YAHOO.lang.JSON.stringify(dupeVal);
 
         var disabledTable = SUGAR.disabledDupesTable;
-		var dupeVal = [];
-		for(var i=0; i < disabledTable.getRecordSet().getLength(); i++){
-			var data = disabledTable.getRecord(i).getData();
-			if (data.dupeVal && data.dupeVal != '')
-			    dupeVal[i] = data.dupeVal;
-		}
-			YAHOO.util.Dom.get('disabled_dupes').value = YAHOO.lang.JSON.stringify(dupeVal);
-	}
+        var dupeVal = [];
+        for(var i=0; i < disabledTable.getRecordSet().getLength(); i++){
+            var data = disabledTable.getRecord(i).getData();
+            if (data.dupeVal && data.dupeVal != '')
+                dupeVal[i] = data.dupeVal;
+        }
+            YAHOO.util.Dom.get('disabled_dupes').value = YAHOO.lang.JSON.stringify(dupeVal);
+    }
 
 
 
@@ -339,21 +341,21 @@ document.getElementById('goback').onclick = function(){
     document.getElementById('importstepdup').action.value = 'step3';
     document.getElementById('importstepdup').to_pdf.value = '0';
         var success = function(data) {
-			var response = YAHOO.lang.JSON.parse(data.responseText);
-			importWizardDialogDiv = document.getElementById('importWizardDialogDiv');
-			importWizardDialogTitle = document.getElementById('importWizardDialogTitle');
-			submitDiv = document.getElementById('submitDiv');
-			importWizardDialogDiv.innerHTML = response['html'];
-			importWizardDialogTitle.innerHTML = response['title'];
-			SUGAR.util.evalScript(response['html']);
-			submitDiv.innerHTML = response['submitContent'];
-			eval(response['script']);
+            var response = YAHOO.lang.JSON.parse(data.responseText);
+            importWizardDialogDiv = document.getElementById('importWizardDialogDiv');
+            importWizardDialogTitle = document.getElementById('importWizardDialogTitle');
+            submitDiv = document.getElementById('submitDiv');
+            importWizardDialogDiv.innerHTML = response['html'];
+            importWizardDialogTitle.innerHTML = response['title'];
+            SUGAR.util.evalScript(response['html']);
+            submitDiv.innerHTML = response['submitContent'];
+            eval(response['script']);
 
-		}
+        }
 
         var formObject = document.getElementById('importstepdup');
-		YAHOO.util.Connect.setForm(formObject);
-		var cObj = YAHOO.util.Connect.asyncRequest('POST', "index.php", {success: success, failure: success});
+        YAHOO.util.Connect.setForm(formObject);
+        var cObj = YAHOO.util.Connect.asyncRequest('POST', "index.php", {success: success, failure: success});
 }
 
 document.getElementById('importnow').onclick = function(){

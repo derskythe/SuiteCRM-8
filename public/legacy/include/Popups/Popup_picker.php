@@ -62,11 +62,11 @@ class Popup_Picker
         global $currentModule, $popupMeta;
 
         // cn: bug 12269 - directory navigation attack - detect and stop.
-        if (isset($_REQUEST['metadata']) && strpos($_REQUEST['metadata'], "..") !== false) {
-            die("Directory navigation attack denied.");
+        if (isset($_REQUEST['metadata']) && str_contains($_REQUEST['metadata'], '..')) {
+            die('Directory navigation attack denied.');
         }
         if (empty($popupMeta)) {
-            if (!empty($_REQUEST['metadata']) && $_REQUEST['metadata'] != 'undefined') { // if custom metadata is requested
+            if (!empty($_REQUEST['metadata']) && $_REQUEST['metadata'] !== 'undefined') { // if custom metadata is requested
                 require_once('modules/' . $currentModule . '/metadata/' . $_REQUEST['metadata'] . '.php');
             } else {
                 require_once('modules/' . $currentModule . '/metadata/popupdefs.php');
@@ -75,7 +75,7 @@ class Popup_Picker
         $this->_popupMeta = $popupMeta;
 
         require_once('modules/' . $currentModule . '/' . $this->_popupMeta['moduleMain'] . '.php');
-        if (isset($this->_popupMeta['create']['formBase']) && isset($_REQUEST['create']) && $_REQUEST['create'] == 'true') { // include create form
+        if (isset($this->_popupMeta['create']['formBase']) && isset($_REQUEST['create']) && $_REQUEST['create'] === 'true') { // include create form
             require_once('modules/' . $currentModule . '/' . $this->_popupMeta['create']['formBase']);
             $this->_create = true;
         }
@@ -118,7 +118,8 @@ class Popup_Picker
         global $currentModule;
         global $app_list_strings, $sugar_version, $sugar_config;
 
-        $output_html = "<script type=\"text/javascript\" src=\"" . getJSPath('include/javascript/sugar_3.js'). "\"></script>";
+        $output_html =
+            '<script type="text/javascript" src="' . getJSPath('include/javascript/sugar_3.js') . '"></script>';
         $where = '';
 
         if (empty($_REQUEST[$currentModule . '_' . strtoupper($this->_popupMeta['moduleMain']) . '_offset'])) {
@@ -132,7 +133,7 @@ class Popup_Picker
         // CREATE STUFF
         if ($this->_create) {
             $formBase = new $this->_popupMeta['create']['formBaseClass']();
-            if (isset($_REQUEST['doAction']) && $_REQUEST['doAction'] == 'save') {
+            if (isset($_REQUEST['doAction']) && $_REQUEST['doAction'] === 'save') {
                 $formBase->handleSave('', false, true);
             }
 
@@ -153,13 +154,13 @@ class Popup_Picker
                 . '</td></tr></table>'
                 . '<input type="hidden" name="action" value="Popup" />';
             $formSave = <<<EOQ
-			<input type="hidden" name="create" value="true">
-			<input type="hidden" name="popup" value="true">
-			<input type="hidden" name="to_pdf" value="true">
-			<input type="hidden" name="return_module" value="$currentModule">
-			<input type="hidden" name="return_action" value="Popup">
-			<input type="submit" name="button" class="button" title="$lbl_save_button_title" value="  $lbl_save_button_label  " />
-			<input type="button" name="button" class="button" title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" accesskey="{$app_strings['LBL_CANCEL_BUTTON_KEY']}" value="{$app_strings['LBL_CANCEL_BUTTON_LABEL']}" onclick="toggleDisplay('addform');" />
+            <input type="hidden" name="create" value="true">
+            <input type="hidden" name="popup" value="true">
+            <input type="hidden" name="to_pdf" value="true">
+            <input type="hidden" name="return_module" value="$currentModule">
+            <input type="hidden" name="return_action" value="Popup">
+            <input type="submit" name="button" class="button" title="$lbl_save_button_title" value="  $lbl_save_button_label  " />
+            <input type="button" name="button" class="button" title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" accesskey="{$app_strings['LBL_CANCEL_BUTTON_KEY']}" value="{$app_strings['LBL_CANCEL_BUTTON_LABEL']}" onclick="toggleDisplay('addform');" />
 EOQ;
             // if metadata contains custom inputs for the quickcreate
             if (!empty($this->_popupMeta['customInput']) && is_array($this->_popupMeta['customInput'])) {
@@ -169,7 +170,7 @@ EOQ;
             }
             $createButtonTranslation = translate($this->_popupMeta['create']['createButton']);
             $createButton = <<<EOQ
-			<input type="button" id="showAdd" name="showAdd" class="button" value="{$createButtonTranslation}" onclick="toggleDisplay('addform');" />
+            <input type="button" id="showAdd" name="showAdd" class="button" value="{$createButtonTranslation}" onclick="toggleDisplay('addform');" />
 EOQ;
             $addformheader = get_form_header($createButtonTranslation, $formSave, false);
         }
@@ -194,7 +195,7 @@ EOQ;
 
         //START:FOR MULTI-SELECT
         $multi_select = false;
-        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) == 'MULTISELECT') {
+        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) === 'MULTISELECT') {
             $multi_select = true;
             $button .= "<input type='hidden' name='mode' value='MultiSelect'>";
             $button .= "<input type='button' name='button' class='button' onclick=\"send_back_selected('$currentModule',document.MassUpdate,'mass[]','" .$app_strings['ERR_NOTHING_SELECTED']."', request_data.field_to_name_array);\" title='"
@@ -240,7 +241,7 @@ EOQ;
 
         // assign search inputs to xtemplates
         foreach (array_keys($searchInputs) as $key) {
-            if (!empty($_REQUEST[$key]) && (isset($seed_bean->field_name_map[$key]['type']) && $seed_bean->field_name_map[$key]['type'] == 'bool')) {
+            if (!empty($_REQUEST[$key]) && (isset($seed_bean->field_name_map[$key]['type']) && $seed_bean->field_name_map[$key]['type'] === 'bool')) {
                 $form->assign(strtoupper($key), ' checked ');
             } else {
                 $form->assign(strtoupper($key), $searchInputs[$key]);
@@ -301,54 +302,54 @@ EOQ;
 
         // decode then encode to escape "'s
         $output_html .= "</form>
-		<script type=\"text/javascript\">
-		function save_checks(offset) {
-			checked_ids = Array();
-			for (i = 0; i < document.MassUpdate.elements.length; i++){
-				if(document.MassUpdate.elements[i].name == 'mass[]' && document.MassUpdate.elements[i].checked) {
-					temp_string = '';
-					temp_string += '\"' + document.MassUpdate.elements[i].value + '\": {';
-					for(the_key in associated_javascript_data[document.MassUpdate.elements[i].value]) {
-						temp_string += '\"' + the_key + '\":\"' + associated_javascript_data[document.MassUpdate.elements[i].value][the_key] + '\",';
-					}
-					temp_string = temp_string.substring(0,temp_string.length - 1);
-					temp_string += '}';
-					checked_ids.push(temp_string);
-				}
-			}
-			document.MassUpdate.saved_associated_data.value = escape('{' + checked_ids.join(',') + '}');
+        <script type=\"text/javascript\">
+        function save_checks(offset) {
+            checked_ids = Array();
+            for (i = 0; i < document.MassUpdate.elements.length; i++){
+                if(document.MassUpdate.elements[i].name == 'mass[]' && document.MassUpdate.elements[i].checked) {
+                    temp_string = '';
+                    temp_string += '\"' + document.MassUpdate.elements[i].value + '\": {';
+                    for(the_key in associated_javascript_data[document.MassUpdate.elements[i].value]) {
+                        temp_string += '\"' + the_key + '\":\"' + associated_javascript_data[document.MassUpdate.elements[i].value][the_key] + '\",';
+                    }
+                    temp_string = temp_string.substring(0,temp_string.length - 1);
+                    temp_string += '}';
+                    checked_ids.push(temp_string);
+                }
+            }
+            document.MassUpdate.saved_associated_data.value = escape('{' + checked_ids.join(',') + '}');
 
-			document.MassUpdate.action.value = \"Popup\";
-			document.MassUpdate.$currentModule" . '_' . strtoupper($this->_popupMeta['moduleMain']) . '_offset.value = offset;
-			document.MassUpdate.submit();
-		}
-		// reassigned the saved data from the saved checks
-		if(typeof(document.MassUpdate) != \'undefined\' && document.MassUpdate.saved_associated_data.value != \'\') {
-			temp_array = ' . (!empty($_REQUEST['saved_associated_data']) ? $json->encode($json->decode(urldecode($_REQUEST['saved_associated_data']))) : '\'\'') . ';
-			for(the_key in temp_array) {
-				associated_javascript_data[the_key] = temp_array[the_key];
-			}
-		}
+            document.MassUpdate.action.value = \"Popup\";
+            document.MassUpdate.$currentModule" . '_' . strtoupper($this->_popupMeta['moduleMain']) . '_offset.value = offset;
+            document.MassUpdate.submit();
+        }
+        // reassigned the saved data from the saved checks
+        if(typeof(document.MassUpdate) != \'undefined\' && document.MassUpdate.saved_associated_data.value != \'\') {
+            temp_array = ' . (!empty($_REQUEST['saved_associated_data']) ? $json->encode($json->decode(urldecode($_REQUEST['saved_associated_data']))) : '\'\'') . ';
+            for(the_key in temp_array) {
+                associated_javascript_data[the_key] = temp_array[the_key];
+            }
+        }
 
-		// save checks across pages for multiselects
-		if(typeof(document.MassUpdate) != "undefined") {
-			checked_items = Array();
-			inputs_array = document.MassUpdate.elements;
+        // save checks across pages for multiselects
+        if(typeof(document.MassUpdate) != "undefined") {
+            checked_items = Array();
+            inputs_array = document.MassUpdate.elements;
 
-			for(wp = 0 ; wp < inputs_array.length; wp++) {
-				if(inputs_array[wp].name == "mass[]" && inputs_array[wp].style.display == "none") {
-					checked_items.push(inputs_array[wp].value);
-				}
-			}
-			for(i in checked_items) {
-				for(wp = 0 ; wp < inputs_array.length; wp++) {
-					if(inputs_array[wp].name == "mass[]" && inputs_array[wp].value == checked_items[i]) {
-						inputs_array[wp].checked = true;
-					}
-				}
-			}
-		}
-		</script>';
+            for(wp = 0 ; wp < inputs_array.length; wp++) {
+                if(inputs_array[wp].name == "mass[]" && inputs_array[wp].style.display == "none") {
+                    checked_items.push(inputs_array[wp].value);
+                }
+            }
+            for(i in checked_items) {
+                for(wp = 0 ; wp < inputs_array.length; wp++) {
+                    if(inputs_array[wp].name == "mass[]" && inputs_array[wp].value == checked_items[i]) {
+                        inputs_array[wp].checked = true;
+                    }
+                }
+            }
+        }
+        </script>';
         $output_html .= insert_popup_footer();
         return $output_html;
     }

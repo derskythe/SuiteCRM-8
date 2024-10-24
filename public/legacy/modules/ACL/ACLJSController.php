@@ -61,26 +61,26 @@ class ACLJSController
         }
         $script = "<SCRIPT>\n//BEGIN ACL JAVASCRIPT\n";
 
-        if ($action == 'DetailView') {
+        if ($action === 'DetailView') {
             if (!ACLController::checkAccess($this->module, 'edit', $this->is_owner)) {
                 $script .= <<<EOQ
-						if(typeof(document.DetailView) != 'undefined'){
-							if(typeof(document.DetailView.elements['Edit']) != 'undefined'){
-								document.DetailView.elements['Edit'].disabled = 'disabled';
-							}
-							if(typeof(document.DetailView.elements['Duplicate']) != 'undefined'){
-								document.DetailView.elements['Duplicate'].disabled = 'disabled';
-							}
-						}
+                        if(typeof(document.DetailView) != 'undefined'){
+                            if(typeof(document.DetailView.elements['Edit']) != 'undefined'){
+                                document.DetailView.elements['Edit'].disabled = 'disabled';
+                            }
+                            if(typeof(document.DetailView.elements['Duplicate']) != 'undefined'){
+                                document.DetailView.elements['Duplicate'].disabled = 'disabled';
+                            }
+                        }
 EOQ;
             }
             if (!ACLController::checkAccess($this->module, 'delete', $this->is_owner)) {
                 $script .= <<<EOQ
-						if(typeof(document.DetailView) != 'undefined'){
-							if(typeof(document.DetailView.elements['Delete']) != 'undefined'){
-								document.DetailView.elements['Delete'].disabled = 'disabled';
-							}
-						}
+                        if(typeof(document.DetailView) != 'undefined'){
+                            if(typeof(document.DetailView.elements['Delete']) != 'undefined'){
+                                document.DetailView.elements['Delete'].disabled = 'disabled';
+                            }
+                        }
 EOQ;
             }
         }
@@ -115,8 +115,8 @@ EOQ;
         $return_array = array();
         switch ($def['display_option']) {
             case 'clear_link':
-                $return_array['href']= "#";
-                $return_array['className']= "nolink";
+                $return_array['href']= '#';
+                $return_array['className']= 'nolink';
                 break;
             default:
                 $return_array[$def['display_option']] = $def['display_option'];
@@ -143,10 +143,10 @@ EOQ;
         if (!ACLController::checkAccess($def['module'], $def['action_option'], true)) {
             foreach ($this->getHTMLValues($def) as $key=>$value) {
                 $script .=  <<<EOQ
-			var aclfields = document.getElementsByName('$name');
-			for(var i in aclfields){
-				aclfields[i].$key = '$value';
-			}
+            var aclfields = document.getElementsByName('$name');
+            for(var i in aclfields){
+                aclfields[i].$key = '$value';
+            }
 EOQ;
             }
         }

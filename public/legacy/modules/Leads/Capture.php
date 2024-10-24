@@ -67,7 +67,7 @@ if (!empty($_POST['user']) && !empty($users[$_POST['user']])) {
         $leadForm = new LeadFormBase();
         $prefix = '';
         if (!empty($_POST['prefix'])) {
-            $prefix = 	$_POST['prefix'];
+            $prefix =     $_POST['prefix'];
         }
 
         if (!isset($_POST['assigned_user_id']) || !empty($_POST['assigned_user_id'])) {
@@ -96,7 +96,7 @@ if (!empty($_POST['user']) && !empty($users[$_POST['user']])) {
             echo '<form name="redirect" action="' .$_POST['redirect']. '" method="POST">';
 
             foreach ($_POST as $param => $value) {
-                if ($param != 'redirect' && $param != 'submit') {
+                if ($param !== 'redirect' && $param !== 'submit') {
                     echo '<input type="hidden" name="'.$param.'" value="'.$value.'">';
                 }
             }
@@ -107,7 +107,7 @@ if (!empty($_POST['user']) && !empty($users[$_POST['user']])) {
             echo '</form><script language="javascript" type="text/javascript">document.redirect.submit();</script>';
             echo '</body></html>';
         } else {
-            echo "Thank You For Your Submission.";
+            echo 'Thank You For Your Submission.';
         }
         sugar_cleanup();
         // die to keep code from running into redirect case below

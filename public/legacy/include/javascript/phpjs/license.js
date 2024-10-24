@@ -46,7 +46,7 @@
  * (http://web2.bitbaro.hu/), paulo kuong, jmweb, Lincoln Ramsay, djmix,
  * Pyerre, Jon Hohle, Thiago Mata (http://thiagomata.blog.com), lmeyrick
  * (https://sourceforge.net/projects/bcmath-js/this.), Linuxworld, duncan,
- * Gilbert, Sanjoy Roy, Shingo, sankai, Oskar Larsson Hšgfeldt
+ * Gilbert, Sanjoy Roy, Shingo, sankai, Oskar Larsson Hï¿½gfeldt
  * (http://oskar-lh.name/), Denny Wardhana, 0m3r, Everlasto, Subhasis Deb,
  * josh, jd, Pier Paolo Ramon (http://www.mastersoup.com/), P, merabi, Soren
  * Hansen, EdorFaus, Eugene Bulkin (http://doubleaw.com/), Der Simon
@@ -79,7 +79,7 @@
  * (http://www.3rd-Eden.com), Chris McMacken, Yannoo, jakes, gabriel paderni,
  * FGFEmperor, Greg Frazier, baris ozdil, 3D-GRAF, daniel airton wermann
  * (http://wermann.com.br), Howard Yeend, Diogo Resende, Allan Jensen
- * (http://www.winternet.no), Benjamin Lupton, Atli ?—r, Maximusya, davook,
+ * (http://www.winternet.no), Benjamin Lupton, Atli ?ï¿½r, Maximusya, davook,
  * Tod Gentille, Ryan W Tenney (http://ryan.10e.us), Nathan Sepulveda, Cord,
  * fearphage (http://http/my.opera.com/fearphage/), Victor, Rafa? Kukawski
  * (http://kukawski.pl), Matteo, Manish, Matt Bradley, Riddler

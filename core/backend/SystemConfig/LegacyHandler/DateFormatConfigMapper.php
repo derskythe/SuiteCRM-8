@@ -35,7 +35,7 @@ class DateFormatConfigMapper implements SystemConfigMapperInterface
     /**
      * @var DateTimeHandler
      */
-    private $dateTimeHandler;
+    private DateTimeHandler $dateTimeHandler;
 
     /**
      * DateFormatConfigMapper constructor.
@@ -43,7 +43,6 @@ class DateFormatConfigMapper implements SystemConfigMapperInterface
      */
     public function __construct(DateTimeHandler $dateTimeHandler)
     {
-
         $this->dateTimeHandler = $dateTimeHandler;
     }
 
@@ -58,13 +57,13 @@ class DateFormatConfigMapper implements SystemConfigMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(SystemConfig $config): void
+    public function map(SystemConfig $systemConfig): void
     {
-        if (empty($config->getValue())) {
+        if (empty($systemConfig->getValue())) {
             return;
         }
 
-        $format = $this->dateTimeHandler->mapFormat($config->getValue());
-        $config->setValue($format);
+        $format = $this->dateTimeHandler->mapFormat($systemConfig->getValue());
+        $systemConfig->setValue($format);
     }
 }

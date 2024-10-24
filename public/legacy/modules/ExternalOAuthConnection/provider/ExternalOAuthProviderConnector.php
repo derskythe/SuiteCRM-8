@@ -152,6 +152,7 @@ abstract class ExternalOAuthProviderConnector implements ExternalOAuthProviderCo
 
     /**
      * @inheritDoc
+     * @throws IdentityProviderException
      */
     public function refreshAccessToken(string $refreshToken): ?AccessTokenInterface
     {

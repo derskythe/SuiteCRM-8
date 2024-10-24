@@ -59,13 +59,13 @@ class ImapHandlerFakeData
     public const ERR_CALL_NOT_EXISTS = 4;
     public const ERR_CALL_REMOVE = 5;
     public const ERR_WRONG_TESTSET = 6;
-    
+
     /**
      *
      * @var array
      */
     protected $calls = [];
-    
+
     /**
      *
      * @param array|null $args
@@ -75,12 +75,14 @@ class ImapHandlerFakeData
     {
         return $encoded = md5(serialize($args));
     }
-    
+
     /**
      *
      * @param string $name
      * @param string $argsEncoded
+     *
      * @return mixed
+     * @throws Exception
      */
     protected function getNextCallReturn($name, $argsEncoded)
     {
@@ -95,7 +97,7 @@ class ImapHandlerFakeData
         }
         return $ret;
     }
-    
+
     /**
      *
      * @param string $name
@@ -117,7 +119,7 @@ class ImapHandlerFakeData
             throw new Exception('Fake call does not exists for this function call: ' . $name . "\nwith specific arguments:\n" . print_r($args, true), self::ERR_CALL_NOT_FOUND);
         }
     }
-    
+
     /**
      *
      * @param string $name
@@ -135,7 +137,7 @@ class ImapHandlerFakeData
         }
         return $out;
     }
-    
+
     /**
      *
      * @param string $name
@@ -152,7 +154,7 @@ class ImapHandlerFakeData
         }
         $this->calls[$name][$argsEncoded] = $ret;
     }
-    
+
     /**
      *
      * @param string $name
@@ -167,7 +169,7 @@ class ImapHandlerFakeData
         }
         unset($this->calls[$name][$argsEncoded]);
     }
-    
+
     /**
      *
      */
@@ -175,7 +177,7 @@ class ImapHandlerFakeData
     {
         $this->calls = null;
     }
-    
+
     /**
      *
      * @param string $name
@@ -193,11 +195,13 @@ class ImapHandlerFakeData
         }
         $this->add($name, $args);
     }
-    
+
     /**
      * Following example when ImapHandlerFake::open() called and imitate a success IMAP connection
      *
      * @param array $calls
+     *
+     * @throws Exception
      */
     public function retrieve($calls)
     {

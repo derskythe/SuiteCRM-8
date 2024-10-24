@@ -48,10 +48,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 class Group extends User
 {
     // User attribute overrides
-    public $status			= 'Group';
-    public $password		= ''; // to disallow logins
+    public $status            = 'Group';
+    public $password        = ''; // to disallow logins
     public $default_team;
-    public $importable = false;
 
 
     public function __construct()
@@ -60,10 +59,10 @@ class Group extends User
     }
 
 
-
-
     /**
      * overrides SugarBean method
+     *
+     * @throws Exception
      */
     public function mark_deleted($id)
     {
@@ -75,25 +74,25 @@ class Group extends User
         SugarBean::mark_deleted($id);
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         global $current_user;
         if (!is_admin($current_user)) {
             throw new RuntimeException('Not authorized');
         }
 
-        $query = "SELECT users.*";
-        $query .= " FROM users ";
-        $where_auto = " users.deleted = 0";
-        if ($where != "") {
+        $query = 'SELECT users.*';
+        $query .= ' FROM users ';
+        $where_auto = ' users.deleted = 0';
+        if ($where != '') {
             $query .= " WHERE $where AND " . $where_auto;
         } else {
-            $query .= " WHERE " . $where_auto;
+            $query .= ' WHERE ' . $where_auto;
         }
-        if ($order_by != "") {
+        if ($order_by != '') {
             $query .= " ORDER BY $order_by";
         } else {
-            $query .= " ORDER BY users.user_name";
+            $query .= ' ORDER BY users.user_name';
         }
         return $query;
     }

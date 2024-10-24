@@ -75,7 +75,7 @@ class LegacyToFrontendViewDefinitionMapper implements ViewDefinitionMapperInterf
     /**
      * @inheritDoc
      */
-    public function map(ViewDefinition $viewDefinition, FieldDefinition $fieldDefinition): void
+    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition): void
     {
         $legacyToFrontEndFieldsMap = $this->getLegacyToFrontendFieldsMap();
         if (empty($legacyToFrontEndFieldsMap)) {
@@ -90,10 +90,10 @@ class LegacyToFrontendViewDefinitionMapper implements ViewDefinitionMapperInterf
                 continue;
             }
 
-            $this->mapRecordView($viewDefinition, $legacyFieldsMap, $frontendFieldsMap);
-            $this->mapListView($viewDefinition, $legacyFieldsMap, $frontendFieldsMap);
-            $this->mapSearchView($viewDefinition, $legacyFieldsMap, $frontendFieldsMap);
-            $this->mapSubpanelView($viewDefinition, $legacyFieldsMap, $frontendFieldsMap);
+            $this->mapRecordView($definition, $legacyFieldsMap, $frontendFieldsMap);
+            $this->mapListView($definition, $legacyFieldsMap, $frontendFieldsMap);
+            $this->mapSearchView($definition, $legacyFieldsMap, $frontendFieldsMap);
+            $this->mapSubpanelView($definition, $legacyFieldsMap, $frontendFieldsMap);
         }
     }
 
@@ -195,15 +195,15 @@ class LegacyToFrontendViewDefinitionMapper implements ViewDefinitionMapperInterf
      */
     public function mapSubpanelView(ViewDefinition $viewDefinition, array $legacyMap, array $frontendMap): void
     {
-        $subpanelView = $viewDefinition->getSubPanel() ?? [];
+        $subPanelView = $viewDefinition->getSubPanel() ?? [];
 
-        if (empty($subpanelView)) {
+        if (empty($subPanelView)) {
             return;
         }
 
         $service = new LegacyToFrontendDefinitionMapper();
 
-        foreach ($subpanelView as $subpanelModule => $subPanelColumns) {
+        foreach ($subPanelView as $subpanelModule => $subPanelColumns) {
             $vardefs = $subPanelColumns['columns'] ?? [];
 
             if (empty($vardefs)) {
@@ -212,9 +212,9 @@ class LegacyToFrontendViewDefinitionMapper implements ViewDefinitionMapperInterf
 
             $transformedVardefs = $service->getTransformedVardefs($vardefs, $legacyMap, $frontendMap);
 
-            $subpanelView[$subpanelModule]['columns'] = $transformedVardefs;
+            $subPanelView[$subpanelModule]['columns'] = $transformedVardefs;
         }
 
-        $viewDefinition->setSubPanel($subpanelView);
+        $viewDefinition->setSubPanel($subPanelView);
     }
 }

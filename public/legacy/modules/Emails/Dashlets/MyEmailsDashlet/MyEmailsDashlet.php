@@ -73,7 +73,7 @@ class MyEmailsDashlet extends DashletGeneric
 
 
 
-    public function process($lvsParams = array(), $id = null)
+    public function process($lvsParams = array(), $id = null) : mixed
     {
         global $current_language, $app_list_strings, $image_path, $current_user;
         //$where = 'emails.deleted = 0 AND emails.assigned_user_id = \''.$current_user->id.'\' AND emails.type = \'inbound\' AND emails.status = \'unread\'';
@@ -82,12 +82,12 @@ class MyEmailsDashlet extends DashletGeneric
         if ($this->myItemsOnly) {
             $this->filters['assigned_user_id'] = $current_user->id;
         }
-        $this->filters['type'] = array("inbound");
-        $this->filters['status'] = array("unread");
+        $this->filters['type'] = array( 'inbound' );
+        $this->filters['status'] = array( 'unread' );
 
         $lvsParams = array();
-        $lvsParams['custom_select'] = " ,emails_text.from_addr as from_addr ";
-        $lvsParams['custom_from'] = " join emails_text on emails.id = emails_text.email_id ";
+        $lvsParams['custom_select'] = ' ,emails_text.from_addr as from_addr ';
+        $lvsParams['custom_from'] = ' join emails_text on emails.id = emails_text.email_id ';
         parent::process($lvsParams);
     }
 
@@ -110,7 +110,7 @@ class MyEmailsDashlet extends DashletGeneric
         function quick_create_overlib(id, theme, el) {
 
         var \$dialog = \$('<div></div>')
-		.html('<a style=\'width: 150px\' class=\'menuItem\' onmouseover=\'hiliteItem(this,"yes");\' onmouseout=\'unhiliteItem(this);\' href=\'index.php?module=Cases&action=EditView&inbound_email_id=' + id + '\'>' +
+        .html('<a style=\'width: 150px\' class=\'menuItem\' onmouseover=\'hiliteItem(this,"yes");\' onmouseout=\'unhiliteItem(this);\' href=\'index.php?module=Cases&action=EditView&inbound_email_id=' + id + '\'>' +
             "<!--not_in_theme!--><img border='0' src='" + {$casesImageURL} + "' style='margin-right:5px'>" + '{$mod_strings['LBL_LIST_CASE']}' + '</a>' +
 
 
@@ -133,17 +133,17 @@ class MyEmailsDashlet extends DashletGeneric
                     "<!--not_in_theme!--><img border='0' src='" + {$tasksURL} + "' style='margin-right:5px'>"
 
                    + '{$mod_strings['LBL_LIST_TASK']}' + "</a>")
-		.dialog({
-			autoOpen: false,
-			title: '{$mod_strings['LBL_QUICK_CREATE']}',
-			width: 150,
-			position: {
-				    my: 'right top',
-				    at: 'left top',
-				    of: $(el)
-			  }
-		});
-		\$dialog.dialog('open');
+        .dialog({
+            autoOpen: false,
+            title: '{$mod_strings['LBL_QUICK_CREATE']}',
+            width: 150,
+            position: {
+                    my: 'right top',
+                    at: 'left top',
+                    of: $(el)
+              }
+        });
+        \$dialog.dialog('open');
 
         }
         </script>

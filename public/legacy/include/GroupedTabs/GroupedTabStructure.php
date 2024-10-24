@@ -60,7 +60,7 @@ class GroupedTabStructure
     public function get_tab_structure($modList = '', $patch = '', $ignoreSugarConfig=false, $labelAsKey=false)
     {
         global $modListHeader, $app_strings, $app_list_strings, $modInvisListActivities;
-        
+
         /* Use default if not provided */
         if (!$modList) {
             $modList =& $modListHeader;
@@ -71,21 +71,21 @@ class GroupedTabStructure
         /* Apply patch, use a reference if we can */
         if ($patch) {
             $tabStructure = $GLOBALS['tabStructure'];
-            
+
             foreach ($patch as $mainTab => $subModules) {
                 $tabStructure[$mainTab]['modules'] = array_merge($tabStructure[$mainTab]['modules'], $subModules);
             }
         } else {
             $tabStructure =& $GLOBALS['tabStructure'];
         }
-        
+
         $retStruct = array();
         $mlhUsed = array();
         //the invisible list should be merged if activities is set to be hidden
-        if (in_array('Activities', $modList)) {
+        if (in_array('Activities', $modList, true)) {
             $modList = array_merge($modList, $modInvisListActivities);
         }
-        
+
         //Add any iFrame tabs to the 'other' group.
         $moduleExtraMenu = array();
         if (!should_hide_iframes()) {
@@ -99,9 +99,9 @@ class GroupedTabStructure
                 unset($modList['iFrames']);
             }
         }
-                
+
         $modList = array_merge($modList, $moduleExtraMenu);
-                
+
         /* Only return modules which exists in the modList */
         foreach ($tabStructure as $mainTab => $subModules) {
             //Ensure even empty groups are returned

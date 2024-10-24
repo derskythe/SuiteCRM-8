@@ -40,20 +40,21 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHandlerInterface, LoggerAwareInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'record-create-portal-user';
+    protected const PROCESS_TYPE          = 'record-create-portal-user';
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * CreatePortalUserActionHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -63,21 +64,24 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
      * @param ModuleNameMapperInterface $moduleNameMapper
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        RequestStack $requestStack,
-        ModuleNameMapperInterface $moduleNameMapper
-    ) {
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        RequestStack              $requestStack,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $requestStack
+            $requestStack,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -85,7 +89,7 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -93,7 +97,7 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -101,7 +105,7 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -109,11 +113,10 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
-
 
         return [
             $module => [
@@ -129,7 +132,7 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         $process->setId(self::PROCESS_TYPE);
         $process->setAsync(false);
@@ -138,7 +141,7 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -155,7 +158,7 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
      * @inheritDoc
      * @throws \JsonException
      */
-    public function run(Process $process): void
+    public function run(Process $process) : void
     {
         $this->init();
 
@@ -164,34 +167,39 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
         global $sugar_config, $mod_strings;
         $contact = \BeanFactory::getBean('Contacts', $options['id']);
 
-        if (!array_key_exists("aop", $sugar_config)) {
+        if (!array_key_exists('aop', $sugar_config)) {
             $this->logger->warning('LBL_ERROR_AOP_NOT_CONFIGURED');
-            $process->setMessages(['LBL_ERROR_AOP_NOT_CONFIGURED']);
+            $process->setMessages([ 'LBL_ERROR_AOP_NOT_CONFIGURED' ]);
             $process->setStatus('error');
+
             return;
         }
         if (empty($sugar_config['aop']['enable_portal'])) {
             $this->logger->warning('LBL_ERROR_PORTAL_NOT_ENABLED');
-            $process->setMessages(['LBL_ERROR_PORTAL_NOT_ENABLED']);
+            $process->setMessages([ 'LBL_ERROR_PORTAL_NOT_ENABLED' ]);
             $process->setStatus('error');
+
             return;
         }
         if (empty($sugar_config['aop']['enable_aop'])) {
             $this->logger->warning('LBL_ERROR_AOP_NOT_ENABLED');
-            $process->setMessages(['LBL_ERROR_AOP_NOT_ENABLED']);
+            $process->setMessages([ 'LBL_ERROR_AOP_NOT_ENABLED' ]);
             $process->setStatus('error');
+
             return;
         }
         if (empty($sugar_config['aop']['joomla_url'])) {
             $this->logger->warning('LBL_ERROR_JOOMLA_URL_MISSING');
-            $process->setMessages(['LBL_ERROR_JOOMLA_URL_MISSING']);
+            $process->setMessages([ 'LBL_ERROR_JOOMLA_URL_MISSING' ]);
             $process->setStatus('error');
+
             return;
         }
         if (empty($contact) || !$contact->id || !$contact->email1) {
             $this->logger->error($mod_strings['LBL_ERROR_CONTACT_ID_OR_EMAIL_EMPTY']);
-            $process->setMessages(['LBL_ERROR_CONTACT_ID_OR_EMAIL_EMPTY']);
+            $process->setMessages([ 'LBL_ERROR_CONTACT_ID_OR_EMAIL_EMPTY' ]);
             $process->setStatus('error');
+
             return;
         }
 
@@ -202,24 +210,26 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
         if ($apiResponse === false) {
             $this->logger->error($mod_strings['LBL_FAILED_TO_CONNECT_JOOMLA']);
             $process->setStatus('error');
-            $process->setMessages(['LBL_CREATE_PORTAL_USER_FAILED']);
+            $process->setMessages([ 'LBL_CREATE_PORTAL_USER_FAILED' ]);
+
             return;
         }
 
         $decodedResponse = json_decode($apiResponse, false, JSON_THROW_ON_ERROR, JSON_THROW_ON_ERROR);
 
         if (empty($decodedResponse) || !$decodedResponse->success) {
-            $msg = $decodedResponse->error ?: $mod_strings['LBL_CREATE_PORTAL_USER_FAILED'];
+            $msg = $decodedResponse->error ? : $mod_strings['LBL_CREATE_PORTAL_USER_FAILED'];
             $this->logger->error($msg);
             $this->logger->error('JSON error: ' . json_last_error_msg());
             $process->setStatus('error');
-            $process->setMessages([$msg]);
+            $process->setMessages([ $msg ]);
+
             return;
         }
 
-        $process->setMessages(['LBL_CREATE_PORTAL_USER_SUCCESS']);
+        $process->setMessages([ 'LBL_CREATE_PORTAL_USER_SUCCESS' ]);
         $process->setStatus('success');
-        $process->setData(['reload' => true]);
+        $process->setData([ 'reload' => true ]);
 
         $this->close();
     }
@@ -227,10 +237,8 @@ class CreatePortalUserActionHandler extends LegacyHandler implements ProcessHand
     /**
      * @inheritDoc
      */
-    public function setLogger(LoggerInterface $logger): void
+    public function setLogger(LoggerInterface $logger) : void
     {
         $this->logger = $logger;
     }
-
-
 }

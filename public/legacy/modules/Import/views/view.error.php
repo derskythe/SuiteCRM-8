@@ -49,7 +49,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 require_once('include/MVC/View/SugarView.php');
-        
+
 #[\AllowDynamicProperties]
 class ImportViewError extends SugarView
 {
@@ -57,29 +57,29 @@ class ImportViewError extends SugarView
      * @see SugarView::getMenu()
      */
     public function getMenu(
-        $module = null
+        string $module = null
         ) {
         global $mod_strings, $current_language;
-        
+
         if (empty($module)) {
             $module = $_REQUEST['import_module'];
         }
-        
+
         $old_mod_strings = $mod_strings;
         $mod_strings = return_module_language($current_language, $module);
         $returnMenu = parent::getMenu($module);
         $mod_strings = $old_mod_strings;
-        
+
         return $returnMenu;
     }
-    
+
     /**
      * @see SugarView::_getModuleTab()
      */
-    protected function _getModuleTab()
+    protected function _getModuleTab() : ?string
     {
         global $app_list_strings, $moduleTabMap;
-        
+
         // Need to figure out what tab this module belongs to, most modules have their own tabs, but there are exceptions.
         if (!empty($_REQUEST['module_tab'])) {
             return $_REQUEST['module_tab'];
@@ -93,11 +93,12 @@ class ImportViewError extends SugarView
             return $_REQUEST['import_module'];
         }
     }
-    
+
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $module = $_REQUEST['import_module'] ?? '';
         if (!empty($module) && !isAllowedModuleName($module)) {
@@ -105,17 +106,17 @@ class ImportViewError extends SugarView
         }
 
         $source = $_REQUEST['source'] ?? '';
-        $result = preg_match("/^[\w\-\_\.\:]+$/", $source);
+        $result = preg_match('/^[\w\-\_\.\:]+$/', $source);
         if (!empty($source) && empty($result)) {
             throw new InvalidArgumentException('Invalid source');
         }
 
-        $this->ss->assign("IMPORT_MODULE", $module);
-        $this->ss->assign("ACTION", 'Step1');
-        $this->ss->assign("MESSAGE", $_REQUEST['message'] ?? '');
-        $this->ss->assign("SOURCE", "");
+        $this->ss->assign('IMPORT_MODULE', $module);
+        $this->ss->assign('ACTION', 'Step1');
+        $this->ss->assign('MESSAGE', $_REQUEST['message'] ?? '');
+        $this->ss->assign('SOURCE', '');
         if (isset($_REQUEST['source'])) {
-            $this->ss->assign("SOURCE", $source);
+            $this->ss->assign('SOURCE', $source);
         }
 
         $this->ss->display('modules/Import/tpls/error.tpl');

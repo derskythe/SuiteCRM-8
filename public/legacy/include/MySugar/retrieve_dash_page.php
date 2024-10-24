@@ -196,7 +196,7 @@ if (empty($pages)) {
     $pageIndex = 0;
     $pages[0]['columns'] = $columns;
     $pages[0]['numColumns'] = '2';
-    $pages[0]['pageTitleLabel'] = 'LBL_HOME_PAGE_1_NAME';	// "My Sugar"
+    $pages[0]['pageTitleLabel'] = 'LBL_HOME_PAGE_1_NAME';    // "My Sugar"
     $pageIndex++;
     $current_user->setPreference('pages', $pages, 0, 'Home');
     $activePage = 0;
@@ -258,7 +258,7 @@ foreach ($pages[$activePage]['columns'] as $colNum => $column) {
                     $sortOrder = '';
                     $orderBy = '';
                     foreach ($_REQUEST as $k => $v) {
-                        if ($k == 'lvso') {
+                        if ($k === 'lvso') {
                             $sortOrder = $v;
                         } else {
                             if (preg_match('/Home2_.+_ORDER_BY/', $k)) {
@@ -339,7 +339,7 @@ if ($sugarChart) {
     $sugar_smarty->assign('chartResources', $resources);
     $sugar_smarty->assign('mySugarChartResources', $mySugarResources);
 }
-if (file_exists("custom/include/MySugar/tpls/MySugar2.tpl")) {
+if (file_exists('custom/include/MySugar/tpls/MySugar2.tpl')) {
     echo $sugar_smarty->fetch('custom/include/MySugar/tpls/MySugar2.tpl');
 } else {
     echo $sugar_smarty->fetch('include/MySugar/tpls/MySugar2.tpl');

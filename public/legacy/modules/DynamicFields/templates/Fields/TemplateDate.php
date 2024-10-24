@@ -79,6 +79,10 @@ class TemplateDate extends TemplateRange
     }
 
     //BEGIN BACKWARDS COMPATABILITY
+
+    /**
+     * @throws DateMalformedStringException
+     */
     public function get_xtpl_edit()
     {
         global $timedate;

@@ -39,19 +39,20 @@ class CopyLegacyAssets extends Command
     /**
      * @var string
      */
-    private $projectDir;
+    private string $projectDir;
 
     /**
      * @var array
      */
-    private $copyLegacyAssetPaths;
+    private array $copyLegacyAssetPaths;
     /**
      * @var string
      */
-    private $legacyDir;
+    private string $legacyDir;
 
     /**
      * CopyLegacyAssets constructor.
+     *
      * @param string|null $name
      * @param string $projectDir
      * @param string $legacyDir
@@ -70,26 +71,26 @@ class CopyLegacyAssets extends Command
         $this->legacyDir = $legacyDir;
     }
 
-    protected function configure(): void
+    protected function configure() : void
     {
-        $this
-            ->setDescription('Copy legacy assets');
+        parent::configure();
+        $this->setDescription('Copy legacy assets');
     }
 
     /**
      * @inheritDoc
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->copyAssets();
 
-        return 0;
+        return parent::execute($input, $output);
     }
 
     /**
      * Copy assets
      */
-    protected function copyAssets(): void
+    protected function copyAssets() : void
     {
         $filesystem = new Filesystem();
 
@@ -97,13 +98,20 @@ class CopyLegacyAssets extends Command
             return;
         }
 
-
         foreach ($this->copyLegacyAssetPaths as $path => $legacyPath) {
             $copyPath = $this->legacyDir . '/' . $legacyPath;
             $originPath = $this->getProjectDir() . '/' . $path;
 
             if (is_dir($originPath)) {
-                $filesystem->mirror($originPath, $copyPath, null, ['override' => true, 'delete' => true]);
+                $filesystem->mirror(
+                    $originPath,
+                    $copyPath,
+                    null,
+                    [
+                        'override' => true,
+                        'delete'   => true
+                    ]
+                );
             } elseif (is_file($originPath)) {
                 $filesystem->copy($originPath, $copyPath);
             }
@@ -113,7 +121,7 @@ class CopyLegacyAssets extends Command
     /**
      * @return string
      */
-    public function getProjectDir(): string
+    public function getProjectDir() : string
     {
         return $this->projectDir;
     }

@@ -67,6 +67,7 @@ class SugarFieldStringmap extends SugarFieldText
 
     /**
      * @inheritDoc
+     * @throws JsonException
      */
     public function save(&$bean, $params, $field, $properties, $prefix = '')
     {

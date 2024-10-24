@@ -232,7 +232,7 @@ class BeanFactory
      * @param array|bool $params
      * @return array
      */
-    protected static function convertParams($params)
+    protected static function convertParams(array|string $params) : array
     {
         if (!is_array($params)) {
             $params = [
@@ -250,7 +250,7 @@ class BeanFactory
      *
      * @return void
      */
-    protected static function initBeanRegistry($module)
+    protected static function initBeanRegistry(string $module) : void
     {
         if (!isset(self::$loadedBeans[$module])) {
             self::$loadedBeans[$module] = [];
@@ -266,11 +266,9 @@ class BeanFactory
      *
      * @return bool|mixed
      */
-    protected static function hasEncodeFlag($params)
+    protected static function hasEncodeFlag(array $params) : bool
     {
-        return isset($params['encode'])
-            ? $params['encode']
-            : true;
+        return $params['encode'] ?? true;
     }
 
     /**
@@ -281,11 +279,9 @@ class BeanFactory
      *
      * @return bool
      */
-    protected static function hasDeletedFlag($params, $deleted)
+    protected static function hasDeletedFlag(array $params, bool $deleted) : bool
     {
-        return isset($params['deleted'])
-            ? $params['deleted']
-            : $deleted;
+        return $params['deleted'] ?? $deleted;
     }
 
     /**
@@ -295,7 +291,7 @@ class BeanFactory
      *
      * @return SugarBean|bool
      */
-    public static function newBean($module)
+    public static function newBean(string $module) : ?SugarBean
     {
         return self::getBean($module);
     }
@@ -307,7 +303,7 @@ class BeanFactory
      *
      * @return array
      */
-    public static function getBeanMeta($module)
+    public static function getBeanMeta(string $module) : array
     {
         return [
             'moduleName' => $module,
@@ -328,12 +324,12 @@ class BeanFactory
      *
      * @return string|bool
      */
-    public static function getBeanName($module)
+    public static function getBeanName(string $module) : string
     {
         global $beanList;
 
         if (empty($beanList[$module])) {
-            return false;
+            return '';
         }
 
         return $beanList[$module];

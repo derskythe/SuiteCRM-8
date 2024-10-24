@@ -47,7 +47,7 @@ class UpgradeFinalizeCommand extends BaseStepExecutorCommand
     /**
      * @inheritdoc
      */
-    protected $suppressWarnings = true;
+    protected bool $suppressWarnings = true;
 
     /**
      * @var UpgradeFinalizeHandlerInterface

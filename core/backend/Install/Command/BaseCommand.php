@@ -40,32 +40,32 @@ abstract class BaseCommand extends Command
     /**
      * @var array
      */
-    protected $inputConfig = [];
+    protected array $inputConfig = [];
 
     /**
      * @var bool
      */
-    protected $initSession = false;
+    protected bool $initSession = false;
 
     /**
      * @var string
      */
-    protected $defaultSessionName;
+    protected string $defaultSessionName;
 
     /**
      * @var RequestStack
      */
-    protected $requestStack;
+    protected RequestStack $requestStack;
 
     /**
      * @var string
      */
-    protected $legacySessionName;
+    protected string $legacySessionName;
 
     /**
      * @var AppStringsHandler
      */
-    protected $appStringsHandler;
+    protected AppStringsHandler $appStringsHandler;
 
     /**
      * @var DefaultLegacyHandler
@@ -74,36 +74,40 @@ abstract class BaseCommand extends Command
 
     /**
      * @required
+     *
      * @param string $defaultSessionName
      */
-    public function setDefaultSessionName(string $defaultSessionName): void
+    public function setDefaultSessionName(string $defaultSessionName) : void
     {
         $this->defaultSessionName = $defaultSessionName;
     }
 
     /**
      * @required
+     *
      * @param string $legacySessionName
      */
-    public function setLegacySessionName(string $legacySessionName): void
+    public function setLegacySessionName(string $legacySessionName) : void
     {
         $this->legacySessionName = $legacySessionName;
     }
 
     /**
      * @required
+     *
      * @param RequestStack $requestStack
      */
-    public function setRequestStack(RequestStack $requestStack): void
+    public function setRequestStack(RequestStack $requestStack) : void
     {
         $this->requestStack = $requestStack;
     }
 
     /**
      * @required
+     *
      * @param AppStringsHandler $appStringsHandler
      */
-    public function setAppStringsHandler(AppStringsHandler $appStringsHandler): void
+    public function setAppStringsHandler(AppStringsHandler $appStringsHandler) : void
     {
         $this->appStringsHandler = $appStringsHandler;
     }
@@ -111,16 +115,17 @@ abstract class BaseCommand extends Command
     /**
      * @return DefaultLegacyHandler
      */
-    public function getLegacyHandler(): DefaultLegacyHandler
+    public function getLegacyHandler() : DefaultLegacyHandler
     {
         return $this->legacyHandler;
     }
 
     /**
      * @param DefaultLegacyHandler $legacyHandler
+     *
      * @return void
      */
-    public function setLegacyHandler(DefaultLegacyHandler $legacyHandler): void
+    public function setLegacyHandler(DefaultLegacyHandler $legacyHandler) : void
     {
         $this->legacyHandler = $legacyHandler;
     }
@@ -128,7 +133,7 @@ abstract class BaseCommand extends Command
     /**
      * @inheritDoc
      */
-    public function execute(InputInterface $input, OutputInterface $output): int
+    public function execute(InputInterface $input, OutputInterface $output) : int
     {
         $arguments = [];
 
@@ -153,23 +158,33 @@ abstract class BaseCommand extends Command
             $this->startSession();
         }
 
+        parent::execute($input, $output);
+
         return $this->executeCommand($input, $output, $arguments);
     }
 
     /**
      * Execute command actions
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param array $inputs
+     * @param array $arguments
+     *
      * @return int
      */
-    abstract protected function executeCommand(InputInterface $input, OutputInterface $output, array $inputs): int;
+    abstract protected function executeCommand(
+        InputInterface  $input,
+        OutputInterface $output,
+        array           $arguments
+    ) : int;
 
     /**
      * @inheritDoc
      */
-    protected function configure(): void
+    protected function configure() : void
     {
+        parent::configure();
+
         $inputs = [];
 
         foreach ($this->inputConfig as $key => $item) {
@@ -184,7 +199,7 @@ abstract class BaseCommand extends Command
     /**
      * Start Session
      */
-    protected function startSession(): void
+    protected function startSession() : void
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             return;
@@ -196,16 +211,14 @@ abstract class BaseCommand extends Command
 
     /**
      * Write feedback for a given step
+     *
      * @param string $step
      * @param OutputInterface $output
      * @param Feedback $feedback
      */
-    protected function writeStepFeedback(string $step, OutputInterface $output, Feedback $feedback): void
+    protected function writeStepFeedback(string $step, OutputInterface $output, Feedback $feedback) : void
     {
-        $status = '<info>done</info>';
-        if ($feedback->isSuccess() === false) {
-            $status = '<error>failed</error>';
-        }
+        $status = $feedback->isSuccess() ? '<info>done</info>' : '<error>failed</error>';
 
         $output->writeln('step: ' . $step . ' | status: ' . $status);
 
@@ -216,10 +229,11 @@ abstract class BaseCommand extends Command
 
     /**
      * Write feedback messages
+     *
      * @param OutputInterface $output
      * @param Feedback $feedback
      */
-    protected function writeFeedbackMessages(OutputInterface $output, Feedback $feedback): void
+    protected function writeFeedbackMessages(OutputInterface $output, Feedback $feedback) : void
     {
         $messages = $feedback->getMessages() ?? [];
 
@@ -230,10 +244,11 @@ abstract class BaseCommand extends Command
 
     /**
      * Write feedback messages
+     *
      * @param OutputInterface $output
      * @param Feedback $feedback
      */
-    protected function writeFeedbackErrors(OutputInterface $output, Feedback $feedback): void
+    protected function writeFeedbackErrors(OutputInterface $output, Feedback $feedback) : void
     {
         $errors = $feedback->getErrors()['data'] ?? [];
 
@@ -246,7 +261,7 @@ abstract class BaseCommand extends Command
         foreach ($errors as $error) {
 
             $details = [];
-            $parts = ['label', 'status', 'error', 'info'];
+            $parts = [ 'label', 'status', 'error', 'info' ];
 
             foreach ($parts as $key) {
                 $part = $error[$key] ?? '';
@@ -273,7 +288,7 @@ abstract class BaseCommand extends Command
         }
     }
 
-    protected function writeFeedbackWarnings(OutputInterface $output, Feedback $feedback): void
+    protected function writeFeedbackWarnings(OutputInterface $output, Feedback $feedback) : void
     {
         $warnings = $feedback->getWarnings() ?? [];
         foreach ($warnings as $warning) {
@@ -284,32 +299,34 @@ abstract class BaseCommand extends Command
     /**
      * @param Feedback $feedback
      * @param string $message
+     *
      * @return string
      */
-    protected function colorFeedbackMessage(Feedback $feedback, string $message): string
+    protected function colorFeedbackMessage(Feedback $feedback, string $message) : string
     {
         $colorTag = 'info';
         if ($feedback->isSuccess() === false) {
             $colorTag = 'error';
         }
 
-        return implode('', ["<$colorTag>", $message, "</$colorTag>"]);
+        return implode('', [ "<$colorTag>", $message, "</$colorTag>" ]);
     }
 
     /**
      * @param string $type
      * @param string $message
+     *
      * @return string
      */
-    protected function colorMessage(string $type, string $message): string
+    protected function colorMessage(string $type, string $message) : string
     {
-        return implode('', ["<$type>", $message, "</$type>"]);
+        return implode('', [ "<$type>", $message, "</$type>" ]);
     }
 
     /**
      * @return array|null
      */
-    protected function getAppStrings(): ?array
+    protected function getAppStrings() : ?array
     {
         $appStringsEntity = $this->appStringsHandler->getAppStrings('en_us');
         $appStrings = [];

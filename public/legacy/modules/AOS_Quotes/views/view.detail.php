@@ -61,7 +61,7 @@ class AOS_QuotesViewDetail extends ViewDetail
         parent::__construct();
     }
 
-    public function display()
+    public function display() : void
     {
         $this->populateQuoteTemplates();
         $this->displayPopupHtml();
@@ -84,6 +84,9 @@ class AOS_QuotesViewDetail extends ViewDetail
         }
     }
 
+    /**
+     * @throws SmartyException
+     */
     protected function displayPopupHtml()
     {
         global $app_list_strings, $app_strings, $mod_strings;

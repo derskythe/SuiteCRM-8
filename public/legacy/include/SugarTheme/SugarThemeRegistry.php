@@ -212,29 +212,31 @@ class SugarThemeRegistry
 
     /**
      * Builds the theme registry
+     *
+     * @throws Exception
      */
     public static function buildRegistry()
     {
         self::$_themes = array();
-        $dirs = array("themes/","custom/themes/");
+        $dirs = array( 'themes/', 'custom/themes/' );
 
         // check for a default themedef file
         $themedefDefault = array();
-        if (is_file("custom/themes/default/themedef.php")) {
+        if (is_file('custom/themes/default/themedef.php')) {
             $themedef = array();
-            require("custom/themes/default/themedef.php");
+            require('custom/themes/default/themedef.php');
             $themedefDefault = $themedef;
         }
 
         foreach ($dirs as $dirPath) {
             if (is_dir('./'.$dirPath) && is_readable('./'.$dirPath) && $dir = opendir('./'.$dirPath)) {
                 while (($file = readdir($dir)) !== false) {
-                    if ($file == ".."
-                            || $file == "."
-                            || $file == ".svn"
-                            || $file == "CVS"
-                            || $file == "Attic"
-                            || $file == "default"
+                    if ($file === '..'
+                        || $file === '.'
+                        || $file === '.svn'
+                        || $file === 'CVS'
+                        || $file === 'Attic'
+                        || $file === 'default'
                             || !is_dir("./$dirPath".$file)
                             || !is_file("./{$dirPath}{$file}/themedef.php")
                             ) {
@@ -286,7 +288,7 @@ class SugarThemeRegistry
     {
         $availableThemes = self::availableThemes();
         foreach ($availableThemes as $key=>$theme) {
-            if (strtolower($key) == 'sugar') {
+            if (strtolower($key) === 'sugar') {
                 return $key;
             }
         }
@@ -309,7 +311,7 @@ class SugarThemeRegistry
         }
 
         foreach (self::$_themes as $themename => $themeobject) {
-            if (in_array($themename, $disabledThemes)) {
+            if (in_array($themename, $disabledThemes, true)) {
                 continue;
             }
             $themelist[$themeobject->dirName] = $themeobject->name;
@@ -335,7 +337,7 @@ class SugarThemeRegistry
         }
 
         foreach (self::$_themes as $themename => $themeobject) {
-            if (in_array($themename, $disabledThemes)) {
+            if (in_array($themename, $disabledThemes, true)) {
                 $themelist[$themeobject->dirName] = $themeobject->name;
             }
         }
@@ -375,7 +377,7 @@ class SugarThemeRegistry
         foreach (self::$_themes as $themename => $themeobject) {
             $themearray['name'] = $themeobject->name;
             $themearray['configurable'] = $themeobject->configurable;
-            $themearray['enabled'] = !in_array($themename, $disabledThemes);
+            $themearray['enabled'] = !in_array($themename, $disabledThemes, true);
             $themelist[$themeobject->dirName] = $themearray;
         }
 

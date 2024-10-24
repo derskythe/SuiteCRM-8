@@ -44,27 +44,29 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 /**
  * Provide application specific logic to the session object.
+ *
  * @api
  */
 class SugarSession
 {
-    private static $_instance;
-    public static $sessionId;
+    private static self $_instance;
+    public static string $sessionId;
 
     /**
-     * When constructing the session object, be sure to check if the session_id() already exists as is the case of session.auto_start = 1
+     * When constructing the session object, be sure to check if the session_id() already exists as is the case of
+     * session.auto_start = 1
      *
      */
     public function __construct()
     {
     }
 
-    public function setSessionId($sessionId)
+    public function setSessionId(string $sessionId) : void
     {
         self::$sessionId = session_id($sessionId);
     }
 
-    public function start()
+    public function start() : void
     {
         $session_id = session_id();
         if (empty($session_id)) {
@@ -75,17 +77,16 @@ class SugarSession
         }
     }
 
-    public static function getInstance()
+    public static function getInstance() : self
     {
         if (!isset(self::$_instance)) {
-            $className = __CLASS__;
-            self::$_instance = new $className();
+            self::$_instance = new self();
         }
 
         return self::$_instance;
     }
 
-    public function destroy()
+    public function destroy() : void
     {
         foreach ($_SESSION as $var => $val) {
             $_SESSION[$var] = null;
@@ -102,7 +103,7 @@ class SugarSession
         return (!empty($_SESSION[$var]) ? $_SESSION[$var] : '');
     }
 
-    public function __set($var, $val)
+    public function __set(string $var, $val)
     {
         return ($_SESSION[$var] = $val);
     }

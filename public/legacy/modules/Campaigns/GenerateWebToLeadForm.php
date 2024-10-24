@@ -86,7 +86,7 @@ if (!empty($_REQUEST['web_submit'])) {
 if (!empty($_REQUEST['post_url'])) {
     $web_post_url= $_REQUEST['post_url'];
 }
-if (!empty($_REQUEST['redirect_url']) && $_REQUEST['redirect_url'] !="http://") {
+if (!empty($_REQUEST['redirect_url']) && $_REQUEST['redirect_url'] !== 'http://') {
     $web_redirect_url= $_REQUEST['redirect_url'];
 }
 if (!empty($_REQUEST['notify_campaign'])) {
@@ -106,8 +106,8 @@ $typeOfPerson = !empty($_REQUEST['typeOfPerson']) ? $_REQUEST['typeOfPerson'] : 
  $person = new $typeOfPerson();
  $fieldsMetaData = BeanFactory::newBean('EditCustomFields');
  $xtpl=new XTemplate('modules/Campaigns/WebToLeadForm.html');
- $xtpl->assign("MOD", $mod_strings);
- $xtpl->assign("APP", $app_strings);
+ $xtpl->assign('MOD', $mod_strings);
+ $xtpl->assign('APP', $app_strings);
 
 include_once 'WebToLeadFormBuilder.php';
 $Web_To_Lead_Form_html = WebToLeadFormBuilder::generate(
@@ -127,8 +127,8 @@ $Web_To_Lead_Form_html = WebToLeadFormBuilder::generate(
     $web_assigned_user,
     $web_form_required_fields_msg
 );
-$xtpl->assign("BODY", $Web_To_Lead_Form_html ? $Web_To_Lead_Form_html : '');
-$xtpl->assign("BODY_HTML", $Web_To_Lead_Form_html ? $Web_To_Lead_Form_html : '');
+$xtpl->assign('BODY', $Web_To_Lead_Form_html ? $Web_To_Lead_Form_html : '');
+$xtpl->assign('BODY_HTML', $Web_To_Lead_Form_html ? $Web_To_Lead_Form_html : '');
 
 
 require_once('include/SugarTinyMCE.php');
@@ -138,18 +138,18 @@ $tiny->defaultConfig['apply_source_formatting']=true;
 $tiny->defaultConfig['cleanup']=false;
 $tiny->defaultConfig['extended_valid_elements'] .= ',input[name|id|type|value|onclick|required|placeholder|title],select[name|id|multiple|tabindex|onchange|required|title],option[value|selected|title]';
 $ed = $tiny->getInstance('body_html');
-$xtpl->assign("tiny", $ed);
+$xtpl->assign('tiny', $ed);
 
-$xtpl->parse("main.textarea");
+$xtpl->parse('main.textarea');
 
-$xtpl->assign("INSERT_VARIABLE_ONCLICK", "insert_variable_html(document.EditView.variable_text.value)");
-$xtpl->parse("main.variable_button");
-
-
+$xtpl->assign('INSERT_VARIABLE_ONCLICK', 'insert_variable_html(document.EditView.variable_text.value)');
+$xtpl->parse('main.variable_button');
 
 
-$xtpl->parse("main");
-$xtpl->out("main");
+
+
+$xtpl->parse('main');
+$xtpl->out('main');
 
 function ifRadioButton($customFieldName)
 {
@@ -157,7 +157,7 @@ function ifRadioButton($customFieldName)
     $query="select id,type from fields_meta_data where deleted = 0 and name = '$customFieldName'";
     $result=DBManagerFactory::getInstance()->query($query);
     $row = DBManagerFactory::getInstance()->fetchByAssoc($result);
-    if ($row != null && $row['type'] == 'radioenum') {
+    if ($row != null && $row['type'] === 'radioenum') {
         return $custRow = $row;
     }
     return $custRow;

@@ -49,7 +49,7 @@ class AlertsViewDefault extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         return array('Alerts');
     }
@@ -57,14 +57,15 @@ class AlertsViewDefault extends SugarView
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $this->ss->assign('json', $this->ss->get_config_vars());
         echo $this->ss->fetch('modules/Alerts/templates/json.tpl');

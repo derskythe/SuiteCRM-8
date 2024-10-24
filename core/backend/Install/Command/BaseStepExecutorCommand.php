@@ -38,13 +38,17 @@ abstract class BaseStepExecutorCommand extends BaseCommand
     /**
      * @var bool
      */
-    protected $suppressWarnings = false;
+    protected bool $suppressWarnings = false;
 
     /**
      * @inheritDoc
      * @throws Exception
      */
-    public function executeCommand(InputInterface $input, OutputInterface $output, array $arguments): int
+    public function executeCommand(
+        InputInterface  $input,
+        OutputInterface $output,
+        array           $arguments
+    ) : int
     {
         if ($this->suppressWarnings === true) {
             error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE & ~E_WARNING);
@@ -55,20 +59,20 @@ abstract class BaseStepExecutorCommand extends BaseCommand
         }
 
         $output->writeln([
-            '',
-            $this->getTitle(),
-            '============',
-            '',
-        ]);
+                             '',
+                             $this->getTitle(),
+                             '============',
+                             '',
+                         ]);
 
         $context = $this->getContext($arguments);
 
         $success = $this->runSteps($input, $output, $context);
 
         $output->writeln([
-            '',
-            '============',
-        ]);
+                             '',
+                             '============',
+                         ]);
 
         if ($success === false) {
             return 1;
@@ -80,21 +84,23 @@ abstract class BaseStepExecutorCommand extends BaseCommand
     /**
      * @return string
      */
-    abstract protected function getTitle(): string;
+    abstract protected function getTitle() : string;
 
     /**
      * @param array $arguments
+     *
      * @return array
      */
-    abstract protected function getContext(array $arguments): array;
+    abstract protected function getContext(array $arguments) : array;
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param array $context
+     *
      * @return bool
      */
-    protected function runSteps(InputInterface $input, OutputInterface $output, array $context): bool
+    protected function runSteps(InputInterface $input, OutputInterface $output, array $context) : bool
     {
         $position = 0;
         $success = true;
@@ -129,7 +135,7 @@ abstract class BaseStepExecutorCommand extends BaseCommand
                 $this->writeStepFeedback($key, $output, $feedback);
             }
 
-            $success = $success && $result->isSuccess();
+            $success = $result->isSuccess();
 
             $position++;
 
@@ -141,5 +147,5 @@ abstract class BaseStepExecutorCommand extends BaseCommand
     /**
      * @return ProcessStepExecutorInterface
      */
-    abstract protected function getHandler(): ProcessStepExecutorInterface;
+    abstract protected function getHandler() : ProcessStepExecutorInterface;
 }

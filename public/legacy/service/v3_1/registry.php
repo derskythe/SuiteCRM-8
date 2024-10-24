@@ -46,7 +46,7 @@ require_once('service/v3/registry.php');
 
 class registry_v3_1 extends registry_v3
 {
-    
+
     /**
      * This method registers all the functions on the service class
      *
@@ -61,7 +61,7 @@ class registry_v3_1 extends registry_v3
             array('session'=>'xsd:string', 'module_name'=>'xsd:string', 'id'=>'xsd:string', 'select_fields'=>'tns:select_fields','link_name_to_fields_array'=>'tns:link_names_to_fields_array','track_view'=>'xsd:boolean'),
             array('return'=>'tns:get_entry_result_version2')
         );
-            
+
         $this->serviceClass->registerFunction(
             'get_entries',
             array('session'=>'xsd:string', 'module_name'=>'xsd:string', 'ids'=>'tns:select_fields', 'select_fields'=>'tns:select_fields', 'link_name_to_fields_array'=>'tns:link_names_to_fields_array','track_view'=>'xsd:boolean'),
@@ -73,26 +73,26 @@ class registry_v3_1 extends registry_v3
             array('session'=>'xsd:string', 'module_name'=>'xsd:string', 'query'=>'xsd:string', 'order_by'=>'xsd:string','offset'=>'xsd:int', 'select_fields'=>'tns:select_fields', 'link_name_to_fields_array'=>'tns:link_names_to_fields_array', 'max_results'=>'xsd:int', 'deleted'=>'xsd:int', 'favorites'=>'xsd:boolean'),
             array('return'=>'tns:get_entry_list_result_version2')
         );
-            
+
         $this->serviceClass->registerFunction(
             'search_by_module',
             array('session'=>'xsd:string','search_string'=>'xsd:string', 'modules'=>'tns:select_fields', 'offset'=>'xsd:int', 'max_results'=>'xsd:int','unified_search_only'=>'xsd:boolean'),
             array('return'=>'tns:return_search_result')
         );
-               
+
         $this->serviceClass->registerFunction(
             'get_available_modules',
             array('session'=>'xsd:string','filter'=>'xsd:string'),
             array('return'=>'tns:module_list')
         );
-            
+
         $this->serviceClass->registerFunction(
             'get_module_fields_md5',
             array('session'=>'xsd:string', 'module_names'=>'tns:select_fields'),
             array('return'=>'tns:md5_results')
         );
     }
-    
+
     /**
      * This method registers all the complex types
      *
@@ -100,7 +100,7 @@ class registry_v3_1 extends registry_v3
     protected function registerTypes()
     {
         parent::registerTypes();
-        
+
         $this->serviceClass->registerType(
             'md5_results',
             'complexType',
@@ -113,8 +113,8 @@ class registry_v3_1 extends registry_v3
             ),
             'xsd:string'
         );
-        
-        
+
+
         $this->serviceClass->registerType(
             'module_list',
             'complexType',
@@ -125,7 +125,7 @@ class registry_v3_1 extends registry_v3
                     'modules'=>array('name'=>'modules', 'type'=>'tns:module_list_array'),
                 )
         );
-        
+
         $this->serviceClass->registerType(
             'module_list_array',
             'complexType',
@@ -138,7 +138,7 @@ class registry_v3_1 extends registry_v3
             ),
             'tns:module_list_entry'
         );
-        
+
         $this->serviceClass->registerType(
             'module_list_entry',
             'complexType',
@@ -151,7 +151,7 @@ class registry_v3_1 extends registry_v3
                     'acls'=>array('name'=>'acls', 'type'=>'tns:acl_list'),
                 )
         );
-        
+
         $this->serviceClass->registerType(
             'acl_list',
             'complexType',
@@ -164,7 +164,7 @@ class registry_v3_1 extends registry_v3
             ),
             'tns:acl_list_entry'
         );
-        
+
         $this->serviceClass->registerType(
             'acl_list_entry',
             'complexType',
@@ -176,7 +176,7 @@ class registry_v3_1 extends registry_v3
                     'access'=>array('name'=>'access', 'type'=>'xsd:string'),
                 )
         );
-        
+
         $this->serviceClass->registerType(
             'get_entry_list_result_version2',
             'complexType',
@@ -191,7 +191,7 @@ class registry_v3_1 extends registry_v3
                 'relationship_list' => array('name' =>'relationship_list', 'type'=>'tns:link_lists'),
             )
         );
-        
+
         $this->serviceClass->registerType(
             'new_module_fields',
             'complexType',
@@ -205,7 +205,7 @@ class registry_v3_1 extends registry_v3
                     'link_fields'=>array('name'=>'link_fields', 'type'=>'tns:link_field_list'),
                 )
         );
-        
+
         //From v2_1, can't extend from this class because of versioning.
         $this->serviceClass->registerType(
             'link_list2',
@@ -229,7 +229,7 @@ class registry_v3_1 extends registry_v3
             ),
             'tns:link_list2'
         );
-        
+
         $this->serviceClass->registerType(
             'link_array_list',
             'complexType',
@@ -242,7 +242,7 @@ class registry_v3_1 extends registry_v3
             ),
             'tns:link_value2'
         );
-        
+
         $this->serviceClass->registerType(
             'link_value2',
             'complexType',
@@ -253,7 +253,7 @@ class registry_v3_1 extends registry_v3
             'link_value'=>array('name'=>'link_value', 'type'=>'tns:link_value'),
             )
         );
-        
+
         $this->serviceClass->registerType(
             'report_field_list',
             'complexType',
@@ -273,7 +273,7 @@ class registry_v3_1 extends registry_v3
             'all',
             '',
             array(
-            "field_list"=>array('name'=>'field_list', 'type'=>'tns:field_list'),
+                'field_list' =>array( 'name' =>'field_list', 'type' =>'tns:field_list'),
             )
         );
         $this->serviceClass->registerType(
@@ -295,7 +295,7 @@ class registry_v3_1 extends registry_v3
             'all',
             '',
             array(
-            "entry_list"=>array('name'=>'entry_list', 'type'=>'tns:entry_list'),
+                'entry_list' =>array( 'name' =>'entry_list', 'type' =>'tns:entry_list'),
             )
         );
     }

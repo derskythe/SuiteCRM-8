@@ -51,21 +51,24 @@ class CallsViewEdit extends ViewEdit
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
-        if ($_REQUEST['module'] != 'Calls' && isset($_REQUEST['status']) && empty($_REQUEST['status'])) {
+        if ($_REQUEST['module'] !== 'Calls' && isset($_REQUEST['status']) && empty($_REQUEST['status'])) {
             $this->bean->status = '';
         } //if
-        if (!empty($_REQUEST['status']) && ($_REQUEST['status'] == 'Held')) {
+        if (!empty($_REQUEST['status']) && ($_REQUEST['status'] === 'Held')) {
             $this->bean->status = 'Held';
         }
         parent::preDisplay();
     }
 
     /**
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $json;
         $json = getJSONobj();

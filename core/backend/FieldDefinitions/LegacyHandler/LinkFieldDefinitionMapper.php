@@ -27,6 +27,7 @@
 
 namespace App\FieldDefinitions\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\FieldDefinitions\Entity\FieldDefinition;
@@ -43,6 +44,7 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
 
     /**
      * LinkFieldDefinitionMapper constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -57,8 +59,10 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
         string                    $legacySessionName,
         string                    $defaultSessionName,
         LegacyScopeState          $legacyScopeState,
-        RequestStack          $session,
-        ModuleNameMapperInterface $moduleNameMapper)
+        RequestStack              $session,
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface           $logger
+    )
     {
         parent::__construct(
             $projectDir,
@@ -66,14 +70,16 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session);
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return 'link-field-definition-mapper';
     }
@@ -81,7 +87,7 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'link-field-definition-mapper';
     }
@@ -89,16 +95,17 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
     /**
      * @inheritDoc
      */
-    public function getModule(): string
+    public function getModule() : string
     {
         return 'default';
     }
 
     /**
      * @inheritDoc
+     *
      * @param FieldDefinition $definition
      */
-    public function map(FieldDefinition $definition): void
+    public function map(FieldDefinition $definition) : void
     {
 
         $vardefs = $definition->getVardef();
@@ -167,11 +174,15 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
      * @param array $fieldDefinition
      * @param array $relationshipMetadata
      * @param string $beanModule
+     *
      * @return void
      * @desc this function retrieves the relationship metadata for the link type field.
      * this information is required to link the relationship between the two modules
      */
-    public function injectRelationshipMetadata(array &$fieldDefinition, array $relationshipMetadata, string $beanModule): void
+    public function injectRelationshipMetadata(array  &$fieldDefinition,
+                                               array  $relationshipMetadata,
+                                               string $beanModule
+    ) : void
     {
         if (empty($relationshipMetadata)) {
             return;
@@ -187,10 +198,10 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
             $fieldDefinition['module'] = $rhsModule;
             $fieldDefinition['relationshipMetadata'] =
                 [
-                    'side' => 'rhs',
+                    'side'       => 'rhs',
                     'related_id' => $joinKeyRhs,
-                    'type' => $relationshipType,
-                    'parent_id' => $joinKeyLhs
+                    'type'       => $relationshipType,
+                    'parent_id'  => $joinKeyLhs
                 ];
         }
 
@@ -198,10 +209,10 @@ class LinkFieldDefinitionMapper extends LegacyHandler implements FieldDefinition
             $fieldDefinition['module'] = $lhsModule;
             $fieldDefinition['relationshipMetadata'] =
                 [
-                    'side' => 'lhs',
+                    'side'       => 'lhs',
                     'related_id' => $joinKeyLhs,
-                    'type' => $relationshipType,
-                    'parent_id' => $joinKeyRhs
+                    'type'       => $relationshipType,
+                    'parent_id'  => $joinKeyRhs
                 ];
         }
     }

@@ -61,7 +61,7 @@ class SugarWidgetSubPanelEditButton extends SugarWidgetField
     {
         global $app_strings;
         global $subpanel_item_count;
-        $unique_id = $layout_def['subpanel_id']."_edit_".$subpanel_item_count; //bug 51512
+        $unique_id = $layout_def['subpanel_id'] . '_edit_' . $subpanel_item_count; //bug 51512
 
         if ($layout_def['EditView']) {
 

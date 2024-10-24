@@ -62,7 +62,7 @@ class SugarOAuthServer
     {
         if (!function_exists('mhash') && !function_exists('hash_hmac')) {
             // define exception class
-            throw new OAuthException("MHash extension required for OAuth support");
+            throw new OAuthException('MHash extension required for OAuth support');
         }
     }
 
@@ -124,7 +124,7 @@ class SugarOAuthServer
         if ($token->consumer != $this->consumer->id) {
             return SuiteCRM\Zend_Oauth_Provider::TOKEN_REJECTED;
         }
-        $GLOBALS['log']->debug("OAUTH: tokenHandler, found token=".var_export($token->id, true));
+        $GLOBALS['log']->debug('OAUTH: tokenHandler, found token=' . var_export($token->id, true));
         if ($token->tstate == OAuthToken::REQUEST) {
             if (!empty($token->verify) && $provider->verifier == $token->verify) {
                 $provider->token_secret = $token->secret;
@@ -159,7 +159,11 @@ class SugarOAuthServer
      * Create OAuth provider
      *
      * Checks current request for OAuth valitidy
+     *
      * @param bool $add_rest add REST endpoint as request path
+     *
+     * @throws Exception
+     * @throws OAuthException
      */
     public function __construct($req_path = '')
     {
@@ -186,15 +190,17 @@ class SugarOAuthServer
 
     /**
      * Generate request token string
+     *
      * @return string
+     * @throws Exception
      */
     public function requestToken()
     {
-        $GLOBALS['log']->debug("OAUTH: requestToken");
+        $GLOBALS['log']->debug('OAUTH: requestToken');
         $token = OAuthToken::generate();
         $token->setConsumer($this->consumer);
         $params = $this->provider->getOAuthParams();
-        if (!empty($params['oauth_callback']) && $params['oauth_callback'] != 'oob') {
+        if (!empty($params['oauth_callback']) && $params['oauth_callback'] !== 'oob') {
             $token->setCallbackURL($params['oauth_callback']);
         }
         $token->save();
@@ -203,11 +209,13 @@ class SugarOAuthServer
 
     /**
      * Generate access token string - must have validated request token
+     *
      * @return string
+     * @throws Exception
      */
     public function accessToken()
     {
-        $GLOBALS['log']->debug("OAUTH: accessToken");
+        $GLOBALS['log']->debug('OAUTH: accessToken');
         if (empty($this->token) || $this->token->tstate != OAuthToken::REQUEST) {
             return null;
         }
@@ -227,7 +235,9 @@ class SugarOAuthServer
      */
     public function authUrl()
     {
-        return urlencode(rtrim($GLOBALS['sugar_config']['site_url'], '/')."/index.php?module=OAuthTokens&action=authorize");
+        return urlencode(
+            rtrim($GLOBALS['sugar_config']['site_url'], '/') . '/index.php?module=OAuthTokens&action=authorize'
+        );
     }
 
     /**

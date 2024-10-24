@@ -73,36 +73,36 @@ function get_validate_record_js()
 
 <script type="text/javascript" language="Javascript">
 function verify_data(form) {
-	var isError = false;
-	var errorMessage = "";
-	if (trim(form.last_name.value) == "") {
-		isError = true;
-		errorMessage += "\\n$lbl_last_name";
-	}
+    var isError = false;
+    var errorMessage = "";
+    if (trim(form.last_name.value) == "") {
+        isError = true;
+        errorMessage += "\\n$lbl_last_name";
+    }
 
-	if (isError == true) {
-		alert("$err_missing_required_fields" + errorMessage);
-		return false;
-	}
-	if (trim(form.email1.value) != "" && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(form.email1.value)) {
-		alert('"' + form.email1.value + '" $err_invalid_email_address');
-		return false;
-	}
-	if (trim(form.email2.value) != "" && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(form.email2.value)) {
-		alert('"' + form.email2.value + '" $err_invalid_email_address');
-		return false;
-	}
-		if ((trim(form.reports_to_name.value) == "" && trim(form.reports_to_id.value) != "") || 
-		 (trim(form.reports_to_name.value) != "" && trim(form.reports_to_id.value) == "")) {
-		alert('$sqs_no_match');
-		return false;	
-	}
-	
-	if (document.EditView.return_id.value != ''  && document.EditView.return_id.value == form.reports_to_id.value) {
-		alert('$err_self_reporting');
-		return false;
-	}
-	return true;
+    if (isError == true) {
+        alert("$err_missing_required_fields" + errorMessage);
+        return false;
+    }
+    if (trim(form.email1.value) != "" && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(form.email1.value)) {
+        alert('"' + form.email1.value + '" $err_invalid_email_address');
+        return false;
+    }
+    if (trim(form.email2.value) != "" && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/.test(form.email2.value)) {
+        alert('"' + form.email2.value + '" $err_invalid_email_address');
+        return false;
+    }
+        if ((trim(form.reports_to_name.value) == "" && trim(form.reports_to_id.value) != "") ||
+         (trim(form.reports_to_name.value) != "" && trim(form.reports_to_id.value) == "")) {
+        alert('$sqs_no_match');
+        return false;
+    }
+
+    if (document.EditView.return_id.value != ''  && document.EditView.return_id.value == form.reports_to_id.value) {
+        alert('$err_self_reporting');
+        return false;
+    }
+    return true;
 }
 </script>
 

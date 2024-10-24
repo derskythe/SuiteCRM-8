@@ -33,18 +33,10 @@ use App\ViewDefinitions\LegacyHandler\ViewDefinitionMapperInterface;
 
 class RecordViewEmailMapper implements ViewDefinitionMapperInterface
 {
-
-    /**
-     * RecordViewEmailMapper constructor.
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'record-view-email-mapper';
     }
@@ -52,7 +44,7 @@ class RecordViewEmailMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function getModule(): string
+    public function getModule() : string
     {
         return 'default';
     }
@@ -60,7 +52,7 @@ class RecordViewEmailMapper implements ViewDefinitionMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition): void
+    public function map(ViewDefinition $definition, FieldDefinition $fieldDefinition) : void
     {
         $recordView = $definition->getRecordView() ?? [];
         $panels = $recordView['panels'] ?? [];
@@ -80,9 +72,10 @@ class RecordViewEmailMapper implements ViewDefinitionMapperInterface
 
     /**
      * @param $row
+     *
      * @return array cols
      */
-    public function mapCols(array $row): array
+    public function mapCols(array $row) : array
     {
         $cols = [];
         foreach ($row['cols'] as $cellKey => $cell) {
@@ -103,44 +96,44 @@ class RecordViewEmailMapper implements ViewDefinitionMapperInterface
 
             $config = [
                 'labelOnFirstLine' => true,
-                'definition' => [
-                    'name' => 'email-fields',
-                    'vname' => 'LBL_EMAIL',
-                    'type' => 'composite',
-                    'layout' => ['email_address', 'primary_address', 'opt_out', 'invalid_email'],
-                    'display' => 'inline',
+                'definition'       => [
+                    'name'            => 'email-fields',
+                    'vname'           => 'LBL_EMAIL',
+                    'type'            => 'composite',
+                    'layout'          => [ 'email_address', 'primary_address', 'opt_out', 'invalid_email' ],
+                    'display'         => 'inline',
                     'attributeFields' => [
-                        'email_address' => [
-                            'name' => 'email_address',
-                            'type' => 'email',
-                            'vname' => 'LBL_EMAIL_ADDRESS',
-                            'labelKey' => 'LBL_EMAIL_ADDRESS',
-                            'required' => $isRequired,
+                        'email_address'   => [
+                            'name'        => 'email_address',
+                            'type'        => 'email',
+                            'vname'       => 'LBL_EMAIL_ADDRESS',
+                            'labelKey'    => 'LBL_EMAIL_ADDRESS',
+                            'required'    => $isRequired,
                             'valueParent' => 'record',
-                            'showLabel' => ['*'],
+                            'showLabel'   => [ '*' ],
                         ],
                         'primary_address' => [
-                            'name' => 'primary_address',
-                            'type' => 'bool',
-                            'vname' => 'LBL_PRIMARY',
-                            'labelKey' => 'LBL_PRIMARY',
+                            'name'        => 'primary_address',
+                            'type'        => 'bool',
+                            'vname'       => 'LBL_PRIMARY',
+                            'labelKey'    => 'LBL_PRIMARY',
                             'valueParent' => 'record',
-                            'showLabel' => ['*'],
+                            'showLabel'   => [ '*' ],
                         ],
-                        'invalid_email' => [
-                            'name' => 'invalid_email',
-                            'type' => 'bool',
-                            'vname' => 'LBL_INVALID_EMAIL',
-                            'labelKey' => 'LBL_INVALID_EMAIL',
+                        'invalid_email'   => [
+                            'name'        => 'invalid_email',
+                            'type'        => 'bool',
+                            'vname'       => 'LBL_INVALID_EMAIL',
+                            'labelKey'    => 'LBL_INVALID_EMAIL',
                             'valueParent' => 'record',
-                            'showLabel' => ['*'],
+                            'showLabel'   => [ '*' ],
                         ],
-                        'opt_out' => [
-                            'name' => 'opt_out',
-                            'type' => 'bool',
-                            'vname' => 'LBL_OPT_OUT',
+                        'opt_out'         => [
+                            'name'        => 'opt_out',
+                            'type'        => 'bool',
+                            'vname'       => 'LBL_OPT_OUT',
                             'valueParent' => 'record',
-                            'showLabel' => ['*'],
+                            'showLabel'   => [ '*' ],
                         ],
                     ],
                 ]
@@ -149,11 +142,11 @@ class RecordViewEmailMapper implements ViewDefinitionMapperInterface
 
             $cell['fieldDefinition']['logic'] = [
                 'emailPrimarySelectLogic' => [
-                    'key' => 'emailPrimarySelect',
-                    'modes' => ['edit', 'create', 'massupdate'],
+                    'key'    => 'emailPrimarySelect',
+                    'modes'  => [ 'edit', 'create', 'massupdate' ],
                     'params' => [
                         'triggerOnEvents' => [
-                            'onLineItemAdd' => true,
+                            'onLineItemAdd'    => true,
                             'onLineItemRemove' => true
                         ]
                     ]

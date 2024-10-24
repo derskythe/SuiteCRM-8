@@ -15,7 +15,7 @@ class AOS_Product_CategoriesViewEdit extends ViewEdit
 
 
 
-    public function display()
+    public function display() : void
     {
         parent::display(); ?>
         <script>

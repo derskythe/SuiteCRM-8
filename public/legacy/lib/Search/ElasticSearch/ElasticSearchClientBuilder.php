@@ -207,7 +207,7 @@ class ElasticSearchClientBuilder
      */
     private static function addHttp($url, $scheme = 'http')
     {
-        if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        if (!preg_match('~^(?:f|ht)tps?://~i', $url)) {
             $url = $scheme . '://' . $url;
         }
 

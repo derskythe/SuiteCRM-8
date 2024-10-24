@@ -43,7 +43,6 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 /**
-
  * Description: class for sanitizing field values
  * Portions created by SugarCRM are Copyright (C) SugarCRM, Inc.
  * All Rights Reserved.
@@ -75,21 +74,23 @@ class ImportFieldSanitize
      * true if we will create related beans during the sanitize process
      */
     public $addRelatedBean = false;
-    
+
     /**
      * Checks the SugarField defintion for an available santization method.
      *
      * @param  $value  string
      * @param  $vardef array
      * @param  $focus  object bean of the module we're importing into
+     *
      * @return string sanitized and validated value on success, bool false on failure
      */
     public function __call(
         $name,
         $params
-        ) {
+    )
+    {
         static $sfh;
-        
+
         if (!isset($sfh)) {
             require_once('include/SugarFields/SugarFieldHandler.php');
             $sfh = new SugarFieldHandler();
@@ -101,17 +102,17 @@ class ImportFieldSanitize
         } else {
             $focus = null;
         }
-        if ($name == 'relate' && !empty($params[3])) {
+        if ($name === 'relate' && !empty($params[3])) {
             $this->addRelatedBean = true;
         } else {
             $this->addRelatedBean = false;
         }
-        
+
         $field = $sfh::getSugarField(ucfirst($name));
         if ($field instanceof SugarFieldBase) {
             $value = $field->importSanitize($value, $vardef, $focus, $this);
         }
-        
+
         return $value;
     }
 
@@ -121,13 +122,15 @@ class ImportFieldSanitize
      * @param  $value  string
      * @param  $vardef array
      * @param  $focus  object bean of the module we're importing into
+     *
      * @return string sanitized and validated value on success, bool false on failure
      */
     public function date(
         $value,
         $vardef,
         &$focus
-        ) {
+    )
+    {
         global $timedate;
 
         $format = $this->dateformat;
@@ -155,19 +158,21 @@ class ImportFieldSanitize
      * @param  $value  string
      * @param  $vardef array
      * @param  $focus  object bean of the module we're importing into
+     *
      * @return string sanitized and validated value on success, bool false on failure
      */
     public function email(
         $value,
         $vardef
-        ) {
+    )
+    {
         // cache $sea instance
         static $sea;
-        
+
         if (!($sea instanceof SugarEmailAddress)) {
             $sea = new SugarEmailAddress;
         }
-        
+
         if (!empty($value) && !preg_match($sea->regex, (string) $value)) {
             return false;
         }
@@ -181,13 +186,15 @@ class ImportFieldSanitize
      * @param  $value     string
      * @param  $vardef    array
      * @param  $bad_names array used to return list of bad users/teams in $value
+     *
      * @return string sanitized and validated value on success, bool false on failure
      */
     public function synctooutlook(
         $value,
         $vardef,
         &$bad_names
-        ) {
+    )
+    {
         static $focus_user;
 
         // cache this object since we'll be reusing it a bunch
@@ -195,18 +202,17 @@ class ImportFieldSanitize
             $focus_user = BeanFactory::newBean('Users');
         }
 
-
-        if (!empty($value) && strtolower($value) != "all") {
-            $theList   = explode(",", $value);
-            $isValid   = true;
+        if (!empty($value) && strtolower($value) !== 'all') {
+            $theList = explode(',', $value);
+            $isValid = true;
             $bad_names = array();
             foreach ($theList as $eachItem) {
                 if ($focus_user->retrieve_user_id($eachItem)
-                        || $focus_user->retrieve($eachItem)
+                    || $focus_user->retrieve($eachItem)
                 ) {
                     // all good
                 } else {
-                    $isValid     = false;
+                    $isValid = false;
                     $bad_names[] = $eachItem;
                     continue;
                 }
@@ -224,14 +230,16 @@ class ImportFieldSanitize
      *
      * @param  $value    string
      * @param  $vardef   array
-     * @param  $focus  object bean of the module we're importing into
+     * @param  $focus    object bean of the module we're importing into
+     *
      * @return string sanitized and validated value on success, bool false on failure
      */
     public function time(
         $value,
         $vardef,
         $focus
-        ) {
+    )
+    {
         global $timedate;
 
         $format = $this->timeformat;
@@ -270,73 +278,75 @@ class ImportFieldSanitize
      *
      * @param  $value  string
      * @param  $format string
+     *
      * @return string sanitized and validated value on success, bool false on failure
      */
     public function isValidTimeDate(
         $value,
         $format
-        ) {
+    )
+    {
         global $timedate;
 
         $dateparts = array();
         $reg = $timedate->get_regular_expression($format);
-        preg_match('@'.$reg['format'].'@', (string) $value, $dateparts);
+        preg_match('@' . $reg['format'] . '@', (string) $value, $dateparts);
 
         if (empty($dateparts)) {
             return false;
         }
         if (isset($reg['positions']['a'])
-                && !in_array($dateparts[$reg['positions']['a']], array('am','pm'))) {
+            && !in_array($dateparts[$reg['positions']['a']], array( 'am', 'pm' ))) {
             return false;
         }
         if (isset($reg['positions']['A'])
-                && !in_array($dateparts[$reg['positions']['A']], array('AM','PM'))) {
+            && !in_array($dateparts[$reg['positions']['A']], array( 'AM', 'PM' ))) {
             return false;
         }
         if (isset($reg['positions']['h']) && (
-            !is_numeric($dateparts[$reg['positions']['h']])
+                !is_numeric($dateparts[$reg['positions']['h']])
                 || $dateparts[$reg['positions']['h']] < 1
                 || $dateparts[$reg['positions']['h']] > 12
-        )) {
+            )) {
             return false;
         }
         if (isset($reg['positions']['H']) && (
-            !is_numeric($dateparts[$reg['positions']['H']])
+                !is_numeric($dateparts[$reg['positions']['H']])
                 || $dateparts[$reg['positions']['H']] < 0
                 || $dateparts[$reg['positions']['H']] > 23
-        )) {
+            )) {
             return false;
         }
         if (isset($reg['positions']['i']) && (
-            !is_numeric($dateparts[$reg['positions']['i']])
+                !is_numeric($dateparts[$reg['positions']['i']])
                 || $dateparts[$reg['positions']['i']] < 0
                 || $dateparts[$reg['positions']['i']] > 59
-        )) {
+            )) {
             return false;
         }
         if (isset($reg['positions']['s']) && (
-            !is_numeric($dateparts[$reg['positions']['s']])
+                !is_numeric($dateparts[$reg['positions']['s']])
                 || $dateparts[$reg['positions']['s']] < 0
                 || $dateparts[$reg['positions']['s']] > 59
-        )) {
+            )) {
             return false;
         }
         if (isset($reg['positions']['d']) && (
-            !is_numeric($dateparts[$reg['positions']['d']])
+                !is_numeric($dateparts[$reg['positions']['d']])
                 || $dateparts[$reg['positions']['d']] < 1
                 || $dateparts[$reg['positions']['d']] > 31
-        )) {
+            )) {
             return false;
         }
         if (isset($reg['positions']['m']) && (
-            !is_numeric($dateparts[$reg['positions']['m']])
+                !is_numeric($dateparts[$reg['positions']['m']])
                 || $dateparts[$reg['positions']['m']] < 1
                 || $dateparts[$reg['positions']['m']] > 12
-        )) {
+            )) {
             return false;
         }
         if (isset($reg['positions']['Y']) &&
-                !is_numeric($dateparts[$reg['positions']['Y']])) {
+            !is_numeric($dateparts[$reg['positions']['Y']])) {
             return false;
         }
 

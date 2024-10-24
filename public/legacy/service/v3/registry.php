@@ -47,7 +47,7 @@ require_once('service/v2/registry.php'); //Extend off of v2 registry
 #[\AllowDynamicProperties]
 class registry_v3 extends registry
 {
-    
+
     /**
      * This method registers all the functions on the service class
      *
@@ -97,7 +97,7 @@ class registry_v3 extends registry
 
         // END OF REGISTER FUNCTIONS
     }
-    
+
     /**
      * This method registers all the complex types
      *
@@ -105,7 +105,7 @@ class registry_v3 extends registry
     protected function registerTypes()
     {
         parent::registerTypes();
-        
+
         $this->serviceClass->registerType(
             'md5_results',
             'complexType',
@@ -118,7 +118,7 @@ class registry_v3 extends registry
             ),
             'xsd:string'
         );
-        
+
         $this->serviceClass->registerType(
             'module_names',
             'complexType',
@@ -131,7 +131,7 @@ class registry_v3 extends registry
             ),
             'xsd:string'
         );
-        
+
         $this->serviceClass->registerType(
             'upcoming_activities_list',
             'complexType',
@@ -144,7 +144,7 @@ class registry_v3 extends registry
             ),
             'tns:upcoming_activity_entry'
         );
-        
+
         $this->serviceClass->registerType(
             'upcoming_activity_entry',
             'complexType',
@@ -152,13 +152,13 @@ class registry_v3 extends registry
             'all',
             '',
             array(
-                "id" => array('name'=>"id",'type'=>'xsd:string'),
-                "module" => array('name'=>"module",'type'=>'xsd:string'),
-                "date_due" => array('name'=>"date_due",'type'=>'xsd:string'),
-                "summary" => array('name'=>"summary",'type'=>'xsd:string'),
+                'id'       => array( 'name' => 'id', 'type' =>'xsd:string'),
+                'module'   => array( 'name' => 'module', 'type' =>'xsd:string'),
+                'date_due' => array( 'name' => 'date_due', 'type' =>'xsd:string'),
+                'summary'  => array( 'name' => 'summary', 'type' =>'xsd:string'),
             )
         );
-        
+
         $this->serviceClass->registerType(
             'last_viewed_list',
             'complexType',
@@ -171,7 +171,7 @@ class registry_v3 extends registry
             ),
             'tns:last_viewed_entry'
         );
-        
+
         $this->serviceClass->registerType(
             'last_viewed_entry',
             'complexType',
@@ -179,15 +179,15 @@ class registry_v3 extends registry
             'all',
             '',
             array(
-                "id" => array('name'=>"id",'type'=>'xsd:string'),
-                "item_id" => array('name'=>"item_id",'type'=>'xsd:string'),
-                "item_summary" => array('name'=>"item_summary",'type'=>'xsd:string'),
-                "module_name" => array('name'=>"module_name",'type'=>'xsd:string'),
-                "monitor_id" => array('name'=>"monitor_id",'type'=>'xsd:string'),
-                "date_modified" => array('name'=>"date_modified",'type'=>'xsd:string')
+                'id'            => array( 'name' => 'id', 'type' =>'xsd:string'),
+                'item_id'       => array( 'name' => 'item_id', 'type' =>'xsd:string'),
+                'item_summary'  => array( 'name' => 'item_summary', 'type' =>'xsd:string'),
+                'module_name'   => array( 'name' => 'module_name', 'type' =>'xsd:string'),
+                'monitor_id'    => array( 'name' => 'monitor_id', 'type' =>'xsd:string'),
+                'date_modified' => array( 'name' => 'date_modified', 'type' =>'xsd:string')
             )
         );
-        
+
         $this->serviceClass->registerType(
             'field',
             'complexType',

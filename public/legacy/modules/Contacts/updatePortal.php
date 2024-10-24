@@ -82,6 +82,9 @@ class updatePortal
      * @param $emailBody
      * @param $altEmailBody
      * @param SugarBean|null $relatedBean
+     *
+     * @throws Exception
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function sendEmail($emailTo, $emailSubject, $emailBody, $altEmailBody, SugarBean $relatedBean = null)
     {

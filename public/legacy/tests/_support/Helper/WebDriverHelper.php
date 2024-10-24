@@ -231,11 +231,11 @@ class WebDriverHelper extends Module
         if ($envBrowserStackUsername === false) {
             $webDriver = $this->moduleContainer->getModule('\SuiteCRM\Test\Driver\WebDriver');
             $config = $webDriver->_getConfig();
-            if (empty($config["capabilities"]["browserstack.user"])) {
+            if (empty($config['capabilities']['browserstack.user'])) {
                 // return default
                 return '';
             } else {
-                return $config["capabilities"]["browserstack.user"];
+                return $config['capabilities']['browserstack.user'];
             }
         } else {
             return $envBrowserStackUsername;
@@ -253,11 +253,11 @@ class WebDriverHelper extends Module
         if ($envBrowserStackAccessKey === false) {
             $webDriver = $this->moduleContainer->getModule('\SuiteCRM\Test\Driver\WebDriver');
             $config = $webDriver->_getConfig();
-            if (empty($config["capabilities"]["browserstack.key"])) {
+            if (empty($config['capabilities']['browserstack.key'])) {
                 // return default
                 return '';
             } else {
-                return $config["capabilities"]["browserstack.key"];
+                return $config['capabilities']['browserstack.key'];
             }
         } else {
             return $envBrowserStackAccessKey;
@@ -275,11 +275,11 @@ class WebDriverHelper extends Module
         if ($envBrowserStackAccessKey === false) {
             $webDriver = $this->moduleContainer->getModule('\SuiteCRM\Test\Driver\WebDriver');
             $config = $webDriver->_getConfig();
-            if (empty($config["capabilities"]["browserstack.localfolderurl"])) {
+            if (empty($config['capabilities']['browserstack.localfolderurl'])) {
                 // return default
                 return '';
             } else {
-                return $config["capabilities"]["browserstack.localfolderurl"];
+                return $config['capabilities']['browserstack.localfolderurl'];
             }
         } else {
             return $envBrowserStackAccessKey;

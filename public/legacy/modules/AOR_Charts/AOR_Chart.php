@@ -27,30 +27,30 @@ class AOR_Chart extends Basic
 {
     public const COLOUR_DEFAULTS = "['#1f78b4','#a6cee3','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928','#144c73','#6caed1','#8acf4e','#20641c','#f8514f','#9e1214','#fc9d24','#b35900','#a880bb','#442763','#ffff4d','#733a1a']";
     public $colours;
-    public $new_schema = true;
-    public $module_dir = 'AOR_Charts';
-    public $object_name = 'AOR_Chart';
-    public $table_name = 'aor_charts';
-    public $importable = true;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOR_Charts';
+    public string $object_name = 'AOR_Chart';
+    public string $table_name = 'aor_charts';
+    public bool $importable = true;
     public $disable_row_level_security = true ;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
 
     public $type;
     public $x_field;
     public $y_field;
-    public $noDataMessage = "No Results";
+    public $noDataMessage = 'No Results';
 
 
 
@@ -61,8 +61,9 @@ class AOR_Chart extends Basic
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save_lines(array $post, AOR_Report $bean, $postKey)
     {
         $seenIds = array();
@@ -84,7 +85,7 @@ class AOR_Chart extends Basic
         }
         //Any beans that exist but aren't in $seenIds must have been removed.
         foreach ($bean->get_linked_beans('aor_charts', 'AOR_Charts') as $chart) {
-            if (!in_array($chart->id, $seenIds)) {
+            if (!in_array($chart->id, $seenIds, true)) {
                 $chart->mark_deleted($chart->id);
             }
         }
@@ -117,9 +118,9 @@ class AOR_Chart extends Basic
 
     public function buildChartImageBar($chartPicture, $recordImageMap = false)
     {
-        $scaleSettings = array("DrawSubTicks" => false, "LabelRotation" => 30, 'MinDivHeight' => 50);
+        $scaleSettings = array( 'DrawSubTicks' => false, 'LabelRotation' => 30, 'MinDivHeight' => 50);
         $chartPicture->drawScale($scaleSettings);
-        $chartPicture->drawBarChart(array("RecordImageMap"=>$recordImageMap));
+        $chartPicture->drawBarChart(array( 'RecordImageMap' =>$recordImageMap));
     }
 
     public function buildChartImagePie($chartPicture, $chartData, $reportData, $imageHeight, $imageWidth, $xName, $recordImageMap)
@@ -130,21 +131,23 @@ class AOR_Chart extends Basic
             $PieChart->setSliceColor($x, $this->getColour($row[$xName], true));
             $x++;
         }
-        $PieChart->draw2DPie($imageWidth/3, $imageHeight/2, array("Border"=>true,'Radius'=>200,''=>true,"RecordImageMap"=>$recordImageMap));
-        $PieChart->drawPieLegend($imageWidth*0.7, $imageHeight/3, array('FontSize'=>10,"FontName"=>"modules/AOR_Charts/lib/pChart/fonts/verdana.ttf",'BoxSize'=>14));
+        $PieChart->draw2DPie($imageWidth/3, $imageHeight/2, array( 'Border'         =>true, 'Radius' =>200, '' =>true,
+                                                                   'RecordImageMap' =>$recordImageMap));
+        $PieChart->drawPieLegend($imageWidth*0.7, $imageHeight/3, array( 'FontSize' =>10, 'FontName' => 'modules/AOR_Charts/lib/pChart/fonts/verdana.ttf', 'BoxSize' =>14));
     }
 
     public function buildChartImageLine($chartPicture, $recordImageMap = false)
     {
-        $scaleSettings = array("XMargin"=>10,"YMargin"=>10,"GridR"=>200,"GridG"=>200,"GridB"=>200,'MinDivHeight' => 50,"LabelRotation" => 30);
+        $scaleSettings = array( 'XMargin'       =>10, 'YMargin' =>10, 'GridR' =>200, 'GridG' =>200, 'GridB' =>200, 'MinDivHeight' => 50,
+                                'LabelRotation' => 30);
         $chartPicture->drawScale($scaleSettings);
-        $chartPicture->drawLineChart(array("RecordImageMap"=>$recordImageMap));
+        $chartPicture->drawLineChart(array( 'RecordImageMap' =>$recordImageMap));
     }
 
     public function buildChartImageRadar($chartPicture, $chartData, $recordImageMap)
     {
         $SplitChart = new pRadar();
-        $Options = array("LabelPos"=>RADAR_LABELS_HORIZONTAL,"RecordImageMap"=>$recordImageMap);
+        $Options = array( 'LabelPos' =>RADAR_LABELS_HORIZONTAL, 'RecordImageMap' =>$recordImageMap);
         $SplitChart->drawRadar($chartPicture, $chartData, $Options);
     }
 
@@ -154,11 +157,11 @@ class AOR_Chart extends Basic
         require_once 'modules/AOR_Charts/lib/pChart/pChart.php';
 
         if ($generateImageMapId !== false) {
-            $generateImageMapId = $current_user->id."-".$generateImageMapId;
+            $generateImageMapId = $current_user->id. '-' .$generateImageMapId;
         }
 
         $html = '';
-        if (!in_array($this->type, $this->getValidChartTypes())) {
+        if (!in_array($this->type, $this->getValidChartTypes(), true)) {
             return $html;
         }
         $x = $fields[$this->x_field];
@@ -171,7 +174,7 @@ class AOR_Chart extends Basic
         $yName = str_replace(' ', '_', (string) $y->label) . $this->y_field;
 
         $chartData = new pData();
-        $chartData->loadPalette("modules/AOR_Charts/lib/pChart/palettes/navy.color", true);
+        $chartData->loadPalette('modules/AOR_Charts/lib/pChart/palettes/navy.color', true);
         $labels = array();
         foreach ($reportData as $row) {
             $chartData->addPoints($row[$yName], 'data');
@@ -179,8 +182,8 @@ class AOR_Chart extends Basic
             $labels[] = $row[$xName];
         }
 
-        $chartData->setSerieDescription("Months", "Month");
-        $chartData->setAbscissa("Labels");
+        $chartData->setSerieDescription('Months', 'Month');
+        $chartData->setAbscissa('Labels');
 
         $imageHeight = 700;
         $imageWidth = 700;
@@ -193,12 +196,15 @@ class AOR_Chart extends Basic
 
         $chartPicture->Antialias = true;
 
-        $chartPicture->drawFilledRectangle(0, 0, $imageWidth-1, $imageHeight-1, array("R"=>240,"G"=>240,"B"=>240,"BorderR"=>0,"BorderG"=>0,"BorderB"=>0,));
+        $chartPicture->drawFilledRectangle(0, 0, $imageWidth-1, $imageHeight-1, array( 'R'       =>240, 'G' =>240, 'B' =>240, 'BorderR' =>0, 'BorderG' =>0,
+                                                                                       'BorderB' =>0,));
 
-        $chartPicture->setFontProperties(array("FontName"=>"modules/AOR_Charts/lib/pChart/fonts/verdana.ttf","FontSize"=>14));
+        $chartPicture->setFontProperties(array( 'FontName' => 'modules/AOR_Charts/lib/pChart/fonts/verdana.ttf',
+                                                'FontSize' =>14));
 
-        $chartPicture->drawText($imageWidth/2, 20, $this->name, array("R"=>0,"G"=>0,"B"=>0,'Align'=>TEXT_ALIGN_TOPMIDDLE));
-        $chartPicture->setFontProperties(array("FontName"=>"modules/AOR_Charts/lib/pChart/fonts/verdana.ttf","FontSize"=>6));
+        $chartPicture->drawText($imageWidth/2, 20, $this->name, array( 'R' =>0, 'G' =>0, 'B' =>0, 'Align' =>TEXT_ALIGN_TOPMIDDLE));
+        $chartPicture->setFontProperties(array( 'FontName' => 'modules/AOR_Charts/lib/pChart/fonts/verdana.ttf',
+                                                'FontSize' =>6));
 
         $chartPicture->setGraphArea(60, 60, $imageWidth-60, $imageHeight-100);
 
@@ -218,7 +224,7 @@ class AOR_Chart extends Basic
                 break;
         }
         if ($generateImageMapId) {
-            $chartPicture->replaceImageMapTitle("data", $labels);
+            $chartPicture->replaceImageMapTitle('data', $labels);
         }
         ob_start();
         $chartPicture->render(null);
@@ -266,7 +272,7 @@ class AOR_Chart extends Basic
     private function buildChartHTMLRGraph(array $reportData, array $fields, AOR_Field $mainGroupField = null)
     {
         $html = '';
-        if (!in_array($this->type, $this->getValidChartTypes())) {
+        if (!in_array($this->type, $this->getValidChartTypes(), true)) {
             return $html;
         }
         $x = $fields[$this->x_field];
@@ -583,7 +589,7 @@ EOF;
     private function buildChartHTMLChartJS(array $reportData, array $fields)
     {
         $html = '';
-        if (!in_array($this->type, $this->getValidChartTypes())) {
+        if (!in_array($this->type, $this->getValidChartTypes(), true)) {
             return $html;
         }
         $x = $fields[$this->x_field];
@@ -692,7 +698,7 @@ EOF;
         foreach ($reportData as $key => $row) {
             $filter = $row[$xName];
             foreach ($reportData as $key2 => $row2) {
-                if ($row2[$xName] == $filter && !in_array($key, $usedKeys)) {
+                if ($row2[$xName] == $filter && !in_array($key, $usedKeys, true)) {
                     $data      [ $row[$xName]  ]   [] = (float) $row[$yName];
                     $tooltips  [ $row[$xName]  ]   [] = isset($row[$zName]) ? $row[$zName] : null;
                     $usedKeys[] = $key;
@@ -763,12 +769,12 @@ EOF;
 
         $data['datasets'] = array();
         $data['datasets'][] = array(
-            'fillColor' => "rgba(151,187,205,0.2)",
-            'strokeColor' => "rgba(151,187,205,1)",
-            'pointColor' => "rgba(151,187,205,1)",
-            'pointStrokeColor' => "#fff",
-            'pointHighlightFill' => "#fff",
-            'pointHighlightStroke' => "rgba(151,187,205,1)4",
+            'fillColor' => 'rgba(151,187,205,0.2)',
+            'strokeColor' => 'rgba(151,187,205,1)',
+            'pointColor' => 'rgba(151,187,205,1)',
+            'pointStrokeColor' => '#fff',
+            'pointHighlightFill' => '#fff',
+            'pointHighlightStroke' => 'rgba(151,187,205,1)4',
             'data'=>$datasetData);
         return $data;
     }

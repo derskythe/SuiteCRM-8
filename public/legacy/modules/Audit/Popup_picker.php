@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-require_once("include/upload_file.php");
+require_once('include/upload_file.php');
 require_once('include/utils/db_utils.php');
 require_once('modules/Audit/Audit.php');
 
@@ -72,10 +72,9 @@ class Popup_Picker
     }
 
 
-
-
     /**
      *
+     * @throws Exception
      */
     public function process_page()
     {
@@ -103,7 +102,7 @@ class Popup_Picker
         echo "<table width='100%' cellpadding='0' cellspacing='0'><tr><td>";
 
         if (!isset($focus->module_dir)) {
-            LoggerManager::getLogger()->fatal("Popup picker needs module dir from focus bean but global focus is none.");
+            LoggerManager::getLogger()->fatal('Popup picker needs module dir from focus bean but global focus is none.');
             throw new Exception('There is not selected focus bean for popup picker process page.');
         }
 
@@ -137,8 +136,8 @@ EOHTML;
         asort($audited_fields);
         $fields = '';
         $field_count = is_countable($audited_fields) ? count($audited_fields) : 0;
-        $start_tag = "<table><tr><td >";
-        $end_tag = "</td></tr></table>";
+        $start_tag = '<table><tr><td >';
+        $end_tag = '</td></tr></table>';
 
         if ($field_count > 0) {
             $index = 0;
@@ -153,7 +152,7 @@ EOHTML;
                 $fields .= str_replace(':', '', (string) translate($vname, $focus->module_dir));
 
                 if ($index < $field_count) {
-                    $fields .= ", ";
+                    $fields .= ', ';
                 }
             }
 
@@ -189,25 +188,25 @@ EOHTML;
                 'DATE_CREATED' => $audit['date_created'],
             );
 
-            $xtpl->assign("ACTIVITY", $activity_fields);
+            $xtpl->assign('ACTIVITY', $activity_fields);
 
             if ($oddRow) {
                 //todo move to themes
-                $xtpl->assign("ROW_COLOR", 'oddListRow');
-                $xtpl->assign("BG_COLOR", $odd_bg);
+                $xtpl->assign('ROW_COLOR', 'oddListRow');
+                $xtpl->assign('BG_COLOR', $odd_bg);
             } else {
                 //todo move to themes
-                $xtpl->assign("ROW_COLOR", 'evenListRow');
-                $xtpl->assign("BG_COLOR", $even_bg);
+                $xtpl->assign('ROW_COLOR', 'evenListRow');
+                $xtpl->assign('BG_COLOR', $even_bg);
             }
             $oddRow = !$oddRow;
 
-            $xtpl->parse("audit.row");
+            $xtpl->parse('audit.row');
             // Put the rows in.
         }//end foreach
 
-        $xtpl->parse("audit");
-        $xtpl->out("audit");
+        $xtpl->parse('audit');
+        $xtpl->out('audit');
         insert_popup_footer();
     }
 } // end of class Popup_Picker

@@ -52,10 +52,13 @@ class ParserFactory
     /**
      * Create a new parser
      *
-     * @param string $view          The view, for example EditView or ListView. For search views, use advanced_search or basic_search
-     * @param string $moduleName    Module name
-     * @param string $packageName   Package name. If present implies that we are being called from ModuleBuilder
+     * @param string $view        The view, for example EditView or ListView. For search views, use advanced_search or
+     *                            basic_search
+     * @param string $moduleName  Module name
+     * @param string $packageName Package name. If present implies that we are being called from ModuleBuilder
+     *
      * @return AbstractMetaDataParser
+     * @throws Exception
      */
 
     public static function getParser($view, $moduleName, $packageName = null, $subpanelName = null)
@@ -63,7 +66,7 @@ class ParserFactory
         $GLOBALS [ 'log' ]->info("ParserFactory->getParser($view,$moduleName,$packageName,$subpanelName )") ;
         $sm = null;
         $lView = strtolower($view);
-        if (empty($packageName) || ($packageName == 'studio')) {
+        if (empty($packageName) || ($packageName === 'studio')) {
             $packageName = null ;
             //For studio modules, check for view parser overrides
             $parser = self::checkForStudioParserOverride($view, $moduleName, $packageName);
@@ -131,10 +134,10 @@ class ParserFactory
             $prefix = empty($packageName) ? 'build' :'modify';
         }
         $fileNames = array(
-            "custom/modules/$moduleName/parsers/parser." . strtolower($prefix . $view) . ".php",
-            "modules/$moduleName/parsers/parser." . strtolower($prefix . $view) . ".php",
-            "custom/modules/ModuleBuilder/parsers/parser." . strtolower($prefix . $view) . ".php",
-            "modules/ModuleBuilder/parsers/parser." . strtolower($prefix . $view) . ".php",
+            "custom/modules/$moduleName/parsers/parser." . strtolower($prefix . $view) . '.php',
+            "modules/$moduleName/parsers/parser." . strtolower($prefix . $view) . '.php',
+            'custom/modules/ModuleBuilder/parsers/parser.' . strtolower($prefix . $view) . '.php',
+            'modules/ModuleBuilder/parsers/parser.' . strtolower($prefix . $view) . '.php',
         );
         foreach ($fileNames as $fileName) {
             if (file_exists($fileName)) {

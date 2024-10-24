@@ -36,23 +36,25 @@ class ClassicViewRoutingExclusionsHandler extends LegacyHandler
 
     /**
      * Lazy initialized manager
+     *
      * @var ClassicViewRoutingExclusionsManager
      */
-    protected $manager;
+    protected ?ClassicViewRoutingExclusionsManager $manager;
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get configured exclusions
+     *
      * @return array
      */
-    public function get(): array
+    public function get() : array
     {
         $this->init();
 
@@ -67,16 +69,16 @@ class ClassicViewRoutingExclusionsHandler extends LegacyHandler
 
     /**
      * Get manager. Initialize it if needed
+     *
      * @return ClassicViewRoutingExclusionsManager
      */
-    protected function getManager(): ClassicViewRoutingExclusionsManager
+    protected function getManager() : ClassicViewRoutingExclusionsManager
     {
         if ($this->manager !== null) {
             return $this->manager;
         }
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/ClassicViewRoutingExclusionsManager.php';
+        require_once $this->legacyDir.'/include/portability/ClassicViewRoutingExclusionsManager.php';
 
         $this->manager = new ClassicViewRoutingExclusionsManager();
 

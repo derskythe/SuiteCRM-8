@@ -61,13 +61,13 @@ class ListViewMerge extends EditViewMerge
     protected $viewDefs = 'ListView';
 
     /**
-    	 * Loads the meta data of the original, new, and custom file into the variables originalData, newData, and customData respectively it then transforms them into a structure that EditView Merge would understand
-    	 *
-    	 * @param STRING $module - name of the module's files that are to be merged
-    	 * @param STRING $original_file - path to the file that originally shipped with sugar
-    	 * @param STRING $new_file - path to the new file that is shipping with the patch
-    	 * @param STRING $custom_file - path to the custom file
-    	 */
+         * Loads the meta data of the original, new, and custom file into the variables originalData, newData, and customData respectively it then transforms them into a structure that EditView Merge would understand
+         *
+         * @param STRING $module - name of the module's files that are to be merged
+         * @param STRING $original_file - path to the file that originally shipped with sugar
+         * @param STRING $new_file - path to the new file that is shipping with the patch
+         * @param STRING $custom_file - path to the custom file
+         */
     protected function loadData($module, $original_file, $new_file, $custom_file)
     {
         $this->module = $module;
@@ -165,7 +165,7 @@ class ListViewMerge extends EditViewMerge
         $panels  = array();
         //first only deal with ones that have their location coming from the custom source
         foreach ($this->mergedFields as $id =>$field) {
-            if ($field['loc']['source'] == 'custom') {
+            if ($field['loc']['source'] === 'custom') {
                 $panels[$field['loc']['panel']] = $field['data'];
                 unset($this->mergedFields[$id]);
             }

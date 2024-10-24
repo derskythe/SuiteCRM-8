@@ -56,7 +56,7 @@ class SugarFieldMultienum extends SugarFieldEnum
 
     public function getSearchViewSmarty($parentFieldArray, $vardef, $displayParams, $tabindex)
     {
-        if (!empty($vardef['function']['returns']) && $vardef['function']['returns']== 'html') {
+        if (!empty($vardef['function']['returns']) && $vardef['function']['returns'] === 'html') {
             $this->setup($parentFieldArray, $vardef, $displayParams, $tabindex);
             return $this->fetch($this->findTemplate('EditViewFunction'));
         } else {
@@ -75,7 +75,7 @@ class SugarFieldMultienum extends SugarFieldEnum
      */
     public function displayFromFunc($displayType, $parentFieldArray, $vardef, $displayParams, $tabindex = 0)
     {
-        if (isset($vardef['function']['returns']) && $vardef['function']['returns'] == 'html') {
+        if (isset($vardef['function']['returns']) && $vardef['function']['returns'] === 'html') {
             return parent::displayFromFunc($displayType, $parentFieldArray, $vardef, $displayParams, $tabindex);
         }
 
@@ -119,10 +119,10 @@ class SugarFieldMultienum extends SugarFieldEnum
             $enum_list = $value;
         } else {
             // If someone was using the old style multienum import technique
-            $value = str_replace("^", "", $value);
+            $value = str_replace('^', '', $value);
 
             // We will need to break it apart to put test it.
-            $enum_list = explode(",", $value);
+            $enum_list = explode(',', $value);
         }
         // parse to see if all the values given are valid
         foreach ($enum_list as $key => $enum_value) {

@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -37,24 +37,26 @@ final class Version20240619160606 extends BaseMigration implements ContainerAwar
 {
     use EnvHandlingMigrationTrait;
 
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return 'Add randomly generated APP_SECRET to .env.local';
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
-        $envLocalFile = $this->getProjectDir() . "/.env.local";
+        $envLocalFile = $this->getProjectDir() . '/.env.local';
 
         $env = $_ENV ?? [];
 
         if (!empty($env['APP_SECRET'])) {
             $this->log('APP_SECRET already set in ENV, skipping.');
+
             return;
         }
 
         if (!file_exists($envLocalFile)) {
             $this->log('File .env.local does not exist, skipping.');
+
             return;
         }
 
@@ -63,16 +65,17 @@ final class Version20240619160606 extends BaseMigration implements ContainerAwar
         $this->addAppSecret($envContents, $envLocalFile);
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 
     /**
      * Check and add randomly generated app secret
+     *
      * @param $envContents
      * @param string $envFile
      */
-    protected function addAppSecret(&$envContents, string $envFile): void
+    protected function addAppSecret(&$envContents, string $envFile) : void
     {
         /** @var AppSecretGenerator $entityManager */
         $appSecretGenerator = $this->container->get('security.app_secret_generator');
@@ -84,7 +87,12 @@ final class Version20240619160606 extends BaseMigration implements ContainerAwar
         $wrapperStart = '';
         $wrapperEnd = '';
 
-        $propertiesToAdd = $this->getContentToAdd($envContents, $properties, $wrapperStart, $wrapperEnd);
+        $propertiesToAdd = $this->getContentToAdd(
+            $envContents,
+            $properties,
+            $wrapperStart,
+            $wrapperEnd
+        );
         if (!empty($propertiesToAdd)) {
             $envContents .= $propertiesToAdd;
             file_put_contents($envFile, $envContents);

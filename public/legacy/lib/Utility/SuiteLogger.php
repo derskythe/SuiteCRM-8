@@ -48,21 +48,33 @@ use Psr\Log\LogLevel;
  * /**
  * PSR-3 Compliant logger
  * Class SuiteLogger
+ *
  * @package SuiteCRM\Utility
- * @see http://www.php-fig.org/psr/psr-3/
+ * @see     http://www.php-fig.org/psr/psr-3/
  */
 #[\AllowDynamicProperties]
 class SuiteLogger extends AbstractLogger
 {
     /**
      * @param LogLevel|string $level
-     * @param string $message eg 'hello {user}'
-     * @param array $context eg array(user => 'joe')
-     * @throws InvalidArgumentException
+     * @param string|Stringable $message eg 'hello {user}'
+     * @param array $context             eg array(user => 'joe')
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = array())
     {
         $log = \LoggerManager::getLogger();
+        parent::log($level, $message, $context);
+        if ($log === null) {
+            trigger_error(
+                sprintf(
+                    'Logger not initialized!%sMessage to log: [%s] %s',
+                    PHP_EOL,
+                    $level,
+                    $message
+                ),
+                E_USER_WARNING
+            );
+        }
         $message = $this->interpolate($message, $context);
         switch ($level) {
             case LogLevel::EMERGENCY:
@@ -104,11 +116,13 @@ class SuiteLogger extends AbstractLogger
 
     /**
      * build a replacement array with braces around the context keys
+     *
      * @param $message
      * @param array $context
+     *
      * @return string
      */
-    private function interpolate($message, array $context = [])
+    private function interpolate(string $message, array $context = []) : string
     {
         $replace = [];
 

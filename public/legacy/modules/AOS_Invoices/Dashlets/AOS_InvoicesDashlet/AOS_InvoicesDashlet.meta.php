@@ -34,10 +34,10 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * All Rights Reserved.
  * Contributor(s): ______________________________________..
  ********************************************************************************/
- 
+
 global $app_strings;
 
-$dashletMeta['AOS_InvoicesDashlet'] = array('module'		=> 'AOS_Invoices',
+$dashletMeta['AOS_InvoicesDashlet'] = array('module'        => 'AOS_Invoices',
                                           'title'       => translate('LBL_HOMEPAGE_TITLE', 'AOS_Invoices'),
                                           'description' => 'A customizable view into AOS_Invoices',
                                           'icon'        => 'themes/default/images/icon_AOS_Invoices_32.gif',

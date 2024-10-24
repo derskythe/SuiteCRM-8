@@ -163,7 +163,7 @@ class EmailTemplateParser
         $charVariable = chr(36);
         $charUnderscore = chr(95);
 
-        if (strpos($variable, $charVariable) === false || strpos($variable, $charUnderscore) === false) {
+        if (!str_contains($variable, $charVariable) || !str_contains($variable, $charUnderscore)) {
             $GLOBALS['log']->warn(sprintf(
                 'Variable %s parsed to an empty string, because attribute has no %s or %s character',
                 $variable,
@@ -181,7 +181,7 @@ class EmailTemplateParser
         if (strtolower($moduleName) === 'contact') {
             if (in_array($this->module->object_name, ['Lead', 'Prospect'], true)) {
                 $moduleName = strtolower($this->module->object_name);
-            } else if ($this->module->object_name == 'User' && str_begin(strtolower($attribute), 'user_')) {
+            } else if ($this->module->object_name === 'User' && str_begin(strtolower($attribute), 'user_')) {
                 $attribute = explode('_', $attribute, 2)[1];
                 $moduleName = 'user';
             }

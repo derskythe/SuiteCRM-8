@@ -65,8 +65,8 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
      * @param String $application -- The name of the application you are logging in from.  (Currently unused).
      * @param array $name_value_list -- Array of name value pair of extra parameters. As of today only 'language' and 'notifyonsave' is supported
      * @return Array - id - String id is the session_id of the session that was created.
-     * 				 - module_name - String - module name of user
-     * 				 - name_value_list - Array - The name value pair of user_id, user_name, user_language, user_currency_id, user_currency_name,
+     *                  - module_name - String - module name of user
+     *                  - name_value_list - Array - The name value pair of user_id, user_name, user_language, user_currency_id, user_currency_name,
      *                                         - user_default_team_id, user_is_admin, user_default_dateformat, user_default_timeformat
      * @exception 'SoapFault' -- The SOAP error, if any
      */
@@ -76,7 +76,8 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
         if ($application_name === '' && $application === null){
             $GLOBALS['log']->info("Application name not set. Please set using 'application_name' or 'application'. ");
         }
-        $GLOBALS['log']->info("Begin: SugarWebServiceImpl->login({$user_auth['user_name']}, $application_name, ". print_r($name_value_list, true) .")");
+        $GLOBALS['log']->info("Begin: SugarWebServiceImpl->login({$user_auth['user_name']}, $application_name, ". print_r($name_value_list, true) . ')'
+        );
         global $sugar_config, $system_config;
         $error = new SoapError();
         $user = BeanFactory::newBean('Users');
@@ -86,7 +87,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
         $system_config->retrieveSettings('system');
         $authController = new AuthenticationController();
         //rrs
-        if (!empty($user_auth['encryption']) && $user_auth['encryption'] === 'PLAIN' && $authController->authController->userAuthenticateClass != "LDAPAuthenticateUser") {
+        if (!empty($user_auth['encryption']) && $user_auth['encryption'] === 'PLAIN' && $authController->authController->userAuthenticateClass !== 'LDAPAuthenticateUser') {
             $user_auth['password'] = md5($user_auth['password']);
         }
         $isLoginSuccess = $authController->login($user_auth['user_name'], $user_auth['password'], array('passwordEncrypted' => true));
@@ -116,15 +117,15 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
             $GLOBALS['logic_hook']->call_custom_logic('Users', 'login_failed');
             self::$helperObject->setFaultObject($error);
             return;
-        } elseif (function_exists('openssl_decrypt') && $authController->authController->userAuthenticateClass == "LDAPAuthenticateUser"
+        } elseif (function_exists('openssl_decrypt') && $authController->authController->userAuthenticateClass === 'LDAPAuthenticateUser'
                 && (empty($user_auth['encryption']) || $user_auth['encryption'] !== 'PLAIN')) {
             $password = self::$helperObject->decrypt_string($user_auth['password']);
             $authController->loggedIn = false; // reset login attempt to try again with decrypted password
             if ($authController->login($user_auth['user_name'], $password) && isset($_SESSION['authenticated_user_id'])) {
                 $success = true;
             }
-        } elseif ($authController->authController->userAuthenticateClass == "LDAPAuthenticateUser"
-                 && (empty($user_auth['encryption']) || $user_auth['encryption'] == 'PLAIN')) {
+        } elseif ($authController->authController->userAuthenticateClass === 'LDAPAuthenticateUser'
+                 && (empty($user_auth['encryption']) || $user_auth['encryption'] === 'PLAIN')) {
             $authController->loggedIn = false; // reset login attempt to try again with md5 password
             if ($authController->login($user_auth['user_name'], md5($user_auth['password']), array('passwordEncrypted' => true))
                 && isset($_SESSION['authenticated_user_id'])) {
@@ -199,7 +200,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
      * @param Array $link_name_to_fields_array -- A list of link_names and for each link_name, what fields value to be returned. For ex.'link_name_to_fields_array' => array(array('name' =>  'email_addresses', 'value' => array('id', 'email_address', 'opt_out', 'primary_address')))
      * @return Array
      *        'entry_list' -- Array - The records name value pair for the simple data types excluding link field data.
-     *	     'relationship_list' -- Array - The records link field data. The example is if asked about accounts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
+     *         'relationship_list' -- Array - The records link field data. The example is if asked about accounts email address then return data would look like Array ( [0] => Array ( [name] => email_addresses [records] => Array ( [0] => Array ( [0] => Array ( [name] => id [value] => 3fb16797-8d90-0a94-ac12-490b63a6be67 ) [1] => Array ( [name] => email_address [value] => hr.kid.qa@example.com ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 1 ) ) [1] => Array ( [0] => Array ( [name] => id [value] => 403f8da1-214b-6a88-9cef-490b63d43566 ) [1] => Array ( [name] => email_address [value] => kid.hr@example.name ) [2] => Array ( [name] => opt_out [value] => 0 ) [3] => Array ( [name] => primary_address [value] => 0 ) ) ) ) )
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function get_entries(
@@ -271,7 +272,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
         global  $beanList, $beanFiles;
         $error = new SoapError();
         $using_cp = false;
-        if ($module_name == 'CampaignProspects') {
+        if ($module_name === 'CampaignProspects') {
             $module_name = 'Prospects';
             $using_cp = true;
         }
@@ -387,7 +388,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
             $seed = new $class_name();
 
             foreach ($a_view as $view) {
-                $aclViewCheck = (strtolower($view) == 'subpanel') ? 'DetailView' : ucfirst(strtolower($view)) . 'View';
+                $aclViewCheck = (strtolower($view) === 'subpanel') ? 'DetailView' : ucfirst(strtolower($view)) . 'View';
                 if (!$acl_check || $seed->ACLAccess($aclViewCheck, true)) {
                     foreach ($a_type as $type) {
                         $a_vardefs = self::$helperObject->get_module_view_defs($module_name, $type, $view);
@@ -411,16 +412,16 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
      * Given a list of modules to search and a search string, return the id, module_name, along with the fields
      * We will support Accounts, Bugs, Cases, Contacts, Leads, Opportunities, Project, ProjectTask, Quotes
      *
-     * @param string $session			- Session ID returned by a previous call to login.
-     * @param string $search_string 	- string to search
-     * @param string[] $modules			- array of modules to query
-     * @param int $offset				- a specified offset in the query
-     * @param int $max_results			- max number of records to return
-     * @param string $assigned_user_id	- a user id to filter all records by, leave empty to exclude the filter
+     * @param string $session            - Session ID returned by a previous call to login.
+     * @param string $search_string     - string to search
+     * @param string[] $modules            - array of modules to query
+     * @param int $offset                - a specified offset in the query
+     * @param int $max_results            - max number of records to return
+     * @param string $assigned_user_id    - a user id to filter all records by, leave empty to exclude the filter
      * @param string[] $select_fields   - An array of fields to return.  If empty the default return fields will be from the active list view defs.
      * @param bool $unified_search_only - A boolean indicating if we should only search against those modules participating in the unified search.
      * @param bool $favorites           - A boolean indicating if we should only search against records marked as favorites.
-     * @return Array return_search_result 	- Array('Accounts' => array(array('name' => 'first_name', 'value' => 'John', 'name' => 'last_name', 'value' => 'Do')))
+     * @return Array return_search_result     - Array('Accounts' => array(array('name' => 'first_name', 'value' => 'John', 'name' => 'last_name', 'value' => 'Do')))
      * @exception 'SoapFault' -- The SOAP error, if any
      */
     public function search_by_module($session, $search_string, $modules, $offset, $max_results, $assigned_user_id = '', $select_fields = array(), $unified_search_only = true, $favorites = false)
@@ -468,7 +469,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
 
 
         foreach ($unified_search_modules as $module=>$data) {
-            if (in_array($module, $modules)) {
+            if (in_array($module, $modules, true)) {
                 $modules_to_search[$module] = $beanList[$module];
             } // if
         } // foreach
@@ -488,8 +489,8 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                 require_once $beanFiles[$beanName] ;
                 $seed = new $beanName();
                 require_once 'include/SearchForm/SearchForm2.php' ;
-                if ($beanName == "User"
-                    || $beanName == "ProjectTask"
+                if ($beanName === 'User'
+                    || $beanName === 'ProjectTask'
                     ) {
                     if (!self::$helperObject->check_modules_access($current_user, $seed->module_dir, 'read')) {
                         continue;
@@ -499,8 +500,8 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                     } // if
                 }
 
-                if ($beanName != "User"
-                    && $beanName != "ProjectTask"
+                if ($beanName !== 'User'
+                    && $beanName !== 'ProjectTask'
                     ) {
                     require_once 'include/SearchForm/SearchForm2.php' ;
                     $searchForm = new SearchForm($seed, $name) ;
@@ -531,7 +532,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                                 $filterFields[] = strtolower($colName);
                             }
                         }
-                        if (!in_array('id', $filterFields)) {
+                        if (!in_array('id', $filterFields, true)) {
                             $filterFields[] = 'id';
                         }
                     }
@@ -539,7 +540,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                     //Pull in any db fields used for the unified search query so the correct joins will be added
                     $selectOnlyQueryFields = array();
                     foreach ($unifiedSearchFields[$name] as $field => $def) {
-                        if (isset($def['db_field']) && !in_array($field, $filterFields)) {
+                        if (isset($def['db_field']) && !in_array($field, $filterFields, true)) {
                             $filterFields[] = $field;
                             $selectOnlyQueryFields[] = $field;
                         }
@@ -551,7 +552,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                         $where = "($where) AND $ownerWhere";
                     }
 
-                    if ($beanName == "Employee") {
+                    if ($beanName === 'Employee') {
                         $where = "($where) AND users.deleted = 0 AND users.is_group = 0 AND users.employee_status = 'Active'";
                     }
 
@@ -575,14 +576,15 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                     }
                     $main_query = $ret_array['select'] . $params['custom_select'] . $ret_array['from'] . $params['custom_from'] . $ret_array['where'] . $params['custom_where'] . $ret_array['order_by'] . $params['custom_order_by'];
                 } else {
-                    if ($beanName == "User") {
+                    if ($beanName === 'User') {
                         $filterFields = array('id', 'user_name', 'first_name', 'last_name', 'email_address');
-                        $main_query = "select users.id, ea.email_address, users.user_name, first_name, last_name from users ";
+                        $main_query =
+                            'select users.id, ea.email_address, users.user_name, first_name, last_name from users ';
                         $main_query = $main_query . " LEFT JOIN email_addr_bean_rel eabl ON eabl.bean_module = '{$seed->module_dir}'
     LEFT JOIN email_addresses ea ON (ea.id = eabl.email_address_id) ";
                         $main_query = $main_query . "where ((users.first_name like '{$search_string}') or (users.last_name like '{$search_string}') or (users.user_name like '{$search_string}') or (ea.email_address like '{$search_string}')) and users.deleted = 0 and users.is_group = 0 and users.employee_status = 'Active'";
                     } // if
-                    if ($beanName == "ProjectTask") {
+                    if ($beanName === 'ProjectTask') {
                         $filterFields = array('id', 'name', 'project_id', 'project_name');
                         $main_query = "select {$seed->table_name}.project_task_id id,{$seed->table_name}.project_id, {$seed->table_name}.name, project.name project_name from {$seed->table_name} ";
                         $main_query .= "LEFT JOIN project ON $seed->table_name.project_id = project.id ";
@@ -606,7 +608,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
                 while ($row = $seed->db->fetchByAssoc($result)) {
                     $nameValueArray = array();
                     foreach ($filterFields as $field) {
-                        if (in_array($field, $selectOnlyQueryFields)) {
+                        if (in_array($field, $selectOnlyQueryFields, true)) {
                             continue;
                         }
                         $nameValue = array();
@@ -626,17 +628,18 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
     } // fn
 
 
-
     /**
      * Get OAuth reqtest token
+     *
+     * @throws Exception
      */
     public function oauth_request_token()
     {
         $GLOBALS['log']->info('Begin: SugarWebServiceImpl->oauth_request_token');
-        require_once "include/SugarOAuthServer.php";
+        require_once 'include/SugarOAuthServer.php';
         try {
             $oauth = new SugarOAuthServer(rtrim($GLOBALS['sugar_config']['site_url'], '/').'/service/v4/rest.php');
-            $result = $oauth->requestToken()."&oauth_callback_confirmed=true&authorize_url=".$oauth->authURL();
+            $result = $oauth->requestToken(). '&oauth_callback_confirmed=true&authorize_url=' .$oauth->authURL();
         } catch (OAuthException $e) {
             $GLOBALS['log']->debug("OAUTH Exception: $e");
             $errorObject = new SoapError();
@@ -654,7 +657,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
     public function oauth_access_token()
     {
         $GLOBALS['log']->info('Begin: SugarWebServiceImpl->oauth_access_token');
-        require_once "include/SugarOAuthServer.php";
+        require_once 'include/SugarOAuthServer.php';
         try {
             $oauth = new SugarOAuthServer();
             $result = $oauth->accessToken();
@@ -708,7 +711,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
             $jobid = null;
         }
         $GLOBALS['log']->info('End: SugarWebServiceImpl->job_queue_next');
-        return array("results" => $jobid);
+        return array( 'results' => $jobid);
     }
 
     /**
@@ -729,7 +732,7 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
         $queue->cleanup();
         $queue->runSchedulers();
         $GLOBALS['log']->info('End: SugarWebServiceImpl->job_queue_cycle');
-        return array("results" => "ok");
+        return array( 'results' => 'ok' );
     }
 
     /**
@@ -751,9 +754,9 @@ class SugarWebServiceImplv4 extends SugarWebServiceImplv3_1
         $result = SchedulersJob::runJobId($jobid, $clientid);
         $GLOBALS['log']->info('End: SugarWebServiceImpl->job_queue_run');
         if ($result === true) {
-            return array("results" => true);
+            return array( 'results' => true);
         }
-        return array("results" => false, "message" => $result);
+        return array( 'results' => false, 'message' => $result);
     }
 }
 

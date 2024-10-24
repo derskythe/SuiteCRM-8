@@ -41,6 +41,7 @@
 namespace SuiteCRM\API\JsonApi\v1\Filters\Interpreters;
 
 use Behat\Gherkin\Filter\FilterInterface;
+use SuiteCRM\Exception\InvalidArgumentException;
 use SuiteCRM\API\JsonApi\v1\Filters\Interfaces\OperatorInterface;
 use SuiteCRM\API\JsonApi\v1\Filters\Interpreters\ByIdFilters\ByIdFilter;
 use SuiteCRM\API\JsonApi\v1\Filters\Operators\FieldOperator;
@@ -208,10 +209,16 @@ class FilterInterpreter
 
     /**
      * Convert the filter structure for a parser into an SQL where clause
+     *
      * @param array $filterStructure [table => [field => [operator, operand, ... ], ...]
-     * @param array $args Route arguments
+     * @param array $args            Route arguments
+     *
      * @return string
-     * @throws BadRequestException
+     * @throws BadRequestException*@throws Exception
+     * @throws Exception
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws Exception
      */
     public function getFilterByAttributes(array $filterStructure, array $args)
     {

@@ -56,7 +56,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  *     'buttons' => list of button htmls, such as ( html_element1, html_element2, ..., html_element_n),
  *     'id' => id property for ul element
  *     'class' => class property for ul element
- * 	   'flat' => controls the display of the menu as a dropdown or flat buttons (if the value is assigned, it will be not affected by enable_action_menu setting.)
+ *        'flat' => controls the display of the menu as a dropdown or flat buttons (if the value is assigned, it will be not affected by enable_action_menu setting.)
  * @param $smarty
  *
  * @return string - compatible sugarActionMenu structure, such as
@@ -167,7 +167,8 @@ function smarty_function_sugar_action_menu($params, &$smarty)
         $action_menu = array(
             'id' => !empty($params['id']) ? (is_array($params['id']) ? $params['id'][0] : $params['id']) : '',
             'htmlOptions' => array(
-                'class' => !empty($params['class']) && strpos($params['class'], 'clickMenu') !== false  ? $params['class'] : 'clickMenu '. (!empty($params['class']) ? $params['class'] : ''),
+                'class' => !empty($params['class']) && str_contains($params['class'], 'clickMenu')
+                    ? $params['class'] : 'clickMenu '. (!empty($params['class']) ? $params['class'] : ''),
             ),
             'itemOptions' => array(
                 'class' => (count($menus['items']) == 0) ? 'single' : 'sugar_action_button'

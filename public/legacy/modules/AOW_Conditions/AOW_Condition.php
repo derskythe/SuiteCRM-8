@@ -41,30 +41,30 @@
 #[\AllowDynamicProperties]
 class AOW_Condition extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOW_Conditions';
-    public $object_name = 'AOW_Condition';
-    public $table_name = 'aow_conditions';
-    public $tracker_visibility = false;
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOW_Conditions';
+    public string $object_name = 'AOW_Condition';
+    public string $table_name = 'aow_conditions';
+    public bool $tracker_visibility = false;
+    public bool $importable = false;
     public $disable_row_level_security = true;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
     public $aow_workflow_id;
     public $condition_order;
     public $module_path;
-    public $field;
+    public string $field;
     public $operator;
     public $value;
     public $value_type;
@@ -78,11 +78,14 @@ class AOW_Condition extends Basic
 
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     public function save_lines($post_data, $parent, $key = '')
     {
         require_once('modules/AOW_WorkFlow/aow_utils.php');
@@ -110,7 +113,7 @@ class AOW_Condition extends Basic
                     $field_name = $field_def['name'];
                     if (isset($post_data[$key . $field_name][$i])) {
                         if (is_array($post_data[$key . $field_name][$i])) {
-                            if ($field_name == 'module_path') {
+                            if ($field_name === 'module_path') {
                                 $post_data[$key . $field_name][$i] = base64_encode(serialize($post_data[$key . $field_name][$i]));
                             } else {
                                 switch ($condition->value_type) {

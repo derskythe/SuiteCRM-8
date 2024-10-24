@@ -49,45 +49,45 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * Contributor(s): ______________________________________..
  ********************************************************************************/
 require_once('include/MVC/View/SugarView.php');
- 
+
 #[\AllowDynamicProperties]
 class HomeViewAdditionaldetailsretrieve extends SugarView
 {
-    public function display()
+    public function display() : void
     {
         global $beanList, $beanFiles, $current_user, $app_strings, $app_list_strings;
-        
+
         $moduleDir = empty($_REQUEST['bean']) ? '' : $_REQUEST['bean'];
         $beanName = empty($beanList[$moduleDir]) ? '' : $beanList[$moduleDir];
         $id = empty($_REQUEST['id']) ? '' : $_REQUEST['id'];
-        
+
         // Bug 40216 - Add support for a custom additionalDetails.php file
         $additionalDetailsFile = $this->getAdditionalDetailsMetadataFile($moduleDir);
-        
+
         if (empty($beanFiles[$beanName]) ||
             empty($id) || !is_file($additionalDetailsFile)) {
             echo 'bad data';
             die();
         }
-        
+
         require_once($beanFiles[$beanName]);
         require_once($additionalDetailsFile);
         $adFunction = 'additionalDetails' . $beanName;
-        
+
         if (function_exists($adFunction)) { // does the additional details function exist
             $json = getJSONobj();
             $bean = new $beanName();
             $bean->retrieve($id);
-            
+
             //bug38901 - shows dropdown list label instead of database value
             foreach ($bean->field_name_map as $field => $value) {
-                if ($value["type"] == "enum" && isset($app_list_strings[$value['options']][$bean->$field])) {
+                if ($value['type'] === 'enum' && isset($app_list_strings[$value['options']][$bean->$field])) {
                     $bean->$field = $app_list_strings[$value['options']][$bean->$field];
                 }
             }
-            
+
             $arr = array_change_key_case($bean->toArray(), CASE_UPPER);
-        
+
             $results = $adFunction($arr, $bean, $_REQUEST);
 
             $retArray = array();
@@ -109,7 +109,7 @@ class HomeViewAdditionaldetailsretrieve extends SugarView
                 }
                 $retArray['caption'] .= "<a title='".$GLOBALS['app_strings']['LBL_ADDITIONAL_DETAILS_CLOSE_TITLE']."' href='javascript: SUGAR.util.closeStaticAdditionalDetails();'> <span class=\"suitepicon suitepicon-action-clear\"></span></a>";
             }
-            $retArray['caption'] .= "";
+            $retArray['caption'] .= '';
             $retArray['width'] = (empty($results['width']) ? '300' : $results['width']);
 
             if (isset($results['version'])) {
@@ -119,7 +119,7 @@ class HomeViewAdditionaldetailsretrieve extends SugarView
             }
         }
     }
-    
+
     protected function getAdditionalDetailsMetadataFile(
         $moduleName
         ) {
@@ -127,7 +127,7 @@ class HomeViewAdditionaldetailsretrieve extends SugarView
         if (file_exists('custom/'.$additionalDetailsFile)) {
             $additionalDetailsFile = 'custom/'.$additionalDetailsFile;
         }
-        
+
         return $additionalDetailsFile;
     }
 }

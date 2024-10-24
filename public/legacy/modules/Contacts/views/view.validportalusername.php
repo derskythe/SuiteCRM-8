@@ -52,7 +52,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  *
  * @author Collin Lee
  * */
- 
+
 require_once('include/MVC/View/SugarView.php');
 
 #[\AllowDynamicProperties]
@@ -61,7 +61,7 @@ class ContactsViewValidPortalUsername extends SugarView
     /**
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         $this->display();
     }
@@ -69,7 +69,7 @@ class ContactsViewValidPortalUsername extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if (!empty($_REQUEST['portal_name'])) {
             $portalUsername = $this->bean->db->quote($_REQUEST['portal_name']);

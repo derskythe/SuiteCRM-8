@@ -46,7 +46,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 
 global $current_user;
 $dashletData['MyContactsDashlet']['searchFields'] = array('date_entered'     => array('default' => ''),
-                                                          'title'			 => array('default' => ''),
+                                                          'title'             => array('default' => ''),
                                                           'primary_address_country'  => array('default' => ''),
                                                           'assigned_user_id' => array('type'    => 'assigned_user_name',
                                                                                       'default' => $current_user->name,

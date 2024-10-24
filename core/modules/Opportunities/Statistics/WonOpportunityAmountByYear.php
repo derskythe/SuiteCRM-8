@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Opportunities\Statistics;
 
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
@@ -42,7 +41,7 @@ class WonOpportunityAmountByYear extends SubpanelDataQueryHandler implements Sta
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -50,9 +49,9 @@ class WonOpportunityAmountByYear extends SubpanelDataQueryHandler implements Sta
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         $subpanel = 'opportunities';
 
         if (empty($module) || empty($id)) {

@@ -55,10 +55,10 @@ class Popup_Picker
         $where = '';
         if (isset($_REQUEST['query'])) {
             $where_clauses = array();
-            append_where_clause($where_clauses, "first_name", "contacts.first_name");
-            append_where_clause($where_clauses, "last_name", "contacts.last_name");
-            append_where_clause($where_clauses, "account_name", "accounts.name");
-            append_where_clause($where_clauses, "account_id", "accounts.id");
+            append_where_clause($where_clauses, 'first_name', 'contacts.first_name');
+            append_where_clause($where_clauses, 'last_name', 'contacts.last_name');
+            append_where_clause($where_clauses, 'account_name', 'accounts.name');
+            append_where_clause($where_clauses, 'account_id', 'accounts.id');
             $where = generate_where_statement($where_clauses);
         }
         return $where;
@@ -82,7 +82,7 @@ class Popup_Picker
 
 
         $formBase = new ContactFormBase();
-        if (isset($_REQUEST['doAction']) && $_REQUEST['doAction'] == 'save') {
+        if (isset($_REQUEST['doAction']) && $_REQUEST['doAction'] === 'save') {
             $formBase->handleSave('', false, true);
         }
 
@@ -102,11 +102,11 @@ class Popup_Picker
             . '</td></tr></table>'
             . '<input type="hidden" name="action" value="Popup" />';
         $formSave = <<<EOQ
-		<input type="submit" name="button" class="button" title="$lbl_save_button_title" value="  $lbl_save_button_label  " />
-		<input type="button" name="button" class="button" title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" accesskey="{$app_strings['LBL_CANCEL_BUTTON_KEY']}" value="{$app_strings['LBL_CANCEL_BUTTON_LABEL']}" onclick="toggleDisplay('addform');" />
+        <input type="submit" name="button" class="button" title="$lbl_save_button_title" value="  $lbl_save_button_label  " />
+        <input type="button" name="button" class="button" title="{$app_strings['LBL_CANCEL_BUTTON_TITLE']}" accesskey="{$app_strings['LBL_CANCEL_BUTTON_KEY']}" value="{$app_strings['LBL_CANCEL_BUTTON_LABEL']}" onclick="toggleDisplay('addform');" />
 EOQ;
         $createContact = <<<EOQ
-		<input type="button" id="showAdd" name="showAdd" class="button" value="{$mod_strings['LNK_NEW_CONTACT']}" onclick="toggleDisplay('addform');" />
+        <input type="button" id="showAdd" name="showAdd" class="button" value="{$mod_strings['LNK_NEW_CONTACT']}" onclick="toggleDisplay('addform');" />
 EOQ;
         $addformheader = get_form_header($mod_strings['LNK_NEW_CONTACT'], $formSave, false);
         $button  = "<form action='index.php' method='post' name='form' id='form'>\n";
@@ -153,19 +153,21 @@ EOQ;
         $button .= "<input type='hidden' name='html' value='change_address'>";
         $button .= "<input type='hidden' name='account_name' value='$account_name'>";
         // Added ID attribute to each element to use getElementById. To give ID attribute to an element is a good practice.
-        $button .= "<span style='display: none'><textarea name='primary_address_street' id='primary_address_street'>" . str_replace("&lt;br&gt;", "\n", (string) $_REQUEST["primary_address_street"]) . "</textarea></span>";
-        $button .= "<input type='hidden' name='primary_address_city' id='primary_address_city' value='". $_REQUEST["primary_address_city"] ."'>";
-        $button .= "<input type='hidden' name='primary_address_state' id='primary_address_state' value='". $_REQUEST["primary_address_state"] ."'>";
-        $button .= "<input type='hidden' name='primary_address_postalcode' id='primary_address_postalcode' value='". $_REQUEST["primary_address_postalcode"] ."'>";
-        $button .= "<input type='hidden' name='primary_address_country' id='primary_address_country' value='". $_REQUEST["primary_address_country"] ."'>";
+        $button .= "<span style='display: none'><textarea name='primary_address_street' id='primary_address_street'>" . str_replace(
+                '&lt;br&gt;', "\n", (string) $_REQUEST['primary_address_street']) . '</textarea></span>';
+        $button .= "<input type='hidden' name='primary_address_city' id='primary_address_city' value='". $_REQUEST['primary_address_city'] ."'>";
+        $button .= "<input type='hidden' name='primary_address_state' id='primary_address_state' value='". $_REQUEST['primary_address_state'] ."'>";
+        $button .= "<input type='hidden' name='primary_address_postalcode' id='primary_address_postalcode' value='". $_REQUEST['primary_address_postalcode'] ."'>";
+        $button .= "<input type='hidden' name='primary_address_country' id='primary_address_country' value='". $_REQUEST['primary_address_country'] ."'>";
         // Adding an onclick event to remove address for alternate address, as user has selected copy address to primary address
         $button .= "<input title='".$mod_strings['LBL_COPY_ADDRESS_CHECKED_PRIMARY']."'  class='button' LANGUAGE=javascript type='submit' name='button' value='  ".$mod_strings['LBL_COPY_ADDRESS_CHECKED_PRIMARY']."  ' onclick='clearAddress(\"alt\");'>\n";
         // Adding a new block of code copy the address to alternate address for contacts
-        $button .= "<span style='display: none'><textarea name='alt_address_street' id='alt_address_street'>" . str_replace("&lt;br&gt;", "\n", (string) $_REQUEST["primary_address_street"]) . "</textarea></span>";
-        $button .= "<input type='hidden' name='alt_address_city' id='alt_address_city' value='". $_REQUEST["primary_address_city"] ."'>";
-        $button .= "<input type='hidden' name='alt_address_state' id='alt_address_state' value='". $_REQUEST["primary_address_state"] ."'>";
-        $button .= "<input type='hidden' name='alt_address_postalcode' id='alt_address_postalcode' value='". $_REQUEST["primary_address_postalcode"] ."'>";
-        $button .= "<input type='hidden' name='alt_address_country' id='alt_address_country' value='". $_REQUEST["primary_address_country"] ."'>";
+        $button .= "<span style='display: none'><textarea name='alt_address_street' id='alt_address_street'>" . str_replace(
+                '&lt;br&gt;', "\n", (string) $_REQUEST['primary_address_street']) . '</textarea></span>';
+        $button .= "<input type='hidden' name='alt_address_city' id='alt_address_city' value='". $_REQUEST['primary_address_city'] ."'>";
+        $button .= "<input type='hidden' name='alt_address_state' id='alt_address_state' value='". $_REQUEST['primary_address_state'] ."'>";
+        $button .= "<input type='hidden' name='alt_address_postalcode' id='alt_address_postalcode' value='". $_REQUEST['primary_address_postalcode'] ."'>";
+        $button .= "<input type='hidden' name='alt_address_country' id='alt_address_country' value='". $_REQUEST['primary_address_country'] ."'>";
         // Adding an onclick event to remove address for primary address, as user has selected copy address to alternate address
         // NOTE => You need to change the label as as per SugarCRM way..
         $button .= "<input title='".$mod_strings['LBL_COPY_ADDRESS_CHECKED_ALT']."'  class='button' LANGUAGE=javascript type='submit' name='button' value='  ".$mod_strings['LBL_COPY_ADDRESS_CHECKED_ALT']."  ' onclick='clearAddress(\"primary\");'>\n";
@@ -256,7 +258,7 @@ EOJS;
         $button  = "<form action='index.php' method='post' name='form' id='form'>\n";
         //START:FOR MULTI-SELECT
         $multi_select=false;
-        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) == 'MULTISELECT') {
+        if (!empty($_REQUEST['mode']) && strtoupper($_REQUEST['mode']) === 'MULTISELECT') {
             $multi_select=true;
             $button .= "<input type='button' name='button' class='button' onclick=\"send_back_selected('Contacts',document.MassUpdate,'mass[]','" .$app_strings['ERR_NOTHING_SELECTED']."');\" title='"
                 .$app_strings['LBL_SELECT_BUTTON_TITLE']."' accesskey='"
@@ -308,9 +310,9 @@ EOJS;
         $ListView->setXTemplate($form);
         $ListView->multi_select_popup=$multi_select;
         if ($multi_select) {
-            $ListView->xTemplate->assign("TAG_TYPE", "SPAN");
+            $ListView->xTemplate->assign('TAG_TYPE', 'SPAN');
         } else {
-            $ListView->xTemplate->assign("TAG_TYPE", "A");
+            $ListView->xTemplate->assign('TAG_TYPE', 'A');
         }
         $ListView->setHeaderTitle($mod_strings['LBL_LIST_FORM_TITLE']);
         $ListView->setQuery($where, '', 'contacts.last_name, contacts.first_name', 'CONTACT');
@@ -336,7 +338,7 @@ EOJS;
                     if (isset($row[$seed_bean->table_name .'.'.$field])) {
                         $seed_bean->$field = $row[$seed_bean->table_name .'.'.$field];
                     } else {
-                        $seed_bean->$field = "";
+                        $seed_bean->$field = '';
                     }
                 }
             }

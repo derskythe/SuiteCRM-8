@@ -50,7 +50,7 @@ require_once('include/Dashlets/Dashlet.php');
 class TopCampaignsDashlet extends Dashlet
 {
     protected $top_campaigns = array();
-    
+
     /**
      * Constructor
      *
@@ -68,19 +68,19 @@ class TopCampaignsDashlet extends Dashlet
         } else {
             $this->title = $def['title'];
         }
-        
+
         if (isset($def['autoRefresh'])) {
             $this->autoRefresh = $def['autoRefresh'];
         }
-        
+
         $this->seedBean = BeanFactory::newBean('Opportunities');
 
-        $qry = "SELECT C.name AS campaign_name, SUM(O.amount) AS revenue, C.id as campaign_id " .
-               "FROM campaigns C, opportunities O " .
-               "WHERE C.id = O.campaign_id " .
+        $qry = 'SELECT C.name AS campaign_name, SUM(O.amount) AS revenue, C.id as campaign_id ' .
+            'FROM campaigns C, opportunities O ' .
+            'WHERE C.id = O.campaign_id ' .
                "AND O.sales_stage = 'Closed Won' " .
-               "AND O.deleted = 0 " .
-               "GROUP BY C.name,C.id ORDER BY revenue desc";
+            'AND O.deleted = 0 ' .
+            'GROUP BY C.name,C.id ORDER BY revenue desc';
 
         $result = $this->seedBean->db->limitQuery($qry, 0, 10);
         $row = $this->seedBean->db->fetchByAssoc($result);
@@ -90,21 +90,23 @@ class TopCampaignsDashlet extends Dashlet
             $row = $this->seedBean->db->fetchByAssoc($result);
         }
     }
-    
+
     /**
+     * @throws SmartyException
      * @see Dashlet::display()
      */
-    public function display()
+    public function display() : string
     {
         $ss = new Sugar_Smarty();
         $ss->assign('lbl_campaign_name', translate('LBL_TOP_CAMPAIGNS_NAME', 'Campaigns'));
         $ss->assign('lbl_revenue', translate('LBL_TOP_CAMPAIGNS_REVENUE', 'Campaigns'));
         $ss->assign('top_campaigns', $this->top_campaigns);
-        
+
         return parent::display() . $ss->fetch('modules/Campaigns/Dashlets/TopCampaignsDashlet/TopCampaignsDashlet.tpl');
     }
-    
+
     /**
+     * @throws SmartyException
      * @see Dashlet::displayOptions()
      */
     public function displayOptions()
@@ -120,7 +122,7 @@ class TopCampaignsDashlet extends Dashlet
             $ss->assign('autoRefreshOptions', $this->getAutoRefreshOptions());
             $ss->assign('autoRefreshSelect', $this->autoRefresh);
         }
-        
+
         return $ss->fetch('modules/Opportunities/Dashlets/MyClosedOpportunitiesDashlet/MyClosedOpportunitiesDashletConfigure.tpl');
     }
 
@@ -130,12 +132,12 @@ class TopCampaignsDashlet extends Dashlet
     public function saveOptions($req)
     {
         $options = array();
-        
+
         if (isset($req['title'])) {
             $options['title'] = $req['title'];
         }
         $options['autoRefresh'] = empty($req['autoRefresh']) ? '0' : $req['autoRefresh'];
-        
+
         return $options;
     }
 }

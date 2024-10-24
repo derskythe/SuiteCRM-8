@@ -77,7 +77,7 @@ class ExternalSourceEAPMAdapter extends ImportDataSource
     {
         global $current_user, $locale;
         $this->_eapmName = $eapmName;
-      
+
         $this->_localeSettings['importlocale_num_grp_sep'] = $current_user->getPreference('num_grp_sep');
         $this->_localeSettings['importlocale_dec_sep'] = $current_user->getPreference('dec_sep');
         $this->_localeSettings['importlocale_default_currency_significant_digits'] = $locale->getPrecedentPreference('default_currency_significant_digits', $current_user);
@@ -117,7 +117,7 @@ class ExternalSourceEAPMAdapter extends ImportDataSource
     {
         return '';
     }
-    
+
     public function getTotalRecordCount()
     {
         return $this->_totalRecordCount;
@@ -129,29 +129,29 @@ class ExternalSourceEAPMAdapter extends ImportDataSource
     }
 
     //Begin Implementation for SPL's Iterator interface
-    public function current()
+    public function current() : mixed
     {
         $this->_currentRow =  current($this->_recordSet);
         return $this->_currentRow;
     }
 
-    public function key()
+    public function key() : mixed
     {
         return key($this->_recordSet);
     }
-    
-    public function rewind()
+
+    public function rewind() : void
     {
         reset($this->_recordSet);
     }
 
-    public function next()
+    public function next() : void
     {
         $this->_rowsCount++;
         next($this->_recordSet);
     }
 
-    public function valid()
+    public function valid() : bool
     {
         return (current($this->_recordSet) !== false);
     }

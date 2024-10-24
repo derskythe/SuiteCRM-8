@@ -89,10 +89,10 @@ if ($result == null) {
 
 $focus->set_accept_status($current_entity, $_REQUEST['accept_status']);
 
-print $app_strings['LBL_STATUS_UPDATED']."<BR><BR>";
-print $app_strings['LBL_STATUS']. " ". $app_list_strings['dom_meeting_accept_status'][$_REQUEST['accept_status']];
-print "<BR><BR>";
+print $app_strings['LBL_STATUS_UPDATED']. '<BR><BR>';
+print $app_strings['LBL_STATUS']. ' ' . $app_list_strings['dom_meeting_accept_status'][$_REQUEST['accept_status']];
+print '<BR><BR>';
 
-print "<a href='?module=$currentModule&action=DetailView&record=$focus->id'>".$app_strings['LBL_MEETING_GO_BACK']."</a><br>";
+print "<a href='?module=$currentModule&action=DetailView&record=$focus->id'>".$app_strings['LBL_MEETING_GO_BACK']. '</a><br>';
 sugar_cleanup();
 exit;

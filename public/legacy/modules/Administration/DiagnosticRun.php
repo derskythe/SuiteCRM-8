@@ -49,10 +49,10 @@ global $current_user;
 
 
 if (!is_admin($current_user)) {
-    sugar_die("Unauthorized access to administration.");
+    sugar_die('Unauthorized access to administration.');
 }
 if (isset($GLOBALS['sugar_config']['hide_admin_diagnostics']) && $GLOBALS['sugar_config']['hide_admin_diagnostics']) {
-    sugar_die("Unauthorized access to diagnostic tool.");
+    sugar_die('Unauthorized access to diagnostic tool.');
 }
 
 
@@ -93,7 +93,7 @@ $sod_guid = create_guid();
 
 //GET CURRENT DATETIME STAMP TO USE IN FILENAME
 global $curdatetime;
-$curdatetime = date("Ymd-His");
+$curdatetime = date('Ymd-His');
 
 
 global $progress_bar_percent;
@@ -104,26 +104,26 @@ global $totalitems;
 $totalitems = 0;
 global $currentitems;
 $currentitems = 0;
-define("CONFIG_WEIGHT", 1);
-define("CUSTOM_DIR_WEIGHT", 1);
-define("PHPINFO_WEIGHT", 1);
-define("SQL_DUMPS_WEIGHT", 2);
-define("SQL_SCHEMA_WEIGHT", 3);
-define("SQL_INFO_WEIGHT", 1);
-define("MD5_WEIGHT", 5);
-define("BEANLISTBEANFILES_WEIGHT", 1);
-define("SUGARLOG_WEIGHT", 2);
-define("VARDEFS_WEIGHT", 2);
+define('CONFIG_WEIGHT', 1);
+define('CUSTOM_DIR_WEIGHT', 1);
+define('PHPINFO_WEIGHT', 1);
+define('SQL_DUMPS_WEIGHT', 2);
+define('SQL_SCHEMA_WEIGHT', 3);
+define('SQL_INFO_WEIGHT', 1);
+define('MD5_WEIGHT', 5);
+define('BEANLISTBEANFILES_WEIGHT', 1);
+define('SUGARLOG_WEIGHT', 2);
+define('VARDEFS_WEIGHT', 2);
 
 //THIS MUST CHANGE IF THE NUMBER OF DIRECTORIES TRAVERSED TO GET TO
 //   THE DIAGNOSTIC CACHE DIR CHANGES
-define("RETURN_FROM_DIAG_DIR", "../../../..");
+define('RETURN_FROM_DIAG_DIR', '../../../..');
 
 global $getDumpsFrom;
 $getDumpsFrom = array();
 
 global $cacheDir;
-$cacheDir = "";
+$cacheDir = '';
 
 function sodUpdateProgressBar($itemweight)
 {
@@ -134,10 +134,10 @@ function sodUpdateProgressBar($itemweight)
 
     $currentitems++;
     if ($currentitems == $totalitems) {
-        update_progress_bar("diagnostic", 100, 100);
+        update_progress_bar('diagnostic', 100, 100);
     } else {
         $progress_bar_percent += ($itemweight / $GLOBALS['totalweight'] * 100);
-        update_progress_bar("diagnostic", $progress_bar_percent, 100);
+        update_progress_bar('diagnostic', $progress_bar_percent, 100);
     }
 }
 
@@ -161,18 +161,18 @@ function array_as_table($header, $values)
     foreach ($keys as $key) {
         $contents .= "<th class=\"tabDetailViewDL\"><b>$key</b></th>";
     }
-    $contents .= "</tr>";
+    $contents .= '</tr>';
     foreach ($values as $field) {
-        $contents .= "<tr>";
+        $contents .= '<tr>';
         foreach ($field as $item) {
             if (is_array($item)) {
-                $item = implode(",", $item);
+                $item = implode(',', $item);
             }
             $contents .= "<td class=\"tabDetailViewDF\">$item</td>";
         }
-        $contents .= "</tr>";
+        $contents .= '</tr>';
     }
-    $contents .= "</table>";
+    $contents .= '</table>';
     return $contents;
 }
 
@@ -185,15 +185,15 @@ function getFullTableDump($tableName)
 
     $cols = $db->get_columns($tableName);
     $indexes = $db->get_indices($tableName);
-    $returnString = "";
+    $returnString = '';
     //setting up table header for each file
     $returnString .= array_as_table("{$db->dbName} $tableName Definitions:", $cols);
     $returnString .= array_as_table("{$db->dbName} $tableName Keys:", $indexes);
-    $returnString .= "<BR><BR>";
+    $returnString .= '<BR><BR>';
 
     $def_count = is_countable($cols) ? count($cols) : 0;
 
-    $td_result = $db->query("select * from ".$tableName);
+    $td_result = $db->query('select * from ' .$tableName);
     if (!$td_result) {
         return $db->lastError();
     }
@@ -202,30 +202,30 @@ function getFullTableDump($tableName)
     foreach ($fields as $field) {
         $returnString .= "<th class=\"tabDetailViewDL\">$field</th>";
     }
-    $returnString .= "</tr>";
+    $returnString .= '</tr>';
     $row_counter = 1;
     while ($row = $db->fetchByAssoc($td_result)) {
         $row = array_values($row);
-        $returnString .= "<tr>";
-        $returnString .= "<td class=\"tabDetailViewDL\">".$row_counter."</td>";
+        $returnString .= '<tr>';
+        $returnString .= "<td class=\"tabDetailViewDL\">".$row_counter. '</td>';
         for ($counter = 0; $counter < $def_count; $counter++) {
             $replace_val = false;
             //perform this check when counter is set to two, which means it is on the 'value' column
             if ($counter == 2) {
                 //if the previous "name" column value was set to smtppass, set replace_val to true
-                if (strcmp($row[$counter - 1], "smtppass") == 0) {
+                if (strcmp($row[$counter - 1], 'smtppass') == 0) {
                     $replace_val = true;
                 }
 
                 //if the previous "name" column value was set to smtppass,
                 //and the "category" value set to ldap, set replace_val to true
-                if (strcmp($row[$counter - 2], "ldap") == 0 && strcmp($row[$counter - 1], "admin_password") == 0) {
+                if (strcmp($row[$counter - 2], 'ldap') == 0 && strcmp($row[$counter - 1], 'admin_password') == 0) {
                     $replace_val = true;
                 }
 
                 //if the previous "name" column value was set to password,
                 //and the "category" value set to proxy, set replace_val to true
-                if (strcmp($row[$counter - 2], "proxy") == 0 && strcmp($row[$counter - 1], "password") == 0) {
+                if (strcmp($row[$counter - 2], 'proxy') == 0 && strcmp($row[$counter - 1], 'password') == 0) {
                     $replace_val = true;
                 }
             }
@@ -233,13 +233,13 @@ function getFullTableDump($tableName)
             if ($replace_val) {
                 $returnString .= "<td class=\"tabDetailViewDF\">********</td>";
             } else {
-                $returnString .= "<td class=\"tabDetailViewDF\">".($row[$counter] == "" ? "&nbsp;" : $row[$counter])."</td>";
+                $returnString .= "<td class=\"tabDetailViewDF\">".($row[$counter] == '' ? '&nbsp;' : $row[$counter]). '</td>';
             }
         }
         $row_counter++;
-        $returnString .= "</tr>";
+        $returnString .= '</tr>';
     }
-    $returnString .= "</table>";
+    $returnString .= '</table>';
 
     return $returnString;
 }
@@ -247,7 +247,7 @@ function getFullTableDump($tableName)
 // Deletes the directory recursively
 function deleteDir($dir)
 {
-    if (substr((string) $dir, strlen((string) $dir)-1, 1) != '/') {
+    if (!str_ends_with((string) $dir, '/')) {
         $dir .= '/';
     }
 
@@ -288,16 +288,16 @@ function prepareDiag()
     global $mod_strings;
 
     echo getClassicModuleTitle(
-        "Administration",
+        'Administration',
         array(
             "<a href='index.php?module=Administration&action=index'>{$mod_strings['LBL_MODULE_NAME']}</a>",
            translate('LBL_DIAGNOSTIC_TITLE')
            ),
         false
         );
-    echo "<BR>";
+    echo '<BR>';
     echo $mod_strings['LBL_DIAGNOSTIC_EXECUTING'];
-    echo "<BR>";
+    echo '<BR>';
 
 
     //determine if files.md5 exists or not
@@ -316,11 +316,11 @@ function prepareDiag()
 
 
     //Creates the diagnostic directory in the cache directory
-    $cacheDir = create_cache_directory("diagnostic/");
-    $cacheDir = create_cache_directory("diagnostic/".$sod_guid);
-    $cacheDir = create_cache_directory("diagnostic/".$sod_guid."/diagnostic".$curdatetime."/");
+    $cacheDir = create_cache_directory('diagnostic/');
+    $cacheDir = create_cache_directory('diagnostic/' .$sod_guid);
+    $cacheDir = create_cache_directory('diagnostic/' .$sod_guid. '/diagnostic' .$curdatetime. '/');
 
-    display_progress_bar("diagnostic", $progress_bar_percent, 100);
+    display_progress_bar('diagnostic', $progress_bar_percent, 100);
 
     ob_flush();
 }
@@ -352,9 +352,9 @@ function executephpinfo()
     $phpinfo = ob_get_contents();
     ob_clean();
 
-    $handle = sugar_fopen($cacheDir."phpinfo.html", "w");
+    $handle = sugar_fopen($cacheDir. 'phpinfo.html', 'w');
     if (fwrite($handle, $phpinfo) === false) {
-        echo "Cannot write to file ".$cacheDir."phpinfo.html<br>";
+        echo 'Cannot write to file ' .$cacheDir. 'phpinfo.html<br>';
     }
     fclose($handle);
     //END GETPHPINFO
@@ -373,7 +373,7 @@ function executeconfigphp()
     $tempPass = $sugar_config['dbconfig']['db_password'];
     $sugar_config['dbconfig']['db_password'] = '********';
     //write config.php to a file
-    write_array_to_file("Diagnostic", $sugar_config, $cacheDir."config.php");
+    write_array_to_file('Diagnostic', $sugar_config, $cacheDir. 'config.php');
     //restore db_password so everything still works
     $sugar_config['dbconfig']['db_password'] = $tempPass;
     //END COPY CONFIG.PHP
@@ -390,12 +390,12 @@ function execute_sql($getinfo, $getdumps, $getschema)
     global $sod_guid;
     $db = DBManagerFactory::getInstance();
 
-    $sqlInfoDir = create_cache_directory("diagnostic/".$sod_guid."/diagnostic".$curdatetime."/{$db->dbName}/");
+    $sqlInfoDir = create_cache_directory('diagnostic/' .$sod_guid. '/diagnostic' .$curdatetime."/{$db->dbName}/");
 
 
     //create directory for table definitions
     if ($getschema) {
-        $tablesSchemaDir = create_cache_directory("diagnostic/".$sod_guid."/diagnostic".$curdatetime."/{$db->dbName}/TableSchema/");
+        $tablesSchemaDir = create_cache_directory('diagnostic/' .$sod_guid. '/diagnostic' .$curdatetime."/{$db->dbName}/TableSchema/");
     }
 
     //make sure they checked the box to get basic info
@@ -487,7 +487,7 @@ function execute_sql($getinfo, $getdumps, $getschema)
             //setting up table header for each file
             $contents .= array_as_table("{$db->dbName} $tablename Definitions:", $cols);
             $contents .= array_as_table("{$db->dbName} $tablename Keys:", $indexes);
-            $contents .= "<BR><BR>";
+            $contents .= '<BR><BR>';
         }
 
         file_put_contents($tablesSchemaDir."{$db->dbName}TablesSchema.html", $contents);
@@ -499,13 +499,13 @@ function execute_sql($getinfo, $getdumps, $getschema)
 
     if ($getdumps) {
         //BEGIN GET TABLEDUMPS
-        $tableDumpsDir = create_cache_directory("diagnostic/".$sod_guid."/diagnostic".$curdatetime."/{$db->dbName}/TableDumps/");
+        $tableDumpsDir = create_cache_directory('diagnostic/' .$sod_guid. '/diagnostic' .$curdatetime."/{$db->dbName}/TableDumps/");
 
 
         foreach ($getDumpsFrom as $table) {
             //calling function defined above to get the string for dump
             $contents = $style .getFullTableDump($table);
-            file_put_contents($tableDumpsDir.$table.".html", $contents);
+            file_put_contents($tableDumpsDir.$table. '.html', $contents);
         }
         //END GET TABLEDUMPS
         //BEGIN UPDATING PROGRESS BAR
@@ -527,28 +527,28 @@ function executebeanlistbeanfiles()
     ob_start();
 
     echo $mod_strings['LBL_DIAGNOSTIC_BEANLIST_DESC'];
-    echo "<BR>";
-    echo "<font color=green>";
+    echo '<BR>';
+    echo '<font color=green>';
     echo $mod_strings['LBL_DIAGNOSTIC_BEANLIST_GREEN'];
-    echo "</font>";
-    echo "<BR>";
-    echo "<font color=orange>";
+    echo '</font>';
+    echo '<BR>';
+    echo '<font color=orange>';
     echo $mod_strings['LBL_DIAGNOSTIC_BEANLIST_ORANGE'];
-    echo "</font>";
-    echo "<BR>";
-    echo "<font color=red>";
+    echo '</font>';
+    echo '<BR>';
+    echo '<font color=red>';
     echo $mod_strings['LBL_DIAGNOSTIC_BEANLIST_RED'];
-    echo "</font>";
-    echo "<BR><BR>";
+    echo '</font>';
+    echo '<BR><BR>';
 
     foreach ($beanList as $beanz) {
         if (!isset($beanFiles[$beanz])) {
-            echo "<font color=orange>NO! --- ".$beanz." is not an index in \$beanFiles</font><br>";
+            echo '<font color=orange>NO! --- ' .$beanz." is not an index in \$beanFiles</font><br>";
         } else {
             if (file_exists($beanFiles[$beanz])) {
-                echo "<font color=green>YES --- ".$beanz." file \"".$beanFiles[$beanz]."\" exists</font><br>";
+                echo '<font color=green>YES --- ' .$beanz." file \"". $beanFiles[$beanz]."\" exists</font><br>";
             } else {
-                echo "<font color=red>NO! --- ".$beanz." file \"".$beanFiles[$beanz]."\" does NOT exist</font><br>";
+                echo '<font color=red>NO! --- ' .$beanz." file \"". $beanFiles[$beanz]."\" does NOT exist</font><br>";
             }
         }
     }
@@ -556,9 +556,9 @@ function executebeanlistbeanfiles()
     $content = ob_get_contents();
     ob_clean();
 
-    $handle = sugar_fopen($cacheDir."beanFiles.html", "w");
+    $handle = sugar_fopen($cacheDir. 'beanFiles.html', 'w');
     if (fwrite($handle, $content) === false) {
-        echo "Cannot write to file ".$cacheDir."beanFiles.html<br>";
+        echo 'Cannot write to file ' .$cacheDir. 'beanFiles.html<br>';
     }
     fclose($handle);
     //END CHECK BEANLIST FILES ARE AVAILABLE
@@ -572,7 +572,7 @@ function executecustom_dir()
     //BEGIN ZIP AND SAVE CUSTOM DIRECTORY
     global $cacheDir;
 
-    zip_dir("custom", $cacheDir."custom_directory.zip");
+    zip_dir('custom', $cacheDir. 'custom_directory.zip');
     //END ZIP AND SAVE CUSTOM DIRECTORY
     //BEGIN UPDATING PROGRESS BAR
     sodUpdateProgressBar(CUSTOM_DIR_WEIGHT);
@@ -647,7 +647,7 @@ function executevardefs()
 
         if(!empty($beanFiles[ $beanz ])) {
             $path_parts = pathinfo((string) $beanFiles[$beanz]);
-            $vardefFileName = $path_parts['dirname'] . "/vardefs.php";
+            $vardefFileName = $path_parts['dirname'] . '/vardefs.php';
             if (file_exists($vardefFileName)) {
                 include_once($vardefFileName);
             }
@@ -656,12 +656,12 @@ function executevardefs()
     }
 
     echo "<html lang='en'>";
-    echo "<BODY>";
-    echo "<H1>Schema listing based on vardefs</H1>";
-    echo "<P>Sugar version:  ".$sugar_version." / Sugar DB version:  ".$sugar_db_version." / Sugar flavor:  ".$sugar_flavor;
-    echo "</P>";
+    echo '<BODY>';
+    echo '<H1>Schema listing based on vardefs</H1>';
+    echo '<P>Sugar version:  ' .$sugar_version. ' / Sugar DB version:  ' .$sugar_db_version. ' / Sugar flavor:  ' .$sugar_flavor;
+    echo '</P>';
 
-    echo "<style> th { text-align: left; } </style>";
+    echo '<style> th { text-align: left; } </style>';
 
     $tables = array();
     foreach ($dictionary as $vardef) {
@@ -674,20 +674,20 @@ function executevardefs()
 
     foreach ($tables as $t) {
         $name = $t;
-        if ($name == "does_not_exist") {
+        if ($name == 'does_not_exist') {
             continue;
         }
         $comment = $comments[$t];
         echo "<h2>Table: $t</h2>
-		<p><i>{$comment}</i></p>";
+        <p><i>{$comment}</i></p>";
         echo "<table border=\"0\" cellpadding=\"3\" class=\"tabDetailView\">";
         echo '<TR BGCOLOR="#DFDFDF">
-		<TD NOWRAP ALIGN=left class=\"tabDetailViewDL\">Column</TD>
-		<TD NOWRAP class=\"tabDetailViewDL\">Type</TD>
-		<TD NOWRAP class=\"tabDetailViewDL\">Length</TD>
-		<TD NOWRAP class=\"tabDetailViewDL\">Required</TD>
-		<TD NOWRAP class=\"tabDetailViewDL\">Comment</TD>
-	</TR>';
+        <TD NOWRAP ALIGN=left class=\"tabDetailViewDL\">Column</TD>
+        <TD NOWRAP class=\"tabDetailViewDL\">Type</TD>
+        <TD NOWRAP class=\"tabDetailViewDL\">Length</TD>
+        <TD NOWRAP class=\"tabDetailViewDL\">Required</TD>
+        <TD NOWRAP class=\"tabDetailViewDL\">Comment</TD>
+    </TR>';
 
         ksort($fields[ $t ]);
 
@@ -719,24 +719,24 @@ function executevardefs()
             }
 
             echo '<TR BGCOLOR="#FFFFFF" ALIGN=left>
-			<TD ALIGN=left class=\"tabDetailViewDF\">'.$columnname.'</TD>
-	  		<TD NOWRAP class=\"tabDetailViewDF\">'.$columntype.'</TD>
-			<TD NOWRAP class=\"tabDetailViewDF\">'.$columnlen.'</TD>
-			<TD NOWRAP class=\"tabDetailViewDF"\">'.$columndisplayrequired.'</TD>
-			<TD WRAP class=\"tabDetailViewDF\">'.$columncomment.'</TD></TR>';
+            <TD ALIGN=left class=\"tabDetailViewDF\">'.$columnname.'</TD>
+              <TD NOWRAP class=\"tabDetailViewDF\">'.$columntype.'</TD>
+            <TD NOWRAP class=\"tabDetailViewDF\">'.$columnlen.'</TD>
+            <TD NOWRAP class=\"tabDetailViewDF"\">'.$columndisplayrequired.'</TD>
+            <TD WRAP class=\"tabDetailViewDF\">'.$columncomment.'</TD></TR>';
         }
 
-        echo "</table></p>";
+        echo '</table></p>';
     }
 
-    echo "</body></html>";
+    echo '</body></html>';
 
     $vardefFormattedOutput = ob_get_contents();
     ob_clean();
 
-    $handle = sugar_fopen($cacheDir."vardefschema.html", "w");
+    $handle = sugar_fopen($cacheDir. 'vardefschema.html', 'w');
     if (fwrite($handle, $vardefFormattedOutput) === false) {
-        echo "Cannot write to file ".$cacheDir."vardefschema.html<br>";
+        echo 'Cannot write to file ' .$cacheDir. 'vardefschema.html<br>';
     }
     fclose($handle);
     sodUpdateProgressBar(VARDEFS_WEIGHT);
@@ -752,19 +752,19 @@ function finishDiag()
     global $mod_strings;
 
     chdir($cacheDir);
-    zip_dir(".", "../diagnostic".$curdatetime.".zip");
+    zip_dir('.', '../diagnostic' .$curdatetime. '.zip');
     //END ZIP ALL FILES AND EXTRACT IN CACHE ROOT
     chdir(RETURN_FROM_DIAG_DIR);
 
     deleteDir($cacheDir);
 
 
-    print "<a href=\"index.php?module=Administration&action=DiagnosticDownload&guid=$sod_guid&time=$curdatetime&to_pdf=1\">".$mod_strings['LBL_DIAGNOSTIC_DOWNLOADLINK']."</a><BR>";
+    print "<a href=\"index.php?module=Administration&action=DiagnosticDownload&guid=$sod_guid&time=$curdatetime&to_pdf=1\">".$mod_strings['LBL_DIAGNOSTIC_DOWNLOADLINK']. '</a><BR>';
 
     deleteDir($cacheDir);
 
 
-    print "<a href=\"index.php?module=Administration&action=DiagnosticDelete&file=diagnostic".$curdatetime."&guid=".$sod_guid."\">".$mod_strings['LBL_DIAGNOSTIC_DELETELINK']."</a><br>";
+    print "<a href=\"index.php?module=Administration&action=DiagnosticDelete&file=diagnostic".$curdatetime. '&guid=' .$sod_guid."\">". $mod_strings['LBL_DIAGNOSTIC_DELETELINK']. '</a><br>';
 }
 
 //BEGIN check for what we are executing
@@ -833,48 +833,48 @@ prepareDiag();
 
 
 if ($doconfigphp) {
-    echo $mod_strings['LBL_DIAGNOSTIC_GETCONFPHP']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_GETCONFPHP']. '<BR>';
     executeconfigphp();
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($docustom_dir) {
-    echo $mod_strings['LBL_DIAGNOSTIC_GETCUSTDIR']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_GETCUSTDIR']. '<BR>';
     executecustom_dir();
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($dophpinfo) {
-    echo $mod_strings['LBL_DIAGNOSTIC_GETPHPINFO']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_GETPHPINFO']. '<BR>';
     executephpinfo();
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($domysql_info || $domysql_dumps || $domysql_schema) {
     echo $mod_strings['LBL_DIAGNOSTIC_GETTING'].
-                 ($domysql_info ? "... ".$mod_strings['LBL_DIAGNOSTIC_GETMYSQLINFO'] : " ").
-                 ($domysql_dumps ? "... ".$mod_strings['LBL_DIAGNOSTIC_GETMYSQLTD'] : " ").
-                 ($domysql_schema ? "... ".$mod_strings['LBL_DIAGNOSTIC_GETMYSQLTS'] : "...").
-                 "<BR>";
+                 ($domysql_info ? '... ' . $mod_strings['LBL_DIAGNOSTIC_GETMYSQLINFO'] : ' ').
+                 ($domysql_dumps ? '... ' . $mod_strings['LBL_DIAGNOSTIC_GETMYSQLTD'] : ' ').
+                 ($domysql_schema ? '... ' . $mod_strings['LBL_DIAGNOSTIC_GETMYSQLTS'] : '...').
+        '<BR>';
     execute_sql($domysql_info, $domysql_dumps, $domysql_schema);
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($domd5) {
-    echo $mod_strings['LBL_DIAGNOSTIC_GETMD5INFO']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_GETMD5INFO']. '<BR>';
     executemd5($domd5filesmd5, $domd5calculated);
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($dobeanlistbeanfiles) {
-    echo $mod_strings['LBL_DIAGNOSTIC_GETBEANFILES']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_GETBEANFILES']. '<BR>';
     executebeanlistbeanfiles();
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($dosugarlog) {
-    echo $mod_strings['LBL_DIAGNOSTIC_GETSUITELOG']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_GETSUITELOG']. '<BR>';
     executesugarlog();
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 if ($dovardefs) {
-    echo $mod_strings['LBL_DIAGNOSTIC_VARDEFS']."<BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_VARDEFS']. '<BR>';
     executevardefs();
-    echo $mod_strings['LBL_DIAGNOSTIC_DONE']."<BR><BR>";
+    echo $mod_strings['LBL_DIAGNOSTIC_DONE']. '<BR><BR>';
 }
 
 //finish up the last steps

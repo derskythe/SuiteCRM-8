@@ -77,9 +77,9 @@ class Popup_Picker
         $where = '';
         if (isset($_REQUEST['query'])) {
             $where_clauses = array();
-            append_where_clause($where_clauses, "first_name", "users.first_name");
-            append_where_clause($where_clauses, "last_name", "users.last_name");
-            append_where_clause($where_clauses, "user_name", "users.user_name");
+            append_where_clause($where_clauses, 'first_name', 'users.first_name');
+            append_where_clause($where_clauses, 'last_name', 'users.last_name');
+            append_where_clause($where_clauses, 'user_name', 'users.user_name');
 
             $where = generate_where_statement($where_clauses);
         }

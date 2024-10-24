@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Routes\Service;
 
 use App\Navbar\Entity\Navbar;
@@ -34,13 +33,15 @@ interface NavigationProviderInterface
 {
     /**
      * Get Navbar information
+     *
      * @return Navbar
      */
-    public function getNavbar(): Navbar;
+    public function getNavbar() : Navbar;
 
     /**
      * Get module routing
+     *
      * @return array
      */
-    public function getModuleRouting(): array;
+    public function getModuleRouting() : array;
 }

@@ -27,6 +27,7 @@
 
 namespace App\Data\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Data\Entity\RecordList;
@@ -37,6 +38,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class RecordListHandler
+ *
  * @package App\Legacy
  */
 class RecordListHandler extends LegacyHandler implements RecordListProviderInterface
@@ -60,6 +62,7 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -70,18 +73,27 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
      * @param PresetListDataHandlers $presetHandlers
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        ListDataHandler $listDataHandler,
-        PresetListDataHandlers $presetHandlers,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState,
-            $session);
+        ListDataHandler           $listDataHandler,
+        PresetListDataHandlers    $presetHandlers,
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->listDataHandler = $listDataHandler;
         $this->presetHandlers = $presetHandlers;
@@ -90,7 +102,7 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -101,15 +113,17 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
      * @param int $offset
      * @param int $limit
      * @param array $sort
+     *
      * @return RecordList
      */
     public function getList(
         string $moduleName,
-        array $criteria = [],
-        int $offset = -1,
-        int $limit = -1,
-        array $sort = []
-    ): RecordList {
+        array  $criteria = [],
+        int    $offset = -1,
+        int    $limit = -1,
+        array  $sort = []
+    ) : RecordList
+    {
         $this->init();
         $this->startLegacyApp();
 
@@ -133,11 +147,12 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
         $recordList->setMeta(
             array_merge(
                 [
-                    'offsets' => $listData->getOffsets(),
+                    'offsets'  => $listData->getOffsets(),
                     'ordering' => $listData->getOrdering()
                 ],
                 $listData->getMeta() ?? []
-            ));
+            )
+        );
 
         $this->close();
 
@@ -146,9 +161,10 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
 
     /**
      * @param $moduleName
+     *
      * @return string
      */
-    private function validateModuleName($moduleName): string
+    private function validateModuleName($moduleName) : string
     {
         $moduleName = $this->moduleNameMapper->toLegacy($moduleName);
 
@@ -165,15 +181,17 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
      * @param int $offset
      * @param int $limit
      * @param array $sort
+     *
      * @return ListData
      */
     protected function getData(
         string $module,
-        array $criteria = [],
-        int $offset = -1,
-        int $limit = -1,
-        array $sort = []
-    ): ListData {
+        array  $criteria = [],
+        int    $offset = -1,
+        int    $limit = -1,
+        array  $sort = []
+    ) : ListData
+    {
         if (isset($criteria['preset'])) {
             $type = $criteria['preset']['type'] ?? '';
 
@@ -185,12 +203,13 @@ class RecordListHandler extends LegacyHandler implements RecordListProviderInter
 
     /**
      * @param ListData $recordList
+     *
      * @return bool
      */
-    protected function currentPageHasNoRecords(ListData $recordList): bool
+    protected function currentPageHasNoRecords(ListData $recordList) : bool
     {
-        $totalRecords = (int)($recordList->getOffsets()['total'] ?? 0);
-        $current = (int)($recordList->getOrdering()['current'] ?? 0);
+        $totalRecords = (int) ($recordList->getOffsets()['total'] ?? 0);
+        $current = (int) ($recordList->getOrdering()['current'] ?? 0);
 
         return $totalRecords && $current && $current >= $totalRecords;
     }

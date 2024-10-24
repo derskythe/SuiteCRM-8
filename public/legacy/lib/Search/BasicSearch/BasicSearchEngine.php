@@ -219,7 +219,7 @@ class BasicSearchEngine extends SearchEngine
                 );
                 $whereClauses = $searchForm->generateSearchWhere();
                 //add inner joins back into the where clause
-                $params = ['custom_select' => ""];
+                $params = ['custom_select' => '' ];
                 foreach ($innerJoins as $field => $def) {
                     if (isset($def['db_field'])) {
                         foreach ($def['db_field'] as $dbfield) {

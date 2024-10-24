@@ -120,7 +120,7 @@ if (!isset($_POST['dashName'])) {
 
     $home_mod_strings = return_module_language($current_language, $type);
 
-    require_once("include/MySugar/retrieve_dash_page.php");
+    require_once('include/MySugar/retrieve_dash_page.php');
 
     $sugar_smarty = new Sugar_Smarty();
     $sugar_smarty->assign('columns', $display);
@@ -129,5 +129,5 @@ if (!isset($_POST['dashName'])) {
     $sugar_smarty->assign('app', $GLOBALS['app_strings']);
     $sugar_smarty->assign('lblAddDashlets', $home_mod_strings['LBL_ADD_DASHLETS']);
     $sugar_smarty->assign('numCols', $dashboardPage['numColumns']);
-    header("Location: index.php?action=index&module=Home");
+    header('Location: index.php?action=index&module=Home');
 }

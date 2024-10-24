@@ -13,7 +13,7 @@ class CasesViewList extends ViewList
 
 
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->lv = new CasesListViewSmarty();
     }

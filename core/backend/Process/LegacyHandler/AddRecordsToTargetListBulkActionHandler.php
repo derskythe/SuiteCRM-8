@@ -70,7 +70,8 @@ class AddRecordsToTargetListBulkActionHandler extends LegacyHandler implements P
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
     )
     {
         parent::__construct(
@@ -79,7 +80,7 @@ class AddRecordsToTargetListBulkActionHandler extends LegacyHandler implements P
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,$logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -173,12 +174,11 @@ class AddRecordsToTargetListBulkActionHandler extends LegacyHandler implements P
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $this->init();
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Relationships/AddRecordsToTargetListService.php';
+        require_once $this->legacyDir.'/include/portability/Services/Relationships/AddRecordsToTargetListService.php';
 
         $options = $process->getOptions();
         [

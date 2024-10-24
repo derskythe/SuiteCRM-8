@@ -62,7 +62,7 @@ class DocumentsParseRule extends BaseRule
                         $panels[$name][$rowCount][$key] = 'related_doc_name';
                     } else {
                         if ($this->matches($column, '/^related_doc_rev_id$/')) {
-                            $panels[$name][$rowCount][$key] = ($view == 'EditView') ? 'related_doc_rev_number' : 'related_doc_name';
+                            $panels[$name][$rowCount][$key] = ($view === 'EditView') ? 'related_doc_rev_number' : 'related_doc_name';
                         } else {
                             if ($this->matches($column, '/^user_date_format$/')) {
                                 $panels[$name][$rowCount][$key] = 'active_date';
@@ -103,8 +103,9 @@ class DocumentsParseRule extends BaseRule
     return $panels;
     }
 
-    public function parsePanels(& $panels, $view)
+    public function parsePanels(array $panels, string $view) : mixed
     {
+        parent::parsePanels($panels, $view);
         foreach ($panels as $name=>$panel) {
             foreach ($panel as $rowCount=>$row) {
                 foreach ($row as $key=>$column) {

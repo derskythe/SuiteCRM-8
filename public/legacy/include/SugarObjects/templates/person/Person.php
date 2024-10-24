@@ -43,34 +43,34 @@ require_once 'include/SugarObjects/templates/basic/Basic.php';
 class Person extends Basic
 {
     public $photo;
-    public $first_name;
-    public $last_name;
-    public $full_name;
-    public $salutation;
-    public $title;
-    public $email1;
-    public $phone_fax;
-    public $phone_work;
-    public $phone_other;
-    public $lawful_basis;
-    public $date_reviewed;
-    public $lawful_basis_source;
+    public string $first_name = '';
+    public string $last_name = '';
+    public string $full_name = '';
+    public ?string $salutation;
+    public ?string $title;
+    public ?string $email1;
+    public ?string $phone_fax;
+    public ?string $phone_work;
+    public ?string $phone_other;
+    public ?string $lawful_basis;
+    public ?string $date_reviewed;
+    public ?string $lawful_basis_source;
 
 
     /**
      * @var bool controls whether or not to invoke the getLocalFormattedName method with title and salutation
      */
-    public $createLocaleFormattedName = true;
+    public bool $createLocaleFormattedName = true;
 
     /**
      * @var Link2
      */
-    public $email_addresses;
+    public null|\Link2 $email_addresses = null;
 
     /**
      * @var SugarEmailAddress
      */
-    public $emailAddress;
+    public array $emailAddress = [];
 
     /**
      * Person constructor.
@@ -82,19 +82,18 @@ class Person extends Basic
     }
 
 
-
     /**
      * need to override to have a name field created for this class
-     *
-     * @see parent::retrieve()
      *
      * @param int $id
      * @param bool $encode
      * @param bool $deleted
      *
      * @return SugarBean
+     * @see parent::retrieve()
+     *
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $ret_val = parent::retrieve($id, $encode, $deleted);
         $this->_create_proper_name_field();
@@ -161,6 +160,8 @@ class Person extends Basic
     }
 
     /**
+     * @throws Exception
+     * @throws Exception
      * @see parent::save()
      */
     public function save($check_notify = false)
@@ -174,7 +175,7 @@ class Person extends Basic
         $this->add_address_streets('primary_address_street');
         $this->add_address_streets('alt_address_street');
         $ori_in_workflow = empty($this->in_workflow) ? false : true;
-	$this->emailAddress->handleLegacySave($this);
+        $this->emailAddress->handleLegacySave($this);
 
         if (empty($this->id)) {
             $this->id = create_guid();
@@ -207,14 +208,15 @@ class Person extends Basic
             );
         }
 
-	parent::save($check_notify);
+        parent::save($check_notify);
+
         return $this->id;
     }
 
     /**
      * @see parent::get_summary_text()
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         $this->_create_proper_name_field();
 
@@ -248,7 +250,8 @@ class Person extends Basic
      */
     public function populateRelatedBean(
         SugarBean $newBean
-    ) {
+    ) : void
+    {
         parent::populateRelatedBean($newBean);
 
         if ($newBean instanceof Company) {
@@ -277,7 +280,7 @@ class Person extends Basic
      *
      * @see SugarBean::create_export_query()
      */
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->custom_fields->getJOIN(true, true, $where);
 
@@ -288,11 +291,11 @@ class Person extends Basic
             $custom_join['join'] .= $relate_link_join;
         }
         $query = "SELECT
-					$table.*,
-					email_addresses.email_address email_address,
-					'' email_addresses_non_primary, " .
-                 // email_addresses_non_primary needed for get_field_order_mapping()
-                 'users.user_name as assigned_user_name ';
+                    $table.*,
+                    email_addresses.email_address email_address,
+                    '' email_addresses_non_primary, " .
+            // email_addresses_non_primary needed for get_field_order_mapping()
+            'users.user_name as assigned_user_name ';
         if ($custom_join) {
             $query .= $custom_join['select'];
         }
@@ -300,12 +303,12 @@ class Person extends Basic
         $query .= " FROM $table ";
 
         $query .= "LEFT JOIN users
-					ON $table.assigned_user_id=users.id ";
+                    ON $table.assigned_user_id=users.id ";
 
         //Join email address table too.
         $query .= " LEFT JOIN email_addr_bean_rel on $table.id = email_addr_bean_rel.bean_id and email_addr_bean_rel.bean_module = '" .
-                  $this->module_dir .
-                  "' and email_addr_bean_rel.deleted = 0 and email_addr_bean_rel.primary_address = 1";
+            $this->module_dir .
+            "' and email_addr_bean_rel.deleted = 0 and email_addr_bean_rel.primary_address = 1";
         $query .= ' LEFT JOIN email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id ';
 
         if ($custom_join) {
@@ -330,14 +333,16 @@ class Person extends Basic
 
     /**
      * Set Lawful Basis
+     *
      * @param string $basis
      * @param string $source
+     *
      * @return int
      * @throws InvalidArgumentException
      */
     public function setLawfulBasis($basis, $source)
     {
-        global $app_list_strings,$timedate;
+        global $app_list_strings, $timedate;
         /**
          * This function will update the lawful basis, source and date of the change.
          * Will take the parameters of email id and possible the module?
@@ -360,12 +365,12 @@ class Person extends Basic
         }
 
         //Set lawful basis, lawful basis source and date reviewed
-        $this->lawful_basis = '^'.$basis.'^';
+        $this->lawful_basis = '^' . $basis . '^';
         $this->lawful_basis_source = $source;
         $date = TimeDate::getInstance()->nowDb();
         $date_test = $timedate->to_display_date($date, false);
         $this->date_reviewed = $date_test;
 
-        return (bool)$this->save();
+        return (bool) $this->save();
     }
 }

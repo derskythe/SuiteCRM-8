@@ -47,7 +47,9 @@ class FieldViewer
     }
 
 
-
+    /**
+     * @throws SmartyException
+     */
     public function getLayout($vardef)
     {
         if (empty($vardef['type'])) {

@@ -35,7 +35,7 @@ function smarty_function_fetch($params, &$smarty)
             $smarty->_trigger_fatal_error('[plugin] (secure mode) fetch \'' . $params['file'] . '\' is not allowed');
             return;
         }
-        
+
         // fetch the file
         if ($fp = @fopen($params['file'], 'rb')) {
             while (!feof($fp)) {
@@ -54,9 +54,9 @@ function smarty_function_fetch($params, &$smarty)
                 // set defaults
                 $host = $server_name = $uri_parts['host'];
                 $timeout = 30;
-                $accept = "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*";
-                $agent = "Smarty Template Engine ".$smarty->_version;
-                $referer = "";
+                $accept = 'image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*';
+                $agent = 'Smarty Template Engine ' . $smarty->_version;
+                $referer = '';
                 $uri = !empty($uri_parts['path']) ? $uri_parts['path'] : '/';
                 $uri .= !empty($uri_parts['query']) ? '?' . $uri_parts['query'] : '';
                 $_is_proxy = false;
@@ -74,26 +74,26 @@ function smarty_function_fetch($params, &$smarty)
                 // loop through parameters, setup headers
                 foreach ($params as $param_key => $param_value) {
                     switch ($param_key) {
-                        case "file":
-                        case "assign":
-                        case "assign_headers":
+                        case 'file':
+                        case 'assign':
+                        case 'assign_headers':
                             break;
-                        case "user":
+                        case 'user':
                             if (!empty($param_value)) {
                                 $user = $param_value;
                             }
                             break;
-                        case "pass":
+                        case 'pass':
                             if (!empty($param_value)) {
                                 $pass = $param_value;
                             }
                             break;
-                        case "accept":
+                        case 'accept':
                             if (!empty($param_value)) {
                                 $accept = $param_value;
                             }
                             break;
-                        case "header":
+                        case 'header':
                             if (!empty($param_value)) {
                                 if (!preg_match('![\w\d-]+: .+!', $param_value)) {
                                     $smarty->_trigger_fatal_error("[plugin] invalid header format '".$param_value."'");
@@ -102,12 +102,12 @@ function smarty_function_fetch($params, &$smarty)
                                 $extra_headers[] = $param_value;
                             }
                             break;
-                        case "proxy_host":
+                        case 'proxy_host':
                             if (!empty($param_value)) {
                                 $proxy_host = $param_value;
                             }
                             break;
-                        case "proxy_port":
+                        case 'proxy_port':
                             if (!preg_match('!\D!', $param_value)) {
                                 $proxy_port = (int) $param_value;
                             } else {
@@ -115,17 +115,17 @@ function smarty_function_fetch($params, &$smarty)
                                 return;
                             }
                             break;
-                        case "agent":
+                        case 'agent':
                             if (!empty($param_value)) {
                                 $agent = $param_value;
                             }
                             break;
-                        case "referer":
+                        case 'referer':
                             if (!empty($param_value)) {
                                 $referer = $param_value;
                             }
                             break;
-                        case "timeout":
+                        case 'timeout':
                             if (!preg_match('!\D!', $param_value)) {
                                 $timeout = (int) $param_value;
                             } else {
@@ -172,7 +172,7 @@ function smarty_function_fetch($params, &$smarty)
                     }
                 }
                 if (!empty($user) && !empty($pass)) {
-                    fwrite($fp, "Authorization: BASIC ".base64_encode("$user:$pass")."\r\n");
+                    fwrite($fp, 'Authorization: BASIC ' . base64_encode("$user:$pass") . "\r\n");
                 }
 
                 fwrite($fp, "\r\n");
@@ -188,7 +188,7 @@ function smarty_function_fetch($params, &$smarty)
                     $smarty->assign($params['assign_headers'], preg_split("!\r\n!", $csplit[0]));
                 }
             } else {
-                $smarty->_trigger_fatal_error("[plugin] unable to parse URL, check syntax");
+                $smarty->_trigger_fatal_error('[plugin] unable to parse URL, check syntax');
                 return;
             }
         } else {

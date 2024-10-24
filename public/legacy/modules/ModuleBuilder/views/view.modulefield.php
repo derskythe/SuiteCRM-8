@@ -47,17 +47,17 @@ class ViewModulefield extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
            translate('LBL_MODULE_NAME', 'Administration'),
            ModuleBuilderController::getModuleTitle(),
            );
     }
 
-    public function display()
+    public function display() : void
     {
         $ac = $this->fetch();
         echo $ac->getJavascript();
@@ -84,14 +84,14 @@ class ViewModulefield extends SugarView
 
         $isClone = false;
         if (!empty($this->view_object_map['is_clone']) && $this->view_object_map['is_clone']
-            && (strcmp($field_name, "name") != 0)   // bug #35767, do not allow cloning of name field
+            && (strcmp($field_name, 'name') != 0)   // bug #35767, do not allow cloning of name field
             ) {
             $isClone = true;
         }
         /*
         $field_types =  array('varchar'=>'YourField', 'int'=>'Integer', 'float'=>'Decimal','bool'=>'Checkbox','enum'=>'DropDown',
-        		'date'=>'Date', 'phone' => 'Phone', 'currency' => 'Currency', 'html' => 'HTML', 'radioenum' => 'Radio',
-        		'relate' => 'Relate', 'address' => 'Address', 'text' => 'TextArea', 'url' => 'Link');
+                'date'=>'Date', 'phone' => 'Phone', 'currency' => 'Currency', 'html' => 'HTML', 'radioenum' => 'Radio',
+                'relate' => 'Relate', 'address' => 'Address', 'text' => 'TextArea', 'url' => 'Link');
         */
         $field_types = $GLOBALS['mod_strings']['fieldTypes'];
         if (isset($field_types['encrypt'])) {
@@ -148,7 +148,7 @@ class ViewModulefield extends SugarView
             }
         }
 
-        if (empty($_REQUEST['view_package']) || $_REQUEST['view_package'] == 'studio') {
+        if (empty($_REQUEST['view_package']) || $_REQUEST['view_package'] === 'studio') {
             $moduleName = $_REQUEST['view_module'];
             $objectName = BeanFactory::getObjectName($moduleName);
             $module = BeanFactory::getBean($moduleName);
@@ -162,7 +162,7 @@ class ViewModulefield extends SugarView
                 $module->mbvardefs = new stdClass();
             }
             $module->mbvardefs->vardefs =  $dictionary[$objectName];
-            
+
             $module->name = $moduleName;
             if (!$ac) {
                 $ac = new AjaxCompose();
@@ -171,7 +171,7 @@ class ViewModulefield extends SugarView
             if ($isClone) {
                 unset($vardef['name']);
             }
-          
+
             if (empty($vardef['name'])) {
                 if (!empty($_REQUEST['type'])) {
                     $vardef['type'] = $_REQUEST['type'];
@@ -183,45 +183,44 @@ class ViewModulefield extends SugarView
                 $action = 'saveSugarField'; // tyoung - for OOB fields we currently only support modifying the label
                 $fv->ss->assign('hideLevel', 3);
             }
-            if ($isClone && isset($vardef['type']) && $vardef['type'] == 'datetime') {
+            if ($isClone && isset($vardef['type']) && $vardef['type'] === 'datetime') {
                 $vardef['type'] = 'datetimecombo';
             }
-            
+
             require_once('modules/DynamicFields/FieldCases.php') ;
-            $tf = get_widget(empty($vardef [ 'type' ]) ?  "" : $vardef [ 'type' ]) ;
+            $tf = get_widget(empty($vardef [ 'type' ]) ? '' : $vardef ['type' ]) ;
             $tf->module = $module;
             $tf->populateFromRow($vardef);
             $vardef = array_merge($vardef, $tf->get_field_def());
 
             //          $GLOBALS['log']->debug('vardefs after loading = '.print_r($vardef,true));
-           
-            
+
             //Check if autoincrement fields are allowed
             $allowAutoInc = true;
             $enumFields = array();
             foreach ($module->field_defs as $field => $def) {
-                if (!empty($def['type']) && $def['type'] == "int" && !empty($def['auto_increment'])) {
+                if (!empty($def['type']) && $def['type'] === 'int' && !empty($def['auto_increment'])) {
                     $allowAutoInc = false;
                     continue;
                 }
-                if (!empty($def['type']) && $def['type'] == "enum" && $field != $vardef['name']) {
-                    if (!empty($def['studio']) && $def['studio'] == "false") {
+                if (!empty($def['type']) && $def['type'] === 'enum' && $field != $vardef['name']) {
+                    if (!empty($def['studio']) && $def['studio'] === 'false') {
                         continue;
                     } //bug51866
                     $enumFields[$field] = translate($def['vname'], $moduleName);
-                    if (substr((string) $enumFields[$field], -1) == ":") {
+                    if (str_ends_with((string) $enumFields[$field], ':')) {
                         $enumFields[$field] = substr((string) $enumFields[$field], 0, strlen((string) $enumFields[$field]) - 1);
                     }
                 }
             }
             $fv->ss->assign('allowAutoInc', $allowAutoInc);
 
-            $GLOBALS['log']->warn('view.modulefield: hidelevel '.$fv->ss->get_template_vars('hideLevel')." ".print_r($vardef, true));
+            $GLOBALS['log']->warn('view.modulefield: hidelevel '.$fv->ss->get_template_vars('hideLevel'). ' ' .print_r($vardef, true));
             if (!empty($vardef['vname'])) {
                 $fv->ss->assign('lbl_value', htmlentities((string) translate($vardef['vname'], $moduleName), ENT_QUOTES, 'UTF-8'));
             }
             $fv->ss->assign('module', $module);
-            if (empty($module->mbvardefs->vardefs['fields']['parent_name']) || (isset($vardef['type']) && $vardef['type'] == 'parent')) {
+            if (empty($module->mbvardefs->vardefs['fields']['parent_name']) || (isset($vardef['type']) && $vardef['type'] === 'parent')) {
                 $field_types['parent'] = $GLOBALS['mod_strings']['parent'];
             }
 
@@ -258,12 +257,10 @@ class ViewModulefield extends SugarView
             }
 
             require_once('modules/DynamicFields/FieldCases.php') ;
-            $tf = get_widget(empty($vardef [ 'type' ]) ?  "" : $vardef [ 'type' ]) ;
+            $tf = get_widget(empty($vardef [ 'type' ]) ? '' : $vardef ['type' ]) ;
             $tf->module = $module;
             $tf->populateFromRow($vardef);
             $vardef = array_merge($vardef, $tf->get_field_def());
-            
-            
 
             $fv->ss->assign('module', $module);
             $fv->ss->assign('package', $package);
@@ -272,17 +269,17 @@ class ViewModulefield extends SugarView
             if (isset($vardef['vname'])) {
                 $fv->ss->assign('lbl_value', htmlentities((string) $module->getLabel('en_us', $vardef['vname']), ENT_QUOTES, 'UTF-8'));
             }
-            if (empty($module->mbvardefs->vardefs['fields']['parent_name']) || (isset($vardef['type']) && $vardef['type'] == 'parent')) {
+            if (empty($module->mbvardefs->vardefs['fields']['parent_name']) || (isset($vardef['type']) && $vardef['type'] === 'parent')) {
                 $field_types['parent'] = $GLOBALS['mod_strings']['parent'];
             }
 
             $enumFields = array();
             if (!empty($module->mbvardefs->vardefs['fields'])) {
                 foreach ($module->mbvardefs->vardefs['fields'] as $field => $def) {
-                    if (!empty($def['type']) && $def['type'] == "enum" && $field != $vardef['name']) {
+                    if (!empty($def['type']) && $def['type'] === 'enum' && $field != $vardef['name']) {
                         $enumFields[$field] = isset($module->mblanguage->strings[$current_language][$def['vname']]) ?
                             $this->mbModule->mblanguage->strings[$current_language][$def['vname']] : translate($field);
-                        if (substr((string) $enumFields[$field], -1) == ":") {
+                        if (str_ends_with((string) $enumFields[$field], ':')) {
                             $enumFields[$field] = substr((string) $enumFields[$field], 0, strlen((string) $enumFields[$field]) -1);
                         }
                     }
@@ -292,7 +289,7 @@ class ViewModulefield extends SugarView
             $edit_or_add = 'mbeditField';
         }
 
-        if ($_REQUEST['action'] == 'RefreshField') {
+        if ($_REQUEST['action'] === 'RefreshField') {
             require_once('modules/DynamicFields/FieldCases.php');
             $field = get_widget($_POST['type']);
             $field->populateFromPost();
@@ -301,20 +298,20 @@ class ViewModulefield extends SugarView
             $fv->ss->assign('lbl_value', htmlentities((string) $_REQUEST['labelValue'], ENT_QUOTES, 'UTF-8'));
         }
 
-        foreach (array("formula", "default", "comments", "help", "visiblityGrid") as $toEscape) {
+        foreach (array( 'formula', 'default', 'comments', 'help', 'visiblityGrid' ) as $toEscape) {
             if (!empty($vardef[$toEscape]) && is_string($vardef[$toEscape])) {
                 $vardef[$toEscape] = htmlentities($vardef[$toEscape], ENT_QUOTES, 'UTF-8');
             }
         }
-        
+
         if ((!empty($vardef['studio']) && is_array($vardef['studio']) && !empty($vardef['studio']['no_duplicate']) && $vardef['studio']['no_duplicate'] == true)
-           || (strcmp($field_name, "name") == 0) || (isset($vardef['type']) && $vardef['type'] == 'name')) { // bug #35767, do not allow cloning of name field
+           || (strcmp($field_name, 'name') == 0) || (isset($vardef['type']) && $vardef['type'] === 'name')) { // bug #35767, do not allow cloning of name field
             $fv->ss->assign('no_duplicate', true);
         }
 
         $fv->ss->assign('action', $action);
         $fv->ss->assign('isClone', ($isClone ? 1 : 0));
-        $fv->ss->assign("module_dd_fields", $enumFields);
+        $fv->ss->assign('module_dd_fields', $enumFields);
         $json = getJSONobj();
 
         $fv->ss->assign('field_name_exceptions', $json->encode($field_name_exceptions));
@@ -328,17 +325,17 @@ class ViewModulefield extends SugarView
         $triggers = array() ;
         $existing_field_names = array() ;
         foreach ($module->mbvardefs->vardefs['fields'] as $field) {
-            if ($field [ 'type' ] == 'enum' || $field [ 'type'] == 'multienum') {
+            if ($field [ 'type' ] === 'enum' || $field ['type'] === 'multienum') {
                 $triggers [] = $field [ 'name' ] ;
             }
-            
-            if (!isset($field['source']) || $field['source'] != 'non-db') {
+
+            if (!isset($field['source']) || $field['source'] !== 'non-db') {
                 if (preg_match('/^(.*?)(_c)?$/', (string) $field['name'], $matches)) {
                     $existing_field_names [] = strtoupper($matches[1]);
                 }
             }
         }
-        
+
         $fv->ss->assign('triggers', $triggers);
         $fv->ss->assign('existing_field_names', $json->encode($existing_field_names));
         $fv->ss->assign('mod_strings', $GLOBALS['mod_strings']);

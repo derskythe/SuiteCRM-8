@@ -56,7 +56,7 @@ class ViewImportvcardsave extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $redirect = "index.php?action=Importvcard&module={$_REQUEST['module']}";
 
@@ -72,10 +72,10 @@ class ViewImportvcardsave extends SugarView
         } else {
             switch ($_FILES['vcard']['error']) {
                 case UPLOAD_ERR_FORM_SIZE:
-                    $redirect .= "&error=vcardErrorFilesize";
+                    $redirect .= '&error=vcardErrorFilesize';
                 break;
                 default:
-                    $redirect .= "&error=vcardErrorDefault";
+                    $redirect .= '&error=vcardErrorDefault';
                     $GLOBALS['log']->error('Upload error code: ' . $_FILES['vcard']['error'] . '. Please refer to the error codes http://php.net/manual/en/features.file-upload.errors.php');
                 break;
             }

@@ -48,10 +48,10 @@ unset($_SESSION['rebuild_relationships']);
 unset($_SESSION['rebuild_extensions']);
 // process commands
 if (empty($_REQUEST['install_file'])) {
-    die("File to install not specified.");
+    die('File to install not specified.');
 }
-if (!isset($_REQUEST['mode']) || ($_REQUEST['mode'] == "")) {
-    die("No mode specified.");
+if (!isset($_REQUEST['mode']) || ($_REQUEST['mode'] == '')) {
+    die('No mode specified.');
 }
 
 if (!file_exists($base_tmp_upgrade_dir) && !mkdir($base_tmp_upgrade_dir, 0755,
@@ -61,9 +61,9 @@ if (!file_exists($base_tmp_upgrade_dir) && !mkdir($base_tmp_upgrade_dir, 0755,
 
 $unzip_dir      = mk_temp_dir($base_tmp_upgrade_dir);
 $install_file   = hashToFile($_REQUEST['install_file']);
-$hidden_fields = "";
-$new_lang_name = "";
-$new_lang_desc = "";
+$hidden_fields = '';
+$new_lang_name = '';
+$new_lang_desc = '';
 
 $mode           = $_REQUEST['mode'];
 $hidden_fields .= "<input type=hidden name=\"mode\" value=\"$mode\"/>";
@@ -71,12 +71,12 @@ $hidden_fields .= "<input type=hidden name=\"mode\" value=\"$mode\"/>";
 
 $install_type   = getInstallType($install_file);
 
-$version        = "";
-$previous_version = "";
+$version        = '';
+$previous_version = '';
 $show_files     = true;
 
-$zip_from_dir   = ".";
-$zip_to_dir     = ".";
+$zip_from_dir   = '.';
+$zip_to_dir     = '.';
 $zip_force_copy = array();
 $license_file = $unzip_dir.'/LICENSE.txt';
 $readme_file  = $unzip_dir.'/README.txt';
@@ -91,7 +91,7 @@ $dependencies = array();
 $remove_tables = 'true';
 
 unzip($install_file, $unzip_dir);
-if ($install_type == 'module' && $mode != 'Uninstall') {
+if ($install_type === 'module' && $mode !== 'Uninstall') {
     if (file_exists($license_file)) {
         $require_license = true;
     }
@@ -99,7 +99,7 @@ if ($install_type == 'module' && $mode != 'Uninstall') {
 
 //Scan the unzip dir for unsafe files
 if (((defined('MODULE_INSTALLER_PACKAGE_SCAN') && MODULE_INSTALLER_PACKAGE_SCAN)
-    || !empty($GLOBALS['sugar_config']['moduleInstaller']['packageScan'])) && $install_type != 'patch') {
+    || !empty($GLOBALS['sugar_config']['moduleInstaller']['packageScan'])) && $install_type !== 'patch') {
     require_once('ModuleInstall/ModuleScanner.php');
     $ms = new ModuleScanner();
     $ms->scanPackage($unzip_dir);
@@ -115,13 +115,13 @@ require("$unzip_dir/manifest.php");
 
 
 
-if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] != "") {
+if (isset($manifest['copy_files']['from_dir']) && $manifest['copy_files']['from_dir'] != '') {
     $zip_from_dir   = $manifest['copy_files']['from_dir'];
 }
-if (isset($manifest['copy_files']['to_dir']) && $manifest['copy_files']['to_dir'] != "") {
+if (isset($manifest['copy_files']['to_dir']) && $manifest['copy_files']['to_dir'] != '') {
     $zip_to_dir     = $manifest['copy_files']['to_dir'];
 }
-if (isset($manifest['copy_files']['force_copy']) && $manifest['copy_files']['force_copy'] != "") {
+if (isset($manifest['copy_files']['force_copy']) && $manifest['copy_files']['force_copy'] != '') {
     $zip_force_copy     = $manifest['copy_files']['force_copy'];
 }
 if (isset($manifest['version'])) {
@@ -149,7 +149,7 @@ if (isset($manifest['remove_tables'])) {
     $remove_tables = $manifest['remove_tables'];
 }
 
-if ($remove_tables != 'prompt') {
+if ($remove_tables !== 'prompt') {
     $hidden_fields .= "<input type=hidden name=\"remove_tables\" value='".$remove_tables."'>";
 }
 if (file_exists($readme_file) || !empty($manifest['readme'])) {
@@ -160,23 +160,23 @@ $uh = new UpgradeHistory();
 if (!empty($dependencies)) {
     $not_found = $uh->checkDependencies($dependencies);
     if (!empty($not_found) && (is_countable($not_found) ? count($not_found) : 0) > 0) {
-        die($mod_strings['ERR_UW_NO_DEPENDENCY']."[".implode(',', $not_found)."]");
+        die($mod_strings['ERR_UW_NO_DEPENDENCY']. '[' .implode(',', $not_found). ']');
     }//fi
 }
 switch ($install_type) {
-    case "full":
-    case "patch":
-        if (!is_writable("config.php")) {
+    case 'full':
+    case 'patch':
+        if (!is_writable('config.php')) {
             die($mod_strings['ERR_UW_CONFIG']);
         }
         break;
-    case "theme":
+    case 'theme':
         break;
-    case "langpack":
+    case 'langpack':
         // find name of language pack: find single file in include/language/xx_xx.lang.php
         $d = dir("$unzip_dir/$zip_from_dir/include/language");
         while ($f = $d->read()) {
-            if ($f == "." || $f == "..") {
+            if ($f === '.' || $f === '..') {
                 continue;
             } else {
                 if (preg_match("/(.*)\.lang\.php\$/", $f, $match)) {
@@ -184,22 +184,22 @@ switch ($install_type) {
                 }
             }
         }
-        if ($new_lang_name == "") {
+        if ($new_lang_name == '') {
             die($mod_strings['ERR_UW_NO_LANGPACK'].$install_file);
         }
         $hidden_fields .= "<input type=hidden name=\"new_lang_name\" value=\"$new_lang_name\"/>";
 
         $new_lang_desc = getLanguagePackName("$unzip_dir/$zip_from_dir/include/language/$new_lang_name.lang.php");
-        if ($new_lang_desc == "") {
+        if ($new_lang_desc == '') {
             die($mod_strings['ERR_UW_NO_LANG_DESC_1']."include/language/$new_lang_name.lang.php".$mod_strings['ERR_UW_NO_LANG_DESC_2']."$install_file.");
         }
         $hidden_fields .= "<input type=hidden name=\"new_lang_desc\" value=\"$new_lang_desc\"/>";
 
-        if (!is_writable("config.php")) {
+        if (!is_writable('config.php')) {
             die($mod_strings['ERR_UW_CONFIG']);
         }
         break;
-    case "module":
+    case 'module':
         $previous_install = array();
         if (!empty($id_name) & !empty($version)) {
             $previous_install = $uh->determineIfUpgrade($id_name, $version);
@@ -230,16 +230,16 @@ $serial_manifest['upgrade_manifest'] = (isset($upgrade_manifest) ? $upgrade_mani
 $hidden_fields .= "<input type=hidden name=\"s_manifest\" value='".base64_encode(serialize($serial_manifest))."'>";
 // present list to user
 ?>
-<form action="<?php print($form_action . "_commit"); ?>" name="files" method="post"  onSubmit="return validateForm(<?php print($require_license); ?>);">
+<form action="<?php print($form_action . '_commit'); ?>" name="files" method="post" onSubmit="return validateForm(<?php print($require_license); ?>);">
 <?php
 if (empty($new_studio_mod_files)) {
-    if (!empty($mode) && $mode == 'Uninstall') {
+    if (!empty($mode) && $mode === 'Uninstall') {
         echo $mod_strings['LBL_UW_UNINSTALL_READY'];
     } else {
-        if ($mode == 'Disable') {
+        if ($mode === 'Disable') {
             echo $mod_strings['LBL_UW_DISABLE_READY'];
         } else {
-            if ($mode == 'Enable') {
+            if ($mode === 'Enable') {
                 echo $mod_strings['LBL_UW_ENABLE_READY'];
             } else {
                 echo $mod_strings['LBL_UW_PATCH_READY'];
@@ -251,7 +251,7 @@ if (empty($new_studio_mod_files)) {
     echo '<input type="checkbox" onclick="toggle_these(0, ' . (is_countable($new_studio_mod_files) ? count($new_studio_mod_files) : 0) . ', this)"> '.$mod_strings['LBL_UW_CHECK_ALL'];
     foreach ($new_studio_mod_files as $the_file) {
         $new_file   = clean_path("$zip_to_dir/$the_file");
-        print("<li><input id=\"copy_$count\" name=\"copy_$count\" type=\"checkbox\" value=\"" . $the_file . "\"> " . $new_file . "</li>");
+        print("<li><input id=\"copy_$count\" name=\"copy_$count\" type=\"checkbox\" value=\"" . $the_file . "\"> " . $new_file . '</li>');
         $count++;
     }
 }
@@ -267,51 +267,51 @@ if ($require_license) {
         }
     }
     $license_final =<<<eoq2
-	<table width='100%'>
-	<tr>
-	<td colspan="3"><ul class="tablist">
-	<li id="license_li" class="active"><a id="license_link"  class="current" href="javascript:selectTabCSS('license');">{$mod_strings['LBL_LICENSE']}</a></li>
-	<li class="active" id="readme_li"><a id="readme_link" href="javascript:selectTabCSS('readme');">{$mod_strings['LBL_README']}</a></li>
-	</ul></td>
-	</tr>
-	</table>
-	<div id='license_div'>
-	<table>
-	<tr>
-	<td colspan="3">&nbsp;</td>
-	</tr>
-	<tr>
-	<td align="left" valign="top" colspan=2>
-	<b>{$mod_strings['LBL_MODULE_LICENSE']}</b>
-	</td>
-	</tr>
-	<tr>
-	<td align="left" valign="top" colspan=2>
-	<textarea cols="100" rows="8" readonly>{$contents}</textarea>
-	</td>
+    <table width='100%'>
+    <tr>
+    <td colspan="3"><ul class="tablist">
+    <li id="license_li" class="active"><a id="license_link"  class="current" href="javascript:selectTabCSS('license');">{$mod_strings['LBL_LICENSE']}</a></li>
+    <li class="active" id="readme_li"><a id="readme_link" href="javascript:selectTabCSS('readme');">{$mod_strings['LBL_README']}</a></li>
+    </ul></td>
+    </tr>
+    </table>
+    <div id='license_div'>
+    <table>
+    <tr>
+    <td colspan="3">&nbsp;</td>
+    </tr>
+    <tr>
+    <td align="left" valign="top" colspan=2>
+    <b>{$mod_strings['LBL_MODULE_LICENSE']}</b>
+    </td>
+    </tr>
+    <tr>
+    <td align="left" valign="top" colspan=2>
+    <textarea cols="100" rows="8" readonly>{$contents}</textarea>
+    </td>
 
-	</tr>
-	<tr>
-	<td align="left" valign="top" colspan=2>
-	<input type='radio' id='radio_license_agreement_accept' name='radio_license_agreement' value='accept'>{$mod_strings['LBL_ACCEPT']}&nbsp;
-	<input type='radio' id='radio_license_agreement_reject' name='radio_license_agreement' value='reject' checked>{$mod_strings['LBL_DENY']}
-	</td>
+    </tr>
+    <tr>
+    <td align="left" valign="top" colspan=2>
+    <input type='radio' id='radio_license_agreement_accept' name='radio_license_agreement' value='accept'>{$mod_strings['LBL_ACCEPT']}&nbsp;
+    <input type='radio' id='radio_license_agreement_reject' name='radio_license_agreement' value='reject' checked>{$mod_strings['LBL_DENY']}
+    </td>
 
-	</tr></table>
-	</div>
-	<div id='readme_div' style='display: none;'>
-	<table>
-	<tr>
-	<td colspan="3">&nbsp;</td>
-	</tr>
-	<tr>
-	<td align="left" valign="top" colspan=2>
-	<b>{$mod_strings['LBL_README']}</b>
-	</td>
-	</tr>
-	<tr>
-	<td align="left" valign="top" colspan=2>
-	<textarea cols="100" rows="8" readonly>{$readme_contents}</textarea>
+    </tr></table>
+    </div>
+    <div id='readme_div' style='display: none;'>
+    <table>
+    <tr>
+    <td colspan="3">&nbsp;</td>
+    </tr>
+    <tr>
+    <td align="left" valign="top" colspan=2>
+    <b>{$mod_strings['LBL_README']}</b>
+    </td>
+    </tr>
+    <tr>
+    <td align="left" valign="top" colspan=2>
+    <textarea cols="100" rows="8" readonly>{$readme_contents}</textarea>
         </td>
 
     </tr>
@@ -320,34 +320,34 @@ if ($require_license) {
 
 eoq2;
     echo $license_final;
-    echo "<br>";
+    echo '<br>';
 }
 
 switch ($mode) {
-    case "Install":
-        if ($install_type == "langpack") {
+    case 'Install':
+        if ($install_type === 'langpack') {
             print($mod_strings['LBL_UW_LANGPACK_READY']);
             echo '<br><br>';
         }
         break;
-    case "Uninstall":
-        if ($install_type == "langpack") {
+    case 'Uninstall':
+        if ($install_type === 'langpack') {
             print($mod_strings['LBL_UW_LANGPACK_READY_UNISTALL']);
             echo '<br><br>';
         } else {
-            if ($install_type != "module") {
+            if ($install_type !== 'module') {
                 print($mod_strings['LBL_UW_FILES_REMOVED']);
             }
         }
         break;
-    case "Disable":
-        if ($install_type == "langpack") {
+    case 'Disable':
+        if ($install_type === 'langpack') {
             print($mod_strings['LBL_UW_LANGPACK_READY_DISABLE']);
             echo '<br><br>';
         }
         break;
-    case "Enable":
-        if ($install_type == "langpack") {
+    case 'Enable':
+        if ($install_type === 'langpack') {
             print($mod_strings['LBL_UW_LANGPACK_READY_ENABLE']);
             echo '<br><br>';
         }
@@ -361,10 +361,10 @@ switch ($mode) {
 
 <?php
 
-if ($remove_tables == 'prompt' && $mode == 'Uninstall') {
-    print("<br/><br/>");
-    print("<input type='radio' id='remove_tables_true' name='remove_tables' value='true' checked>".$mod_strings['ML_LBL_REMOVE_TABLES']."&nbsp;");
-    print("<input type='radio' id='remove_tables_false' name='remove_tables' value='false'>".$mod_strings['ML_LBL_DO_NOT_REMOVE_TABLES']."<br>");
+if ($remove_tables === 'prompt' && $mode === 'Uninstall') {
+    print('<br/><br/>');
+    print("<input type='radio' id='remove_tables_true' name='remove_tables' value='true' checked>".$mod_strings['ML_LBL_REMOVE_TABLES']. '&nbsp;');
+    print("<input type='radio' id='remove_tables_false' name='remove_tables' value='false'>".$mod_strings['ML_LBL_DO_NOT_REMOVE_TABLES']. '<br>');
 }
 $count = 0;
 
@@ -374,10 +374,10 @@ if ($show_files == true) {
     $new_studio_mod_files = array();
     $new_sugar_mod_files = array();
 
-    $cache_html_files = findAllFilesRelative(sugar_cached("layout"), array());
+    $cache_html_files = findAllFilesRelative(sugar_cached('layout'), array());
 
     foreach ($new_files as $the_file) {
-        if (substr(strtolower($the_file), -5, 5) == '.html' && in_array($the_file, $cache_html_files)) {
+        if (str_ends_with(strtolower($the_file), '.html') && in_array($the_file, $cache_html_files, true)) {
             array_push($new_studio_mod_files, $the_file);
         } else {
             array_push($new_sugar_mod_files, $the_file);
@@ -393,7 +393,7 @@ if ($show_files == true) {
                 start++;
               }
             }
-			</script>';
+            </script>';
 
 
 
@@ -401,31 +401,31 @@ if ($show_files == true) {
 
     echo '<br/><br/>';
 
-    echo '<div style="text-align: left; cursor: hand; cursor: pointer; text-decoration: underline;'.(($mode == 'Enable' || $mode == 'Disable')?'display:none;':'').'" onclick=\'this.style.display="none"; toggleDisplay("more");\'id="all_text">
-        '.SugarThemeRegistry::current()->getImage('advanced_search', '', null, null, ".gif", $mod_strings['LBL_ADVANCED_SEARCH']).$mod_strings['LBL_UW_SHOW_DETAILS'].'</div><div id=\'more\' style=\'display: none\'>
+    echo '<div style="text-align: left; cursor: hand; cursor: pointer; text-decoration: underline;'.(($mode === 'Enable' || $mode === 'Disable')?'display:none;':'').'" onclick=\'this.style.display="none"; toggleDisplay("more");\'id="all_text">
+        '.SugarThemeRegistry::current()->getImage('advanced_search', '', null, null, '.gif', $mod_strings['LBL_ADVANCED_SEARCH']). $mod_strings['LBL_UW_SHOW_DETAILS'].'</div><div id=\'more\' style=\'display: none\'>
               <div style="text-align: left; cursor: hand; cursor: pointer; text-decoration: underline;" onclick=\'document.getElementById("all_text").style.display=""; toggleDisplay("more");\'>'
-         .SugarThemeRegistry::current()->getImage('basic_search', '', null, null, ".gif", $mod_strings['LBL_BASIC_SEARCH']).$mod_strings['LBL_UW_HIDE_DETAILS'].'</div><br>';
+         .SugarThemeRegistry::current()->getImage('basic_search', '', null, null, '.gif', $mod_strings['LBL_BASIC_SEARCH']). $mod_strings['LBL_UW_HIDE_DETAILS'].'</div><br>';
     echo '<input type="checkbox" checked onclick="toggle_these(' . count($new_studio_mod_files) . ',' . (is_countable($new_files) ? count($new_files) : 0) . ', this)"> '.$mod_strings['LBL_UW_CHECK_ALL'];
     echo '<ul>';
     foreach ($new_sugar_mod_files as $the_file) {
-        $highlight_start = "";
-        $highlight_end = "";
-        $checked = "";
-        $disabled = "";
+        $highlight_start = '';
+        $highlight_end = '';
+        $checked = '';
+        $disabled = '';
         $unzip_file = "$unzip_dir/$zip_from_dir/$the_file";
         $new_file = clean_path("$zip_to_dir/$the_file");
         $forced_copy = false;
 
-        if ($mode == "Install") {
-            $checked = "checked";
+        if ($mode === 'Install') {
+            $checked = 'checked';
 
-            if ($install_type === 'langpack' && $the_file == "./manifest.php") {
+            if ($install_type === 'langpack' && $the_file === './manifest.php') {
                 $checked = '';
                 $disabled = "disabled=\"true\"";
             }
 
             foreach ($zip_force_copy as $pattern) {
-                if (preg_match("#" . $pattern . "#", $unzip_file)) {
+                if (preg_match('#' . $pattern . '#', $unzip_file)) {
                     $disabled = "disabled=\"true\"";
                     $forced_copy = true;
                 }
@@ -433,21 +433,21 @@ if ($show_files == true) {
             if (!$forced_copy && is_file($new_file) && (md5_file($unzip_file) === md5_file($new_file))) {
                 $disabled = "disabled=\"true\"";
             }
-            if ($checked != "" && $disabled != "") {    // need to put a hidden field
+            if ($checked != '' && $disabled != '') {    // need to put a hidden field
                 print("<input name=\"copy_$count\" type=\"hidden\" value=\"" . $the_file . "\">\n");
             }
             print("<li><input id=\"copy_$count\" name=\"copy_$count\" type=\"checkbox\" value=\"" . $the_file . "\" $checked $disabled > " . $highlight_start . $new_file . $highlight_end);
-            if ($checked == "" && $disabled != "") {    // need to explain this file hasn't changed
-                print(" (no changes)");
+            if ($checked == '' && $disabled != '') {    // need to explain this file hasn't changed
+                print(' (no changes)');
             }
             print("<br>\n");
         } else {
-            if ($mode == "Uninstall" && file_exists($new_file)) {
+            if ($mode === 'Uninstall' && file_exists($new_file)) {
                 if (md5_file($unzip_file) === md5_file($new_file)) {
                     $checked = "checked=\"true\"";
                 } else {
-                    $highlight_start = "<font color=red>";
-                    $highlight_end = "</font>";
+                    $highlight_start = '<font color=red>';
+                    $highlight_end = '</font>';
                 }
                 print("<li><input name=\"copy_$count\" type=\"checkbox\" value=\"" . $the_file . "\" $checked $disabled > " . $highlight_start . $new_file . $highlight_end . "<br>\n");
             }
@@ -457,21 +457,21 @@ if ($show_files == true) {
     print("</ul>\n");
 }
 
-if ($mode == "Disable" || $mode == "Enable") {
+if ($mode === 'Disable' || $mode === 'Enable') {
     //check to see if any files have been modified
-    $modified_files = getDiffFiles($unzip_dir, $install_file, ($mode == 'Enable'), $previous_version);
+    $modified_files = getDiffFiles($unzip_dir, $install_file, ($mode === 'Enable'), $previous_version);
     if ((is_countable($modified_files) ? count($modified_files) : 0) > 0) {
         //we need to tell the user that some files have been modified since they last did an install
         echo '<script>' .
                 'function handleFileChange(){';
         if ((is_countable($modified_files) ? count($modified_files) : 0) > 0) {
             echo 'if(document.getElementById("radio_overwrite_files") != null && document.getElementById("radio_do_not_overwrite_files") != null){
-                			var overwrite = false;
-                			if(document.getElementById("radio_overwrite_files").checked){
-                   			 overwrite = true
-                			}
-            			}
-        				return true;';
+                            var overwrite = false;
+                            if(document.getElementById("radio_overwrite_files").checked){
+                                overwrite = true
+                            }
+                        }
+                        return true;';
         } else {
             echo 'return true;';
         }
@@ -480,7 +480,7 @@ if ($mode == "Disable" || $mode == "Enable") {
         print('<table><td align="left" valign="top" colspan=2>');
         print("<input type='radio' id='radio_overwrite_files' name='radio_overwrite' value='overwrite'>{$mod_strings['LBL_OVERWRITE_FILES']}&nbsp;");
         print("<input type='radio' id='radio_do_not_overwrite_files' name='radio_overwrite' value='do_not_overwrite' checked>{$mod_strings['LBL_DO_OVERWRITE_FILES']}");
-        print("</td></tr></table>");
+        print('</td></tr></table>');
         print('<ul>');
         foreach ($modified_files as $modified_file) {
             print('<li>'.$modified_file.'</li>');
@@ -521,22 +521,22 @@ echo '<script>' .
     }
     var keys = [ "license","readme"];
     function selectTabCSS(key){
-            	for( var i=0; i<keys.length;i++)
-              	{
-                	var liclass = "";
-                	var linkclass = "";
+                for( var i=0; i<keys.length;i++)
+                  {
+                    var liclass = "";
+                    var linkclass = "";
 
-                	if ( key == keys[i])
-                	{
-                    	var liclass = "active";
-                    	var linkclass = "current";
-                    	document.getElementById(keys[i]+"_div").style.display = "block";
-                	}else{
-                    	document.getElementById(keys[i]+"_div").style.display = "none";
-                	}
-                	document.getElementById(keys[i]+"_li").className = liclass;
-                	document.getElementById(keys[i]+"_link").className = linkclass;
-            	}
+                    if ( key == keys[i])
+                    {
+                        var liclass = "active";
+                        var linkclass = "current";
+                        document.getElementById(keys[i]+"_div").style.display = "block";
+                    }else{
+                        document.getElementById(keys[i]+"_div").style.display = "none";
+                    }
+                    document.getElementById(keys[i]+"_li").className = liclass;
+                    document.getElementById(keys[i]+"_link").className = linkclass;
+                }
                 tabPreviousKey = key;
             }
       </script>';
@@ -553,5 +553,5 @@ echo '<script>' .
 </form>
 
 <?php
-    $GLOBALS['log']->info("Upgrade Wizard patches");
+    $GLOBALS['log']->info('Upgrade Wizard patches');
 ?>

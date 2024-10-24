@@ -801,7 +801,7 @@ $dictionary['User'] = array(
             ],
         'users_email_addresses' =>
             [
-                'lhs_module' => "Users",
+                'lhs_module' => 'Users',
                 'lhs_table' => 'users',
                 'lhs_key' => 'id',
                 'rhs_module' => 'EmailAddresses',
@@ -812,11 +812,11 @@ $dictionary['User'] = array(
                 'join_key_lhs' => 'bean_id',
                 'join_key_rhs' => 'email_address_id',
                 'relationship_role_column' => 'bean_module',
-                'relationship_role_column_value' => "Users"
+                'relationship_role_column_value' => 'Users'
             ],
         'users_email_addresses_primary' =>
             [
-                'lhs_module' => "Users",
+                'lhs_module' => 'Users',
                 'lhs_table' => 'users',
                 'lhs_key' => 'id',
                 'rhs_module' => 'EmailAddresses',

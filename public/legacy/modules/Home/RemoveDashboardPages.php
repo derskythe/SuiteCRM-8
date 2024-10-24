@@ -50,10 +50,10 @@ $pages = $current_user->getPreference('pages', $type);
 if ((is_countable($pages) ? count($pages) : 0) > 1) {
     if (!isset($_POST['status'])) {
         $html = "<form method='post' name='removepageform' action='index.php?module=Home&action=RemoveDashboardPages'/>";
-        $html .= "<p>".$GLOBALS['app_strings']['LBL_DELETE_DASHBOARD1']." ".$pages[$_POST['page_id']]['pageTitle'] . " ".$GLOBALS['app_strings']['LBL_DELETE_DASHBOARD2']."</p>";
+        $html .= '<p>' . $GLOBALS['app_strings']['LBL_DELETE_DASHBOARD1']. ' ' . $pages[$_POST['page_id']]['pageTitle'] . ' ' . $GLOBALS['app_strings']['LBL_DELETE_DASHBOARD2']. '</p>';
         $html .= "<input type='hidden' name='page_id' value='" . $_POST['page_id']. "' />";
         $html .= "<input type='hidden' name='status' value='yes' />";
-        $html .= "</form>";
+        $html .= '</form>';
 
         echo $html;
     } else {

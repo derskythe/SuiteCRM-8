@@ -47,17 +47,17 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class UserSignature extends SugarBean
 {
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $deleted;
+    public string $id;
+    public string $date_entered;
+    public string $date_modified;
+    public int $deleted;
     public $user_id;
-    public $name;
+    public string $name;
     public $signature;
-    public $table_name = 'users_signatures';
-    public $module_dir = 'Users';
-    public $object_name ='UserSignature';
-    public $disable_custom_fields = true;
+    public string $table_name = 'users_signatures';
+    public string $module_dir = 'Users';
+    public string $object_name ='UserSignature';
+    public bool $disable_custom_fields = true;
 
     public function __construct()
     {
@@ -78,7 +78,7 @@ class UserSignature extends SugarBean
     /**
      * returns the bean name - overrides SugarBean's
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -86,7 +86,7 @@ class UserSignature extends SugarBean
     /**
      * Override's SugarBean's
      */
-    public function create_export_query($order_by, $where, $show_deleted = 0)
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         return $this->create_new_list_query($order_by, $where, array(), array(), $show_deleted);
     }
@@ -114,7 +114,7 @@ class UserSignature extends SugarBean
     /**
      * Override's SugarBean's
      */
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
     }
 } // end class definition

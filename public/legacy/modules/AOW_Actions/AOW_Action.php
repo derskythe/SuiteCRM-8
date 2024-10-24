@@ -41,24 +41,24 @@
 #[\AllowDynamicProperties]
 class AOW_Action extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOW_Actions';
-    public $object_name = 'AOW_Action';
-    public $table_name = 'aow_actions';
-    public $tracker_visibility = false;
-    public $importable = false;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOW_Actions';
+    public string $object_name = 'AOW_Action';
+    public string $table_name = 'aow_actions';
+    public bool $tracker_visibility = false;
+    public bool $importable = false;
     public $disable_row_level_security = true;
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
     public $aow_workflow_id;
@@ -72,8 +72,9 @@ class AOW_Action extends Basic
     }
 
 
-
-
+    /**
+     * @throws Exception
+     */
     public function save_lines($post_data, $parent, $key = '')
     {
         if (!isset($post_data[$key . 'action'])) {
@@ -99,28 +100,28 @@ class AOW_Action extends Basic
                 $params = array();
                 $postData = $post_data[$key . 'param'][$i] ?? [];
                 foreach ($postData as $param_name => $param_value) {
-                    if ($param_name == 'value') {
+                    if ($param_name === 'value') {
                         foreach ($param_value as $p_id => $p_value) {
                             if (!isset($post_data[$key . 'param'][$i]['value_type'])) {
                                 LoggerManager::getLogger()->warn('AOW action error when trying to save lines, value type is undefined in post data, key and index was: ' . $key . ', ' . $i);
                             } elseif (!isset($post_data[$key . 'param'][$i]['value_type'][$p_id])) {
                                 LoggerManager::getLogger()->warn('AOW action error when trying to save lines, parameter id not found in post data, parameter id was: ' . $p_id);
                             } else {
-                                if ($post_data[$key . 'param'][$i]['value_type'][$p_id] == 'Value' && is_array($p_value)) {
+                                if ($post_data[$key . 'param'][$i]['value_type'][$p_id] === 'Value' && is_array($p_value)) {
                                     $param_value[$p_id] = encodeMultienumValue($p_value);
-                                }elseif($post_data[$key . 'param'][$i]['value_type'][$p_id] == 'Value'){
+                                }elseif($post_data[$key . 'param'][$i]['value_type'][$p_id] === 'Value'){
                                     if (isset($params['rel_type']) && !empty($params['rel_type']) && ($params['rel_type'] !== $params['record_type'])) {
                                         $relName = $params['rel_type'];
                                         $moduleBean = BeanFactory::getBean($params['record_type']);
                                         if (!$moduleBean->load_relationship($relName)) {
-                                            $GLOBALS['log']->fatal('Line '.__LINE__.': '.__METHOD__.': '."Relationship ".$relName." doesn't exist.");
+                                            $GLOBALS['log']->fatal('Line '.__LINE__.': '.__METHOD__.': '. 'Relationship ' .$relName." doesn't exist.");
                                             continue;
                                         }
                                         $moduleName = $moduleBean->$relName->getRelatedModuleName();
                                     } else {
-                                        $moduleName = $params["record_type"];
+                                        $moduleName = $params['record_type'];
                                     }
-                                    $param_value[$p_id] = fixUpFormatting($moduleName, $post_data[$key . 'param'][$i]["field"][$p_id], $p_value);
+                                    $param_value[$p_id] = fixUpFormatting($moduleName, $post_data[$key . 'param'][$i]['field'][$p_id], $p_value);
                                 }
                             }
                         }
@@ -137,7 +138,7 @@ class AOW_Action extends Basic
         }
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         return false;
     }

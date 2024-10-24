@@ -43,12 +43,12 @@ require_once('include/MVC/View/SugarView.php');
 #[\AllowDynamicProperties]
 class CalendarViewGetGR extends SugarView
 {
-    public function process()
+    public function process() : void
     {
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         $errorLevelStored = error_reporting();
         error_reporting(0);

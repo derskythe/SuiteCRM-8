@@ -46,11 +46,11 @@ if (!defined('sugarEntry') || !sugarEntry) {
 class ProjectTask extends SugarBean
 {
     // database table columns
-    public $id;
-    public $date_entered;
-    public $date_modified;
-    public $name;
-    public $description;
+    public string $id;
+    public string $date_entered;
+    public string $date_modified;
+    public string $name;
+    public string $description;
     public $project_id;
     public $project_task_id;
     public $date_start;
@@ -61,22 +61,22 @@ class ProjectTask extends SugarBean
     public $parent_task_id;
     public $predecessors;
     public $priority;
-    public $importable = true;
+    public bool $importable = true;
 
     // related information
-    public $assigned_user_name;
-    public $parent_name;
+    public string $assigned_user_name;
+    public string $parent_name;
     public $depends_on_name;
     public $email_id;
 
-    public $table_name = 'project_task';
-    public $object_name = 'ProjectTask';
-    public $module_dir = 'ProjectTask';
+    public string $table_name = 'project_task';
+    public string $object_name = 'ProjectTask';
+    public string $module_dir = 'ProjectTask';
 
-    public $field_name_map;
-    public $new_schema = true;
+    public ?array $field_name_map;
+    public bool $new_schema = true;
 
-    public $relationship_fields = array(
+    public array $relationship_fields = array(
         'email_id' => 'emails',
     );
     /**
@@ -87,7 +87,10 @@ class ProjectTask extends SugarBean
 
     /**
      * ProjectTask constructor.
+     *
      * @param bool $init
+     *
+     * @throws Exception
      */
     public function __construct($init = true)
     {
@@ -136,7 +139,7 @@ class ProjectTask extends SugarBean
     /*
      *
      */
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return $this->name;
     }
@@ -149,7 +152,7 @@ class ProjectTask extends SugarBean
         $return_value = '';
 
         $query = "SELECT name, assigned_user_id FROM {$this->table_name} WHERE id='{$depends_on_id}'";
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             $this->depends_on_name_owner = $row['assigned_user_id'];
@@ -165,7 +168,7 @@ class ProjectTask extends SugarBean
         $return_value = '';
 
         $query = "SELECT name, assigned_user_id FROM project WHERE id='{$project_id}'";
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             //$this->parent_name_owner = $row['assigned_user_id'];
@@ -184,7 +187,7 @@ class ProjectTask extends SugarBean
         $return_value = '';
 
         $query = "SELECT name, assigned_user_id FROM project WHERE id='{$parent_id}'";
-        $result = $this->db->query($query, true, " Error filling in additional detail fields: ");
+        $result = $this->db->query($query, true, ' Error filling in additional detail fields: ');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             $this->parent_name_owner = $row['assigned_user_id'];
@@ -198,16 +201,16 @@ class ProjectTask extends SugarBean
     /*
      *
      */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);
         $where_clauses[] = "project_task.name like '$the_query_string%'";
 
-        $the_where = "";
+        $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != "") {
-                $the_where .= " or ";
+            if ($the_where != '') {
+                $the_where .= ' or ';
             }
             $the_where .= $clause;
         }
@@ -215,7 +218,7 @@ class ProjectTask extends SugarBean
         return $the_where;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':
@@ -246,7 +249,7 @@ class ProjectTask extends SugarBean
                     }
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess($this->parent_type, $this->parent_id, 'view');
             /* END - SECURITY GROUPS */
         }
@@ -276,32 +279,32 @@ class ProjectTask extends SugarBean
         return $array_assign;
     }
 
-    public function create_export_query($order_by, $where, $relate_link_join = '')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $query = "SELECT
-				project_task.*,
-                users.user_name as assigned_user_name ";
+        $query = 'SELECT
+                project_task.*,
+                users.user_name as assigned_user_name ';
         $query .= $custom_join['select'];
 
-        $query .= " FROM project_task LEFT JOIN project ON project_task.project_id=project.id AND project.deleted=0 ";
+        $query .= ' FROM project_task LEFT JOIN project ON project_task.project_id=project.id AND project.deleted=0 ';
 
         $query .= $custom_join['join'];
-        $query .= " LEFT JOIN users
-                   	ON project_task.assigned_user_id=users.id ";
+        $query .= ' LEFT JOIN users
+                       ON project_task.assigned_user_id=users.id ';
 
-        $where_auto = " project_task.deleted=0 ";
+        $where_auto = ' project_task.deleted=0 ';
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where ($where) AND " . $where_auto;
         } else {
-            $query .= "where " . $where_auto;
+            $query .= 'where ' . $where_auto;
         }
 
         if (!empty($order_by)) {
             //check to see if order by variable already has table name by looking for dot "."
-            $table_defined_already = strpos((string) $order_by, ".");
+            $table_defined_already = strpos((string) $order_by, '.');
 
             if ($table_defined_already === false) {
                 //table not defined yet, define accounts to avoid "ambigous column" SQL error
@@ -318,6 +321,8 @@ class ProjectTask extends SugarBean
 
     /**
      * This method recalculates the percent complete of a parent task
+     *
+     * @throws Exception
      */
     public function updateParentProjectTaskPercentage()
     {
@@ -354,15 +359,15 @@ class ProjectTask extends SugarBean
         $cumulativeDone = 0;
         //update cumulative calculation - mimics gantt calculation
         foreach ($subProjectTasks as $key => &$value) {
-            if ($value['duration'] == "") {
+            if ($value['duration'] == '') {
                 $value['duration'] = 0;
             }
 
-            if ($value['percent_complete'] == "") {
+            if ($value['percent_complete'] == '') {
                 $value['percent_complete'] = 0;
             }
 
-            if ($value['duration_unit'] == "Hours") {
+            if ($value['duration_unit'] === 'Hours') {
                 $totalHours += $value['duration'];
                 $cumulativeDone += $value['duration'] * ($value['percent_complete'] / 100);
             } else {
@@ -389,7 +394,7 @@ class ProjectTask extends SugarBean
 
         if (!empty($this->parent_task_id) && !empty($this->project_id)) {
             $query = "SELECT id FROM project_task WHERE project_id = '{$this->project_id}' AND project_task_id = '{$this->parent_task_id}' AND deleted = 0 ORDER BY date_modified DESC";
-            $project_task_id = $this->db->getOne($query, true, "Error retrieving parent project task");
+            $project_task_id = $this->db->getOne($query, true, 'Error retrieving parent project task');
 
             if (!empty($project_task_id)) {
                 $projectTaskParent = BeanFactory::getBean('ProjectTask', $project_task_id);
@@ -412,7 +417,7 @@ class ProjectTask extends SugarBean
             //select all tasks from a project
             $query = "SELECT id, project_task_id, parent_task_id FROM project_task WHERE project_id = '{$this->project_id}' AND deleted = 0 ORDER BY project_task_id";
 
-            $result = $this->db->query($query, true, "Error retrieving child project tasks");
+            $result = $this->db->query($query, true, 'Error retrieving child project tasks');
 
             $projectTasks = array();
             while ($row = $this->db->fetchByAssoc($result)) {
@@ -433,7 +438,7 @@ class ProjectTask extends SugarBean
                 $count = 0;
 
                 foreach ($projectTasks as $id => $values) {
-                    if (in_array($values['parent_task_id'], $potentialParentTaskIds)) {
+                    if (in_array($values['parent_task_id'], $potentialParentTaskIds, true)) {
                         $potentialParentTaskIds[$values['project_task_id']] = $values['project_task_id'];
                         $actualParentTaskIds[$values['parent_task_id']] = $values['parent_task_id'];
 
@@ -453,7 +458,7 @@ class ProjectTask extends SugarBean
 
             foreach ($subProjectTasks as $id => $values) {
                 //ignore tasks that are parents
-                if (!in_array($values['project_task_id'], $actualParentTaskIds)) {
+                if (!in_array($values['project_task_id'], $actualParentTaskIds, true)) {
                     $projectTaskBean = BeanFactory::getBean('ProjectTask', $id);
                     $projectTasksBeans[] = $projectTaskBean;
                 }
@@ -492,6 +497,8 @@ class ProjectTask extends SugarBean
 
     /**
      * Update percent complete for project tasks with children tasks based on children's values
+     *
+     * @throws Exception
      */
     public function updateStatistic()
     {

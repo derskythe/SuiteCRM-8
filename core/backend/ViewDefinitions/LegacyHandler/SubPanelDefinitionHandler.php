@@ -25,9 +25,9 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\ViewDefinitions\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\FieldDefinitions\Service\FieldDefinitionsProviderInterface;
@@ -51,19 +51,19 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     public const HANDLER_KEY = 'subpanel-definitions';
 
-    protected $defaultDefinition = [
-        'name' => '',
-        'label' => '',
+    protected array $defaultDefinition = [
+        'name'     => '',
+        'label'    => '',
         'sortable' => true,
     ];
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
     /**
      * @var FieldDefinitionsProviderInterface
      */
-    private $fieldDefinitionProvider;
+    private FieldDefinitionsProviderInterface $fieldDefinitionProvider;
 
     /**
      * @var SubpanelTopActionDefinitionProviderInterface
@@ -81,6 +81,7 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     /**
      * ViewDefinitionsHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -94,25 +95,28 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        ModuleNameMapperInterface $moduleNameMapper,
-        FieldDefinitionsProviderInterface $fieldDefinitionProvider,
-        SubpanelTopActionDefinitionProviderInterface $subpanelTopActionDefinitionProvider,
+        string                                        $projectDir,
+        string                                        $legacyDir,
+        string                                        $legacySessionName,
+        string                                        $defaultSessionName,
+        LegacyScopeState                              $legacyScopeState,
+        ModuleNameMapperInterface                     $moduleNameMapper,
+        FieldDefinitionsProviderInterface             $fieldDefinitionProvider,
+        SubpanelTopActionDefinitionProviderInterface  $subpanelTopActionDefinitionProvider,
         SubpanelLineActionDefinitionProviderInterface $subpanelLineActionDefinitionProvider,
-        FieldAliasMapper $fieldAliasMapper,
-        RequestStack $session
-    ) {
+        FieldAliasMapper                              $fieldAliasMapper,
+        RequestStack                                  $session,
+        LoggerInterface                               $logger
+    )
+    {
         parent::__construct(
             $projectDir,
             $legacyDir,
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->fieldDefinitionProvider = $fieldDefinitionProvider;
@@ -124,7 +128,7 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -132,22 +136,23 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
     /**
      * @inheritDoc
      */
-    public function getSubPanelDef(string $moduleName): array
+    public function getSubPanelDef(string $moduleName) : array
     {
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/SubPanel/SubPanel.php';
+        require_once $this->getLegacyDir().'/include/SubPanel/SubPanel.php';
 
         return $this->getModuleSubpanels($moduleName);
     }
 
     /**
      * Get module subpanels
+     *
      * @param string $module
+     *
      * @return array
      * @description This function gets all the available legacy subpanels/tabs for a module
      * and re-format it to match the front-end requirements
      */
-    protected function getModuleSubpanels(string $module): array
+    protected function getModuleSubpanels(string $module) : array
     {
         /* @noinspection PhpIncludeInspection */
         require_once 'include/SubPanel/SubPanelDefinitions.php';
@@ -192,8 +197,7 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
                 continue;
             }
 
-
-            if ($subpanel === false) {
+            if (!$subpanel) {
                 continue;
             }
 
@@ -232,7 +236,6 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
                 array_unshift($mapColumns, $iconColumn);
             }
 
-
             $resultingTabs[$key]['columns'] = $mapColumns;
 
         }
@@ -242,9 +245,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     /**
      * @param array $tab
-     * @return mixed|string
+     *
+     * @return string
      */
-    protected function getHeaderModule(array $tab)
+    protected function getHeaderModule(array $tab) : string
     {
         $vardefModule = $tab['module'];
 
@@ -271,9 +275,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     /**
      * @param string $vardefModule
+     *
      * @return array
      */
-    protected function getSubpanelModuleVardefs(string $vardefModule): array
+    protected function getSubpanelModuleVardefs(string $vardefModule) : array
     {
         return $this->fieldDefinitionProvider->getVardef($vardefModule)->getVardef();
     }
@@ -281,9 +286,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
     /**
      * @param $subpanel
      * @param $tab
+     *
      * @return array
      */
-    protected function mapButtons(aSubPanel $subpanel, $tab): array
+    protected function mapButtons(aSubPanel $subpanel, array $tab) : array
     {
 
         $module = $tab['module'] ?? '';
@@ -320,18 +326,19 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
         return $topButtons;
     }
 
-    protected function getSearchdefs(aSubPanel $subpanel) {
+    protected function getSearchdefs(aSubPanel $subpanel)
+    {
         $searchDefs = $subpanel->_instance_properties['searchdefs'] ?? '';
 
         if (!empty($searchDefs)) {
             foreach ($searchDefs as &$field) {
                 $fieldDefinition = [
-                    'name' => $field['name'],
-                    'type' => $field['type'] ?? 'varchar',
-                    'vname' => $field['label'] ?? '',
-                    'options' => $field['options'] ?? [],
-                    'default' => $field['default'] ?? null,
-                    'width' => $field['width'] ?? '',
+                    'name'                => $field['name'],
+                    'type'                => $field['type'] ?? 'varchar',
+                    'vname'               => $field['label'] ?? '',
+                    'options'             => $field['options'] ?? [],
+                    'default'             => $field['default'] ?? null,
+                    'width'               => $field['width'] ?? '',
                     'enable_range_search' => $field['enable_range_search'] ?? '',
                 ];
                 $field['fieldDefinition'] = $fieldDefinition;
@@ -339,14 +346,16 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
             return $searchDefs;
         }
+
         return null;
     }
 
     /**
      * @param aSubPanel $subpanel
+     *
      * @return array
      */
-    protected function getButtonDefinitions(aSubPanel $subpanel): array
+    protected function getButtonDefinitions(aSubPanel $subpanel) : array
     {
         return $subpanel->get_buttons() ?? [];
     }
@@ -354,9 +363,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
     /**
      * @param $subpanel
      * @param array $vardefs
+     *
      * @return array
      */
-    protected function mapColumns(aSubPanel $subpanel, array $vardefs, array $extraModuleVardefs): array
+    protected function mapColumns(aSubPanel $subpanel, array $vardefs, array $extraModuleVardefs) : array
     {
         $panelDefinition = $subpanel->panel_definition ?? [];
         $listFields = $panelDefinition['list_fields'] ?? [];
@@ -393,12 +403,14 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     /**
      * Build column
+     *
      * @param $column
      * @param $key
      * @param array|null $vardefs
+     *
      * @return array
      */
-    protected function buildColumn($column, $key, ?array $vardefs): array
+    protected function buildColumn($column, $key, ?array $vardefs) : array
     {
         if (!empty($column)) {
             $column['label'] = $column['vname'] ?? '';
@@ -421,22 +433,24 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     /**
      * @param $module
+     *
      * @return array
      */
-    protected function buildIconColumn($module): array {
-        return $iconColumn = [
-            "name" => "module_name",
-            "label" => "",
-            "sortable" => false,
-            "vname" => "",
-            "fieldDefinition" => [
-                "name" => "module_name",
-                "vname" => "",
-                "type" => "icon",
-                "default" => $module,
-                "required" => false
+    protected function buildIconColumn($module) : array
+    {
+        return [
+            'name'            => 'module_name',
+            'label'           => '',
+            'sortable'        => false,
+            'vname'           => '',
+            'fieldDefinition' => [
+                'name'     => 'module_name',
+                'vname'    => '',
+                'type'     => 'icon',
+                'default'  => $module,
+                'required' => false
             ],
-            "type" => "icon"
+            'type'            => 'icon'
         ];
     }
 
@@ -445,13 +459,14 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
      * @param array $tabs
      * @param $key
      * @param $tab
+     *
      * @return array
      */
-    protected function mapInsightWidget($subpanel, array $tabs, $key, $tab): array
+    protected function mapInsightWidget($subpanel, array $tabs, $key, $tab) : array
     {
         if (!empty($subpanel->panel_definition['insightWidget'])) {
             $widgetConfig = [
-                'type' => 'statistics',
+                'type'    => 'statistics',
                 'options' => [
                     'insightWidget' => $subpanel->panel_definition['insightWidget']
                 ]
@@ -473,51 +488,52 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
      * @param array $tabs
      * @param $key
      * @param $tab
+     *
      * @return array
      */
-    protected function getDefaultWidgetConfig(array $tabs, $key, $tab): array
+    protected function getDefaultWidgetConfig(array $tabs, $key, $tab) : array
     {
         return [
-            'type' => 'statistics',
+            'type'    => 'statistics',
             'options' => [
                 'insightWidget' => [
                     'rows' => [
                         [
                             'justify' => 'end',
-                            'cols' => [
+                            'cols'    => [
                                 [
                                     'icon' => $tab['module'],
                                 ],
                             ]
                         ],
                         [
-                            'align' => 'end',
+                            'align'   => 'end',
                             'justify' => 'start',
-                            'class' => 'flex-grow-1',
-                            'cols' => [
+                            'class'   => 'flex-grow-1',
+                            'cols'    => [
                                 [
                                     'statistic' => $tabs[$key]['module'],
-                                    'class' => 'sub-panel-banner-value',
-                                    'bold' => true,
+                                    'class'     => 'sub-panel-banner-value',
+                                    'bold'      => true,
                                 ],
                             ]
                         ],
                         [
                             'justify' => 'start',
-                            'cols' => [
+                            'cols'    => [
                                 [
                                     'descriptionKey' => $tabs[$key]['title_key'] . '_INSIGHT_DESCRIPTION',
-                                    'class' => 'sub-panel-banner-tooltip',
+                                    'class'          => 'sub-panel-banner-tooltip',
                                 ]
                             ]
                         ],
                         [
                             'justify' => 'start',
-                            'cols' => [
+                            'cols'    => [
                                 [
                                     'labelKey' => $tabs[$key]['title_key'],
-                                    'class' => 'sub-panel-banner-button-title',
-                                    'bold' => true,
+                                    'class'    => 'sub-panel-banner-button-title',
+                                    'bold'     => true,
                                 ]
                             ]
                         ],
@@ -534,7 +550,7 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
      * @param $rowKey
      * @param $colKey
      */
-    protected function replaceLabelKey(string $titleKey, $col, array &$widgetRows, $rowKey, $colKey): void
+    protected function replaceLabelKey(string $titleKey, $col, array &$widgetRows, $rowKey, $colKey) : void
     {
         $labelKey = $col['labelKey'] ?? '';
         if ($labelKey !== '') {
@@ -549,7 +565,7 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
      * @param array $widgetConfig
      * @param $widgetRows
      */
-    protected function replaceVariables(array $tabs, $key, array &$widgetConfig, &$widgetRows): void
+    protected function replaceVariables(array $tabs, $key, array &$widgetConfig, &$widgetRows) : void
     {
         $widgetRows = $widgetConfig['options']['insightWidget']['rows'] ?? [];
 
@@ -568,14 +584,15 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
     /**
      * @param aSubPanel $subpanelDef
      * @param string $subpanelModule
+     *
      * @description  this function fetches all the line actions defined for a subpanel
      * for now, only the remove action is filtered from all available line actions
      * @return array
      */
-    public function getSubpanelLineActions(aSubPanel $subpanelDef, string $subpanelModule): array
+    public function getSubpanelLineActions(aSubPanel $subpanelDef, string $subpanelModule) : array
     {
         $lineActions = [];
-        $subpanelLineActions = ['edit_button' => 'edit', 'close_button' => 'close', 'remove_button' => 'unlink'];
+        $subpanelLineActions = [ 'edit_button' => 'edit', 'close_button' => 'close', 'remove_button' => 'unlink' ];
 
         $thepanel = $subpanelDef->isCollection() ? $subpanelDef->get_header_panel_def() : $subpanelDef;
 
@@ -597,8 +614,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
                 ) {
                     $lineAction = $subpanelLineActions[$list_field['name']];
                     $moduleName = $this->moduleNameMapper->toFrontEnd($subpanelModule);
-                    $lineActions[] = $this->subpanelLineActionDefinitionProvider->getLineAction($moduleName,
-                        $lineAction);
+                    $lineActions[] = $this->subpanelLineActionDefinitionProvider->getLineAction(
+                        $moduleName,
+                        $lineAction
+                    );
                 }
             }
         }
@@ -608,9 +627,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
 
     /**
      * @param $collection_list
+     *
      * @return array
      */
-    protected function getCollectionListVardefs($collection_list): array
+    protected function getCollectionListVardefs($collection_list) : array
     {
         $extraModuleVardefs = [];
         if (!is_array($collection_list)) {
@@ -643,9 +663,10 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
      * @param array $extraModuleVardefs
      * @param int|string $key
      * @param array $definition
+     *
      * @return array
      */
-    protected function addMultiModuleVardefs(array $extraModuleVardefs, $key, array $definition): array
+    protected function addMultiModuleVardefs(array $extraModuleVardefs, $key, array $definition) : array
     {
 
 
@@ -669,6 +690,7 @@ class SubPanelDefinitionHandler extends LegacyHandler implements SubPanelDefinit
         }
 
         $definition['multiModuleDefinitions'] = $multiModuleFieldVardefs;
+
         return $definition;
     }
 }

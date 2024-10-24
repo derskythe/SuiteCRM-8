@@ -91,12 +91,12 @@ class CallTest extends SuitePHPUnitFrameworkTestCase
         $call = BeanFactory::newBean('Calls');
 
         //test with empty string params
-        $expected = "SELECT \n			calls.*,\n			users.user_name as assigned_user_name FROM calls \n			LEFT JOIN users\n			ON calls.assigned_user_id=users.id where  calls.deleted=0   ORDER BY calls.name";
+        $expected = "SELECT \n            calls.*,\n            users.user_name as assigned_user_name FROM calls \n            LEFT JOIN users\n            ON calls.assigned_user_id=users.id where  calls.deleted=0   ORDER BY calls.name";
         $actual = $call->create_list_query('', '');
         self::assertSame($expected, $actual);
 
         //test with valid string params
-        $expected = "SELECT \n			calls.*,\n			users.user_name as assigned_user_name FROM calls \n			LEFT JOIN users\n			ON calls.assigned_user_id=users.id where users.user_name=\"\" AND  calls.deleted=0   ORDER BY calls.name";
+        $expected = "SELECT \n            calls.*,\n            users.user_name as assigned_user_name FROM calls \n            LEFT JOIN users\n            ON calls.assigned_user_id=users.id where users.user_name=\"\" AND  calls.deleted=0   ORDER BY calls.name";
         $actual = $call->create_list_query('name', 'users.user_name=""');
         self::assertSame($expected, $actual);
     }

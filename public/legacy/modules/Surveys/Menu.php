@@ -46,27 +46,27 @@ global $mod_strings, $app_strings, $sugar_config;
 if (ACLController::checkAccess('Surveys', 'edit', true)) {
     $module_menu[] =
         array(
-            "index.php?module=Surveys&action=EditView&return_module=Surveys&return_action=DetailView",
+            'index.php?module=Surveys&action=EditView&return_module=Surveys&return_action=DetailView',
             $mod_strings['LNK_NEW_RECORD'],
-            "Add",
+            'Add',
             'Surveys'
         );
 }
 if (ACLController::checkAccess('Surveys', 'list', true)) {
     $module_menu[] =
         array(
-            "index.php?module=Surveys&action=index&return_module=Surveys&return_action=DetailView",
+            'index.php?module=Surveys&action=index&return_module=Surveys&return_action=DetailView',
             $mod_strings['LNK_LIST'],
-            "List",
+            'List',
             'Surveys'
         );
 }
 if (ACLController::checkAccess('SurveyResponses', 'list', true)) {
     $module_menu[] =
         array(
-            "index.php?module=SurveyResponses&action=index&return_module=Surveys&return_action=index",
+            'index.php?module=SurveyResponses&action=index&return_module=Surveys&return_action=index',
             $mod_strings['LNK_LIST_SURVEY_RESPONSES'] ?? '',
-            "List",
+            'List',
             'SurveyResponses'
         );
 }

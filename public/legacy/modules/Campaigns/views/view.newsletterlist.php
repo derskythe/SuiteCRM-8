@@ -67,11 +67,11 @@ class ViewNewsLetterList extends ViewList
 
         echo $this->searchForm->display($this->headers);
     }
-    
+
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $mod_strings;
         $mod_strings['LBL_MODULE_TITLE'] = $mod_strings['LBL_NEWSLETTER_TITLE'];

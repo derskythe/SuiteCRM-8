@@ -38,14 +38,14 @@ class RecordThreadDefinitionMapper implements ViewDefinitionMapperInterface
 {
     use FieldDefinitionsInjectorTrait;
 
-    protected $defaultDefinition = [
+    protected array $defaultDefinition = [
         'name' => '',
         'label' => '',
     ];
     /**
      * @var FieldDefinitionsProviderInterface
      */
-    private $fieldDefinitionProvider;
+    private FieldDefinitionsProviderInterface $fieldDefinitionProvider;
 
     /**
      * @var FieldAliasMapper
@@ -91,7 +91,6 @@ class RecordThreadDefinitionMapper implements ViewDefinitionMapperInterface
 
         $definition->setRecordView($recordView);
     }
-
 
     /**
      * Add field definitions.
@@ -146,7 +145,7 @@ class RecordThreadDefinitionMapper implements ViewDefinitionMapperInterface
      *
      * @return mixed
      */
-    protected function mergeDisplayParams($definition)
+    protected function mergeDisplayParams($definition) : mixed
     {
         $fieldDefinitions = $definition['fieldDefinition'] ?? [];
         $toMerge = [
@@ -218,11 +217,8 @@ class RecordThreadDefinitionMapper implements ViewDefinitionMapperInterface
             }
 
             $this->addFieldDefinitions('item', 'header', $options, $vardefs);
-
             $this->addFieldDefinitions('item', 'body', $options, $vardefs);
-
             $this->addFieldDefinitions('create', 'header', $options, $vardefs);
-
             $this->addFieldDefinitions('create', 'body', $options, $vardefs);
 
             $widget['options']['recordThread'] = $options;

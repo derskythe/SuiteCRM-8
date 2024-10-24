@@ -45,7 +45,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class LeadsViewDetail extends ViewDetail
 {
-    public function display()
+    public function display() : void
     {
         global $sugar_config;
 
@@ -53,8 +53,8 @@ class LeadsViewDetail extends ViewDetail
         formLetter::DVPopupHtml('Leads');
 
         //If the convert lead action has been disabled for already converted leads, disable the action link.
-        $disableConvert = ($this->bean->status == 'Converted' && !empty($sugar_config['disable_convert_lead'])) ? true : false;
-        $this->ss->assign("DISABLE_CONVERT_ACTION", $disableConvert);
+        $disableConvert = ($this->bean->status === 'Converted' && !empty($sugar_config['disable_convert_lead'])) ? true : false;
+        $this->ss->assign('DISABLE_CONVERT_ACTION', $disableConvert);
         parent::display();
     }
 }

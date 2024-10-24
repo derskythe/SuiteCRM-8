@@ -52,13 +52,13 @@ require_once('include/upload_file.php');
 #[\AllowDynamicProperties]
 class DocumentRevision extends SugarBean
 {
-    public $id;
+    public string $id;
     public $document_id;
     public $doc_id;
     public $doc_type;
     public $doc_url;
-    public $date_entered;
-    public $created_by;
+    public string $date_entered;
+    public string $created_by;
     public $filename;
     public $file_mime_type;
     public $revision;
@@ -67,48 +67,58 @@ class DocumentRevision extends SugarBean
     public $latest_revision;
     public $file_url;
     public $file_ext;
-    public $created_by_name;
+    public string $created_by_name;
 
     public $img_name;
     public $img_name_bare;
 
-    public $table_name = "document_revisions";
-    public $object_name = "DocumentRevision";
-    public $module_dir = 'DocumentRevisions';
-    public $new_schema = true;
+    public string $table_name = 'document_revisions';
+    public string $object_name = 'DocumentRevision';
+    public string $module_dir = 'DocumentRevisions';
+    public bool $new_schema = true;
     public $latest_revision_id;
 
     /*var $column_fields = Array("id"
-    	,"document_id"
-    	,"date_entered"
-    	,"created_by"
-    	,"filename"
-    	,"file_mime_type"
-    	,"revision"
-    	,"change_log"
-    	,"file_ext"
-    	);
-*/
-    public $encodeFields = array();
-
-    // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array('');
-
-    // This is the list of fields that are in the lists.
-    public $list_fields = array("id"
         ,"document_id"
         ,"date_entered"
         ,"created_by"
         ,"filename"
         ,"file_mime_type"
         ,"revision"
-        ,"file_url"
         ,"change_log"
         ,"file_ext"
-        ,"created_by_name"
+        );
+*/
+    public $encodeFields = array();
+
+    // This is used to retrieve related fields from form posts.
+    public array $additional_column_fields = array( '');
+
+    // This is the list of fields that are in the lists.
+    public array $list_fields = array( 'id'
+                                       ,
+                                       'document_id'
+                                       ,
+                                       'date_entered'
+                                       ,
+                                       'created_by'
+                                       ,
+                                       'filename'
+                                       ,
+                                       'file_mime_type'
+                                       ,
+                                       'revision'
+                                       ,
+                                       'file_url'
+                                       ,
+                                       'change_log'
+                                       ,
+                                       'file_ext'
+                                       ,
+                                       'created_by_name'
         );
 
-    public $required_fields = array("revision");
+    public $required_fields = array( 'revision' );
 
     public $authenticated = null;
 
@@ -140,12 +150,12 @@ class DocumentRevision extends SugarBean
 
         return $saveRet;
     }
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->filename;
     }
 
-    public function retrieve($id = -1, $encode=false, $deleted=true)
+    public function retrieve($id = -1, $encode=false, $deleted=true) : ?SugarBean
     {
         $ret = parent::retrieve($id, $encode, $deleted);
 
@@ -166,7 +176,7 @@ class DocumentRevision extends SugarBean
         $this->fill_in_additional_detail_fields();
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         global $theme;
         global $current_language;
@@ -179,7 +189,7 @@ class DocumentRevision extends SugarBean
 
         //find the document name and current version.
         $query = "SELECT document_name, revision, document_revision_id FROM documents, document_revisions where documents.id = '".$this->db->quote($this->document_id)."' AND document_revisions.id = documents.document_revision_id";
-        $result = $this->db->query($query, true, "Error fetching document details...:");
+        $result = $this->db->query($query, true, 'Error fetching document details...:');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             $this->document_name = $row['document_name'];
@@ -230,8 +240,8 @@ class DocumentRevision extends SugarBean
 
         // get extension
         $realFilename = $tempDoc->filename;
-        $fileExtension_beg = strrpos((string) $realFilename, ".");
-        $fileExtension = "";
+        $fileExtension_beg = strrpos((string) $realFilename, '.');
+        $fileExtension = '';
 
         if ($fileExtension_beg > 0) {
             $fileExtension = substr((string) $realFilename, $fileExtension_beg + 1);
@@ -242,11 +252,11 @@ class DocumentRevision extends SugarBean
                 //if found, then append with .txt to filename and break out of lookup
                 //this will make sure that the file goes out with right extension, but is stored
                 //as a text in db.
-                $fileExtension .= ".txt";
+                $fileExtension .= '.txt';
                 break; // no need to look for more
             }
         }
-        $fileExtension = ".".$fileExtension;
+        $fileExtension = '.' .$fileExtension;
 
         $return = $logicalName.$revString.$fileExtension;
 
@@ -263,8 +273,8 @@ class DocumentRevision extends SugarBean
 
         //find the document name and current version.
         $query = "SELECT documents.document_name, revision FROM documents, document_revisions where documents.id = '$doc_id'";
-        $query .= " AND document_revisions.id = documents.document_revision_id";
-        $result = $this->db->query($query, true, "Error fetching document details...:");
+        $query .= ' AND document_revisions.id = documents.document_revision_id';
+        $result = $this->db->query($query, true, 'Error fetching document details...:');
         $row = $this->db->fetchByAssoc($result);
         if ($row != null) {
             $this->name = $row['document_name'];
@@ -326,7 +336,7 @@ class DocumentRevision extends SugarBean
         return $return_array;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'FILE': return true;

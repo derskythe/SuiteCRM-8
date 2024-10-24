@@ -28,6 +28,7 @@
 
 namespace App\Authentication\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Users\Entity\User;
@@ -73,7 +74,8 @@ class UserHandler extends LegacyHandler
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
         SystemConfigProviderInterface $systemConfigProvider,
-        UserPreferencesProviderInterface $userPreferenceService
+        UserPreferencesProviderInterface $userPreferenceService,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -81,7 +83,8 @@ class UserHandler extends LegacyHandler
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->systemConfigProvider = $systemConfigProvider;
         $this->userPreferenceService = $userPreferenceService;

@@ -112,7 +112,7 @@ class ImapHandlerFactory
         $interfaceCallsSettings = include $this->imapHandlerTestInterface['calls'];
 
         if (!isset($interfaceCallsSettings[$testSettings])) {
-            $info = "[debug testSettings] " . var_dump($testSettings, true);
+            $info = '[debug testSettings] ' . var_dump($testSettings, true);
             $info .= "\n[debug info this] " . var_dump($this, true);
             $info .= "\n[debug info callset] " . var_dump($interfaceCallsSettings, true);
             LoggerManager::getLogger()->debug('Imap test setting failure: ' . $info);
@@ -131,6 +131,7 @@ class ImapHandlerFactory
     /**
      *
      * @return string
+     * @throws ImapHandlerException
      */
     protected function getTestSettings()
     {
@@ -139,7 +140,7 @@ class ImapHandlerFactory
             $testSettings = file_get_contents(__DIR__ . self::SETTINGS_KEY_FILE);
         }
         if (!$testSettings) {
-            LoggerManager::getLogger()->warn("Test settings not set, create one with default key");
+            LoggerManager::getLogger()->warn('Test settings not set, create one with default key');
             $testSettings = self::DEFAULT_SETTINGS_KEY;
             $this->saveTestSettingsKey($testSettings);
         }
@@ -168,7 +169,7 @@ class ImapHandlerFactory
     {
         if (!is_string($key) || !$key) {
             $type = gettype($key);
-            throw new InvalidArgumentException('Key should be a non-empty string, ' . ($type == 'string' ? 'empty string' : $type) . ' given.');
+            throw new InvalidArgumentException('Key should be a non-empty string, ' . ($type === 'string' ? 'empty string' : $type) . ' given.');
         }
 
         $calls = include $this->imapHandlerTestInterface['calls'];

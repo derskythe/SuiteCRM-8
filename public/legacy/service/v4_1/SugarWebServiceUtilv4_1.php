@@ -61,7 +61,7 @@ class SugarWebServiceUtilv4_1 extends SugarWebServiceUtilv4
                 session_start();
             }
 
-            if (!empty($_SESSION['is_valid_session']) && $this->is_valid_ip_address('ip_address') && $_SESSION['type'] == 'user') {
+            if (!empty($_SESSION['is_valid_session']) && $this->is_valid_ip_address('ip_address') && $_SESSION['type'] === 'user') {
                 global $current_user;
                 require_once('modules/Users/User.php');
                 $current_user = BeanFactory::newBean('Users');
@@ -72,7 +72,7 @@ class SugarWebServiceUtilv4_1 extends SugarWebServiceUtilv4
                 return true;
             }
 
-            $GLOBALS['log']->debug("calling destroy");
+            $GLOBALS['log']->debug('calling destroy');
             session_destroy();
         }
         LogicHook::initialize();
@@ -88,12 +88,12 @@ class SugarWebServiceUtilv4_1 extends SugarWebServiceUtilv4
             $_SESSION['avail_modules'] = get_user_module_list($user);
         }
         if (isset($_SESSION['avail_modules'][$module_name])) {
-            if ($action == 'write' && $_SESSION['avail_modules'][$module_name] == 'read_only') {
+            if ($action === 'write' && $_SESSION['avail_modules'][$module_name] === 'read_only') {
                 if (is_admin($user)) {
                     return true;
                 }
                 return false;
-            } elseif ($action == 'write' && strcmp(strtolower($module_name), 'users') == 0 && !$user->isAdminForModule($module_name)) {
+            } elseif ($action === 'write' && strcmp(strtolower($module_name), 'users') == 0 && !$user->isAdminForModule($module_name)) {
                 //rrs bug: 46000 - If the client is trying to write to the Users module and is not an admin then we need to stop them
                 return false;
             }
@@ -149,18 +149,18 @@ class SugarWebServiceUtilv4_1 extends SugarWebServiceUtilv4
                 $row = array();
                 foreach ($filterFields as $field) {
                     if (isset($bean->$field)) {
-                        if (isset($bean->field_defs[$field]['type']) && $bean->field_defs[$field]['type'] == 'date') {
+                        if (isset($bean->field_defs[$field]['type']) && $bean->field_defs[$field]['type'] === 'date') {
                             $row[$field] = $timedate->to_display_date_time($bean->$field);
                         } else {
                             $row[$field] = $bean->$field;
                         }
                     } else {
-                        $row[$field] = "";
+                        $row[$field] = '';
                     }
                 }
                 //Users can't see other user's hashes
                 if (is_a($bean, 'User') && $current_user->id != $bean->id && isset($row['user_hash'])) {
-                    $row['user_hash'] = "";
+                    $row['user_hash'] = '';
                 }
                 $row = clean_sensitive_data($bean->field_defs, $row);
                 $list[] = $row;

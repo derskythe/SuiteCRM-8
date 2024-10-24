@@ -145,17 +145,17 @@ class UtilsTest extends SuitePHPUnitFrameworkTestCase
         $recommendedVersion = '7.1.0';
 
         // Returns -1 when the version is less than the minimum version.
-        self::assertEquals(-1, check_php_version("5.4.0", $minimumVersion, $recommendedVersion));
+        self::assertEquals(-1, check_php_version('5.4.0', $minimumVersion, $recommendedVersion));
 
         // Returns 0 when the version is above the minimum but below the recommended version.
-        self::assertEquals(0, check_php_version("7.0.0", $minimumVersion, $recommendedVersion));
+        self::assertEquals(0, check_php_version('7.0.0', $minimumVersion, $recommendedVersion));
 
         // Returns 1 when the version is at or above the recommended version.
-        self::assertEquals(1, check_php_version("7.1.0", $minimumVersion, $recommendedVersion));
-        self::assertEquals(1, check_php_version("7.2.0", $minimumVersion, $recommendedVersion));
-        self::assertEquals(1, check_php_version("8.0.0", $minimumVersion, $recommendedVersion));
+        self::assertEquals(1, check_php_version('7.1.0', $minimumVersion, $recommendedVersion));
+        self::assertEquals(1, check_php_version('7.2.0', $minimumVersion, $recommendedVersion));
+        self::assertEquals(1, check_php_version('8.0.0', $minimumVersion, $recommendedVersion));
         // Handles versions with a `-dev` suffix correctly.
-        self::assertEquals(1, check_php_version("7.4.0-dev", $minimumVersion, $recommendedVersion));
+        self::assertEquals(1, check_php_version('7.4.0-dev', $minimumVersion, $recommendedVersion));
     }
 
     public function testreturn_bytes(): void

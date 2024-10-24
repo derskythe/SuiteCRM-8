@@ -82,11 +82,11 @@ class OneToOneRelationship extends AbstractRelationship
     {
         parent::__construct($definition) ;
     }
-    
+
     /*
      * BUILD methods called during the build
      */
-    
+
     /*
      * @return array    An array of relationship metadata definitions
      */
@@ -115,7 +115,7 @@ class OneToOneRelationship extends AbstractRelationship
             'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getRightModuleSystemLabel()) . '_TITLE',
             $this->relationship_only ? false : $this->getIDName($this->rhs_module)
         ) ;
-        
+
         if (!$this->relationship_only) {
             $vardefs [ $this->lhs_module ] [] = $this->getRelateFieldDefinition($this->rhs_module, $this->relationship_name, $this->getRightModuleSystemLabel()) ;
             $vardefs [ $this->rhs_module ] [] = $this->getRelateFieldDefinition($this->lhs_module, $this->relationship_name, $this->getLeftModuleSystemLabel()) ;
@@ -132,7 +132,7 @@ class OneToOneRelationship extends AbstractRelationship
                 'LBL_' . strtoupper($this->relationship_name . '_FROM_' . $this->getLeftModuleSystemLabel()) . '_TITLE'
             ) ;
         }
-        
+
         return $vardefs ;
     }
 
@@ -145,13 +145,13 @@ class OneToOneRelationship extends AbstractRelationship
         if ($this->relationship_only) {
             return array() ;
         }
- 
+
         if ($this->lhs_module == $this->rhs_module) { // don't add in two fields on recursive relationships
-            return array( $this->lhs_module => static::getValidDBName($this->relationship_name . "_name") );
+            return array( $this->lhs_module => static::getValidDBName($this->relationship_name . '_name') );
         } else {
             return array(
-                $this->lhs_module => static::getValidDBName($this->relationship_name . "_name") ,
-                $this->rhs_module => static::getValidDBName($this->relationship_name . "_name")
+                $this->lhs_module => static::getValidDBName($this->relationship_name . '_name'),
+                $this->rhs_module => static::getValidDBName($this->relationship_name . '_name')
             ) ;
         }
     }

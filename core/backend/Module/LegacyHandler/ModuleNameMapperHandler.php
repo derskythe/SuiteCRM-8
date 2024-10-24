@@ -33,6 +33,7 @@ use ModuleNameMapper;
 
 /**
  * Class ModuleNameMapper
+ *
  * @package App\Legacy
  */
 class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperInterface
@@ -41,14 +42,15 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
 
     /**
      * Lazy initialized mapper
-     * @var ModuleNameMapper
+     *
+     * @var ?ModuleNameMapper
      */
-    protected $mapper;
+    protected ?ModuleNameMapper $mapper;
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -56,7 +58,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * @inheritDoc
      */
-    public function isValidModule(string $module): bool
+    public function isValidModule(string $module) : bool
     {
         $this->init();
 
@@ -71,16 +73,16 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
 
     /**
      * Get mapper. Initialize it if needed
+     *
      * @return ModuleNameMapper
      */
-    protected function getMapper(): ModuleNameMapper
+    protected function getMapper() : ModuleNameMapper
     {
         if ($this->mapper !== null) {
             return $this->mapper;
         }
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/ModuleNameMapper.php';
+        require_once $this->legacyDir.'/include/portability/ModuleNameMapper.php';
 
         $this->mapper = new ModuleNameMapper();
 
@@ -90,7 +92,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * @inheritDoc
      */
-    public function toFrontEnd(string $module): string
+    public function toFrontEnd(string $module) : string
     {
         $this->init();
 
@@ -106,7 +108,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * @inheritDoc
      */
-    public function toCore(string $module): string
+    public function toCore(string $module) : string
     {
         $this->init();
 
@@ -122,7 +124,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * @inheritDoc
      */
-    public function toLegacy(string $module): string
+    public function toLegacy(string $module) : string
     {
         $this->init();
 
@@ -138,7 +140,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * @inheritDoc
      */
-    public function getLegacyToFrontendMap(): array
+    public function getLegacyToFrontendMap() : array
     {
         $this->init();
 
@@ -154,7 +156,7 @@ class ModuleNameMapperHandler extends LegacyHandler implements ModuleNameMapperI
     /**
      * @inheritDoc
      */
-    public function getVisibleModules(): array
+    public function getVisibleModules() : array
     {
         $this->init();
 

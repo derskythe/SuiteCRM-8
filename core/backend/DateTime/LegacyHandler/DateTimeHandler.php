@@ -27,6 +27,7 @@
 
 namespace App\DateTime\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,6 +48,7 @@ class DateTimeHandler extends LegacyHandler
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -56,62 +58,80 @@ class DateTimeHandler extends LegacyHandler
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
+        string           $projectDir,
+        string           $legacyDir,
+        string           $legacySessionName,
+        string           $defaultSessionName,
         LegacyScopeState $legacyScopeState,
-        array $datetimeFormatMap,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState, $session);
+        array            $datetimeFormatMap,
+        RequestStack     $session,
+        LoggerInterface  $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->datetimeFormatMap = $datetimeFormatMap;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Map Datetime format
+     *
      * @param string $format
+     *
      * @return string
      */
-    public function mapFormat(string $format): string
+    public function mapFormat(string $format) : string
     {
         return strtr($format, $this->datetimeFormatMap);
     }
 
     /**
      * To user date format
+     *
      * @param string $dateString
+     *
      * @return string
      */
-    public function toUserDate(string $dateString): string
+    public function toUserDate(string $dateString) : string
     {
         return $this->getFormatter()->toUserDate($dateString);
     }
 
     /**
      * To user date format
+     *
      * @param string $dateString
+     *
      * @return string
      */
-    public function toUserDateTime(string $dateString): string
+    public function toUserDateTime(string $dateString) : string
     {
         return $this->getFormatter()->toUserDateTime($dateString);
     }
 
     /**
      * To user date format
+     *
      * @param string $dateString
+     *
      * @return string
      */
-    public function toDBDateTime(string $dateString): string
+    public function toDBDateTime(string $dateString) : string
     {
         return $this->getFormatter()->toDBDateTime($dateString);
     }
@@ -119,7 +139,7 @@ class DateTimeHandler extends LegacyHandler
     /**
      * @return DateFormatService
      */
-    protected function getFormatter(): DateFormatService
+    protected function getFormatter() : DateFormatService
     {
         if ($this->formatter !== null) {
             return $this->formatter;

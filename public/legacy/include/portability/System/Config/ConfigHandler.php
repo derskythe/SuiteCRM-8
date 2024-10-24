@@ -45,6 +45,6 @@ class ConfigHandler
             return;
         }
 
-        write_array_to_file("sugar_config", $config, "config.php");
+        write_array_to_file('sugar_config', $config, 'config.php');
     }
 }

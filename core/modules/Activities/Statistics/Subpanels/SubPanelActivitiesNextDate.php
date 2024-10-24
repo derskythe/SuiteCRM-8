@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Module\Activities\Statistics\Subpanels;
 
 use App\Statistics\DateTimeStatisticsHandlingTrait;
@@ -33,9 +32,9 @@ use App\Statistics\Entity\Statistic;
 use App\Data\LegacyHandler\PresetDataHandlers\SubpanelDataQueryHandler;
 use App\Statistics\Service\StatisticsProviderInterface;
 
-
 /**
  * Class SubPanelActivitiesNextDate
+ *
  * @package App\Legacy\Statistics
  */
 class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements StatisticsProviderInterface
@@ -47,7 +46,7 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::KEY;
     }
@@ -55,11 +54,11 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
     /**
      * @inheritDoc
      */
-    public function getData(array $query): Statistic
+    public function getData(array $query) : Statistic
     {
         $subpanel = $query['key'];
 
-        [$module, $id] = $this->extractContext($query);
+        [ $module, $id ] = $this->extractContext($query);
         if (empty($module) || empty($id) || empty($subpanel)) {
             return $this->getEmptyResponse(self::KEY);
         }
@@ -68,7 +67,6 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
         if (!empty($subpanelName)) {
             $subpanel = $subpanelName;
         }
-
 
         $this->init();
         $this->startLegacyApp();
@@ -86,15 +84,15 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
         if (empty($min)) {
             $statistic = $this->getEmptyResponse(self::KEY);
             $this->close();
-            $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_ACTIVITIES_NEXT_DATE_TOOLTIP']);
-            $this->addMetadata($statistic, ['descriptionKey' => 'LBL_ACTIVITIES_NEXT_DATE']);
+            $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_ACTIVITIES_NEXT_DATE_TOOLTIP' ]);
+            $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_ACTIVITIES_NEXT_DATE' ]);
 
             return $statistic;
         }
 
         $statistic = $this->buildStatistic($min);
-        $this->addMetadata($statistic, ['tooltip_title_key' => 'LBL_ACTIVITIES_NEXT_DATE_TOOLTIP']);
-        $this->addMetadata($statistic, ['descriptionKey' => 'LBL_ACTIVITIES_NEXT_DATE']);
+        $this->addMetadata($statistic, [ 'tooltip_title_key' => 'LBL_ACTIVITIES_NEXT_DATE_TOOLTIP' ]);
+        $this->addMetadata($statistic, [ 'descriptionKey' => 'LBL_ACTIVITIES_NEXT_DATE' ]);
         $this->close();
 
         return $statistic;
@@ -102,12 +100,13 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
 
     /**
      * @param string $min
+     *
      * @return Statistic
      */
-    protected function buildStatistic(string $min): Statistic
+    protected function buildStatistic(string $min) : Statistic
     {
         if (!empty($min)) {
-            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', ['value' => $min]);
+            $statistic = $this->buildSingleValueResponse(self::KEY, 'date', [ 'value' => $min ]);
         } else {
             $statistic = $this->getEmptyResponse(self::KEY);
         }
@@ -117,9 +116,10 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
 
     /**
      * @param array $result
+     *
      * @return string
      */
-    protected function calculateSmallestDate(array $result): string
+    protected function calculateSmallestDate(array $result) : string
     {
         foreach ($result as $key => $value) {
             if (!empty($value)) {
@@ -137,9 +137,10 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
     /**
      * @param $queries
      * @param  $dateNow
+     *
      * @return array
      */
-    protected function calculateQueryResult($queries, $dateNow): array
+    protected function calculateQueryResult($queries, $dateNow) : array
     {
         $result = [];
         for ($i = 0; $i <= 3; $i++) {
@@ -167,7 +168,6 @@ class SubPanelActivitiesNextDate extends SubpanelDataQueryHandler implements Sta
             $innerQuery = $this->joinQueryParts($parts);
             $result[$i] = $this->fetchRow($innerQuery);
         }
-
 
         return $result;
     }

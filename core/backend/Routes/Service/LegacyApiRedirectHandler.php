@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Routes\Service;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -35,15 +34,16 @@ class LegacyApiRedirectHandler extends LegacyRedirectHandler
     /**
      * @var string[]
      */
-    private $legacyApiPaths;
+    private array $legacyApiPaths;
 
     /**
      * @var array
      */
-    private $legacyApiPathFiles;
+    private array $legacyApiPathFiles;
 
     /**
      * LegacyApiRedirectHandler constructor.
+     *
      * @param array $legacyApiPaths
      * @param String $legacyPath
      * @param array $legacyApiPathFiles
@@ -59,9 +59,10 @@ class LegacyApiRedirectHandler extends LegacyRedirectHandler
      * Check if the given $request is a legacy api request
      *
      * @param Request $request
+     *
      * @return bool
      */
-    public function isApiRequest(Request $request): bool
+    public function isApiRequest(Request $request) : bool
     {
         return $this->inPathList($request, array_keys($this->legacyApiPaths));
     }
@@ -70,9 +71,10 @@ class LegacyApiRedirectHandler extends LegacyRedirectHandler
      * Convert given $request route
      *
      * @param Request $request
+     *
      * @return string
      */
-    public function convert(Request $request): string
+    public function convert(Request $request) : string
     {
         $legacyPath = parent::convert($request);
 
@@ -89,11 +91,12 @@ class LegacyApiRedirectHandler extends LegacyRedirectHandler
      * Convert given $request route
      *
      * @param Request $request
+     *
      * @return array
      */
-    public function getIncludeFile(Request $request): array
+    public function getIncludeFile(Request $request) : array
     {
-
+        parent::getIncludeFile($request);
         foreach ($this->legacyApiPathFiles as $path => $info) {
             if ($this->inPath($request, $path)) {
 
@@ -111,8 +114,8 @@ class LegacyApiRedirectHandler extends LegacyRedirectHandler
         }
 
         return [
-            'dir' => '',
-            'file' => './index.php',
+            'dir'    => '',
+            'file'   => './index.php',
             'access' => true
         ];
     }

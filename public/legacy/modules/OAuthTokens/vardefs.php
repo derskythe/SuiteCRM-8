@@ -197,9 +197,9 @@ $dictionary['OAuthToken'] = array('table' => 'oauth_tokens',
   ),
   ),
     'indices' => array(
-       'id'=>array('name' =>'oauthtokenpk', 'type' =>'primary', 'fields'=>array('id', 'deleted')),
-       'state_ts'=>array('name' =>"oauth_state_ts", 'type' =>'index', 'fields'=>array('tstate','token_ts')),
-       'consumer'=>array('name' =>"constoken_key", 'type' =>'index', 'fields'=>array('consumer')),
+        'id'=>array('name' =>'oauthtokenpk', 'type' =>'primary', 'fields'=>array('id', 'deleted')),
+        'state_ts'=>array( 'name' => 'oauth_state_ts', 'type' =>'index', 'fields' =>array( 'tstate', 'token_ts')),
+        'consumer'=>array( 'name' => 'constoken_key', 'type' =>'index', 'fields' =>array( 'consumer')),
     ),
    'relationships'=>array(
         'consumer_tokens' =>

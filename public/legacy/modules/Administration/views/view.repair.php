@@ -50,11 +50,11 @@ class ViewRepair extends SugarView
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         $randc = new RepairAndClear();
         $randc->repairAndClearAll(array('clearAll'), array(translate('LBL_ALL_MODULES')), false, true);
-        
+
         echo <<<EOHTML
 <br /><br /><a href="index.php?module=Administration&action=index">{$GLOBALS['mod_strings']['LBL_DIAGNOSTIC_DELETE_RETURN']}</a>
 EOHTML;

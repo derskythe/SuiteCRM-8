@@ -27,6 +27,7 @@
 
 namespace App\Navbar\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\Module\Service\ModuleNameMapperInterface;
@@ -48,40 +49,41 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * @var ModuleNameMapperInterface
      */
-    protected $moduleNameMapper;
+    protected ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * @var RouteConverterInterface
      */
-    protected $routeConverter;
+    protected RouteConverterInterface $routeConverter;
 
     /**
      * @var array
      */
-    protected $menuItemMap;
+    protected array $menuItemMap;
 
     /**
      * @var ModuleRegistryInterface
      */
-    protected $moduleRegistry;
+    protected ModuleRegistryInterface $moduleRegistry;
 
     /**
      * @var array
      */
-    protected $moduleRouting;
+    protected array $moduleRouting;
 
     /**
      * @var array
      */
-    protected $navbarAdministrationOverrides;
+    protected array $navbarAdministrationOverrides;
 
     /**
      * @var array
      */
-    protected $quickActionsConfig;
+    protected array $quickActionsConfig;
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -97,22 +99,31 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
      * @param array $quickActions
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
-        array $menuItemMap,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
+        array                     $menuItemMap,
         ModuleNameMapperInterface $moduleNameMapper,
-        RouteConverterInterface $routeConverter,
-        ModuleRegistryInterface $moduleRegistry,
-        RequestStack $session,
-        array $moduleRouting,
-        array $navbarAdministrationOverrides,
-        array $quickActions
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState,
-            $session);
+        RouteConverterInterface   $routeConverter,
+        ModuleRegistryInterface   $moduleRegistry,
+        RequestStack              $session,
+        array                     $moduleRouting,
+        array                     $navbarAdministrationOverrides,
+        array                     $quickActions,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->routeConverter = $routeConverter;
         $this->menuItemMap = $menuItemMap;
@@ -125,16 +136,17 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * Get Navbar using legacy information
+     *
      * @return Navbar
      */
-    public function getNavbar(): Navbar
+    public function getNavbar() : Navbar
     {
         $this->init();
 
@@ -171,19 +183,22 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Get list of modules the user has access to
+     *
      * @return array
      */
-    protected function getAccessibleModulesList(): array
+    protected function getAccessibleModulesList() : array
     {
         return $this->moduleRegistry->getUserAccessibleModules();
     }
 
     /**
      * Map legacy names to front end names
+     *
      * @param array $legacyTabNames
+     *
      * @return array
      */
-    protected function createFrontendNameMap(array $legacyTabNames): array
+    protected function createFrontendNameMap(array $legacyTabNames) : array
     {
         $map = [];
 
@@ -196,10 +211,11 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Fetch modules that are configured to display
+     *
      * @return array
      * Based on @see SugarView::displayHeader
      */
-    protected function getDisplayEnabledModules(): array
+    protected function getDisplayEnabledModules() : array
     {
         global $current_user;
 
@@ -208,17 +224,18 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Fetch Grouped Navigation tabs
+     *
      * @param array $displayModules
      * @param array $moduleNameMap
+     *
      * @return array
      * Based on @see SugarView::displayHeader
      */
-    protected function fetchGroupedNavTabs(array $displayModules, array $moduleNameMap): array
+    protected function fetchGroupedNavTabs(array $displayModules, array $moduleNameMap) : array
     {
         $output = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/GroupedTabs/GroupedTabStructure.php';
+        require_once $this->legacyDir . '/include/GroupedTabs/GroupedTabStructure.php';
 
         $modules = get_val_array($displayModules);
         $groupedTabStructure = $this->getTabStructure($modules);
@@ -233,11 +250,9 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             }
 
             $output[] = [
-
-                'name' => $mainTab,
+                'name'     => $mainTab,
                 'labelKey' => $mainTab,
-                'modules' => array_values($submoduleArray)
-
+                'modules'  => array_values($submoduleArray)
             ];
         }
 
@@ -246,10 +261,12 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Get Tab Structure
+     *
      * @param array $modules
+     *
      * @return array
      */
-    protected function getTabStructure(array $modules): array
+    protected function getTabStructure(array $modules) : array
     {
         return (new GroupedTabStructure())->get_tab_structure($modules, '', false, true);
     }
@@ -257,20 +274,21 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * @param SugarView $sugarView
      * @param array $legacyNameMap
+     *
      * @return array
      */
-    protected function buildModuleInfo(SugarView $sugarView, array $legacyNameMap): array
+    protected function buildModuleInfo(SugarView $sugarView, array $legacyNameMap) : array
     {
         $modules = [];
 
         foreach ($legacyNameMap as $legacyName => $frontendName) {
             $menu = $this->buildSubModule($sugarView, $legacyName, $frontendName);
             $modules[$frontendName] = [
-                'path' => $frontendName,
+                'path'         => $frontendName,
                 'defaultRoute' => "./#/$frontendName",
-                'name' => $frontendName,
-                'labelKey' => $legacyName,
-                'menu' => $menu
+                'name'         => $frontendName,
+                'labelKey'     => $legacyName,
+                'menu'         => $menu
             ];
 
         }
@@ -285,12 +303,18 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Retrieve legacy menu information and build suite 8 entry
+     *
      * @param SugarView $sugarView
      * @param string $legacyModule
      * @param string $frontendModule
+     *
      * @return array
      */
-    protected function buildSubModule(SugarView $sugarView, string $legacyModule, string $frontendModule): array
+    protected function buildSubModule(
+        SugarView $sugarView,
+        string    $legacyModule,
+        string    $frontendModule
+    ) : array
     {
         $subMenu = [];
         $legacyMenuItems = $sugarView->getMenu($legacyModule) ?? [];
@@ -301,7 +325,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             $admin_mod_strings = return_module_language($current_language, 'Administration') ?? [];
 
             $admin_group_header = [];
-            require 'modules/Administration/metadata/adminpaneldefs.php';
+            require $this->legacyDir.'/modules/Administration/metadata/adminpaneldefs.php';
 
             $admin_group_header = $admin_group_header ?? [];
 
@@ -309,7 +333,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             foreach ($admin_group_header as $adminEntry) {
 
                 $administration_menu[] = [
-                    "",
+                    '',
                     $admin_mod_strings[$adminEntry[0] ?? ''] ?? '',
                     'View',
                     'Administration',
@@ -322,10 +346,10 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
         foreach ($legacyMenuItems as $legacyMenuItem) {
 
-            [$url, $label, $action] = $legacyMenuItem ?? [];
+            [ $url, $label, $action ] = $legacyMenuItem ?? [];
             $routeInfo = [
                 'module' => 'Administration',
-                'route' => '',
+                'route'  => '',
                 'params' => []
             ];
 
@@ -338,15 +362,15 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
             }
 
             $subMenuItem = [
-                'name' => $action,
-                'labelKey' => $this->mapEntry($frontendModule, $action, 'labelKey', $label),
-                'url' => $this->mapEntry($frontendModule, $action, 'url', $routeInfo['route'] ?? ''),
-                'process' => $process['process'] ?? '',
-                'params' => $routeInfo['params'] ?? [],
-                'icon' => $this->mapEntry($frontendModule, $action, 'icon', ''),
+                'name'           => $action,
+                'labelKey'       => $this->mapEntry($frontendModule, $action, 'labelKey', $label),
+                'url'            => $this->mapEntry($frontendModule, $action, 'url', $routeInfo['route'] ?? ''),
+                'process'        => $process['process'] ?? '',
+                'params'         => $routeInfo['params'] ?? [],
+                'icon'           => $this->mapEntry($frontendModule, $action, 'icon', ''),
                 'actionLabelKey' => $this->mapEntry($frontendModule, $action, 'actionLabelKey', ''),
-                'quickAction' => $quickAction ?? false,
-                'type' => $type ?? ''
+                'quickAction'    => $quickAction ?? false,
+                'type'           => $type ?? ''
             ];
 
             if (!empty($subMenuItem) && (($quickAction ?? null) === null)) {
@@ -378,12 +402,13 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Convert legacy submenu data and return it
+     *
      * @param array $legacyArray
+     *
      * @return array
      */
-    protected function setLinks(array $legacyArray): array
+    protected function setLinks(array $legacyArray) : array
     {
-
         if (empty($legacyArray)) {
             return [];
         }
@@ -398,11 +423,11 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
                 $path = $this->routeConverter->convertUri($link[3]) ?? '';
 
                 $mappedLink = [
-                    'name' => $link[0] ?? '',
-                    'labelKey' => html_entity_decode($link[1] ?? '', ENT_QUOTES),
+                    'name'           => $link[0] ?? '',
+                    'labelKey'       => html_entity_decode($link[1] ?? '', ENT_QUOTES),
                     'actionLabelKey' => '',
-                    'url' => $path,
-                    'icon' => '',
+                    'url'            => $path,
+                    'icon'           => '',
                 ];
 
                 $query = parse_url($path, PHP_URL_QUERY);
@@ -434,13 +459,15 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Map entry if defined on the configuration
+     *
      * @param string $moduleName
      * @param string $action
      * @param string $entry
      * @param string $default
+     *
      * @return string
      */
-    protected function mapEntry(string $moduleName, string $action, string $entry, string $default): string
+    protected function mapEntry(string $moduleName, string $action, string $entry, string $default) : string
     {
         $module = $moduleName;
         if ($this->isEntryMapped($action, $entry, $module)) {
@@ -456,12 +483,14 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Check if there is an entry mapped for the given module
+     *
      * @param string $action
      * @param string $entry
      * @param string $module
+     *
      * @return bool
      */
-    protected function isEntryMapped(string $action, string $entry, string $module): bool
+    protected function isEntryMapped(string $action, string $entry, string $module) : bool
     {
         return empty($this->menuItemMap[$module]) ||
             empty($this->menuItemMap[$module][$action]) ||
@@ -471,25 +500,25 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * Fetch the user action menu
      */
-    protected function fetchUserActionMenu(): array
+    protected function fetchUserActionMenu() : array
     {
         global $current_user;
 
         $actions['LBL_PROFILE'] = [
-            'name' => 'profile',
+            'name'     => 'profile',
             'labelKey' => 'LBL_PROFILE_EDIT',
-            'url' => 'index.php?module=Users&action=EditView&record=' . $current_user->id,
-            'icon' => '',
+            'url'      => 'index.php?module=Users&action=EditView&record=' . $current_user->id,
+            'icon'     => '',
         ];
 
         // Order matters
         $actionLabelMap = [
-            'LBL_PROFILE' => 'profile',
+            'LBL_PROFILE'   => 'profile',
             'LBL_EMPLOYEES' => 'employees',
-            'LBL_TRAINING' => 'training',
-            'LBL_ADMIN' => 'admin',
-            'LNK_ABOUT' => 'about',
-            'LBL_LOGOUT' => 'logout',
+            'LBL_TRAINING'  => 'training',
+            'LBL_ADMIN'     => 'admin',
+            'LNK_ABOUT'     => 'about',
+            'LBL_LOGOUT'    => 'logout',
         ];
 
         $actionKeys = array_keys($actionLabelMap);
@@ -508,10 +537,10 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
                     }
 
                     $actions[$labelKey] = [
-                        'name' => $name,
+                        'name'     => $name,
                         'labelKey' => $labelKey,
-                        'url' => current($attributeValue),
-                        'icon' => '',
+                        'url'      => current($attributeValue),
+                        'icon'     => '',
                     ];
                 }
             }
@@ -530,24 +559,25 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * Get global control links from legacy
+     *
      * @return array
      */
-    protected function getGlobalControlLinks(): array
+    protected function getGlobalControlLinks() : array
     {
         $global_control_links = [];
 
-        /* @noinspection PhpIncludeInspection */
-        require 'include/globalControlLinks.php';
+        require $this->legacyDir.'/include/globalControlLinks.php';
 
         return $global_control_links;
     }
 
     /**
      * Get max number of tabs
+     *
      * @return int
      * Based on @link SugarView
      */
-    protected function getMaxTabs(): int
+    protected function getMaxTabs() : int
     {
         global $current_user;
 
@@ -569,7 +599,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * @return string
      */
-    protected function getNavigationType(): string
+    protected function getNavigationType() : string
     {
         global $current_user;
         $navigationType = $current_user->getPreference('navigation_paradigm');
@@ -589,7 +619,7 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
     /**
      * @inheritDoc
      */
-    public function getModuleRouting(): array
+    public function getModuleRouting() : array
     {
         $this->init();
 
@@ -603,8 +633,8 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
             if (empty($routes[$name])) {
                 $routes[$name] = [
-                    'index' => true,
-                    'list' => true,
+                    'index'  => true,
+                    'list'   => true,
                     'record' => true
                 ];
             }
@@ -617,9 +647,10 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
 
     /**
      * @param $url
+     *
      * @return bool
      */
-    protected function isModuleQuickAction($url): bool
+    protected function isModuleQuickAction($url) : bool
     {
         $regex = [
             '/(edit(\/)?$)|(edit(\/)?\?)/',
@@ -633,14 +664,16 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * @param $url
+     *
      * @return string
      */
-    protected function getActionType($url): string
+    protected function getActionType($url) : string
     {
         $regex = [
             '/(edit(\/)?$)|(edit(\/)?\?)/',
@@ -653,14 +686,16 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
                 return 'create';
             }
         }
+
         return '';
     }
 
     /**
      * @param Navbar $navbar
+     *
      * @return array
      */
-    protected function getQuickActions(Navbar $navbar): array
+    protected function getQuickActions(Navbar $navbar) : array
     {
         $useNavigationModules = $this->quickActionsConfig['use_navigation_modules'] ?? true;
         $preDefinedQuickActions = $this->quickActionsConfig['actions'] ?? [];
@@ -688,15 +723,15 @@ class NavbarHandler extends LegacyHandler implements NavigationProviderInterface
                 $count++;
 
                 $quickActions[] = [
-                    'name' => $menuEntry['name'] ?? '',
-                    'labelKey' => $menuEntry['labelKey'] ?? '',
-                    'url' => str_replace('/#/', '/', $menuEntry['url'] ?? ''),
-                    'params' => $menuEntry['params'] ?? [],
-                    'icon' => $menuEntry['icon'] ?? '',
+                    'name'        => $menuEntry['name'] ?? '',
+                    'labelKey'    => $menuEntry['labelKey'] ?? '',
+                    'url'         => str_replace('/#/', '/', $menuEntry['url'] ?? ''),
+                    'params'      => $menuEntry['params'] ?? [],
+                    'icon'        => $menuEntry['icon'] ?? '',
                     'quickAction' => $menuEntry['quickAction'] ?? false,
-                    'type' => $type,
-                    'module' => $module,
-                    'process' => $menuEntry['process'] ?? null
+                    'type'        => $type,
+                    'module'      => $module,
+                    'process'     => $menuEntry['process'] ?? null
                 ];
 
                 if ($count >= $maxQuickActions) {

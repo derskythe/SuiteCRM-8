@@ -42,8 +42,8 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-require_once("data/Relationships/SugarRelationship.php");
-require_once("data/Relationships/One2MRelationship.php");
+require_once('data/Relationships/SugarRelationship.php');
+require_once('data/Relationships/One2MRelationship.php');
 
 /**
  * Represents 1-1 relationship

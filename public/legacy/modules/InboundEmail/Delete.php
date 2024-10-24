@@ -54,5 +54,6 @@ if (empty($_REQUEST['record'])) {
     // which will be saved and tracked (bug #47552)
     $focus->retrieve($_REQUEST['record']);
     $focus->mark_deleted($_REQUEST['record']);
-    header("Location: index.php?module=".$_REQUEST['return_module']."&action=".$_REQUEST['return_action']."&record=".$_REQUEST['return_id']);
+    header(
+        'Location: index.php?module=' . $_REQUEST['return_module']. '&action=' . $_REQUEST['return_action']. '&record=' . $_REQUEST['return_id']);
 }

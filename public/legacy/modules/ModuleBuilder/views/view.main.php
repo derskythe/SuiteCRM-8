@@ -54,7 +54,7 @@ class ViewMain extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -64,7 +64,10 @@ class ViewMain extends SugarView
            );
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         global $app_strings, $current_user, $mod_strings, $theme;
 
@@ -107,7 +110,7 @@ class ViewMain extends SugarView
         }
         $userPref = $current_user->getPreference('mb_assist', 'Assistant');
         if (!$userPref) {
-            $userPref="na";
+            $userPref= 'na';
         }
         $smarty->assign('userPref', $userPref);
 
@@ -116,13 +119,13 @@ class ViewMain extends SugarView
         $tiny = new SugarTinyMCE();
         $tiny->defaultConfig['width']=300;
         $tiny->defaultConfig['height']=300;
-        $tiny->buttonConfig = "code,separator,bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,
-	                         justifyfull,separator,forecolor,backcolor,
-	                         ";
-        $tiny->buttonConfig2 = "pastetext,pasteword,fontselect,fontsizeselect,";
-        $tiny->buttonConfig3 = "";
+        $tiny->buttonConfig = 'code,separator,bold,italic,underline,strikethrough,separator,justifyleft,justifycenter,justifyright,
+                             justifyfull,separator,forecolor,backcolor,
+                             ';
+        $tiny->buttonConfig2 = 'pastetext,pasteword,fontselect,fontsizeselect,';
+        $tiny->buttonConfig3 = '';
         $ed = $tiny->getInstance();
-        $smarty->assign("tiny", $ed);
+        $smarty->assign('tiny', $ed);
 
         $smarty->display('modules/ModuleBuilder/tpls/index.tpl');
     }

@@ -59,30 +59,32 @@ class ViewAdminwizard extends SugarView
     public function __construct($bean = null, $view_object_map = array())
     {
         parent::__construct($bean, $view_object_map);
-        
+
         $this->options['show_header'] = false;
         $this->options['show_footer'] = false;
         $this->options['show_javascript'] = false;
     }
-    
+
     /**
+     * @throws SmartyException
+     * @throws Exception
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $current_user, $mod_strings, $app_list_strings, $sugar_config, $locale, $sugar_version;
-            
+
         if (!is_admin($current_user)) {
             sugar_die($GLOBALS['app_strings']['ERR_NOT_ADMIN']);
         }
-                
+
         $themeObject = SugarThemeRegistry::current();
-        
+
         $configurator = new Configurator();
         $sugarConfig = SugarConfig::getInstance();
         $focus = BeanFactory::newBean('Administration');
         $focus->retrieveSettings();
-        
+
         $ut = $GLOBALS['current_user']->getPreference('ut');
         if (empty($ut)) {
             $this->ss->assign('SKIP_URL', 'index.php?module=Users&action=Wizard&skipwelcome=1');
@@ -130,7 +132,7 @@ class ViewAdminwizard extends SugarView
         $this->options['show_javascript'] = true;
         $this->renderJavascript();
         $this->options['show_javascript'] = false;
-        $this->ss->assign("SUGAR_JS", ob_get_contents().$themeObject->getJS());
+        $this->ss->assign('SUGAR_JS', ob_get_contents().$themeObject->getJS());
         ob_end_clean();
 
         $this->ss->assign('langHeader', get_language_header());
@@ -149,7 +151,7 @@ class ViewAdminwizard extends SugarView
             $this->ss->assign('scenarios', []);
         }
         //End of scenario block
-                
+
         $this->ss->display('modules/Configurator/tpls/adminwizard.tpl');
     }
 }

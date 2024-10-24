@@ -48,9 +48,9 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class ExternalOAuthConnection extends Basic
 {
-    public $module_dir = 'ExternalOAuthConnection';
-    public $object_name = 'ExternalOAuthConnection';
-    public $table_name = 'external_oauth_connections';
+    public string $module_dir = 'ExternalOAuthConnection';
+    public string $object_name = 'ExternalOAuthConnection';
+    public string $table_name = 'external_oauth_connections';
     public $disable_row_level_security = true;
 
     public $client_id;
@@ -65,7 +65,7 @@ class ExternalOAuthConnection extends Basic
     /**
      * @inheritDoc
      */
-    public function retrieve($id = -1, $encode = true, $deleted = true)
+    public function retrieve($id = -1, $encode = true, $deleted = true) : ?SugarBean
     {
         $result = parent::retrieve($id, $encode, $deleted);
 
@@ -141,7 +141,7 @@ class ExternalOAuthConnection extends Basic
     /**
      * @inheritDoc
      */
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         if ($interface === 'ACL') {
             return true;

@@ -19,8 +19,8 @@ if (isset($_REQUEST['record'])) {
     $focus->retrieve($_REQUEST['record']);
 }
 
-if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
-    $focus->id = "";
+if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
+    $focus->id = '';
 }
 
 // Prepopulate either side of the relationship if passed in.
@@ -32,10 +32,10 @@ safe_map('noninheritable', $focus);
 safe_map('primary_group', $focus);
 
 
-$theme_path="themes/".$theme."/";
-$image_path=$theme_path."images/";
+$theme_path= 'themes/' .$theme. '/';
+$image_path=$theme_path. 'images/';
 
-$GLOBALS['log']->info("SecurityGroup User relationship");
+$GLOBALS['log']->info('SecurityGroup User relationship');
 
 $json = getJSONobj();
 require_once('include/QuickSearchDefaults.php');
@@ -47,21 +47,21 @@ $quicksearch_js .= '<script type="text/javascript" language="javascript">sqs_obj
 echo $quicksearch_js;
 
 $xtpl=new XTemplate('modules/SecurityGroups/SecurityGroupUserRelationshipEdit.html');
-$xtpl->assign("MOD", $mod_strings);
-$xtpl->assign("APP", $app_strings);
+$xtpl->assign('MOD', $mod_strings);
+$xtpl->assign('APP', $app_strings);
 
-$xtpl->assign("RETURN_URL", "&return_module=$currentModule&return_action=DetailView&return_id=$focus->id");
-$xtpl->assign("RETURN_MODULE", $_REQUEST['return_module']);
-$xtpl->assign("RETURN_ACTION", $_REQUEST['return_action']);
-$xtpl->assign("RETURN_ID", $_REQUEST['return_id']);
-$xtpl->assign("THEME", $theme);
-$xtpl->assign("IMAGE_PATH", $image_path);$xtpl->assign("PRINT_URL", "index.php?".$GLOBALS['request_string']);
-$xtpl->assign("ID", $focus->id);
-$xtpl->assign("SECURITYGROUP", $securityGroup = array("NAME" => $focus->securitygroup_name, "ID" => $focus->securitygroup_id));
-$xtpl->assign("USER", $user = array("NAME" => $focus->user_name, "ID" => $focus->user_id));
+$xtpl->assign('RETURN_URL', "&return_module=$currentModule&return_action=DetailView&return_id=$focus->id");
+$xtpl->assign('RETURN_MODULE', $_REQUEST['return_module']);
+$xtpl->assign('RETURN_ACTION', $_REQUEST['return_action']);
+$xtpl->assign('RETURN_ID', $_REQUEST['return_id']);
+$xtpl->assign('THEME', $theme);
+$xtpl->assign('IMAGE_PATH', $image_path);$xtpl->assign('PRINT_URL', 'index.php?' . $GLOBALS['request_string']);
+$xtpl->assign('ID', $focus->id);
+$xtpl->assign('SECURITYGROUP', $securityGroup = array( 'NAME' => $focus->securitygroup_name, 'ID' => $focus->securitygroup_id));
+$xtpl->assign('USER', $user = array( 'NAME' => $focus->user_name, 'ID' => $focus->user_id));
 
 echo "\n<p>\n";
-echo get_module_title($mod_strings['LBL_MODULE_NAME'], $mod_strings['LBL_SECURITYGROUP_USER_FORM_TITLE'].": ".$securityGroup['NAME'] . " - ". $user['NAME'], true);
+echo get_module_title($mod_strings['LBL_MODULE_NAME'], $mod_strings['LBL_SECURITYGROUP_USER_FORM_TITLE']. ': ' . $securityGroup['NAME'] . ' - ' . $user['NAME'], true);
 echo "\n</p>\n";
 
 // noninheritable
@@ -78,9 +78,9 @@ if (isset($focus->primary_group) && $focus->primary_group == true) {
 }
 $xtpl->assign('primary_group', $primary_group);
 
-$xtpl->parse("main");
+$xtpl->parse('main');
 
-$xtpl->out("main");
+$xtpl->out('main');
 
 require_once('include/javascript/javascript.php');
 $javascript = new javascript();

@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\Process\Service\BulkActions;
 
 use ApiPlatform\Exception\InvalidArgumentException;
@@ -37,7 +36,7 @@ use App\Process\Service\ProcessHandlerInterface;
 class CsvExportBulkAction implements ProcessHandlerInterface
 {
     protected const MSG_OPTIONS_NOT_FOUND = 'Process options is not defined';
-    protected const PROCESS_TYPE = 'bulk-export';
+    protected const PROCESS_TYPE          = 'bulk-export';
 
     /**
      * @var ModuleNameMapperInterface
@@ -51,6 +50,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
 
     /**
      * CsvExportBulkAction constructor.
+     *
      * @param ModuleNameMapperInterface $moduleNameMapper
      * @param LegacyFilterMapper $legacyFilterMapper
      */
@@ -63,7 +63,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getProcessType(): string
+    public function getProcessType() : string
     {
         return self::PROCESS_TYPE;
     }
@@ -71,7 +71,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function requiredAuthRole(): string
+    public function requiredAuthRole() : string
     {
         return 'ROLE_USER';
     }
@@ -79,7 +79,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function getRequiredACLs(Process $process): array
+    public function getRequiredACLs(Process $process) : array
     {
         $options = $process->getOptions();
         $module = $options['module'] ?? '';
@@ -89,7 +89,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
             $module => [
                 [
                     'action' => 'export',
-                    'ids' => $ids
+                    'ids'    => $ids
                 ]
             ]
         ];
@@ -98,7 +98,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function configure(Process $process): void
+    public function configure(Process $process) : void
     {
         //This process is synchronous
         //We aren't going to store a record on db
@@ -110,7 +110,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function validate(Process $process): void
+    public function validate(Process $process) : void
     {
         if (empty($process->getOptions())) {
             throw new InvalidArgumentException(self::MSG_OPTIONS_NOT_FOUND);
@@ -134,7 +134,7 @@ class CsvExportBulkAction implements ProcessHandlerInterface
     /**
      * @inheritDoc
      */
-    public function run(Process $process)
+    public function run(Process $process) : void
     {
         $options = $process->getOptions();
 
@@ -147,14 +147,15 @@ class CsvExportBulkAction implements ProcessHandlerInterface
 
     /**
      * @param array|null $options
+     *
      * @return array
      */
-    protected function getDownloadData(?array $options): array
+    protected function getDownloadData(?array $options) : array
     {
         $responseData = [
             'handler' => 'export',
-            'params' => [
-                'url' => 'legacy/index.php?entryPoint=export',
+            'params'  => [
+                'url'      => 'legacy/index.php?entryPoint=export',
                 'formData' => []
             ]
         ];
@@ -174,14 +175,16 @@ class CsvExportBulkAction implements ProcessHandlerInterface
 
     /**
      * Get request data based on a list of ids
+     *
      * @param array|null $options
      * @param array $responseData
+     *
      * @return array
      */
-    protected function getIdBasedRequestData(?array $options, array $responseData): array
+    protected function getIdBasedRequestData(?array $options, array $responseData) : array
     {
         $responseData['params']['formData'] = [
-            'uid' => implode(',', $options['ids']),
+            'uid'    => implode(',', $options['ids']),
             'module' => $this->moduleNameMapper->toLegacy($options['module']),
             'action' => 'index'
         ];
@@ -191,26 +194,28 @@ class CsvExportBulkAction implements ProcessHandlerInterface
 
     /**
      * Get Request data based on a search criteria
+     *
      * @param array|null $options
      * @param array $responseData
+     *
      * @return array
      */
-    protected function getCriteriaBasedRequestData(?array $options, array $responseData): array
+    protected function getCriteriaBasedRequestData(?array $options, array $responseData) : array
     {
         $responseData['params']['url'] .= '&module=' . $this->moduleNameMapper->toLegacy($options['module']);
 
         $downloadData = [
-            'module' => $this->moduleNameMapper->toLegacy($options['module']),
-            'action' => 'index',
-            "searchFormTab" => "advanced_search",
-            "query" => "true",
-            "saved_search_name" => "",
-            "search_module" => "",
+            'module'              => $this->moduleNameMapper->toLegacy($options['module']),
+            'action'              => 'index',
+            "searchFormTab"       => "advanced_search",
+            "query"               => "true",
+            "saved_search_name"   => "",
+            "search_module"       => "",
             "saved_search_action" => "",
-            "displayColumns" => strtoupper(implode('|', $options['fields'])),
-            "orderBy" => strtoupper($this->legacyFilterMapper->getOrderBy($options['sort'])),
-            "sortOrder" => $this->legacyFilterMapper->getSortOrder($options['sort']),
-            "button" => "Search"
+            "displayColumns"      => strtoupper(implode('|', $options['fields'])),
+            "orderBy"             => strtoupper($this->legacyFilterMapper->getOrderBy($options['sort'])),
+            "sortOrder"           => $this->legacyFilterMapper->getSortOrder($options['sort']),
+            "button"              => "Search"
         ];
 
         $type = $options['criteria']['type'] ?? 'advanced';

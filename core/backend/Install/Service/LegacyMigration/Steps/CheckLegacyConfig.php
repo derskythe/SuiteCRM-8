@@ -35,6 +35,7 @@ use App\Install\Service\LegacyMigration\LegacyMigrationStepInterface;
 
 /**
  * Class CheckLegacyConfig
+ *
  * @package App\Install\Service\LegacyMigration\Steps;
  */
 class CheckLegacyConfig implements LegacyMigrationStepInterface
@@ -42,15 +43,16 @@ class CheckLegacyConfig implements LegacyMigrationStepInterface
     use ProcessStepTrait;
 
     public const HANDLER_KEY = 'check-legacy-config';
-    public const POSITION = 100;
+    public const POSITION    = 100;
 
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * CheckLegacyConfig constructor.
+     *
      * @param InstallHandler $handler
      */
     public function __construct(InstallHandler $handler)
@@ -61,7 +63,7 @@ class CheckLegacyConfig implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -69,7 +71,7 @@ class CheckLegacyConfig implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function getOrder(): int
+    public function getOrder() : int
     {
         return self::POSITION;
     }
@@ -77,20 +79,17 @@ class CheckLegacyConfig implements LegacyMigrationStepInterface
     /**
      * @inheritDoc
      */
-    public function execute(array &$context): Feedback
+    public function execute(array &$context) : Feedback
     {
-
-        $config = $this->handler->loadLegacyConfig();
         $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Found legacy config. Proceeding with migration']);
 
-        if ($config === null) {
+        if ($this->handler->loadLegacyConfig() === null) {
             $feedback->setSuccess(false);
-            $feedback->setMessages(['Legacy config not found. Stopping migration process']);
+            $feedback->setMessages([ 'Legacy config not found. Stopping migration process' ]);
             $feedback->setStatusCode(InstallStatus::FAILED);
-
-            return $feedback;
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages([ 'Found legacy config. Proceeding with migration' ]);
         }
 
         return $feedback;

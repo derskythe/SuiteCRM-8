@@ -42,11 +42,11 @@ class CacheBridge
     /**
      * @var KernelInterface
      */
-    protected $kernel;
+    protected KernelInterface $kernel;
     /**
      * @var string
      */
-    private $cacheDir;
+    private string $cacheDir;
 
     /**
      * CacheBridge constructor.
@@ -66,17 +66,15 @@ class CacheBridge
     public function clear(): Feedback
     {
         $feedback = new Feedback();
-        $feedback->setSuccess(true)->setMessages(['Successfully cleared cache']);
 
         try {
-
             $this->clearCacheDir();
             $this->clearPhpCache();
 
+            $feedback->setSuccess(true)->setMessages(['Successfully cleared cache']);
         } catch (Exception $e) {
             $feedback->setSuccess(false)->setMessages(['Error clearing cache']);
         }
-
 
         return $feedback;
     }
@@ -105,13 +103,13 @@ class CacheBridge
     protected function clearCacheDir() : void
     {
         $fs = new Filesystem();
-        $tempId = uniqid();
+        $tempId = uniqid('', true);
 
         if($fs->exists($this->cacheDir)){
-            $fs->rename($this->cacheDir, $this->cacheDir . '_' . $tempId . '_deprecated/');
+            $new_name = sprintf('%s_%s_deprecated/', $this->cacheDir, $tempId);
+            $fs->rename($this->cacheDir, $new_name);
             $fs->mkdir($this->cacheDir);
-            $fs->remove($this->cacheDir . '_' . $tempId . '_deprecated/');
+            $fs->remove($new_name);
         }
     }
-
 }

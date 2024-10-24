@@ -512,19 +512,20 @@ class ModuleScanner
         $pi = pathinfo($file);
 
         //make sure they don't override the files.md5
-        if (empty($pi['extension']) || $pi['basename'] == 'files.md5') {
+        if (empty($pi['extension']) || $pi['basename'] === 'files.md5') {
             return false;
         }
-        return in_array($pi['extension'], $this->validExt);
+
+        return in_array($pi['extension'], $this->validExt, true);
     }
 
     public function isConfigFile($file)
     {
         $real = realpath($file);
-        if ($real === realpath("config.php")) {
+        if ($real === realpath('config.php')) {
             return true;
         }
-        if (file_exists("config_override.php") && $real === realpath("config_override.php")) {
+        if (file_exists('config_override.php') && $real === realpath('config_override.php')) {
             return true;
         }
         return false;
@@ -546,7 +547,7 @@ class ModuleScanner
         while ($e = $d->read()) {
             $next = $path . '/' . $e;
             if (is_dir($next)) {
-                if (substr($e, 0, 1) == '.') {
+                if (str_starts_with($e, '.')) {
                     continue;
                 }
                 $this->scanDir($next);
@@ -630,7 +631,11 @@ class ModuleScanner
                 switch ($token[0]) {
                     case T_WHITESPACE: break;
                     case T_EVAL:
-                        if (in_array('eval', $this->blackList) && !in_array('eval', $this->blackListExempt)) {
+                        if (in_array('eval', $this->blackList, true) && !in_array(
+                                'eval',
+                                $this->blackListExempt,
+                                true
+                            )) {
                             $issues[]= translate('ML_INVALID_FUNCTION', 'Administration') . ' eval()';
                         }
                         break;
@@ -646,14 +651,14 @@ class ModuleScanner
                             if (!in_array($token[1], $this->classBlackList)) {
                                 break;
                             }
-                            if (in_array($token[1], $this->classBlackListExempt)) {
+                            if (in_array($token[1], $this->classBlackListExempt, true)) {
                                 break;
                             }
                         } elseif ($token[0] == T_DOUBLE_COLON) {
-                            if (!in_array($lastToken[1], $this->classBlackList)) {
+                            if (!in_array($lastToken[1], $this->classBlackList, true)) {
                                 break;
                             }
-                            if (in_array($lastToken[1], $this->classBlackListExempt)) {
+                            if (in_array($lastToken[1], $this->classBlackListExempt, true)) {
                                 break;
                             }
                         } else {
@@ -662,30 +667,29 @@ class ModuleScanner
                             ($lastToken[0] == T_OBJECT_OPERATOR ||  $lastToken[0] == T_DOUBLE_COLON)) {
                                 // check static blacklist for methods
                                 if (!empty($this->methodsBlackList[$token[1]])) {
-                                    if ($this->methodsBlackList[$token[1]] == '*') {
+                                    if ($this->methodsBlackList[$token[1]] === '*') {
                                         $issues[]= translate('ML_INVALID_METHOD', 'Administration') . ' ' .$token[1].  '()';
                                         break;
                                     }
                                     if ($lastToken[0] == T_DOUBLE_COLON && $index > 2 && $tokens[$index-2][0] == T_STRING) {
                                         $classname = strtolower($tokens[$index-2][1]);
-                                        if (in_array($classname, $this->methodsBlackList[$token[1]])) {
+                                        if (in_array($classname, $this->methodsBlackList[$token[1]], true)) {
                                             $issues[]= translate('ML_INVALID_METHOD', 'Administration') . ' ' .$classname . '::' . $token[1]. '()';
                                             break;
                                         }
                                     }
                                 }
                                 //this is a method call, check the black list
-                                if (in_array($token[1], $this->methodsBlackList)) {
+                                if (in_array($token[1], $this->methodsBlackList, true)) {
                                     $issues[]= translate('ML_INVALID_METHOD', 'Administration') . ' ' .$token[1].  '()';
                                 }
                                 break;
                             }
 
-
-                            if (!in_array($token[1], $this->blackList)) {
+                            if (!in_array($token[1], $this->blackList, true)) {
                                 break;
                             }
-                            if (in_array($token[1], $this->blackListExempt)) {
+                            if (in_array($token[1], $this->blackListExempt, true)) {
                                 break;
                             }
                         }
@@ -749,7 +753,7 @@ class ModuleScanner
             $path = str_replace(DIRECTORY_SEPARATOR, '/', $path);
         }
         $res = array();
-        foreach (explode("/", $path) as $component) {
+        foreach (explode('/', $path) as $component) {
             if (empty($component)) {
                 continue;
             }
@@ -763,7 +767,7 @@ class ModuleScanner
             $res[] = $component;
         }
 
-        return implode("/", $res);
+        return implode('/', $res);
     }
 
     /**
@@ -814,7 +818,7 @@ class ModuleScanner
                     continue;
                 }
                 if ($to === '') {
-                    $to = ".";
+                    $to = '.';
                 }
                 $this->scanCopy($from, $to);
             }
@@ -892,7 +896,7 @@ class ModuleScanner
                 } else {
                     echo "$issue<br>";
                 }
-                echo "</div>";
+                echo '</div>';
             }
             echo '</div>';
         }
@@ -920,7 +924,7 @@ class ModuleScanner
                 } else {
                     $message .= "$issue<br>";
                 }
-                $message .= "</div>";
+                $message .= '</div>';
             }
             $message .= '</div>';
         }

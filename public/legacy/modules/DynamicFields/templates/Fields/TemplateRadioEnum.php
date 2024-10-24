@@ -51,7 +51,7 @@ class TemplateRadioEnum extends TemplateEnum
     {
         $this->prepare();
         $xtpl_var = strtoupper($this->name);
-        return "{RADIOOPTIONS_".$xtpl_var. "}";
+        return '{RADIOOPTIONS_' .$xtpl_var. '}';
     }
 
     public function get_field_def()

@@ -44,7 +44,10 @@ require_once('include/EditView/EditView2.php');
 #[\AllowDynamicProperties]
 class CalendarViewCreateInvitee extends SugarView
 {
-    public function preDisplay()
+    /**
+     * @throws Exception
+     */
+    public function preDisplay() : void
     {
         global $beanFiles, $beanList;
 
@@ -59,14 +62,14 @@ class CalendarViewCreateInvitee extends SugarView
 
         if ($this->bean->ACLAccess('save')) {
             require_once('include/formbase.php');
-            $this->bean = populateFromPost("", $this->bean);
+            $this->bean = populateFromPost('', $this->bean);
             $this->bean->save();
         } else {
             $this->returnNoAccess($this->bean->object_name);
         }
     }
 
-    public function display()
+    public function display() : void
     {
         $sendbackArr = array(
             'module' => $this->bean->object_name,

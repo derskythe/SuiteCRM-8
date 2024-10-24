@@ -40,7 +40,7 @@
 
 class ViewSerialized extends SugarView
 {
-    public $type ='detail';
+    public $type = 'detail';
 
     public function __construct()
     {
@@ -48,12 +48,11 @@ class ViewSerialized extends SugarView
     }
 
 
-
-
-    public function display()
+    public function display() : void
     {
         ob_clean();
         echo serialize($this->bean->toArray());
+        parent::display();
         sugar_cleanup(true);
     }
 }

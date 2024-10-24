@@ -82,7 +82,7 @@ class UndeployedSubpanelImplementation extends AbstractMetaDataImplementation im
         $this->_fielddefs = & $this->module->mbvardefs->vardefs [ 'fields' ] ;
 
         $templates = & $this->module->config['templates'];
-        $template_def="";
+        $template_def= '';
         foreach ($templates as $template => $a) {
             if ($a===1) {
                 $template_def = $template;
@@ -115,7 +115,7 @@ class UndeployedSubpanelImplementation extends AbstractMetaDataImplementation im
      */
     public function getLanguage()
     {
-        return ""; // '' is the signal to translate() to use the global mod_strings
+        return ''; // '' is the signal to translate() to use the global mod_strings
     }
 
     /**

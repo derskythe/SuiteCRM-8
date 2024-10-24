@@ -57,32 +57,34 @@ class UsersLastImport extends SugarBean
     /**
      * Fields in the table
      */
-    public $id;
-    public $assigned_user_id;
+    public string $id;
+    public string $assigned_user_id;
     public $import_module;
     public $bean_type;
     public $bean_id;
-    public $deleted;
+    public int $deleted;
 
     /**
      * Set the default settings from Sugarbean
      */
-    public $module_dir = 'Import';
-    public $table_name = "users_last_import";
-    public $object_name = "UsersLastImport";
-    public $disable_custom_fields = true;
-    public $column_fields = array(
-        "id",
-        "assigned_user_id",
-        "bean_type",
-        "bean_id",
-        "deleted"
+    public string $module_dir = 'Import';
+    public string $table_name = 'users_last_import';
+    public string $object_name = 'UsersLastImport';
+    public bool $disable_custom_fields = true;
+    public array $column_fields = array(
+        'id',
+        'assigned_user_id',
+        'bean_type',
+        'bean_id',
+        'deleted'
         );
-    public $new_schema = true;
-    public $additional_column_fields = array();
+    public bool $new_schema = true;
+    public array $additional_column_fields = array();
 
     /**
      * Constructor
+     *
+     * @throws Exception
      */
     public function __construct()
     {
@@ -115,7 +117,7 @@ class UsersLastImport extends SugarBean
     public function mark_deleted_by_user_id($user_id)
     {
         $query = "DELETE FROM $this->table_name WHERE assigned_user_id = '$user_id'";
-        $this->db->query($query, true, "Error marking last imported records deleted: ");
+        $this->db->query($query, true, 'Error marking last imported records deleted: ');
     }
 
     /**

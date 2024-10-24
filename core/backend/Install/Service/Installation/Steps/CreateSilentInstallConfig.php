@@ -36,6 +36,7 @@ use App\Install\Service\Installation\InstallStepTrait;
 
 /**
  * Class CreateSilentInstallConfig
+ *
  * @package App\Install\Service\Installation\Steps;
  */
 class CreateSilentInstallConfig implements InstallStepInterface
@@ -44,15 +45,16 @@ class CreateSilentInstallConfig implements InstallStepInterface
     use InstallStepTrait;
 
     public const HANDLER_KEY = 'create-config';
-    public const POSITION = 500;
+    public const POSITION    = 500;
 
     /**
      * @var InstallHandler
      */
-    private $handler;
+    private InstallHandler $handler;
 
     /**
      * CreateSilentInstallConfig constructor.
+     *
      * @param InstallHandler $handler
      */
     public function __construct(InstallHandler $handler)
@@ -63,7 +65,7 @@ class CreateSilentInstallConfig implements InstallStepInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return self::HANDLER_KEY;
     }
@@ -71,7 +73,7 @@ class CreateSilentInstallConfig implements InstallStepInterface
     /**
      * @inheritDoc
      */
-    public function getOrder(): int
+    public function getOrder() : int
     {
         return self::POSITION;
     }
@@ -79,26 +81,22 @@ class CreateSilentInstallConfig implements InstallStepInterface
     /**
      * @inheritDoc
      */
-    public function execute(array &$context): Feedback
+    public function execute(array &$context) : Feedback
     {
         $inputs = $this->getInputs($context);
+        $feedback = new Feedback();
 
-        $inputsValid = $this->validateInputs($inputs);
-
-        if (!$inputsValid) {
-            return (new Feedback())->setSuccess(false)->setMessages(['Missing inputs']);
+        if (!$this->validateInputs($inputs)) {
+            return $feedback->setSuccess(false)->setMessages([ 'Missing inputs' ]);
         }
 
-        $result = $this->handler->createConfig($inputs);
-
-        $feedback = new Feedback();
-        $feedback->setSuccess(true);
-        $feedback->setMessages(['Created silent install config: config_si.php']);
-
-        if ($result === false) {
+        if (!$this->handler->createConfig($inputs)) {
             $feedback->setSuccess(false);
-            $feedback->setMessages(['Could not create silent install config: config_si.php']);
+            $feedback->setMessages([ 'Could not create silent install config: config_si.php' ]);
             $feedback->setStatusCode(InstallStatus::FAILED);
+        } else {
+            $feedback->setSuccess(true);
+            $feedback->setMessages([ 'Created silent install config: config_si.php' ]);
         }
 
         return $feedback;

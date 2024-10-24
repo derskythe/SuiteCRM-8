@@ -25,7 +25,6 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\SystemConfig\LegacyHandler;
 
 use App\SystemConfig\Entity\SystemConfig;
@@ -36,10 +35,11 @@ class DefaultCurrencyConfigMapper implements SystemConfigMapperInterface
     /**
      * @var CurrencyHandler
      */
-    private $currencyHandler;
+    private CurrencyHandler $currencyHandler;
 
     /**
      * DefaultCurrencyConfigMapper constructor.
+     *
      * @param CurrencyHandler $currencyHandler
      */
     public function __construct(CurrencyHandler $currencyHandler)
@@ -50,7 +50,7 @@ class DefaultCurrencyConfigMapper implements SystemConfigMapperInterface
     /**
      * @inheritDoc
      */
-    public function getKey(): string
+    public function getKey() : string
     {
         return 'currency';
     }
@@ -58,12 +58,12 @@ class DefaultCurrencyConfigMapper implements SystemConfigMapperInterface
     /**
      * @inheritDoc
      */
-    public function map(SystemConfig $config): void
+    public function map(SystemConfig $systemConfig) : void
     {
-        $id = $config->getValue();
+        $id = $systemConfig->getValue();
 
         $currency = $this->currencyHandler->getCurrency($id);
-        $config->setValue(null);
-        $config->setItems($currency);
+        $systemConfig->setValue(null);
+        $systemConfig->setItems($currency);
     }
 }

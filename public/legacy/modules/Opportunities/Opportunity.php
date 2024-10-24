@@ -45,19 +45,19 @@ if (!defined('sugarEntry') || !sugarEntry) {
 #[\AllowDynamicProperties]
 class Opportunity extends SugarBean
 {
-    public $field_name_map;
+    public ?array $field_name_map;
     // Stored fields
-    public $id;
+    public string $id;
     public $lead_source;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $assigned_user_id;
-    public $created_by;
-    public $created_by_name;
-    public $modified_by_name;
-    public $description;
-    public $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $assigned_user_id;
+    public string $created_by;
+    public string $created_by_name;
+    public string $modified_by_name;
+    public string $description;
+    public string $name;
     public $opportunity_type;
     public $amount;
     public $amount_usdollar;
@@ -78,24 +78,24 @@ class Opportunity extends SugarBean
     public $call_id;
     public $email_id;
     public $email1 = '';
-    public $assigned_user_name;
+    public string $assigned_user_name;
 
-    public $table_name = "opportunities";
-    public $rel_account_table = "accounts_opportunities";
-    public $rel_contact_table = "opportunities_contacts";
-    public $module_dir = "Opportunities";
+    public string $table_name = 'opportunities';
+    public $rel_account_table = 'accounts_opportunities';
+    public $rel_contact_table = 'opportunities_contacts';
+    public string $module_dir = 'Opportunities';
 
-    public $importable = true;
-    public $object_name = "Opportunity";
+    public bool $importable = true;
+    public string $object_name = 'Opportunity';
 
     // This is used to retrieve related fields from form posts.
-    public $additional_column_fields = array('assigned_user_name', 'assigned_user_id', 'account_name', 'account_id', 'contact_id', 'task_id', 'note_id', 'meeting_id', 'call_id', 'email_id'
+    public array $additional_column_fields = array( 'assigned_user_name', 'assigned_user_id', 'account_name', 'account_id', 'contact_id', 'task_id', 'note_id', 'meeting_id', 'call_id', 'email_id'
     );
 
-    public $relationship_fields = array('task_id'=>'tasks', 'note_id'=>'notes', 'account_id'=>'accounts',
-                                    'meeting_id'=>'meetings', 'call_id'=>'calls', 'email_id'=>'emails', 'project_id'=>'project',
-                                    // Bug 38529 & 40938
-                                    'currency_id' => 'currencies',
+    public array $relationship_fields = array( 'task_id'     =>'tasks', 'note_id' =>'notes', 'account_id' =>'accounts',
+                                               'meeting_id'  =>'meetings', 'call_id' =>'calls', 'email_id' =>'emails', 'project_id' =>'project',
+                                               // Bug 38529 & 40938
+                                               'currency_id' => 'currencies',
                                     );
 
     public function __construct()
@@ -109,11 +109,11 @@ class Opportunity extends SugarBean
 
 
 
-    public $new_schema = true;
+    public bool $new_schema = true;
 
 
 
-    public function get_summary_text()
+    public function get_summary_text() : string
     {
         return (string)$this->name;
     }
@@ -121,20 +121,20 @@ class Opportunity extends SugarBean
     public function create_list_query($order_by, $where, $show_deleted = 0)
     {
         $custom_join = $this->getCustomJoin();
-        $query = "SELECT ";
+        $query = 'SELECT ';
 
-        $query .= "
+        $query .= '
                             accounts.id as account_id,
                             accounts.name as account_name,
                             accounts.assigned_user_id account_id_owner,
-                            users.user_name as assigned_user_name ";
+                            users.user_name as assigned_user_name ';
         $query .= $custom_join['select'];
-        $query .= " ,opportunities.*
-                            FROM opportunities ";
+        $query .= ' ,opportunities.*
+                            FROM opportunities ';
 
 
-        $query .= 			"LEFT JOIN users
-                            ON opportunities.assigned_user_id=users.id ";
+        $query .= 'LEFT JOIN users
+                            ON opportunities.assigned_user_id=users.id ';
         $query .= "LEFT JOIN $this->rel_account_table
                             ON opportunities.id=$this->rel_account_table.opportunity_id
                             LEFT JOIN accounts
@@ -143,63 +143,63 @@ class Opportunity extends SugarBean
         $where_auto = '1=1';
         if ($show_deleted == 0) {
             $where_auto = "
-			($this->rel_account_table.deleted is null OR $this->rel_account_table.deleted=0)
-			AND (accounts.deleted is null OR accounts.deleted=0)
-			AND opportunities.deleted=0";
+            ($this->rel_account_table.deleted is null OR $this->rel_account_table.deleted=0)
+            AND (accounts.deleted is null OR accounts.deleted=0)
+            AND opportunities.deleted=0";
         } else {
             if ($show_deleted == 1) {
-                $where_auto = " opportunities.deleted=1";
+                $where_auto = ' opportunities.deleted=1';
             }
         }
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where ($where) AND ".$where_auto;
         } else {
-            $query .= "where ".$where_auto;
+            $query .= 'where ' .$where_auto;
         }
 
-        if ($order_by != "") {
+        if ($order_by != '') {
             $query .= " ORDER BY $order_by";
         } else {
-            $query .= " ORDER BY opportunities.name";
+            $query .= ' ORDER BY opportunities.name';
         }
 
         return $query;
     }
 
 
-    public function create_export_query($order_by, $where, $relate_link_join='')
+    public function create_export_query(string $order_by, string $where) : array|string
     {
         $custom_join = $this->getCustomJoin(true, true, $where);
         $custom_join['join'] .= $relate_link_join;
-        $query = "SELECT
+        $query = 'SELECT
                                 opportunities.*,
                                 accounts.name as account_name,
-                                users.user_name as assigned_user_name ";
+                                users.user_name as assigned_user_name ';
         $query .= $custom_join['select'];
-        $query .= " FROM opportunities ";
-        $query .= 				"LEFT JOIN users
-                                ON opportunities.assigned_user_id=users.id";
+        $query .= ' FROM opportunities ';
+        $query .= 'LEFT JOIN users
+                                ON opportunities.assigned_user_id=users.id';
         $query .= " LEFT JOIN $this->rel_account_table
                                 ON opportunities.id=$this->rel_account_table.opportunity_id
                                 LEFT JOIN accounts
                                 ON $this->rel_account_table.account_id=accounts.id ";
         $query .= $custom_join['join'];
         $where_auto = "
-			($this->rel_account_table.deleted is null OR $this->rel_account_table.deleted=0)
-			AND (accounts.deleted is null OR accounts.deleted=0)
-			AND opportunities.deleted=0";
+            ($this->rel_account_table.deleted is null OR $this->rel_account_table.deleted=0)
+            AND (accounts.deleted is null OR accounts.deleted=0)
+            AND opportunities.deleted=0";
 
-        if ($where != "") {
+        if ($where != '') {
             $query .= "where $where AND ".$where_auto;
         } else {
-            $query .= "where ".$where_auto;
+            $query .= 'where ' .$where_auto;
         }
 
-        if ($order_by != "") {
+        if ($order_by != '') {
             $query .= " ORDER BY opportunities.$order_by";
         } else {
-            $query .= " ORDER BY opportunities.name";
+            $query .= ' ORDER BY opportunities.name';
         }
         return $query;
     }
@@ -211,7 +211,7 @@ class Opportunity extends SugarBean
         }
     }
 
-    public function fill_in_additional_detail_fields()
+    public function fill_in_additional_detail_fields() : void
     {
         parent::fill_in_additional_detail_fields();
 
@@ -255,7 +255,8 @@ class Opportunity extends SugarBean
             LoggerManager::getLogger()->warn("Illegal string offset 'select' (\$query_array) value id: $query_array");
         } else {
             //update the select clause in the retruned query.
-            $query_array['select']="SELECT contacts.id, contacts.first_name, contacts.last_name, contacts.title, contacts.email1, contacts.phone_work, opportunities_contacts.contact_role as opportunity_role, opportunities_contacts.id as opportunity_rel_id ";
+            $query_array['select']=
+                'SELECT contacts.id, contacts.first_name, contacts.last_name, contacts.title, contacts.email1, contacts.phone_work, opportunities_contacts.contact_role as opportunity_role, opportunities_contacts.id as opportunity_rel_id ';
         }
 
         $query='';
@@ -284,7 +285,7 @@ class Opportunity extends SugarBean
         }
 
         if (!empty($idequals)) {
-            $query = "select amount, id from opportunities where (" . $idequals . ") and deleted=0 and opportunities.sales_stage <> 'Closed Won' AND opportunities.sales_stage <> 'Closed Lost';";
+            $query = 'select amount, id from opportunities where (' . $idequals . ") and deleted=0 and opportunities.sales_stage <> 'Closed Won' AND opportunities.sales_stage <> 'Closed Lost';";
             $result = $this->db->query($query);
             while ($row = $this->db->fetchByAssoc($result)) {
                 $currencyIdQuoted = $this->db->quote($currency->id);
@@ -304,7 +305,7 @@ class Opportunity extends SugarBean
 
         $temp_array = $this->get_list_view_array();
         $temp_array['SALES_STAGE'] = empty($temp_array['SALES_STAGE']) ? '' : $temp_array['SALES_STAGE'];
-        $temp_array["ENCODED_NAME"]=$this->name;
+        $temp_array['ENCODED_NAME']=$this->name;
         return $temp_array;
     }
 
@@ -325,20 +326,20 @@ class Opportunity extends SugarBean
 
 
     /**
-    	builds a generic search based on the query string using or
-    	do not include any $this-> because this is called on without having the class instantiated
+        builds a generic search based on the query string using or
+        do not include any $this-> because this is called on without having the class instantiated
     */
-    public function build_generic_where_clause($the_query_string)
+    public function build_generic_where_clause($the_query_string) : string
     {
         $where_clauses = array();
         $the_query_string = DBManagerFactory::getInstance()->quote($the_query_string);
         array_push($where_clauses, "opportunities.name like '$the_query_string%'");
         array_push($where_clauses, "accounts.name like '$the_query_string%'");
 
-        $the_where = "";
+        $the_where = '';
         foreach ($where_clauses as $clause) {
-            if ($the_where != "") {
-                $the_where .= " or ";
+            if ($the_where != '') {
+                $the_where .= ' or ';
             }
             $the_where .= $clause;
         }
@@ -373,7 +374,7 @@ class Opportunity extends SugarBean
         return parent::save($check_notify);
     }
 
-    public function save_relationship_changes($is_update, $exclude = array())
+    public function save_relationship_changes(bool $is_update, array $exclude = array())
     {
         //if account_id was replaced unlink the previous account_id.
         //this rel_fields_before_value is populated by sugarbean during the retrieve call.
@@ -402,16 +403,16 @@ class Opportunity extends SugarBean
     {
         global $app_list_strings;
 
-        $xtpl->assign("OPPORTUNITY_NAME", $oppty->name);
-        $xtpl->assign("OPPORTUNITY_AMOUNT", $oppty->amount);
-        $xtpl->assign("OPPORTUNITY_CLOSEDATE", $oppty->date_closed);
-        $xtpl->assign("OPPORTUNITY_STAGE", (isset($oppty->sales_stage)?$app_list_strings['sales_stage_dom'][$oppty->sales_stage]:""));
-        $xtpl->assign("OPPORTUNITY_DESCRIPTION", nl2br($oppty->description));
+        $xtpl->assign('OPPORTUNITY_NAME', $oppty->name);
+        $xtpl->assign('OPPORTUNITY_AMOUNT', $oppty->amount);
+        $xtpl->assign('OPPORTUNITY_CLOSEDATE', $oppty->date_closed);
+        $xtpl->assign('OPPORTUNITY_STAGE', (isset($oppty->sales_stage)? $app_list_strings['sales_stage_dom'][$oppty->sales_stage]: ''));
+        $xtpl->assign('OPPORTUNITY_DESCRIPTION', nl2br($oppty->description));
 
         return $xtpl;
     }
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':return true;
@@ -436,7 +437,7 @@ class Opportunity extends SugarBean
                     $is_owner = $current_user->id == $parent_bean->assigned_user_id;
                 }
             }
-            require_once("modules/SecurityGroups/SecurityGroup.php");
+            require_once('modules/SecurityGroups/SecurityGroup.php');
             $in_group = SecurityGroup::groupHasAccess('Accounts', $this->account_id, 'view');
             /* END - SECURITY GROUPS */
         }
@@ -461,13 +462,13 @@ class Opportunity extends SugarBean
     {
         $ret_array = array();
         $db = DBManagerFactory::getInstance();
-        $query = "SELECT acc.id, acc.name, acc.assigned_user_id "
-            . "FROM accounts acc, accounts_opportunities a_o "
-            . "WHERE acc.id=a_o.account_id"
+        $query = 'SELECT acc.id, acc.name, acc.assigned_user_id '
+            . 'FROM accounts acc, accounts_opportunities a_o '
+            . 'WHERE acc.id=a_o.account_id'
             . " AND a_o.opportunity_id='$opp_id'"
-            . " AND a_o.deleted=0"
-            . " AND acc.deleted=0";
-        $result = $db->query($query, true, "Error filling in opportunity account details: ");
+            . ' AND a_o.deleted=0'
+            . ' AND acc.deleted=0';
+        $result = $db->query($query, true, 'Error filling in opportunity account details: ');
         $row = $db->fetchByAssoc($result);
         if ($row != null) {
             $ret_array['name'] = $row['name'];

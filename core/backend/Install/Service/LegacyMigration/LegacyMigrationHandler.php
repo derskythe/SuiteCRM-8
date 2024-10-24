@@ -34,13 +34,15 @@ class LegacyMigrationHandler extends ProcessStepExecutor implements LegacyMigrat
 {
     /**
      * LegacyMigrationHandler constructor.
+     *
      * @param iterable $legacyMigrationHandlers
      * @param LoggerInterface $upgradeLogger
      */
     public function __construct(
-        iterable $legacyMigrationHandlers,
+        iterable        $legacyMigrationHandlers,
         LoggerInterface $upgradeLogger
-    ) {
+    )
+    {
         $this->logger = $upgradeLogger;
         $handlers = [];
 

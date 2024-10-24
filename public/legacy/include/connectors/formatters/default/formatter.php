@@ -83,10 +83,10 @@ class default_formatter
                     if (file_exists("modules/Connectors/connectors/formatters/{$dir}/tpls/default.tpl")) {
                         return $this->_ss->fetch("modules/Connectors/connectors/formatters/{$dir}/tpls/default.tpl");
                     } else {
-                        if (preg_match('/_soap_/', $class)) {
-                            return $this->_ss->fetch("include/connectors/formatters/ext/soap/tpls/default.tpl");
+                        if (str_contains($class, '_soap_')) {
+                            return $this->_ss->fetch('include/connectors/formatters/ext/soap/tpls/default.tpl');
                         } else {
-                            return $this->_ss->fetch("include/connectors/formatters/ext/rest/tpls/default.tpl");
+                            return $this->_ss->fetch('include/connectors/formatters/ext/rest/tpls/default.tpl');
                         }
                     }
                 }

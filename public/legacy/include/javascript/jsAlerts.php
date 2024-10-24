@@ -41,8 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-require_once("include/utils/db_utils.php");
+require_once('include/utils/db_utils.php');
 
 #[\AllowDynamicProperties]
 class jsAlerts
@@ -53,9 +52,9 @@ class jsAlerts
     {
         global $app_strings;
         $this->script .= <<<EOQ
-		if (!alertsTimeoutId) {
-		    checkAlerts();
-		}
+        if (!alertsTimeoutId) {
+            checkAlerts();
+        }
 
 EOQ;
         $this->addActivities();
@@ -79,7 +78,7 @@ EOQ;
 
     public function getScript()
     {
-        return "<script>secondsSinceLoad = 0; alertList = [];" . $this->script . "</script>";
+        return '<script>secondsSinceLoad = 0; alertList = [];' . $this->script . '</script>';
     }
 
     /*
@@ -98,6 +97,9 @@ EOQ;
         return '';
     }
 
+    /**
+     * @throws DateMalformedStringException
+     */
     public function addActivities()
     {
         global $app_list_strings, $timedate, $current_user, $app_strings;
@@ -112,30 +114,30 @@ EOQ;
 
         // cn: get a boundary limiter
         $dateTimeMax = $timedate->getNow()->modify("+{$app_list_strings['reminder_max_time']} seconds")->asDb();
-        $dateTimeNow = $timedate->getNow()->modify("-60 seconds")->asDb();
+        $dateTimeNow = $timedate->getNow()->modify('-60 seconds')->asDb();
 
         $db = DBManagerFactory::getInstance();
         $dateTimeNow = $db->convert($db->quoted($dateTimeNow), 'datetime');
         $dateTimeMax = $db->convert($db->quoted($dateTimeMax), 'datetime');
-        $desc = $db->convert("description", "text2char");
-        if ($desc != "description") {
-            $desc .= " description";
+        $desc = $db->convert('description', 'text2char');
+        if ($desc !== 'description') {
+            $desc .= ' description';
         }
 
         // Prep Meetings Query
         $selectMeetings = "SELECT meetings.id, name,reminder_time, $desc,location, status, parent_type, parent_id, date_start, assigned_user_id
-			FROM meetings LEFT JOIN meetings_users ON meetings.id = meetings_users.meeting_id
-			WHERE meetings_users.user_id ='".$current_user->id."'
-				AND meetings_users.accept_status != 'decline'
-				AND meetings.reminder_time != -1
-				AND meetings_users.deleted != 1
-				AND meetings.status = 'Planned'
-			    AND date_start >= $dateTimeNow
-			    AND date_start <= $dateTimeMax";
+            FROM meetings LEFT JOIN meetings_users ON meetings.id = meetings_users.meeting_id
+            WHERE meetings_users.user_id ='".$current_user->id."'
+                AND meetings_users.accept_status != 'decline'
+                AND meetings.reminder_time != -1
+                AND meetings_users.deleted != 1
+                AND meetings.status = 'Planned'
+                AND date_start >= $dateTimeNow
+                AND date_start <= $dateTimeMax";
         $result = $db->query($selectMeetings);
 
         ///////////////////////////////////////////////////////////////////////
-        ////	MEETING INTEGRATION
+        ////    MEETING INTEGRATION
         $meetingIntegration = null;
         if (isset($sugar_config['meeting_integration']) && !empty($sugar_config['meeting_integration'])) {
             if (!class_exists($sugar_config['meeting_integration'])) {
@@ -143,7 +145,7 @@ EOQ;
             }
             $meetingIntegration = new $sugar_config['meeting_integration']();
         }
-        ////	END MEETING INTEGRATION
+        ////    END MEETING INTEGRATION
         ///////////////////////////////////////////////////////////////////////
 
         while ($row = $db->fetchByAssoc($result)) {
@@ -156,12 +158,12 @@ EOQ;
             $instructions = $app_strings['MSG_JS_ALERT_MTG_REMINDER_MEETING_MSG'];
 
             ///////////////////////////////////////////////////////////////////
-            ////	MEETING INTEGRATION
+            ////    MEETING INTEGRATION
             if (!empty($meetingIntegration) && $meetingIntegration->isIntegratedMeeting($row['id'])) {
                 $url = $meetingIntegration->miUrlGetJsAlert($row);
                 $instructions = $meetingIntegration->miGetJsAlertInstructions();
             }
-            ////	END MEETING INTEGRATION
+            ////    END MEETING INTEGRATION
             ///////////////////////////////////////////////////////////////////
 
             $meetingName = from_html($row['name']);
@@ -189,15 +191,15 @@ EOQ;
 
         // Prep Calls Query
         $selectCalls = "
-				SELECT calls.id, name, reminder_time, $desc, date_start, status, parent_type, parent_id
-				FROM calls LEFT JOIN calls_users ON calls.id = calls_users.call_id
-				WHERE calls_users.user_id ='".$current_user->id."'
-				    AND calls_users.accept_status != 'decline'
-				    AND calls.reminder_time != -1
-					AND calls_users.deleted != 1
-					AND calls.status = 'Planned'
-				    AND date_start >= $dateTimeNow
-				    AND date_start <= $dateTimeMax";
+                SELECT calls.id, name, reminder_time, $desc, date_start, status, parent_type, parent_id
+                FROM calls LEFT JOIN calls_users ON calls.id = calls_users.call_id
+                WHERE calls_users.user_id ='".$current_user->id."'
+                    AND calls_users.accept_status != 'decline'
+                    AND calls.reminder_time != -1
+                    AND calls_users.deleted != 1
+                    AND calls.status = 'Planned'
+                    AND date_start >= $dateTimeNow
+                    AND date_start <= $dateTimeMax";
 
         $result = $db->query($selectCalls);
 

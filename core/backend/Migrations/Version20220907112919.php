@@ -25,7 +25,7 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Migrations;
 
@@ -36,29 +36,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class Version20220907112919 extends BaseMigration implements ContainerAwareInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $upgradeLogger;
-
-    public function getDescription(): string
+    public function getDescription() : string
     {
         return 'Add LOCK_DSN to .env';
     }
 
-    public function isTransactional(): bool
+    public function isTransactional() : bool
     {
         return false;
     }
 
-    public function up(Schema $schema): void
+    public function up(Schema $schema) : void
     {
-        $envFile = $this->getProjectDir() . "/.env";
+        $envFile = $this->getProjectDir() . '/.env';
 
         if (!file_exists($envFile)) {
             return;
@@ -83,7 +73,7 @@ final class Version20220907112919 extends BaseMigration implements ContainerAwar
         $this->log('Added LOCK_DSN to .env.');
     }
 
-    public function down(Schema $schema): void
+    public function down(Schema $schema) : void
     {
     }
 }

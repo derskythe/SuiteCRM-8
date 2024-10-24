@@ -53,7 +53,7 @@ function get_node_data($params, $get_array=false)
     $subcat_id=$params['NODES'][$click_level]['id'];
     $cat_id=$params['NODES'][$click_level-1]['id'];
     $href=true;
-    if (isset($params['TREE']['caller']) && $params['TREE']['caller']=='Documents') {
+    if (isset($params['TREE']['caller']) && $params['TREE']['caller'] === 'Documents') {
         $href=false;
     }
     $nodes=get_documents($cat_id, $subcat_id, $href);
@@ -74,7 +74,8 @@ function get_node_data($params, $get_array=false)
      $nodes=array();
      global $mod_strings;
      global $app_list_strings;
-     $query="select distinct category_id, subcategory_id from documents where deleted=0 order by category_id, subcategory_id";
+     $query=
+         'select distinct category_id, subcategory_id from documents where deleted=0 order by category_id, subcategory_id';
      $result=DBManagerFactory::getInstance()->query($query);
      $current_cat_id=null;
      $cat_node=null;
@@ -91,9 +92,9 @@ function get_node_data($params, $get_array=false)
              if (!empty($cat_node)) {
                  $nodes[]=$cat_node;
              }
-            
+
              $cat_node = new Node($cat_id, $cat_name);
-             $cat_node->set_property("href", $href_string);
+             $cat_node->set_property('href', $href_string);
              $cat_node->expanded = true;
              $cat_node->dynamic_load = false;
          }
@@ -106,10 +107,10 @@ function get_node_data($params, $get_array=false)
              $subcat_name=$app_list_strings['document_subcategory_dom'][$row['subcategory_id']];
          }
          $subcat_node = new Node($subcat_id, $subcat_name);
-         $subcat_node->set_property("href", $href_string);
+         $subcat_node->set_property('href', $href_string);
          $subcat_node->expanded = false;
          $subcat_node->dynamic_load = true;
-        
+
          $cat_node->add_node($subcat_node);
      }
      if (!empty($cat_node)) {
@@ -118,33 +119,33 @@ function get_node_data($params, $get_array=false)
 
      return $nodes;
  }
- 
+
 function get_documents($cat_id, $subcat_id, $href=true)
 {
     $nodes=array();
     $href_string = "javascript:select_document('doctree')";
-    $query="select * from documents where deleted=0";
-    if ($cat_id != 'null') {
+    $query= 'select * from documents where deleted=0';
+    if ($cat_id !== 'null') {
         $query.=" and category_id='" . DBManagerFactory::getInstance()->quote($cat_id) . "'";
     } else {
-        $query.=" and category_id is null";
+        $query.= ' and category_id is null';
     }
-        
-    if ($subcat_id != 'null') {
+
+    if ($subcat_id !== 'null') {
         $query.=" and subcategory_id='" . DBManagerFactory::getInstance()->quote($subcat_id) . "'";
     } else {
-        $query.=" and subcategory_id is null";
+        $query.= ' and subcategory_id is null';
     }
     $result=DBManagerFactory::getInstance()->query($query);
     $current_cat_id=null;
     while (($row=DBManagerFactory::getInstance()->fetchByAssoc($result))!= null) {
         $node = new Node($row['id'], $row['document_name']);
         if ($href) {
-            $node->set_property("href", $href_string);
+            $node->set_property('href', $href_string);
         }
         $node->expanded = true;
         $node->dynamic_load = false;
-        
+
         $nodes[]=$node;
     }
     return $nodes;

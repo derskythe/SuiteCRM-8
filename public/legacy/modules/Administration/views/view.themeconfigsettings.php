@@ -44,49 +44,51 @@ if (!defined('sugarEntry') || !sugarEntry) {
 require_once('modules/Administration/Forms.php');
 require_once('modules/Configurator/Configurator.php');
 require_once('include/MVC/View/SugarView.php');
-        
+
 #[\AllowDynamicProperties]
 class AdministrationViewThemeConfigSettings extends SugarView
 {
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
-        
+
         return array(
-           "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>',
            $mod_strings['LBL_THEME_SETTINGS']
            );
     }
-    
+
     /**
+     * @throws Exception
+     * @throws Exception
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         global $current_user;
         if (!is_admin($current_user)) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
 
         // Check if the theme is valid
         if (!isset($_REQUEST['theme']) || !array_key_exists($_REQUEST['theme'], SugarThemeRegistry::allThemes())) {
-            sugar_die("theme is invalid.");
+            sugar_die('theme is invalid.');
         }
 
-        if (isset($_REQUEST['do']) && $_REQUEST['do'] == 'save') {
+        if (isset($_REQUEST['do']) && $_REQUEST['do'] === 'save') {
             $theme_config = SugarThemeRegistry::getThemeConfig($_REQUEST['theme']);
 
             $configurator = new Configurator();
 
             foreach ($theme_config as $name => $def) {
                 if (isset($_REQUEST[$name])) {
-                    if ($_REQUEST[$name] == 'true') {
+                    if ($_REQUEST[$name] === 'true') {
                         $_REQUEST[$name] = true;
                     } else {
-                        if ($_REQUEST[$name] == 'false') {
+                        if ($_REQUEST[$name] === 'false') {
                             $_REQUEST[$name] = false;
                         }
                     }
@@ -101,18 +103,20 @@ class AdministrationViewThemeConfigSettings extends SugarView
 
         parent::process();
     }
-    
+
     /**
      * display the form
+     *
+     * @throws SmartyException
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings, $app_strings;
 
         $this->ss->assign('config', SugarThemeRegistry::getThemeConfig($_REQUEST['theme']));
         $this->ss->assign('mod', $mod_strings);
         $this->ss->assign('APP', $app_strings);
-        
+
         echo $this->getModuleTitle(false);
         echo $this->ss->fetch('modules/Administration/templates/themeConfigSettings.tpl');
     }

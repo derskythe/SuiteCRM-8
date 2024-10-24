@@ -25,35 +25,36 @@
  * the words "Supercharged by SuiteCRM".
  */
 
-
 namespace App\ViewDefinitions\LegacyHandler;
-
 
 use App\ViewDefinitions\Service\FieldAliasMapper;
 
 trait FieldDefinitionsInjectorTrait
 {
-    private $defaultFields = [
-        'type' => 'type',
+    private array $defaultFields = [
+        'type'  => 'type',
         'label' => 'vname',
     ];
 
     /**
      * Add field definition to current view field metadata
+     *
      * @param array|null $vardefs
      * @param $name
      * @param $field
      * @param array $baseViewFieldDefinition
      * @param FieldAliasMapper $fieldAliasMapper
+     *
      * @return array
      */
     protected function addFieldDefinition(
-        array &$vardefs,
-        $name,
-        $field,
-        array $baseViewFieldDefinition,
+        array            &$vardefs,
+                         $name,
+                         $field,
+        array            $baseViewFieldDefinition,
         FieldAliasMapper $fieldAliasMapper
-    ): array {
+    ) : array
+    {
         $baseField = $this->getField($field);
 
         $field = array_merge($baseViewFieldDefinition, $baseField);
@@ -79,10 +80,12 @@ trait FieldDefinitionsInjectorTrait
 
     /**
      * Get base field structure
+     *
      * @param $field
+     *
      * @return array
      */
-    protected function getField($field): array
+    protected function getField($field) : array
     {
         $baseField = $field;
 
@@ -97,10 +100,12 @@ trait FieldDefinitionsInjectorTrait
 
     /**
      * Apply defaults
+     *
      * @param array $field
+     *
      * @return array
      */
-    protected function applyDefaults(array $field): array
+    protected function applyDefaults(array $field) : array
     {
         foreach ($this->defaultFields as $attribute => $default) {
             if (empty($field[$attribute])) {
@@ -116,6 +121,7 @@ trait FieldDefinitionsInjectorTrait
      * @param FieldAliasMapper $fieldAliasMapper
      * @param array $vardefs
      * @param string $name
+     *
      * @return mixed
      */
     protected function getAliasDefinitions(FieldAliasMapper $fieldAliasMapper, array $vardefs, string $name)
@@ -125,6 +131,7 @@ trait FieldDefinitionsInjectorTrait
         }
 
         $alias = $fieldAliasMapper->map($vardefs[$name]);
+
         return $vardefs[$alias] ?? $vardefs[$name];
     }
 }

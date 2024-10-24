@@ -42,12 +42,12 @@ if (!defined('sugarEntry') || !sugarEntry) {
     die('Not A Valid Entry Point');
 }
 
-require_once("modules/Meetings/Meeting.php");
-require_once("modules/Calls/Call.php");
-require_once("modules/Users/User.php");
-require_once("modules/Contacts/Contact.php");
-require_once("modules/Leads/Lead.php");
-require_once("include/utils.php");
+require_once('modules/Meetings/Meeting.php');
+require_once('modules/Calls/Call.php');
+require_once('modules/Users/User.php');
+require_once('modules/Contacts/Contact.php');
+require_once('modules/Leads/Lead.php');
+require_once('include/utils.php');
 
 /**
  * Class for sending email reminders of meetings and call to invitees
@@ -56,17 +56,17 @@ require_once("include/utils.php");
 #[\AllowDynamicProperties]
 class EmailReminder
 {
-    
+
     /**
      * string db datetime of now
      */
     protected $now;
-    
+
     /**
      * string db datetime will be fetched till
      */
     protected $max;
-    
+
     /**
      * constructor
      */
@@ -85,10 +85,13 @@ class EmailReminder
         $this->now = $GLOBALS['timedate']->nowDb();
         $this->max = $GLOBALS['timedate']->getNow()->modify("+{$max_time} seconds")->asDb();
     }
-    
+
     /**
      * main method that runs reminding process
+     *
      * @return boolean
+     * @throws Exception
+     * @throws Exception
      */
     public function process()
     {
@@ -96,7 +99,7 @@ class EmailReminder
         $admin->retrieveSettings();
 
         Reminder::sendEmailReminders($this, $admin);
-        
+
         $meetings = $this->getMeetingsForRemind();
         foreach ($meetings as $id) {
             $recipients = $this->getRecipients($id, 'Meetings');
@@ -107,7 +110,7 @@ class EmailReminder
                 $bean->save();
             }
         }
-        
+
         $calls = $this->getCallsForRemind();
         foreach ($calls as $id) {
             $recipients = $this->getRecipients($id, 'Calls');
@@ -118,16 +121,21 @@ class EmailReminder
                 $bean->save();
             }
         }
-        
+
         return true;
     }
 
     /**
      * send reminders
+     *
      * @param SugarBean $bean
      * @param Administration $admin
      * @param array $recipients
+     *
      * @return boolean
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function sendReminders(SugarBean $bean, Administration $admin, $recipients)
     {
@@ -164,7 +172,7 @@ class EmailReminder
 
         $template_name = $GLOBALS['beanList'][$bean->module_dir] . 'Reminder';
         $xtpl->parse($template_name);
-        $xtpl->parse($template_name . "_Subject");
+        $xtpl->parse($template_name . '_Subject');
 
         $tempBody = from_html(trim($xtpl->text($template_name)));
         $mail->msgHTML($tempBody);
@@ -172,12 +180,12 @@ class EmailReminder
         $tempBody = preg_replace('/<a href=([\"\']?)(.*?)\1>(.*?)<\/a>/', "\\3 [\\2]", (string) $tempBody);
 
         $mail->AltBody = strip_tags($tempBody);
-        $mail->Subject = strip_tags(from_html($xtpl->text($template_name . "_Subject")));
+        $mail->Subject = strip_tags(from_html($xtpl->text($template_name . '_Subject')));
 
         $oe = new OutboundEmail();
         $oe = $oe->getSystemMailerSettings();
         if (empty($oe->mail_smtpserver)) {
-            $GLOBALS['log']->fatal("Email Reminder: error sending email, system smtp server is not set");
+            $GLOBALS['log']->fatal('Email Reminder: error sending email, system smtp server is not set');
 
             return false;
         }
@@ -193,7 +201,7 @@ class EmailReminder
 
         return true;
     }
-    
+
     /**
      * set reminder body
      * @param XTemplate $xtpl
@@ -207,7 +215,7 @@ class EmailReminder
 
         $xtpl->assign("{$object}_SUBJECT", $bean->name);
         $date = $GLOBALS['timedate']->fromUser($bean->date_start, $GLOBALS['current_user']);
-        $xtpl->assign("{$object}_STARTDATE", $GLOBALS['timedate']->asUser($date, $user)." ".TimeDate::userTimezoneSuffix($date, $user));
+        $xtpl->assign("{$object}_STARTDATE", $GLOBALS['timedate']->asUser($date, $user). ' ' .TimeDate::userTimezoneSuffix($date, $user));
         if (isset($bean->location)) {
             $xtpl->assign("{$object}_LOCATION", $bean->location);
         }
@@ -216,7 +224,7 @@ class EmailReminder
 
         return $xtpl;
     }
-    
+
     /**
      * get meeting ids list for remind
      * @return array
@@ -244,7 +252,7 @@ class EmailReminder
         }
         return $meetings;
     }
-    
+
     /**
      * get calls ids list for remind
      * @return array
@@ -272,28 +280,28 @@ class EmailReminder
         }
         return $calls;
     }
-    
+
     /**
      * get recipients of reminding email for specific activity
      * @param string $id
      * @param string $module
      * @return array
      */
-    protected function getRecipients($id, $module = "Meetings")
+    protected function getRecipients($id, $module = 'Meetings')
     {
         $db = DBManagerFactory::getInstance();
-    
+
         switch ($module) {
-            case "Meetings":
-                $field_part = "meeting";
+            case 'Meetings':
+                $field_part = 'meeting';
                 break;
-            case "Calls":
-                $field_part = "call";
+            case 'Calls':
+                $field_part = 'call';
                 break;
             default:
                 return array();
         }
-    
+
         $emails = array();
         // fetch users
         $query = "SELECT user_id FROM {$field_part}s_users WHERE {$field_part}_id = '{$id}' AND accept_status != 'decline' AND deleted = 0

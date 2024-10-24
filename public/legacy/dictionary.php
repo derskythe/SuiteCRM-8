@@ -41,7 +41,5 @@
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-
-
 require_once('include/entryPoint.php');
 include_once('modules/TableDictionary.php');

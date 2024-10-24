@@ -63,7 +63,7 @@ class SoapError
         if (!isset($error_defs[$error_name])) {
             $this->name = 'An Undefined Error - ' . $error_name . ' occurred';
             $this->number = '-1';
-            $this->description = 'There is no error definition for ' . 	$error_name;
+            $this->description = 'There is no error definition for ' .     $error_name;
         } else {
             $this->name = $error_defs[$error_name]['name'];
             $this->number = $error_defs[$error_name]['number'];

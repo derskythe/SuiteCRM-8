@@ -89,7 +89,7 @@ $imageSave = SugarThemeRegistry::current()->getImage('studio_save', '', null, nu
 
 $buttons = array();
 $buttons [] = array( 'text' => $GLOBALS['mod_strings']['LBL_BTN_SAVEPUBLISH'],'actionScript'=>"onclick='studiotabs.generateForm(\"edittabs\");document.edittabs.submit()'" ) ;
-$html = "" ;
+$html = '';
 foreach ($buttons as $button) {
     $html .= "<td><input type='button' valign='center' class='button' style='cursor:pointer' onmousedown='this.className=\"buttonOn\";return false;' onmouseup='this.className=\"button\"' onmouseout='this.className=\"button\"' {$button['actionScript']} value = '{$button['text']}' ></td>" ;
 }
@@ -119,4 +119,4 @@ if (isset($sugar_config['other_group_tab_displayed'])) {
 $smarty->assign('tabGroupSelected_lang', $tabGroupSelected_lang);
 
 $smarty->assign('available_languages', get_languages());
-$smarty->display("modules/Studio/TabGroups/EditViewTabs.tpl");
+$smarty->display('modules/Studio/TabGroups/EditViewTabs.tpl');

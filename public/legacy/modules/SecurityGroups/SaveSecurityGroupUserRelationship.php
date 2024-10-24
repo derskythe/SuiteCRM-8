@@ -29,7 +29,7 @@ if (!is_admin($GLOBALS['current_user'])
 }
 
 // send them to the edit screen.
-if (isset($_REQUEST['record']) && $_REQUEST['record'] != "") {
+if (isset($_REQUEST['record']) && $_REQUEST['record'] != '') {
     $recordID = $_REQUEST['record'];
 }
 
@@ -48,12 +48,12 @@ if (isset($_REQUEST['record']) && $_REQUEST['record'] != "") {
     } else {
         $focus->primary_group = 0;
     }
-    
-    
+
+
 $focus->save();
 $recordID = $focus->id;
 
-$GLOBALS['log']->debug("Saved record with id of ".$recordID);
+$GLOBALS['log']->debug('Saved record with id of ' .$recordID);
 
 $header_URL = "Location: index.php?action={$_REQUEST['return_action']}&module={$_REQUEST['return_module']}&record={$_REQUEST['return_id']}";
 $GLOBALS['log']->debug("about to post header URL of: $header_URL");

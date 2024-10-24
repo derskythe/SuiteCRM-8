@@ -48,12 +48,12 @@ class CalendarViewSaveSettings extends SugarView
         parent::__construct();
     }
 
-    public function process()
+    public function process() : void
     {
         $this->display();
     }
 
-    public function display()
+    public function display() : void
     {
         global $current_user;
 
@@ -75,9 +75,10 @@ class CalendarViewSaveSettings extends SugarView
         $current_user->setPreference('calendar_display_shared_separate', $_REQUEST['shared_calendar_separate'], 0, 'global', $current_user);
 
         if (isset($_REQUEST['day']) && !empty($_REQUEST['day'])) {
-            header("Location: index.php?module=Calendar&action=index&view=".$_REQUEST['view']."&hour=0&day=".$_REQUEST['day']."&month=".$_REQUEST['month']."&year=".$_REQUEST['year']);
+            header(
+                'Location: index.php?module=Calendar&action=index&view=' . $_REQUEST['view']. '&hour=0&day=' . $_REQUEST['day']. '&month=' . $_REQUEST['month']. '&year=' . $_REQUEST['year']);
         } else {
-            header("Location: index.php?module=Calendar&action=index");
+            header('Location: index.php?module=Calendar&action=index');
         }
     }
 
@@ -87,23 +88,23 @@ class CalendarViewSaveSettings extends SugarView
         $minutes = (int)$minutes;
         $mer = strtolower($mer);
         if (!empty($mer)) {
-            if (($mer) == 'am') {
+            if (($mer) === 'am') {
                 if ($hours == 12) {
                     $hours = $hours - 12;
                 }
             }
-            if (($mer) == 'pm') {
+            if (($mer) === 'pm') {
                 if ($hours != 12) {
                     $hours = $hours + 12;
                 }
             }
         }
         if ($hours < 10) {
-            $hours = "0".$hours;
+            $hours = '0' .$hours;
         }
         if ($minutes < 10) {
-            $minutes = "0".$minutes;
+            $minutes = '0' .$minutes;
         }
-        return $hours . ":". $minutes;
+        return $hours . ':' . $minutes;
     }
 }

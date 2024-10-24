@@ -41,7 +41,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  * display the words "Powered by SugarCRM" and "Supercharged by SuiteCRM".
  */
 
-define('CONNECTOR_DISPLAY_CONFIG_FILE', 'custom/modules/Connectors/metadata/display_config.php');
+const CONNECTOR_DISPLAY_CONFIG_FILE = 'custom/modules/Connectors/metadata/display_config.php';
 require_once('include/connectors/ConnectorFactory.php');
 
 /**
@@ -95,11 +95,12 @@ class ConnectorUtils
     public static function eapmEnabled($id, $refresh = false)
     {
         $data = self::getConnector($id, $refresh);
-        if (!$data || !isset($data["eapm"])) {
+        if (!$data || !isset($data['eapm'])) {
             // TODO: if we don't know this connector, should we decide it's enabled or disabled?
             return true;
         }
-        return !empty($data["eapm"]["enabled"]);
+
+        return !empty($data['eapm']['enabled']);
     }
 
     /**
@@ -124,7 +125,7 @@ class ConnectorUtils
             }
 
             if (!write_array_to_file('searchdefs', $searchdefs, 'custom/modules/Connectors/metadata/searchdefs.php')) {
-                $GLOBALS['log']->fatal("Cannot write file custom/modules/Connectors/metadata/searchdefs.php");
+                $GLOBALS['log']->fatal('Cannot write file custom/modules/Connectors/metadata/searchdefs.php');
                 return array();
             }
         }
@@ -237,7 +238,7 @@ class ConnectorUtils
             }
 
             if (!write_array_to_file('viewdefs', $view_defs, 'custom/modules/Connectors/metadata/mergeviewdefs.php')) {
-                $GLOBALS['log']->fatal("Cannot write file custom/modules/Connectors/metadata/mergeviewdefs.php");
+                $GLOBALS['log']->fatal('Cannot write file custom/modules/Connectors/metadata/mergeviewdefs.php');
                 return array();
             }
         }
@@ -328,7 +329,7 @@ class ConnectorUtils
 
         if (!write_array_to_file('connectors', $connectors, $toFile)) {
             //Log error and return empty array
-            $GLOBALS['log']->fatal("Cannot write sources to file");
+            $GLOBALS['log']->fatal('Cannot write sources to file');
             return false;
         }
         self::$connectors_cache = $connectors;
@@ -402,7 +403,7 @@ class ConnectorUtils
 
             if (!write_array_to_file('modules_sources', $modules_sources, CONNECTOR_DISPLAY_CONFIG_FILE)) {
                 //Log error and return empty array
-                $GLOBALS['log']->fatal("Cannot write \$modules_sources to " . CONNECTOR_DISPLAY_CONFIG_FILE);
+                $GLOBALS['log']->fatal('Cannot write $modules_sources to ' . CONNECTOR_DISPLAY_CONFIG_FILE);
             }
         }
 
@@ -471,7 +472,7 @@ class ConnectorUtils
      * When a module has all of the sources removed from it we do not properly remove it from the viewdefs. This function
      * will handle that.
      *
-     * @param String $module	 - the module in question
+     * @param String $module     - the module in question
      */
     public static function cleanMetaDataFile(
         $module
@@ -660,7 +661,11 @@ class ConnectorUtils
                                 $newDisplayParam = $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams'];
                                 $newDisplayParam['module'] = $module;
                                 $newDisplayParam['enableConnectors'] = true;
-                                if (!is_null($source_id) && !in_array($source_id, $newDisplayParam['connectors'])) {
+                                if (!is_null($source_id) && !in_array(
+                                        $source_id,
+                                        $newDisplayParam['connectors'],
+                                        true
+                                    )) {
                                     $newDisplayParam['connectors'][] = $source_id;
                                 }
                                 $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams'] = $newDisplayParam;
@@ -699,7 +704,11 @@ class ConnectorUtils
                         if (!empty($viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams'])) {
                             $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams']['enableConnectors'] = true;
                             $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams']['module'] = $module;
-                            if (!is_null($source_id) && !in_array($source_id, $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams']['connectors'])) {
+                            if (!is_null($source_id) && !in_array(
+                                    $source_id,
+                                    $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams']['connectors'],
+                                    true
+                                )) {
                                 $viewdefs[$module]['DetailView']['panels'][$panel_id][$row_id][$field_id]['displayParams']['connectors'][] = $source_id;
                             }
                         } else {
@@ -735,7 +744,7 @@ class ConnectorUtils
         $shown_sources = array();
         if (!empty($module) && !empty($displayParams['connectors'])) {
             foreach ($displayParams['connectors'] as $id) {
-                if (!empty($modules_sources[$module]) && in_array($id, $modules_sources[$module])) {
+                if (!empty($modules_sources[$module]) && in_array($id, $modules_sources[$module], true)) {
                     $shown_sources[] = $id;
                 }
             }
@@ -797,7 +806,11 @@ class ConnectorUtils
         $lang .= '.lang.php';
         $dir = str_replace('_', '/', $source_id);
 
-        if (!write_array_to_file("connector_strings", $connector_strings, "custom/modules/Connectors/connectors/sources/{$dir}/language/{$lang}")) {
+        if (!write_array_to_file(
+            'connector_strings',
+            $connector_strings,
+            "custom/modules/Connectors/connectors/sources/{$dir}/language/{$lang}"
+        )) {
             //Log error and return empty array
             $GLOBALS['log']->fatal("Cannot write connectory_strings to file custom/modules/Connectors/connectors/sources/{$dir}/language/{$lang}");
             return false;
@@ -842,7 +855,7 @@ class ConnectorUtils
 
         if (!write_array_to_file('modules_sources', $modules_sources, CONNECTOR_DISPLAY_CONFIG_FILE)) {
             //Log error and return empty array
-            $GLOBALS['log']->fatal("Cannot write \$modules_sources to " . CONNECTOR_DISPLAY_CONFIG_FILE);
+            $GLOBALS['log']->fatal('Cannot write $modules_sources to ' . CONNECTOR_DISPLAY_CONFIG_FILE);
         }
         return true;
     }
@@ -882,7 +895,7 @@ class ConnectorUtils
 
         if (!write_array_to_file('modules_sources', $modules_sources, CONNECTOR_DISPLAY_CONFIG_FILE)) {
             //Log error and return empty array
-            $GLOBALS['log']->fatal("Cannot write \$modules_sources to " . CONNECTOR_DISPLAY_CONFIG_FILE);
+            $GLOBALS['log']->fatal('Cannot write $modules_sources to ' . CONNECTOR_DISPLAY_CONFIG_FILE);
             return false;
         }
 

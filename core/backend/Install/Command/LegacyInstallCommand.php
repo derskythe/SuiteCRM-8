@@ -37,6 +37,7 @@ use Symfony\Component\Console\Question\Question;
 
 /**
  * Class LegacyInstallCommand
+ *
  * @package App\Command
  */
 #[AsCommand(name: 'suitecrm:app:install')]
@@ -45,19 +46,20 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
     /**
      * @var InstallHandler
      */
-    protected $installHandler;
+    protected InstallHandler $installHandler;
 
     /**
      * @var array
      */
-    protected $inputs = [];
+    protected array $inputs = [];
     /**
      * @var InstallStepHandler
      */
-    private $handler;
+    private InstallStepHandler $handler;
 
     /**
      * LegacyInstallCommand constructor.
+     *
      * @param InstallHandler $installHandler
      * @param InstallStepHandler $handler
      */
@@ -104,7 +106,7 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
                 InputOption::VALUE_REQUIRED,
                 'database port'
             ),
-            'default' => '',
+            'default'  => '',
             'required' => false
         ];
 
@@ -154,7 +156,7 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
         $this->inputConfig['demoData'] = [
             'question' => new ChoiceQuestion(
                 'Install demo data?: ',
-                ['yes', 'no'],
+                [ 'yes', 'no' ],
                 'no'
             ),
             'argument' => new InputOption(
@@ -163,14 +165,14 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
                 InputOption::VALUE_OPTIONAL,
                 'Install "demo data" during install process'
             ),
-            'default' => 'no',
+            'default'  => 'no',
             'required' => false
         ];
 
         $this->inputConfig['sys_check_option'] = [
             'question' => new ChoiceQuestion(
                 'Ignore system check warnings?: ',
-                ['true', 'false'],
+                [ 'true', 'false' ],
                 'false'
             ),
             'argument' => new InputOption(
@@ -179,7 +181,7 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
                 InputOption::VALUE_REQUIRED,
                 'Ignore "system check warnings" during install system acceptance check'
             ),
-            'default' => 'false',
+            'default'  => 'false',
             'required' => false
         ];
 
@@ -188,7 +190,7 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
         $this->handler = $handler;
     }
 
-    protected function configure(): void
+    protected function configure() : void
     {
         parent::configure();
 
@@ -199,19 +201,21 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
 
     /**
      * @param array $arguments
+     *
      * @return array
      */
-    protected function getContext(array $arguments): array
+    protected function getContext(array $arguments) : array
     {
-        return [
-            'inputs' => $arguments
-        ];
+        return
+            [
+                'inputs' => $arguments
+            ];
     }
 
     /**
      * @return string
      */
-    protected function getTitle(): string
+    protected function getTitle() : string
     {
         return 'SuiteCRM Silent Install';
     }
@@ -219,7 +223,7 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
     /**
      * @inheritDoc
      */
-    protected function getHandler(): ProcessStepExecutorInterface
+    protected function getHandler() : ProcessStepExecutorInterface
     {
         return $this->handler;
     }
@@ -227,8 +231,9 @@ class LegacyInstallCommand extends BaseStepExecutorCommand
     /**
      * @inheritDoc
      */
-    protected function getAppStrings(): ?array
+    protected function getAppStrings() : ?array
     {
+        parent::getAppStrings();
         $appStringsEntity = $this->appStringsHandler->getInstallAppStrings('en_us');
         $appStrings = [];
 

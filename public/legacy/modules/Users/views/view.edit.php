@@ -59,7 +59,7 @@ class UsersViewEdit extends ViewEdit
 
 
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         $this->fieldHelper = new UserViewHelper($this->ss, $this->bean, 'EditView');
         $this->fieldHelper->setupAdditionalFields();
@@ -67,26 +67,26 @@ class UsersViewEdit extends ViewEdit
         parent::preDisplay();
     }
 
-    public function getMetaDataFile()
+    public function getMetaDataFile() : ?string
     {
         $userType = 'Regular';
-        if (isset($this->fieldHelper) && $this->fieldHelper->usertype == 'GROUP') {
+        if (isset($this->fieldHelper) && $this->fieldHelper->usertype === 'GROUP') {
             $userType = 'Group';
         }
 
-        if ($userType != 'Regular') {
+        if ($userType !== 'Regular') {
             $oldType = $this->type;
             $this->type = $oldType.'group';
         }
         $metadataFile = parent::getMetaDataFile();
-        if ($userType != 'Regular') {
+        if ($userType !== 'Regular') {
             $this->type = $oldType;
         }
 
         return $metadataFile;
     }
 
-    public function display()
+    public function display() : void
     {
         global $current_user, $app_list_strings, $mod_strings;
 
@@ -104,12 +104,12 @@ class UsersViewEdit extends ViewEdit
             $this->fieldHelper->setupAdditionalFields();
         }
 
-        if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] == 'true') {
+        if (isset($_REQUEST['isDuplicate']) && $_REQUEST['isDuplicate'] === 'true') {
             $this->ss->assign('RETURN_MODULE', $_REQUEST['return_module']);
             $this->ss->assign('RETURN_ACTION', $_REQUEST['return_action']);
             $this->ss->assign('RETURN_ID', $_REQUEST['record']);
-            $this->bean->id = "";
-            $this->bean->user_name = "";
+            $this->bean->id = '';
+            $this->bean->user_name = '';
             $this->ss->assign('ID', '');
         } else {
             if (isset($_REQUEST['return_module'])) {
@@ -128,15 +128,15 @@ class UsersViewEdit extends ViewEdit
 
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	REDIRECTS FROM COMPOSE EMAIL SCREEN
-        if (isset($_REQUEST['type']) && (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] == 'Emails')) {
+        ////    REDIRECTS FROM COMPOSE EMAIL SCREEN
+        if (isset($_REQUEST['type']) && (isset($_REQUEST['return_module']) && $_REQUEST['return_module'] === 'Emails')) {
             $this->ss->assign('REDIRECT_EMAILS_TYPE', $_REQUEST['type']);
         }
-        ////	END REDIRECTS FROM COMPOSE EMAIL SCREEN
+        ////    END REDIRECTS FROM COMPOSE EMAIL SCREEN
         ///////////////////////////////////////////////////////////////////////////////
 
         ///////////////////////////////////////////////////////////////////////////////
-        ////	NEW USER CREATION ONLY
+        ////    NEW USER CREATION ONLY
         if (empty($this->bean->id)) {
             $this->ss->assign('SHOW_ADMIN_CHECKBOX', 'height="30"');
             $this->ss->assign('NEW_USER', '1');
@@ -145,7 +145,7 @@ class UsersViewEdit extends ViewEdit
             $this->ss->assign('NEW_USER_TYPE', 'DISABLED');
         }
 
-        ////	END NEW USER CREATION ONLY
+        ////    END NEW USER CREATION ONLY
         ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -190,7 +190,7 @@ class UsersViewEdit extends ViewEdit
         $processSpecial = false;
         $processFormName = '';
         if (isset($this->fieldHelper->usertype) && (
-            $this->fieldHelper->usertype == 'GROUP'
+            $this->fieldHelper->usertype === 'GROUP'
             )) {
             $this->ev->formName = 'EditViewGroup';
 
@@ -235,7 +235,7 @@ EOD
 EOD
         ;
         $action_button_header[] = <<<EOD
-                    <input	title="{$APP['LBL_CANCEL_BUTTON_TITLE']}" id="CANCEL_HEADER" accessKey="{$APP['LBL_CANCEL_BUTTON_KEY']}"
+                    <input    title="{$APP['LBL_CANCEL_BUTTON_TITLE']}" id="CANCEL_HEADER" accessKey="{$APP['LBL_CANCEL_BUTTON_KEY']}"
                               class="button" onclick="var _form = $('#EditView')[0]; _form.action.value='{$RETURN_ACTION}'; _form.module.value='{$RETURN_MODULE}'; _form.record.value='{$RETURN_ID}'; _form.submit()"
                               type="button" name="button" value="{$APP['LBL_CANCEL_BUTTON_LABEL']}">
 EOD
@@ -251,7 +251,7 @@ EOD
 EOD
         ;
         $action_button_footer[] = <<<EOD
-                    <input	title="{$APP['LBL_CANCEL_BUTTON_TITLE']}" id="CANCEL_FOOTER" accessKey="{$APP['LBL_CANCEL_BUTTON_KEY']}"
+                    <input    title="{$APP['LBL_CANCEL_BUTTON_TITLE']}" id="CANCEL_FOOTER" accessKey="{$APP['LBL_CANCEL_BUTTON_KEY']}"
                               class="button" onclick="var _form = $('#EditView')[0]; _form.action.value='{$RETURN_ACTION}'; _form.module.value='{$RETURN_MODULE}'; _form.record.value='{$RETURN_ID}'; _form.submit()"
                               type="button" name="button" value="{$APP['LBL_CANCEL_BUTTON_LABEL']}">
 EOD
@@ -277,7 +277,7 @@ EOD
         //$efocus->et->preflightUser($current_user);
         $out = $efocus->et->displayEmailFrame('modules/Users/_baseEmail.tpl');
         echo $out;
-        echo "<script>var composePackage = null;</script>";
+        echo '<script>var composePackage = null;</script>';
 
         $this->ev->process($processSpecial, $processFormName);
 

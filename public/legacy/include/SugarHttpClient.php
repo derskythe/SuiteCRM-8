@@ -60,9 +60,9 @@ class SugarHttpClient
      */
     public function callRest($url, $postArgs)
     {
-        if (!function_exists("curl_init")) {
+        if (!function_exists('curl_init')) {
             $this->last_error = 'ERROR_NO_CURL';
-            $GLOBALS['log']->fatal("REST call failed - no cURL!");
+            $GLOBALS['log']->fatal('REST call failed - no cURL!');
             return false;
         }
         $curl = curl_init($url);

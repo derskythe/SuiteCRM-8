@@ -150,7 +150,9 @@ class EntryPointConfirmOptInHandler
      * Confirm Opt In User
      *
      * @param array $request
+     *
      * @return string
+     * @throws SmartyException
      */
     private function methodConfirmOptInUser($request)
     {

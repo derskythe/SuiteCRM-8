@@ -54,7 +54,7 @@ if (!isset($install_script) || !$install_script) {
 // System Environment
 $envString = '
 
-	   <h3>'.$mod_strings['LBL_SYSTEM_ENV'].'</h3>';
+       <h3>'.$mod_strings['LBL_SYSTEM_ENV'].'</h3>';
 
 // PHP VERSION
 $envString .='<p><b>'.$mod_strings['LBL_CHECKSYS_PHPVER'].'</b> '.constant('PHP_VERSION').'</p>';
@@ -95,20 +95,20 @@ $envString .='<p><b>'.$mod_strings['LBL_CHECKSYS_CACHE'].'</b> '.$mod_strings['L
 // End already known to be good
 
 // memory limit
-$memory_msg     = "";
+$memory_msg     = '';
 // CL - fix for 9183 (if memory_limit is enabled we will honor it and check it; otherwise use unlimited)
 $memory_limit = ini_get('memory_limit');
 if (empty($memory_limit)) {
-    $memory_limit = "-1";
+    $memory_limit = '-1';
 }
 if (!defined('SUGARCRM_MIN_MEM')) {
     define('SUGARCRM_MIN_MEM', 64*1024*1024);
 }
 $sugarMinMem = constant('SUGARCRM_MIN_MEM');
 // logic based on: http://us2.php.net/manual/en/ini.core.php#ini.memory-limit
-if ($memory_limit == "") {          // memory_limit disabled at compile time, no memory limit
+if ($memory_limit == '') {          // memory_limit disabled at compile time, no memory limit
     $memory_msg = "<b>{$mod_strings['LBL_CHECKSYS_MEM_OK']}</b>";
-} elseif ($memory_limit == "-1") {   // memory_limit enabled, but set to unlimited
+} elseif ($memory_limit == '-1') {   // memory_limit enabled, but set to unlimited
     $memory_msg = (string)($mod_strings['LBL_CHECKSYS_MEM_UNLIMITED']);
 } else {
     $mem_display = $memory_limit;
@@ -149,7 +149,7 @@ if (function_exists('gzclose')) {
 $envString .='<p><b>'.$mod_strings['LBL_CHECKSYS_ZLIB'].'</b> '.$zlibStatus.'</p>';
 
 // zip
-if (class_exists("ZipArchive")) {
+if (class_exists('ZipArchive')) {
     $zipStatus = (string)($mod_strings['LBL_CHECKSYS_OK']);
 } else {
     $zipStatus = "<span class='stop'><b>{$mod_strings['ERR_CHECKSYS_ZIP']}</b></span>";
@@ -213,15 +213,18 @@ if (function_exists('imagecreatetruecolor')) {
 $envString .='<p><b>'.$mod_strings['LBL_SPRITE_SUPPORT'].'</b> '.$spriteSupportStatus.'</p>';
 
 // Suhosin allow to use upload://
-if (UploadStream::getSuhosinStatus() == true || (strpos(ini_get('suhosin.perdir'), 'e') !== false && strpos((string) $_SERVER["SERVER_SOFTWARE"], 'Microsoft-IIS') === false)) {
+if (UploadStream::getSuhosinStatus() == true || (str_contains(ini_get('suhosin.perdir'), 'e') && !str_contains(
+            (string) $_SERVER['SERVER_SOFTWARE'],
+            'Microsoft-IIS'
+        ))) {
     $suhosinStatus = (string)($mod_strings['LBL_CHECKSYS_OK']);
 } else {
     $suhosinStatus = "<span class='stop'><b>{$app_strings['ERR_SUHOSIN']}</b></span>";
 }
-$envString .= "<p><b>{$mod_strings['LBL_STREAM']} (" . UploadStream::STREAM_NAME . "://)</b> " . $suhosinStatus . "</p>";
+$envString .= "<p><b>{$mod_strings['LBL_STREAM']} (" . UploadStream::STREAM_NAME . '://)</b> ' . $suhosinStatus . '</p>';
 
 // PHP.ini
-$phpIniLocation = get_cfg_var("cfg_file_path");
+$phpIniLocation = get_cfg_var('cfg_file_path');
 $envString .='<p><b>'.$mod_strings['LBL_CHECKSYS_PHP_INI'].'</b> '.$phpIniLocation.'</p>';
 
 $out =<<<EOQ
@@ -266,10 +269,10 @@ if (is_windows()) {
         }
     }
     $cronString = '<p><b>'.$mod_strings_scheduler['LBL_CRON_WINDOWS_DESC'].'</b><br>
-						cd /D '.realpath('./').'<br>
-						php.exe -f cron.php
-						<br>'.$error.'</p>
-			   ';
+                        cd /D '.realpath('./').'<br>
+                        php.exe -f cron.php
+                        <br>'.$error.'</p>
+               ';
 } else {
     if (isset($_SERVER['Path']) && !empty($_SERVER['Path'])) { // some Linux servers do not make this available
         if (!strpos((string) $_SERVER['PATH'], 'php')) {
@@ -283,9 +286,9 @@ if (is_windows()) {
     }
     $cronString = '<p><b>'.$mod_strings_scheduler['LBL_CRON_INSTRUCTIONS_LINUX'].'</b><br> '.$mod_strings_scheduler['LBL_CRON_LINUX_DESC1'].'<br>
                         <span style=\'background-color:#dfdfdf\'>sudo crontab -e -u '.$webServerUser.'</span><br> '.$mod_strings_scheduler['LBL_CRON_LINUX_DESC2'].'<br>
-						<span style=\'background-color:#dfdfdf\'>*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;
-						cd '.realpath('./').'; php -f cron.php > /dev/null 2>&1
-						</span><br>'.$mod_strings_scheduler['LBL_CRON_LINUX_DESC3'].'
+                        <span style=\'background-color:#dfdfdf\'>*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;
+                        cd '.realpath('./').'; php -f cron.php > /dev/null 2>&1
+                        </span><br>'.$mod_strings_scheduler['LBL_CRON_LINUX_DESC3'].'
                         <br><br><hr><br>'.$error.'</p>
               ';
 }
@@ -330,42 +333,42 @@ $out = <<<EOQ
             -->
             <div class="install_img"><a href="https://suitecrm.com" target="_blank"><img src="{$sugar_md}" alt="SuiteCRM"></a></div>
         </header>
-	        <form action="install.php" method="post" name="form" id="form">
-	        	<div id="install_content">
-	        	{$sysEnv}
+            <form action="install.php" method="post" name="form" id="form">
+                <div id="install_content">
+                {$sysEnv}
 
-	        	<!--
+                <!--
 
-			    <h3>{$mod_strings['LBL_TITLE_ARE_YOU_READY']}</h3>
-				<p><strong>{$mod_strings['LBL_WELCOME_PLEASE_READ_BELOW']}</strong></p>
-				<span onclick="showtime('sys_comp');" style="cursor:pointer;cursor:hand">
-				    <span id='basic_sys_comp'><img alt="{$mod_strings['LBL_BASIC_SEARCH']}" src="themes/default/images/basic_search.gif" border="0"></span>
-				    <span id='adv_sys_comp' style='display:none'><img alt="{$mod_strings['LBL_ADVANCED_SEARCH']}" src="themes/default/images/advanced_search.gif" border="0"></span>
-				    &nbsp;{$mod_strings['REQUIRED_SYS_COMP']}
-				</span>
-				<div id='sys_comp' >{$mod_strings['REQUIRED_SYS_COMP_MSG']}</div>
-				<span onclick="showtime('sys_check');" style="cursor:pointer;cursor:hand">
-				    <span id='basic_sys_check'><img alt="{$mod_strings['LBL_BASIC_SEARCH']}" src="themes/default/images/basic_search.gif" border="0"></span>
-					<span id='adv_sys_check' style='display:none'><img alt="{$mod_strings['LBL_ADVANCED_SEARCH']}" src="themes/default/images/advanced_search.gif" border="0"></span>
-					&nbsp;{$mod_strings['REQUIRED_SYS_CHK']}
-				</span>
-				<div id='sys_check' >{$mod_strings['REQUIRED_SYS_CHK_MSG']}</div>
-				<span onclick="showtime('installType');" style="cursor:pointer;cursor:hand">
-					<span id='basic_installType'><img alt="{$mod_strings['LBL_BASIC_TYPE']}" src="themes/default/images/basic_search.gif" border="0"></span>
-					<span id='adv_installType' style='display:none'><img alt="{$mod_strings['LBL_ADVANCED_TYPE']}" src="themes/default/images/advanced_search.gif" border="0"></span>
-					&nbsp;{$mod_strings['REQUIRED_INSTALLTYPE']}
-				</span>
-				<div id='installType' >{$mod_strings['REQUIRED_INSTALLTYPE_MSG']}</div>
-				<hr>
+                <h3>{$mod_strings['LBL_TITLE_ARE_YOU_READY']}</h3>
+                <p><strong>{$mod_strings['LBL_WELCOME_PLEASE_READ_BELOW']}</strong></p>
+                <span onclick="showtime('sys_comp');" style="cursor:pointer;cursor:hand">
+                    <span id='basic_sys_comp'><img alt="{$mod_strings['LBL_BASIC_SEARCH']}" src="themes/default/images/basic_search.gif" border="0"></span>
+                    <span id='adv_sys_comp' style='display:none'><img alt="{$mod_strings['LBL_ADVANCED_SEARCH']}" src="themes/default/images/advanced_search.gif" border="0"></span>
+                    &nbsp;{$mod_strings['REQUIRED_SYS_COMP']}
+                </span>
+                <div id='sys_comp' >{$mod_strings['REQUIRED_SYS_COMP_MSG']}</div>
+                <span onclick="showtime('sys_check');" style="cursor:pointer;cursor:hand">
+                    <span id='basic_sys_check'><img alt="{$mod_strings['LBL_BASIC_SEARCH']}" src="themes/default/images/basic_search.gif" border="0"></span>
+                    <span id='adv_sys_check' style='display:none'><img alt="{$mod_strings['LBL_ADVANCED_SEARCH']}" src="themes/default/images/advanced_search.gif" border="0"></span>
+                    &nbsp;{$mod_strings['REQUIRED_SYS_CHK']}
+                </span>
+                <div id='sys_check' >{$mod_strings['REQUIRED_SYS_CHK_MSG']}</div>
+                <span onclick="showtime('installType');" style="cursor:pointer;cursor:hand">
+                    <span id='basic_installType'><img alt="{$mod_strings['LBL_BASIC_TYPE']}" src="themes/default/images/basic_search.gif" border="0"></span>
+                    <span id='adv_installType' style='display:none'><img alt="{$mod_strings['LBL_ADVANCED_TYPE']}" src="themes/default/images/advanced_search.gif" border="0"></span>
+                    &nbsp;{$mod_strings['REQUIRED_INSTALLTYPE']}
+                </span>
+                <div id='installType' >{$mod_strings['REQUIRED_INSTALLTYPE_MSG']}</div>
+                <hr>
 
-				-->
+                -->
 
-				</div>
+                </div>
                 <div id="installcontrols">
-				    <input type="hidden" name="current_step" value="{$next_step}">
-					<input class="acceptButton" type="button" name="goto" value="{$mod_strings['LBL_BACK']}" id="button_back_ready" onclick="document.getElementById('form').submit();" />
-			        <input class="button" type="submit" name="goto" value="{$mod_strings['LBL_NEXT']}" id="button_next2" />
-			    </div>
+                    <input type="hidden" name="current_step" value="{$next_step}">
+                    <input class="acceptButton" type="button" name="goto" value="{$mod_strings['LBL_BACK']}" id="button_back_ready" onclick="document.getElementById('form').submit();" />
+                    <input class="button" type="submit" name="goto" value="{$mod_strings['LBL_NEXT']}" id="button_next2" />
+                </div>
             </form>
     <script>
         function showtime(div){

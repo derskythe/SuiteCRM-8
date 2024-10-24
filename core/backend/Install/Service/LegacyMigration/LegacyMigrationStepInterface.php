@@ -32,9 +32,9 @@ use App\Engine\Model\ProcessStepInterface;
 /**
  * Interface LegacyMigrationStepInterface
  * Used to auto-configure upgrade steps
+ *
  * @package App\Install\Service\LegacyMigration
  */
 interface LegacyMigrationStepInterface extends ProcessStepInterface
 {
-
 }

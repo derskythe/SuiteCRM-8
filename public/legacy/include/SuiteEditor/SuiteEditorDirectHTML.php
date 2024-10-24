@@ -68,6 +68,7 @@ class SuiteEditorDirectHTML implements SuiteEditorInterface
      * see more at SuiteEditorInterface
      *
      * @return mixed
+     * @throws SmartyException
      */
     public function getHtml()
     {

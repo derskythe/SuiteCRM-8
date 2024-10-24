@@ -51,7 +51,7 @@ class ViewSearchProperties extends ViewList
     /**
      * @see SugarView::process()
      */
-    public function process()
+    public function process() : void
     {
         $this->options['show_all'] = false;
         $this->options['show_javascript'] = true;
@@ -59,11 +59,12 @@ class ViewSearchProperties extends ViewList
         $this->options['show_header'] = false;
         parent::process();
     }
-    
+
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         require_once('include/connectors/utils/ConnectorUtils.php');
         require_once('include/connectors/sources/SourceFactory.php');
@@ -73,24 +74,24 @@ class ViewSearchProperties extends ViewList
         $modules_sources = array();
         $sources = ConnectorUtils::getConnectors();
         $display_data = array();
-        
+
         if ($is_enabled) {
             $searchDefs = ConnectorUtils::getSearchDefs();
             $searchDefs = !empty($searchDefs[$_REQUEST['source_id']]) ? $searchDefs[$_REQUEST['source_id']] : array();
-                    
+
             $source = SourceFactory::getSource($_REQUEST['source_id']);
             $field_defs = $source->getFieldDefs();
-           
+
 
             //Create the Javascript code to dynamically add the tables
             $json = getJSONobj();
             foreach ($searchDefs as $module=>$fields) {
                 $disabled = array();
                 $enabled = array();
-            
+
                 $enabled_fields = array_flip($fields);
                 $field_keys = array_keys($field_defs);
-    
+
                 foreach ($field_keys as $index=>$key) {
                     if (!empty($field_defs[$key]['hidden']) || empty($field_defs[$key]['search'])) {
                         continue;
@@ -102,7 +103,7 @@ class ViewSearchProperties extends ViewList
                         $enabled[$key] = !empty($connector_strings[$field_defs[$key]['vname']]) ? $connector_strings[$field_defs[$key]['vname']] : $key;
                     }
                 }
-    
+
                 $modules_sources[$module] = array_merge($enabled, $disabled);
 
                 asort($disabled);
@@ -110,7 +111,7 @@ class ViewSearchProperties extends ViewList
                                                'module_name' => isset($GLOBALS['app_list_strings']['moduleList'][$module]) ? $GLOBALS['app_list_strings']['moduleList'][$module] : $module);
             }
         }
-        
+
         $this->ss->assign('no_searchdefs_defined', !$is_enabled);
         $this->ss->assign('display_data', $display_data);
         $this->ss->assign('modules_sources', $modules_sources);

@@ -143,27 +143,30 @@ class SugarWidgetSubPanelTopButton_c extends SugarWidget
 
         //module_button is used to override the value of module name
         $formValues['module'] = $defines['child_module_name'];
-        $formValues[strtolower($defines['parent_bean_name'])."_id"] = $defines['focus']->id;
+        $formValues[strtolower($defines['parent_bean_name']) . '_id'] = $defines['focus']->id;
 
         if (isset($defines['focus']->name)) {
-            $formValues[strtolower($defines['parent_bean_name'])."_name"] = $defines['focus']->name;
+            $formValues[strtolower($defines['parent_bean_name']) . '_name'] = $defines['focus']->name;
             // #26451,add these fields for custom one-to-many relate field.
             if (!empty($defines['child_module_name'])) {
-                $formValues[$relationship_name."_name"] = $defines['focus']->name;
-                $childFocusName = !empty($GLOBALS['beanList'][$defines['child_module_name']]) ? $GLOBALS['beanList'][$defines['child_module_name']] : "";
-                if (!empty($GLOBALS['dictionary'][ $childFocusName ]["fields"][$relationship_name .'_name']['id_name'])) {
-                    $formValues[$GLOBALS['dictionary'][ $childFocusName ]["fields"][$relationship_name .'_name']['id_name']] = $defines['focus']->id;
+                $formValues[$relationship_name . '_name'] = $defines['focus']->name;
+                $childFocusName =
+                    !empty($GLOBALS['beanList'][$defines['child_module_name']])
+                        ? $GLOBALS['beanList'][$defines['child_module_name']] : '';
+                if (!empty($GLOBALS['dictionary'][$childFocusName]['fields'][$relationship_name . '_name']['id_name'])) {
+                    $formValues[$GLOBALS['dictionary'][$childFocusName]['fields'][$relationship_name . '_name']['id_name']] =
+                        $defines['focus']->id;
                 }
             }
         }
 
         $formValues['return_module'] = $currentModule;
 
-        if ($currentModule == 'Campaigns') {
-            $formValues['return_action'] = "DetailView";
+        if ($currentModule === 'Campaigns') {
+            $formValues['return_action'] = 'DetailView';
         } else {
             $formValues['return_action'] = $defines['action'];
-            if ($formValues['return_action'] == 'SubPanelViewer') {
+            if ($formValues['return_action'] === 'SubPanelViewer') {
                 $formValues['return_action'] = 'DetailView';
             }
         }
@@ -182,23 +185,23 @@ class SugarWidgetSubPanelTopButton_c extends SugarWidget
                 break ;
             case 'leads':
             case 'contacts':
-                $name = $defines['focus']->first_name . " " .$defines['focus']->last_name ;
+            $name = $defines['focus']->first_name . ' ' . $defines['focus']->last_name;
                 break ;
             default:
-               $name = (isset($defines['focus']->name)) ? $defines['focus']->name : "";
+                $name = (isset($defines['focus']->name)) ? $defines['focus']->name : '';
         }
         $formValues['return_name'] = $name;
 
         // TODO: move this out and get $additionalFormFields working properly
         if (empty($additionalFormFields['parent_type'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_type'] = 'Accounts';
             } else {
                 $additionalFormFields['parent_type'] = $defines['focus']->module_dir;
             }
         }
         if (empty($additionalFormFields['parent_name'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_name'] = $defines['focus']->account_name;
                 $additionalFormFields['account_name'] = $defines['focus']->account_name;
             } else {
@@ -206,11 +209,11 @@ class SugarWidgetSubPanelTopButton_c extends SugarWidget
             }
         }
         if (empty($additionalFormFields['parent_id'])) {
-            if ($defines['focus']->object_name=='Contact') {
+            if ($defines['focus']->object_name === 'Contact') {
                 $additionalFormFields['parent_id'] = $defines['focus']->account_id;
                 $additionalFormFields['account_id'] = $defines['focus']->account_id;
             } else {
-                if ($defines['focus']->object_name=='Contract') {
+                if ($defines['focus']->object_name === 'Contract') {
                     $additionalFormFields['contract_id'] = $defines['focus']->id;
                 } else {
                     $additionalFormFields['parent_id'] = $defines['focus']->id;
@@ -234,7 +237,7 @@ class SugarWidgetSubPanelTopButton_c extends SugarWidget
                 $formValues['reports_to_name'] = $defines['focus']->name;
             }
         }
-        $formValues['action'] = "EditView";
+        $formValues['action'] = 'EditView';
 
         if ($asUrl) {
             $returnLink = '';
@@ -257,7 +260,7 @@ class SugarWidgetSubPanelTopButton_c extends SugarWidget
             }
             // fill in additional form fields for all but action
             foreach ($additionalFormFields as $key => $value) {
-                if ($key != 'action') {
+                if ($key !== 'action') {
                     $button .= "<input type='hidden' name='" . $key . "' value='" . $value . "' />\n";
                 }
             }
@@ -280,7 +283,7 @@ class SugarWidgetSubPanelTopButton_c extends SugarWidget
         global $app_strings;
 
         $button = '';
-        if (isset($_REQUEST['layout_def_key']) && $_REQUEST['layout_def_key'] == 'UserEAPM') {
+        if (isset($_REQUEST['layout_def_key']) && $_REQUEST['layout_def_key'] === 'UserEAPM') {
             // Subpanels generally don't go on the editview, so we have to handle this special
             $megaLink = $this->_get_form($defines, $additionalFormFields, true);
         //$button = "<input title='$this->title' accesskey='$this->access_key' class='button' type='submit' name='$inputID' id='$inputID' value='$this->form_value' onclick='javascript:document.location=\"index.php?".$megaLink."\"; return false;'/>";

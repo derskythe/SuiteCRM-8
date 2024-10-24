@@ -18,7 +18,7 @@ class ACLRolesViewClassic extends ViewDetail
 
 
 
-    public function display()
+    public function display() : void
     {
         $this->dv->process();
 
@@ -26,7 +26,7 @@ class ACLRolesViewClassic extends ViewDetail
         $this->includeClassicFile('modules/'. $this->module . '/'. $file . '.php');
     }
 
-    public function preDisplay()
+    public function preDisplay() : void
     {
         parent::preDisplay();
 

@@ -163,12 +163,12 @@ class AddScheduledReminderAlerts
     {
         $popupReminders = BeanFactory::getBean('Reminders')->get_full_list(
             '',
-            "reminders.popup = 1 AND
+            'reminders.popup = 1 AND
                     reminders.popup_viewed = 0 AND
                     (
                         reminders.date_willexecute = -1 OR
-                        reminders.date_willexecute BETWEEN " . $dateTimeNowStamp . " AND " . $dateTimeMaxStamp . "
-                    )"
+                        reminders.date_willexecute BETWEEN ' . $dateTimeNowStamp . ' AND ' . $dateTimeMaxStamp . '
+                    )'
         );
 
         return $popupReminders;
@@ -250,7 +250,9 @@ class AddScheduledReminderAlerts
 
     /**
      * Get date range
+     *
      * @return array
+     * @throws DateMalformedStringException
      */
     protected function getDateRange(): array
     {
@@ -271,7 +273,9 @@ class AddScheduledReminderAlerts
     /**
      * @param SugarBean $popupReminder
      * @param $relatedEventStart
+     *
      * @return void
+     * @throws Exception
      */
     protected function updateReminderExecutionTime(SugarBean $popupReminder, $relatedEventStart): void
     {

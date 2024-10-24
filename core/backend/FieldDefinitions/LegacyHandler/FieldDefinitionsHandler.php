@@ -27,6 +27,7 @@
 
 namespace App\FieldDefinitions\LegacyHandler;
 
+use Psr\Log\LoggerInterface;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
 use App\FieldDefinitions\Entity\FieldDefinition;
@@ -38,6 +39,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class FieldDefinitionsHandler
+ *
  * @package App\Legacy
  */
 class FieldDefinitionsHandler extends LegacyHandler implements FieldDefinitionsProviderInterface
@@ -56,6 +58,7 @@ class FieldDefinitionsHandler extends LegacyHandler implements FieldDefinitionsP
 
     /**
      * SystemConfigHandler constructor.
+     *
      * @param string $projectDir
      * @param string $legacyDir
      * @param string $legacySessionName
@@ -66,17 +69,26 @@ class FieldDefinitionsHandler extends LegacyHandler implements FieldDefinitionsP
      * @param RequestStack $session
      */
     public function __construct(
-        string $projectDir,
-        string $legacyDir,
-        string $legacySessionName,
-        string $defaultSessionName,
-        LegacyScopeState $legacyScopeState,
+        string                    $projectDir,
+        string                    $legacyDir,
+        string                    $legacySessionName,
+        string                    $defaultSessionName,
+        LegacyScopeState          $legacyScopeState,
         ModuleNameMapperInterface $moduleNameMapper,
-        FieldDefinitionMappers $mappers,
-        RequestStack $session
-    ) {
-        parent::__construct($projectDir, $legacyDir, $legacySessionName, $defaultSessionName, $legacyScopeState,
-            $session);
+        FieldDefinitionMappers    $mappers,
+        RequestStack              $session,
+        LoggerInterface           $logger
+    )
+    {
+        parent::__construct(
+            $projectDir,
+            $legacyDir,
+            $legacySessionName,
+            $defaultSessionName,
+            $legacyScopeState,
+            $session,
+            $logger
+        );
         $this->moduleNameMapper = $moduleNameMapper;
         $this->mappers = $mappers;
     }
@@ -84,17 +96,18 @@ class FieldDefinitionsHandler extends LegacyHandler implements FieldDefinitionsP
     /**
      * @inheritDoc
      */
-    public function getHandlerKey(): string
+    public function getHandlerKey() : string
     {
         return self::HANDLER_KEY;
     }
 
     /**
      * @param string $moduleName
+     *
      * @return FieldDefinition
      * @throws Exception
      */
-    public function getVardef(string $moduleName): FieldDefinition
+    public function getVardef(string $moduleName) : FieldDefinition
     {
         $this->init();
 
@@ -117,7 +130,9 @@ class FieldDefinitionsHandler extends LegacyHandler implements FieldDefinitionsP
 
     /**
      * Get legacy definitions
+     *
      * @param string $legacyModuleName
+     *
      * @return array|mixed
      */
     protected function getDefinitions(string $legacyModuleName)

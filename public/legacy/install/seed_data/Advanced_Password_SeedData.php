@@ -136,4 +136,4 @@ if ($sugar_config['passwordsetting']['systexpirationtype'] === '0') {
     $sugar_config['passwordsetting']['systexpirationtype'] = 1;
 }
 
-write_array_to_file("sugar_config", $sugar_config, "config.php");
+write_array_to_file('sugar_config', $sugar_config, 'config.php');

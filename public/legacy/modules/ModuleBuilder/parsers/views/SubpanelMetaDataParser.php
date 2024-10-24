@@ -70,7 +70,7 @@ class SubpanelMetaDataParser extends ListLayoutMetaDataParser
      */
     public function __construct($subpanelName, $moduleName, $packageName = '')
     {
-        $GLOBALS ['log']->debug(get_class($this) . ": __construct()");
+        $GLOBALS ['log']->debug(get_class($this) . ': __construct()');
 
         // TODO: check the implementations
         if (empty($packageName)) {
@@ -85,11 +85,11 @@ class SubpanelMetaDataParser extends ListLayoutMetaDataParser
         $this->_viewdefs = array_change_key_case($this->implementation->getViewdefs()); // force to lower case so don't have problems with case mismatches later
         $this->_fielddefs = $this->implementation->getFielddefs();
         $this->_standardizeFieldLabels($this->_fielddefs);
-        $GLOBALS['log']->debug(get_class($this) . "->__construct(): viewdefs = " . print_r($this->_viewdefs, true));
-        $GLOBALS['log']->debug(get_class($this) . "->__construct(): viewdefs = " . print_r($this->_viewdefs, true));
+        $GLOBALS['log']->debug(get_class($this) . '->__construct(): viewdefs = ' . print_r($this->_viewdefs, true));
+        $GLOBALS['log']->debug(get_class($this) . '->__construct(): viewdefs = ' . print_r($this->_viewdefs, true));
         $this->_invisibleFields = $this->findInvisibleFields($this->_viewdefs);
 
-        $GLOBALS['log']->debug(get_class($this) . "->__construct(): invisibleFields = " . print_r(
+        $GLOBALS['log']->debug(get_class($this) . '->__construct(): invisibleFields = ' . print_r(
             $this->_invisibleFields,
             true
         ));
@@ -161,7 +161,7 @@ class SubpanelMetaDataParser extends ListLayoutMetaDataParser
     {
         $invisibleFields = array();
         foreach ($viewdefs as $name => $def) {
-            if (isset($def ['usage']) && ($def ['usage'] == 'query_only')) {
+            if (isset($def ['usage']) && ($def ['usage'] === 'query_only')) {
                 $invisibleFields [$name] = $def;
             }
         }
@@ -210,7 +210,7 @@ class SubpanelMetaDataParser extends ListLayoutMetaDataParser
     protected function makeRelateFieldsAsLink($defs)
     {
         foreach ($defs as $index => $fieldData) {
-            if ((isset($fieldData['type']) && $fieldData['type'] == 'relate')
+            if ((isset($fieldData['type']) && $fieldData['type'] === 'relate')
                 || (isset($fieldData['link']) && self::isTrue($fieldData['link']))
             ) {
                 $defs[$index]['widget_class'] = 'SubPanelDetailViewLink';

@@ -27,6 +27,7 @@
 
 namespace App\Module\LegacyHandler\Favorites;
 
+use Psr\Log\LoggerInterface;
 use ApiPlatform\Exception\InvalidArgumentException;
 use App\Engine\LegacyHandler\LegacyHandler;
 use App\Engine\LegacyHandler\LegacyScopeState;
@@ -45,7 +46,7 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @var ModuleNameMapperInterface
      */
-    private $moduleNameMapper;
+    private ModuleNameMapperInterface $moduleNameMapper;
 
     /**
      * LegacyHandler constructor.
@@ -64,7 +65,8 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
         string $defaultSessionName,
         LegacyScopeState $legacyScopeState,
         RequestStack $session,
-        ModuleNameMapperInterface $moduleNameMapper
+        ModuleNameMapperInterface $moduleNameMapper,
+        LoggerInterface $logger
     ) {
         parent::__construct(
             $projectDir,
@@ -72,7 +74,8 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
             $legacySessionName,
             $defaultSessionName,
             $legacyScopeState,
-            $session
+            $session,
+            $logger
         );
         $this->moduleNameMapper = $moduleNameMapper;
     }
@@ -155,8 +158,9 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
     /**
      * @inheritDoc
      * @throws Exception
+     * @throws \Throwable
      */
-    public function run(Process $process)
+    public function run(Process $process): void
     {
         $this->init();
         $this->startLegacyApp();
@@ -178,8 +182,7 @@ class UpdateFavorite extends LegacyHandler implements ProcessHandlerInterface
         $process->setStatus('success');
         $process->setMessages([]);
 
-        /* @noinspection PhpIncludeInspection */
-        require_once 'include/portability/Services/Favorites/FavoritesManagerPort.php';
+        require_once $this->legacyDir.'/include/portability/Services/Favorites/FavoritesManagerPort.php';
 
         $favoritesManager = new FavoritesManagerPort();
 

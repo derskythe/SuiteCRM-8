@@ -72,7 +72,7 @@ class FormatterFactory
 
             //split the wrapper name to find the path to the file.
             $dir = str_replace('_', '/', (string) $formatter_name);
-            $parts = explode("/", $dir);
+            $parts = explode('/', $dir);
             $file = $parts[count($parts)-1];
 
             //check if this override wrapper file exists.

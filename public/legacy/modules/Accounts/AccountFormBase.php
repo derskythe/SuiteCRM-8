@@ -74,7 +74,7 @@ class AccountFormBase
 
         if (!empty($name)) {
             $nameQuoted = $this->db->quoted($name . '%');
-            $query = $baseQuery ." name LIKE " . $nameQuoted;
+            $query = $baseQuery . ' name LIKE ' . $nameQuoted;
         }
 
         if (!empty($billingAddressCity) || !empty($shippingAddressCity)) {
@@ -82,13 +82,13 @@ class AccountFormBase
 
             if (!empty($billingAddressCity)) {
                 $billingAddressCityQuoted = $this->db->quoted($billingAddressCity . '%');
-                $tempQuery .= "billing_address_city LIKE " . $billingAddressCityQuoted;
+                $tempQuery .= 'billing_address_city LIKE ' . $billingAddressCityQuoted;
             }
 
             if (!empty($shippingAddressCity)) {
                 $shippingAddressCityQuoted = $this->db->quoted($shippingAddressCity . '%');
                 $tempQuery .= (empty($tempQuery)) ?: ' OR ';
-                $tempQuery .= "shipping_address_city LIKE " . $shippingAddressCityQuoted;
+                $tempQuery .= 'shipping_address_city LIKE ' . $shippingAddressCityQuoted;
             }
 
             $query .= (empty($query)) ? $baseQuery : ' AND ';
@@ -131,7 +131,7 @@ class AccountFormBase
         }
         global $app_strings;
         $cols = (is_countable($rows[0]) ? count($rows[0]) : 0) * 2 + 1;
-        if ($action != 'ShowDuplicates') {
+        if ($action !== 'ShowDuplicates') {
             $form = "<form action='index.php' method='post' id='dupAccounts'  name='dupAccounts'><input type='hidden' name='selectedAccount' value=''>";
             $form .= '<table width="100%"><tr><td>'.$mod_strings['MSG_DUPLICATE']. '</td></tr><tr><td height="20"></td></tr></table>';
             unset($_POST['selectedAccount']);
@@ -139,17 +139,17 @@ class AccountFormBase
             $form = '<table width="100%"><tr><td>'.$mod_strings['MSG_SHOW_DUPLICATES']. '</td></tr><tr><td height="20"></td></tr></table>';
         }
 
-        if (isset($_POST['return_action']) && $_POST['return_action'] == 'SubPanelViewer') {
+        if (isset($_POST['return_action']) && $_POST['return_action'] === 'SubPanelViewer') {
             $_POST['return_action'] = 'DetailView';
         }
 
-        if (isset($_POST['return_action']) && $_POST['return_action'] == 'DetailView' && empty($_REQUEST['return_id'])) {
+        if (isset($_POST['return_action']) && $_POST['return_action'] === 'DetailView' && empty($_REQUEST['return_id'])) {
             unset($_POST['return_action']);
         }
 
         $form .= "<table width='100%' cellpadding='0' cellspacing='0' class='list view' border='0'><tr class='pagination'><td colspan='$cols'><table width='100%' cellspacing='0' cellpadding='0' border='0'><tr><td>";
         // handle buttons
-        if ($action == 'ShowDuplicates') {
+        if ($action === 'ShowDuplicates') {
             $return_action = 'ListView'; // cn: bug 6658 - hardcoded return action break popup -> create -> duplicate -> cancel
             $return_action = (isset($_REQUEST['return_action']) && !empty($_REQUEST['return_action'])) ? $_REQUEST['return_action'] : $return_action;
             $form .= "<input type='hidden' name='selectedAccount' id='selectedAccount' value=''><input title='{$app_strings['LBL_SAVE_BUTTON_TITLE']}' accessKey='{$app_strings['LBL_SAVE_BUTTON_KEY']}' class='button' onclick=\"this.form.action.value='Save';\" type='submit' name='button' value='  {$app_strings['LBL_SAVE_BUTTON_LABEL']}  '>\n";
@@ -164,21 +164,21 @@ class AccountFormBase
         } else {
             $form .= "<input type='submit' class='button' name='ContinueAccount' value='{$mod_strings['LNK_NEW_ACCOUNT']}'>\n";
         }
-        $form .= "</td></tr></table></td></tr><tr>";
-        if ($action != 'ShowDuplicates') {
-            $form .= "<th> &nbsp;</th>";
+        $form .= '</td></tr></table></td></tr><tr>';
+        if ($action !== 'ShowDuplicates') {
+            $form .= '<th> &nbsp;</th>';
         }
         require_once('include/formbase.php');
 
         $form .= getPostToForm();
         if (isset($rows[0])) {
             foreach ($rows[0] as $key=>$value) {
-                if ($key != 'id') {
-                    $form .= "<th>". $mod_strings[$mod_strings['db_'.$key]]. "</th>";
+                if ($key !== 'id') {
+                    $form .= '<th>' . $mod_strings[$mod_strings['db_'.$key]]. '</th>';
                 }
             }
 
-            $form .= "</tr>";
+            $form .= '</tr>';
         }
 
         $rowColor = 'oddListRowS1';
@@ -188,11 +188,11 @@ class AccountFormBase
 
         foreach ($rows as $row) {
             $form .= "<tr class='$rowColor'>";
-            if ($action != 'ShowDuplicates') {
+            if ($action !== 'ShowDuplicates') {
                 $form .= "<td width='1%' nowrap><a href='javascript:void(0)' onclick='document.dupAccounts.selectedAccount.value=\"{$row['id']}\"; document.dupAccounts.submit(); '>[{$app_strings['LBL_SELECT_BUTTON_LABEL']}]</a>&nbsp;&nbsp;</td>\n";
             }
             foreach ($row as $key=>$value) {
-                if ($key != 'id') {
+                if ($key !== 'id') {
                     if (isset($_POST['popup']) && $_POST['popup']==true) {
                         $form .= "<td scope='row'><a  href='javascript:void(0)' onclick=\"window.opener.location='index.php?module=Accounts&action=DetailView&record={$row['id']}'\">$value</a></td>\n";
                     } else {
@@ -205,17 +205,17 @@ class AccountFormBase
                 }
             }
 
-            if ($rowColor == 'evenListRowS1') {
+            if ($rowColor === 'evenListRowS1') {
                 $rowColor = 'oddListRowS1';
             } else {
                 $rowColor = 'evenListRowS1';
             }
-            $form .= "</tr>";
+            $form .= '</tr>';
         }
         $form .= "<tr class='pagination'><td colspan='$cols'><table width='100%' cellspacing='0' cellpadding='0' border='0'><tr><td>";
 
         // handle buttons
-        if ($action == 'ShowDuplicates') {
+        if ($action === 'ShowDuplicates') {
             $return_action = 'ListView'; // cn: bug 6658 - hardcoded return action break popup -> create -> duplicate -> cancel
             $return_action = (isset($_REQUEST['return_action']) && !empty($_REQUEST['return_action'])) ? $_REQUEST['return_action'] : $return_action;
             $form .= "<input type='hidden' name='selectedAccount' id='selectedAccount' value=''><input title='{$app_strings['LBL_SAVE_BUTTON_TITLE']}' class='button' onclick=\"this.form.action.value='Save';\" type='submit' name='button' value='  {$app_strings['LBL_SAVE_BUTTON_LABEL']}  '>\n";
@@ -230,7 +230,7 @@ class AccountFormBase
         } else {
             $form .= "<input type='submit' class='button' name='ContinueAccount' value='{$mod_strings['LNK_NEW_ACCOUNT']}'></form>\n";
         }
-        $form .= "</td></tr></table></td></tr></table>";
+        $form .= '</td></tr></table></td></tr></table>';
         return $form;
     }
 
@@ -253,14 +253,14 @@ class AccountFormBase
 
         $the_form = get_left_form_header($mod_strings['LBL_NEW_FORM_TITLE']);
         $the_form .= <<<EOQ
-		<form name="{$prefix}AccountSave" onSubmit="return check_form('{$prefix}AccountSave');" method="POST" action="index.php">
-			<input type="hidden" name="{$prefix}module" value="Accounts">
-			<input type="hidden" name="{$prefix}action" value="Save">
+        <form name="{$prefix}AccountSave" onSubmit="return check_form('{$prefix}AccountSave');" method="POST" action="index.php">
+            <input type="hidden" name="{$prefix}module" value="Accounts">
+            <input type="hidden" name="{$prefix}action" value="Save">
 EOQ;
-        $the_form .= $this->getFormBody($prefix, $mod, $prefix."AccountSave");
+        $the_form .= $this->getFormBody($prefix, $mod, $prefix. 'AccountSave');
         $the_form .= <<<EOQ
-		<p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
-		</form>
+        <p><input title="$lbl_save_button_title" accessKey="$lbl_save_button_key" class="button" type="submit" name="button" value="  $lbl_save_button_label  " ></p>
+        </form>
 
 EOQ;
         $the_form .= get_left_form_footer();
@@ -294,11 +294,11 @@ EOQ;
         $user_id = $current_user->id;
 
         $form = <<<EOQ
-			<p><input type="hidden" name="record" value="">
-			<input type="hidden" name="email1" value="">
-			<input type="hidden" name="email2" value="">
-			<input type="hidden" name="assigned_user_id" value='{$user_id}'>
-			<input type="hidden" name="action" value="Save">
+            <p><input type="hidden" name="record" value="">
+            <input type="hidden" name="email1" value="">
+            <input type="hidden" name="email2" value="">
+            <input type="hidden" name="assigned_user_id" value='{$user_id}'>
+            <input type="hidden" name="action" value="Save">
 EOQ;
         $form .= "$lbl_account_name&nbsp;<span class='required'>$lbl_required_symbol</span><br><input name='name' type='text' value=''><br>";
         $form .= "$lbl_phone<br><input name='phone_office' type='text' value=''><br>";
@@ -359,43 +359,43 @@ EOQ;
         if (!isset($contact->email_opt_out)) {
             $contact->email_opt_out = '';
         }
-        $form="";
-        $default_desc="";
+        $form= '';
+        $default_desc= '';
         if (!empty($contact->description)) {
             $default_desc=$contact->description;
         }
         $form .= <<<EOQ
-		<input type="hidden" name="{$prefix}record" value="">
-		<input type="hidden" name="{$prefix}phone_fax" value="{$contact->phone_fax}">
-		<input type="hidden" name="{$prefix}phone_other" value="{$contact->phone_other}">
-		<input type="hidden" name="{$prefix}email1" value="{$contact->email1}">
-		<input type="hidden" name="{$prefix}email2" value="{$contact->email2}">
-		<input type='hidden' name='{$prefix}billing_address_street' value='{$contact->primary_address_street}'><input type='hidden' name='{$prefix}billing_address_city' value='{$contact->primary_address_city}'><input type='hidden' name='{$prefix}billing_address_state'   value='{$contact->primary_address_state}'><input type='hidden' name='{$prefix}billing_address_postalcode'   value='{$contact->primary_address_postalcode}'><input type='hidden' name='{$prefix}billing_address_country'  value='{$contact->primary_address_country}'>
-		<input type='hidden' name='{$prefix}shipping_address_street' value='{$contact->alt_address_street}'><input type='hidden' name='{$prefix}shipping_address_city' value='{$contact->alt_address_city}'><input type='hidden' name='{$prefix}shipping_address_state'   value='{$contact->alt_address_state}'><input type='hidden' name='{$prefix}shipping_address_postalcode'   value='{$contact->alt_address_postalcode}'><input type='hidden' name='{$prefix}shipping_address_country'  value='{$contact->alt_address_country}'>
-		<input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
-		<input type='hidden' name='{$prefix}do_not_call'  value='{$contact->do_not_call}'>
-		<input type='hidden' name='{$prefix}email_opt_out'  value='{$contact->email_opt_out}'>
-		<table width='100%' border="0" cellpadding="0" cellspacing="0">
-		<tr>
-		<td width="20%" nowrap scope="row">$lbl_account_name&nbsp;<span class="required">$lbl_required_symbol</span></td>
-		<TD width="80%" nowrap scope="row">{$mod_strings['LBL_DESCRIPTION']}</TD>
-		</tr>
-		<tr>
-		<td nowrap ><input name='{$prefix}name' type="text" value="$contact->account_name"></td>
-		<TD rowspan="5" ><textarea name='{$prefix}description' rows='6' cols='50' >$default_desc</textarea></TD>
-		</tr>
-		<tr>
-		<td nowrap scope="row">$lbl_phone</td>
-		</tr>
-		<tr>
-		<td nowrap ><input name='{$prefix}phone_office' type="text" value="$contact->phone_work"></td>
-		</tr>
-		<tr>
-		<td nowrap scope="row">$lbl_website</td>
-		</tr>
-		<tr>
-		<td nowrap ><input name='{$prefix}website' type="text" value="http://"></td>
-		</tr>
+        <input type="hidden" name="{$prefix}record" value="">
+        <input type="hidden" name="{$prefix}phone_fax" value="{$contact->phone_fax}">
+        <input type="hidden" name="{$prefix}phone_other" value="{$contact->phone_other}">
+        <input type="hidden" name="{$prefix}email1" value="{$contact->email1}">
+        <input type="hidden" name="{$prefix}email2" value="{$contact->email2}">
+        <input type='hidden' name='{$prefix}billing_address_street' value='{$contact->primary_address_street}'><input type='hidden' name='{$prefix}billing_address_city' value='{$contact->primary_address_city}'><input type='hidden' name='{$prefix}billing_address_state'   value='{$contact->primary_address_state}'><input type='hidden' name='{$prefix}billing_address_postalcode'   value='{$contact->primary_address_postalcode}'><input type='hidden' name='{$prefix}billing_address_country'  value='{$contact->primary_address_country}'>
+        <input type='hidden' name='{$prefix}shipping_address_street' value='{$contact->alt_address_street}'><input type='hidden' name='{$prefix}shipping_address_city' value='{$contact->alt_address_city}'><input type='hidden' name='{$prefix}shipping_address_state'   value='{$contact->alt_address_state}'><input type='hidden' name='{$prefix}shipping_address_postalcode'   value='{$contact->alt_address_postalcode}'><input type='hidden' name='{$prefix}shipping_address_country'  value='{$contact->alt_address_country}'>
+        <input type="hidden" name="{$prefix}assigned_user_id" value='{$user_id}'>
+        <input type='hidden' name='{$prefix}do_not_call'  value='{$contact->do_not_call}'>
+        <input type='hidden' name='{$prefix}email_opt_out'  value='{$contact->email_opt_out}'>
+        <table width='100%' border="0" cellpadding="0" cellspacing="0">
+        <tr>
+        <td width="20%" nowrap scope="row">$lbl_account_name&nbsp;<span class="required">$lbl_required_symbol</span></td>
+        <TD width="80%" nowrap scope="row">{$mod_strings['LBL_DESCRIPTION']}</TD>
+        </tr>
+        <tr>
+        <td nowrap ><input name='{$prefix}name' type="text" value="$contact->account_name"></td>
+        <TD rowspan="5" ><textarea name='{$prefix}description' rows='6' cols='50' >$default_desc</textarea></TD>
+        </tr>
+        <tr>
+        <td nowrap scope="row">$lbl_phone</td>
+        </tr>
+        <tr>
+        <td nowrap ><input name='{$prefix}phone_office' type="text" value="$contact->phone_work"></td>
+        </tr>
+        <tr>
+        <td nowrap scope="row">$lbl_website</td>
+        </tr>
+        <tr>
+        <td nowrap ><input name='{$prefix}website' type="text" value="http://"></td>
+        </tr>
 EOQ;
         //carry forward custom lead fields common to accounts during Lead Conversion
         $tempAccount = BeanFactory::newBean('Accounts');
@@ -404,7 +404,7 @@ EOQ;
         }
         unset($tempAccount);
         $form .= <<<EOQ
-		</TABLE>
+        </TABLE>
 EOQ;
 
 
@@ -418,6 +418,9 @@ EOQ;
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function handleSave($prefix, $redirect=true, $useRequired=false)
     {
         require_once('include/formbase.php');
@@ -465,7 +468,7 @@ EOQ;
 
                 if ($focus->hasCustomFields()) {
                     foreach ($focus->field_defs as $name=>$field) {
-                        if (!empty($field['source']) && $field['source'] == 'custom_fields') {
+                        if (!empty($field['source']) && $field['source'] === 'custom_fields') {
                             $get .= "&Accounts$name=".urlencode($focus->$name);
                         }
                     }
@@ -492,7 +495,7 @@ EOQ;
                         $urlData[$var] = $_POST[$var];
                     }
                 }
-                $get .= "&".http_build_query($urlData);
+                $get .= '&' .http_build_query($urlData);
 
                 $_SESSION['SHOW_DUPLICATES'] = $get;
                 //now redirect the post to modules/Accounts/ShowDuplicates.php
@@ -519,7 +522,7 @@ EOQ;
         $focus->save($check_notify);
         $return_id = $focus->id;
 
-        $GLOBALS['log']->debug("Saved record with id of ".$return_id);
+        $GLOBALS['log']->debug('Saved record with id of ' .$return_id);
 
 
         if (!empty($_POST['is_ajax_call']) && $_POST['is_ajax_call'] == '1') {
@@ -544,8 +547,8 @@ EOQ;
             return null;
         }
 
-        if (isset($_POST['popup']) && $_POST['popup'] == 'true') {
-            $urlData = array("query" => true, "name" => $focus->name, "module" => 'Accounts', 'action' => 'Popup');
+        if (isset($_POST['popup']) && $_POST['popup'] === 'true') {
+            $urlData = array( 'query' => true, 'name' => $focus->name, 'module' => 'Accounts', 'action' => 'Popup');
             if (!empty($_POST['return_module'])) {
                 $urlData['module'] = $_POST['return_module'];
             }
@@ -557,7 +560,7 @@ EOQ;
                     $urlData[$var] = $_POST[$var];
                 }
             }
-            header("Location: index.php?".http_build_query($urlData));
+            header('Location: index.php?' .http_build_query($urlData));
             return;
         }
         if ($redirect) {

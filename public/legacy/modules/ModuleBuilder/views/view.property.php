@@ -56,7 +56,7 @@ class ViewProperty extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
@@ -67,44 +67,50 @@ class ViewProperty extends SugarView
     }
 
 
-    public function init($bean = null, $view_object_map = array()) // pseudo-constuctor - given a well-known name to allow subclasses to call this classes constructor
+    public function init(
+        SugarBean $bean = null,
+        array     $view_object_map = array()
+    ) : void // pseudo-constuctor - given a well-known name to allow subclasses to call this classes constructor
     {
         $this->editModule = (! empty($_REQUEST['view_module'])) ? $_REQUEST['view_module'] : null;
         $this->editPackage = (! empty($_REQUEST['view_package'])) ? $_REQUEST['view_package'] : null;
         $this->id = (! empty($_REQUEST['id'])) ? $_REQUEST['id'] : null;
-        $this->subpanel = (! empty($_REQUEST['subpanel'])) ? $_REQUEST['subpanel'] : "";
+        $this->subpanel = (! empty($_REQUEST['subpanel'])) ? $_REQUEST['subpanel'] : '';
         $this->properties = array();
         foreach ($_REQUEST as $key=>$value) {
-            if (substr($key, 0, 4) == 'name') {
+            if (str_starts_with($key, 'name')) {
                 $this->properties[substr($key, 5)]['name'] = $value;
             }
-            if (substr($key, 0, 2) == 'id') {
+            if (str_starts_with($key, 'id')) {
                 $this->properties[substr($key, 3)]['id'] = $value;
             }
-            if (substr($key, 0, 5) == 'value') {
+            if (str_starts_with($key, 'value')) {
                 $this->properties[substr($key, 6)]['value'] = $value;
                 // tyoung - now a nasty hack to disable editing of labels which contain Smarty functions - this is envisaged to be a temporary fix to prevent admins modifying these functions then being unable to restore the original complicated value if they regret it
-                if (substr($key, 6) == 'label') {
+                if (substr($key, 6) === 'label') {
                     //#29796  , we disable the edit function for sub panel label
                     if (preg_match('/\{.*\}/', (string) $value) || !empty($this->subpanel)) {
                         $this->properties[substr($key, 6)]['hidden'] = 1;
                     }
                 }
             }
-            if (substr($key, 0, 5) == 'title') {
+            if (str_starts_with($key, 'title')) {
                 $this->properties[substr($key, 6)]['title'] = $value;
             }
         }
     }
 
-    public function display()
+    /**
+     * @throws SmartyException
+     */
+    public function display() : void
     {
         global $mod_strings;
         $ajax = new AjaxCompose();
         $smarty = new Sugar_Smarty();
-        if (isset($_REQUEST['MB']) && $_REQUEST['MB'] == "1") {
-            $smarty->assign("MB", $_REQUEST['MB']);
-            $smarty->assign("view_package", $_REQUEST['view_package']);
+        if (isset($_REQUEST['MB']) && $_REQUEST['MB'] == '1') {
+            $smarty->assign('MB', $_REQUEST['MB']);
+            $smarty->assign('view_package', $_REQUEST['view_package']);
         }
 
         $selected_lang = (!empty($_REQUEST['selected_lang'])?$_REQUEST['selected_lang']:$_SESSION['authenticated_user_language']);
@@ -116,15 +122,15 @@ class ViewProperty extends SugarView
 
         ksort($this->properties);
 
-        $smarty->assign("properties", $this->properties);
+        $smarty->assign('properties', $this->properties);
 //        $smarty->assign("id",$this->id);
 
-        $smarty->assign("mod_strings", $mod_strings);
+        $smarty->assign('mod_strings', $mod_strings);
         $smarty->assign('APP', $GLOBALS['app_strings']);
-        $smarty->assign("view_module", $this->editModule);
-        $smarty->assign("subpanel", $this->subpanel);
+        $smarty->assign('view_module', $this->editModule);
+        $smarty->assign('subpanel', $this->subpanel);
         if (isset($this->editPackage)) {
-            $smarty->assign("view_package", $this->editPackage);
+            $smarty->assign('view_package', $this->editPackage);
         }
 
         $ajax->addSection('east', translate('LBL_SECTION_PROPERTIES', 'ModuleBuilder'), $smarty->fetch('modules/ModuleBuilder/tpls/editProperty.tpl'));

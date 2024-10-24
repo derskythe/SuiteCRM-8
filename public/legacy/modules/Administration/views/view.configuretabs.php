@@ -53,46 +53,48 @@ class ViewConfiguretabs extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
         return array(
-           "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>',
            $mod_strings['LBL_CONFIG_TABS']
            );
     }
 
     /**
+     * @throws Exception
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $current_user;
 
         if (!is_admin($current_user)) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $app_list_strings;
 
-        require_once("modules/MySettings/TabController.php");
+        require_once('modules/MySettings/TabController.php');
         $controller = new TabController();
         $tabs = $controller->get_tabs_system();
 
         $enabled= array();
         foreach ($tabs[0] as $key=>$value) {
-            $enabled[] = array("module" => $key, 'label' => translate($key));
+            $enabled[] = array( 'module' => $key, 'label' => translate($key));
         }
         $disabled = array();
         foreach ($tabs[1] as $key=>$value) {
-            $disabled[] = array("module" => $key, 'label' => translate($key));
+            $disabled[] = array( 'module' => $key, 'label' => translate($key));
         }
 
         $user_can_edit = $controller->get_users_can_edit();
@@ -120,7 +122,7 @@ class ViewConfiguretabs extends SugarView
                 continue;
             }
             $key = strtolower($key);
-            $enabled[] =  array("module" => $key, "label" => $mod_list_strings_key_to_lower[$key]);
+            $enabled[] =  array( 'module' => $key, 'label' => $mod_list_strings_key_to_lower[$key]);
         }
 
         //now create array of subpanels to hide for use in Drag and Drop widget
@@ -130,7 +132,7 @@ class ViewConfiguretabs extends SugarView
                 continue;
             }
             $key = strtolower($key);
-            $disabled[] =  array("module" => $key, "label" => $mod_list_strings_key_to_lower[$key]);
+            $disabled[] =  array( 'module' => $key, 'label' => $mod_list_strings_key_to_lower[$key]);
         }
 
         $this->ss->assign('enabled_panels', json_encode($enabled));

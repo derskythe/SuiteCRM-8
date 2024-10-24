@@ -49,32 +49,34 @@ class ViewLanguages extends SugarView
     /**
      * @see SugarView::_getModuleTitleParams()
      */
-    protected function _getModuleTitleParams($browserTitle = false)
+    protected function _getModuleTitleParams(bool $browserTitle = false) : array
     {
         global $mod_strings;
 
         return array(
-           "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']."</a>",
+            "<a href='index.php?module=Administration&action=index'>".$mod_strings['LBL_MODULE_NAME']. '</a>',
            $mod_strings['LBL_MANAGE_LANGUAGES']
            );
     }
 
     /**
+     * @throws Exception
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
         global $current_user;
 
         if (!is_admin($current_user)) {
-            sugar_die("Unauthorized access to administration.");
+            sugar_die('Unauthorized access to administration.');
         }
     }
 
     /**
+     * @throws SmartyException
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         global $mod_strings;
         global $app_list_strings;
@@ -96,9 +98,9 @@ class ViewLanguages extends SugarView
         }
         foreach ($sugar_config['languages'] as $key=>$value) {
             if (isset($disabled_list[$key])) {
-                $disabled[] = array("module" => $key, 'label' => $value);
+                $disabled[] = array( 'module' => $key, 'label' => $value);
             } else {
-                $enabledLang = array("module" => $key, 'label' => $value);
+                $enabledLang = array( 'module' => $key, 'label' => $value);
 
                 if ($key === $systemLanguage) {
                     $enabledLang['disabled'] = true;

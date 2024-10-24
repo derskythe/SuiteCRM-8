@@ -164,7 +164,7 @@ $layout_defs['Campaigns'] = array(
         'targeted' => array(
             'order' => 110,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'targeted', 'EMAIL_MARKETING_ID_VALUE' => '',/*'distinct'=>'campaign_log.target_id','group_by'=>'campaign_log.target_id, campaign_log.marketing_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_TARGETED_TITLE',
@@ -174,7 +174,7 @@ $layout_defs['Campaigns'] = array(
         'viewed' => array(
             'order' => 120,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'subpanel_name' => 'default',
             'function_parameters' => array(0 => 'viewed', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'title_key' => 'LBL_LOG_ENTRIES_VIEWED_TITLE',
@@ -184,7 +184,7 @@ $layout_defs['Campaigns'] = array(
         'link' => array(
             'order' => 130,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'link', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_LINK_TITLE',
@@ -194,7 +194,7 @@ $layout_defs['Campaigns'] = array(
         'lead' => array(
             'order' => 140,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_leads",
+            'get_subpanel_data' => 'function:track_log_leads',
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_LEAD_TITLE',
             'sort_order' => 'desc',
@@ -206,7 +206,7 @@ $layout_defs['Campaigns'] = array(
         'contact' => array(
             'order' => 150,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'contact', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_CONTACT_TITLE',
@@ -216,7 +216,7 @@ $layout_defs['Campaigns'] = array(
         'invalid_email' => array(
             'order' => 160,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'invalid email', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_INVALID_EMAIL_TITLE',
@@ -226,7 +226,7 @@ $layout_defs['Campaigns'] = array(
         'send_error' => array(
             'order' => 170,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'send error', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_SEND_ERROR_TITLE',
@@ -236,7 +236,7 @@ $layout_defs['Campaigns'] = array(
         'removed' => array(
             'order' => 180,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'removed', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_REMOVED_TITLE',
@@ -246,7 +246,7 @@ $layout_defs['Campaigns'] = array(
         'blocked' => array(
             'order' => 185,
             'module' => 'CampaignLog',
-            'get_subpanel_data' => "function:track_log_entries",
+            'get_subpanel_data' => 'function:track_log_entries',
             'function_parameters' => array(0 => 'blocked', 'EMAIL_MARKETING_ID_VALUE' => '',/*'group_by'=>'campaign_log.target_id','distinct'=>'campaign_log.target_id'*/),
             'subpanel_name' => 'default',
             'title_key' => 'LBL_LOG_ENTRIES_BLOCKEDD_TITLE',

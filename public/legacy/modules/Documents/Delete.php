@@ -66,11 +66,12 @@ if (!$focus->ACLAccess('Delete')) {
     ACLController::displayNoAccess(true);
     sugar_cleanup(true);
 }
-if (isset($_REQUEST['object']) && $_REQUEST['object']="documentrevision") {
+if (isset($_REQUEST['object']) && $_REQUEST['object']= 'documentrevision') {
     //delete document revision.
     $focus = BeanFactory::newBean('DocumentRevisions');
     UploadFile::unlink_file($_REQUEST['revision_id'], $_REQUEST['filename']);
 }
 
 $focus->mark_deleted($_REQUEST['record']);
-header("Location: index.php?module=".$_REQUEST['return_module']."&action=".$_REQUEST['return_action']."&record=".$_REQUEST['return_id']);
+header(
+    'Location: index.php?module=' . $_REQUEST['return_module']. '&action=' . $_REQUEST['return_action']. '&record=' . $_REQUEST['return_id']);

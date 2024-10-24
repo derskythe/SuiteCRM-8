@@ -40,6 +40,7 @@
 
 namespace Api\V8\Service;
 
+use SuiteCRM\ErrorMessageException;
 use Api\V8\BeanDecorator\BeanManager;
 use Api\V8\JsonApi\Helper\AttributeObjectHelper;
 use Api\V8\JsonApi\Helper\PaginationObjectHelper;
@@ -63,7 +64,7 @@ include_once __DIR__ . '/../../../include/ListView/ListViewFacade.php';
 #[\AllowDynamicProperties]
 class ListViewService
 {
-    
+
     /**
      * an exact match to ListViewColumnInterface struct of Angular front-end
      *
@@ -80,7 +81,7 @@ class ListViewService
         'sortable' => false,
         'customCode' => '', // deprecated from legacy (using only on PHP front-end)
     ];
-    
+
     /**
      * @var BeanManager
      */
@@ -123,13 +124,15 @@ class ListViewService
      * @param ListViewColumnsParams $params
      *
      * @return JsonSerializable
+     * @throws ErrorMessageException
+     * @throws ErrorMessageException
      */
     public function getListViewDefs(ListViewColumnsParams $params)
     {
         $moduleName = $params->getModuleName();
         /** @var SugarBean */
         $bean = \BeanFactory::getBean($moduleName);
-        
+
         $text = new LangText(null, null, LangText::USING_ALL_STRINGS, true, false, $moduleName);
         $displayColumns = ListViewFacade::getDisplayColumns($moduleName);
         $data = [];
@@ -141,7 +144,7 @@ class ListViewService
                 $translated = $text->getText($bean->field_name_map[strtolower($key)]['vname']);
             }
             $column['label'] = $translated ? $translated : $column['label'];
-            
+
             // TODO: validate the column name (for e.g label and name should be requered etc...) also check the ListViewColumnInterface keys are match..
             $data[] = $column;
         }

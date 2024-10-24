@@ -66,6 +66,9 @@ class SubPanel
     public $search_query='';
     public $collections = array();
 
+    /**
+     * @throws Exception
+     */
     public function __construct($module, $record_id, $subpanel_id, $subpanelDef, $layout_def_key='', $collections = array())
     {
         global $beanList, $beanFiles, $focus, $app_strings;
@@ -90,7 +93,7 @@ class SubPanel
             $result = $this->parent_bean;
         }
 
-        if ($record_id!='fab4' && $result == null) {
+        if ($record_id !== 'fab4' && $result == null) {
             sugar_die($app_strings['ERROR_NO_RECORD']);
         }
 
@@ -110,7 +113,7 @@ class SubPanel
         $this->template_file = $template_file;
     }
 
-    public function setBeanList(&$value)
+    public function setBeanList($value)
     {
         $this->bean_list =$value;
     }
@@ -143,7 +146,7 @@ class SubPanel
             $widget_contents .= '<td style="padding-right: 2px; padding-bottom: 2px;">' . "\n";
 
             if (empty($widget_data['widget_class'])) {
-                $widget_contents .= "widget_class not defined for top subpanel buttons";
+                $widget_contents .= 'widget_class not defined for top subpanel buttons';
             } else {
                 $widget_contents .= $layout_manager->widgetDisplay($widget_data);
             }
@@ -163,37 +166,77 @@ class SubPanel
         global $sugar_config;
         global $app_strings;
 
-        //		if(isset($this->listview)){
-        //			$ListView =& $this->listview;
-        //		}else{
-        //			$this->listview = new ListViewSubPanel();
-        //		}
+        //        if(isset($this->listview)){
+        //            $ListView =& $this->listview;
+        //        }else{
+        //            $this->listview = new ListViewSubPanel();
+        //        }
         $this->listview = new ListViewSubPanel();
         $ListView =& $this->listview;
         $ListView->initNewSmartyTemplate($xTemplatePath, $this->subpanel_defs->mod_strings);
-        $ListView->smartyTemplateAssign("RETURN_URL", "&return_module=".$this->parent_module."&return_action=DetailView&return_id=".$this->parent_bean->id);
-        $ListView->smartyTemplateAssign("RELATED_MODULE", $this->parent_module);  // TODO: what about unions?
-        $ListView->smartyTemplateAssign("RECORD_ID", $this->parent_bean->id);
-        $ListView->smartyTemplateAssign("EDIT_INLINE_PNG", SugarThemeRegistry::current()->getImage('edit_inline', 'align="absmiddle"  border="0"', null, null, '.gif', $app_strings['LNK_EDIT']));
-        $ListView->smartyTemplateAssign("DELETE_INLINE_PNG", SugarThemeRegistry::current()->getImage('delete_inline', 'align="absmiddle" border="0"', null, null, '.gif', $app_strings['LBL_DELETE_INLINE']));
-        $ListView->smartyTemplateAssign("REMOVE_INLINE_PNG", SugarThemeRegistry::current()->getImage('delete_inline', 'align="absmiddle" border="0"', null, null, '.gif', $app_strings['LBL_ID_FF_REMOVE']));
-        $ListView->smartyTemplateAssign("APP", $app_strings);
+        $ListView->smartyTemplateAssign(
+            'RETURN_URL',
+            '&return_module=' . $this->parent_module . '&return_action=DetailView&return_id=' . $this->parent_bean->id
+        );
+        $ListView->smartyTemplateAssign('RELATED_MODULE', $this->parent_module);  // TODO: what about unions?
+        $ListView->smartyTemplateAssign('RECORD_ID', $this->parent_bean->id);
+        $ListView->smartyTemplateAssign(
+            'EDIT_INLINE_PNG',
+            SugarThemeRegistry::current()->getImage(
+                'edit_inline',
+                'align="absmiddle"  border="0"',
+                null,
+                null,
+                '.gif',
+                $app_strings['LNK_EDIT']
+            )
+        );
+        $ListView->smartyTemplateAssign(
+            'DELETE_INLINE_PNG',
+            SugarThemeRegistry::current()->getImage(
+                'delete_inline',
+                'align="absmiddle" border="0"',
+                null,
+                null,
+                '.gif',
+                $app_strings['LBL_DELETE_INLINE']
+            )
+        );
+        $ListView->smartyTemplateAssign(
+            'REMOVE_INLINE_PNG',
+            SugarThemeRegistry::current()->getImage(
+                'delete_inline',
+                'align="absmiddle" border="0"',
+                null,
+                null,
+                '.gif',
+                $app_strings['LBL_ID_FF_REMOVE']
+            )
+        );
+        $ListView->smartyTemplateAssign('APP', $app_strings);
         $header_text= '';
 
-        $ListView->smartyTemplateAssign("SUBPANEL_ID", $this->subpanel_id);
-        $ListView->smartyTemplateAssign("SUBPANEL_SEARCH", $this->getSearchForm());
+        $ListView->smartyTemplateAssign('SUBPANEL_ID', $this->subpanel_id);
+        $ListView->smartyTemplateAssign('SUBPANEL_SEARCH', $this->getSearchForm());
         $display_sps = '';
         if ($this->search_query == '' && empty($this->collections)) {
             $display_sps = 'display:none';
         }
-        $ListView->smartyTemplateAssign("DISPLAY_SPS", $display_sps);
+        $ListView->smartyTemplateAssign('DISPLAY_SPS', $display_sps);
 
-        if (is_admin($current_user) && $_REQUEST['module'] != 'DynamicLayout' && !empty($_SESSION['editinplace'])) {
+        if (is_admin($current_user) && $_REQUEST['module'] !== 'DynamicLayout' && !empty($_SESSION['editinplace'])) {
             $exploded = explode('/', $xTemplatePath);
             $file_name = $exploded[count($exploded) - 1];
             $mod_name =  $exploded[count($exploded) - 2];
             $header_text= "&nbsp;<a href='index.php?action=index&module=DynamicLayout&from_action=$file_name&from_module=$mod_name&mod_lang="
-                .$_REQUEST['module']."'>".SugarThemeRegistry::current()->getImage("EditLayout", "border='0' align='bottom'", null, null, '.gif', 'Edit Layout')."</a>";
+                . $_REQUEST['module'] . "'>" . SugarThemeRegistry::current()->getImage(
+                    'EditLayout',
+                    "border='0' align='bottom'",
+                    null,
+                    null,
+                    '.gif',
+                    'Edit Layout'
+                ) . '</a>';
         }
         $ListView->setHeaderTitle('');
         $ListView->setHeaderText('');
@@ -295,7 +338,8 @@ class SubPanel
 
         //bug# 40171: "Custom subpanels not working as expected"
         //each custom subpanel needs to have a unique custom def file
-        $filename = $panel->parent_bean->object_name . "_subpanel_" . $panel->name; //bug 42262 (filename with $panel->_instance_properties['get_subpanel_data'] can create problem if had word "function" in it)
+        $filename =
+            $panel->parent_bean->object_name . '_subpanel_' . $panel->name; //bug 42262 (filename with $panel->_instance_properties['get_subpanel_data'] can create problem if had word "function" in it)
         $oldName1 = '_override' . $panel->parent_bean->object_name .$panel->_instance_properties['module'] . $panel->_instance_properties['subpanel_name'] ;
         $oldName2 = '_override' . $panel->parent_bean->object_name .$panel->_instance_properties['get_subpanel_data'] ;
         if (file_exists('custom/Extension/modules/'. $panel->parent_bean->module_dir . "/Ext/Layoutdefs/$oldName1.php")) {
@@ -314,7 +358,7 @@ class SubPanel
         //tyoung 10.12.07 pushed panel->name to lowercase to match case in subpaneldefs.php files -
         //gave error on bad index 'module' as this override key didn't match the key in the subpaneldefs
         $name = "layout_defs['".  $panel->parent_bean->module_dir. "']['subpanel_setup']['" .strtolower($panel->name). "']";
-        //  	$GLOBALS['log']->debug('SubPanel.php->saveSubPanelDefOverride(): '.$name);
+        //      $GLOBALS['log']->debug('SubPanel.php->saveSubPanelDefOverride(): '.$name);
         $newValue = override_value_to_string($name, 'override_subpanel_name', $filename);
         mkdir_recursive('custom/Extension/modules/'. $panel->parent_bean->module_dir . '/Ext/Layoutdefs', true);
         sugar_file_put_contents(
@@ -399,7 +443,7 @@ class SubPanel
 
         require_once('include/SubPanel/SubPanelSearchForm.php');
 
-        if (isset($subpanel_defs['type']) && $subpanel_defs['type'] == 'collection') {
+        if (isset($subpanel_defs['type']) && $subpanel_defs['type'] === 'collection') {
             $arrayValues = array_values($subpanel_defs['collection_list']);
             $collection = array_shift($arrayValues);
             $module = $collection['module'];
@@ -448,7 +492,7 @@ class SubPanel
         $subpanel_defs = $thisPanel->_instance_properties;
         require_once('include/SubPanel/SubPanelSearchForm.php');
 
-        if (isset($subpanel_defs['type']) && $subpanel_defs['type'] == 'collection') {
+        if (isset($subpanel_defs['type']) && $subpanel_defs['type'] === 'collection') {
             $arrayValues = array_values($subpanel_defs['collection_list']);
             $collection = array_shift($arrayValues);
             $module = $collection['module'];

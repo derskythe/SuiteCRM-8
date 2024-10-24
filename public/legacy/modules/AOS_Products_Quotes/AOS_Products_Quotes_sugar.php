@@ -41,29 +41,29 @@
 #[\AllowDynamicProperties]
 class AOS_Products_Quotes_sugar extends Basic
 {
-    public $new_schema = true;
-    public $module_dir = 'AOS_Products_Quotes';
-    public $object_name = 'AOS_Products_Quotes';
-    public $table_name = 'aos_products_quotes';
-    public $tracker_visibility = false;
-    public $importable = true;
+    public bool $new_schema = true;
+    public string $module_dir = 'AOS_Products_Quotes';
+    public string $object_name = 'AOS_Products_Quotes';
+    public string $table_name = 'aos_products_quotes';
+    public bool $tracker_visibility = false;
+    public bool $importable = true;
 
     public $disable_row_level_security = true; // to ensure that modules created and deployed under CE will continue to function under team security if the instance is upgraded to PRO
 
-    public $id;
-    public $name;
-    public $date_entered;
-    public $date_modified;
-    public $modified_user_id;
-    public $modified_by_name;
-    public $created_by;
-    public $created_by_name;
-    public $description;
-    public $deleted;
+    public string $id;
+    public string $name;
+    public string $date_entered;
+    public string $date_modified;
+    public string $modified_user_id;
+    public string $modified_by_name;
+    public string $created_by;
+    public string $created_by_name;
+    public string $description;
+    public int $deleted;
     public $created_by_link;
     public $modified_user_link;
-    public $assigned_user_id;
-    public $assigned_user_name;
+    public string $assigned_user_id;
+    public string $assigned_user_name;
     public $assigned_user_link;
     public $product_qty;
     public $product_cost_price;
@@ -75,7 +75,7 @@ class AOS_Products_Quotes_sugar extends Basic
     public $product_total_price;
     public $discount;
     public $vat;
-    public $parent_name;
+    public string $parent_name;
     public $parent_type;
     public $parent_id;
     public $product_id;
@@ -93,7 +93,7 @@ class AOS_Products_Quotes_sugar extends Basic
 
 
 
-    public function bean_implements($interface)
+    public function bean_implements($interface) : bool
     {
         switch ($interface) {
             case 'ACL':

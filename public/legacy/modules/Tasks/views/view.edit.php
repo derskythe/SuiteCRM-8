@@ -49,12 +49,12 @@ class TasksViewEdit extends ViewEdit
     /**
      * @see SugarView::preDisplay()
      */
-    public function preDisplay()
+    public function preDisplay() : void
     {
-        if ($_REQUEST['module'] != 'Tasks' && isset($_REQUEST['status']) && empty($_REQUEST['status'])) {
+        if ($_REQUEST['module'] !== 'Tasks' && isset($_REQUEST['status']) && empty($_REQUEST['status'])) {
             $this->bean->status = '';
         } //if
-        if (!empty($_REQUEST['status']) && ($_REQUEST['status'] == 'Completed')) {
+        if (!empty($_REQUEST['status']) && ($_REQUEST['status'] === 'Completed')) {
             $this->bean->status = 'Completed';
         }
         parent::preDisplay();
@@ -63,7 +63,7 @@ class TasksViewEdit extends ViewEdit
     /**
      * @see SugarView::display()
      */
-    public function display()
+    public function display() : void
     {
         if ($this->ev->isDuplicate) {
             $this->bean->status = $this->bean->getDefaultStatus();

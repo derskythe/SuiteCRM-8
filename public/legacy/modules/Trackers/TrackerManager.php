@@ -129,7 +129,7 @@ class TrackerManager
     public function getMonitor($name)
     {
         //don't waste our time on disabled monitors
-        if ($name!='tracker_sessions' && !empty($this->disabledMonitors[$name])) {
+        if ($name !== 'tracker_sessions' && !empty($this->disabledMonitors[$name])) {
             return false;
         }
         if (isset($this->monitors[$name])) {
@@ -161,6 +161,9 @@ class TrackerManager
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function _getMonitor($name='', $monitorId='', $metadata='', $store='')
     {
         $class = strtolower($name.'_monitor');

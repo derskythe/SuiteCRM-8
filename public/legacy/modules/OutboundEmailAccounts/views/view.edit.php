@@ -49,7 +49,7 @@ class OutboundEmailAccountsViewEdit extends ViewEdit
     /**
      * @inheritdoc
      */
-    public function display()
+    public function display() : void
     {
         global $current_user;
         $this->ev->ss->assign('is_admin', is_admin($current_user));

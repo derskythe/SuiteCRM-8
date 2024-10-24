@@ -42,7 +42,7 @@ if (!defined('sugarEntry') || !sugarEntry) {
  */
 
 
-require_once("data/Relationships/One2MBeanRelationship.php");
+require_once('data/Relationships/One2MBeanRelationship.php');
 
 /**
  * 1-1 Bean relationship
@@ -100,7 +100,7 @@ class One2OneBeanRelationship extends One2MBeanRelationship
 
         //Set up any table aliases required
         if (! empty($params['join_table_alias'])) {
-            $targetTableWithAlias = $targetTable . " ". $params['join_table_alias'];
+            $targetTableWithAlias = $targetTable . ' ' . $params['join_table_alias'];
             $targetTable = $params['join_table_alias'];
         }
 
@@ -118,7 +118,7 @@ class One2OneBeanRelationship extends One2MBeanRelationship
                 'type' => $this->type,
                 'rel_key' => $targetKey,
                 'join_tables' => array($targetTable),
-                'where' => "",
+                'where' => '',
                 'select' => "$targetTable.id",
             );
         }
